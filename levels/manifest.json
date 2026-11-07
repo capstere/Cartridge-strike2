@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "levels": [
+    {
+      "id": "synthetic-demo",
+      "file": "levels/synthetic-demo.json",
+      "rights": "original synthetic geometry and procedural furnishings"
+    },
+    {
+      "id": "floor5-prepared",
+      "file": "levels/floor5-prepared.json",
+      "rights": "reviewed original/approved assets"
+    }
+  ],
+  "defaultLevel": "floor5-prepared"
+}

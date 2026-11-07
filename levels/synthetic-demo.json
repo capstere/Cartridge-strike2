@@ -1,0 +1,437 @@
+{
+  "format": "cartridge-strike-level-project",
+  "schemaVersion": 2,
+  "editorVersion": "3.1.0",
+  "createdAt": "2026-10-28T12:00:00.000Z",
+  "projectId": "lvl-synthetic-demo",
+  "name": "Syntetisk testbana",
+  "game": {
+    "repository": "capstere/cartridge-strike",
+    "version": "0.18.0",
+    "baseCommit": "f5c63a22483feeeb29583853dab0c0911af5c09a",
+    "compatibleWith": [
+      "0.18.0"
+    ]
+  },
+  "mode": "new-level",
+  "units": {
+    "linear": "model-unit",
+    "metricScaleVerified": false,
+    "planAxes": [
+      "x",
+      "z"
+    ],
+    "upAxis": "y",
+    "playerRadius": 0.22,
+    "actorRadius": 0.2,
+    "gridStep": 0.1
+  },
+  "rules": {
+    "minDoorWidth": 1.1,
+    "minCorridorWidth": 2,
+    "doorWidthAppliesTo": "all"
+  },
+  "ground": {
+    "bounds": {
+      "x0": -2,
+      "z0": -2,
+      "x1": 18,
+      "z1": 8
+    },
+    "wallHeightDefault": 2.85,
+    "floors": [
+      {
+        "id": "BYGG-G-0001",
+        "name": "Västra rummet",
+        "role": "room",
+        "surface": "carpet",
+        "x0": 0,
+        "z0": 0,
+        "x1": 6,
+        "z1": 6
+      },
+      {
+        "id": "BYGG-G-0002",
+        "name": "Passagen",
+        "role": "corridor",
+        "surface": "vinyl",
+        "x0": 6,
+        "z0": 1.8,
+        "x1": 10,
+        "z1": 4.2
+      },
+      {
+        "id": "BYGG-G-0003",
+        "name": "Östra rummet",
+        "role": "room",
+        "surface": "carpet",
+        "x0": 10,
+        "z0": 0,
+        "x1": 16,
+        "z1": 6
+      }
+    ]
+  },
+  "architecture": {
+    "schemaVersion": 1,
+    "edits": [],
+    "added": [
+      {
+        "id": "BYGG-V-0001",
+        "kind": "wall",
+        "a": [
+          0,
+          0
+        ],
+        "b": [
+          6,
+          0
+        ],
+        "height": 2.85,
+        "thickness": 0.11,
+        "sill": 0.9,
+        "finish": "white"
+      },
+      {
+        "id": "BYGG-V-0002",
+        "kind": "wall",
+        "a": [
+          0,
+          0
+        ],
+        "b": [
+          0,
+          6
+        ],
+        "height": 2.85,
+        "thickness": 0.11,
+        "sill": 0.9,
+        "finish": "white"
+      },
+      {
+        "id": "BYGG-V-0003",
+        "kind": "window",
+        "a": [
+          0,
+          6
+        ],
+        "b": [
+          6,
+          6
+        ],
+        "height": 2.85,
+        "thickness": 0.11,
+        "sill": 1.05,
+        "finish": "white"
+      },
+      {
+        "id": "BYGG-V-0004",
+        "kind": "wall",
+        "a": [
+          6,
+          0
+        ],
+        "b": [
+          6,
+          6
+        ],
+        "height": 2.85,
+        "thickness": 0.11,
+        "sill": 0.9,
+        "finish": "white"
+      },
+      {
+        "id": "BYGG-D-0001",
+        "kind": "door",
+        "a": [
+          6,
+          2.35
+        ],
+        "b": [
+          6,
+          3.65
+        ],
+        "height": 2.4,
+        "thickness": 0.11,
+        "sill": 0.9,
+        "finish": "white"
+      },
+      {
+        "id": "BYGG-V-0005",
+        "kind": "wall",
+        "a": [
+          6,
+          1.8
+        ],
+        "b": [
+          10,
+          1.8
+        ],
+        "height": 2.85,
+        "thickness": 0.11,
+        "sill": 0.9,
+        "finish": "white"
+      },
+      {
+        "id": "BYGG-V-0006",
+        "kind": "glazed",
+        "a": [
+          6,
+          4.2
+        ],
+        "b": [
+          10,
+          4.2
+        ],
+        "height": 2.85,
+        "thickness": 0.11,
+        "sill": 0.9,
+        "finish": "white"
+      },
+      {
+        "id": "BYGG-V-0007",
+        "kind": "wall",
+        "a": [
+          10,
+          0
+        ],
+        "b": [
+          10,
+          6
+        ],
+        "height": 2.85,
+        "thickness": 0.11,
+        "sill": 0.9,
+        "finish": "white"
+      },
+      {
+        "id": "BYGG-D-0002",
+        "kind": "door",
+        "a": [
+          10,
+          2.35
+        ],
+        "b": [
+          10,
+          3.65
+        ],
+        "height": 2.4,
+        "thickness": 0.11,
+        "sill": 0.9,
+        "finish": "white"
+      },
+      {
+        "id": "BYGG-V-0008",
+        "kind": "wall",
+        "a": [
+          10,
+          0
+        ],
+        "b": [
+          16,
+          0
+        ],
+        "height": 2.85,
+        "thickness": 0.11,
+        "sill": 0.9,
+        "finish": "white"
+      },
+      {
+        "id": "BYGG-V-0009",
+        "kind": "wall",
+        "a": [
+          16,
+          0
+        ],
+        "b": [
+          16,
+          6
+        ],
+        "height": 2.85,
+        "thickness": 0.11,
+        "sill": 0.9,
+        "finish": "white"
+      },
+      {
+        "id": "BYGG-V-0010",
+        "kind": "window",
+        "a": [
+          10,
+          6
+        ],
+        "b": [
+          16,
+          6
+        ],
+        "height": 2.85,
+        "thickness": 0.11,
+        "sill": 0.85,
+        "finish": "white"
+      }
+    ],
+    "removed": [],
+    "floors": [],
+    "posters": [],
+    "treatments": []
+  },
+  "furniture": {
+    "placements": [],
+    "added": [
+      {
+        "id": "NY-BORD-0001",
+        "roomId": "BYGG-G-0001",
+        "kind": "table",
+        "x": 3,
+        "z": 1.3,
+        "yaw": 0,
+        "w": 1.2,
+        "d": 0.7,
+        "height": 0.75
+      },
+      {
+        "id": "NY-STOL-0001",
+        "roomId": "BYGG-G-0003",
+        "kind": "chair",
+        "x": 13,
+        "z": 1.2,
+        "yaw": 0,
+        "w": 0.5,
+        "d": 0.5,
+        "height": 0.9
+      }
+    ],
+    "removed": []
+  },
+  "gameplay": {
+    "mode": "classic",
+    "counts": {
+      "analysts": 5,
+      "counterAnalysts": 5
+    },
+    "spawns": [
+      {
+        "id": "SP-A-01",
+        "team": "analysts",
+        "index": 0,
+        "x": 1.2,
+        "z": 4.9,
+        "yaw": 0
+      },
+      {
+        "id": "SP-C-01",
+        "team": "counterAnalysts",
+        "index": 0,
+        "x": 11.2,
+        "z": 4.9,
+        "yaw": 3.141592653589793
+      },
+      {
+        "id": "SP-A-02",
+        "team": "analysts",
+        "index": 1,
+        "x": 2.05,
+        "z": 4.9,
+        "yaw": 0
+      },
+      {
+        "id": "SP-C-02",
+        "team": "counterAnalysts",
+        "index": 1,
+        "x": 12.049999999999999,
+        "z": 4.9,
+        "yaw": 3.141592653589793
+      },
+      {
+        "id": "SP-A-03",
+        "team": "analysts",
+        "index": 2,
+        "x": 2.9,
+        "z": 4.9,
+        "yaw": 0
+      },
+      {
+        "id": "SP-C-03",
+        "team": "counterAnalysts",
+        "index": 2,
+        "x": 12.899999999999999,
+        "z": 4.9,
+        "yaw": 3.141592653589793
+      },
+      {
+        "id": "SP-A-04",
+        "team": "analysts",
+        "index": 3,
+        "x": 3.75,
+        "z": 4.9,
+        "yaw": 0
+      },
+      {
+        "id": "SP-C-04",
+        "team": "counterAnalysts",
+        "index": 3,
+        "x": 13.75,
+        "z": 4.9,
+        "yaw": 3.141592653589793
+      },
+      {
+        "id": "SP-A-05",
+        "team": "analysts",
+        "index": 4,
+        "x": 4.6,
+        "z": 4.9,
+        "yaw": 0
+      },
+      {
+        "id": "SP-C-05",
+        "team": "counterAnalysts",
+        "index": 4,
+        "x": 14.6,
+        "z": 4.9,
+        "yaw": 3.141592653589793
+      }
+    ],
+    "objectives": {
+      "bomb": {
+        "id": "OBJ-BOMB",
+        "x": 13,
+        "z": 3,
+        "radius": 1.1,
+        "roomId": "BYGG-G-0003"
+      },
+      "rescue": {
+        "id": "OBJ-RESCUE",
+        "x": 3,
+        "z": 3,
+        "radius": 1.65,
+        "roomId": "BYGG-G-0001"
+      },
+      "hostages": [
+        {
+          "id": "OBJ-H1",
+          "x": 12.1,
+          "z": 1.3,
+          "yaw": 0,
+          "roomId": "BYGG-G-0003"
+        },
+        {
+          "id": "OBJ-H2",
+          "x": 14,
+          "z": 1.3,
+          "yaw": 0,
+          "roomId": "BYGG-G-0003"
+        }
+      ]
+    }
+  },
+  "navHints": [],
+  "intent": {},
+  "validation": {},
+  "assets": {
+    "library": [],
+    "local": [],
+    "posters": []
+  },
+  "agentBrief": {
+    "goal": "Fiktiv provbana för banstudion. Inga arbetsplatsritningar eller privata modeller."
+  }
+}
