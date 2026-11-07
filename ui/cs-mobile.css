@@ -1,0 +1,139 @@
+/* CARTRIDGE-STRIKE // MOBILE LANDSCAPE LAYER
+   Loaded last on the FPS lobby, Character Studio and Level Studio. Only phone-height
+   landscape screens (and portrait phones for the rotate prompt) are affected — desktop is untouched. */
+
+/* ---------- Rotate prompt (portrait phones) ---------- */
+.cs-rotate{display:none}
+@media (orientation:portrait) and (max-width:600px){
+  html:not(.cs-rotate-ok) .cs-rotate{position:fixed;inset:0;z-index:2147483000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:max(32px,env(safe-area-inset-top)) 32px max(32px,env(safe-area-inset-bottom));background:radial-gradient(90% 60% at 50% 40%,#132036,#05070b 75%);color:#eef2f7;text-align:center;font-family:"Barlow",system-ui,sans-serif}
+  html:not(.cs-rotate-ok) body{overflow:hidden!important}
+}
+.cs-rotate-phone{width:62px;height:104px;border:2px solid #eef2f7;border-radius:12px;position:relative;animation:cs-rot 2.4s cubic-bezier(.2,.8,.2,1) infinite}
+.cs-rotate-phone::after{content:"";position:absolute;left:50%;bottom:7px;width:18px;height:3px;margin-left:-9px;border-radius:2px;background:#3d8bff}
+@keyframes cs-rot{0%,25%{transform:rotate(0)}55%,100%{transform:rotate(-90deg)}}
+@media (prefers-reduced-motion:reduce){.cs-rotate-phone{animation:none;transform:rotate(-90deg)}}
+.cs-rotate small{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.24em;color:#3d8bff}
+.cs-rotate strong{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-size:32px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;line-height:1}
+.cs-rotate p{margin:0;max-width:30ch;color:#8e9aac;font-size:15px;line-height:1.45}
+.cs-rotate button{margin-top:8px;min-height:44px;padding:0 20px;background:none;border:1px solid #ffffff2e;color:#eef2f7;font-family:"Barlow Condensed",sans-serif;font-size:14px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;border-radius:0}
+
+/* Panel toggle used by the Character Studio on phones (created by cs-mobile.mjs) */
+.cs-mtoggle{display:none}
+
+/* ---------- Phone landscape ---------- */
+@media (orientation:landscape) and (max-height:520px){
+  html,body{overscroll-behavior:none}
+
+  /* ===== FPS lobby ===== */
+  .lobby{grid-template-columns:minmax(0,1fr) minmax(220px,30vw)!important;grid-template-rows:auto minmax(0,1fr)!important;height:100dvh!important;padding:0 env(safe-area-inset-right) 0 env(safe-area-inset-left)}
+  .lb-bar{gap:10px;padding:6px 14px;min-height:46px}
+  .lb-brand{font-size:13px;gap:8px;letter-spacing:.1em}
+  .lb-mark{width:18px;height:18px}.lb-mark i{width:6px;height:6px}
+  .lb-nav{margin-left:4px;overflow-x:auto;scrollbar-width:none}
+  .lb-nav a{font-size:12px;padding:10px 8px;white-space:nowrap}
+  .lb-nav a::after{left:8px;right:8px;bottom:2px}
+  .lb-icon{min-height:40px;padding:6px 10px}
+  .lb-icon span{display:none}
+  .lb-left{grid-column:1;grid-row:2;gap:10px;padding:8px 0 calc(10px + env(safe-area-inset-bottom)) 14px;overflow-y:auto;overscroll-behavior:contain}
+  .lb-tag{font-size:9px;letter-spacing:.18em}
+  .lb-title{font-size:34px!important;margin:4px 0 0;display:flex;gap:.25em}
+  .lb-title span{display:inline!important}
+  .lb-lead,#private-character-note,#original-character-match{display:none!important}
+  .lb-block{gap:6px}
+  .lb-label{font-size:11px}
+  .lobby .lb-teams{gap:8px}
+  .lobby .team-option{min-height:58px!important;flex-direction:row;align-items:center;gap:10px;padding:8px 10px}
+  .lobby .team-icon{width:30px;height:34px;font-size:13px;flex:none}
+  .lobby .team-option strong{font-size:17px}
+  .lobby .team-option small{font-size:9px;margin-top:3px}
+  .lobby .radio-dot{top:10px;right:10px}
+  .lb-seg button{padding:8px 10px;font-size:15px;min-height:44px}
+  .lobby #mode-description{display:none}
+  .lobby #loadout-row{margin-top:6px}
+  .lobby #loadout-row select{min-width:150px;min-height:40px;padding:6px 10px}
+  .lb-launch{margin-top:2px;padding-top:0;position:sticky;bottom:0;z-index:5}
+  .lobby #start{height:54px!important;gap:12px}
+  .lb-start-t{font-size:24px!important}
+  .lb-start-k{display:none}
+  .lb-right{grid-column:2;grid-row:2;gap:10px;padding:8px 14px calc(10px + env(safe-area-inset-bottom)) 10px;overflow-y:auto;justify-content:flex-start}
+  .lb-plate{padding-left:12px}
+  .lb-plate h2{font-size:22px;margin:4px 0 8px}
+  .lobby .lb-char{gap:6px}
+  .lobby .lb-char select{min-height:40px;padding:6px 10px}
+  .lb-brief{font-size:12px}
+  .lb-brief>div{padding:7px 10px}
+  .lb-brief dd{font-size:14px;margin-top:3px}
+  .lb-brief-obj dd{font-size:12px}
+  .lb-foot{grid-column:2;grid-row:2;align-self:end;justify-content:flex-end;padding:0 14px calc(6px + env(safe-area-inset-bottom));font-size:9px;gap:12px;pointer-events:none}
+  .lb-foot a{pointer-events:auto;padding:6px 0}
+  .lb-right{padding-bottom:34px}
+  .lobby .lb-drawer{width:min(400px,70vw);padding-right:env(safe-area-inset-right)}
+  .lobby .lb-drawer>summary{padding:12px 18px}
+  .lb-beam{display:none}
+
+  /* ===== Character Studio ===== */
+  body.cs-shell{height:100dvh;--pw:min(310px,38vw)}
+  body.cs-shell.cs-wide{--pw:min(62vw,560px)}
+  body.cs-shell.cs-mpanel-off{--pw:0px}
+  .cs-shell main{grid-template-columns:calc(64px + env(safe-area-inset-left)) minmax(0,1fr) var(--pw)!important;grid-template-rows:46px minmax(0,1fr)!important;height:100dvh!important}
+  .cs-top{gap:8px;padding:0 calc(8px + env(safe-area-inset-right)) 0 calc(10px + env(safe-area-inset-left))}
+  .cs-brand>span:last-child,.cs-namewrap>span,.cs-nav{display:none!important}
+  .cs-namewrap{margin-left:0}
+  .cs-shell input.cs-name{width:clamp(110px,18vw,180px);height:36px;font-size:14px}
+  .cs-shell .studio-bar{gap:6px;overflow-x:auto;scrollbar-width:none}
+  .cs-shell .studio-bar button,.cs-shell .studio-bar a{min-height:38px!important;padding:0 10px!important;font-size:12px!important;white-space:nowrap}
+  .cs-shell #save-state{display:none}
+  .cs-rail{padding:4px 4px calc(4px + env(safe-area-inset-bottom)) calc(4px + env(safe-area-inset-left));gap:0}
+  .cs-rail button{min-height:44px;padding:6px 2px!important;font-size:10.5px!important;line-height:1.1}
+  .cs-rail button svg{width:18px!important;height:18px!important}
+  .cs-panel{padding-bottom:calc(24px + env(safe-area-inset-bottom));padding-right:env(safe-area-inset-right);overscroll-behavior:contain}
+  .cs-mpanel-off .cs-panel{visibility:hidden;border:0}
+  .cs-panel :is(input[type=range]){min-height:32px}
+  .cs-panel :is(button,select){min-height:40px}
+  .cs-cambar{bottom:calc(8px + env(safe-area-inset-bottom));padding:4px;gap:4px;max-width:calc(100% - 16px)}
+  .cs-cambar button{min-height:40px;padding:6px 8px!important;font-size:12px!important}
+  .cs-shell .preview-hint{display:none}
+  .cs-stage canvas{touch-action:none}
+  .cs-mtoggle{display:grid;place-items:center;position:absolute;top:8px;right:8px;z-index:4;width:44px;height:44px;padding:0;background:#0b0f16e6;border:1px solid #ffffff2b;color:#eef2f7;border-radius:0;font-size:18px;line-height:1}
+  .cs-mtoggle[aria-pressed=true]{border-color:#3d8bff;color:#3d8bff}
+  .cs-shell .status,.cs-shell #status{max-width:min(60vw,420px)}
+
+  /* ===== Level Studio ===== */
+  body.lv-shell{--pw:min(280px,34vw);height:100dvh!important}
+  body.lv-shell .lv-top{height:46px;min-height:46px;gap:8px;padding:0 calc(8px + env(safe-area-inset-right)) 0 calc(10px + env(safe-area-inset-left))}
+  .lv-brand>span:last-child,.lv-nav,.lv-mode,.lv-namewrap>span{display:none!important}
+  .lv-shell .lv-top .kid-steps{display:none!important}
+  .lv-shell input.lv-name{width:clamp(120px,22vw,220px);height:36px;font-size:14px}
+  .lv-hist{margin-left:auto}
+  .lv-shell .lv-hist button,.lv-shell .lv-ghost,.lv-shell .lv-cta{min-height:40px;height:40px;padding:0 10px;font-size:13px}
+  .lv-shell main{grid-template-columns:calc(56px + env(safe-area-inset-left)) var(--pw) minmax(0,1fr)!important}
+  .lv-rail{padding:4px 3px calc(4px + env(safe-area-inset-bottom)) calc(3px + env(safe-area-inset-left))}
+  .lv-shell .lv-cat{min-height:48px;padding:4px 2px}
+  .lv-shell .lv-cat span{font-size:9.5px}
+  .lv-shell .lv-cat svg{width:18px;height:18px}
+  .lv-panehead{padding:8px 12px!important}
+  .lv-panehead h2{font-size:18px!important}
+  .lv-panehead p,.lv-panehead #modeHelp{display:none!important}
+  .lv-shell #toolsPanel{overscroll-behavior:contain}
+  .lv-shell #toolsPanel button{min-height:40px}
+  .lv-inspector{top:8px;right:calc(8px + env(safe-area-inset-right));width:min(250px,40vw);max-height:calc(100% - 80px)}
+  .lv-shell #plan,.lv-shell #scene3d{touch-action:none}
+  .lv-shell .build-tools{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  .lv-shell .build-tools button{min-width:0;overflow:hidden;text-overflow:ellipsis}
+  .lv-shell #workGuide{max-width:min(320px,45vw);padding:6px 10px!important;font-size:12px}
+  .lv-shell #workGuide #activeHelp{display:none}
+  .lv-shell .move-pad{transform:scale(.85);transform-origin:bottom right;right:calc(8px + env(safe-area-inset-right))}
+}
+
+/* Very small landscape (≈ 667×375 and below): give the scene even more room */
+@media (orientation:landscape) and (max-height:400px){
+  body.cs-shell{--pw:min(270px,36vw)}
+  body.lv-shell{--pw:min(240px,32vw)}
+  .lb-title{font-size:28px!important}
+}
+
+/* RC fix: keep the Level Studio view toolbar inside the stage on phones (scrolls sideways instead of clipping). */
+@media (orientation:landscape) and (max-height:520px){
+  .lv-shell .lv-camera{max-width:calc(100% - 120px);overflow-x:auto!important;scrollbar-width:none;left:12px!important;transform:none!important;bottom:max(8px,env(safe-area-inset-bottom))!important}
+  .lv-shell .lv-camera::-webkit-scrollbar{display:none}
+}
