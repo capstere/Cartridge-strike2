@@ -1,0 +1,136 @@
+/* Focus HUD 0.15.0. Opt-in full mode keeps the legacy stylesheet untouched.
+   Layout sizes are CSS pixels; no transform scaling of text or touch targets. */
+#mobile-utilities[hidden],#mobile-more[hidden]{display:none!important}
+.focus-session-summary{padding:12px;border:1px solid #49626d;border-radius:6px;color:#e5f3f2;font-size:12px;line-height:1.6}
+html[data-hud=clean] #hud .key-hints,
+html[data-hud=clean] #difficulty-label,
+html[data-hud=clean] #perf,
+html[data-hud=clean] #combat-session,
+html[data-hud=clean] #combat-hit-label[data-kind=body],
+html[data-hud=clean] #crosshair.auto-target::after{display:none!important}
+html[data-hud=clean] .top-hud{position:absolute;top:12px;left:50%;transform:translateX(-50%);margin:0;gap:3px;width:max-content;max-width:calc(100vw - 32px)}
+html[data-hud=clean] .score{min-width:112px;padding:5px 10px;gap:10px;background:#0b1721c9;border-top:0}
+html[data-hud=clean] .score>strong{font-size:25px;line-height:1.1}
+html[data-hud=clean] .score>span{font-size:10px}
+html[data-hud=clean] .score small{font-size:10px;margin:1px 0 0}
+html[data-hud=clean] .round-clock{min-width:80px;padding:5px 10px}
+html[data-hud=clean] .round-clock b{font-size:23px}
+html[data-hud=clean] #phase{display:none}
+html[data-hud=clean] #hud .map-panel{left:16px;top:16px;transform:none;padding:7px;border:0;background:#0c1a23b8}
+html[data-hud=clean] #hud .map-panel small{display:none}
+html[data-hud=clean] #minimap[width="224"]{width:144px;height:101.57px}
+html[data-hud=clean] .map-panel p{max-width:144px;margin:0 0 4px;font-size:11px}
+html[data-hud=clean].hud-map-open #hud .map-panel{display:block!important;left:max(12px,env(safe-area-inset-left));top:68px;z-index:8;width:min(448px,calc(100vw - 24px));background:#0c1a23ed}
+html[data-hud=clean].hud-map-open #minimap{width:100%;height:auto}
+html[data-hud=clean].hud-map-open .map-panel p{max-width:none}
+html[data-hud=clean] #objectives{top:68px;max-width:calc(100vw - 40px);padding:5px 9px;gap:10px;font-size:11px;background:#0a1720d9;white-space:normal}
+html[data-hud=clean].hud-freeplay #objectives{display:none!important}
+html[data-hud=clean] #control-card{top:68px;width:330px;max-width:calc(100vw - 32px);min-height:40px;padding:6px 10px;grid-template-columns:minmax(0,1fr) 100px;column-gap:8px;background:#10252bda;border:0;box-shadow:none}
+html[data-hud=clean] #control-name{font-size:12px;margin:0;max-height:34px}
+html[data-hud=clean] #control-state,html[data-hud=clean] #control-card footer{font-size:10px}
+html[data-hud=clean] #killfeed{right:16px;top:60px;font-size:11px;max-width:260px;gap:3px}
+html[data-hud=clean] #killfeed>div{padding:4px 8px}
+html[data-hud=clean] #killfeed>div:nth-last-child(n+4){display:none}
+html[data-hud=clean] .bottom-hud{left:16px;right:16px;bottom:max(12px,env(safe-area-inset-bottom));transform:none;align-items:flex-end}
+html[data-hud=clean] .vitals,html[data-hud=clean] .ammo{min-width:128px;padding:7px 10px;background:#0c1a23c9;border-bottom-width:2px;border-radius:5px}
+html[data-hud=clean] .vitals{gap:8px}
+html[data-hud=clean] .vitals>strong,html[data-hud=clean] .ammo strong{font-size:30px}
+html[data-hud=clean] .vitals div,html[data-hud=clean] .vitals small,html[data-hud=clean] .ammo>span{font-size:11px}
+html[data-hud=clean] .ammo>small{font-size:11px;letter-spacing:0}
+html[data-hud=clean] .ammo strong span{font-size:15px}
+html[data-hud=clean] .health-symbol{font-size:22px}
+html[data-hud=clean] .inventory{display:none;position:absolute;left:50%;bottom:0;transform:translateX(-50%)}
+html[data-hud=clean].hud-inventory-peek .inventory{display:block}
+html[data-hud=clean] #money{display:none}
+html[data-hud=clean] #weapon-slots span{font-size:11px;padding:5px 8px}
+html[data-hud=clean] #spawn-protection{top:auto!important;left:16px;bottom:90px;transform:none;padding:4px 7px;letter-spacing:.03em;font-size:11px;border-radius:4px}
+html[data-hud=clean] #combat-medal{top:148px;right:16px;left:auto;transform:none;min-width:0;max-width:230px;padding:6px 10px;text-align:right;background:#132a30db;border:0;border-radius:4px}
+html[data-hud=clean] #combat-medal small,html[data-hud=clean] #combat-medal span{display:none}
+html[data-hud=clean] #combat-medal strong{font-size:13px;margin:0;letter-spacing:.03em}
+html[data-hud=clean] #notification{top:auto;bottom:112px;max-width:min(480px,75vw);font-size:12px;padding:5px 9px}
+html[data-hud=clean] #radio-caption{bottom:153px;font-size:12px;max-width:75vw;padding:5px 9px}
+html[data-hud=clean] #prompt{top:auto;bottom:72px;max-width:70vw;padding:6px 10px;font-size:12px}
+html[data-hud=clean] #grenade-preview-note{top:auto;bottom:75px;padding:5px 8px;max-width:240px}
+html[data-hud=clean] #grenade-preview-note strong{font-size:11px}
+html[data-hud=clean] #grenade-preview-note span{display:none}
+html[data-hud=clean] #combat-warning{top:calc(50% - 112px)!important;font-size:11px;padding:5px 8px}
+html[data-hud=clean] #spectate{top:auto!important;bottom:205px!important;max-width:90vw;font-size:14px}
+html[data-hud=clean] #combat-recap{top:auto!important;bottom:90px!important;max-width:90vw}
+html[data-hud=clean] #round-result{max-width:90vw}
+html[data-hud=clean].hud-low-health .vitals{border-color:#ff997f;color:#ffe4db}
+html[data-hud=clean].hud-low-ammo .ammo{border-color:#ffd58b;color:#ffe2ad}
+/* A single panel for less frequent actions; actual controls retain their handlers. */
+html[data-hud=clean] #mobile-controls [data-focus-hidden]{display:none!important}
+html[data-hud=clean] #mobile-controls .mobile-button{min-width:48px;min-height:48px;width:56px;height:56px;font-size:11px;line-height:1.1;letter-spacing:0;padding:3px;border:1px solid #bbd7d080;background:#112d3bd4;box-shadow:0 2px 7px #0004;transform:none}
+html[data-hud=clean] #mobile-controls .mobile-button.pressed{background:#316c61f2;border-color:#c9fff1}
+html[data-hud=clean] #mobile-controls .mobile-pause,
+html[data-hud=clean] #mobile-controls .mobile-more{top:max(12px,env(safe-area-inset-top));bottom:auto;height:44px;min-height:44px;width:52px;border-radius:8px}
+html[data-hud=clean] #mobile-controls .mobile-pause{right:max(12px,env(safe-area-inset-right));left:auto}
+html[data-hud=clean] #mobile-controls .mobile-more{left:max(12px,env(safe-area-inset-left));right:auto}
+html[data-hud=clean] #mobile-controls .mobile-aim{top:auto;right:max(12px,env(safe-area-inset-right));bottom:calc(max(10px,env(safe-area-inset-bottom)) + 128px)}
+html[data-hud=clean] #mobile-controls.hud-manual-trigger .mobile-aim{right:calc(max(12px,env(safe-area-inset-right)) + 72px)}
+html[data-hud=clean] #mobile-controls .mobile-fire{top:auto;right:max(12px,env(safe-area-inset-right));bottom:calc(max(10px,env(safe-area-inset-bottom)) + 128px);width:64px;height:64px;font-size:14px;background:#663e2bdc;border-color:#ffd1ad}
+html[data-hud=clean] #mobile-controls .mobile-jump{top:auto;right:calc(max(12px,env(safe-area-inset-right)) + 72px);bottom:calc(max(10px,env(safe-area-inset-bottom)) + 64px)}
+html[data-hud=clean] #mobile-controls .mobile-crouch{top:auto;right:max(12px,env(safe-area-inset-right));bottom:calc(max(10px,env(safe-area-inset-bottom)) + 64px)}
+html[data-hud=clean] #mobile-controls .mobile-interact{top:auto;right:calc(max(12px,env(safe-area-inset-right)) + 136px);bottom:calc(max(10px,env(safe-area-inset-bottom)) + 64px)}
+html[data-hud=clean] #mobile-controls .mobile-weapon{top:auto;right:calc(max(12px,env(safe-area-inset-right)) + 72px);bottom:max(10px,env(safe-area-inset-bottom));height:48px;border-radius:8px}
+html[data-hud=clean] #mobile-controls .mobile-reload{top:auto;right:calc(max(12px,env(safe-area-inset-right)) + 136px);bottom:max(10px,env(safe-area-inset-bottom));height:48px;border-radius:8px}
+html[data-hud=clean] #mobile-controls .mobile-restart{left:50%;right:auto;top:auto;bottom:40%;transform:translateX(-50%);width:120px;height:48px;border-radius:8px}
+html[data-hud=clean] #mobile-controls .mobile-portrait-note{display:none}
+html[data-hud=clean] #mobile-controls .mobile-stick{box-shadow:none;opacity:.2}
+html[data-hud=clean] #mobile-controls .mobile-stick.active{opacity:.8}
+#mobile-utilities{position:absolute;left:max(12px,env(safe-area-inset-left));top:calc(max(12px,env(safe-area-inset-top)) + 52px);padding:8px;display:grid;grid-template-columns:repeat(2,72px);gap:8px;background:#0e222af5;border:1px solid #59757c;border-radius:8px;pointer-events:auto;z-index:6;max-height:calc(100dvh - 82px);overflow-y:auto;touch-action:pan-y}
+html[data-hud=clean] #mobile-controls #mobile-utilities .mobile-button{position:static;inset:auto;width:72px;height:48px;min-height:48px;border-radius:6px;font-size:11px;transform:none}
+html[data-hud=clean] #mobile-controls.mobile-dead #mobile-more{display:none}
+@media(pointer:coarse){
+ html[data-hud=clean] #hud .top-hud{top:max(12px,env(safe-area-inset-top));margin:0;transform:translateX(-50%);gap:2px;max-width:calc(100vw - 152px)}
+ html[data-hud=clean] .score{min-width:64px;gap:6px;padding:4px 7px}
+ html[data-hud=clean] .score>strong{font-size:21px}
+ html[data-hud=clean] .score>span{font-size:0}
+ html[data-hud=clean] .score.analysts>span::before{content:'A';font-size:11px}
+ html[data-hud=clean] .score.counter>span::before{content:'CA';font-size:11px}
+ html[data-hud=clean] .score small{font-size:10px;white-space:nowrap}
+ html[data-hud=clean] .round-clock{min-width:72px;padding:4px 7px}
+ html[data-hud=clean] .round-clock b{font-size:21px}
+ html[data-hud=clean] #round-label{font-size:8px;max-width:82px;overflow:hidden;white-space:nowrap}
+ html[data-hud=clean] #hud .bottom-hud{left:max(12px,env(safe-area-inset-left));right:max(12px,env(safe-area-inset-right));bottom:max(10px,env(safe-area-inset-bottom));transform:none}
+ html[data-hud=clean] .vitals{min-width:108px;height:48px;gap:6px;padding:5px 7px}
+ html[data-hud=clean] .vitals>strong{font-size:25px}
+ html[data-hud=clean] .vitals div>span{display:none}
+ html[data-hud=clean] .vitals small{font-size:10px}
+ html[data-hud=clean] .ammo{min-width:64px;max-width:68px;height:48px;padding:3px 5px;border:0}
+ html[data-hud=clean] .ammo strong{font-size:23px;white-space:nowrap}
+ html[data-hud=clean] .ammo strong span{font-size:11px}
+ html[data-hud=clean] .ammo>small{font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ html[data-hud=clean] .ammo>span{font-size:10px}
+ html[data-hud=clean] .inventory,html[data-hud=clean].hud-inventory-peek .inventory{display:none!important}
+ html[data-hud=clean] #hud .map-panel{display:none}
+ html[data-hud=clean] #hud #objectives{top:64px;max-width:calc(100vw - 160px);font-size:10px;padding:4px 7px;gap:7px}
+ html[data-hud=clean] #control-card{top:64px;width:280px;min-height:40px;padding:5px 8px;grid-template-columns:minmax(0,1fr) 88px}
+ html[data-hud=clean] #control-name{font-size:11px}
+ html[data-hud=clean] #control-state,html[data-hud=clean] #control-card footer{font-size:10px;letter-spacing:0}
+ html[data-hud=clean] #spawn-protection{left:max(12px,env(safe-area-inset-left));bottom:70px;font-size:10px}
+ html[data-hud=clean] #hud #killfeed{top:66px;right:12px;max-width:148px;font-size:10px;opacity:1}
+ html[data-hud=clean] #killfeed>div{padding:3px 6px}
+ html[data-hud=clean] #killfeed>div:nth-last-child(n+3){display:none}
+ html[data-hud=clean] #combat-medal{top:118px;right:12px;max-width:148px;padding:4px 6px}
+ html[data-hud=clean] #combat-medal strong{font-size:11px}
+ html[data-hud=clean] #hud #prompt{top:auto;bottom:80px;max-width:calc(100vw - 310px);font-size:11px;padding:5px 8px}
+ html[data-hud=clean] #prompt kbd{display:none}
+ html[data-hud=clean] #notification{bottom:118px;max-width:calc(100vw - 310px);font-size:11px}
+ html[data-hud=clean] #radio-caption{bottom:156px;max-width:calc(100vw - 310px);font-size:11px}
+ html[data-hud=clean] #grenade-preview-note{top:auto;bottom:14px;max-width:180px;padding:4px 6px}
+ html[data-hud=clean] #grenade-preview-note strong{font-size:10px;letter-spacing:0}
+ html[data-hud=clean] #combat-recap{bottom:80px!important;padding:8px 12px}
+ html[data-hud=clean] #spectate{bottom:184px!important;padding:8px 12px}
+}
+@media(pointer:coarse) and (orientation:portrait){
+ html[data-hud=clean] #control-card{top:70px}
+ html[data-hud=clean] #hud #objectives{top:70px;max-width:calc(100vw - 24px)}
+ html[data-hud=clean] #hud #killfeed{top:128px;max-width:180px}
+ html[data-hud=clean] #combat-medal{top:188px}
+ html[data-hud=clean] #hud #prompt{bottom:238px;max-width:calc(100vw - 32px)}
+ html[data-hud=clean] #notification{bottom:280px;max-width:calc(100vw - 32px)}
+ html[data-hud=clean] #radio-caption{bottom:322px;max-width:calc(100vw - 32px)}
+ html[data-hud=clean] #grenade-preview-note{bottom:204px;max-width:240px}
+}

@@ -1,0 +1,13 @@
+[
+  {
+    "version": "5.6.1",
+    "date": "2026-10-26",
+    "changes": [
+      {
+        "t": "new",
+        "x": "Édition Cartridge Strike fondée sur le moteur libre du jeu original.",
+        "x_en": "Cartridge Strike edition based on the original MIT-licensed engine."
+      }
+    ]
+  }
+]

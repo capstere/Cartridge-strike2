@@ -1,0 +1,50 @@
+# Level project decisions (2026-10-28)
+
+- Checked `main` at `f5c63a22483feeeb29583853dab0c0911af5c09a`; the original `GAME_VERSION` is 0.17.0. New runtime release is 0.18.0. `BASE_COMMIT` in the furniture patch is `7b99da5` and remains a strict legacy baseline; new projects record the checked main HEAD. The proposal's `5d3a30e` is neither main nor the furniture baseline.
+- Project `schemaVersion` is **2**. “2.1” identifies the proposal revision, not a serialized schema version. Architecture's nested `schemaVersion` remains 1. `compatibleWith` lists game versions, not Git commits.
+- All distances are model units with `metricScaleVerified: false`. Minimum new passage width is 1.10 (error); corridor width below 2.0 is a warning. Existing unedited Floor 5 doors are exempt.
+- Door swing is automatic in `doors.mjs`, including two leaves on wide apertures and approach-aware opening. `hinge` and `opensToward` are not required. V09 checks runtime-supported access instead.
+- The existing engine renders window parapets, but Floor 5 uses special case dimensions. New levels must use `sill` for visible and physical geometry. Glass is solid before breakage; opening has no leaf or wall collision. The project must not claim free traversal through glazed or window segments.
+- Canonical new ZIP paths are `project.json`, `assets/models/<sha256>.glb`, `assets/posters/<safe-id>.webp`, optional `preview/plan.png`, `preview/view3d.png`, and `AGENT_BRIEF.md`. Legacy `projekt.json` plus `models/` is accepted only as an input.
+- A version 1 patch is retained verbatim under `legacyPatch` when migrated. This preserves emptyFixed, architecture, posters, treatments, dimensions, mounts and old metadata; normalization must not destroy the original.
+- The synthetic example remains the portable test fixture. The owner-approved Floor 5 release uses the complete inherited project, a hash-specific asset review and an explicit `--default-floor5` publish step. Private drafts continue to use browser-local preview.
+
+Baseline: `node tools/owner-door-traversal.mjs` passed 102 directional cases; `node tools/verify-owner-runtime.mjs` passed 195 SHA-256 entries. The broad Node suite requires a local `three` resolution shim for vendored addon imports; without it six files fail at module resolution before assertions run.
+
+## Shared building workflow (2026-10-28, baseline 47728ea)
+
+- Both `new.html` and `new.html?mode=edit-floor5` use the same plan/3D tools. The original editor remains available for compatibility.
+- `project-scene.mjs` resolves the authored scene for UI, collision handoff and FPS. Floor 5 retains source polygons, routes and a pinned baseline; source edits and removals are applied before physics is built. Default FPS without a level parameter still uses the original world path.
+- Room strokes create their floor and four walls; one click places a standard door/opening or a window/glass span on an existing wall, replacing that span. No separate collision drawing is required. Furniture models are shared with the FPS preview, and collider dimensions use local width/depth, rotation and elevation exactly once.
+- Floor 5 projects inherit the existing 5+5 anchors if no gameplay overrides exist. Engine validation checks the resolved scene. Original unmodified doors retain their width exemption.
+- Schema remains 2; these are additive behaviors within that contract. Editor version is 3.2.0, compatible game version remains 0.18.0; the historical furniture BASE_COMMIT is unchanged.
+- The export is deterministic geometry plus a derived collision map and an agent brief. It makes implementation reproducible; no promise of error-free autonomous changes replaces engine/browser verification.
+
+Shared-wall compilation also removes every underlying solid span when a window/glass part is fitted across overlapping room walls. A real shot-clearance regression confirms that no invisible opaque wall survives behind a broken window. Capsule traversal is simulated from both sides in the isolated level world; the original 102-case Floor 5 regression remains separate.
+
+Publication verification found a browser environment with WebGL disabled. The new studio now creates its 3D renderer lazily: plan editing and JSON/ZIP remain usable without a GPU. A real Chromium test disables WebGL contexts, builds a room with the mouse, checks the clear 3D warning, and downloads the authored JSON. FPS/3D still require WebGL 2.
+
+## Free authoring and FPS walk view (editor 3.3.1)
+
+- Placement warnings no longer veto inserting, dragging, rotating or exporting furniture. The source project may contain temporary collisions or furniture outside floor polygons. `validateLevel` still fails such a level, and the bot match button still requires motor approval. This changes only authoring, not physics.
+- Catalogue cards use the existing audited GLB thumbnail paths. The editor's 3D preview now calls `buildProjectFurniture`, the same model builder used by custom FPS levels. The first-person walk page instantiates the real FPS `Renderer` and `createWorld` with the current browser-local project. It finds a legal standing point without requiring gameplay anchors and drives the existing `world.move` capsule and automatic door simulation. Missing objectives are off-map renderer placeholders only; saved JSON/ZIP is untouched.
+- The walk page is a private design preview in the editor, with no bots, weapons or match objectives. The existing bot match remains a separate validated action. Schema remains 2 and game compatibility remains 0.18.0. Model units remain unverified real-world metres.
+- Editor 3.3.1 pins the HTML entry points and changed module imports to a release query. GitHub Pages caches static assets for ten minutes; a previously opened browser could otherwise receive new HTML with the prior JavaScript and fail during startup. This is an asset-cache revision only, not a schema or game-version change.
+
+## Moving the build view and restoring the kitchen chair (editor 3.4.0)
+
+- Plan and 3D views have visible directional controls plus continuous WASD/arrow movement. Directions follow the screen in plan view and the camera's ground-plane orientation in 3D. Right/middle/Space dragging pans both views; dragging empty 3D space still orbits. These camera actions never mutate project geometry, autosave, or undo history.
+- The orange kitchen-chair card is a studio preset that saves the existing audited `kenney:furniture-kit:chairdesk` asset ID with `chairRole: kitchen`. The public FPS and the studio share the same GLB and color builder. This adds no new binary model or schema field; the role was already supported by the furniture contract.
+
+## Direct 3D building and ordinary orange chair (editor 3.5.0)
+
+- The 3.4 kitchen preset used an office-chair GLB. This was the wrong shape. Editor 3.5 replaces it with a six-part procedural dining chair (seat, back, four metal legs), matching the existing authored blue chair silhouette. Studio and custom FPS call the same geometry builder. An exact-name migration upgrades only the mislabeled 3.4 preset in browser drafts and imported JSON/ZIP; intentionally chosen office chairs remain unchanged. No new binary asset or project schema version is needed.
+- Both canvases call the same build operation: rectangle room/corridor, two-point wall, and paint-over-wall doors/windows/glass/openings. 3D rays choose the visible wall surface for attachment and the ground plane for rectangles; tagged geometry makes architecture, furniture and gameplay markers selectable. A transparent 3D footprint previews placement. Escape cancels an unfinished action and switches to selection; Delete/Backspace removes the selected item through the existing undoable removal path. Alt+left drag orbits in 3D while build tools are active; right/middle/Space drag pans. The authoring preview is cut away for visibility; the first-person walk remains the exact FPS renderer and collision engine.
+- Schema remains 2; compatible game version remains 0.18.0. Entry modules and the changed shared imports have a 3.5 cache revision so reopening a previously cached GitHub Pages tab loads the new procedural chair contract consistently.
+
+## Direct manipulation and live game appearance (editor 3.6.0)
+
+- A selected authored rectangle has four drag handles in plan and 3D. Resize remaps boundary segments, door/window/glass spans and connected endpoints as one undo step. Insert widths remain constant; remaining solid wall lengths absorb the change. Shared room sides or spans that would become too short are refused with an actionable message. Source Floor 5 floor polygons retain their legacy shape; added rectangular rooms in either mode can be resized.
+- An insert slides along its supporting wall. For split authored walls the neighboring solid endpoints follow and close the previous gap; a door over a full source wall stays clipped by the same runtime wall compiler. Width changes in the property panel use this operation too. Unsupported ambiguous junctions, overlapping inserts and attached decorations are rejected rather than leaving detached collision. A free wall endpoint can be dragged; connected corners use the room handles. Deleting a room removes its unshared perimeter in the same undo step.
+- The palette's door/window/glass/opening buttons can be clicked or dragged onto a visible wall. Plan and 3D both show attachment previews. The optional split **SPELUTSEENDE** pane instantiates the existing FPS walk renderer beside the editor and reloads after committed edits. A full-screen walk opens near the current 3D focus when that position passes the engine's canOccupy check, then returns to the previous build view. The split pane is an optional, relatively expensive WebGL preview; the authoring geometry remains cut away for editing.
+- The first-build guide derives its steps from actual floor, door, furniture, successful FPS walk and ZIP save state, and can be dismissed or reopened. It does not gate free editing. Schema stays at 2, game compatibleWith stays at 0.18.0 and BASE_COMMIT remains the historical source-map value. Only editorVersion changes to 3.6.0.

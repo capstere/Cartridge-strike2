@@ -1,0 +1,1021 @@
+{
+  "schemaVersion": 1,
+  "source": "Hidencod/tge-assets",
+  "sourceCommit": "37f5baddf99899547ae661668880809c42b450f0",
+  "originalAuthor": "Kenney",
+  "license": "CC0-1.0",
+  "officialFurnitureKit": "https://kenney.nl/assets/furniture-kit",
+  "entries": 76,
+  "importedModels": 72,
+  "files": [
+    {
+      "file": "models/food-kit/apple.glb",
+      "sourcePath": "packs/food-kit/apple.glb",
+      "bytes": 25120,
+      "sha256": "80617eb699d267f4bc377415aff8e5397de4184b88d43974501b11bc3b5f33a1",
+      "meshes": 1,
+      "accessors": 5
+    },
+    {
+      "file": "models/food-kit/bowl.glb",
+      "sourcePath": "packs/food-kit/bowl.glb",
+      "bytes": 17080,
+      "sha256": "cdfedca671dadfed19229881ba9afd4b544d2ba60dbba1f5a24071abc59d7c58",
+      "meshes": 1,
+      "accessors": 5
+    },
+    {
+      "file": "models/food-kit/cup-coffee.glb",
+      "sourcePath": "packs/food-kit/cup-coffee.glb",
+      "bytes": 18616,
+      "sha256": "ec4e98349868f1eb2d4237490d53ccc87f16315f7431004ed018214a35023d5d",
+      "meshes": 1,
+      "accessors": 5
+    },
+    {
+      "file": "models/food-kit/donut.glb",
+      "sourcePath": "packs/food-kit/donut.glb",
+      "bytes": 22104,
+      "sha256": "424e11523abb1fbaf90d02230b049ded10e925ef09f8f70889def1a7df782d60",
+      "meshes": 1,
+      "accessors": 5
+    },
+    {
+      "file": "models/food-kit/plate.glb",
+      "sourcePath": "packs/food-kit/plate.glb",
+      "bytes": 19216,
+      "sha256": "3181b14d2ee0fd67e3320097d56f8aad75caa94dab0fba828187445b1945245a",
+      "meshes": 1,
+      "accessors": 5
+    },
+    {
+      "file": "models/food-kit/soda-can.glb",
+      "sourcePath": "packs/food-kit/soda-can.glb",
+      "bytes": 27124,
+      "sha256": "95336d766ad68d4757cebe2d6cd25ec6ccefbc0eb2e436b0c39535dd1f1962fc",
+      "meshes": 1,
+      "accessors": 5
+    },
+    {
+      "file": "models/furniture-kit/bathroomcabinet.glb",
+      "sourcePath": "packs/furniture-kit/bathroomcabinet.glb",
+      "bytes": 7216,
+      "sha256": "9db540227acaaedbbadc6a085f4a00460b73944e608afaad4770e53238a3b7f8",
+      "meshes": 2,
+      "accessors": 10
+    },
+    {
+      "file": "models/furniture-kit/bathroommirror.glb",
+      "sourcePath": "packs/furniture-kit/bathroommirror.glb",
+      "bytes": 6792,
+      "sha256": "940b986894101ea59b50541554b6dc608a22b133057975849259009012984175",
+      "meshes": 1,
+      "accessors": 6
+    },
+    {
+      "file": "models/furniture-kit/bathroomsink.glb",
+      "sourcePath": "packs/furniture-kit/bathroomsink.glb",
+      "bytes": 22536,
+      "sha256": "39d4f19608cab7e0fed52303b2c689f5f51fae1bad9b6913cb53d838875e797e",
+      "meshes": 1,
+      "accessors": 6
+    },
+    {
+      "file": "models/furniture-kit/bathroomsinksquare.glb",
+      "sourcePath": "packs/furniture-kit/bathroomsinksquare.glb",
+      "bytes": 15108,
+      "sha256": "360853c822f268e7267c62ef20cf646f170a13d76254cc0804a1d397a4a3ea67",
+      "meshes": 1,
+      "accessors": 6
+    },
+    {
+      "file": "models/furniture-kit/bench.glb",
+      "sourcePath": "packs/furniture-kit/bench.glb",
+      "bytes": 10756,
+      "sha256": "ba05a6d23a5a5a44da016757632070e47ff7587ce10e2f6d6d52328b4cf5489b",
+      "meshes": 1,
+      "accessors": 4
+    },
+    {
+      "file": "models/furniture-kit/bookcaseclosed.glb",
+      "sourcePath": "packs/furniture-kit/bookcaseclosed.glb",
+      "bytes": 23132,
+      "sha256": "9d210448de5e1179541da895450bbc7a39f4cd673d677654cd6b134e4ea0e047",
+      "meshes": 1,
+      "accessors": 4
+    },
+    {
+      "file": "models/furniture-kit/bookcasecloseddoors.glb",
+      "sourcePath": "packs/furniture-kit/bookcasecloseddoors.glb",
+      "bytes": 22644,
+      "sha256": "ff33f535acdb1825c0e958a293642b39665adcae0b1317b650e83d2bb687f4e2",
+      "meshes": 3,
+      "accessors": 14
+    },
+    {
+      "file": "models/furniture-kit/bookcaseopen.glb",
+      "sourcePath": "packs/furniture-kit/bookcaseopen.glb",
+      "bytes": 18020,
+      "sha256": "750702218d68c062b15dfef6ab06a4014d1cfa8bd05f02e57c53b7e13bec157c",
+      "meshes": 1,
+      "accessors": 4
+    },
+    {
+      "file": "models/furniture-kit/bookcaseopenlow.glb",
+      "sourcePath": "packs/furniture-kit/bookcaseopenlow.glb",
+      "bytes": 11520,
+      "sha256": "6d4d625faf977a2dbf155f1313cd32c6310e463114a1cd4c08cb9f80a5fb1d75",
+      "meshes": 1,
+      "accessors": 4
+    },
+    {
+      "file": "models/furniture-kit/books.glb",
+      "sourcePath": "packs/furniture-kit/books.glb",
+      "bytes": 6864,
+      "sha256": "b8dc56e5d29f6fc1f4727fccb1b9642627fee9942c48060a00034e98df02701c",
+      "meshes": 1,
+      "accessors": 7
+    },
+    {
+      "file": "models/furniture-kit/cardboardboxclosed.glb",
+      "sourcePath": "packs/furniture-kit/cardboardboxclosed.glb",
+      "bytes": 5400,
+      "sha256": "4af079dca52960912764574950f0549ff2ae1224b3db1528718629473a2d5d81",
+      "meshes": 1,
+      "accessors": 5
+    },
+    {
+      "file": "models/furniture-kit/ceilingfan.glb",
+      "sourcePath": "packs/furniture-kit/ceilingfan.glb",
+      "bytes": 15284,
+      "sha256": "5fdf7b3c4328875462c9887c6b1f2fad08126ea42e758cf86534639b9ea72044",
+      "meshes": 1,
+      "accessors": 6
+    },
+    {
+      "file": "models/furniture-kit/chair.glb",
+      "sourcePath": "packs/furniture-kit/chair.glb",
+      "bytes": 10756,
+      "sha256": "c8a11eec93e89e31250ba91afc1b8d56c3bec7ae86640fd1239f595ff4180883",
+      "meshes": 1,
+      "accessors": 4
+    },
+    {
+      "file": "models/furniture-kit/chaircushion.glb",
+      "sourcePath": "packs/furniture-kit/chaircushion.glb",
+      "bytes": 12588,
+      "sha256": "33544228984857f2cb502b58452fed72157335f9b1caf29e96da5c9094c53fdc",
+      "meshes": 1,
+      "accessors": 5
+    },
+    {
+      "file": "models/furniture-kit/chairdesk.glb",
+      "sourcePath": "packs/furniture-kit/chairdesk.glb",
+      "bytes": 39016,
+      "sha256": "46406619186034cbe92b19b79a5f1a8e3f442a17a70a7524ef2c0ad0f35095c6",
+      "meshes": 2,
+      "accessors": 9
+    },
+    {
+      "file": "models/furniture-kit/chairmoderncushion.glb",
+      "sourcePath": "packs/furniture-kit/chairmoderncushion.glb",
+      "bytes": 7376,
+      "sha256": "245132697e633e907e2b48c86d56f6c8543604a3440a055d1c71c06ce11d2858",
+      "meshes": 1,
+      "accessors": 5
+    },
+    {
+      "file": "models/furniture-kit/chairmodernframecushion.glb",
+      "sourcePath": "packs/furniture-kit/chairmodernframecushion.glb",
+      "bytes": 18592,
+      "sha256": "fd3351b077cafbd54224e20fa7a3a1b4a4304019cf44c25a6e7709ad71b852b8",
+      "meshes": 1,
+      "accessors": 5
+    },
+    {
+      "file": "models/furniture-kit/coatrackstanding.glb",
+      "sourcePath": "packs/furniture-kit/coatrackstanding.glb",
+      "bytes": 13288,
+      "sha256": "d8231c22dab63ceb9fc8678f6c8ceafc62afa8726b51a73b4ce349043d3cdc91",
+      "meshes": 1,
+      "accessors": 4
+    },
+    {
+      "file": "models/furniture-kit/computerscreen.glb",
+      "sourcePath": "packs/furniture-kit/computerscreen.glb",
+      "bytes": 6404,
+      "sha256": "5942cbad29a2d2b956619569926e81d50a4174403d592fece6556e57632dc643",
+      "meshes": 1,
+      "accessors": 5
+    },
+    {
+      "file": "models/furniture-kit/desk.glb",
+      "sourcePath": "packs/furniture-kit/desk.glb",
+      "bytes": 15048,
+      "sha256": "0164fe828f028b321730fb8c74502e353583f751be74da1682d42fff7d3c5a42",
+      "meshes": 2,
+      "accessors": 9
+    },
+    {
+      "file": "models/furniture-kit/deskcorner.glb",
+      "sourcePath": "packs/furniture-kit/deskcorner.glb",
+      "bytes": 17984,
+      "sha256": "a6a77ba0083d5ecd34ad50f738867b03ed7b7f469429bb1acc78f423bcc3f034",
+      "meshes": 2,
+      "accessors": 9
+    },
+    {
+      "file": "models/furniture-kit/kitchenbar.glb",
+      "sourcePath": "packs/furniture-kit/kitchenbar.glb",
+      "bytes": 6004,
+      "sha256": "792c3d31e60c8a8d8c7a28cf7d1efe004c5a601adc1b163a8799dde32c1b559d",
+      "meshes": 1,
+      "accessors": 6
+    },
+    {
+      "file": "models/furniture-kit/kitchenblender.glb",
+      "sourcePath": "packs/furniture-kit/kitchenblender.glb",
+      "bytes": 18728,
+      "sha256": "f471defb5b2b1cf3b949a1a8aaef0a8b727afe662b0815068cf4e963325a3c1f",
+      "meshes": 3,
+      "accessors": 13
+    },
+    {
+      "file": "models/furniture-kit/kitchencabinet.glb",
+      "sourcePath": "packs/furniture-kit/kitchencabinet.glb",
+      "bytes": 10444,
+      "sha256": "7238c57778935ae25db5e57e9f7af3ba7068c71b005ff7cfbff3b6f3b1a13200",
+      "meshes": 2,
+      "accessors": 11
+    },
+    {
+      "file": "models/furniture-kit/kitchencoffeemachine.glb",
+      "sourcePath": "packs/furniture-kit/kitchencoffeemachine.glb",
+      "bytes": 13332,
+      "sha256": "063f582c6fa0f00a9f24e3393dac2295491c4becdaf5513c893ab1a2826b6ec3",
+      "meshes": 2,
+      "accessors": 9
+    },
+    {
+      "file": "models/furniture-kit/kitchenfridge.glb",
+      "sourcePath": "packs/furniture-kit/kitchenfridge.glb",
+      "bytes": 20116,
+      "sha256": "8af4f4bbb1b5525ad8226e97926a5af60fa8fb20a3cb74dbda5328a9d320dbab",
+      "meshes": 3,
+      "accessors": 16
+    },
+    {
+      "file": "models/furniture-kit/kitchenfridgebuiltin.glb",
+      "sourcePath": "packs/furniture-kit/kitchenfridgebuiltin.glb",
+      "bytes": 22616,
+      "sha256": "eedcfbca0a9e565424d941b8cf82ddc0c3c4dfc63911a420bfae058e9a18044c",
+      "meshes": 3,
+      "accessors": 19
+    },
+    {
+      "file": "models/furniture-kit/kitchenfridgelarge.glb",
+      "sourcePath": "packs/furniture-kit/kitchenfridgelarge.glb",
+      "bytes": 30632,
+      "sha256": "5851cc59c7e12f6f34a01a2ea93d5b9540be4078c1b703f517239fcede98fb32",
+      "meshes": 3,
+      "accessors": 14
+    },
+    {
+      "file": "models/furniture-kit/kitchenfridgesmall.glb",
+      "sourcePath": "packs/furniture-kit/kitchenfridgesmall.glb",
+      "bytes": 12988,
+      "sha256": "35dab7f63711623be321bfd82072f4ab29fe8006aac9371c6e6b78df2e02f5ed",
+      "meshes": 2,
+      "accessors": 11
+    },
+    {
+      "file": "models/furniture-kit/kitchenmicrowave.glb",
+      "sourcePath": "packs/furniture-kit/kitchenmicrowave.glb",
+      "bytes": 11248,
+      "sha256": "dd6a6c919f4bebc6e2080fe419262cf97a0d6461ead3f3998aa3c9edf4d2bd27",
+      "meshes": 2,
+      "accessors": 12
+    },
+    {
+      "file": "models/furniture-kit/kitchensink.glb",
+      "sourcePath": "packs/furniture-kit/kitchensink.glb",
+      "bytes": 23480,
+      "sha256": "7b9610277d71f00dcf1bba49cf4d98d77ce5177e84bf76c7da2f8893e542f743",
+      "meshes": 2,
+      "accessors": 14
+    },
+    {
+      "file": "models/furniture-kit/kitchenstoveelectric.glb",
+      "sourcePath": "packs/furniture-kit/kitchenstoveelectric.glb",
+      "bytes": 18604,
+      "sha256": "cf646b960d7dfed1fac27898ff6de1f0671cfa33beecbed06ead7d0684517392",
+      "meshes": 1,
+      "accessors": 9
+    },
+    {
+      "file": "models/furniture-kit/lamproundfloor.glb",
+      "sourcePath": "packs/furniture-kit/lamproundfloor.glb",
+      "bytes": 6600,
+      "sha256": "50fe1b5b588edf15bfa9cc880f71a02a4fda6036350b24733d0ef4de5cc5e908",
+      "meshes": 1,
+      "accessors": 5
+    },
+    {
+      "file": "models/furniture-kit/lampsquaretable.glb",
+      "sourcePath": "packs/furniture-kit/lampsquaretable.glb",
+      "bytes": 5624,
+      "sha256": "70ec9211af336b1ef3b4da32590b8737b4facf219348c22e6533a1e898cdb13d",
+      "meshes": 1,
+      "accessors": 5
+    },
+    {
+      "file": "models/furniture-kit/laptop.glb",
+      "sourcePath": "packs/furniture-kit/laptop.glb",
+      "bytes": 5540,
+      "sha256": "5fa8a1f4a71ab8d82ef64da77a6973ffd350c6d4557516069a4ffd4bb8d808af",
+      "meshes": 1,
+      "accessors": 6
+    },
+    {
+      "file": "models/furniture-kit/loungechair.glb",
+      "sourcePath": "packs/furniture-kit/loungechair.glb",
+      "bytes": 9648,
+      "sha256": "ddfe6bc4b3451bca61666d7b614552d6ed2a03d82fc76244b72ae3155874dc6c",
+      "meshes": 1,
+      "accessors": 5
+    },
+    {
+      "file": "models/furniture-kit/loungechairrelax.glb",
+      "sourcePath": "packs/furniture-kit/loungechairrelax.glb",
+      "bytes": 13904,
+      "sha256": "def698179e44de6cd17f4cfc2730273da54dd25458a29b079fbf4468abe5d98e",
+      "meshes": 1,
+      "accessors": 6
+    },
+    {
+      "file": "models/furniture-kit/loungedesignsofa.glb",
+      "sourcePath": "packs/furniture-kit/loungedesignsofa.glb",
+      "bytes": 9128,
+      "sha256": "b4f4e6850118e409da301df678228c703b6ac02e94fbb9dbde61543af817fa53",
+      "meshes": 1,
+      "accessors": 5
+    },
+    {
+      "file": "models/furniture-kit/loungesofa.glb",
+      "sourcePath": "packs/furniture-kit/loungesofa.glb",
+      "bytes": 9644,
+      "sha256": "1886b811c0d3ad0d8525a4fd43adf4112c497c8e0ed906f06877ca3517f4c7dd",
+      "meshes": 1,
+      "accessors": 5
+    },
+    {
+      "file": "models/furniture-kit/loungesofalong.glb",
+      "sourcePath": "packs/furniture-kit/loungesofalong.glb",
+      "bytes": 13112,
+      "sha256": "452df1c862f97781615e2c1c832913b48cf6c6f011d3260dc023ff3f117cc9d1",
+      "meshes": 1,
+      "accessors": 5
+    },
+    {
+      "file": "models/furniture-kit/plantsmall1.glb",
+      "sourcePath": "packs/furniture-kit/plantsmall1.glb",
+      "bytes": 8224,
+      "sha256": "2b9c022feb47be857b2c4fdc29f36522766ba9b70c578c31d7c05d71b4377d15",
+      "meshes": 1,
+      "accessors": 5
+    },
+    {
+      "file": "models/furniture-kit/plantsmall2.glb",
+      "sourcePath": "packs/furniture-kit/plantsmall2.glb",
+      "bytes": 12996,
+      "sha256": "d7c8ff42c66dd4f9238a73570549813d1ca6c5f6f661d7af9cb764c4fce314b9",
+      "meshes": 1,
+      "accessors": 5
+    },
+    {
+      "file": "models/furniture-kit/pottedplant.glb",
+      "sourcePath": "packs/furniture-kit/pottedplant.glb",
+      "bytes": 7576,
+      "sha256": "5b760eda2766f75fda36b2c5df652a1662f82981ef64cd8fa7fe7bcd386b3a15",
+      "meshes": 2,
+      "accessors": 9
+    },
+    {
+      "file": "models/furniture-kit/radio.glb",
+      "sourcePath": "packs/furniture-kit/radio.glb",
+      "bytes": 25020,
+      "sha256": "1ba93d6ba6f049750853b4652b92f286f2898e527695a0705b75cc7615897fed",
+      "meshes": 1,
+      "accessors": 6
+    },
+    {
+      "file": "models/furniture-kit/rugrectangle.glb",
+      "sourcePath": "packs/furniture-kit/rugrectangle.glb",
+      "bytes": 3188,
+      "sha256": "a989d2d59c04e3071e0c90388b113a9a8f339ce1814ef984c51cb6dcd7c8e0eb",
+      "meshes": 1,
+      "accessors": 5
+    },
+    {
+      "file": "models/furniture-kit/shower.glb",
+      "sourcePath": "packs/furniture-kit/shower.glb",
+      "bytes": 52020,
+      "sha256": "25c1cebad681fe369dc04839a8f08f5da2ccbd99b3a70aa83fe2e4d1590c6951",
+      "meshes": 3,
+      "accessors": 15
+    },
+    {
+      "file": "models/furniture-kit/sidetable.glb",
+      "sourcePath": "packs/furniture-kit/sidetable.glb",
+      "bytes": 8800,
+      "sha256": "8227810584f7d37582e4e9ec821c56f1dc54b99c88a8dc74242ea3b7402bc472",
+      "meshes": 1,
+      "accessors": 5
+    },
+    {
+      "file": "models/furniture-kit/speaker.glb",
+      "sourcePath": "packs/furniture-kit/speaker.glb",
+      "bytes": 15744,
+      "sha256": "78230b9fb382a937cb19e4bf7556ee9402d33ac80b1baaee2d2eb89493cfa1fc",
+      "meshes": 1,
+      "accessors": 5
+    },
+    {
+      "file": "models/furniture-kit/stoolbar.glb",
+      "sourcePath": "packs/furniture-kit/stoolbar.glb",
+      "bytes": 11816,
+      "sha256": "a86167a9f92401a61fec7e509ad089ecc552d0f299743add3aeb919acb24e341",
+      "meshes": 1,
+      "accessors": 5
+    },
+    {
+      "file": "models/furniture-kit/table.glb",
+      "sourcePath": "packs/furniture-kit/table.glb",
+      "bytes": 8196,
+      "sha256": "ff1a94498d023957f4bc3ff6f55a7a82977d336dbf01a573b3364f03afe5ff61",
+      "meshes": 1,
+      "accessors": 4
+    },
+    {
+      "file": "models/furniture-kit/tablecoffee.glb",
+      "sourcePath": "packs/furniture-kit/tablecoffee.glb",
+      "bytes": 8256,
+      "sha256": "e38bea760fbd514efbb75528d09b4752c91af44677bbb97e6d4386c263525179",
+      "meshes": 1,
+      "accessors": 4
+    },
+    {
+      "file": "models/furniture-kit/tablecoffeeglass.glb",
+      "sourcePath": "packs/furniture-kit/tablecoffeeglass.glb",
+      "bytes": 9428,
+      "sha256": "05bf257a086a540b3b79b0c1c7dae35b036ed4d520686aed74ea94ea701c447e",
+      "meshes": 1,
+      "accessors": 5
+    },
+    {
+      "file": "models/furniture-kit/tablecoffeesquare.glb",
+      "sourcePath": "packs/furniture-kit/tablecoffeesquare.glb",
+      "bytes": 8276,
+      "sha256": "bcc81d8919a3af9141c9c93b4520106dd0a90a7144346cd87928014018aac816",
+      "meshes": 1,
+      "accessors": 4
+    },
+    {
+      "file": "models/furniture-kit/tablecross.glb",
+      "sourcePath": "packs/furniture-kit/tablecross.glb",
+      "bytes": 12140,
+      "sha256": "f0d83392aff5df82f6c9585cadff694643dbd30a4ff2b8bb01a00a7a161338a3",
+      "meshes": 1,
+      "accessors": 4
+    },
+    {
+      "file": "models/furniture-kit/tableglass.glb",
+      "sourcePath": "packs/furniture-kit/tableglass.glb",
+      "bytes": 9848,
+      "sha256": "a5ed516d18b51cf5db3cc78f1403451f853a81db45510543d3ed56c1dd9c412b",
+      "meshes": 1,
+      "accessors": 5
+    },
+    {
+      "file": "models/furniture-kit/tableround.glb",
+      "sourcePath": "packs/furniture-kit/tableround.glb",
+      "bytes": 6444,
+      "sha256": "f8daea9124a542a00b7bdacfddac82dc468573d43e44d7b54dd6316e9695754b",
+      "meshes": 1,
+      "accessors": 4
+    },
+    {
+      "file": "models/furniture-kit/toaster.glb",
+      "sourcePath": "packs/furniture-kit/toaster.glb",
+      "bytes": 14924,
+      "sha256": "38c1fb7b122be9997758c8ee855d87f28014cf282f24d66d39f4e8d8b236d2af",
+      "meshes": 1,
+      "accessors": 5
+    },
+    {
+      "file": "models/furniture-kit/toilet.glb",
+      "sourcePath": "packs/furniture-kit/toilet.glb",
+      "bytes": 18112,
+      "sha256": "16165cfd03c56c2cb443b800570810a22ef770f65e7a468f6761d9dc14eaaeae",
+      "meshes": 2,
+      "accessors": 10
+    },
+    {
+      "file": "models/furniture-kit/toiletsquare.glb",
+      "sourcePath": "packs/furniture-kit/toiletsquare.glb",
+      "bytes": 17548,
+      "sha256": "f241e26a22b0d9512d8455f3e868124f8032710c83c5265a546c19c67ecdd4b9",
+      "meshes": 2,
+      "accessors": 9
+    },
+    {
+      "file": "models/furniture-kit/trashcan.glb",
+      "sourcePath": "packs/furniture-kit/trashcan.glb",
+      "bytes": 6452,
+      "sha256": "e0ccc1fe50cbd05386477fdff527171d1cf7c0de2ba7ff3233f8d9561feb2561",
+      "meshes": 1,
+      "accessors": 5
+    },
+    {
+      "file": "models/space-kit/desk-chairarms.glb",
+      "sourcePath": "packs/space-kit/desk-chairarms.glb",
+      "bytes": 10440,
+      "sha256": "7564e5ce5bbb209242eb57128ed53356bbeee2806168923486f3ecd049a3fdcc",
+      "meshes": 1,
+      "accessors": 6
+    },
+    {
+      "file": "models/space-kit/desk-computer.glb",
+      "sourcePath": "packs/space-kit/desk-computer.glb",
+      "bytes": 6972,
+      "sha256": "a2a6c536db930352553d56833870956ec2790e8c6a71d4a2f93358cce36d12e3",
+      "meshes": 1,
+      "accessors": 6
+    },
+    {
+      "file": "models/space-kit/machine-barrel.glb",
+      "sourcePath": "packs/space-kit/machine-barrel.glb",
+      "bytes": 23960,
+      "sha256": "ecd46823928292bbb01718966bd4602a71e37a09320f3ba232d9044e909ce4ed",
+      "meshes": 2,
+      "accessors": 12
+    },
+    {
+      "file": "models/space-kit/machine-generator.glb",
+      "sourcePath": "packs/space-kit/machine-generator.glb",
+      "bytes": 28044,
+      "sha256": "98e8ac6aceada3b2483ed1eceb59bff7190ee774edac799350ccc11ad140f7f3",
+      "meshes": 2,
+      "accessors": 11
+    },
+    {
+      "file": "models/space-kit/machine-wireless.glb",
+      "sourcePath": "packs/space-kit/machine-wireless.glb",
+      "bytes": 13420,
+      "sha256": "9d49e70d51515bc38628fb0d6e43f4eda7f9cd5326882fd02e8815e61f2259d7",
+      "meshes": 1,
+      "accessors": 7
+    },
+    {
+      "file": "models/space-kit/machine-wirelesscable.glb",
+      "sourcePath": "packs/space-kit/machine-wirelesscable.glb",
+      "bytes": 20884,
+      "sha256": "b38770b6d1a40e2afd8a5f535e6a962f07cf18a8345e9b940bf3843bcf938a6b",
+      "meshes": 2,
+      "accessors": 13
+    },
+    {
+      "file": "thumbs/food-kit/apple.webp",
+      "sourcePath": "packs/food-kit/thumbs/apple.webp",
+      "bytes": 2286,
+      "sha256": "993933cb74ff0261beb841fc36685f1a1ee607bbd7b63f6bf83f7f47e723f883"
+    },
+    {
+      "file": "thumbs/food-kit/bowl.webp",
+      "sourcePath": "packs/food-kit/thumbs/bowl.webp",
+      "bytes": 1900,
+      "sha256": "62d044f225070bce32d33621ee83421a7ff03b9db2082e2ce449abc223d68042"
+    },
+    {
+      "file": "thumbs/food-kit/cup-coffee.webp",
+      "sourcePath": "packs/food-kit/thumbs/cup-coffee.webp",
+      "bytes": 1978,
+      "sha256": "51658e69a40a9cac6b7af756273da3152ef293e5a2b151be0ed0dbc40e778d7b"
+    },
+    {
+      "file": "thumbs/food-kit/donut.webp",
+      "sourcePath": "packs/food-kit/thumbs/donut.webp",
+      "bytes": 1888,
+      "sha256": "e52c4d3673fb30f71beb5e68b2732dd6074d391980a78e806b727c7a298223be"
+    },
+    {
+      "file": "thumbs/food-kit/plate.webp",
+      "sourcePath": "packs/food-kit/thumbs/plate.webp",
+      "bytes": 1444,
+      "sha256": "a1cef360f382c1ef6c408f699fb2ac2bf89d9f0e4e918f8b9593d1151149610f"
+    },
+    {
+      "file": "thumbs/food-kit/soda-can.webp",
+      "sourcePath": "packs/food-kit/thumbs/soda-can.webp",
+      "bytes": 2378,
+      "sha256": "1eb9e5206a8dc6ae4f9dcd61defcb302ac3dde75cfe0c820cdb7616d5f65d077"
+    },
+    {
+      "file": "thumbs/furniture-kit/bathroomcabinet.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/bathroomcabinet.webp",
+      "bytes": 2032,
+      "sha256": "e6b43c02bc8294a9044a408d3a7b832f4b0fca6069837344645988856ef03089"
+    },
+    {
+      "file": "thumbs/furniture-kit/bathroommirror.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/bathroommirror.webp",
+      "bytes": 2106,
+      "sha256": "62ae516d91792210ea176fa43215235e0c76f80b1b4ceab8eed9316d14d7157d"
+    },
+    {
+      "file": "thumbs/furniture-kit/bathroomsink.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/bathroomsink.webp",
+      "bytes": 1480,
+      "sha256": "737910e464abf715dee986a5c1efcd0eeb5c6983c08755ce1b6509d7a0b4f283"
+    },
+    {
+      "file": "thumbs/furniture-kit/bathroomsinksquare.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/bathroomsinksquare.webp",
+      "bytes": 1608,
+      "sha256": "ce2c76f058c31c8ee73ce65e97c8c91a3ef8a617ae61cd1b320f52ac3947376b"
+    },
+    {
+      "file": "thumbs/furniture-kit/bench.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/bench.webp",
+      "bytes": 3250,
+      "sha256": "23b8ec799a2668ea3aa91912401f37c79da6d50d28d45c68a543b1b8d508ea1c"
+    },
+    {
+      "file": "thumbs/furniture-kit/bookcaseclosed.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/bookcaseclosed.webp",
+      "bytes": 2244,
+      "sha256": "2271537d7401d5ec71471d8a1f75921b40f2c4e8d9f54ba759034069b8f99430"
+    },
+    {
+      "file": "thumbs/furniture-kit/bookcasecloseddoors.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/bookcasecloseddoors.webp",
+      "bytes": 1734,
+      "sha256": "9ff0930e5e9677f61cf9d94a38e5ea5347178acbd93f6ad43db13dc3ebb12f16"
+    },
+    {
+      "file": "thumbs/furniture-kit/bookcaseopen.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/bookcaseopen.webp",
+      "bytes": 3028,
+      "sha256": "db5d833f96d6bccd29ed97689225fe4d1a3597e6124c82286163731d8315803d"
+    },
+    {
+      "file": "thumbs/furniture-kit/bookcaseopenlow.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/bookcaseopenlow.webp",
+      "bytes": 2928,
+      "sha256": "85262d8fa8efcde9adc6d8d1d8def6eba8393070400a3fc5c28c1086224bf10b"
+    },
+    {
+      "file": "thumbs/furniture-kit/books.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/books.webp",
+      "bytes": 2654,
+      "sha256": "989fe548839b359790033fb14aa31508adebbf1f8460c75864cc842dc14c2830"
+    },
+    {
+      "file": "thumbs/furniture-kit/cardboardboxclosed.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/cardboardboxclosed.webp",
+      "bytes": 2176,
+      "sha256": "6fb13c24ac6d876e8b527c395140c48deef2550df814aa1bf6081d8eafcbf877"
+    },
+    {
+      "file": "thumbs/furniture-kit/ceilingfan.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/ceilingfan.webp",
+      "bytes": 1740,
+      "sha256": "cb89e67688c6aeefb2cc46bca1c67c7c418a5e6dd1ebaf5a6ff3bb03d57a5240"
+    },
+    {
+      "file": "thumbs/furniture-kit/chair.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/chair.webp",
+      "bytes": 2474,
+      "sha256": "25ec1226404ef809f1f4440ab5f6dcc911305963fe0ae4a4a77b1b58600537e0"
+    },
+    {
+      "file": "thumbs/furniture-kit/chaircushion.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/chaircushion.webp",
+      "bytes": 2552,
+      "sha256": "3b43c08f5b7d8b929216947d0122b0b6e218b4b8204a6a14cd5a757cf9d326fb"
+    },
+    {
+      "file": "thumbs/furniture-kit/chairdesk.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/chairdesk.webp",
+      "bytes": 2834,
+      "sha256": "529521309fd3cc6eb908451e1bbcbb941e32157835bd5e18f958f0dbdb537f92"
+    },
+    {
+      "file": "thumbs/furniture-kit/chairmoderncushion.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/chairmoderncushion.webp",
+      "bytes": 1962,
+      "sha256": "249b5222d9a961f52e2608c660a7baf387c6365c8e73c17afaec4de5fd699981"
+    },
+    {
+      "file": "thumbs/furniture-kit/chairmodernframecushion.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/chairmodernframecushion.webp",
+      "bytes": 2282,
+      "sha256": "80b1d11e6743f4e350a0798c0fd8ee368e9d64132482ccce92e012109d9e97ef"
+    },
+    {
+      "file": "thumbs/furniture-kit/coatrackstanding.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/coatrackstanding.webp",
+      "bytes": 2282,
+      "sha256": "2a930cde70dcf677146a475b457017d419e1a4965468e52a7f71cd08f66b9542"
+    },
+    {
+      "file": "thumbs/furniture-kit/computerscreen.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/computerscreen.webp",
+      "bytes": 1826,
+      "sha256": "dfe10e866c14b9c6eea3ad54f78982ce8f3a171a792cf0bc4b78ceb97cd5b0b8"
+    },
+    {
+      "file": "thumbs/furniture-kit/desk.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/desk.webp",
+      "bytes": 2116,
+      "sha256": "4c444df7c8777cd4c2b685c1aeffa4a2fc969b189879fcf6045e284e04d3738c"
+    },
+    {
+      "file": "thumbs/furniture-kit/deskcorner.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/deskcorner.webp",
+      "bytes": 1964,
+      "sha256": "0583ab0f1b3e8f7690d7617f9f2c9db881b7f6ba8e3293ca60b9781e19bb8a8e"
+    },
+    {
+      "file": "thumbs/furniture-kit/kitchenbar.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/kitchenbar.webp",
+      "bytes": 2192,
+      "sha256": "9cba9220f7d2ecc53812cd93de065ce8e551cc373b939248893cc55fd2121aa8"
+    },
+    {
+      "file": "thumbs/furniture-kit/kitchenblender.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/kitchenblender.webp",
+      "bytes": 2152,
+      "sha256": "cf4732fc30c988970fd6f9a5e933049db5dad98b6a2d5bc072b9b6351d5bee35"
+    },
+    {
+      "file": "thumbs/furniture-kit/kitchencabinet.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/kitchencabinet.webp",
+      "bytes": 2522,
+      "sha256": "e1ceeaeb56a77f95645729e28a3bdd4d3d9252b25366a10651c3ecd5774ecb16"
+    },
+    {
+      "file": "thumbs/furniture-kit/kitchencoffeemachine.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/kitchencoffeemachine.webp",
+      "bytes": 2018,
+      "sha256": "c3bfc5d5317b2e330dca3295d99eeca247faaaf34bdb4bf2d0de15dadb637c0b"
+    },
+    {
+      "file": "thumbs/furniture-kit/kitchenfridge.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/kitchenfridge.webp",
+      "bytes": 1362,
+      "sha256": "f3ad0303c22ad82a9dd38d9b4c972d952cc7246ba841ae846e38a24a61e0cefa"
+    },
+    {
+      "file": "thumbs/furniture-kit/kitchenfridgebuiltin.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/kitchenfridgebuiltin.webp",
+      "bytes": 2044,
+      "sha256": "06d588f91582d18f40bdc3632ae171432ec5143a2f751e3b7174b65b9a2385b6"
+    },
+    {
+      "file": "thumbs/furniture-kit/kitchenfridgelarge.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/kitchenfridgelarge.webp",
+      "bytes": 1652,
+      "sha256": "c6a88f39e84429375056c97de0ce5038dd2b05ed3b62f81c3d29ea204e21d5d8"
+    },
+    {
+      "file": "thumbs/furniture-kit/kitchenfridgesmall.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/kitchenfridgesmall.webp",
+      "bytes": 1504,
+      "sha256": "43461636ab50c13a5c1581b8866ce4a6e136ad75d6c97174ace8c850c274bc6e"
+    },
+    {
+      "file": "thumbs/furniture-kit/kitchenmicrowave.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/kitchenmicrowave.webp",
+      "bytes": 1980,
+      "sha256": "3af58b11ecc28d4eec3171e537964019261f39fb33718d2908baccf8d0e58495"
+    },
+    {
+      "file": "thumbs/furniture-kit/kitchensink.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/kitchensink.webp",
+      "bytes": 2716,
+      "sha256": "44c777eab4bca9e6fd66f7027248e13e6adb45798abe156d8f95d8980d71aaad"
+    },
+    {
+      "file": "thumbs/furniture-kit/kitchenstoveelectric.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/kitchenstoveelectric.webp",
+      "bytes": 3396,
+      "sha256": "325cc379729c09bf2d496b8ffeb8ba295e7f881b67a24586fb42ed9c518091c0"
+    },
+    {
+      "file": "thumbs/furniture-kit/lamproundfloor.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/lamproundfloor.webp",
+      "bytes": 1292,
+      "sha256": "ae87dc5206e812e9cea1212d11e3171402244987fbdf161f157c60c2380bf7f3"
+    },
+    {
+      "file": "thumbs/furniture-kit/lampsquaretable.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/lampsquaretable.webp",
+      "bytes": 1894,
+      "sha256": "d0d9ab3f1a4c20edb3e3a59f8e3061f8f45c573877b519229cec16d7f94fe044"
+    },
+    {
+      "file": "thumbs/furniture-kit/laptop.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/laptop.webp",
+      "bytes": 2162,
+      "sha256": "ddce796a96cd30356251773a1e9431a5d8a4bc9299793a9b5c2f676073a9e5ae"
+    },
+    {
+      "file": "thumbs/furniture-kit/loungechair.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/loungechair.webp",
+      "bytes": 2468,
+      "sha256": "23bc5ad06d88dbd2366baa4a58f41adcfb0378d020cfa0d83dcc6890afa4d4d1"
+    },
+    {
+      "file": "thumbs/furniture-kit/loungechairrelax.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/loungechairrelax.webp",
+      "bytes": 2452,
+      "sha256": "ad7b2e5ab88f98ea405295671d9489ab1ee43a5760889d5fb4e4de8b8816f73c"
+    },
+    {
+      "file": "thumbs/furniture-kit/loungedesignsofa.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/loungedesignsofa.webp",
+      "bytes": 2074,
+      "sha256": "c4958b01f2481437950f8721a86a2ba90ef4fe13e500bb48dcac01b4beecfeaa"
+    },
+    {
+      "file": "thumbs/furniture-kit/loungesofa.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/loungesofa.webp",
+      "bytes": 2312,
+      "sha256": "16d0588060123837381ba35dbd94fae5fa22dd9086264baafb3c48a0b1b558f4"
+    },
+    {
+      "file": "thumbs/furniture-kit/loungesofalong.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/loungesofalong.webp",
+      "bytes": 2318,
+      "sha256": "06a60ee977a90910cc8305e151b935d2bec9c73cdd075306691121cc311c1f96"
+    },
+    {
+      "file": "thumbs/furniture-kit/plantsmall1.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/plantsmall1.webp",
+      "bytes": 2092,
+      "sha256": "3f17b401add41e4ef26264561bfe51e68fbed298f30712d91c26bac6aa1d0372"
+    },
+    {
+      "file": "thumbs/furniture-kit/plantsmall2.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/plantsmall2.webp",
+      "bytes": 2070,
+      "sha256": "f2e4a2a419e61722ed1f95069bb4babd4f373c92d6c523e348243185070aeeb2"
+    },
+    {
+      "file": "thumbs/furniture-kit/pottedplant.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/pottedplant.webp",
+      "bytes": 2304,
+      "sha256": "b172f3e47ba6de9e81f578c0149db395746eaf733ceca99272fcce8d98e1ed47"
+    },
+    {
+      "file": "thumbs/furniture-kit/radio.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/radio.webp",
+      "bytes": 3554,
+      "sha256": "8f7569c9b4b87501ccd084b23c0f2b23f374998f2d07ce0910cf90b654aab7c1"
+    },
+    {
+      "file": "thumbs/furniture-kit/rugrectangle.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/rugrectangle.webp",
+      "bytes": 2142,
+      "sha256": "cacf11520854865cb180abd16f3d37882b674a411d1e99a162a6b48b85815813"
+    },
+    {
+      "file": "thumbs/furniture-kit/shower.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/shower.webp",
+      "bytes": 2216,
+      "sha256": "3a84e7886a8a24c5a224fc8c6ff0ca18828d3ff16f0c7a1b958a4d0ee13dbf69"
+    },
+    {
+      "file": "thumbs/furniture-kit/sidetable.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/sidetable.webp",
+      "bytes": 2446,
+      "sha256": "6b32b5dcc88914c6a0c6a13648d30f5c3ee96792ad4dea9cb7fb713f6a48b972"
+    },
+    {
+      "file": "thumbs/furniture-kit/speaker.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/speaker.webp",
+      "bytes": 1628,
+      "sha256": "e7780f9e3c1710dc7f3a07048a339229b67ebcf94074ba49d05ee652bdae498a"
+    },
+    {
+      "file": "thumbs/furniture-kit/stoolbar.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/stoolbar.webp",
+      "bytes": 2270,
+      "sha256": "4b8a728552f0261e8b39bff78026e4e984844b02f31557fa6918b6a24188ac89"
+    },
+    {
+      "file": "thumbs/furniture-kit/table.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/table.webp",
+      "bytes": 2822,
+      "sha256": "9a6bc1e9067fd032f885f17850f93bf455820b89f921f6df7a9958e46c6f27a7"
+    },
+    {
+      "file": "thumbs/furniture-kit/tablecoffee.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/tablecoffee.webp",
+      "bytes": 2944,
+      "sha256": "0db2b9135f52ed12b88c1d67091989119ad892908d8e0f4226ef44d01ad121be"
+    },
+    {
+      "file": "thumbs/furniture-kit/tablecoffeeglass.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/tablecoffeeglass.webp",
+      "bytes": 2858,
+      "sha256": "6507ce18d9b7ea67f1b52e71fb8651fec853f3ca51f0884b91da467f12bd94e3"
+    },
+    {
+      "file": "thumbs/furniture-kit/tablecoffeesquare.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/tablecoffeesquare.webp",
+      "bytes": 3062,
+      "sha256": "860311e0e103805f5c8ec4e2dc42142dc97cdc00a4cb7e03ab063885095c7e1d"
+    },
+    {
+      "file": "thumbs/furniture-kit/tablecross.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/tablecross.webp",
+      "bytes": 2872,
+      "sha256": "185b6e5c05a1b1898f8d2734611d3a24f316c4a2c93576825a547438dfe892b1"
+    },
+    {
+      "file": "thumbs/furniture-kit/tableglass.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/tableglass.webp",
+      "bytes": 2798,
+      "sha256": "22448c5b726fe784b78d858c91201c3b1d7a5f66572d9cd5005e13f8246602b5"
+    },
+    {
+      "file": "thumbs/furniture-kit/tableround.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/tableround.webp",
+      "bytes": 1900,
+      "sha256": "f77c8c3d7ce91d38970a2df617f5a982af3c6761fa3433185ce8e2c6f250c52b"
+    },
+    {
+      "file": "thumbs/furniture-kit/toaster.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/toaster.webp",
+      "bytes": 2108,
+      "sha256": "a3f2010f9e9630d28947cca5accddca87c411e255ddc99ed1ba8e7cf9f294c37"
+    },
+    {
+      "file": "thumbs/furniture-kit/toilet.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/toilet.webp",
+      "bytes": 2120,
+      "sha256": "411508fe94243be4a52b50d6d4a7a0dae89a6073f6aabfe16f099bff5c700df1"
+    },
+    {
+      "file": "thumbs/furniture-kit/toiletsquare.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/toiletsquare.webp",
+      "bytes": 2038,
+      "sha256": "52284da9d43b70617021addd0046ab0332f0e9178c92d209d0d4146fa4cbdf0f"
+    },
+    {
+      "file": "thumbs/furniture-kit/trashcan.webp",
+      "sourcePath": "packs/furniture-kit/thumbs/trashcan.webp",
+      "bytes": 1440,
+      "sha256": "8ee4e34b73f4b520ef6f88bed5ef6b8e7941903f9923eb28874ac4d5276fba09"
+    },
+    {
+      "file": "thumbs/space-kit/desk-chairarms.webp",
+      "sourcePath": "packs/space-kit/thumbs/desk-chairarms.webp",
+      "bytes": 2246,
+      "sha256": "218d2065ed00fcdbc9c969987613671dbeb7ff40a0371679c47d5fc7a8663197"
+    },
+    {
+      "file": "thumbs/space-kit/desk-computer.webp",
+      "sourcePath": "packs/space-kit/thumbs/desk-computer.webp",
+      "bytes": 1494,
+      "sha256": "958c5b5a9e7c53dae87cc75f669b314190b1e99a592f3fdc548e4ceb01ee28bb"
+    },
+    {
+      "file": "thumbs/space-kit/machine-barrel.webp",
+      "sourcePath": "packs/space-kit/thumbs/machine-barrel.webp",
+      "bytes": 2572,
+      "sha256": "61eaa63a1e4b6c3b056390e57cf286a0081d01e8b635b66e6b1db852050f416d"
+    },
+    {
+      "file": "thumbs/space-kit/machine-generator.webp",
+      "sourcePath": "packs/space-kit/thumbs/machine-generator.webp",
+      "bytes": 2430,
+      "sha256": "4017139581e7823c2008a17f2a55b67f76dcb2d85ae08959f2a4e973beb2605f"
+    },
+    {
+      "file": "thumbs/space-kit/machine-wireless.webp",
+      "sourcePath": "packs/space-kit/thumbs/machine-wireless.webp",
+      "bytes": 1918,
+      "sha256": "d17c47280b168dcd83e3b98cdb6c574388a9609c74d9f24e79c7a21337d90625"
+    },
+    {
+      "file": "thumbs/space-kit/machine-wirelesscable.webp",
+      "sourcePath": "packs/space-kit/thumbs/machine-wirelesscable.webp",
+      "bytes": 1726,
+      "sha256": "530a4f587637eb647200f61fec4611bd405b9c619211e87d365c6105db17c0e1"
+    }
+  ],
+  "totalBytes": 1225430
+}

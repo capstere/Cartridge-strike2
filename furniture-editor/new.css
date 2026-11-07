@@ -1,0 +1,287 @@
+[hidden]{display:none!important}:root{font-family:system-ui,sans-serif;color:#e9f3ed;background:#122022}*{box-sizing:border-box}body{margin:0}header{height:66px;background:#193237;border-bottom:1px solid #3c5c60;display:flex;align-items:center;justify-content:space-between;padding:0 24px}header strong{letter-spacing:.12em}header span{margin-left:20px;color:#9ac7c7;font-size:.8rem}a{color:#b2e2d9;text-decoration:none;margin-left:16px}main{display:grid;grid-template-columns:300px minmax(400px,1fr) 280px;height:calc(100vh - 66px)}aside{overflow:auto;padding:18px;border-right:1px solid #315057;background:#192b30}aside.checks{border-left:1px solid #315057;border-right:0}h1{font-size:1.35rem;margin:0}h2{font-size:1.05rem;margin:0 0 10px}h2 small{font-weight:400;color:#abd2cc}p{color:#b5c9c6;font-size:.86rem;line-height:1.45}label{display:block;margin:12px 0;font-size:.83rem;color:#c4dad5}input,select,button{font:inherit}input,select{width:100%;padding:8px;margin-top:4px;border:1px solid #557274;border-radius:6px;background:#20373a;color:#f5f8f5}input[type=file]{font-size:.7rem}.row{display:flex;gap:8px}.row>*{flex:1;min-width:0}button{border:1px solid #609b99;border-radius:6px;padding:9px 11px;color:#e6f8ee;background:#2a5154;cursor:pointer;margin:3px 0}button:hover,button.active{background:#397b78}.primary{background:#2c887a;border-color:#69c1ad;width:100%;font-weight:700}.tabs{display:flex;gap:4px;margin:16px 0}.tabs button{flex:1;font-size:.78rem}section.selection{border-top:1px solid #456466;padding-top:15px;margin-top:14px}.hint{font-size:.76rem;color:#a6bcb8}.workspace{position:relative;min-width:0;display:flex;flex-direction:column;background:#e5efeb;color:#294345}.toolbar,.foot{display:flex;align-items:center;gap:8px;padding:6px 12px;background:#223c40;color:#d8ece8}.toolbar span{margin-left:auto;font-size:.82rem}.foot{justify-content:space-between;font-size:.75rem;min-height:34px}canvas{display:block;flex:1;width:100%;height:calc(100% - 76px);touch-action:none;cursor:crosshair}#results{white-space:pre-wrap;line-height:1.45;font-size:.82rem;color:#d8e5e0;max-height:45vh;overflow:auto}.error{color:#ffb0a2}.warn{color:#f6d398}.pass{color:#83d8af}#autosave{font-size:.76rem}hr{border:0;border-top:1px solid #416063;margin:22px 0}@media(max-width:1000px){main{grid-template-columns:240px minmax(320px,1fr)}aside.checks{grid-column:1/-1;max-height:35vh;border-top:1px solid #456466}.workspace{min-height:60vh}}@media(max-width:700px){main{display:block;height:auto}.workspace{height:65vh}aside{max-height:none}header{height:auto;padding:12px}header span{display:block;margin-left:0}}
+
+[hidden]{display:none!important}.build-tools{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}.build-tools button{font-size:1.6rem;padding:8px 2px}.build-tools span{display:block;font-size:.7rem;margin-top:4px}.inline{display:flex;align-items:center;gap:5px;margin:0;font-size:.7rem;white-space:nowrap}.inline input{width:auto;margin:0}.toolbar{flex-wrap:wrap}.selection input:disabled{opacity:.4}
+
+/* The catalogue is browsed by appearance. A click arms placement immediately. */
+.catalog-count{display:block;color:#9ac7c0;margin:8px 0}.catalog-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;max-height:48vh;overflow-y:auto;padding:3px 3px 8px}
+.catalog-card{margin:0;display:flex;flex-direction:column;gap:3px;align-items:flex-start;text-align:left;min-width:0;background:#20383a;border-color:#42676a;padding:5px}
+.catalog-card:hover,.catalog-card.active{border-color:#85e2bd;background:#275b53;box-shadow:0 0 0 2px #72d6ae55}
+.catalog-card strong{font-size:.72rem;line-height:1.2}.catalog-card small{font-size:.65rem;color:#c1d1ca}.catalog-image{width:100%;height:68px;display:grid;place-items:center;background:#dbe9e5;color:#2d6768;border-radius:3px;font-size:1.6rem;overflow:hidden}
+.catalog-image img{width:100%;height:100%;object-fit:contain}.catalog-fallback{width:100%;font-size:.76rem;margin-top:8px}
+#walkView{border-color:#a4d8b8;background:#266a57;font-weight:700}#walkFrame{display:block;flex:1;min-height:0;width:100%;border:0;background:#18252a}
+.selection details{margin-top:12px}.selection summary{cursor:pointer;color:#b9e9da;font-size:.82rem}.selection label:has(:disabled){display:none}.selection .row{flex-wrap:wrap}
+
+/* Visible movement controls work in plan and 3D, including touch and keyboard activation. */
+.move-pad{position:absolute;right:14px;bottom:48px;z-index:3;display:grid;grid-template-areas:"label label label" ". forward ." "left . right" ". backward .";grid-template-columns:repeat(3,36px);gap:3px;padding:7px;background:#173b40de;border:1px solid #8bbfbb;border-radius:10px;box-shadow:0 3px 16px #142b3299;user-select:none;touch-action:none}
+.move-pad span{grid-area:label;text-align:center;font-size:.58rem;letter-spacing:.07em;color:#e5f7ef;font-weight:700}
+.move-pad button{padding:0;margin:0;width:36px;height:36px;font-size:1.3rem;line-height:1;touch-action:none;background:#2a6968;border-color:#94cebf}
+.move-pad button:active{background:#3ba68b}.move-pad [data-move="forward"]{grid-area:forward}.move-pad [data-move="backward"]{grid-area:backward}.move-pad [data-move="left"]{grid-area:left}.move-pad [data-move="right"]{grid-area:right}
+.catalog-image{position:relative}.catalog-color-badge{position:absolute;right:3px;top:3px;background:#d76b28;color:#1c2626;border:1px solid #a34d17;border-radius:3px;padding:1px 3px;font-size:.55rem;font-weight:800;letter-spacing:.02em}
+/* Keep the canvas still when the live coordinate label grows from dashes to numbers. */
+#coordinates{flex:0 0 155px;min-width:155px;white-space:nowrap;text-align:right}
+.work-guide{position:absolute;left:12px;top:82px;z-index:3;display:flex;align-items:center;gap:7px;max-width:calc(100% - 170px);padding:7px 9px;border:1px solid #7fb8a7;border-radius:8px;background:#173b40e8;color:#f2fbf5;box-shadow:0 3px 14px #142b3266;font-size:.75rem}
+.work-guide strong{color:#f4bd65;white-space:nowrap}.work-guide span{max-width:360px}.work-guide button{padding:5px 7px;font-size:.7rem;white-space:nowrap;margin:0}.work-guide button:disabled{opacity:.48;cursor:default}
+.catalog-image svg{height:100%;width:100%;max-width:85px}
+@media(max-width:1000px){.work-guide{top:115px;flex-wrap:wrap;max-width:calc(100% - 24px)}}
+.first-build{margin:15px 0;padding:11px;border:1px solid #70bba5;border-radius:9px;background:#204943}
+.first-build strong{font-size:.79rem;letter-spacing:.05em;color:#ffcf82}.first-build span{float:right;font-size:.69rem;color:#bce8cf}
+.first-build p{margin:8px 0;color:#e5f6e9}.first-build button{font-size:.7rem;padding:5px 8px}
+.workspace.game-look #scene3d{width:57%;align-self:flex-start}
+#gameLookPanel{position:absolute;right:0;top:56px;bottom:34px;width:43%;z-index:2;background:#142a30;color:#e8f5ed;border-left:2px solid #69bb9f;display:flex;flex-direction:column}
+#gameLookPanel>div{display:flex;align-items:center;justify-content:space-between;padding:5px 9px;font-size:.72rem}
+#gameLookPanel button{font-size:.66rem;padding:4px 7px;margin:0}
+#gameLookFrame{display:block;flex:1;width:100%;border:0;min-height:0;background:#152b30}
+#gameLookPanel small{padding:6px 9px;font-size:.65rem;color:#b1d1c5}
+.workspace.game-look .move-pad{right:calc(43% + 10px)}
+.workspace.game-look .work-guide{max-width:calc(57% - 20px)}
+#gameLook.active{background:#278a70;border-color:#a3dfb9}
+@media(max-width:1000px){#gameLookPanel{top:94px}.workspace.game-look .work-guide{max-width:calc(57% - 20px)}}
+
+/* Studio UX: the scene is the work surface; tools are secondary. */
+header{gap:14px}header nav{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+header nav a{margin:0;font-size:.76rem;font-weight:750;padding:8px 10px;border-radius:8px}
+header nav a:hover{background:#29575a}
+button{border-radius:9px;min-height:38px}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{
+ outline:3px solid #a8eac5;outline-offset:2px}
+.catalog-cards{gap:10px}
+.catalog-card{border-radius:10px;padding:9px;gap:6px}
+.catalog-image{height:94px;border-radius:8px}
+.catalog-card strong{font-size:.82rem;line-height:1.35}
+.catalog-card small{font-size:.71rem}
+#stageFocus{background:#25474f;border-color:#568b91;font-weight:750}
+#stageFocus[aria-pressed=true]{background:#d7f6e6;color:#144c51}
+#quickSave{background:#2a876c;border-color:#78c9b0;font-weight:750}
+.mobile-studio-bar,.mobile-drawer-top{display:none}
+.mobile-backdrop{display:none}
+@media(min-width:1001px){
+ body.stage-focus main{grid-template-columns:300px minmax(0,1fr)}
+ body.stage-focus main>.checks{display:none}
+}
+@media(min-width:701px) and (max-width:1000px){
+ body.stage-focus main>.checks{display:none}
+}
+@media(max-width:700px){
+ header{display:flex;flex-direction:column;align-items:flex-start;padding:10px 12px;gap:7px}
+ header strong{font-size:.82rem}
+ header span{margin-left:9px;display:inline;font-size:.7rem}
+ header nav{max-width:100%;overflow-x:auto;flex-wrap:nowrap;gap:4px;scrollbar-width:thin}
+ header nav a{font-size:.69rem;white-space:nowrap;padding:6px 8px}
+ main{display:block;height:auto;min-height:0}
+ .workspace{height:calc(100dvh - 120px);min-height:430px;max-height:none;overflow:hidden}
+ .mobile-studio-bar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;padding:7px 9px;background:#152d32;flex:none}
+ .mobile-studio-bar button{font-size:.75rem;padding:8px 3px;min-width:0;min-height:42px;line-height:1.1}
+ .mobile-studio-bar button:last-child{background:#2a806c;border-color:#8ed6b9}
+ .toolbar{flex:none;min-height:52px;max-width:100%;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin;padding:5px 7px}
+ .toolbar button{flex:none;white-space:nowrap;font-size:.72rem;padding:8px}
+ .toolbar .inline{flex:none}
+ #coordinates,#stageFocus,#quickSave{display:none!important}
+ .workspace canvas{min-height:0;height:auto;flex:1}
+ .foot{flex:none;min-height:42px;padding:9px 12px}
+ .foot span:last-child{display:none}
+ .work-guide{top:118px;left:8px;max-width:calc(100% - 16px);font-size:.7rem;padding:6px;flex-wrap:wrap}
+ .work-guide span{max-width:230px}
+ .move-pad{right:8px;bottom:49px}
+ .mobile-backdrop:not([hidden]){display:block;position:fixed;inset:0;border:0;border-radius:0;margin:0;padding:0;min-height:0;
+   z-index:49;background:#06181bc0;cursor:pointer}
+ main>aside.tool-panel,main>aside.checks{
+   position:fixed;left:0;right:0;bottom:0;top:auto;z-index:50;width:auto;
+   height:min(78dvh,720px);max-height:78dvh;min-height:0;
+   border:1px solid #668f8b;border-bottom:0;border-radius:20px 20px 0 0;
+   padding:20px 16px calc(20px + env(safe-area-inset-bottom));
+   background:#192e32;overflow-y:auto;
+   transform:translateY(110%);visibility:hidden;pointer-events:none;
+   box-shadow:0 -15px 55px #04181d80;transition:transform .2s ease,visibility .2s;
+ }
+ body[data-studio-sheet="tools"] main>.tool-panel,
+ body[data-studio-sheet="checks"] main>.checks{
+   transform:translateY(0);visibility:visible;pointer-events:auto;
+ }
+ .mobile-drawer-top{display:flex;align-items:center;justify-content:space-between;gap:12px;
+   position:sticky;top:-20px;z-index:3;padding:10px 0 12px;background:#192e32;border-bottom:1px solid #385b60;margin-bottom:14px}
+ .mobile-drawer-top strong{font-size:1rem}
+ .mobile-drawer-top button{background:#35565d;font-size:.84rem;min-height:40px;min-width:80px}
+ .catalog-cards{max-height:none;grid-template-columns:repeat(2,minmax(0,1fr));overflow:visible}
+ .catalog-image{height:110px}
+ .build-tools button{font-size:1.35rem;min-height:56px}
+ #gameLookPanel{top:50%;bottom:42px;width:100%;border-left:0;border-top:2px solid #69bb9f}
+ .workspace.game-look #scene3d{height:50%;width:100%;align-self:auto}
+ .workspace.game-look .move-pad{right:8px;bottom:calc(50% + 40px)}
+ .workspace.game-look .work-guide{max-width:calc(100% - 16px)}
+}
+@media(prefers-reduced-motion:reduce){
+ main>aside.tool-panel,main>aside.checks{transition:none}
+}
+
+/* Keep contextual help inside the scene, NEVER over the toolbar.
+   Compact on phones so movement controls and the canvas stay usable. */
+.work-guide{top:auto;bottom:53px;max-width:min(48%,450px)}
+@media(max-width:1000px){.work-guide{top:auto;bottom:54px;max-width:calc(100% - 170px)}}
+@media(max-width:700px){
+ .work-guide{top:auto;bottom:53px;max-width:calc(100% - 159px);font-size:.7rem}
+ .work-guide>span{display:none}
+ .workspace.game-look .work-guide{max-width:calc(100% - 159px)}
+}
+
+
+/* Contextual object editing: high-frequency controls remain next to the scene.
+   Advanced properties stay in the existing sidebar, preserving power-user tools. */
+.edit-dock{
+ position:absolute;z-index:6;left:12px;bottom:52px;
+ width:min(432px,calc(100% - 154px));max-height:min(57vh,440px);overflow-y:auto;
+ padding:12px 14px;border-radius:14px;border:1px solid #75bca9;
+ color:#eaf8f0;background:#183b40f5;box-shadow:0 16px 42px #051a20a8;
+ backdrop-filter:blur(12px);touch-action:pan-y;
+}
+.edit-dock-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:9px}
+.edit-dock-head>div{display:grid;gap:3px;min-width:0}
+.edit-dock-head small{color:#9bc7bc;font-size:.63rem;letter-spacing:.11em;font-weight:800}
+.edit-dock-head strong{font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.edit-dock-head button{min-height:34px;font-size:.76rem;flex:none;background:#315b5e}
+.edit-dock-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px 10px}
+.edit-dock-fields label{margin:0;min-width:0;font-size:.72rem;font-weight:750;color:#c0ddd4}
+.edit-dock-fields input,.edit-dock-fields select{min-width:0;width:100%;height:40px;margin-top:4px;
+ padding:7px 8px;font-size:.86rem;border:1px solid #719795;background:#234d50;color:#fff;border-radius:8px}
+.edit-dock-fields label:last-child{grid-column:span 2}
+.edit-dock-fields input:focus-visible,.edit-dock-fields select:focus-visible{
+ outline:3px solid #9be3b8;outline-offset:1px}
+.edit-dock-actions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:10px}
+.edit-dock-actions button{min-height:40px;font-size:.75rem;margin:0;padding:7px 5px}
+.edit-dock-actions .danger-action{background:#60373c;border-color:#ab7775;color:#ffddd5}
+#editDockMessage{font-size:.72rem;line-height:1.4;margin:9px 0 0;color:#a2d8c4;max-height:3.9em;overflow:auto}
+#editDockMessage.issue{color:#ffd39b}
+.edit-dock-reopen{position:absolute;z-index:6;bottom:53px;left:12px;background:#216a67;
+ border-color:#8cceae;box-shadow:0 4px 17px #09242fa3;font-size:.79rem;font-weight:750}
+.workspace:has(#editDock:not([hidden])) .work-guide,
+.workspace:has(#editDockReopen:not([hidden])) .work-guide{display:none}
+@media(max-width:700px){
+ .edit-dock{left:8px;right:8px;bottom:52px;width:auto;max-height:min(39dvh,355px);padding:11px 12px;
+  border-radius:14px}
+ .edit-dock-fields{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+ .edit-dock-fields label{font-size:.71rem}
+ .edit-dock-fields input,.edit-dock-fields select{height:42px;font-size:.86rem;padding:6px}
+ .edit-dock-actions{grid-template-columns:repeat(4,minmax(0,1fr))}
+ .edit-dock-actions button{font-size:.7rem;padding:6px 3px}
+ .edit-dock-reopen{left:8px;bottom:53px}
+ .workspace:has(#editDock:not([hidden])) .move-pad{opacity:0;pointer-events:none}
+ body[data-studio-sheet="tools"] .edit-dock,body[data-studio-sheet="checks"] .edit-dock{display:none}
+}
+/* Soft placement: a single optional, touch-friendly helper control. */
+.easy-place-toggle{display:flex;align-items:center;gap:10px;border:1px solid #4d8278;background:#204a47;border-radius:10px;padding:11px 12px;margin:12px 0;color:#e8f5ee;cursor:pointer;line-height:1.35}
+.easy-place-toggle input[type=checkbox]{width:20px;height:20px;min-width:20px;margin:0;accent-color:#58b79c}
+#results>details{margin-top:14px;padding:10px;border-radius:9px;border:1px solid #49696c;background:#17383c;color:#d1e8e0}
+#results>details summary{cursor:pointer;font-weight:700}
+#results>details>div{white-space:pre-wrap;font-size:.75rem;margin-top:8px}
+/* Child-first four-step toolbar: big buttons, zero mandatory setup forms. */
+.kid-steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;flex:0 0 auto;
+ padding:8px 12px;background:#d7e9df;border-bottom:1px solid #a8c9b9;z-index:3}
+.kid-steps button{display:flex;justify-content:center;align-items:center;gap:9px;min-width:0;min-height:56px;
+ border:2px solid #b4d1c4;border-radius:12px;margin:0;padding:8px 9px;background:#fff;color:#195148;
+ font-size:.9rem;font-weight:800;box-shadow:0 2px 4px #244f4012;line-height:1.2}
+.kid-steps button:hover{background:#edfff4;border-color:#2e8d72}
+.kid-steps button:focus-visible{outline:3px solid #348b71;outline-offset:2px}
+.kid-steps button span{font-size:1.4rem;line-height:1}
+.kid-steps button.kid-step-primary{background:#206c60;color:white;border-color:#277963}
+.kid-categories{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}
+.kid-categories button{min-height:42px;margin:0;background:#244b4c;border-color:#5f9890;font-size:.8rem;
+ border-radius:99px;padding:8px 13px;flex:0 0 auto}
+.kid-categories button[aria-pressed="true"]{background:#b9f1d4;color:#17453b;border-color:#88d3b2}
+@media(max-width:700px){
+ .kid-steps{gap:5px;padding:7px 6px}
+ .kid-steps button{flex-direction:column;min-height:64px;gap:3px;font-size:.68rem;padding:6px 2px;border-radius:9px}
+ .kid-steps button strong{font-size:.69rem;line-height:1.15}
+ .kid-steps button span{font-size:1.25rem}
+ .kid-categories{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin;padding-bottom:5px}
+ .kid-categories button{white-space:nowrap}
+}
+
+
+/* Sims-style next-room placement. Only valid sides can be chosen; the scene stays visible. */
+.room-choices{
+ flex:0 0 auto;z-index:5;background:#f0faf3;color:#214c46;
+ padding:12px 15px;border-bottom:2px solid #85b9a4;
+ box-shadow:0 4px 14px #183e3a20
+}
+.room-choice-head{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.room-choice-head strong{font-size:1rem;line-height:1.25}
+.room-choice-head p{margin:4px 0 0;color:#4c7369;font-size:.82rem;max-width:70ch}
+.room-choice-head button{background:#e1ece5;border:1px solid #9cbeab;color:#215b4c;min-height:42px}
+.room-choice-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}
+.room-choice-grid button{margin:0;padding:10px 9px;min-height:50px;border:2px solid #96c4aa;
+ background:#fff;color:#184e3b;border-radius:10px;font-size:.86rem;font-weight:800}
+.room-choice-grid button span{font-size:1.35rem;line-height:1;vertical-align:middle;margin-right:4px}
+.room-choice-grid button:hover:not(:disabled),.room-choice-grid button:focus-visible:not(:disabled){
+ border-color:#278e6c;background:#ddf8e9
+}
+.room-choice-grid button:disabled{opacity:.5;cursor:not-allowed;background:#dce4dd;color:#4e6b62}
+.room-choice-custom{margin:10px 0 0;padding:9px 10px;min-height:40px;border:0;
+ text-decoration:underline;text-underline-offset:3px;background:none;color:#265f52;font-weight:750}
+.room-choice-custom:hover{background:#dbede1}
+.kid-steps button[aria-expanded="true"]{background:#17725b;color:#fff;border-color:#226d54}
+@media(max-width:700px){
+ .room-choices{padding:10px 8px}
+ .room-choice-head strong{font-size:.9rem}
+ .room-choice-head p{font-size:.76rem}
+ .room-choice-head button{padding:7px;min-width:56px}
+ .room-choice-grid{gap:5px;margin-top:8px}
+ .room-choice-grid button{min-height:57px;padding:7px 3px;display:flex;flex-direction:column;align-items:center;
+  gap:2px;font-size:.69rem;line-height:1.15}
+ .room-choice-grid button span{margin:0;font-size:1.4rem}
+ .room-choice-custom{font-size:.76rem}
+}
+
+/* Intuitive furniture and wall attachments; no additional specialist tool panel. */
+.placement-method{display:block;border:1px solid #6c9e8f;border-radius:10px;background:#234842;
+ padding:10px 12px;margin:11px 0;color:#e9f6ec;font-weight:760}
+.placement-method select{margin-top:7px;min-height:42px}
+.edit-dock-fields .dock-attachment-setting{grid-column:span 2}
+#dockWallHeightRow{grid-column:span 1}
+#dockMountMode{min-height:42px}
+@media(max-width:700px){.placement-method{padding:10px;margin:9px 0}
+ .edit-dock-fields .dock-attachment-setting{grid-column:span 2}}
+
+/* Common actions stay close to the scene; numbers are optional. */
+.dock-details{margin-top:10px}.dock-details summary{cursor:pointer;color:#b9e9da;font-size:.8rem;padding:5px 0}.dock-details[open] .edit-dock-fields{margin-top:8px}
+.edit-dock-actions button{min-height:44px}
+/* Status text must never resize the drawing canvas halfway through a drag. */
+.workspace>.foot{flex:0 0 48px;height:48px;min-height:48px}
+.workspace>.foot>span{flex:1;min-width:0;max-height:36px;overflow:auto}
+
+.dock-transform-hint{margin:6px 0;font-size:12px;color:#bad4cd}.edit-dock-actions [aria-pressed="true"]{background:#bce9da;color:#133e35}
+
+/* Projected handles stay attached to the selected 3D instance, at a readable screen size. */
+.furniture-handles{position:absolute;z-index:5;pointer-events:none;overflow:hidden;touch-action:none}
+.furniture-handles svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.handle-line{stroke-width:4;stroke:#429bc9;stroke-linecap:round;filter:drop-shadow(0 1px 1px #14353c)}
+.handle-line.handle-z{stroke:#248c78}.handle-line.handle-height{stroke:#d58125}
+.furniture-handle{position:absolute;pointer-events:auto;touch-action:none;transform:translate(-50%,-50%);width:58px;min-height:48px;margin:0;padding:3px;border:2px solid #d7f8ff;border-radius:12px;background:#205e83;color:white;box-shadow:0 2px 7px #163b4488;cursor:grab;user-select:none}
+.furniture-handle span{display:block;font-size:20px;line-height:23px}.furniture-handle small{display:block;font-size:10px;line-height:14px;font-weight:700}
+.furniture-handle.handle-z{background:#146552}.furniture-handle.handle-height{background:#95551c}.furniture-handle.handle-move{background:#f5f2df;color:#214244;border-color:#315b60;width:50px}
+.furniture-handle:hover,.furniture-handle.active{filter:brightness(1.25)}.furniture-handle:focus-visible{outline:3px solid #fff;outline-offset:3px}.furniture-handles.dragging .furniture-handle{cursor:grabbing}
+
+.surface-dock{position:absolute;left:14px;bottom:52px;z-index:6;padding:14px;width:min(320px,calc(100% - 28px));box-sizing:border-box;border:1px solid #76aaa7;border-radius:15px;background:#173f42ed;box-shadow:0 5px 20px #1235;color:#eef9f4}.surface-dock strong{display:block;margin-bottom:9px}.surface-dock label{display:flex;gap:12px;align-items:center}.surface-dock input[type=color]{width:60px;height:42px;padding:2px}.surface-swatches{display:flex;flex-wrap:wrap;gap:4px;margin:9px 0}.surface-swatches button{width:44px;height:44px;padding:0;background:var(--paint);border:2px solid #d9eee5;border-radius:9px}.surface-dock small{display:block;margin-top:9px}#spaceTools select{width:100%}#spaceTools button{margin-top:6px}
+
+/* Stable toolbar: selection changes never move the canvas under the pointer. */
+.clipboard-dock{display:flex;align-items:center;gap:6px;flex-wrap:wrap;flex-shrink:0;padding:6px 12px;background:#173a3e;color:#edf8f2;border-bottom:1px solid #71baa8}.clipboard-dock strong{flex:1;font-size:12px}.clipboard-dock button{width:auto;min-height:36px;margin:0;padding:5px 10px}.clipboard-dock small{font-size:11px;color:#c2dbd5}.clipboard-dock #clearFurnitureSelection{min-width:36px}@media(max-width:720px){.clipboard-dock{gap:4px;padding:4px 8px}.clipboard-dock small{display:none}.clipboard-dock button{min-height:44px;font-size:12px}.clipboard-dock strong{font-size:11px}}
+
+
+/* Floor 5's reversible shell-only action is scoped to the furniture tab. */
+.floor5-interior-tools {
+ display: grid;
+ gap: .45rem;
+ margin: .3rem 0 1rem;
+ padding: .7rem .75rem;
+ border: 1px solid var(--line, #526565);
+ border-radius: 10px;
+}
+.floor5-interior-tools[hidden],.floor5-interior-tools button[hidden] { display: none; }
+.floor5-interior-tools .hint { margin: 0; }
+.floor5-interior-tools button { width: 100%; text-align: left; }
+
+/* The selected floor material belongs beside its colour, also on small screens. */
+.surface-dock{max-height:calc(100% - 70px);overflow-y:auto}
+.surface-dock #floorMaterialLabel{display:block;margin-bottom:10px}
+.surface-dock #floorMaterialLabel[hidden]{display:none}
+.surface-dock #selectedSurface{display:block;width:100%;min-height:44px;margin-top:5px}
+.curtain-tools{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
+.curtain-tools button{flex:1;min-width:90px;min-height:44px}

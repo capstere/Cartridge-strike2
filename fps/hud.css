@@ -1,0 +1,275 @@
+/* CARTRIDGE-STRIKE // TACTICAL INDUSTRIAL — in-game layer.
+   Loaded last on fps/index.html. Two registers:
+   - Combat HUD (#hud): thin, flat, readable, no blur, centre kept clear.
+   - Full-screen menus (#buy, #pause, #scoreboard, #match-end): cinematic and immersive.
+   Positions of HUD blocks and touch controls are inherited from style.css / focus-hud.css
+   (they already handle safe areas); this file restyles them and fixes mobile overflow. */
+:root{
+  --h-g0:#05070b;--h-g1:#0a0d13;--h-g2:#111723;--h-ln:#ffffff1a;--h-ln2:#ffffff30;--h-wh:#eef2f7;--h-mu:#8e9aac;--h-dim:#5f6a7c;
+  --h-blue:#3d8bff;--h-amber:#e8a33d;--h-red:#ff5a4f;--h-ok:#5fd3a0;--h-ac:var(--h-blue);
+  --h-disp:"Barlow Condensed","Arial Narrow",sans-serif;--h-body:"Barlow",system-ui,sans-serif;--h-mono:"JetBrains Mono",ui-monospace,monospace;
+  --h-plate:#06090ed9;--h-ease:cubic-bezier(.2,.8,.2,1);
+}
+html[data-cs-team=counterAnalysts]{--h-ac:var(--h-amber)}
+
+/* ================= COMBAT HUD ================= */
+html #hud{font-family:var(--h-body);color:var(--h-wh)}
+html #hud .top-hud{gap:0!important}
+html #hud .score{background:var(--h-plate)!important;border:0!important;border-radius:0!important;padding:4px 12px!important;color:var(--h-wh)!important;position:relative}
+html #hud .score::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--h-blue)}
+html #hud .score.counter::after{background:var(--h-amber)}
+html #hud .score>strong{font-family:var(--h-disp);font-weight:800;font-size:28px!important;line-height:1!important;font-variant-numeric:tabular-nums}
+html #hud .score.analysts>strong{color:var(--h-blue)}
+html #hud .score.counter>strong{color:var(--h-amber)}
+html #hud .score>span{font-family:var(--h-disp);font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+html #hud .score small{font-family:var(--h-mono);font-size:9.5px!important;letter-spacing:.08em;color:var(--h-mu)!important;font-weight:500}
+html #hud .round-clock{background:#020305e6!important;border-radius:0!important;padding:4px 14px!important;border-left:1px solid var(--h-ln);border-right:1px solid var(--h-ln)}
+html #hud .round-clock b{font-family:var(--h-disp);font-weight:700;font-size:26px!important;letter-spacing:.04em;line-height:1!important}
+html #hud .round-clock small{font-family:var(--h-mono);font-size:8.5px!important;letter-spacing:.2em;color:var(--h-mu)!important}
+html #hud #phase{color:var(--h-ac)!important}
+
+html #hud #objectives{background:var(--h-plate)!important;border-radius:0!important;border-left:2px solid var(--h-ac);font-family:var(--h-mono);font-size:10px!important;letter-spacing:.08em;text-transform:uppercase;color:#c6cfdb!important}
+html #hud #objectives .hot{color:var(--h-amber)!important;font-weight:600}
+
+/* Minimap / tactical map */
+html #hud .map-panel{background:var(--h-plate)!important;border:1px solid var(--h-ln)!important;border-radius:0!important;box-shadow:none}
+html #hud .map-panel::before{content:"";position:absolute;left:-1px;top:-1px;width:14px;height:14px;border-left:2px solid var(--h-ac);border-top:2px solid var(--h-ac);pointer-events:none}
+html #hud .map-panel p{font-family:var(--h-disp);font-weight:700;font-size:11px!important;letter-spacing:.14em;text-transform:uppercase;color:var(--h-wh)!important}
+html #hud .map-panel small{font-family:var(--h-mono);letter-spacing:.08em;color:var(--h-dim)!important}
+html #hud #minimap{opacity:.95}
+html.hud-map-open #hud .map-panel{background:#05070bf2!important;border-color:var(--h-ln2)!important;padding:10px!important}
+html.hud-map-open #hud .map-panel p::after{content:"  ·  TAKTISK KARTA";color:var(--h-ac);font-family:var(--h-mono);font-size:9px;letter-spacing:.2em}
+
+/* Kill feed + notifications */
+html #hud #killfeed>div{background:var(--h-plate)!important;border:0!important;border-right:2px solid var(--h-ac)!important;border-radius:0!important;font-family:var(--h-disp);font-weight:600;font-size:13px;letter-spacing:.04em;padding:4px 10px!important;animation:h-slide .25s var(--h-ease) both}
+@keyframes h-slide{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:none}}
+html #hud #notification{background:var(--h-plate)!important;border-radius:0!important;border-top:1px solid var(--h-ac);color:var(--h-wh)!important;font-family:var(--h-disp);font-weight:600;font-size:14px!important;letter-spacing:.08em;text-transform:uppercase}
+html #hud #prompt{background:var(--h-plate)!important;border-radius:0!important;font-family:var(--h-disp);font-weight:600;letter-spacing:.06em;font-size:14px!important}
+html #hud #prompt kbd,html #hud kbd{font-family:var(--h-mono);font-size:10px;padding:1px 6px;border:1px solid var(--h-ln2);border-radius:0;background:#ffffff0d;color:var(--h-wh)}
+html #hud #prompt .progress{height:2px;background:#ffffff1a;border-radius:0}
+html #hud #action-progress{background:var(--h-ac)!important;border-radius:0}
+html #hud #spawn-protection{font-family:var(--h-mono);letter-spacing:.14em;border-radius:0!important}
+html #hud #radio-menu{background:#05070bf0!important;border:1px solid var(--h-ln2)!important;border-left:2px solid var(--h-ac)!important;border-radius:0!important;font-family:var(--h-disp)}
+html #hud #difficulty-label,html #hud #perf{font-family:var(--h-mono);letter-spacing:.1em;color:var(--h-dim)!important}
+html #hud .key-hints{font-family:var(--h-mono);font-size:9.5px;letter-spacing:.1em;color:var(--h-dim)!important;text-transform:uppercase}
+
+/* Vitals + ammo — flat bars with team accent, red/amber warnings */
+html #hud .vitals,html #hud .ammo{background:linear-gradient(90deg,var(--h-plate),#06090e99)!important;border:0!important;border-radius:0!important;border-bottom:2px solid var(--h-ac)!important;padding:6px 12px!important}
+html #hud .ammo{background:linear-gradient(270deg,var(--h-plate),#06090e99)!important;border-bottom-color:var(--h-wh)!important}
+html #hud .vitals>strong,html #hud .ammo strong{font-family:var(--h-disp);font-weight:700;font-size:34px!important;line-height:1!important;font-variant-numeric:tabular-nums}
+html #hud .health-symbol{font-family:var(--h-disp);color:var(--h-ac);font-size:22px}
+html #hud .vitals div{font-family:var(--h-mono);font-size:9px!important;letter-spacing:.18em;color:var(--h-mu)!important}
+html #hud .vitals small{color:var(--h-wh)!important}
+html #hud .ammo>small{font-family:var(--h-disp);font-weight:700;font-size:12px!important;letter-spacing:.14em!important;text-transform:uppercase;color:var(--h-mu)!important}
+html #hud .ammo strong span{font-size:15px!important;color:var(--h-dim)!important}
+html #hud .ammo>span{font-family:var(--h-mono);font-size:9.5px!important;letter-spacing:.1em;color:var(--h-amber)!important}
+html.hud-low-health #hud .vitals{border-bottom-color:var(--h-red)!important;color:#ffd9d4!important}
+html.hud-low-health #hud .health-symbol{color:var(--h-red)}
+html.hud-low-ammo #hud .ammo{border-bottom-color:var(--h-amber)!important}
+html #hud #weapon-slots{gap:2px!important}
+html #hud #weapon-slots span{background:var(--h-plate)!important;border:0!important;border-bottom:2px solid transparent!important;border-radius:0!important;font-family:var(--h-disp);font-weight:600;font-size:12px!important;letter-spacing:.06em;color:var(--h-mu)!important;text-transform:uppercase}
+html #hud #weapon-slots span b{font-family:var(--h-mono);color:var(--h-dim)!important}
+html #hud #weapon-slots .selected{color:var(--h-wh)!important;border-bottom-color:var(--h-ac)!important}
+html #hud #money{font-family:var(--h-mono);color:var(--h-ok)!important;letter-spacing:.06em}
+
+/* Crosshair + hitmarker stay thin and neutral */
+html #hud #crosshair i{background:var(--h-wh)!important;box-shadow:0 0 0 1px #0008}
+html #hud #hitmarker{color:var(--h-wh)!important;font-weight:300}
+
+/* Round result: a horizontal band, never a box — doesn't block the view */
+html #hud #round-result{width:min(640px,92vw)!important;top:26%!important;padding:18px 24px!important;background:linear-gradient(90deg,transparent,#05070be6 18%,#05070be6 82%,transparent)!important;border:0!important;animation:h-band .45s var(--h-ease) both}
+html #hud #round-result::before,html #hud #round-result::after{content:"";position:absolute;left:18%;right:18%;height:1px;background:var(--h-win,var(--h-ac))}
+html #hud #round-result::before{top:0}html #hud #round-result::after{bottom:0}
+html #hud #round-result small{font-family:var(--h-mono)!important;font-size:10px!important;letter-spacing:.3em!important;color:var(--h-mu)!important}
+html #hud #round-result h2{margin:6px 0 4px;font-family:var(--h-disp);font-weight:800;font-size:clamp(30px,5vw,52px)!important;letter-spacing:.02em;text-transform:uppercase;line-height:1;color:var(--h-win,var(--h-wh))}
+html #hud #round-result p{margin:0;font-family:var(--h-disp);font-weight:600;letter-spacing:.14em;text-transform:uppercase;font-size:13px;color:#c6cfdb!important}
+html[data-cs-round=analysts] #hud #round-result{--h-win:var(--h-blue)}
+html[data-cs-round=counterAnalysts] #hud #round-result{--h-win:var(--h-amber)}
+@keyframes h-band{from{opacity:0;transform:translateX(-50%) scaleX(.9)}to{opacity:1;transform:translateX(-50%)}}
+
+/* Death / spectator */
+html #hud #spectate{background:linear-gradient(90deg,transparent,#05070be6 15%,#05070be6 85%,transparent)!important;border-radius:0!important;color:var(--h-red)!important;font-family:var(--h-disp);font-weight:800;font-size:20px!important;letter-spacing:.14em;text-transform:uppercase;padding:12px 40px!important}
+html #hud #spectate span{color:var(--h-wh)}
+html #hud #spectate small{font-family:var(--h-mono)!important;font-weight:500;font-size:10px!important;letter-spacing:.12em;color:var(--h-mu)!important;text-transform:none}
+html #hud #death-restart{margin-top:10px;min-height:40px;border-radius:0!important;background:none!important;border:1px solid var(--h-ln2)!important;color:var(--h-wh)!important;font-family:var(--h-disp);letter-spacing:.14em}
+
+/* ================= FULL-SCREEN MENUS ================= */
+html .modal-overlay{background:radial-gradient(120% 90% at 30% 50%,#0b1424e0,#030407f2)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));font-family:var(--h-body);color:var(--h-wh)}
+html .modal-overlay .card{background:linear-gradient(180deg,#0b0f16f2,#07090df2)!important;border:1px solid var(--h-ln2)!important;border-radius:0!important;box-shadow:0 40px 120px -30px #000!important;position:relative;color:var(--h-wh)}
+html .modal-overlay .card::before{content:"";position:absolute;left:-1px;top:-1px;width:28px;height:28px;border-left:2px solid var(--h-ac);border-top:2px solid var(--h-ac);pointer-events:none}
+html .modal-overlay .card::after{content:"";position:absolute;right:-1px;bottom:-1px;width:28px;height:28px;border-right:2px solid var(--h-ac);border-bottom:2px solid var(--h-ac);pointer-events:none}
+html .modal-overlay .eyebrow{font-family:var(--h-mono)!important;font-size:10px!important;letter-spacing:.28em!important;color:var(--h-ac)!important;margin:0 0 6px}
+html .modal-overlay h2{font-family:var(--h-disp);font-weight:800;text-transform:uppercase;letter-spacing:.01em;line-height:.95;color:var(--h-wh)}
+html .modal-overlay .card-top{font-family:var(--h-mono)!important;font-size:10px!important;letter-spacing:.24em!important;color:var(--h-mu)!important;border-bottom:1px solid var(--h-ln)!important}
+html .modal-overlay .card-top>span:last-child{color:var(--h-ac)!important}
+html .modal-overlay button.primary{min-height:52px;border:0!important;border-radius:0!important;background:var(--h-ac)!important;color:#05070b!important;font-family:var(--h-disp)!important;font-weight:800!important;font-size:20px!important;letter-spacing:.12em!important;text-transform:uppercase;clip-path:polygon(0 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%);transition:filter .15s,transform .15s var(--h-ease)}
+html .modal-overlay button.primary:hover{filter:brightness(1.1);transform:translateY(-1px)}
+html .modal-overlay button.secondary{min-height:46px;border-radius:0!important;background:none!important;border:1px solid var(--h-ln2)!important;color:var(--h-wh)!important;font-family:var(--h-disp)!important;font-weight:700!important;font-size:15px!important;letter-spacing:.14em!important;text-transform:uppercase}
+html .modal-overlay button.secondary:hover{border-color:var(--h-wh)!important}
+html .modal-overlay button.close{width:44px;height:44px;border-radius:0!important;background:none!important;border:1px solid var(--h-ln2)!important;color:var(--h-wh)!important;font-size:22px}
+html .modal-overlay :is(select,input[type=number],input[type=text]){border-radius:0!important;background:#05070b!important;border:1px solid var(--h-ln2)!important;color:var(--h-wh)!important;font-family:var(--h-body);min-height:38px}
+html .modal-overlay input[type=range]{accent-color:var(--h-ac)}
+html .modal-overlay :is(button,select,input,a):focus-visible{outline:2px solid var(--h-ac)!important;outline-offset:2px}
+html .modal-overlay .setting,html .modal-overlay label{font-family:var(--h-disp);font-weight:600;letter-spacing:.08em;text-transform:uppercase;font-size:13px;color:#c6cfdb}
+
+/* ---------- Pause: actions left, settings right ---------- */
+html #pause .pause-card{width:min(980px,100%)!important;max-height:100%!important;overflow:hidden!important;padding:32px 36px!important;display:grid;grid-template-columns:minmax(260px,340px) minmax(0,1fr);grid-template-rows:auto auto auto auto auto 1fr;column-gap:40px;row-gap:10px;align-content:start}
+html #pause .pause-card>.eyebrow{grid-column:1}
+html #pause .pause-card>h2{grid-column:1;margin:0;font-size:clamp(40px,6vw,72px)!important}
+html #pause .pause-card>p:not(.eyebrow){grid-column:1;margin:0 0 14px;color:var(--h-mu)!important;font-size:14px!important}
+html #pause #resume{grid-column:1;width:100%}
+html #pause #restart{grid-column:1;width:100%}
+html #pause .controls-list{grid-column:1;display:grid!important;gap:0;margin-top:10px;border-top:1px solid var(--h-ln)}
+html #pause .controls-list span{display:grid;grid-template-columns:44px 1fr;align-items:center;gap:12px;padding:7px 0;border-bottom:1px solid var(--h-ln);font-family:var(--h-mono);font-size:11px;color:var(--h-ac)}
+html #pause .controls-list b{font-family:var(--h-body);font-weight:500;color:#c6cfdb;text-align:left}
+html #pause #pause-settings{grid-column:2;grid-row:1/-1;min-height:0;max-height:calc(100dvh - 120px);overflow-y:auto;padding:0 6px 0 28px;border-left:1px solid var(--h-ln);overscroll-behavior:contain}
+html #pause #pause-settings::before{content:"INSTÄLLNINGAR";display:block;position:sticky;top:0;z-index:1;padding:4px 0 12px;background:#0a0d13;font-family:var(--h-mono);font-size:10px;letter-spacing:.28em;color:var(--h-mu)}
+
+/* ---------- Buy menu ---------- */
+html #buy .buy-card{width:min(1180px,100%)!important;max-height:100%!important;overflow:hidden!important;padding:0!important;display:grid;grid-template-columns:minmax(0,1fr) 280px;grid-template-rows:auto auto minmax(0,1fr) auto}
+html #buy .card-top{grid-column:1/-1;margin:0!important;padding:14px 22px!important;display:flex;align-items:center;gap:18px}
+html #buy .card-top>span:first-child{font-family:var(--h-mono);color:var(--h-mu)}
+html #buy #buy-money{font-family:var(--h-disp)!important;font-weight:800;font-size:28px;letter-spacing:.02em;color:var(--h-ok)!important;margin-left:10px;vertical-align:-4px}
+html #buy .cs-buy-clock{margin-left:auto;font-family:var(--h-mono);font-size:10px;letter-spacing:.2em;color:var(--h-mu)}
+html #buy .cs-buy-clock b{font-family:var(--h-disp);font-size:24px;font-weight:700;letter-spacing:.04em;color:var(--h-wh);margin-left:8px;vertical-align:-3px;font-variant-numeric:tabular-nums}
+html #buy .buy-card>h2{grid-column:1;margin:16px 22px 0!important;font-size:30px!important}
+html #buy #buy-note{grid-column:1;grid-row:2;align-self:end;margin:0 22px 0 auto!important;font-family:var(--h-mono);font-size:10px;letter-spacing:.08em;color:var(--h-mu)!important;padding-bottom:6px}
+html #buy .buy-card>h2{grid-row:2}
+html #buy #shop{grid-column:1;grid-row:3;display:grid!important;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px!important;padding:16px 22px!important;overflow-y:auto;min-height:0;align-content:start;overscroll-behavior:contain}
+html #buy .cs-buy-col{display:flex;flex-direction:column;gap:6px;min-width:0}
+html #buy .cs-buy-col>h3{display:flex;align-items:baseline;gap:10px;margin:0 0 4px;font-family:var(--h-disp);font-weight:700;font-size:18px;letter-spacing:.1em;text-transform:uppercase;color:var(--h-wh)}
+html #buy .cs-buy-col>h3 b{font-family:var(--h-mono);font-size:10px;color:var(--h-ac);font-weight:600}
+html #buy #shop button{position:relative;display:grid!important;grid-template-columns:auto 1fr auto;grid-template-rows:auto auto;align-items:center;column-gap:12px;row-gap:2px;min-height:64px!important;padding:10px 12px!important;text-align:left;background:#0c1119!important;border:1px solid var(--h-ln)!important;border-radius:0!important;color:var(--h-wh)!important;transition:border-color .12s,background .12s}
+html #buy #shop button:hover,html #buy #shop button:focus-visible,html #buy #shop button.cs-focus{border-color:var(--h-ac)!important;background:#111a27!important}
+html #buy #shop button .cs-ico{grid-row:1/3;width:44px;height:28px;color:#a9c4ff}
+html #buy #shop button .cs-ico svg{width:100%;height:100%;fill:currentColor}
+html #buy #shop button strong{grid-column:2;font-family:var(--h-disp);font-weight:700;font-size:16px!important;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html #buy #shop button em{grid-column:3;grid-row:1;font-family:var(--h-disp);font-style:normal;font-weight:700;font-size:16px!important;color:var(--h-ok)!important;font-variant-numeric:tabular-nums}
+html #buy #shop button small{grid-column:2/4!important;grid-row:2;font-family:var(--h-mono);font-size:9.5px!important;letter-spacing:.06em;color:var(--h-dim)!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html #buy #shop button.cs-cant{opacity:.5}
+html #buy #shop button.cs-cant em{color:var(--h-red)!important}
+html #buy #shop button.cs-cant .cs-ico{color:var(--h-dim)}
+html #buy #shop button.cs-other{opacity:.32}
+html #buy #shop button.cs-other::after{content:"ANNAT LAG";position:absolute;right:10px;bottom:6px;font-family:var(--h-mono);font-size:8.5px;letter-spacing:.16em;color:var(--h-mu)}
+html #buy #shop button.cs-other small{visibility:hidden}
+html #buy #shop button.cs-owned{border-color:#5fd3a066!important}
+html #buy #shop button.cs-owned::before{content:"";position:absolute;left:-1px;top:-1px;bottom:-1px;width:3px;background:var(--h-ok)}
+html #buy .cs-buy-detail{grid-column:2;grid-row:2/4;border-left:1px solid var(--h-ln);padding:18px 20px;display:flex;flex-direction:column;gap:12px;min-height:0;overflow-y:auto}
+html #buy .cs-buy-detail small{font-family:var(--h-mono);font-size:9.5px;letter-spacing:.24em;color:var(--h-mu)}
+html #buy .cs-buy-detail h4{margin:0;font-family:var(--h-disp);font-weight:800;font-size:28px;letter-spacing:.02em;text-transform:uppercase;line-height:1}
+html #buy .cs-buy-detail .cs-big{height:70px;color:#a9c4ff}.cs-buy-detail .cs-big svg{width:100%;height:100%;fill:currentColor}
+html #buy .cs-buy-detail dl{margin:0;display:grid;gap:8px}
+html #buy .cs-buy-detail dl div{display:grid;grid-template-columns:90px 1fr auto;align-items:center;gap:10px;font-family:var(--h-mono);font-size:10px;letter-spacing:.1em;color:var(--h-mu)}
+html #buy .cs-buy-detail dl i{height:3px;background:#ffffff14;position:relative}
+html #buy .cs-buy-detail dl i::after{content:"";position:absolute;inset:0 auto 0 0;width:var(--v,0%);background:var(--h-ac)}
+html #buy .cs-buy-detail dl b{color:var(--h-wh);font-weight:600}
+html #buy .cs-buy-detail p{margin:0;font-size:13px;color:#c6cfdb;line-height:1.45}
+html #buy #buy-message{grid-column:1;grid-row:4;align-self:center;margin:0 22px!important;font-family:var(--h-disp);font-weight:700;font-size:15px;letter-spacing:.1em;text-transform:uppercase;color:var(--h-ok)}
+html #buy #buy-message.cs-err{color:var(--h-red)}
+html #buy #buy-message:not(:empty){animation:h-pop .3s var(--h-ease)}
+@keyframes h-pop{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+html #buy #return-buy{white-space:nowrap;align-self:center;height:auto;grid-column:2;grid-row:4;margin:12px 20px 16px!important;font-size:16px!important}
+
+/* ---------- Scoreboard: two teams side by side ---------- */
+html #scoreboard .scoreboard-card{width:min(1100px,100%)!important;max-height:100%!important;overflow:hidden!important;padding:22px 26px!important;display:flex;flex-direction:column}
+html #scoreboard .card-top{margin-bottom:14px!important;padding-bottom:12px!important}
+html #scoreboard #score-tables{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto minmax(0,1fr);grid-auto-flow:column;column-gap:22px;min-height:0;overflow-y:auto}
+html #scoreboard h3{display:flex;justify-content:space-between;align-items:baseline;margin:0;padding:0 0 8px;border-bottom:2px solid var(--h-blue);font-family:var(--h-disp);font-weight:800;font-size:20px!important;letter-spacing:.08em;text-transform:uppercase;color:var(--h-blue)!important}
+html #scoreboard h3 span{float:none!important;font-size:34px;line-height:.8}
+html #scoreboard h3.counter{border-bottom-color:var(--h-amber);color:var(--h-amber)!important}
+html #scoreboard table{margin:0!important;font-family:var(--h-body);font-size:13px!important}
+html #scoreboard th{font-family:var(--h-mono);font-size:9px!important;letter-spacing:.18em;color:var(--h-dim)!important;padding:8px 6px!important;font-weight:500}
+html #scoreboard th:first-child{width:auto!important}
+html #scoreboard td{padding:7px 6px!important;border-top:1px solid var(--h-ln)!important;font-variant-numeric:tabular-nums}
+html #scoreboard td:not(:first-child),html #scoreboard th:not(:first-child){text-align:right}
+html #scoreboard tr.me td{background:#ffffff0f!important;color:var(--h-wh);font-weight:600}
+html #scoreboard tr.me td:first-child{box-shadow:inset 3px 0 0 var(--h-ac)}
+html #scoreboard tr.dead td{color:var(--h-dim)!important;text-decoration:none}
+html #scoreboard .small{margin:12px 0 0;font-family:var(--h-mono);font-size:9.5px;letter-spacing:.14em;color:var(--h-dim)!important}
+
+/* ---------- Match end ---------- */
+html #match-end .pause-card{width:min(720px,100%)!important;padding:44px 48px!important;text-align:left;overflow:hidden}
+html #match-end .pause-card::after{border-color:var(--h-win,var(--h-ac))}
+html #match-end #match-winner{margin:6px 0 10px;font-size:clamp(44px,7vw,84px)!important;color:var(--h-win,var(--h-wh));animation:h-rise .6s var(--h-ease) both}
+html #match-end #match-score{font-family:var(--h-disp);font-weight:700;font-size:22px!important;letter-spacing:.14em;text-transform:uppercase;color:#c6cfdb!important;margin:0 0 26px!important}
+html #match-end .pause-card .eyebrow{color:var(--h-win,var(--h-ac))!important}
+html[data-cs-match=analysts] #match-end{--h-win:var(--h-blue)}
+html[data-cs-match=counterAnalysts] #match-end{--h-win:var(--h-amber)}
+html #match-end .pause-card .cs-strip{position:absolute;inset:0 auto 0 0;width:6px;background:var(--h-win,var(--h-ac))}
+@keyframes h-rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){html #hud *,html .modal-overlay *{animation:none!important}}
+
+/* ---------- Touch controls: same plates, steel outlines ---------- */
+html #mobile-controls .mobile-button{background:#06090ec4!important;border:1px solid #ffffff38!important;color:var(--h-wh)!important;font-family:var(--h-disp)!important;font-weight:700!important;letter-spacing:.08em!important;box-shadow:none!important}
+html #mobile-controls .mobile-button:active,html #mobile-controls .mobile-button.active,html #mobile-controls .mobile-button[aria-pressed=true]{background:var(--h-ac)!important;color:#05070b!important;border-color:var(--h-ac)!important}
+html #mobile-controls .mobile-fire{background:#3a1410d0!important;border-color:#ff8f7a!important}
+html #mobile-controls .mobile-stick{border-color:#ffffff38!important;background:#06090e66!important}
+html #mobile-controls .mobile-stick-nub{background:#eef2f733!important;border-color:#eef2f780!important}
+html #mobile-controls .mobile-pause,html #mobile-controls .mobile-more{border-radius:0!important}
+
+/* ================= DESKTOP-MID ================= */
+@media (max-width:1000px){
+  html #buy .buy-card{grid-template-columns:minmax(0,1fr) 230px}
+}
+
+/* ================= PHONE LANDSCAPE ================= */
+@media (orientation:landscape) and (max-height:520px){
+  html .modal-overlay{padding:max(8px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));align-items:stretch!important;overflow:hidden!important}
+  html .modal-overlay .card{max-height:none!important;height:100%}
+  html .modal-overlay .card::before,html .modal-overlay .card::after{width:16px;height:16px}
+
+  /* buy: 3 compact columns + slim detail */
+  html #buy .buy-card{grid-template-columns:minmax(0,1fr) 190px;grid-template-rows:auto minmax(0,1fr) auto}
+  html #buy .card-top{padding:6px 12px!important}
+  html #buy #buy-money{font-size:22px}
+  html #buy .cs-buy-clock b{font-size:18px}
+  html #buy .buy-card>h2,html #buy #buy-note{display:none}
+  html #buy #shop{grid-row:2;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px!important;padding:8px 12px!important}
+  html #buy .cs-buy-col>h3{font-size:13px;margin:0}
+  html #buy #shop button{min-height:46px!important;padding:5px 8px!important;column-gap:6px}
+  html #buy #shop button .cs-ico{width:28px;height:18px}
+  html #buy #shop button strong,html #buy #shop button em{font-size:13px!important}
+  html #buy #shop button small{display:none}
+  html #buy .cs-buy-detail{grid-row:2;padding:8px 12px;gap:6px}
+  html #buy .cs-buy-detail h4{font-size:18px}
+  html #buy .cs-buy-detail .cs-big{height:34px}
+  html #buy .cs-buy-detail p{display:none}
+  html #buy .cs-buy-detail dl div{grid-template-columns:62px 1fr auto;font-size:9px}
+  html #buy #buy-message{grid-row:3;font-size:12px;margin:0 12px!important}
+  html #buy #return-buy{grid-row:3;margin:6px 10px 8px!important;min-height:44px;font-size:13px!important;letter-spacing:.06em!important;padding:0 8px}
+
+  /* pause */
+  html #pause .pause-card{padding:14px 18px!important;column-gap:20px;row-gap:6px;grid-template-columns:minmax(200px,250px) minmax(0,1fr)}
+  html #pause .pause-card>h2{font-size:32px!important}
+  html #pause .pause-card>p:not(.eyebrow){margin:0 0 6px;font-size:12px!important}
+  html #pause #resume{min-height:46px;font-size:16px!important}
+  html #pause #restart{min-height:42px}
+  html #pause .controls-list{display:none!important}
+  html #pause #pause-settings{max-height:calc(100dvh - 40px);padding-left:16px}
+
+  /* scoreboard */
+  html #scoreboard .scoreboard-card{padding:10px 14px!important}
+  html #scoreboard .card-top{margin-bottom:6px!important;padding-bottom:6px!important}
+  html #scoreboard h3{font-size:14px!important;padding-bottom:4px}
+  html #scoreboard h3 span{font-size:22px}
+  html #scoreboard table{font-size:11px!important}
+  html #scoreboard th{padding:4px!important}
+  html #scoreboard td{padding:3px 4px!important}
+  html #scoreboard th:nth-child(5),html #scoreboard td:nth-child(5){display:none}
+  html #scoreboard .small{display:none}
+
+  /* match end */
+  html #match-end .pause-card{align-self:center;height:auto!important;padding:22px 28px!important}
+  html #match-end #match-winner{font-size:44px!important}
+  html #match-end #match-score{font-size:16px!important;margin-bottom:14px!important}
+
+  /* HUD: tactical map opens above the stick, never under the thumb; can't swallow touches */
+  html.hud-map-open #hud .map-panel{top:max(8px,env(safe-area-inset-top))!important;left:max(70px,calc(env(safe-area-inset-left) + 70px))!important;width:auto!important;max-width:min(52vw,440px)!important;max-height:calc(100dvh - 120px);pointer-events:none}
+  html.hud-map-open #hud #minimap{width:100%!important;height:auto!important;max-height:calc(100dvh - 160px);object-fit:contain}
+  html #hud #round-result{top:22%!important;padding:10px 18px!important}
+  html #hud #round-result h2{font-size:30px!important}
+  html #hud #spectate{font-size:15px!important;padding:8px 24px!important;top:auto!important;bottom:calc(max(10px,env(safe-area-inset-bottom)) + 80px)}
+  html #hud .vitals>strong,html #hud .ammo strong{font-size:26px!important}
+  html #hud .score>strong{font-size:22px!important}
+  html #hud .round-clock b{font-size:20px!important}
+}

@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "level": "lvl-floor5-preppad-20261105",
+  "items": 1020,
+  "generatedLabBoxes": 0,
+  "smokeDetectors": 79,
+  "lights": 3,
+  "qualities": [
+    "standard",
+    "low"
+  ],
+  "studioFinish": true,
+  "elevatorPoses": 2,
+  "glassDoorPoses": 2,
+  "glassBreakReset": true,
+  "capsuleMove": true,
+  "errors": []
+}

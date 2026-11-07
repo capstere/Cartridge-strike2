@@ -1,0 +1,95 @@
+{
+  "status": "PASS",
+  "errors": [],
+  "loaded": {
+    "phase": "active",
+    "anchors": [
+      {
+        "x": -21.042,
+        "y": 0,
+        "z": -22.13526,
+        "height": 1.6,
+        "radius": 0.2
+      },
+      {
+        "x": -22.4,
+        "y": 0,
+        "z": -21.7,
+        "height": 1.6,
+        "radius": 0.2
+      }
+    ],
+    "clips": [
+      "Crouch_Fwd_Loop",
+      "Crouch_Idle_Loop",
+      "Death01",
+      "Hit_Chest",
+      "Idle_Loop",
+      "Jog_Fwd_Loop",
+      "Jump_Land",
+      "Jump_Loop",
+      "Pistol_Idle_Loop",
+      "Pistol_Reload",
+      "Pistol_Shoot",
+      "Sprint_Loop",
+      "Walk_Loop"
+    ],
+    "bones": 71,
+    "meshes": 3,
+    "sharedGeometry": true,
+    "sharedMaterials": true,
+    "independentSkeleton": true,
+    "idle": "Idle_Loop"
+  },
+  "escort": {
+    "escortId": "counterAnalysts-0",
+    "playerId": "counterAnalysts-0",
+    "clips": [
+      "Walk_Loop",
+      "Jog_Fwd_Loop",
+      "Idle_Loop"
+    ],
+    "distanceWalked": 4.398333333333213,
+    "displacement": 3.9633333333332246,
+    "height": 1.6,
+    "radius": 0.2,
+    "minFloor": 0.003999998515382297,
+    "maxFloor": 0.004000000975351345,
+    "phase": "active"
+  },
+  "death": {
+    "alive": false,
+    "clip": "Death01",
+    "finite": true,
+    "floor": 0.0059999992419012965
+  },
+  "nextRound": [
+    {
+      "id": "hostage-0",
+      "x": -21.042,
+      "y": 0,
+      "z": -22.13526,
+      "height": 1.6,
+      "radius": 0.2,
+      "defaultHostage": true,
+      "clip": "Idle_Loop",
+      "deathCleared": true,
+      "idleRunning": true,
+      "visualHeight": 1.6899999992612602
+    },
+    {
+      "id": "hostage-1",
+      "x": -22.4,
+      "y": 0,
+      "z": -21.7,
+      "height": 1.6,
+      "radius": 0.2,
+      "defaultHostage": true,
+      "clip": "Idle_Loop",
+      "deathCleared": true,
+      "idleRunning": true,
+      "visualHeight": 1.6899999992612602
+    }
+  ],
+  "modelRequests": 1
+}

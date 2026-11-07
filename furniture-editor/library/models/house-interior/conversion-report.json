@@ -1,0 +1,3721 @@
+{
+  "blender": "4.5.3 LTS",
+  "sourceCommit": "ccaf58d2b3eca04d1ddb07af9a3989ff0390b33c",
+  "files": [
+    {
+      "source": "Bathroom_Bathtub.blend",
+      "sourceSHA256": "7763c4c42781ad57d0735e91a264b37304d9cedc3b7a29567f17ee7c0c2d92e4",
+      "materialNodes": {
+        "Grey": [],
+        "White": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 248,
+      "dimensionsXYZ": [
+        1.6075098514556885,
+        3.899736166000366,
+        1.2602075636386871
+      ],
+      "materials": [
+        "Grey",
+        "White"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Bathroom_Bathtub.glb",
+      "bytes": 6740,
+      "sha256": "02e5e8a46d99036375645758cdbbcb4997103e64ab3723dc643568c2228f8482",
+      "roundTripTriangles": 248
+    },
+    {
+      "source": "Bathroom_Mirror1.blend",
+      "sourceSHA256": "a12f96bb47cc79440913729043c6ae0a3c8099f57bbf6128103df080bc3b5dcb",
+      "materialNodes": {
+        "Black": [],
+        "Mirror": [
+          "OUTPUT_MATERIAL",
+          "BSDF_PRINCIPLED"
+        ]
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 76,
+      "dimensionsXYZ": [
+        0.6480790376663208,
+        0.10197026282548904,
+        0.9296666383743286
+      ],
+      "materials": [
+        "Black",
+        "Mirror"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Bathroom_Mirror1.glb",
+      "bytes": 5548,
+      "sha256": "ef9f95f64afa9d63736c83f3087f738ef5bba1f5d5e1f744a44e6569370ac94d",
+      "roundTripTriangles": 76
+    },
+    {
+      "source": "Bathroom_Mirror2.blend",
+      "sourceSHA256": "f34b6551bff4064d10317a16651cc7e01f5ca2db05598fd65892a3f491b91141",
+      "materialNodes": {
+        "Mirror": [
+          "OUTPUT_MATERIAL",
+          "BSDF_PRINCIPLED"
+        ],
+        "Black": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 92,
+      "dimensionsXYZ": [
+        0.5371610522270203,
+        0.03774707205593586,
+        0.7743948698043823
+      ],
+      "materials": [
+        "Mirror",
+        "Black"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Bathroom_Mirror2.glb",
+      "bytes": 4016,
+      "sha256": "354279d3b11ed1426c6f6cf638db995f657f2c14ff702c951e6dcef5ba5acea7",
+      "roundTripTriangles": 92
+    },
+    {
+      "source": "Bathroom_Shower1.blend",
+      "sourceSHA256": "10034585c55a42d9898b3feaae3e3742f3c0f7251ed25f39cfda81840fee8059",
+      "materialNodes": {
+        "LightMetal": [],
+        "Couch_Blue": [],
+        "Grey": [],
+        "Metal": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 652,
+      "dimensionsXYZ": [
+        1.895848572254181,
+        1.8928359746932983,
+        3.54810943454504
+      ],
+      "materials": [
+        "LightMetal",
+        "Couch_Blue",
+        "Grey",
+        "Metal"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Bathroom_Shower1.glb",
+      "bytes": 37172,
+      "sha256": "18c863e7226fd47982a354fa862a2bf654c8d398968cf583a05192de7381ef7b",
+      "roundTripTriangles": 652
+    },
+    {
+      "source": "Bathroom_Sink.blend",
+      "sourceSHA256": "3520cd07f875ca6821e6f5ef9a928f6556120643b37f198b00ffde44b3388dae",
+      "materialNodes": {
+        "White": [],
+        "Grey": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 350,
+      "dimensionsXYZ": [
+        1.389499306678772,
+        0.8152636885643005,
+        1.4468303322792053
+      ],
+      "materials": [
+        "White",
+        "Grey"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Bathroom_Sink.glb",
+      "bytes": 8452,
+      "sha256": "de89326fef89a236cf4a091e89c24ee7def31c956faeaf432a4c957970ddbc2c",
+      "roundTripTriangles": 350
+    },
+    {
+      "source": "Bathroom_Toilet.blend",
+      "sourceSHA256": "5f562ffbdcd965cc97d3a800fbc59e3e26c8d6182b86441fdcfeda90e1afee38",
+      "materialNodes": {
+        "White": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 402,
+      "dimensionsXYZ": [
+        1.1966686248779297,
+        1.6914019584655762,
+        1.9006728371605277
+      ],
+      "materials": [
+        "White"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Bathroom_Toilet.glb",
+      "bytes": 8684,
+      "sha256": "43a0b76222693cc25811c5273ee95f42c3b9571e1da2033e82ecdcdb3da368c2",
+      "roundTripTriangles": 402
+    },
+    {
+      "source": "Bathroom_Toilet2.blend",
+      "sourceSHA256": "39147b298bd04d065f34f0fc46a65292ef7e0d3696bd1222d00bd0deedbf30cc",
+      "materialNodes": {
+        "White": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 334,
+      "dimensionsXYZ": [
+        1.1111400127410889,
+        1.5398201942443848,
+        1.007767423056066
+      ],
+      "materials": [
+        "White"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Bathroom_Toilet2.glb",
+      "bytes": 7412,
+      "sha256": "73cbe719821c541c44406f9074962c60a2b9f26a4a845f52b963ec58e1f9b3d9",
+      "roundTripTriangles": 334
+    },
+    {
+      "source": "Bathroom_ToiletPaper.blend",
+      "sourceSHA256": "5a6c2cd59ce61bf26c01e39fdf7d8fc688aed9e59d2615e56cbd2dd676ff716a",
+      "materialNodes": {
+        "Brown": [],
+        "White": [],
+        "LightMetal": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 276,
+      "dimensionsXYZ": [
+        0.29994112253189087,
+        0.17487655580043793,
+        0.34440701454877853
+      ],
+      "materials": [
+        "Brown",
+        "White",
+        "LightMetal"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Bathroom_ToiletPaper.glb",
+      "bytes": 8128,
+      "sha256": "1d729a23797596c3b08a043194239ad6b5b565bec1830c66cdee25d4f1090efa",
+      "roundTripTriangles": 276
+    },
+    {
+      "source": "Bathroom_ToiletPaperPile.blend",
+      "sourceSHA256": "2e1b98d3c34678727c4f2e139725533db5c45c920d24f15adf03e6afdd3ca840",
+      "materialNodes": {
+        "Brown": [],
+        "LightMetal": [],
+        "White": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 384,
+      "dimensionsXYZ": [
+        0.33447882533073425,
+        0.3498116135597229,
+        0.37470779987052083
+      ],
+      "materials": [
+        "Brown",
+        "LightMetal",
+        "White"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Bathroom_ToiletPaperPile.glb",
+      "bytes": 10328,
+      "sha256": "1408fedd502b3afc2306bbc66535287d73e22f50e99fb8f5af6d715fd3ed8625",
+      "roundTripTriangles": 384
+    },
+    {
+      "source": "Bathroom_Towel.blend",
+      "sourceSHA256": "deff64a02c4a39fe6455c44ce74151d59df1ab043be2fe06c7cb61110f9afcbc",
+      "materialNodes": {
+        "Red": [],
+        "LightMetal": [],
+        "White": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 192,
+      "dimensionsXYZ": [
+        1.1845464706420898,
+        0.16111644729971886,
+        0.6538205444812775
+      ],
+      "materials": [
+        "Red",
+        "LightMetal",
+        "White"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Bathroom_Towel.glb",
+      "bytes": 7044,
+      "sha256": "bc4c27bee1c74949c7ce41a415d14149954249baf06d99e81d6bcc2458f6a0b2",
+      "roundTripTriangles": 192
+    },
+    {
+      "source": "Bathroom_WashingMachine.blend",
+      "sourceSHA256": "7ccb25aa14e9c1a293de8e7178a9dee84fb777634d206a4bca39d1b25e6ebf71",
+      "materialNodes": {
+        "Grey": [],
+        "Black": [],
+        "White": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 304,
+      "dimensionsXYZ": [
+        1.2919137477874756,
+        1.3237116932868958,
+        1.4701954126358032
+      ],
+      "materials": [
+        "Grey",
+        "Black",
+        "White"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Bathroom_WashingMachine.glb",
+      "bytes": 9244,
+      "sha256": "0c8e422a533b7f96f7a82e19374370b2cfd2431fe0ff934d5eaeb4e823039cb0",
+      "roundTripTriangles": 304
+    },
+    {
+      "source": "Bed_Bunk.blend",
+      "sourceSHA256": "c6e25d8a35a010d39a6ca8a749216c8dbb5503478bc5c282bfe0c1b2b7847eb1",
+      "materialNodes": {
+        "Red": [],
+        "Grey": [],
+        "Wood": [],
+        "White": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 960,
+      "dimensionsXYZ": [
+        2.1688263416290283,
+        3.9973946809768677,
+        3.0307142604142427
+      ],
+      "materials": [
+        "Red",
+        "Grey",
+        "Wood",
+        "White"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Bed_Bunk.glb",
+      "bytes": 30264,
+      "sha256": "f19a84ac86f15565522c9eae7212b8817ac4160a334fe1b5f336cfa300c919b3",
+      "roundTripTriangles": 960
+    },
+    {
+      "source": "Bed_King.blend",
+      "sourceSHA256": "a1c247e341b3640ced739a65c3ee68685b7621fb1a3f1004fa32eb453e9ee857",
+      "materialNodes": {
+        "Grey": [],
+        "Red": [],
+        "DarkRed": [],
+        "Wood": [],
+        "White": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 676,
+      "dimensionsXYZ": [
+        3.0641281604766846,
+        3.9528441429138184,
+        1.2145822066813707
+      ],
+      "materials": [
+        "Grey",
+        "Red",
+        "DarkRed",
+        "Wood",
+        "White"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Bed_King.glb",
+      "bytes": 20680,
+      "sha256": "ffee7b82ac6d1505c3dbe20bfaec7451efa99ce192b582186a45501eb6c47bd6",
+      "roundTripTriangles": 676
+    },
+    {
+      "source": "Bed_Single.blend",
+      "sourceSHA256": "f9c46fe307aab7f4f8ac3b6fccae13efc7de9597a838baaf3edd9d5f4b35cd9f",
+      "materialNodes": {
+        "White": [],
+        "Red": [],
+        "Wood": [],
+        "DarkRed": [],
+        "Grey": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 536,
+      "dimensionsXYZ": [
+        1.979145109653473,
+        3.93999981880188,
+        1.3545749187469482
+      ],
+      "materials": [
+        "White",
+        "Red",
+        "Wood",
+        "DarkRed",
+        "Grey"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Bed_Single.glb",
+      "bytes": 18576,
+      "sha256": "8c360175d5814c4acedce2fe7537782f658eb76a60ba042a1fc90519605c3df0",
+      "roundTripTriangles": 536
+    },
+    {
+      "source": "Bookshelf.blend",
+      "sourceSHA256": "43b31c1c6fdb4d3c08bf9d9b1950e2f152d5e4797efb9b89bf32f23f51ab5a4d",
+      "materialNodes": {
+        "White": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 120,
+      "dimensionsXYZ": [
+        2.318324327468872,
+        0.7559989094734192,
+        4.438079252839088
+      ],
+      "materials": [
+        "White"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Bookshelf.glb",
+      "bytes": 7556,
+      "sha256": "e1c6c822384cf9579760a2c7eb2b8a034b62d004ade9b54abdfe611f65f5530e",
+      "roundTripTriangles": 120
+    },
+    {
+      "source": "Carpet_1.blend",
+      "sourceSHA256": "73a4fbe8a63c3a80bc75aca417cf7f1a549eb0816b9e6a36c38d3305614e4d46",
+      "materialNodes": {
+        "DarkRed": [],
+        "LightOrange": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 108,
+      "dimensionsXYZ": [
+        2.1312304735183716,
+        3.093209147453308,
+        0.036658028489910066
+      ],
+      "materials": [
+        "DarkRed",
+        "LightOrange"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Carpet_1.glb",
+      "bytes": 5144,
+      "sha256": "79f2bc9ea64cb7fd193d03e3d4738701491942169217302448a7f6f90d8bdba5",
+      "roundTripTriangles": 108
+    },
+    {
+      "source": "Carpet_2.blend",
+      "sourceSHA256": "abe491efebf2231f478d291e3bba10cb6c9610b83b4437b39c5ac4257de5360e",
+      "materialNodes": {
+        "LightOrange": [],
+        "DarkRed": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 98,
+      "dimensionsXYZ": [
+        3.093209385871887,
+        3.1814452409744263,
+        0.036658028489910066
+      ],
+      "materials": [
+        "LightOrange",
+        "DarkRed"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Carpet_2.glb",
+      "bytes": 4840,
+      "sha256": "387604b879618cc8d68ebd6244d1a46db6f74a46fab6a83fdf28faaa07b425d5",
+      "roundTripTriangles": 98
+    },
+    {
+      "source": "Carpet_Round.blend",
+      "sourceSHA256": "132fb30908222d41e32d0620e4e2ac00bc47fa38c240130c2bc894ff5afe605d",
+      "materialNodes": {
+        "DarkRed": [],
+        "LightOrange": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 128,
+      "dimensionsXYZ": [
+        2.492732882499695,
+        2.531187415122986,
+        0.015736011599003064
+      ],
+      "materials": [
+        "DarkRed",
+        "LightOrange"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Carpet_Round.glb",
+      "bytes": 5748,
+      "sha256": "de162321b3cee5264d077bcc95ba3f24cf43d1f8109cc175b805043e9be6a8b9",
+      "roundTripTriangles": 128
+    },
+    {
+      "source": "Chair_1.blend",
+      "sourceSHA256": "7134909a39966f1d0e3c7fe9ef9511e2f3453e90c76c74fb65cf277cb317de17",
+      "materialNodes": {
+        "Wood": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 216,
+      "dimensionsXYZ": [
+        0.7617217898368835,
+        0.8254337310791016,
+        1.7677736640907824
+      ],
+      "materials": [
+        "Wood"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Chair_1.glb",
+      "bytes": 12364,
+      "sha256": "2e4e4d9b192d745a7d62a974128f8f92c29a66c534cf3ea1cad3824416b685df",
+      "roundTripTriangles": 216
+    },
+    {
+      "source": "Chair_2.blend",
+      "sourceSHA256": "5bf14e1ada5a62447c5c4f10c40ae92151e12888745ac729455d2699ee1903e2",
+      "materialNodes": {
+        "Wood_Dark": [],
+        "Cushin": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 352,
+      "dimensionsXYZ": [
+        0.7617217898368835,
+        0.8254337310791016,
+        1.6893582702614367
+      ],
+      "materials": [
+        "Wood_Dark",
+        "Cushin"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Chair_2.glb",
+      "bytes": 16620,
+      "sha256": "2a9da6eac0c5b087999b8f8aac1f22b877ab86caf5986b84ce328dbe8a6b9995",
+      "roundTripTriangles": 352
+    },
+    {
+      "source": "Chair_3.blend",
+      "sourceSHA256": "2ee054e9bbb9906f87dea2f735c8f3a3f49868526dce53727a9e2cd59214b80e",
+      "materialNodes": {
+        "Wood_Dark": [],
+        "Cushin": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 428,
+      "dimensionsXYZ": [
+        0.7617217898368835,
+        0.8375078737735748,
+        1.6940387072972953
+      ],
+      "materials": [
+        "Wood_Dark",
+        "Cushin"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Chair_3.glb",
+      "bytes": 20336,
+      "sha256": "a62a50d7c759ae6d6ff2211c9213632e70212ab0efdc22af30d2529d2d1e1e34",
+      "roundTripTriangles": 428
+    },
+    {
+      "source": "Chair_4.blend",
+      "sourceSHA256": "40d7dfff0ec7dc77f0f738ded949a0f47bc89097de5a0f9639ed9dc69d4251ee",
+      "materialNodes": {
+        "Wood": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 264,
+      "dimensionsXYZ": [
+        0.7617217898368835,
+        0.8254336714744568,
+        1.7677736640907824
+      ],
+      "materials": [
+        "Wood"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Chair_4.glb",
+      "bytes": 8808,
+      "sha256": "3f2f2f27e2167f11deaa7aca3ed5ddf63bffd3499f7a809fab1740e5021df92a",
+      "roundTripTriangles": 264
+    },
+    {
+      "source": "Column_Round1.blend",
+      "sourceSHA256": "af4cfc40812a0901fe3f498060c4e9ea6cc5afd8713dc44e3343333852f52c1a",
+      "materialNodes": {
+        "Marble": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 332,
+      "dimensionsXYZ": [
+        1.4000351428985596,
+        1.4720842838287354,
+        1.772751714038435
+      ],
+      "materials": [
+        "Marble"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Column_Round1.glb",
+      "bytes": 7260,
+      "sha256": "090d067fb2549589570c2519211b2265fd00b44a810f98e72d1b56963da1f0ef",
+      "roundTripTriangles": 332
+    },
+    {
+      "source": "Column_Round2.blend",
+      "sourceSHA256": "747c8736a4a28fb82ee681157273396c7b37e58b40df990807572fa1877bd8c9",
+      "materialNodes": {
+        "Marble": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 556,
+      "dimensionsXYZ": [
+        1.4000351428985596,
+        1.4720842838287354,
+        4.000646114349365
+      ],
+      "materials": [
+        "Marble"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Column_Round2.glb",
+      "bytes": 11128,
+      "sha256": "a4a90fdd6d6c436fa56d1e9b375c8939eb0a03f7b2acf49d90758af82d67fa47",
+      "roundTripTriangles": 556
+    },
+    {
+      "source": "Column_Round3.blend",
+      "sourceSHA256": "da11b48dc27b3dded574adc97ae3ad7160261c34f07dc550fa61432b344285cc",
+      "materialNodes": {
+        "Marble": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 556,
+      "dimensionsXYZ": [
+        1.4000351428985596,
+        1.4720842838287354,
+        5.428989197063032
+      ],
+      "materials": [
+        "Marble"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Column_Round3.glb",
+      "bytes": 11148,
+      "sha256": "4805d100a7a1ccd978bec8733daa64872179f18b45ea475d3020412fc0ff11ba",
+      "roundTripTriangles": 556
+    },
+    {
+      "source": "Column_SquareBig.blend",
+      "sourceSHA256": "9b7553ec271d5f048a2c259ae10fd49ff1c10fe46dc67bd0ef5c5175b9b2f2c9",
+      "materialNodes": {
+        "Marble": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 180,
+      "dimensionsXYZ": [
+        0.9072689414024353,
+        0.9072689414024353,
+        4.158595085144043
+      ],
+      "materials": [
+        "Marble"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Column_SquareBig.glb",
+      "bytes": 4356,
+      "sha256": "d2105aee771508ce140bfce1c2f74b7e4543cd1bd8d9ab447893f645df0318ee",
+      "roundTripTriangles": 180
+    },
+    {
+      "source": "Column_SquareSmall.blend",
+      "sourceSHA256": "42b0e1cd388455459ece33e96db0ca84eceaa53ce3414202f001568045ae185b",
+      "materialNodes": {
+        "Marble": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 148,
+      "dimensionsXYZ": [
+        0.9072689414024353,
+        0.9072689414024353,
+        2.4470200538635254
+      ],
+      "materials": [
+        "Marble"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Column_SquareSmall.glb",
+      "bytes": 3784,
+      "sha256": "67256743eb472c4695d599aaa4832b2eb3eab709768e626c9774d07c04c1c068",
+      "roundTripTriangles": 148
+    },
+    {
+      "source": "Couch_L.blend",
+      "sourceSHA256": "662c808adfd0ad685f5ea8ae44a18194f8089f8d7b3a4a1193cf711d9970c1c2",
+      "materialNodes": {
+        "Couch_BeigeDark": [],
+        "Couch_Beige": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 1428,
+      "dimensionsXYZ": [
+        5.6144092082977295,
+        4.326972603797913,
+        2.261323635466397
+      ],
+      "materials": [
+        "Couch_BeigeDark",
+        "Couch_Beige"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Couch_L.glb",
+      "bytes": 27904,
+      "sha256": "73fc280a5bd0ed199b8288cf0d09156fe95087dc24ebfa64c1cf843686fb5db3",
+      "roundTripTriangles": 1428
+    },
+    {
+      "source": "Couch_Large1.blend",
+      "sourceSHA256": "8d2001c2acc7d55b871a665344503b24010c542c3e514abcebe032a6be70cd1f",
+      "materialNodes": {
+        "DarkRed": [],
+        "Red": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 1460,
+      "dimensionsXYZ": [
+        5.475492000579834,
+        1.9922885298728943,
+        2.1064399938266334
+      ],
+      "materials": [
+        "DarkRed",
+        "Red"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Couch_Large1.glb",
+      "bytes": 28476,
+      "sha256": "df479d82925041a4893ee2f20033e15d80c404dda9d37bd0cfb4ac4c93b94fc0",
+      "roundTripTriangles": 1460
+    },
+    {
+      "source": "Couch_Large2.blend",
+      "sourceSHA256": "1ca343dbfaf20f24c04832497c5e5d7dcc43c031c86a3da5094751dd278c32bb",
+      "materialNodes": {
+        "Couch_BeigeDark": [],
+        "Couch_Beige": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 1332,
+      "dimensionsXYZ": [
+        5.190925359725952,
+        1.992288589477539,
+        2.1080441046506166
+      ],
+      "materials": [
+        "Couch_BeigeDark",
+        "Couch_Beige"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Couch_Large2.glb",
+      "bytes": 26188,
+      "sha256": "e0b856ca0f6f86ee7c105101b44653bc55217ef23895d34044f4960330faed13",
+      "roundTripTriangles": 1332
+    },
+    {
+      "source": "Couch_Large3.blend",
+      "sourceSHA256": "8c87e8016773c1166e49cfe47ccd8c9f2cdd5ac45d7d69394a37bd58d50d1d8d",
+      "materialNodes": {
+        "Couch_Green": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 1300,
+      "dimensionsXYZ": [
+        7.085160255432129,
+        3.0215060710906982,
+        1.0883338004350662
+      ],
+      "materials": [
+        "Couch_Green"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Couch_Large3.glb",
+      "bytes": 24732,
+      "sha256": "048996f151cb00f9c8616a8aba74f43d54c3421bb0392ff5da2e0d3898f1d412",
+      "roundTripTriangles": 1300
+    },
+    {
+      "source": "Couch_Medium1.blend",
+      "sourceSHA256": "9decc8fba7df1e0366535f3b81ffb5754ccbad15ee92758685f8599802e3c6b1",
+      "materialNodes": {
+        "Couch_Blue": [],
+        "Black": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 1012,
+      "dimensionsXYZ": [
+        4.688142776489258,
+        2.2034616470336914,
+        1.9100288255140185
+      ],
+      "materials": [
+        "Couch_Blue",
+        "Black"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Couch_Medium1.glb",
+      "bytes": 20704,
+      "sha256": "ad80c27d51ba3082198a218ca406fc769aff946eccb55994d2487553e99d4586",
+      "roundTripTriangles": 1012
+    },
+    {
+      "source": "Couch_Medium2.blend",
+      "sourceSHA256": "a2e97d68760b88b01c68f8798d0ce41bd51edb362bf8f1fa46563da4756d4b46",
+      "materialNodes": {
+        "Couch_Mustard": [],
+        "Wood": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 924,
+      "dimensionsXYZ": [
+        4.518662929534912,
+        1.9994778037071228,
+        1.9593424929731214
+      ],
+      "materials": [
+        "Couch_Mustard",
+        "Wood"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Couch_Medium2.glb",
+      "bytes": 22188,
+      "sha256": "4a92c33d7f06f5a9fed3cd951760ad1f4e5cb6e78ee8956ee37ea465f19376c8",
+      "roundTripTriangles": 924
+    },
+    {
+      "source": "Couch_Small1.blend",
+      "sourceSHA256": "550054d0d5ab28551b2d39f4a8321b017a140519851fe8b8e62aa490515e6a4a",
+      "materialNodes": {
+        "Couch_Blue": [],
+        "Black": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 852,
+      "dimensionsXYZ": [
+        2.885470390319824,
+        2.2034616470336914,
+        1.9100287845358253
+      ],
+      "materials": [
+        "Couch_Blue",
+        "Black"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Couch_Small1.glb",
+      "bytes": 17776,
+      "sha256": "f92e2a0a9537971309b28343f509daf0f2c457bd3cc988cd2a474247f1468c52",
+      "roundTripTriangles": 852
+    },
+    {
+      "source": "Couch_Small2.blend",
+      "sourceSHA256": "265b56e8352411e469b7415c1459296ee47d31b7b7bba437253aa1a460fe24cb",
+      "materialNodes": {
+        "Couch_BeigeDark": [],
+        "Couch_Beige": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 468,
+      "dimensionsXYZ": [
+        2.113649606704712,
+        1.9922884106636047,
+        1.269114274271308
+      ],
+      "materials": [
+        "Couch_BeigeDark",
+        "Couch_Beige"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Couch_Small2.glb",
+      "bytes": 10384,
+      "sha256": "32013e9ea4d6d23187fc9b62f9649f431fd194e25f101e93cecb723073b1f485",
+      "roundTripTriangles": 468
+    },
+    {
+      "source": "Curtains_Double.blend",
+      "sourceSHA256": "808b0303766ea2ef7c9952a64e43ecaafd6b8f61b534ebea91279a96ea0ca6cc",
+      "materialNodes": {
+        "LightMetal": [],
+        "Couch_Blue": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 320,
+      "dimensionsXYZ": [
+        3.468798875808716,
+        0.47647732496261597,
+        4.344479694031179
+      ],
+      "materials": [
+        "LightMetal",
+        "Couch_Blue"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Curtains_Double.glb",
+      "bytes": 8772,
+      "sha256": "c8344d02edcc595e68dc8e88717422ccd17703870942bffe2a7e63193d1a3b10",
+      "roundTripTriangles": 320
+    },
+    {
+      "source": "Curtains_Single.blend",
+      "sourceSHA256": "302e69b0dac23cdfaa64a0a79cd18e2591ad6cfcab4e4095b702a69b25a82a79",
+      "materialNodes": {
+        "Couch_Blue": [],
+        "LightMetal": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 208,
+      "dimensionsXYZ": [
+        1.6319938898086548,
+        0.4764773100614548,
+        4.344479710794985
+      ],
+      "materials": [
+        "Couch_Blue",
+        "LightMetal"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Curtains_Single.glb",
+      "bytes": 6276,
+      "sha256": "f47f9bc8e3d5acfdd1c36e68ba43536c758cac6d2b1b08737404d64b3171ab1e",
+      "roundTripTriangles": 208
+    },
+    {
+      "source": "Door_1.blend",
+      "sourceSHA256": "4e2dd9098294fbf2465fcd922aa8eb315fb8154e936523ecaeb4e81638efc04d",
+      "materialNodes": {
+        "White": [],
+        "Metal": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 456,
+      "dimensionsXYZ": [
+        1.7357715368270874,
+        0.4201309084892273,
+        4.187835693825036
+      ],
+      "materials": [
+        "White",
+        "Metal"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Door_1.glb",
+      "bytes": 20740,
+      "sha256": "102d72cf96fd76fc7e19e6713a1f1a2ed8f1177fc9c1f3c0e3a4dfc2ecdf05a2",
+      "roundTripTriangles": 456
+    },
+    {
+      "source": "Door_2.blend",
+      "sourceSHA256": "bb9a6e3f6981bebeb18a4d0763d81b7a24d53540ee1e9a4b4f1567096513c772",
+      "materialNodes": {
+        "Metal": [],
+        "Wood": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 456,
+      "dimensionsXYZ": [
+        1.739842176437378,
+        0.4211161434650421,
+        4.197657108306885
+      ],
+      "materials": [
+        "Metal",
+        "Wood"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Door_2.glb",
+      "bytes": 20748,
+      "sha256": "f55a0a3cf8d56437018d368e4157721fd6cb91706703c456aadce76b5f204e14",
+      "roundTripTriangles": 456
+    },
+    {
+      "source": "Door_3.blend",
+      "sourceSHA256": "b249b971260e017f16a98d7dbcfec4c57ae02a9a67d08134284a6529512def3f",
+      "materialNodes": {
+        "Wood": [],
+        "Metal": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 856,
+      "dimensionsXYZ": [
+        1.7357715964317322,
+        0.41585201025009155,
+        4.187835693825036
+      ],
+      "materials": [
+        "Wood",
+        "Metal"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Door_3.glb",
+      "bytes": 18512,
+      "sha256": "786e3d964e0d3c0b88b38608cc94171898e6a60603bf472f3e4c97e4ce2fe727",
+      "roundTripTriangles": 856
+    },
+    {
+      "source": "Door_4.blend",
+      "sourceSHA256": "afc15a9c3b50b2a8d36d8bc0473028b0a57848f4f1615f49e8049fabd5bcb5bc",
+      "materialNodes": {
+        "Metal": [],
+        "Wood": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 920,
+      "dimensionsXYZ": [
+        1.739842176437378,
+        0.4211161434650421,
+        4.197656154632568
+      ],
+      "materials": [
+        "Metal",
+        "Wood"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Door_4.glb",
+      "bytes": 35924,
+      "sha256": "e8a2c1ec568d393b962c51ec653d7bb81b0c6186aba6241b125ca18a19cbd429",
+      "roundTripTriangles": 920
+    },
+    {
+      "source": "Door_5.blend",
+      "sourceSHA256": "95cedfa2217b9380c96e7821d5359eedf341dd959ad93dc0c39d37ce4bbb0b99",
+      "materialNodes": {
+        "Wood": [],
+        "Metal": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 1224,
+      "dimensionsXYZ": [
+        1.739842176437378,
+        0.4211161732673645,
+        4.1976571646519005
+      ],
+      "materials": [
+        "Wood",
+        "Metal"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Door_5.glb",
+      "bytes": 49432,
+      "sha256": "715bdbf4f398e6cf5059024968ddd6d68348fd23d7545cc1a75766a35effe47d",
+      "roundTripTriangles": 1224
+    },
+    {
+      "source": "Door_6.blend",
+      "sourceSHA256": "8f9d785ef6439465d672933da5f100a4a93f1019dabb53d2959abd65e699ba0b",
+      "materialNodes": {
+        "Wood": [],
+        "Metal": [],
+        "Glass": [
+          "OUTPUT_MATERIAL",
+          "BSDF_TRANSPARENT"
+        ],
+        "Wood_Dark": []
+      },
+      "materialAdaptations": [
+        "Glass: Transparent BSDF -> glTF transmission 1, IOR 1"
+      ],
+      "meshes": 1,
+      "triangles": 832,
+      "dimensionsXYZ": [
+        1.739842176437378,
+        0.4211161434650421,
+        4.1976571646519005
+      ],
+      "materials": [
+        "Wood",
+        "Metal",
+        "Glass",
+        "Wood_Dark"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Door_6.glb",
+      "bytes": 34000,
+      "sha256": "af12620a40aa2200ff2e443b85d7e0864274e4e703c347aa603aeeef69f4054c",
+      "roundTripTriangles": 832
+    },
+    {
+      "source": "Door_7.blend",
+      "sourceSHA256": "f1ba986ab133939974bbc323f55b7bc176f649a0670672f2c9a1be5a01dea4e3",
+      "materialNodes": {
+        "White": [],
+        "Metal": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 172,
+      "dimensionsXYZ": [
+        1.739842176437378,
+        0.4211161434650421,
+        4.197657108306885
+      ],
+      "materials": [
+        "White",
+        "Metal"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Door_7.glb",
+      "bytes": 10152,
+      "sha256": "0405dcc037f6c9550e6de62de5aa8833a0261c3bd16a0a2e0d05cd1d37c9b235",
+      "roundTripTriangles": 172
+    },
+    {
+      "source": "Door_8.blend",
+      "sourceSHA256": "909c27f3485352ba2db58b8da5dd39f1a16c3cbd8891e616bd87451aa58d968d",
+      "materialNodes": {
+        "Wood": [],
+        "Gold": [],
+        "Metal": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 2568,
+      "dimensionsXYZ": [
+        1.739842176437378,
+        0.44241489470005035,
+        4.197656154632568
+      ],
+      "materials": [
+        "Wood",
+        "Gold",
+        "Metal"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Door_8.glb",
+      "bytes": 91748,
+      "sha256": "c33e3c7e80a573f06739a387a5bb8eb2e3da38f713157bc189ba5ed1fa9038d3",
+      "roundTripTriangles": 2568
+    },
+    {
+      "source": "Door_9.blend",
+      "sourceSHA256": "bec8d5211651b08a85d2bd3255a6d7731f3ae42e0a1a0748a5a7b8a73619e19a",
+      "materialNodes": {
+        "Metal.001": [],
+        "White.001": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 920,
+      "dimensionsXYZ": [
+        1.739842176437378,
+        0.4211161434650421,
+        4.197656154632568
+      ],
+      "materials": [
+        "Metal.001",
+        "White.001"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Door_9.glb",
+      "bytes": 36020,
+      "sha256": "07e083ac5681a0b5d28a27ff4187d7e6ce6b73fd3dd7a40adfd372ed83f55658",
+      "roundTripTriangles": 920
+    },
+    {
+      "source": "Door_Double.blend",
+      "sourceSHA256": "3f64aa56365de87e742cfb3bfa29720a84bbd7e550152ed80728bd6a6c0e2f9b",
+      "materialNodes": {
+        "Gold": [],
+        "Wood": []
+      },
+      "materialAdaptations": [],
+      "meshes": 2,
+      "triangles": 1720,
+      "dimensionsXYZ": [
+        3.4826080799102783,
+        0.4297962486743927,
+        4.187835931777954
+      ],
+      "materials": [
+        "Gold",
+        "Wood"
+      ],
+      "uvLayers": [
+        0,
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Door_Double.glb",
+      "bytes": 36612,
+      "sha256": "e8321351c43b7058069b9a7dd50f404f5b507daf3cd592f6a45597bc814aa427",
+      "roundTripTriangles": 1720
+    },
+    {
+      "source": "Drawer_1.blend",
+      "sourceSHA256": "62eac1461289e92b3ba847b806149380b6fea4119e61e5c74a670c02f550c8c6",
+      "materialNodes": {
+        "Wood_Dark": [],
+        "Wood": [],
+        "Wood_Light": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 404,
+      "dimensionsXYZ": [
+        2.794059991836548,
+        1.1186073422431946,
+        1.352915521711111
+      ],
+      "materials": [
+        "Wood_Dark",
+        "Wood",
+        "Wood_Light"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Drawer_1.glb",
+      "bytes": 13392,
+      "sha256": "237868391cb535d6f4960db2561b268b5531fc03a2f4d0847215aaf6781ab2da",
+      "roundTripTriangles": 404
+    },
+    {
+      "source": "Drawer_2.blend",
+      "sourceSHA256": "b1ed5d34fe5636f8a08a737b992ff1b295b885a001a2eefa0c750f8fcb796743",
+      "materialNodes": {
+        "Wood": [],
+        "Wood_Light": [],
+        "Wood_Dark": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 436,
+      "dimensionsXYZ": [
+        4.035199165344238,
+        1.1186072826385498,
+        1.3049374781548977
+      ],
+      "materials": [
+        "Wood",
+        "Wood_Light",
+        "Wood_Dark"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Drawer_2.glb",
+      "bytes": 14352,
+      "sha256": "a5a1040c827e43bac18d4f455559f64f87e5fe5903bcf4d5bb313da9043bee44",
+      "roundTripTriangles": 436
+    },
+    {
+      "source": "Drawer_3.blend",
+      "sourceSHA256": "efed617a1cd1894af9f4c4a12310e3b05bdab17a73829e596c3d9e90ef445e04",
+      "materialNodes": {
+        "Wood_Light": [],
+        "Wood_Dark": [],
+        "Wood": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 604,
+      "dimensionsXYZ": [
+        4.1530680656433105,
+        1.3364911675453186,
+        1.5771787881433923
+      ],
+      "materials": [
+        "Wood_Light",
+        "Wood_Dark",
+        "Wood"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Drawer_3.glb",
+      "bytes": 26508,
+      "sha256": "e9f17f25e6a9ca36978cecb524d8bea256de567234ef778e37a2bee4acedb07e",
+      "roundTripTriangles": 604
+    },
+    {
+      "source": "Drawer_4.blend",
+      "sourceSHA256": "8f941c11fc2df1093a66e7fed886d11b6783d052f4a7aa2736f7446d20f8efda",
+      "status": "FAILED",
+      "reason": "Inga meshobjekt"
+    },
+    {
+      "source": "Drawer_5.blend",
+      "sourceSHA256": "47f6a9e5573f405e1fbe19b8e5b9bc14dcb2dff55aba300f31b34c5bef0270b4",
+      "materialNodes": {
+        "Wood_Light": [],
+        "Wood_Dark": [],
+        "Wood": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 352,
+      "dimensionsXYZ": [
+        2.794059991836548,
+        1.1527660489082336,
+        1.3321822956204414
+      ],
+      "materials": [
+        "Wood_Light",
+        "Wood_Dark",
+        "Wood"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Drawer_5.glb",
+      "bytes": 17240,
+      "sha256": "6ef890734d6d57e9af0da4ae7d01c1258aae15d1df581dd54eca7a56dfa7865d",
+      "roundTripTriangles": 352
+    },
+    {
+      "source": "Fireplace.blend",
+      "sourceSHA256": "1e7779b82e16373cc1994cdad7cd32a6702e8855f92e6d2a61ff55b77420240e",
+      "materialNodes": {
+        "Marble": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 360,
+      "dimensionsXYZ": [
+        3.2498072385787964,
+        1.157845914363861,
+        2.5611968940747047
+      ],
+      "materials": [
+        "Marble"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Fireplace.glb",
+      "bytes": 7852,
+      "sha256": "def013fbc375efbe3bb70d13831c586f1622d4e1d33893acaf085f3813381154",
+      "roundTripTriangles": 360
+    },
+    {
+      "source": "Fork.blend",
+      "sourceSHA256": "706e2e69ea5d36c5326478cb40b7a1c9d5e6f1c29eabdefe90f6883aa7320a70",
+      "materialNodes": {
+        "LightMetal": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 188,
+      "dimensionsXYZ": [
+        0.044701674953103065,
+        0.403175950050354,
+        0.010192980989813805
+      ],
+      "materials": [
+        "LightMetal"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Fork.glb",
+      "bytes": 4520,
+      "sha256": "58337eeaf761eda38c0c7327f211dd1747468bf978ac4f7f5143c87827aaaa57",
+      "roundTripTriangles": 188
+    },
+    {
+      "source": "Houseplant_1.blend",
+      "sourceSHA256": "c72d42aa928dfc3136c4524f88b8c266dc7d3d81b45cd2f0541c57c6d04ab139",
+      "materialNodes": {
+        "Brown": [],
+        "Plant_Green": [],
+        "Black": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 245,
+      "dimensionsXYZ": [
+        0.7690395414829254,
+        0.694259762763977,
+        0.7173580710077658
+      ],
+      "materials": [
+        "Brown",
+        "Plant_Green",
+        "Black"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Houseplant_1.glb",
+      "bytes": 8964,
+      "sha256": "92550dba8d3493961af997aa35cd24b32cf2fd8bad0eaaa402ea0bc433ca074f",
+      "roundTripTriangles": 245
+    },
+    {
+      "source": "Houseplant_2.blend",
+      "sourceSHA256": "2dbbac57a89eed3122f5e90373ef5e2c7a20e8856f55d69a509366c3ee5b18f9",
+      "materialNodes": {
+        "Black": [],
+        "DarkGreen": [],
+        "Brown": [],
+        "LightOrange": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 324,
+      "dimensionsXYZ": [
+        0.25055065751075745,
+        0.25055065751075745,
+        0.38489198859315366
+      ],
+      "materials": [
+        "Black",
+        "DarkGreen",
+        "Brown",
+        "LightOrange"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Houseplant_2.glb",
+      "bytes": 10672,
+      "sha256": "4c9dc00a8ae6c77ae573e954597874494c3222495cbcfa42a9fb8c1432daedcd",
+      "roundTripTriangles": 324
+    },
+    {
+      "source": "Houseplant_3.blend",
+      "sourceSHA256": "a2ca2ae40ae6c1c601a8f3872efed16e240aaab273aff2035ed0ee74890a847b",
+      "materialNodes": {
+        "Brown": [],
+        "Black": [],
+        "DarkGreen": [],
+        "LightOrange": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 412,
+      "dimensionsXYZ": [
+        0.3425743877887726,
+        0.33825647830963135,
+        0.8449166296049953
+      ],
+      "materials": [
+        "Brown",
+        "Black",
+        "DarkGreen",
+        "LightOrange"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Houseplant_3.glb",
+      "bytes": 12640,
+      "sha256": "f5ca358db2e535cca78631ec1009bcf13820e38ab0652aeb6a6d4180d1fdb026",
+      "roundTripTriangles": 412
+    },
+    {
+      "source": "Houseplant_4.blend",
+      "sourceSHA256": "8bf40c93fb5482cf5765593f55a5d09a9ef8db39df43466488c3296e4b1f6440",
+      "materialNodes": {
+        "Black": [],
+        "Plant_Green": [],
+        "Brown": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 316,
+      "dimensionsXYZ": [
+        0.33825647830963135,
+        0.33825647830963135,
+        0.9283701656386256
+      ],
+      "materials": [
+        "Black",
+        "Plant_Green",
+        "Brown"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Houseplant_4.glb",
+      "bytes": 8840,
+      "sha256": "5556a7ef391e7b9ba1f74321bb1a2dfa1da45453e20c78f06ca21e49ad599fdf",
+      "roundTripTriangles": 316
+    },
+    {
+      "source": "Houseplant_5.blend",
+      "sourceSHA256": "b458e2ae8a52c307f70c2f2149286315eefa051dde963dc5975b67ea072e6afa",
+      "materialNodes": {
+        "Brown": [],
+        "Black": [],
+        "Plant_Green": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 492,
+      "dimensionsXYZ": [
+        0.5117817372083664,
+        0.5283551514148712,
+        0.4236295698210597
+      ],
+      "materials": [
+        "Brown",
+        "Black",
+        "Plant_Green"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Houseplant_5.glb",
+      "bytes": 12200,
+      "sha256": "bfd9da01f96ac0b4f236edf41170a4cbae0068c5902f3af654a56afa7b4b7bcb",
+      "roundTripTriangles": 492
+    },
+    {
+      "source": "Houseplant_6.blend",
+      "sourceSHA256": "48a47efbb82d1d18f81f815d2810f79b483c6fc42e7b79085de32c3ddb7a9508",
+      "materialNodes": {
+        "Black": [],
+        "Brown": [],
+        "Plant_Green": [],
+        "Grey": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 652,
+      "dimensionsXYZ": [
+        1.0398852229118347,
+        1.050104022026062,
+        0.9586081383749843
+      ],
+      "materials": [
+        "Black",
+        "Brown",
+        "Plant_Green",
+        "Grey"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Houseplant_6.glb",
+      "bytes": 15080,
+      "sha256": "abf71734b74e801918096b0999b8fe3c4cf2f7322850eeaf54647d9cf37be3d7",
+      "roundTripTriangles": 652
+    },
+    {
+      "source": "Houseplant_7.blend",
+      "sourceSHA256": "3c6ac80fa1a5c59b9761987905837c13a77dc9ec2b3edce2d9b91645e95fb621",
+      "materialNodes": {
+        "Black": [],
+        "Plant_Green": [],
+        "Brown": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 449,
+      "dimensionsXYZ": [
+        1.1662461757659912,
+        1.2200591564178467,
+        0.8818566013360396
+      ],
+      "materials": [
+        "Black",
+        "Plant_Green",
+        "Brown"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Houseplant_7.glb",
+      "bytes": 14896,
+      "sha256": "4677d2dec5bd7d74ca90cf407cf8d24b39411e0d889b8e3acd04db7667628187",
+      "roundTripTriangles": 449
+    },
+    {
+      "source": "Houseplant_8.blend",
+      "sourceSHA256": "890d632ebde88c6936f3abd3f87a32f16aa0dab61507f5b097dde8d87334b2bc",
+      "materialNodes": {
+        "Brown": [],
+        "Black": [],
+        "Wood": [],
+        "Plant_Green": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 310,
+      "dimensionsXYZ": [
+        0.5171481519937515,
+        0.5171334445476532,
+        1.5565972803160548
+      ],
+      "materials": [
+        "Brown",
+        "Black",
+        "Wood",
+        "Plant_Green"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Houseplant_8.glb",
+      "bytes": 17836,
+      "sha256": "444a00815e9d1d7e54fa38517d23008d5498a9add98174528271ac7663dfc771",
+      "roundTripTriangles": 310
+    },
+    {
+      "source": "Kitchen_1Drawers.blend",
+      "sourceSHA256": "846b002f5e37240d2b9564ced0150dcb68c305a42ef56d33cdd814d1c28308f9",
+      "materialNodes": {
+        "White": [],
+        "KitchenTop": [],
+        "Kitchen": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 84,
+      "dimensionsXYZ": [
+        1.0108121037483215,
+        1.1204267740249634,
+        1.6136313313618302
+      ],
+      "materials": [
+        "White",
+        "KitchenTop",
+        "Kitchen"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Kitchen_1Drawers.glb",
+      "bytes": 6328,
+      "sha256": "fe8196d8a225605fa32cd42fa7ea521c60e4c9ad3fedc8885ef1fff3da9ae8f7",
+      "roundTripTriangles": 84
+    },
+    {
+      "source": "Kitchen_2Drawers.blend",
+      "sourceSHA256": "55a644cdfdbd35886329c3cc792a492e3831322f30823fcac92f9578a7dbe1a3",
+      "materialNodes": {
+        "White": [],
+        "KitchenTop": [],
+        "Kitchen": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 148,
+      "dimensionsXYZ": [
+        1.0108118057250977,
+        1.1204267740249634,
+        1.6245383024215698
+      ],
+      "materials": [
+        "White",
+        "KitchenTop",
+        "Kitchen"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Kitchen_2Drawers.glb",
+      "bytes": 8908,
+      "sha256": "3c77394d6f6381dd1608ed0a36032fafd5f5a29939cd49cf07e5929ffa5f2bee",
+      "roundTripTriangles": 148
+    },
+    {
+      "source": "Kitchen_3Drawers.blend",
+      "sourceSHA256": "2ce18088cbe1b470e79a79ad3c6149fe2bcec8c0f686342f356f5f83c677fe79",
+      "materialNodes": {
+        "Kitchen": [],
+        "KitchenTop": [],
+        "White": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 212,
+      "dimensionsXYZ": [
+        1.010811984539032,
+        1.1204267740249634,
+        1.6245383024215698
+      ],
+      "materials": [
+        "Kitchen",
+        "KitchenTop",
+        "White"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Kitchen_3Drawers.glb",
+      "bytes": 11500,
+      "sha256": "54b25879ab287d5e88cd8f6492f25da1eefae76119845fa119f608c1dee6126a",
+      "roundTripTriangles": 212
+    },
+    {
+      "source": "Kitchen_Cabinet1.blend",
+      "sourceSHA256": "f189b2c8e644b28bbb80ff02b3364628cb6f29a78a0dc231b69e0f9091e59a29",
+      "materialNodes": {
+        "Kitchen": [],
+        "White": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 68,
+      "dimensionsXYZ": [
+        1.0108119249343872,
+        1.0714648365974426,
+        1.5671223038807511
+      ],
+      "materials": [
+        "Kitchen",
+        "White"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Kitchen_Cabinet1.glb",
+      "bytes": 4844,
+      "sha256": "ca4d0fa288469f8e174241899e6f873737aa09828dcea02b58dd80e4d2b2222d",
+      "roundTripTriangles": 68
+    },
+    {
+      "source": "Kitchen_Cabinet2.blend",
+      "sourceSHA256": "8747ba2159c8ebed2743484d830b5cbdc5aa25dc22d2d4fc71d9994e01940f6e",
+      "materialNodes": {
+        "Kitchen": [],
+        "White": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 68,
+      "dimensionsXYZ": [
+        1.0108120441436768,
+        1.0714648962020874,
+        1.5671223038807511
+      ],
+      "materials": [
+        "Kitchen",
+        "White"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Kitchen_Cabinet2.glb",
+      "bytes": 4844,
+      "sha256": "229d50956a7cd5e012fbaee0a0586cdfd22f73f2a1fa0d14b28ce1e8aeed76f9",
+      "roundTripTriangles": 68
+    },
+    {
+      "source": "Kitchen_CabinetSmall.blend",
+      "sourceSHA256": "0cfd7e15340ce971c4903d933faa468c45b5f8eabf2271d8baef31e2f2d8d390",
+      "materialNodes": {
+        "White": [],
+        "Kitchen": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 68,
+      "dimensionsXYZ": [
+        0.8612343072891235,
+        1.0714648962020874,
+        0.9474438972614223
+      ],
+      "materials": [
+        "White",
+        "Kitchen"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Kitchen_CabinetSmall.glb",
+      "bytes": 4852,
+      "sha256": "a116fee82413ce8acd2c8554421b4280ef57bd5e7fd564c9e71ff6b5f3523b13",
+      "roundTripTriangles": 68
+    },
+    {
+      "source": "Kitchen_Fridge.blend",
+      "sourceSHA256": "151ed78cfbc5320cfbef1c1f6e2cda75ace62a3958896d6d7d53e3547f529e68",
+      "materialNodes": {
+        "Black": [],
+        "White": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 404,
+      "dimensionsXYZ": [
+        1.2975924015045166,
+        1.3018598556518555,
+        3.3084433949552476
+      ],
+      "materials": [
+        "Black",
+        "White"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Kitchen_Fridge.glb",
+      "bytes": 9692,
+      "sha256": "69dae02fa49d4782f2c09978c25e1c74228f5076f16ae9531f0ce8a751c68fb9",
+      "roundTripTriangles": 404
+    },
+    {
+      "source": "Kitchen_Oven.blend",
+      "sourceSHA256": "faefd086ddb296bfed595ec52157ebae35bbc87c673bb9ca7bf59e2df3f7c8cc",
+      "materialNodes": {
+        "Glass": [
+          "OUTPUT_MATERIAL",
+          "BSDF_TRANSPARENT"
+        ],
+        "Kitchen": [],
+        "DarkMetal": [],
+        "LightMetal": [],
+        "KitchenTop": [],
+        "White": []
+      },
+      "materialAdaptations": [
+        "Glass: Transparent BSDF -> glTF transmission 1, IOR 1"
+      ],
+      "meshes": 1,
+      "triangles": 524,
+      "dimensionsXYZ": [
+        1.0108117461204529,
+        1.1204267740249634,
+        1.6171874997447442
+      ],
+      "materials": [
+        "Glass",
+        "Kitchen",
+        "DarkMetal",
+        "LightMetal",
+        "KitchenTop",
+        "White"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Kitchen_Oven.glb",
+      "bytes": 15808,
+      "sha256": "02ce4e2fd259eaae9cb65a81daf6af205e57d4f948310156b3d47333e23bf3ef",
+      "roundTripTriangles": 524
+    },
+    {
+      "source": "Kitchen_Oven_Large.blend",
+      "sourceSHA256": "ea8ce556ad542e5e7f9b67b4f7768b595619e5a1a185cbc6e0780a9a5f691574",
+      "materialNodes": {
+        "DarkMetal": [],
+        "Glass": [
+          "OUTPUT_MATERIAL",
+          "BSDF_TRANSPARENT"
+        ],
+        "Black": [],
+        "LightMetal": [],
+        "White": []
+      },
+      "materialAdaptations": [
+        "Glass: Transparent BSDF -> glTF transmission 1, IOR 1"
+      ],
+      "meshes": 1,
+      "triangles": 528,
+      "dimensionsXYZ": [
+        1.1712193489074707,
+        1.0703632831573486,
+        1.5926069021224976
+      ],
+      "materials": [
+        "DarkMetal",
+        "Glass",
+        "Black",
+        "LightMetal",
+        "White"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Kitchen_Oven_Large.glb",
+      "bytes": 15680,
+      "sha256": "4c43ca7ed8e2915c80029016812a4a70ee836856f48648c9b257d3b585ad8af3",
+      "roundTripTriangles": 528
+    },
+    {
+      "source": "Kitchen_Sink.blend",
+      "sourceSHA256": "dc8d826fb77d8c87c798cd0f604989e90204adab44dae685445910d11aa195d2",
+      "materialNodes": {
+        "LightMetal": [],
+        "White": [],
+        "Glass": [
+          "OUTPUT_MATERIAL",
+          "BSDF_TRANSPARENT"
+        ],
+        "KitchenTop": [],
+        "Kitchen": []
+      },
+      "materialAdaptations": [
+        "Glass: Transparent BSDF -> glTF transmission 1, IOR 1"
+      ],
+      "meshes": 1,
+      "triangles": 444,
+      "dimensionsXYZ": [
+        1.0108117461204529,
+        1.1204267740249634,
+        1.9243956799170396
+      ],
+      "materials": [
+        "LightMetal",
+        "White",
+        "Glass",
+        "KitchenTop",
+        "Kitchen"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Kitchen_Sink.glb",
+      "bytes": 24444,
+      "sha256": "24dbc401716f14e8de570a689641e9137851beb75cb7001ca0b5e3b960eaee86",
+      "roundTripTriangles": 444
+    },
+    {
+      "source": "Knife.blend",
+      "sourceSHA256": "308798287d0496b15b9fa3019042e3c55dcf86b75d209b91db74e0d577f12e1f",
+      "materialNodes": {
+        "LightMetal": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 112,
+      "dimensionsXYZ": [
+        0.03482264373451471,
+        0.41913217306137085,
+        0.0071029632817953825
+      ],
+      "materials": [
+        "LightMetal"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Knife.glb",
+      "bytes": 3196,
+      "sha256": "9615658f0f2a3e663c24866f1a0cae29c9500e5c8d222e5e4dbc23e8942dbc45",
+      "roundTripTriangles": 112
+    },
+    {
+      "source": "Light_Ceiling1.blend",
+      "sourceSHA256": "82f2da52c45382dc180e431d81a452cf1d099d2d8beadfb4fb32af41b5350218",
+      "materialNodes": {
+        "Grey": [],
+        "LightMetal": [],
+        "Light": [
+          "OUTPUT_MATERIAL",
+          "EMISSION"
+        ]
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 269,
+      "dimensionsXYZ": [
+        0.44051074981689453,
+        0.4360269457101822,
+        0.8220383665757254
+      ],
+      "materials": [
+        "Grey",
+        "LightMetal",
+        "Light"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Light_Ceiling1.glb",
+      "bytes": 7888,
+      "sha256": "50e628e48a51a39a7625d1cff785ed5577acb0cbdac93495d233d70246bccd35",
+      "roundTripTriangles": 269
+    },
+    {
+      "source": "Light_Ceiling2.blend",
+      "sourceSHA256": "7e7312bcf6d26aeeb26a0278355a58c23bd6d608bfc9a81c5de07daad4d9ef32",
+      "materialNodes": {
+        "Light": [
+          "OUTPUT_MATERIAL",
+          "EMISSION"
+        ],
+        "Grey": [],
+        "LightMetal": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 196,
+      "dimensionsXYZ": [
+        0.3608052283525467,
+        0.3571327030658722,
+        1.012117042322643
+      ],
+      "materials": [
+        "Light",
+        "Grey",
+        "LightMetal"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Light_Ceiling2.glb",
+      "bytes": 6680,
+      "sha256": "5b2c8abd7263f0d92d85baf3d920b93b682058ac6f2cec18d562e1dd09794cbf",
+      "roundTripTriangles": 196
+    },
+    {
+      "source": "Light_Ceiling3.blend",
+      "sourceSHA256": "d4e25a125609a4c0c8219b37653f00d6add5ebae3ccde38b9aa442b5037bda77",
+      "materialNodes": {
+        "Grey": [],
+        "Light": [
+          "OUTPUT_MATERIAL",
+          "EMISSION"
+        ],
+        "LightMetal": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 820,
+      "dimensionsXYZ": [
+        0.5370410680770874,
+        0.5370410680770874,
+        0.6778733395082952
+      ],
+      "materials": [
+        "Grey",
+        "Light",
+        "LightMetal"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Light_Ceiling3.glb",
+      "bytes": 18136,
+      "sha256": "f273d0eabf71ad0fdc05e25aee2b688fb8004a2d39ebe85451e55331b877bd4e",
+      "roundTripTriangles": 820
+    },
+    {
+      "source": "Light_Ceiling4.blend",
+      "sourceSHA256": "df8e3dd7458730896fb50a9f87e0c00eba60599c809ed66f358c09b862c0b7c4",
+      "materialNodes": {
+        "Light": [
+          "OUTPUT_MATERIAL",
+          "EMISSION"
+        ],
+        "Grey": [],
+        "LightMetal": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 820,
+      "dimensionsXYZ": [
+        0.7757441997528076,
+        0.7757441997528076,
+        1.2966418266296387
+      ],
+      "materials": [
+        "Light",
+        "Grey",
+        "LightMetal"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Light_Ceiling4.glb",
+      "bytes": 18116,
+      "sha256": "c705a9a2e8918ddfe98a6bcd5b7523aca286244149cf803c494e777164429570",
+      "roundTripTriangles": 820
+    },
+    {
+      "source": "Light_Ceiling5.blend",
+      "sourceSHA256": "488dee8e02db556c4a9c8faebd11549d4e60d0cd7798b2afaf254103d4ba9764",
+      "materialNodes": {
+        "Light": [
+          "OUTPUT_MATERIAL",
+          "EMISSION"
+        ],
+        "Grey": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 116,
+      "dimensionsXYZ": [
+        0.5310855805873871,
+        0.5584164261817932,
+        0.1362811871804297
+      ],
+      "materials": [
+        "Light",
+        "Grey"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Light_Ceiling5.glb",
+      "bytes": 4340,
+      "sha256": "e08d4c5bf1498c4441d0ab98a6c59558222b7ac86e954a2fd91300fc93d11886",
+      "roundTripTriangles": 116
+    },
+    {
+      "source": "Light_Ceiling6.blend",
+      "sourceSHA256": "fe5cfcad4789f718586cd30e0efa692ef6090dd52db4cbdc7f424e28977f7dde",
+      "materialNodes": {
+        "Light": [
+          "OUTPUT_MATERIAL",
+          "EMISSION"
+        ],
+        "Grey": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 112,
+      "dimensionsXYZ": [
+        0.5310855805873871,
+        0.5584164261817932,
+        0.12871418381109834
+      ],
+      "materials": [
+        "Light",
+        "Grey"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Light_Ceiling6.glb",
+      "bytes": 4312,
+      "sha256": "7d90b5689a39d957b3e0e81f703a5d592c13b6bac4477daa97690dd1c79aaed1",
+      "roundTripTriangles": 112
+    },
+    {
+      "source": "Light_CeilingSingle.blend",
+      "sourceSHA256": "3cbcacaa663c3cbf6a47c72fe585629538c7f1a4f4b807d5d5ee80a92b1d2e0b",
+      "materialNodes": {
+        "Grey": [],
+        "Light": [
+          "OUTPUT_MATERIAL",
+          "EMISSION"
+        ],
+        "LightMetal": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 232,
+      "dimensionsXYZ": [
+        0.26423291862010956,
+        0.27783092856407166,
+        0.4783832498360425
+      ],
+      "materials": [
+        "Grey",
+        "Light",
+        "LightMetal"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Light_CeilingSingle.glb",
+      "bytes": 7108,
+      "sha256": "eda00aa3b31290936c5488b381357949c452cc4d6f92326a59c598a9bd025ff2",
+      "roundTripTriangles": 232
+    },
+    {
+      "source": "Light_Chandelier.blend",
+      "sourceSHA256": "27daa33602e61cd27b3bc5f8cdf94b6f0c2e8d61c861fd1fbdc12dd7be143517",
+      "materialNodes": {
+        "Light": [
+          "OUTPUT_MATERIAL",
+          "EMISSION"
+        ],
+        "Grey": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 972,
+      "dimensionsXYZ": [
+        0.8131063580513,
+        0.8131063580513,
+        0.5188159274727653
+      ],
+      "materials": [
+        "Light",
+        "Grey"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Light_Chandelier.glb",
+      "bytes": 20100,
+      "sha256": "4255f3c05867fd7f1a540cdc636f2b53b56767fcafbb7a52d3c87b99f0b3317a",
+      "roundTripTriangles": 972
+    },
+    {
+      "source": "Light_Cube.blend",
+      "sourceSHA256": "c88579cdf282c932f41421d2b099ff9e0ad79b94809b2380ad1602873088158f",
+      "materialNodes": {
+        "White": [],
+        "LightMetal": [],
+        "Light": [
+          "OUTPUT_MATERIAL",
+          "EMISSION"
+        ],
+        "Grey": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 368,
+      "dimensionsXYZ": [
+        0.5637560188770294,
+        0.5637561678886414,
+        1.0352282522944734
+      ],
+      "materials": [
+        "White",
+        "LightMetal",
+        "Light",
+        "Grey"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Light_Cube.glb",
+      "bytes": 21064,
+      "sha256": "c3a232d2ca625b6c6ff4e51f61d2ffbe4bdd8c3af38a5c932d7ec827d20e8097",
+      "roundTripTriangles": 368
+    },
+    {
+      "source": "Light_Cube2.blend",
+      "sourceSHA256": "10a4ebf98d5360131758428838cdce83f7d77572309c84c7cb3cf20b3eff3414",
+      "materialNodes": {
+        "LightMetal": [],
+        "White": [],
+        "Light": [
+          "OUTPUT_MATERIAL",
+          "EMISSION"
+        ],
+        "Grey": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 444,
+      "dimensionsXYZ": [
+        0.5542261600494385,
+        0.6407216787338257,
+        0.9222913979319856
+      ],
+      "materials": [
+        "LightMetal",
+        "White",
+        "Light",
+        "Grey"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Light_Cube2.glb",
+      "bytes": 22204,
+      "sha256": "7c560564de819e0efebbd6da138448e5ad0a0f2f3e19f6d1819acaf3adce2335",
+      "roundTripTriangles": 444
+    },
+    {
+      "source": "Light_Desk.blend",
+      "sourceSHA256": "aff3fdf8945e02e52abfd3b7ff5529737e28369464aac5b6e0754425ca57d68c",
+      "materialNodes": {
+        "LightMetal": [],
+        "White": [],
+        "Black": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 356,
+      "dimensionsXYZ": [
+        0.251529335975647,
+        0.4531742334365845,
+        0.5732034874090459
+      ],
+      "materials": [
+        "LightMetal",
+        "White",
+        "Black"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Light_Desk.glb",
+      "bytes": 9748,
+      "sha256": "9d2b1b56ebba6a6e06f2b80a5b36b7902dcf4c5164181195dcea54c1625a0be6",
+      "roundTripTriangles": 356
+    },
+    {
+      "source": "Light_Floor1.blend",
+      "sourceSHA256": "1260e1f38522f7586c005d7e25d67c8735a1edc6a4c321dce3b97a683e39ed4b",
+      "materialNodes": {
+        "Grey": [],
+        "Light": [
+          "OUTPUT_MATERIAL",
+          "EMISSION"
+        ],
+        "LightMetal": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 226,
+      "dimensionsXYZ": [
+        0.28089265525341034,
+        0.29534800350666046,
+        1.603262803517282
+      ],
+      "materials": [
+        "Grey",
+        "Light",
+        "LightMetal"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Light_Floor1.glb",
+      "bytes": 7060,
+      "sha256": "fe9888b812de062a540b9da39d4bab6a9d44fe28b2cb72c4a625d2dec9cb8814",
+      "roundTripTriangles": 226
+    },
+    {
+      "source": "Light_Floor2.blend",
+      "sourceSHA256": "92bd1a3311f760e01b13cbc1cea0a32472870e0a2cf79f231443acca7166cdd1",
+      "materialNodes": {
+        "White": [],
+        "LightMetal": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 276,
+      "dimensionsXYZ": [
+        0.31328827142715454,
+        0.32941077649593353,
+        0.7566992044448853
+      ],
+      "materials": [
+        "White",
+        "LightMetal"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Light_Floor2.glb",
+      "bytes": 6952,
+      "sha256": "944823e35ec5d2fa6c1c75ebff980689ac29c2f6badb190e412e10819799bddc",
+      "roundTripTriangles": 276
+    },
+    {
+      "source": "Light_Floor3.blend",
+      "sourceSHA256": "54feb75801706021399d8d18b8dbd89ccf1b2aab67442f868017e16584fb20ca",
+      "materialNodes": {
+        "White": [],
+        "LightMetal": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 244,
+      "dimensionsXYZ": [
+        0.40024659037590027,
+        0.4208441972732544,
+        0.894197409610944
+      ],
+      "materials": [
+        "White",
+        "LightMetal"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Light_Floor3.glb",
+      "bytes": 6388,
+      "sha256": "cffdbe892f91c669e2b421c5201e78ad46d6eaa864e4b2b776879867682f1ff1",
+      "roundTripTriangles": 244
+    },
+    {
+      "source": "Light_Floor4.blend",
+      "sourceSHA256": "60ae30d8c201f3b47b9c872ce0758f5a019b3b5a0aee97ab63d96596625b7f9c",
+      "materialNodes": {
+        "White": [],
+        "LightMetal": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 244,
+      "dimensionsXYZ": [
+        0.350733146071434,
+        0.3507331609725952,
+        0.7631500731925165
+      ],
+      "materials": [
+        "White",
+        "LightMetal"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Light_Floor4.glb",
+      "bytes": 6388,
+      "sha256": "f8c700c237d93b5ff5a383a15ecccbf745bdaeaefde884039f68c65f60c8ea7f",
+      "roundTripTriangles": 244
+    },
+    {
+      "source": "Light_Icosahedron.blend",
+      "sourceSHA256": "c77b8a4431af531c6635af158901b04f680cb554c5e5abda2700937062b3cab8",
+      "materialNodes": {
+        "Light": [
+          "OUTPUT_MATERIAL",
+          "EMISSION"
+        ],
+        "LightMetal": [],
+        "Grey": [],
+        "White": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 1220,
+      "dimensionsXYZ": [
+        0.5021507740020752,
+        0.4792962372303009,
+        0.8797938822535798
+      ],
+      "materials": [
+        "Light",
+        "LightMetal",
+        "Grey",
+        "White"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Light_Icosahedron.glb",
+      "bytes": 59704,
+      "sha256": "1b4c8f9077f776d1717ad0749158448debb8073df04b33051495183258abd96a",
+      "roundTripTriangles": 1220
+    },
+    {
+      "source": "Light_Icosahedron2.blend",
+      "sourceSHA256": "a9da30e2f1c716a875fd40bb1c71ef8cc62dd681046eacd66a4ee584be6d9997",
+      "materialNodes": {
+        "White": [],
+        "LightMetal": [],
+        "Light": [
+          "OUTPUT_MATERIAL",
+          "EMISSION"
+        ],
+        "Grey": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 3596,
+      "dimensionsXYZ": [
+        1.6261618733406067,
+        0.5021508038043976,
+        0.8797938731508594
+      ],
+      "materials": [
+        "White",
+        "LightMetal",
+        "Light",
+        "Grey"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Light_Icosahedron2.glb",
+      "bytes": 170836,
+      "sha256": "507824312fcbb130f12084721be8ccd608a470780211b57639805e7aa608abac",
+      "roundTripTriangles": 3596
+    },
+    {
+      "source": "Light_Small.blend",
+      "sourceSHA256": "160292caa98b3ef2214fe1a7159e730f04f2ddb0b05f5338331e1038e12448cc",
+      "materialNodes": {
+        "Grey": [],
+        "Light": [
+          "OUTPUT_MATERIAL",
+          "EMISSION"
+        ]
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 116,
+      "dimensionsXYZ": [
+        0.15518852323293686,
+        0.1631748527288437,
+        0.10643821652047336
+      ],
+      "materials": [
+        "Grey",
+        "Light"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Light_Small.glb",
+      "bytes": 4344,
+      "sha256": "2f24a42c91bac28904fd21ef121b34131157cb842e90296b70282bc8b810ca73",
+      "roundTripTriangles": 116
+    },
+    {
+      "source": "Light_Stand1.blend",
+      "sourceSHA256": "3b2d454049a56d78f9ddf2d1f7c2e459a8e89cc747acf384f83e83b126828701",
+      "materialNodes": {
+        "White": [],
+        "LightMetal": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 244,
+      "dimensionsXYZ": [
+        0.7733679711818695,
+        0.8131672441959381,
+        2.993782995869039
+      ],
+      "materials": [
+        "White",
+        "LightMetal"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Light_Stand1.glb",
+      "bytes": 6388,
+      "sha256": "2526db6a74de2c134d973f6f2a08999ea51e103cdd0d43868b568081b0e06e9c",
+      "roundTripTriangles": 244
+    },
+    {
+      "source": "Light_Stand2.blend",
+      "sourceSHA256": "b01255051c73f9297788735853f59e4194ade8fc6c17619d1334b0b6badfdc3b",
+      "materialNodes": {
+        "White": [],
+        "LightMetal": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 244,
+      "dimensionsXYZ": [
+        0.677696704864502,
+        0.677696704864502,
+        2.9450151920318604
+      ],
+      "materials": [
+        "White",
+        "LightMetal"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Light_Stand2.glb",
+      "bytes": 6364,
+      "sha256": "ce7bcfcf6ee65843b21284616d29df505e75567f2e338fb208bec69a3470105b",
+      "roundTripTriangles": 244
+    },
+    {
+      "source": "NightStand_1.blend",
+      "sourceSHA256": "9eb3e637c53c3fe9baa2ddcf2a0268bfa92ffa988c59626efab6b5931b1d9208",
+      "materialNodes": {
+        "Metal": [],
+        "Wood": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 172,
+      "dimensionsXYZ": [
+        0.9522296786308289,
+        0.9522296786308289,
+        0.8249188587069511
+      ],
+      "materials": [
+        "Metal",
+        "Wood"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "NightStand_1.glb",
+      "bytes": 5280,
+      "sha256": "09b0cfbe37df7ecec488e1024f343408beff667e048d67a815c348c1e6709c0a",
+      "roundTripTriangles": 172
+    },
+    {
+      "source": "NightStand_2.blend",
+      "sourceSHA256": "58bf7846e2fa09743dbf109447c6cf964971d29ce342cd3210b5bf0eb3b58619",
+      "materialNodes": {
+        "Wood": [],
+        "Metal": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 184,
+      "dimensionsXYZ": [
+        0.9522296786308289,
+        0.9522296786308289,
+        0.9452512189745903
+      ],
+      "materials": [
+        "Wood",
+        "Metal"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "NightStand_2.glb",
+      "bytes": 5544,
+      "sha256": "dcef05118f9b7fe377b66e079e4a156ea0ccb6344bbfbed0aac00955a3f9776e",
+      "roundTripTriangles": 184
+    },
+    {
+      "source": "NightStand_3.blend",
+      "sourceSHA256": "9e0aa8ae272f16d0062fa85b0f4236bf7907c4eec58394e51241f9d639c60f1c",
+      "materialNodes": {
+        "Metal": [],
+        "Wood": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 272,
+      "dimensionsXYZ": [
+        0.9522296786308289,
+        0.9522296786308289,
+        0.8270522952079773
+      ],
+      "materials": [
+        "Metal",
+        "Wood"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "NightStand_3.glb",
+      "bytes": 7128,
+      "sha256": "0827d476e2c9f7d854a75a129714e16d8299b66d7d5967c1e9be879ff523ee96",
+      "roundTripTriangles": 272
+    },
+    {
+      "source": "Plate_1.blend",
+      "sourceSHA256": "faa5c957aa43c0d9841ec5936bc578877252e863f2ddbe1f5d2708f051aeca42",
+      "materialNodes": {
+        "White": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 136,
+      "dimensionsXYZ": [
+        0.3735980987548828,
+        0.39282432198524475,
+        0.03249745107225621
+      ],
+      "materials": [
+        "White"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Plate_1.glb",
+      "bytes": 3576,
+      "sha256": "1ef1b8bac5e14409facfc7bf304f2b97c6dcfd3209c3f7783b7200f85059c8ad",
+      "roundTripTriangles": 136
+    },
+    {
+      "source": "Plate_2.blend",
+      "sourceSHA256": "61c1a2bc453cb6e564e676bd528f2a27bd854af9fcd3d5192e94b4956cc88db3",
+      "materialNodes": {
+        "White.002": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 204,
+      "dimensionsXYZ": [
+        0.352035254240036,
+        0.3520352393388748,
+        0.02501625739370894
+      ],
+      "materials": [
+        "White.002"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Plate_2.glb",
+      "bytes": 4808,
+      "sha256": "124669a0624b52b89ad6b28d6c697591549739632f8234e0daa3acf4602367e9",
+      "roundTripTriangles": 204
+    },
+    {
+      "source": "Plate_3.blend",
+      "sourceSHA256": "f2b5969a4b569fa58b32b0ea07151d069de708d3fa86a4ca3d07e4ff0688bc37",
+      "materialNodes": {
+        "White": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 136,
+      "dimensionsXYZ": [
+        0.373598113656044,
+        0.39282432198524475,
+        0.034687105929176454
+      ],
+      "materials": [
+        "White"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Plate_3.glb",
+      "bytes": 3576,
+      "sha256": "52fc183e912a1b668fbfffe14244e68ab72e2e524e7398d01132b17c01e964af",
+      "roundTripTriangles": 136
+    },
+    {
+      "source": "Shelf_1.blend",
+      "sourceSHA256": "06e9dd3938602f80a6ac0e6599a7c7019e5402e2fd00c15e36a071610a6ea70d",
+      "materialNodes": {
+        "White": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 96,
+      "dimensionsXYZ": [
+        0.7073433101177216,
+        0.6521835327148438,
+        3.1666894856130625
+      ],
+      "materials": [
+        "White"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Shelf_1.glb",
+      "bytes": 6260,
+      "sha256": "b817c2f7ef2e56301f93a96669337f665c0f9e61c06eebed926d735f504c2e4c",
+      "roundTripTriangles": 96
+    },
+    {
+      "source": "Shelf_2.blend",
+      "sourceSHA256": "8b3803a028657555e1aea206cf177671982b64b1c93bbaf722745945e331d44b",
+      "materialNodes": {
+        "White": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 120,
+      "dimensionsXYZ": [
+        1.1191483736038208,
+        0.7559989094734192,
+        4.438079357147217
+      ],
+      "materials": [
+        "White"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Shelf_2.glb",
+      "bytes": 7536,
+      "sha256": "90e6d0f56643c15434c0145b31d950cd273ca6d7d1ff6fcba52d2563e8ef82d7",
+      "roundTripTriangles": 120
+    },
+    {
+      "source": "Shelf_Large.blend",
+      "sourceSHA256": "23266207573c926cef320ab6699905184fd57fd1678d2670fd7410bf52b96aa4",
+      "materialNodes": {
+        "White": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 220,
+      "dimensionsXYZ": [
+        3.3808964490890503,
+        0.7559989094734192,
+        4.438079252839088
+      ],
+      "materials": [
+        "White"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Shelf_Large.glb",
+      "bytes": 12384,
+      "sha256": "94c389a988aefbb5843016235e67f961f292b00e034dcc7c8f400506dd94f812",
+      "roundTripTriangles": 220
+    },
+    {
+      "source": "Shelf_Small1.blend",
+      "sourceSHA256": "0a8dfa63be1c721c8676c83bfe601170d35b3186e106c3c5d2eaf7930361f638",
+      "materialNodes": {
+        "White": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 132,
+      "dimensionsXYZ": [
+        1.944328486919403,
+        0.5503867268562317,
+        0.5773777943104506
+      ],
+      "materials": [
+        "White"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Shelf_Small1.glb",
+      "bytes": 7636,
+      "sha256": "049cccc756b5b530649c8fea23334e5575710064ca4e412103807f6d46fbcc3a",
+      "roundTripTriangles": 132
+    },
+    {
+      "source": "Shelf_Small2.blend",
+      "sourceSHA256": "44e2a4bcf2912a6e1390c341c8c7ae6157135756dc8b92818526f0b704224350",
+      "materialNodes": {
+        "White": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 92,
+      "dimensionsXYZ": [
+        1.039621889591217,
+        0.5503866076469421,
+        0.3898164890706539
+      ],
+      "materials": [
+        "White"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Shelf_Small2.glb",
+      "bytes": 5860,
+      "sha256": "393d126cc9989df4e4274fe240c26f88680a5a95ed91cbd5986311f8a6a5c4b8",
+      "roundTripTriangles": 92
+    },
+    {
+      "source": "Shelf_Small3.blend",
+      "sourceSHA256": "e52cf5ad423ae4329f386cbc428b7a208cb503a4622bc92d9c07df4799934b87",
+      "materialNodes": {
+        "White": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 48,
+      "dimensionsXYZ": [
+        1.039621889591217,
+        0.5503866076469421,
+        0.3898164890706539
+      ],
+      "materials": [
+        "White"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Shelf_Small3.glb",
+      "bytes": 3672,
+      "sha256": "42d6f7d2196c0f02ca976dfdea4af068fa7243749690a3fda039db523166a5b4",
+      "roundTripTriangles": 48
+    },
+    {
+      "source": "Spoon.blend",
+      "sourceSHA256": "296b5840df72c63105cb53afbf78b89bb25986cbd2ce8c510b216ff9a3722bd4",
+      "materialNodes": {
+        "LightMetal": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 128,
+      "dimensionsXYZ": [
+        0.0844714306294918,
+        0.40537387132644653,
+        0.01796522783115506
+      ],
+      "materials": [
+        "LightMetal"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Spoon.glb",
+      "bytes": 3528,
+      "sha256": "ce02ceaf05fc7a21da97de3eabd2e93926e1db630f205a22469db64b090478ac",
+      "roundTripTriangles": 128
+    },
+    {
+      "source": "Stool.blend",
+      "sourceSHA256": "8543b099486337d7a2bd033e2c2f63358a3871f67b71433195a4a000609afb1f",
+      "materialNodes": {
+        "Cushin": [],
+        "Wood": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 500,
+      "dimensionsXYZ": [
+        0.6753438115119934,
+        0.7100985646247864,
+        1.372302240692079
+      ],
+      "materials": [
+        "Cushin",
+        "Wood"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Stool.glb",
+      "bytes": 11524,
+      "sha256": "49c6738e146c6291a752c726af6c28aad162144c41b35461114a374429e61e61",
+      "roundTripTriangles": 500
+    },
+    {
+      "source": "Table_RoundLarge.blend",
+      "sourceSHA256": "6caeeceb0c5788c0b9ad873511660769effa4b720f914a6a269fbaa13dfa738d",
+      "materialNodes": {
+        "Wood": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 592,
+      "dimensionsXYZ": [
+        3.7133671045303345,
+        1.9409879446029663,
+        1.1211958178319037
+      ],
+      "materials": [
+        "Wood"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Table_RoundLarge.glb",
+      "bytes": 11848,
+      "sha256": "350b3eb246f7f329341c921d2fa7408350a8bb459f695a3116572e548fa0e83e",
+      "roundTripTriangles": 592
+    },
+    {
+      "source": "Table_RoundSmall.blend",
+      "sourceSHA256": "904dd49102a6fce079d831b644bcbb4267b715416307b019c230a89d10253d4c",
+      "materialNodes": {
+        "Wood": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 592,
+      "dimensionsXYZ": [
+        1.940987467765808,
+        1.940987467765808,
+        1.147330624749884
+      ],
+      "materials": [
+        "Wood"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Table_RoundSmall.glb",
+      "bytes": 11844,
+      "sha256": "38d5736c17b95433969d67c20badca83e2cb4d9e05a4ae3db32ca6250e255e1e",
+      "roundTripTriangles": 592
+    },
+    {
+      "source": "Table_RoundSmall2.blend",
+      "sourceSHA256": "d8b9cb3659558e40915b4c3ed28e3288f3dea301bc06606048acf53e4b16d8f1",
+      "materialNodes": {
+        "Wood": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 744,
+      "dimensionsXYZ": [
+        1.9409873485565186,
+        1.9409873485565186,
+        1.2077849581837654
+      ],
+      "materials": [
+        "Wood"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Table_RoundSmall2.glb",
+      "bytes": 14776,
+      "sha256": "8ffc9f1b1801c43c9215a22c43bf8a73bbe40770073bf809ee0be484aec2b16a",
+      "roundTripTriangles": 744
+    },
+    {
+      "source": "Trashcan_Cylindric.blend",
+      "sourceSHA256": "5b24a575cdb08ce56a112544cc12c21e5215945a0d7bf3da4c4d522a331bb0ff",
+      "materialNodes": {
+        "LightMetal": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 380,
+      "dimensionsXYZ": [
+        0.7547006905078888,
+        0.7547007203102112,
+        1.074088335376173
+      ],
+      "materials": [
+        "LightMetal"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Trashcan_Cylindric.glb",
+      "bytes": 7992,
+      "sha256": "3803ffdc3d78d7c12a072bef8f76d27870d9791b48957c4ab39c2e70d1e9b042",
+      "roundTripTriangles": 380
+    },
+    {
+      "source": "Trashcan_Green.blend",
+      "sourceSHA256": "7de310e718dfb42ea442abdf34d3723aeed61a3cb2e7e52fcd40708da5a0c9e5",
+      "materialNodes": {
+        "Black": [],
+        "DarkGreen": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 739,
+      "dimensionsXYZ": [
+        1.2172768712043762,
+        1.5913427472114563,
+        2.2112016968330863
+      ],
+      "materials": [
+        "Black",
+        "DarkGreen"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Trashcan_Green.glb",
+      "bytes": 15812,
+      "sha256": "f4c6fad0e9e609ef0abfb17d306013c15f6cb5d9de729c213b92acc87c0d59e5",
+      "roundTripTriangles": 739
+    },
+    {
+      "source": "Trashcan_Large.blend",
+      "sourceSHA256": "a0013e63b14cdec9a1ec10843ba9610b3f3dfe2a8451224ed69b3ad57f28a224",
+      "materialNodes": {
+        "LightMetal": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 646,
+      "dimensionsXYZ": [
+        1.2232365608215332,
+        1.2232365012168884,
+        1.8462881604209542
+      ],
+      "materials": [
+        "LightMetal"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Trashcan_Large.glb",
+      "bytes": 12940,
+      "sha256": "5d611f3d20917462fb15c23d5f6eb20a713dd631f4ca0b1d5d27b2218388ffbb",
+      "roundTripTriangles": 646
+    },
+    {
+      "source": "Trashcan_Small1.blend",
+      "sourceSHA256": "e25f9b51b4f15c6af7ebb2b7c2ebf29c167216ad14a97227a3f80424e90caa6c",
+      "materialNodes": {
+        "LightMetal": [],
+        "Black": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 260,
+      "dimensionsXYZ": [
+        0.5030289888381958,
+        0.3062140494585037,
+        0.7124432730488479
+      ],
+      "materials": [
+        "LightMetal",
+        "Black"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Trashcan_Small1.glb",
+      "bytes": 7448,
+      "sha256": "f52de86b39cd4ee8504a8719e436b6cfc766765cc3dce5764af9c350373ee80d",
+      "roundTripTriangles": 260
+    },
+    {
+      "source": "Trashcan_Small2.blend",
+      "sourceSHA256": "e5ed232129300b09082352b72c73c6a806062d486c057539b8484d29b2d2051b",
+      "materialNodes": {
+        "LightMetal": []
+      },
+      "materialAdaptations": [],
+      "meshes": 1,
+      "triangles": 432,
+      "dimensionsXYZ": [
+        0.46477603912353516,
+        0.4284539520740509,
+        0.5602781921625137
+      ],
+      "materials": [
+        "LightMetal"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Trashcan_Small2.glb",
+      "bytes": 8920,
+      "sha256": "0f4e5f24b2efb396ff0ccd538b584c08d3a954d1c79d6b94d72a8240cdd89063",
+      "roundTripTriangles": 432
+    },
+    {
+      "source": "Window_Large1.blend",
+      "sourceSHA256": "7ea8844db4defdd7e7b18b6c2bea4729b5caf3034d1111e4fd00afe3d51b0dcb",
+      "materialNodes": {
+        "White": [],
+        "Glass": [
+          "OUTPUT_MATERIAL",
+          "BSDF_TRANSPARENT"
+        ]
+      },
+      "materialAdaptations": [
+        "Glass: Transparent BSDF -> glTF transmission 1, IOR 1"
+      ],
+      "meshes": 1,
+      "triangles": 252,
+      "dimensionsXYZ": [
+        1.8324295282363892,
+        0.1411040648818016,
+        1.6984532475471497
+      ],
+      "materials": [
+        "White",
+        "Glass"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Window_Large1.glb",
+      "bytes": 12604,
+      "sha256": "8aa00f2a08142f3782a7bdcb7d49bf575f31f0528b2b6ee9cd211aed1e177d28",
+      "roundTripTriangles": 252
+    },
+    {
+      "source": "Window_Large2.blend",
+      "sourceSHA256": "410060bf94ed10c9626d6060e14dd7034415617d47b07afcbd273309407c5166",
+      "materialNodes": {
+        "Glass": [
+          "OUTPUT_MATERIAL",
+          "BSDF_TRANSPARENT"
+        ],
+        "White": []
+      },
+      "materialAdaptations": [
+        "Glass: Transparent BSDF -> glTF transmission 1, IOR 1"
+      ],
+      "meshes": 1,
+      "triangles": 372,
+      "dimensionsXYZ": [
+        1.8324295282363892,
+        0.1411040648818016,
+        1.6984532475471497
+      ],
+      "materials": [
+        "Glass",
+        "White"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Window_Large2.glb",
+      "bytes": 17932,
+      "sha256": "81e956f11f10305af4ce3f59a5f3bf47a414ab75de8df41cd08e25aee5c6df51",
+      "roundTripTriangles": 372
+    },
+    {
+      "source": "Window_Round1.blend",
+      "sourceSHA256": "8062dbae12b4c64c82c1eb95e9b3d48cdb556afbccb77ca322c611bfb424d4b6",
+      "materialNodes": {
+        "Glass": [
+          "OUTPUT_MATERIAL",
+          "BSDF_TRANSPARENT"
+        ],
+        "White": []
+      },
+      "materialAdaptations": [
+        "Glass: Transparent BSDF -> glTF transmission 1, IOR 1"
+      ],
+      "meshes": 1,
+      "triangles": 122,
+      "dimensionsXYZ": [
+        0.9063925445079803,
+        0.11255718767642975,
+        1.5498013496398926
+      ],
+      "materials": [
+        "Glass",
+        "White"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Window_Round1.glb",
+      "bytes": 4472,
+      "sha256": "5bd5721694c30e1cadb800978dca2751125e5a392eeb98f6a7e4e16fd6b2ab32",
+      "roundTripTriangles": 122
+    },
+    {
+      "source": "Window_Round2.blend",
+      "sourceSHA256": "7b337cc8ec7210772138ef85f38403dd3a3e3df0d03bb101f269f9df371d7f8a",
+      "materialNodes": {
+        "Glass": [
+          "OUTPUT_MATERIAL",
+          "BSDF_TRANSPARENT"
+        ],
+        "White": []
+      },
+      "materialAdaptations": [
+        "Glass: Transparent BSDF -> glTF transmission 1, IOR 1"
+      ],
+      "meshes": 1,
+      "triangles": 134,
+      "dimensionsXYZ": [
+        0.9063925445079803,
+        0.11255718767642975,
+        1.5498013496398926
+      ],
+      "materials": [
+        "Glass",
+        "White"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Window_Round2.glb",
+      "bytes": 4716,
+      "sha256": "bc0c7771fc8a434235d133f559dd869409e108ea78d66532dd279fb613e72efc",
+      "roundTripTriangles": 134
+    },
+    {
+      "source": "Window_Round3.blend",
+      "sourceSHA256": "81dbd621362d581be775bcd7bbd5eef4e676376fb4ae9e59638a3f165ff6dea8",
+      "materialNodes": {
+        "Glass": [
+          "OUTPUT_MATERIAL",
+          "BSDF_TRANSPARENT"
+        ],
+        "White": []
+      },
+      "materialAdaptations": [
+        "Glass: Transparent BSDF -> glTF transmission 1, IOR 1"
+      ],
+      "meshes": 1,
+      "triangles": 158,
+      "dimensionsXYZ": [
+        0.9063925445079803,
+        0.11255718767642975,
+        1.5498013496398926
+      ],
+      "materials": [
+        "Glass",
+        "White"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Window_Round3.glb",
+      "bytes": 5244,
+      "sha256": "9ee2735ee26d1d9d6159fc6bdac7cd454352d6d7d379f30a62a5f3c7dc7dc736",
+      "roundTripTriangles": 158
+    },
+    {
+      "source": "Window_Small1.blend",
+      "sourceSHA256": "f09fc4f2eae268283a9cebdf4923b5d52fe323c08a09598a2c44f23646b45f86",
+      "materialNodes": {
+        "White": [],
+        "Glass": [
+          "OUTPUT_MATERIAL",
+          "BSDF_TRANSPARENT"
+        ]
+      },
+      "materialAdaptations": [
+        "Glass: Transparent BSDF -> glTF transmission 1, IOR 1"
+      ],
+      "meshes": 1,
+      "triangles": 112,
+      "dimensionsXYZ": [
+        0.9281983375549316,
+        0.1411040723323822,
+        1.2379511594772339
+      ],
+      "materials": [
+        "White",
+        "Glass"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Window_Small1.glb",
+      "bytes": 6908,
+      "sha256": "a7d50fb0d6455063f8c07a956870b8149b463bc26e520599b230c671822e4f17",
+      "roundTripTriangles": 112
+    },
+    {
+      "source": "Window_Small2.blend",
+      "sourceSHA256": "2a85c4663228223dd5d95483cd0d4dfffaa91b8611eb22b0b182eaaf4e8b8bdb",
+      "materialNodes": {
+        "Glass": [
+          "OUTPUT_MATERIAL",
+          "BSDF_TRANSPARENT"
+        ],
+        "White": []
+      },
+      "materialAdaptations": [
+        "Glass: Transparent BSDF -> glTF transmission 1, IOR 1"
+      ],
+      "meshes": 1,
+      "triangles": 132,
+      "dimensionsXYZ": [
+        0.9281983375549316,
+        0.1411040723323822,
+        1.2379511594772339
+      ],
+      "materials": [
+        "Glass",
+        "White"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Window_Small2.glb",
+      "bytes": 7796,
+      "sha256": "c117085983ee815c3e69f53dfb0ae025822cc458bee3b16c06ca5eb19d3002e4",
+      "roundTripTriangles": 132
+    },
+    {
+      "source": "Window_Small3.blend",
+      "sourceSHA256": "06e15cd632ed3af7f0ed684966cb9a85e8ff76d7b82db7811c130726fc635d68",
+      "materialNodes": {
+        "White": [],
+        "Glass": [
+          "OUTPUT_MATERIAL",
+          "BSDF_TRANSPARENT"
+        ]
+      },
+      "materialAdaptations": [
+        "Glass: Transparent BSDF -> glTF transmission 1, IOR 1"
+      ],
+      "meshes": 1,
+      "triangles": 92,
+      "dimensionsXYZ": [
+        0.9281983375549316,
+        0.1411040723323822,
+        1.2379511594772339
+      ],
+      "materials": [
+        "White",
+        "Glass"
+      ],
+      "uvLayers": [
+        0
+      ],
+      "units": "NONE",
+      "status": "PASS",
+      "output": "Window_Small3.glb",
+      "bytes": 6020,
+      "sha256": "69a4b2eafff1d55a0a24720307d761f4809a5fa659854caf8078c5311f3cc62b",
+      "roundTripTriangles": 92
+    }
+  ]
+}

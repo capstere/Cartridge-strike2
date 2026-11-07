@@ -1,0 +1,3600 @@
+{
+  "schemaVersion": 1,
+  "gameVersion": "0.18.0",
+  "entrypoint": "fps/index.html",
+  "release": {
+    "mode": "owner-approved-facility-details-glass",
+    "publicReleaseEligible": true,
+    "basedOn": "e1764d5627f1e8b217d0988abdc800213ad843bb",
+    "scope": "WC/kitchen furnishings, orange upholstery, generic display labs, blue facade, per-pane shootable glass; no reference files"
+  },
+  "files": [
+    {
+      "path": ".nojekyll",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "Business_Man_Quaternius_Anims.glb",
+      "bytes": 10179392,
+      "sha256": "8848008569ae5a35733f1ecc9456cd90a6c505cf3ccde375de7e228bd4a264d4"
+    },
+    {
+      "path": "assets/fps/audio/action-backup.ogg",
+      "bytes": 8228,
+      "sha256": "fef76af35ab2311c58622ca8a84dc2cac56e806f8c627fdbce05b49a4cd26c16"
+    },
+    {
+      "path": "assets/fps/audio/action-cover.ogg",
+      "bytes": 7418,
+      "sha256": "7083c420fe2d64e27364e93bdca130c581671a4e5489231ec07782f22bc39c54"
+    },
+    {
+      "path": "assets/fps/audio/action-death.ogg",
+      "bytes": 5026,
+      "sha256": "ee95c24c46e5e70d5d2a34423d322ecbe2d06edfab10adb8fdc167f443f33c1b"
+    },
+    {
+      "path": "assets/fps/audio/action-fallback.ogg",
+      "bytes": 6857,
+      "sha256": "6358845a0177e80d5381b9996a6285b8c3a8b27f1d3936da53c7431c9f0a68f4"
+    },
+    {
+      "path": "assets/fps/audio/action-go.ogg",
+      "bytes": 8862,
+      "sha256": "6756cca6274f14557014f620ac9dd2767fe452db9c01199439a6b17744cefd1e"
+    },
+    {
+      "path": "assets/fps/audio/action-incoming.ogg",
+      "bytes": 6838,
+      "sha256": "577dd00b6fb747823df320914c75ed24a4e0ba113c4a4e6c4b92cafe060c9051"
+    },
+    {
+      "path": "assets/fps/audio/action-together.ogg",
+      "bytes": 10426,
+      "sha256": "92a926804601955a418a76bef5a466c05b1803cbc4e92fd1c510249adbe43240"
+    },
+    {
+      "path": "assets/fps/audio/computerNoise_000.ogg",
+      "bytes": 119024,
+      "sha256": "1527944e16eb14b48ee03fe3e7ce6aae94262833a4e1f83928d451a7414fe4e1"
+    },
+    {
+      "path": "assets/fps/audio/explosionCrunch_000.ogg",
+      "bytes": 28274,
+      "sha256": "4b597d658d0ae101f0a030fbeea5fc3a4292ab85f017470a8254a8e7959cbd69"
+    },
+    {
+      "path": "assets/fps/audio/ffsl-f_charge_rifle-1.mp3",
+      "bytes": 4965,
+      "sha256": "7e7afbc429f8e026260bd9987d17bfd5f6efcd96aad102bc62a6328b92185e96"
+    },
+    {
+      "path": "assets/fps/audio/ffsl-f_magin_pistol.mp3",
+      "bytes": 4197,
+      "sha256": "83d64cd3bfbf2aa32f0aab60ff33ce68ce48f03d1e210a57cd505c5ccfcec0c8"
+    },
+    {
+      "path": "assets/fps/audio/ffsl-f_magin_rifle-1.mp3",
+      "bytes": 3141,
+      "sha256": "b571d0085ed95ad51565a5198535ed06088a71a4210d9de5c93231b2e8f72e94"
+    },
+    {
+      "path": "assets/fps/audio/ffsl-f_magout_pistol.mp3",
+      "bytes": 3285,
+      "sha256": "914d8ea0fc1cb86a076ed6fd32a0de17f84097bcb3409cc5a401361c5e7b7d7a"
+    },
+    {
+      "path": "assets/fps/audio/ffsl-f_magout_rifle-1.mp3",
+      "bytes": 6861,
+      "sha256": "81a8699d6b4f0530a97c371b5dfc6f9148475a1ee898a397c7b954e962b4c50f"
+    },
+    {
+      "path": "assets/fps/audio/ffsl-f_slide_pistol-1.mp3",
+      "bytes": 1869,
+      "sha256": "1045bc354b1655704cba2ee77bed1d56536d57ecb292e838fb715d212eb837b3"
+    },
+    {
+      "path": "assets/fps/audio/footstep_carpet_000.ogg",
+      "bytes": 6353,
+      "sha256": "b9524658b52a99a20590f8feefc103088637fd13ea8ec35811aee785e1f2f330"
+    },
+    {
+      "path": "assets/fps/audio/footstep_carpet_001.ogg",
+      "bytes": 6411,
+      "sha256": "9af3c3f76705107339e72036e4053bdca3eaa50ad31c8c929f42ce8d40e5d781"
+    },
+    {
+      "path": "assets/fps/audio/footstep_carpet_002.ogg",
+      "bytes": 6411,
+      "sha256": "9af3c3f76705107339e72036e4053bdca3eaa50ad31c8c929f42ce8d40e5d781"
+    },
+    {
+      "path": "assets/fps/audio/footstep_concrete_000.ogg",
+      "bytes": 5808,
+      "sha256": "d7267e183067757c92c169de2a379abea592cfca6b39bb2e8feea15221ad79fe"
+    },
+    {
+      "path": "assets/fps/audio/footstep_concrete_001.ogg",
+      "bytes": 6308,
+      "sha256": "507a75eb19b897087855a3be3cf11a12d7fa37d143ad535eeebe0b8031c7325d"
+    },
+    {
+      "path": "assets/fps/audio/footstep_concrete_002.ogg",
+      "bytes": 6255,
+      "sha256": "b21fa546d74941196b25da8a20b7010abd8c05c4fcf93545d1f344e66a664e13"
+    },
+    {
+      "path": "assets/fps/audio/impactGeneric_light_000.ogg",
+      "bytes": 5827,
+      "sha256": "f0e982611e97512fee5f777986b67e8b435434b601f94992ec044f7e89fb5acb"
+    },
+    {
+      "path": "assets/fps/audio/impactMetal_light_000.ogg",
+      "bytes": 7651,
+      "sha256": "33b5e6e37c6e9d54e07bf5a89b12c76e879f40c1ea83cdd82714df1d6f9fec6d"
+    },
+    {
+      "path": "assets/fps/audio/impactMetal_light_001.ogg",
+      "bytes": 6967,
+      "sha256": "fba69c467ddd85da7b1d82e259f936b876d9ba6a3d6f1b24bdd10468e46bfe08"
+    },
+    {
+      "path": "assets/fps/audio/impactMetal_medium_000.ogg",
+      "bytes": 7117,
+      "sha256": "a96f879fec0864a8938e0c745b6996a6c5679c16a234ce31a01cc995e8401003"
+    },
+    {
+      "path": "assets/fps/audio/impactSoft_medium_000.ogg",
+      "bytes": 5351,
+      "sha256": "7d3ba0bb5e60a11b5d3e558c141303dcf494256675fbf753c0d252d2cf0481e3"
+    },
+    {
+      "path": "assets/fps/audio/laserSmall_000.ogg",
+      "bytes": 7286,
+      "sha256": "72b589eadd41781257ac859e4f4d030222e623390e4a1a83f6d05329a6e026f1"
+    },
+    {
+      "path": "assets/fps/audio/lowFrequency_explosion_000.ogg",
+      "bytes": 14317,
+      "sha256": "3cb48d86dab63140cfb9aaeea4d4a6846abaca5831d157d8adbec0490da26343"
+    },
+    {
+      "path": "assets/fps/audio/riposte-f_draw-1.mp3",
+      "bytes": 6405,
+      "sha256": "055b67b634c6ffa4c31d2978e2d2ad66ef5903db57a783073f6bdd21507a36df"
+    },
+    {
+      "path": "assets/fps/audio/riposte-f_dry-1.mp3",
+      "bytes": 1725,
+      "sha256": "ac4071825b15d6c612791ccbf1d6588e89384e83706b5214137a2d01ec0f4be8"
+    },
+    {
+      "path": "assets/fps/audio/riposte-f_knife-1.mp3",
+      "bytes": 2517,
+      "sha256": "0619b408af2f73a7d88920c677f27e4926aa23fbe10ae3bb01a71606cc542ac7"
+    },
+    {
+      "path": "assets/fps/audio/riposte-f_knife_hit-1.mp3",
+      "bytes": 3453,
+      "sha256": "23262da97855db49c7b447ef452a1831f52c493c38099809ae61921e26a4d536"
+    },
+    {
+      "path": "assets/fps/audio/riposte-f_pickup-1.mp3",
+      "bytes": 5229,
+      "sha256": "740798c14fa1031b9bc961a990ef4b51d3e75b10c50fc4a4296434d61da03b6f"
+    },
+    {
+      "path": "assets/fps/audio/riposte-f_throw-1.mp3",
+      "bytes": 3981,
+      "sha256": "c66d3cb60e956769618f3e51a722403938558baba3ff40b4c26f6a30334c38bd"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_ak_near-1.mp3",
+      "bytes": 12597,
+      "sha256": "83903cae0a6ff3fc38d15335c756dececdca3b438bd4543194d159f0f24416bd"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_ak_pov-1.mp3",
+      "bytes": 13341,
+      "sha256": "ad71df1ab06a9f861b1b21e0e4ac8d21b67555a276b440c4c9973a941c3cd8a2"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_glock_near-1.mp3",
+      "bytes": 8781,
+      "sha256": "4b464f68eafe8fe7d973ef8e718735740a1d47dcba814bd31061fcc8bfa40d70"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_glock_pov-1.mp3",
+      "bytes": 9213,
+      "sha256": "e23a810637a60a827e1b4cca2787dbaa53435bfcdedacf07776208c8e8766938"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_pistol_near-1.mp3",
+      "bytes": 13725,
+      "sha256": "1a64cb02ecde5c7303682dd3b13db828a9653d142d80bf77c984cc5efea04c73"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_pistol_pov-1.mp3",
+      "bytes": 14277,
+      "sha256": "1a06b8dfdb7f988d374b4cc7ade8d5e2668d372495acc183f372a4c18812f76d"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_rifle_near-1.mp3",
+      "bytes": 13005,
+      "sha256": "018f9e05f8d3cce83cbf6c198b519ac96657c195916302554a8a6c4a7c6dd19b"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_rifle_pov-1.mp3",
+      "bytes": 14709,
+      "sha256": "9664c864ccb245a197b5e6648c07e19a24a1570a1b96eb06c3d03759172037c8"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_shotgun_near-1.mp3",
+      "bytes": 13605,
+      "sha256": "052485d780558975e085b1a161ecb2f39111a83565108ba21485ae92023937b5"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_shotgun_pov-1.mp3",
+      "bytes": 13437,
+      "sha256": "189606cada57b5146a6a710cf3e07b59374b7d84f467c32d82316858e45390d3"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_smg_near-1.mp3",
+      "bytes": 9213,
+      "sha256": "853e5dee2cc35ba7e0e8cdc2d8c23a55d47eeb5a8188992e58fdd7ccf23bf60f"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_smg_pov-1.mp3",
+      "bytes": 10581,
+      "sha256": "61c52c3d4d99106598f9cd0fdae87651976b3e0b62b7b86a27881d104ddf3a6e"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_sniper_near-1.mp3",
+      "bytes": 13053,
+      "sha256": "f5e878aab4a37750ba67073e8cee11cdb3ed8b7de3250d74602a4374281ea153"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_sniper_pov-1.mp3",
+      "bytes": 13293,
+      "sha256": "708dcaffda71978780ced2480b8a5c8df7e8261b15352f288fde90ac52a035f6"
+    },
+    {
+      "path": "assets/fps/audio/riposte-i_concrete-1.mp3",
+      "bytes": 3669,
+      "sha256": "ab7b1356c9d71e1ee30bf5733269a6bf4b060e37e76344de386d9fc88a027ce0"
+    },
+    {
+      "path": "assets/fps/audio/riposte-i_flesh-1.mp3",
+      "bytes": 2997,
+      "sha256": "0889917beb655427bb17c945a09cc5f5a1fac82a0aba03190e3b44610acbc3e6"
+    },
+    {
+      "path": "assets/fps/audio/riposte-i_glass-1.mp3",
+      "bytes": 6573,
+      "sha256": "6b9d4df93ae96d9c6342a69593813172d81a83360b50d414f0ab637ba7d333cd"
+    },
+    {
+      "path": "assets/fps/audio/riposte-i_metal-1.mp3",
+      "bytes": 3357,
+      "sha256": "683dbec0592ae7013c9615e6d351270a62ce807dac884c25ff541fd6dcbdfcbb"
+    },
+    {
+      "path": "assets/fps/audio/riposte-i_wood-1.mp3",
+      "bytes": 3981,
+      "sha256": "a22b4299deb3f5df74a925c4d116f1fe48aed0af63e757303ee74fe9559da553"
+    },
+    {
+      "path": "assets/fps/character-overrides.json",
+      "bytes": 38,
+      "sha256": "bc5dfc36dd19249b5d9d3a581ff9baeab03ba63c1e80fce45bcf0249be9f0884"
+    },
+    {
+      "path": "assets/fps/materials/Concrete034/Concrete034_1K-JPG_Color.jpg",
+      "bytes": 269501,
+      "sha256": "8ceb9186d990b31fce785e06fdc6974c160f1d27c43f6160266f164deba713aa"
+    },
+    {
+      "path": "assets/fps/materials/Concrete034/Concrete034_1K-JPG_NormalGL.jpg",
+      "bytes": 821681,
+      "sha256": "e509eb9dfa978e780fbebfd2acacc2ce158b5b7ced722ddc0759039dd51e18ca"
+    },
+    {
+      "path": "assets/fps/materials/Concrete034/Concrete034_1K-JPG_Roughness.jpg",
+      "bytes": 217708,
+      "sha256": "a4a9e39857a19afd23a778e5abf44fcdf6bd7f93918f1cf6878b41933e553511"
+    },
+    {
+      "path": "assets/fps/materials/Fabric045/Fabric045_1K-JPG_Color.jpg",
+      "bytes": 1124059,
+      "sha256": "c262b80d58ae5ad1e87e690188f372a822ad4cdc08f59d944ea5818ac363c9d3"
+    },
+    {
+      "path": "assets/fps/materials/Fabric045/Fabric045_1K-JPG_NormalGL.jpg",
+      "bytes": 2462113,
+      "sha256": "31649ae483d26bc8c795de1994c6ceb365212b548dd2f09f0484bb45b0b76005"
+    },
+    {
+      "path": "assets/fps/materials/Fabric045/Fabric045_1K-JPG_Roughness.jpg",
+      "bytes": 615798,
+      "sha256": "33f128a7adca7e9f42c9b95790ce31a5611e0ec1b831778bd4290c1fff4fddaf"
+    },
+    {
+      "path": "assets/fps/materials/WhitePlaster02/WhitePlaster02_1K-JPG_Color.jpg",
+      "bytes": 527219,
+      "sha256": "a1ebbe091bd1ae93d2abd5de8d69f9003a8d0ee6532bcf9a87c2492c97051f23"
+    },
+    {
+      "path": "assets/fps/materials/WhitePlaster02/WhitePlaster02_1K-JPG_NormalGL.jpg",
+      "bytes": 652310,
+      "sha256": "eb572ca3630d5bfde72e2601b1f02412da23ca005cd19384dced8690be4cb783"
+    },
+    {
+      "path": "assets/fps/materials/WhitePlaster02/WhitePlaster02_1K-JPG_Roughness.jpg",
+      "bytes": 295900,
+      "sha256": "4ff1fe957cd161b07f721fe6c28a9459c8c2e8ec65627a26c16e483a07c80d85"
+    },
+    {
+      "path": "assets/fps/materials/Wood051/Wood051_1K-JPG_Color.jpg",
+      "bytes": 871537,
+      "sha256": "f3c6c5456457e8d05c1fee4d2f186f41d0aea2b8a06859b69ce2934e11aa8798"
+    },
+    {
+      "path": "assets/fps/materials/Wood051/Wood051_1K-JPG_NormalGL.jpg",
+      "bytes": 1583401,
+      "sha256": "9078dc50c43b55831ae322460fc96b62df68c7a148400bd7755ab2788fec1708"
+    },
+    {
+      "path": "assets/fps/materials/Wood051/Wood051_1K-JPG_Roughness.jpg",
+      "bytes": 680793,
+      "sha256": "b5736b940d721b49922cb14eebd52fd34f134b7ef99331ecf28565ce40358098"
+    },
+    {
+      "path": "assets/fps/materials/riposte/paintwood/map.webp",
+      "bytes": 10220,
+      "sha256": "fde5a948c16580f30fc4a603854cd333c75f7297e2b57eecf58ebecc3eeec496"
+    },
+    {
+      "path": "assets/fps/materials/riposte/paintwood/normal.webp",
+      "bytes": 6246,
+      "sha256": "7bad73fe9efd75a2b1ebdb2132a58d642499d4fe546314671482bd9d481bd618"
+    },
+    {
+      "path": "assets/fps/materials/riposte/paintwood/rough.webp",
+      "bytes": 4744,
+      "sha256": "256eaa44465647923a507a638c380bb3b42975202df87aa8760c11399e292127"
+    },
+    {
+      "path": "assets/fps/materials/riposte/steel/map.webp",
+      "bytes": 68100,
+      "sha256": "477dde2780633ea3b69ace1b355c77b97665c178d8ab7a536c52bf9a4b709c5c"
+    },
+    {
+      "path": "assets/fps/materials/riposte/steel/normal.webp",
+      "bytes": 2156,
+      "sha256": "cf533f66c5203be667635877b7bbc1a76655e9d621d5eb296a9d810f214aabec"
+    },
+    {
+      "path": "assets/fps/materials/riposte/steel/rough.webp",
+      "bytes": 68216,
+      "sha256": "820c4d627c2163b2ca0827d875e027dce73cafc0ebbcb7bc1ee853eaf6815606"
+    },
+    {
+      "path": "assets/fps/materials/riposte/timber/map.webp",
+      "bytes": 65614,
+      "sha256": "f6d466a7c87119251b42da7daba599c55623faf9cd58b66706392b11e43a48d6"
+    },
+    {
+      "path": "assets/fps/materials/riposte/timber/normal.webp",
+      "bytes": 29536,
+      "sha256": "438b1eeb7d09847f1297b7df979010d469930c2145cb55d9362a5ea3139a0c5d"
+    },
+    {
+      "path": "assets/fps/materials/riposte/timber/rough.webp",
+      "bytes": 7486,
+      "sha256": "c39dac1088336d7f94af5c06e233d0efd7a377eebf9096e0893a02f023b4f312"
+    },
+    {
+      "path": "assets/fps/models/bookcaseClosedDoors.glb",
+      "bytes": 22644,
+      "sha256": "ff33f535acdb1825c0e958a293642b39665adcae0b1317b650e83d2bb687f4e2"
+    },
+    {
+      "path": "assets/fps/models/chairDesk.glb",
+      "bytes": 39016,
+      "sha256": "46406619186034cbe92b19b79a5f1a8e3f442a17a70a7524ef2c0ad0f35095c6"
+    },
+    {
+      "path": "assets/fps/models/computerScreen.glb",
+      "bytes": 6404,
+      "sha256": "5942cbad29a2d2b956619569926e81d50a4174403d592fece6556e57632dc643"
+    },
+    {
+      "path": "assets/fps/models/nord01-access_terminal-lod0.glb",
+      "bytes": 29648,
+      "sha256": "8fcd1685b7908e27e98daae25fae0fa75da13c3b88f3aa966db6694839ba538c"
+    },
+    {
+      "path": "assets/fps/models/nord01-access_terminal-lod2.glb",
+      "bytes": 18576,
+      "sha256": "6af1b9a3f74a827cb66024e7b44140e7427dee006a6ad3302d1f008d6f54fdfe"
+    },
+    {
+      "path": "assets/fps/models/nord01-medical_case-lod0.glb",
+      "bytes": 22340,
+      "sha256": "c7579a593d944d0f32f3554b8ca0b0254de65ae0658d2de0204ef695b6a52b10"
+    },
+    {
+      "path": "assets/fps/models/nord01-security_locker-lod0.glb",
+      "bytes": 38028,
+      "sha256": "4368ceb4cd3a26d1c8a3ead0413f71cd5204274410b46b031c423b5d1388b277"
+    },
+    {
+      "path": "assets/fps/models/nord01-security_locker-lod2.glb",
+      "bytes": 18476,
+      "sha256": "a08cb42c5a564981f520c2c38aaed6f82e448926a501cf7fe6b0dd14a56a5028"
+    },
+    {
+      "path": "assets/fps/models/nord01-strip_light-lod0.glb",
+      "bytes": 14632,
+      "sha256": "11785a1708dfae00d37628e3f06dee5cf95175ce49b0fc5bd867f0bd83b96f53"
+    },
+    {
+      "path": "assets/fps/models/nord01-supply_crate-lod0.glb",
+      "bytes": 22360,
+      "sha256": "a021e8b54ee354f0a41e4ceaa37b994e68e444b8d715033d47d6f3d4bed3a67d"
+    },
+    {
+      "path": "assets/fps/models/nord01-wall_vent-lod0.glb",
+      "bytes": 40648,
+      "sha256": "25482d2abec3a01920b9f213bf5df6223ac5df4df3a578a53da7c095e2c97757"
+    },
+    {
+      "path": "assets/fps/models/nord01-wall_vent-lod2.glb",
+      "bytes": 22048,
+      "sha256": "5b0b934e822c8275bfee08812a3dbd1940fda3d8174f6247b336824748e8ef99"
+    },
+    {
+      "path": "assets/fps/models/pottedPlant.glb",
+      "bytes": 7576,
+      "sha256": "5b760eda2766f75fda36b2c5df652a1662f82981ef64cd8fa7fe7bcd386b3a15"
+    },
+    {
+      "path": "assets/fps/models/quaternius-operator-female.glb",
+      "bytes": 2128972,
+      "sha256": "bc13c22dc859304f4fc4b74f7b1a4b02b3e8624494314bf866d5951db15940e1"
+    },
+    {
+      "path": "assets/fps/models/quaternius-operator-male.glb",
+      "bytes": 1979872,
+      "sha256": "780a0473bc7202fae47647986918dede4598286c3e2ec95ac03710aa8d00405c"
+    },
+    {
+      "path": "assets/models/1c72ef12bf0604e0ece223bd1142bfcf4fcbecb0770b387461d9b3a478a6f6c7.glb",
+      "bytes": 21012,
+      "sha256": "1c72ef12bf0604e0ece223bd1142bfcf4fcbecb0770b387461d9b3a478a6f6c7"
+    },
+    {
+      "path": "assets/models/3b5d4800c66d183cc683d417d02be848bed2702ef62db6137aa07bc08463eea4.glb",
+      "bytes": 29008,
+      "sha256": "3b5d4800c66d183cc683d417d02be848bed2702ef62db6137aa07bc08463eea4"
+    },
+    {
+      "path": "assets/models/3d5497250923f7858e0693c1027462592bc066952ad0c010df28aa0cb62c24aa.glb",
+      "bytes": 15016,
+      "sha256": "3d5497250923f7858e0693c1027462592bc066952ad0c010df28aa0cb62c24aa"
+    },
+    {
+      "path": "assets/models/7ad94bef7ed7f3afc20f4fdb54e54c6c2ac12c31ccaf375bbb91808373a31131.glb",
+      "bytes": 5016,
+      "sha256": "7ad94bef7ed7f3afc20f4fdb54e54c6c2ac12c31ccaf375bbb91808373a31131"
+    },
+    {
+      "path": "assets/models/88a28fae22960ba24a74b6eaf467bd26bff34f8943e52c37be0725c9169b045f.glb",
+      "bytes": 26196,
+      "sha256": "88a28fae22960ba24a74b6eaf467bd26bff34f8943e52c37be0725c9169b045f"
+    },
+    {
+      "path": "assets/models/9ba73bd3da6869340575ce5857bcb98b8ddfdd2b9c449c3d55e94c93d47908be.glb",
+      "bytes": 48596,
+      "sha256": "9ba73bd3da6869340575ce5857bcb98b8ddfdd2b9c449c3d55e94c93d47908be"
+    },
+    {
+      "path": "assets/models/9c4b643b35b92a91a5def38040b8847b6fe2619668e8fa3830832a43c41e4249.glb",
+      "bytes": 31440,
+      "sha256": "9c4b643b35b92a91a5def38040b8847b6fe2619668e8fa3830832a43c41e4249"
+    },
+    {
+      "path": "assets/models/9e69f0d7242efd9cd38978735f89ffd899f5e12a8091a17457e1d9843fbc0611.glb",
+      "bytes": 48588,
+      "sha256": "9e69f0d7242efd9cd38978735f89ffd899f5e12a8091a17457e1d9843fbc0611"
+    },
+    {
+      "path": "assets/models/9f68f0d5fab99c2503a0b151cfce5865681937b3d06194e13c24dc1eda0fa66a.glb",
+      "bytes": 70984,
+      "sha256": "9f68f0d5fab99c2503a0b151cfce5865681937b3d06194e13c24dc1eda0fa66a"
+    },
+    {
+      "path": "assets/models/c78f8d61efd9d947ec37a76160e0cc48edd52d134312b738bcfd05729a32c980.glb",
+      "bytes": 37404,
+      "sha256": "c78f8d61efd9d947ec37a76160e0cc48edd52d134312b738bcfd05729a32c980"
+    },
+    {
+      "path": "assets/models/c8aeb532b334e63a6a5a49021111f15a27bfd444e760a12eea962701f8b20300.glb",
+      "bytes": 26220,
+      "sha256": "c8aeb532b334e63a6a5a49021111f15a27bfd444e760a12eea962701f8b20300"
+    },
+    {
+      "path": "assets/models/dadc53c65e93676065394489c251ad588c84087640f78624df9a64180df1c009.glb",
+      "bytes": 104544,
+      "sha256": "dadc53c65e93676065394489c251ad588c84087640f78624df9a64180df1c009"
+    },
+    {
+      "path": "assets/models/e445d3f7dbeee8152d0078e8729727caf4d039e3e23b21d9d4290b51c53b87c1.glb",
+      "bytes": 5160,
+      "sha256": "e445d3f7dbeee8152d0078e8729727caf4d039e3e23b21d9d4290b51c53b87c1"
+    },
+    {
+      "path": "character-design/anatomy-accessories.mjs",
+      "bytes": 16669,
+      "sha256": "80fd4506c5515539baaf6edb63e244d07500934833ea5bc7c6dc3853ca3f1199"
+    },
+    {
+      "path": "character-design/app.mjs",
+      "bytes": 43454,
+      "sha256": "edaf3d6f6fa7ec4712e13a268efc3b04d2124610780cd53f595e5eaec795c51c"
+    },
+    {
+      "path": "character-design/cloth-preview.mjs",
+      "bytes": 7012,
+      "sha256": "61b64f7e771e11520ddb2f36cd98594f132e49d1217b64c1d5cf3c7c7deb2b53"
+    },
+    {
+      "path": "character-design/creative-controls.mjs",
+      "bytes": 15793,
+      "sha256": "30673eb154f705a70048d00d6cd51ddedb95c98c4d6a6477d5f63ec9ba3d5a58"
+    },
+    {
+      "path": "character-design/creative-schema.mjs",
+      "bytes": 10083,
+      "sha256": "b2e04a406eca17b4ed46855c7597762201723f762d92b5bacd6f26374beb5df8"
+    },
+    {
+      "path": "character-design/dwarf-fit.mjs",
+      "bytes": 749,
+      "sha256": "5d893a990d470acac15a90dc7d6e4320d62bb137798d94a142da0e9631b2c2b8"
+    },
+    {
+      "path": "character-design/fashion-preview.mjs",
+      "bytes": 17011,
+      "sha256": "660e3103131d4e2f12c0bd035f4e1188f16fe34f3e28d5eaa8d880310e4d1a6e"
+    },
+    {
+      "path": "character-design/fiber-hair.mjs",
+      "bytes": 7122,
+      "sha256": "5d07afee789820b0c942560cd420509d967f358d6e1afe0a15b7fe9838312b78"
+    },
+    {
+      "path": "character-design/private-match.mjs",
+      "bytes": 1565,
+      "sha256": "ed2de48b5820c710802591fd21efe47be6a29a56a99ac10244bac8da34885ac6"
+    },
+    {
+      "path": "character-design/project-schema.mjs",
+      "bytes": 18990,
+      "sha256": "7c59eb63b8623f8ce63887683916d4d99cb7b9d5ca84aa5a5a7a296e031d9ca1"
+    },
+    {
+      "path": "character-design/runtime-export.mjs",
+      "bytes": 3576,
+      "sha256": "c89ffd665ef5afe7e4a29f68ac3a4441ad512c6041b5f637f56a08d162fedee8"
+    },
+    {
+      "path": "character-design/runtime-package.mjs",
+      "bytes": 2920,
+      "sha256": "87dff594a6a601356a9885e43b433840e7107ba767b02fbe9c37309cba6b3ce0"
+    },
+    {
+      "path": "character-design/sculpt-controls.mjs",
+      "bytes": 7139,
+      "sha256": "fe01bc8d81816d0f34b644b0010a9c397a5929d984ab215220f04fcb9019b892"
+    },
+    {
+      "path": "character-design/sculpt-engine.mjs",
+      "bytes": 17587,
+      "sha256": "98f2dec7b844ddc0f1d016b14f66ea883d69730916e11272a4168c998e3634de"
+    },
+    {
+      "path": "character-design/sculpt-schema.mjs",
+      "bytes": 1887,
+      "sha256": "183f7beb0de1d6e1c56502414d1200e732f711c9838e0c9905a5792796811fd8"
+    },
+    {
+      "path": "character-design/studio-controls.mjs",
+      "bytes": 9921,
+      "sha256": "086f284d06846a86ec3a2f7898df3be5c85c43218dee3b59e041d93a44d815ba"
+    },
+    {
+      "path": "character-design/workbench.mjs",
+      "bytes": 23391,
+      "sha256": "fe0a98b37c2cda260fc6dd6dfc13ed01d44cb6a226de0470698f03074a8394e8"
+    },
+    {
+      "path": "credits.html",
+      "bytes": 14024,
+      "sha256": "da1d5f099b091f243c9260e6c49e8bceea2d09543e54bb306533864a74560dbe"
+    },
+    {
+      "path": "docs/fps-furniture-library.md",
+      "bytes": 6572,
+      "sha256": "533dce29d265607a9e3fd44df857fde3510a126887682e97ecb69dfcb0671954"
+    },
+    {
+      "path": "fps/focus-hud.css",
+      "bytes": 12618,
+      "sha256": "35bce0dfeef5d4719823974cffb569806fc3ee936fc245d797ef5df9ba95b93d"
+    },
+    {
+      "path": "fps/index.html",
+      "bytes": 11012,
+      "sha256": "9769f19ac95aca5d902c4fadc6f941718895165198bd9ca04cf80d663dad1ba1"
+    },
+    {
+      "path": "fps/style.css",
+      "bytes": 29996,
+      "sha256": "deb5f649b51b6571d3f71f14ef3ab6c9e627ad05dc2da7f7eaa2d86e26637cd8"
+    },
+    {
+      "path": "fps/walk.html",
+      "bytes": 1805,
+      "sha256": "0782c68b51c8b5bd8becc08c5a606fd306160f46b960a9415dd53cf3a48916ad"
+    },
+    {
+      "path": "fps/walk.mjs",
+      "bytes": 4746,
+      "sha256": "680f521f1c04dfc28c897650defff0beeea5d2e144999d8300f3837058f6239c"
+    },
+    {
+      "path": "furniture-editor/adjacent-room.mjs",
+      "bytes": 3204,
+      "sha256": "6cee4867f25fe5cbfbedc6a9bdd469a47627c44d6610eb9bf168c391378f50ae"
+    },
+    {
+      "path": "furniture-editor/appearance.mjs",
+      "bytes": 3560,
+      "sha256": "1580d1380bce30adb871bf36e54bffe856c44a297ab122048e4f1abdbbe5b807"
+    },
+    {
+      "path": "furniture-editor/build/ai-export.mjs",
+      "bytes": 5626,
+      "sha256": "4c798a285999c3c37f428582f17e724f95036b9c1026ce1c331d52bc0d708793"
+    },
+    {
+      "path": "furniture-editor/build/architecture-preview.mjs",
+      "bytes": 6436,
+      "sha256": "c9699c57933e7bd5fab545a98915ab43a259c217dd10e25d9351ab521c3c993e"
+    },
+    {
+      "path": "furniture-editor/build/architecture.mjs",
+      "bytes": 14492,
+      "sha256": "c9b95f9dd02c64f840a56c7b7d92debc64584ede221a0a045340abfe32dd63c9"
+    },
+    {
+      "path": "furniture-editor/build/curtain-mesh.mjs",
+      "bytes": 5048,
+      "sha256": "93ac715afe46b5dc9025642912f6a1df2e0f248ee92599b0b5a2c54097634bb5"
+    },
+    {
+      "path": "furniture-editor/build/direct-manipulation.mjs",
+      "bytes": 11172,
+      "sha256": "65e2bc20d3a19a6d480a42addebd6aebc1ba6cb6a4fa408a9c9f459d15ea45c4"
+    },
+    {
+      "path": "furniture-editor/build/door-traversal.mjs",
+      "bytes": 1234,
+      "sha256": "b8b12db83c03031fda6eaf1b6a11d7c453dc5d398066df092b235a213193fed2"
+    },
+    {
+      "path": "furniture-editor/build/draft-save.mjs",
+      "bytes": 6144,
+      "sha256": "f90b0f686a4670de3559c88d9b9792c9c66f82497d172698e30f4bc77334b543"
+    },
+    {
+      "path": "furniture-editor/build/empty-interior.mjs",
+      "bytes": 2019,
+      "sha256": "3e4fdbe957811475db94cfbb7b4d504690c27e4cdc77037d2722586c990e1443"
+    },
+    {
+      "path": "furniture-editor/build/environment-art.mjs",
+      "bytes": 9461,
+      "sha256": "f951d33f7f70adbafe861a7e52f5193614b81ad5be7d8a7ed829c785c74c1928"
+    },
+    {
+      "path": "furniture-editor/build/environment-layout.mjs",
+      "bytes": 3688,
+      "sha256": "6cb5f2ff8c2f66cb09580e9bf1da6f48b680715985ad131850616f630142c725"
+    },
+    {
+      "path": "furniture-editor/build/environment-visuals.mjs",
+      "bytes": 12889,
+      "sha256": "6d2e301d4fa55472669030d3ffde3cc7e3c229abbf479a862e64cee915861ae0"
+    },
+    {
+      "path": "furniture-editor/build/floor-edge.mjs",
+      "bytes": 7412,
+      "sha256": "f78768a66ce93693bc5d05dd52bc337979af898b260d7104614ae984c1ac22ed"
+    },
+    {
+      "path": "furniture-editor/build/floor-tape.mjs",
+      "bytes": 3509,
+      "sha256": "3a6220ab77be4e88c82172dd8dd91341bd93a5f7e11a7d11b8bc727df1d748dd"
+    },
+    {
+      "path": "furniture-editor/build/floor5-appearance.mjs",
+      "bytes": 577,
+      "sha256": "f1aa2cdcd88e0a0a4f87d725765a63170a50c0121d3065f6232f19e9bca0f87c"
+    },
+    {
+      "path": "furniture-editor/build/level-project.mjs",
+      "bytes": 17158,
+      "sha256": "f4569b53f6c2f08dcb363f14af323121909b8978dd926dadb3dc5be0516e5c25"
+    },
+    {
+      "path": "furniture-editor/build/level-project.schema.json",
+      "bytes": 9417,
+      "sha256": "7bc7cbc2d3581742019d8cacd613c012281ce7734f4dc3afa34e2119b039a456"
+    },
+    {
+      "path": "furniture-editor/build/paint-over-wall.mjs",
+      "bytes": 6532,
+      "sha256": "2d72038e95548d9333f6e4e9a8d54917a9a74340d99c912589a9984f5ea5a2d0"
+    },
+    {
+      "path": "furniture-editor/build/pattern-materials.mjs",
+      "bytes": 4992,
+      "sha256": "91daccfc5c9b2fb7dedfd844b60178e57b83253f73298f4708e03274b52b306b"
+    },
+    {
+      "path": "furniture-editor/build/pattern-presets.mjs",
+      "bytes": 1014,
+      "sha256": "42c8e695a15d49a39e9086b9bc21befd56c26e0a1379f5af2cbb5411ae416913"
+    },
+    {
+      "path": "furniture-editor/build/poster-art.mjs",
+      "bytes": 3442,
+      "sha256": "6b5b8e32702ed1739cee069b43e4fc2a81d5692429951ac89e7b7754abe28a08"
+    },
+    {
+      "path": "furniture-editor/build/posters.mjs",
+      "bytes": 4164,
+      "sha256": "02608447575848482af382a3a81d43940e3c0612597b5af6b5c40966028be57b"
+    },
+    {
+      "path": "furniture-editor/build/project-scene.mjs",
+      "bytes": 5769,
+      "sha256": "252dd59d6d2e2d62a987d6d12133753cd665a685167ba51f4cf8d66fa1908d34"
+    },
+    {
+      "path": "furniture-editor/build/project-visuals.mjs",
+      "bytes": 6334,
+      "sha256": "84fd8d395a19b2e49da0a33ec6cdd5b6b9df1782faa474255009e7b587b27795"
+    },
+    {
+      "path": "furniture-editor/build/room-drag.mjs",
+      "bytes": 1951,
+      "sha256": "b18601c806dbea5598135a5185dcdc7d6d6f81a50c18a8af3b7f5013707b28e2"
+    },
+    {
+      "path": "furniture-editor/build/safe-save.mjs",
+      "bytes": 1308,
+      "sha256": "2131baad4911a14f3e54eb044a18cc066c8d1477dceb6ff1b143caebd29c8492"
+    },
+    {
+      "path": "furniture-editor/build/surface-style.mjs",
+      "bytes": 5845,
+      "sha256": "30e49facbdfd22de9526bf3fdb32af740cd501e27bd0b32b3fabac8fcacd32ef"
+    },
+    {
+      "path": "furniture-editor/build/treatments.mjs",
+      "bytes": 5109,
+      "sha256": "86285c9b6be697e66370a6d1c060c886220d042a17ca54451670e62dea1fd98c"
+    },
+    {
+      "path": "furniture-editor/build/validate-level.mjs",
+      "bytes": 11028,
+      "sha256": "74db5e80c353929af2b8b4ccf19e542ba421a9abfc84ee1574d1d9d852213e17"
+    },
+    {
+      "path": "furniture-editor/build/walkable-spaces.mjs",
+      "bytes": 3484,
+      "sha256": "c04615c65810969f311ee76c8fa9c4d31a63b1cdec71bb6e970adc1219238742"
+    },
+    {
+      "path": "furniture-editor/build/wall-joints.mjs",
+      "bytes": 1531,
+      "sha256": "751b930156a9226ed28f74510eee5f699515a9023d03042df406118e86bfda4d"
+    },
+    {
+      "path": "furniture-editor/core.mjs",
+      "bytes": 15018,
+      "sha256": "d8d05b776c3d213c7d9e954c380258316fe82ea9cc0f58a73be271661b07e8b5"
+    },
+    {
+      "path": "furniture-editor/furniture-clipboard.mjs",
+      "bytes": 3674,
+      "sha256": "5ae1feb999d59531f0f1c9571274f6953bf170aa88acec3837cfc4ac8c8dc41c"
+    },
+    {
+      "path": "furniture-editor/furniture-handles.mjs",
+      "bytes": 6748,
+      "sha256": "3d3f66c0b121bbdc0854e9d59e78b5f3d6f40baba1f0ac735a27b7b090c70488"
+    },
+    {
+      "path": "furniture-editor/furniture-surfaces.mjs",
+      "bytes": 1273,
+      "sha256": "544963f2905aa2a231e977720c69472038ec179ab81c227ad08c3f2040ffa9b2"
+    },
+    {
+      "path": "furniture-editor/furniture-transforms.mjs",
+      "bytes": 2080,
+      "sha256": "2f731af6c96cff941becf0136aeab636f3380b861f9cc3cd0a7389efa894fa9e"
+    },
+    {
+      "path": "furniture-editor/furniture-translation.mjs",
+      "bytes": 3775,
+      "sha256": "7587b1e5ceee0e7aecc421ebcfa9db972437f89eee72e42feace3b071924e0d7"
+    },
+    {
+      "path": "furniture-editor/index.html",
+      "bytes": 26051,
+      "sha256": "8ce62942b4b8dca4ed5d80c35a48d7da4a5302889244332f32353ff7c672f487"
+    },
+    {
+      "path": "furniture-editor/library/catalog.mjs",
+      "bytes": 48176,
+      "sha256": "5d9f7427f0ffb5a185886ff5187072adfdf902a6ef2e8c7b73945e5b0a272d3b"
+    },
+    {
+      "path": "furniture-editor/library/fps-catalog.mjs",
+      "bytes": 6267,
+      "sha256": "cdeeef008315813de2f2cb2110770145ccb01fc5d62ee6ad3fdba447cec97eaf"
+    },
+    {
+      "path": "furniture-editor/library/fps-mesh.mjs",
+      "bytes": 11782,
+      "sha256": "c64150579069a3b270d2992e6cef3f6b39e03eca30bb5f8d569e732da726dbf0"
+    },
+    {
+      "path": "furniture-editor/library/genexpert-catalog.mjs",
+      "bytes": 1806,
+      "sha256": "eeb30f8a3d492b7c59343a1db339e61101b5c5089bfd2744c82d62f72a1d22f3"
+    },
+    {
+      "path": "furniture-editor/library/glb-utils.mjs",
+      "bytes": 3886,
+      "sha256": "de67282165c33c21f7029b8482ee9cb55062e35cb7de68fa95e653c0c0a453d6"
+    },
+    {
+      "path": "furniture-editor/library/house-catalog.mjs",
+      "bytes": 85507,
+      "sha256": "8ce22067ea7dddb92e9233efd23df267a8dfc5b0d5f9bd61d223643d1fcd15b0"
+    },
+    {
+      "path": "furniture-editor/library/lab-furniture-mesh.mjs",
+      "bytes": 11409,
+      "sha256": "46d875d41f16fffb22feca8a20b9ed0cd13bca67287422e12331a5cf05f23f93"
+    },
+    {
+      "path": "furniture-editor/library/lab-furniture.mjs",
+      "bytes": 2207,
+      "sha256": "fa3236bde86085006cc89d214a2144e0703d4951bc05760553f9a2d7510f3464"
+    },
+    {
+      "path": "furniture-editor/library/models.mjs",
+      "bytes": 6931,
+      "sha256": "9357a27c35b8762dd2a5c9cc0c9b094614f9ae4cf4356e1d228f6b80f39eccae"
+    },
+    {
+      "path": "furniture-editor/library/models/fps/laboratory-drying-oven.glb",
+      "bytes": 1301856,
+      "sha256": "0e45d530895e94d5e8d132d12ddc89e7d762eb270c2dc5d0ad7e098999db918e"
+    },
+    {
+      "path": "furniture-editor/library/models/genexpert/genexpert-16.glb",
+      "bytes": 1113824,
+      "sha256": "ac5e661222d3ddbe26e4b9ed84107f40f829594c1a21e596c81c9c8694dc9d2c"
+    },
+    {
+      "path": "furniture-editor/library/models/genexpert/genexpert-infinity-80.glb",
+      "bytes": 984184,
+      "sha256": "6dfd5e859edc05b06d529f914db0666a24d7d2f3e39328131cff8574c7eabfe1"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Bathroom_Bathtub.glb",
+      "bytes": 6740,
+      "sha256": "02e5e8a46d99036375645758cdbbcb4997103e64ab3723dc643568c2228f8482"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Bathroom_Mirror1.glb",
+      "bytes": 5548,
+      "sha256": "ef9f95f64afa9d63736c83f3087f738ef5bba1f5d5e1f744a44e6569370ac94d"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Bathroom_Mirror2.glb",
+      "bytes": 4016,
+      "sha256": "354279d3b11ed1426c6f6cf638db995f657f2c14ff702c951e6dcef5ba5acea7"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Bathroom_Shower1.glb",
+      "bytes": 37172,
+      "sha256": "18c863e7226fd47982a354fa862a2bf654c8d398968cf583a05192de7381ef7b"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Bathroom_Sink.glb",
+      "bytes": 8452,
+      "sha256": "de89326fef89a236cf4a091e89c24ee7def31c956faeaf432a4c957970ddbc2c"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Bathroom_Toilet.glb",
+      "bytes": 8684,
+      "sha256": "43a0b76222693cc25811c5273ee95f42c3b9571e1da2033e82ecdcdb3da368c2"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Bathroom_Toilet2.glb",
+      "bytes": 7412,
+      "sha256": "73cbe719821c541c44406f9074962c60a2b9f26a4a845f52b963ec58e1f9b3d9"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Bathroom_ToiletPaper.glb",
+      "bytes": 8128,
+      "sha256": "1d729a23797596c3b08a043194239ad6b5b565bec1830c66cdee25d4f1090efa"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Bathroom_ToiletPaperPile.glb",
+      "bytes": 10328,
+      "sha256": "1408fedd502b3afc2306bbc66535287d73e22f50e99fb8f5af6d715fd3ed8625"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Bathroom_Towel.glb",
+      "bytes": 7044,
+      "sha256": "bc4c27bee1c74949c7ce41a415d14149954249baf06d99e81d6bcc2458f6a0b2"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Bathroom_WashingMachine.glb",
+      "bytes": 9244,
+      "sha256": "0c8e422a533b7f96f7a82e19374370b2cfd2431fe0ff934d5eaeb4e823039cb0"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Bed_Bunk.glb",
+      "bytes": 30264,
+      "sha256": "f19a84ac86f15565522c9eae7212b8817ac4160a334fe1b5f336cfa300c919b3"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Bed_King.glb",
+      "bytes": 20680,
+      "sha256": "ffee7b82ac6d1505c3dbe20bfaec7451efa99ce192b582186a45501eb6c47bd6"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Bed_Single.glb",
+      "bytes": 18576,
+      "sha256": "8c360175d5814c4acedce2fe7537782f658eb76a60ba042a1fc90519605c3df0"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Bookshelf.glb",
+      "bytes": 7556,
+      "sha256": "e1c6c822384cf9579760a2c7eb2b8a034b62d004ade9b54abdfe611f65f5530e"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Carpet_1.glb",
+      "bytes": 5144,
+      "sha256": "79f2bc9ea64cb7fd193d03e3d4738701491942169217302448a7f6f90d8bdba5"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Carpet_2.glb",
+      "bytes": 4840,
+      "sha256": "387604b879618cc8d68ebd6244d1a46db6f74a46fab6a83fdf28faaa07b425d5"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Carpet_Round.glb",
+      "bytes": 5748,
+      "sha256": "de162321b3cee5264d077bcc95ba3f24cf43d1f8109cc175b805043e9be6a8b9"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Chair_1.glb",
+      "bytes": 12364,
+      "sha256": "2e4e4d9b192d745a7d62a974128f8f92c29a66c534cf3ea1cad3824416b685df"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Chair_2.glb",
+      "bytes": 16620,
+      "sha256": "2a9da6eac0c5b087999b8f8aac1f22b877ab86caf5986b84ce328dbe8a6b9995"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Chair_3.glb",
+      "bytes": 20336,
+      "sha256": "a62a50d7c759ae6d6ff2211c9213632e70212ab0efdc22af30d2529d2d1e1e34"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Chair_4.glb",
+      "bytes": 8808,
+      "sha256": "3f2f2f27e2167f11deaa7aca3ed5ddf63bffd3499f7a809fab1740e5021df92a"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Column_Round1.glb",
+      "bytes": 7260,
+      "sha256": "090d067fb2549589570c2519211b2265fd00b44a810f98e72d1b56963da1f0ef"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Column_Round2.glb",
+      "bytes": 11128,
+      "sha256": "a4a90fdd6d6c436fa56d1e9b375c8939eb0a03f7b2acf49d90758af82d67fa47"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Column_Round3.glb",
+      "bytes": 11148,
+      "sha256": "4805d100a7a1ccd978bec8733daa64872179f18b45ea475d3020412fc0ff11ba"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Column_SquareBig.glb",
+      "bytes": 4356,
+      "sha256": "d2105aee771508ce140bfce1c2f74b7e4543cd1bd8d9ab447893f645df0318ee"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Column_SquareSmall.glb",
+      "bytes": 3784,
+      "sha256": "67256743eb472c4695d599aaa4832b2eb3eab709768e626c9774d07c04c1c068"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Couch_L.glb",
+      "bytes": 27904,
+      "sha256": "73fc280a5bd0ed199b8288cf0d09156fe95087dc24ebfa64c1cf843686fb5db3"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Couch_Large1.glb",
+      "bytes": 28476,
+      "sha256": "df479d82925041a4893ee2f20033e15d80c404dda9d37bd0cfb4ac4c93b94fc0"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Couch_Large2.glb",
+      "bytes": 26188,
+      "sha256": "e0b856ca0f6f86ee7c105101b44653bc55217ef23895d34044f4960330faed13"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Couch_Large3.glb",
+      "bytes": 24732,
+      "sha256": "048996f151cb00f9c8616a8aba74f43d54c3421bb0392ff5da2e0d3898f1d412"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Couch_Medium1.glb",
+      "bytes": 20704,
+      "sha256": "ad80c27d51ba3082198a218ca406fc769aff946eccb55994d2487553e99d4586"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Couch_Medium2.glb",
+      "bytes": 22188,
+      "sha256": "4a92c33d7f06f5a9fed3cd951760ad1f4e5cb6e78ee8956ee37ea465f19376c8"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Couch_Small1.glb",
+      "bytes": 17776,
+      "sha256": "f92e2a0a9537971309b28343f509daf0f2c457bd3cc988cd2a474247f1468c52"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Couch_Small2.glb",
+      "bytes": 10384,
+      "sha256": "32013e9ea4d6d23187fc9b62f9649f431fd194e25f101e93cecb723073b1f485"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Curtains_Double.glb",
+      "bytes": 8772,
+      "sha256": "c8344d02edcc595e68dc8e88717422ccd17703870942bffe2a7e63193d1a3b10"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Curtains_Single.glb",
+      "bytes": 6276,
+      "sha256": "f47f9bc8e3d5acfdd1c36e68ba43536c758cac6d2b1b08737404d64b3171ab1e"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Door_1.glb",
+      "bytes": 20740,
+      "sha256": "102d72cf96fd76fc7e19e6713a1f1a2ed8f1177fc9c1f3c0e3a4dfc2ecdf05a2"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Door_2.glb",
+      "bytes": 20748,
+      "sha256": "f55a0a3cf8d56437018d368e4157721fd6cb91706703c456aadce76b5f204e14"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Door_3.glb",
+      "bytes": 18512,
+      "sha256": "786e3d964e0d3c0b88b38608cc94171898e6a60603bf472f3e4c97e4ce2fe727"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Door_4.glb",
+      "bytes": 35924,
+      "sha256": "e8a2c1ec568d393b962c51ec653d7bb81b0c6186aba6241b125ca18a19cbd429"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Door_5.glb",
+      "bytes": 49432,
+      "sha256": "715bdbf4f398e6cf5059024968ddd6d68348fd23d7545cc1a75766a35effe47d"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Door_6.glb",
+      "bytes": 34000,
+      "sha256": "af12620a40aa2200ff2e443b85d7e0864274e4e703c347aa603aeeef69f4054c"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Door_7.glb",
+      "bytes": 10152,
+      "sha256": "0405dcc037f6c9550e6de62de5aa8833a0261c3bd16a0a2e0d05cd1d37c9b235"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Door_8.glb",
+      "bytes": 91748,
+      "sha256": "c33e3c7e80a573f06739a387a5bb8eb2e3da38f713157bc189ba5ed1fa9038d3"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Door_9.glb",
+      "bytes": 36020,
+      "sha256": "07e083ac5681a0b5d28a27ff4187d7e6ce6b73fd3dd7a40adfd372ed83f55658"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Door_Double.glb",
+      "bytes": 36612,
+      "sha256": "e8321351c43b7058069b9a7dd50f404f5b507daf3cd592f6a45597bc814aa427"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Drawer_1.glb",
+      "bytes": 13392,
+      "sha256": "237868391cb535d6f4960db2561b268b5531fc03a2f4d0847215aaf6781ab2da"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Drawer_2.glb",
+      "bytes": 14352,
+      "sha256": "a5a1040c827e43bac18d4f455559f64f87e5fe5903bcf4d5bb313da9043bee44"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Drawer_3.glb",
+      "bytes": 26508,
+      "sha256": "e9f17f25e6a9ca36978cecb524d8bea256de567234ef778e37a2bee4acedb07e"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Drawer_5.glb",
+      "bytes": 17240,
+      "sha256": "6ef890734d6d57e9af0da4ae7d01c1258aae15d1df581dd54eca7a56dfa7865d"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Fireplace.glb",
+      "bytes": 7852,
+      "sha256": "def013fbc375efbe3bb70d13831c586f1622d4e1d33893acaf085f3813381154"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Fork.glb",
+      "bytes": 4520,
+      "sha256": "58337eeaf761eda38c0c7327f211dd1747468bf978ac4f7f5143c87827aaaa57"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Houseplant_1.glb",
+      "bytes": 8964,
+      "sha256": "92550dba8d3493961af997aa35cd24b32cf2fd8bad0eaaa402ea0bc433ca074f"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Houseplant_2.glb",
+      "bytes": 10672,
+      "sha256": "4c9dc00a8ae6c77ae573e954597874494c3222495cbcfa42a9fb8c1432daedcd"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Houseplant_3.glb",
+      "bytes": 12640,
+      "sha256": "f5ca358db2e535cca78631ec1009bcf13820e38ab0652aeb6a6d4180d1fdb026"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Houseplant_4.glb",
+      "bytes": 8840,
+      "sha256": "5556a7ef391e7b9ba1f74321bb1a2dfa1da45453e20c78f06ca21e49ad599fdf"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Houseplant_5.glb",
+      "bytes": 12200,
+      "sha256": "bfd9da01f96ac0b4f236edf41170a4cbae0068c5902f3af654a56afa7b4b7bcb"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Houseplant_6.glb",
+      "bytes": 15080,
+      "sha256": "abf71734b74e801918096b0999b8fe3c4cf2f7322850eeaf54647d9cf37be3d7"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Houseplant_7.glb",
+      "bytes": 14896,
+      "sha256": "4677d2dec5bd7d74ca90cf407cf8d24b39411e0d889b8e3acd04db7667628187"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Houseplant_8.glb",
+      "bytes": 17836,
+      "sha256": "444a00815e9d1d7e54fa38517d23008d5498a9add98174528271ac7663dfc771"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Kitchen_1Drawers.glb",
+      "bytes": 6328,
+      "sha256": "fe8196d8a225605fa32cd42fa7ea521c60e4c9ad3fedc8885ef1fff3da9ae8f7"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Kitchen_2Drawers.glb",
+      "bytes": 8908,
+      "sha256": "3c77394d6f6381dd1608ed0a36032fafd5f5a29939cd49cf07e5929ffa5f2bee"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Kitchen_3Drawers.glb",
+      "bytes": 11500,
+      "sha256": "54b25879ab287d5e88cd8f6492f25da1eefae76119845fa119f608c1dee6126a"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Kitchen_Cabinet1.glb",
+      "bytes": 4844,
+      "sha256": "ca4d0fa288469f8e174241899e6f873737aa09828dcea02b58dd80e4d2b2222d"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Kitchen_Cabinet2.glb",
+      "bytes": 4844,
+      "sha256": "229d50956a7cd5e012fbaee0a0586cdfd22f73f2a1fa0d14b28ce1e8aeed76f9"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Kitchen_CabinetSmall.glb",
+      "bytes": 4852,
+      "sha256": "a116fee82413ce8acd2c8554421b4280ef57bd5e7fd564c9e71ff6b5f3523b13"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Kitchen_Fridge.glb",
+      "bytes": 9692,
+      "sha256": "69dae02fa49d4782f2c09978c25e1c74228f5076f16ae9531f0ce8a751c68fb9"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Kitchen_Oven.glb",
+      "bytes": 15808,
+      "sha256": "02ce4e2fd259eaae9cb65a81daf6af205e57d4f948310156b3d47333e23bf3ef"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Kitchen_Oven_Large.glb",
+      "bytes": 15680,
+      "sha256": "4c43ca7ed8e2915c80029016812a4a70ee836856f48648c9b257d3b585ad8af3"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Kitchen_Sink.glb",
+      "bytes": 24444,
+      "sha256": "24dbc401716f14e8de570a689641e9137851beb75cb7001ca0b5e3b960eaee86"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Knife.glb",
+      "bytes": 3196,
+      "sha256": "9615658f0f2a3e663c24866f1a0cae29c9500e5c8d222e5e4dbc23e8942dbc45"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Light_Ceiling1.glb",
+      "bytes": 7888,
+      "sha256": "50e628e48a51a39a7625d1cff785ed5577acb0cbdac93495d233d70246bccd35"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Light_Ceiling2.glb",
+      "bytes": 6680,
+      "sha256": "5b2c8abd7263f0d92d85baf3d920b93b682058ac6f2cec18d562e1dd09794cbf"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Light_Ceiling3.glb",
+      "bytes": 18136,
+      "sha256": "f273d0eabf71ad0fdc05e25aee2b688fb8004a2d39ebe85451e55331b877bd4e"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Light_Ceiling4.glb",
+      "bytes": 18116,
+      "sha256": "c705a9a2e8918ddfe98a6bcd5b7523aca286244149cf803c494e777164429570"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Light_Ceiling5.glb",
+      "bytes": 4340,
+      "sha256": "e08d4c5bf1498c4441d0ab98a6c59558222b7ac86e954a2fd91300fc93d11886"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Light_Ceiling6.glb",
+      "bytes": 4312,
+      "sha256": "7d90b5689a39d957b3e0e81f703a5d592c13b6bac4477daa97690dd1c79aaed1"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Light_CeilingSingle.glb",
+      "bytes": 7108,
+      "sha256": "eda00aa3b31290936c5488b381357949c452cc4d6f92326a59c598a9bd025ff2"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Light_Chandelier.glb",
+      "bytes": 20100,
+      "sha256": "4255f3c05867fd7f1a540cdc636f2b53b56767fcafbb7a52d3c87b99f0b3317a"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Light_Cube.glb",
+      "bytes": 21064,
+      "sha256": "c3a232d2ca625b6c6ff4e51f61d2ffbe4bdd8c3af38a5c932d7ec827d20e8097"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Light_Cube2.glb",
+      "bytes": 22204,
+      "sha256": "7c560564de819e0efebbd6da138448e5ad0a0f2f3e19f6d1819acaf3adce2335"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Light_Desk.glb",
+      "bytes": 9748,
+      "sha256": "9d2b1b56ebba6a6e06f2b80a5b36b7902dcf4c5164181195dcea54c1625a0be6"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Light_Floor1.glb",
+      "bytes": 7060,
+      "sha256": "fe9888b812de062a540b9da39d4bab6a9d44fe28b2cb72c4a625d2dec9cb8814"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Light_Floor2.glb",
+      "bytes": 6952,
+      "sha256": "944823e35ec5d2fa6c1c75ebff980689ac29c2f6badb190e412e10819799bddc"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Light_Floor3.glb",
+      "bytes": 6388,
+      "sha256": "cffdbe892f91c669e2b421c5201e78ad46d6eaa864e4b2b776879867682f1ff1"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Light_Floor4.glb",
+      "bytes": 6388,
+      "sha256": "f8c700c237d93b5ff5a383a15ecccbf745bdaeaefde884039f68c65f60c8ea7f"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Light_Icosahedron.glb",
+      "bytes": 59704,
+      "sha256": "1b4c8f9077f776d1717ad0749158448debb8073df04b33051495183258abd96a"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Light_Icosahedron2.glb",
+      "bytes": 170836,
+      "sha256": "507824312fcbb130f12084721be8ccd608a470780211b57639805e7aa608abac"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Light_Small.glb",
+      "bytes": 4344,
+      "sha256": "2f24a42c91bac28904fd21ef121b34131157cb842e90296b70282bc8b810ca73"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Light_Stand1.glb",
+      "bytes": 6388,
+      "sha256": "2526db6a74de2c134d973f6f2a08999ea51e103cdd0d43868b568081b0e06e9c"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Light_Stand2.glb",
+      "bytes": 6364,
+      "sha256": "ce7bcfcf6ee65843b21284616d29df505e75567f2e338fb208bec69a3470105b"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/NightStand_1.glb",
+      "bytes": 5280,
+      "sha256": "09b0cfbe37df7ecec488e1024f343408beff667e048d67a815c348c1e6709c0a"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/NightStand_2.glb",
+      "bytes": 5544,
+      "sha256": "dcef05118f9b7fe377b66e079e4a156ea0ccb6344bbfbed0aac00955a3f9776e"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/NightStand_3.glb",
+      "bytes": 7128,
+      "sha256": "0827d476e2c9f7d854a75a129714e16d8299b66d7d5967c1e9be879ff523ee96"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Plate_1.glb",
+      "bytes": 3576,
+      "sha256": "1ef1b8bac5e14409facfc7bf304f2b97c6dcfd3209c3f7783b7200f85059c8ad"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Plate_2.glb",
+      "bytes": 4808,
+      "sha256": "124669a0624b52b89ad6b28d6c697591549739632f8234e0daa3acf4602367e9"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Plate_3.glb",
+      "bytes": 3576,
+      "sha256": "52fc183e912a1b668fbfffe14244e68ab72e2e524e7398d01132b17c01e964af"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Shelf_1.glb",
+      "bytes": 6260,
+      "sha256": "b817c2f7ef2e56301f93a96669337f665c0f9e61c06eebed926d735f504c2e4c"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Shelf_2.glb",
+      "bytes": 7536,
+      "sha256": "90e6d0f56643c15434c0145b31d950cd273ca6d7d1ff6fcba52d2563e8ef82d7"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Shelf_Large.glb",
+      "bytes": 12384,
+      "sha256": "94c389a988aefbb5843016235e67f961f292b00e034dcc7c8f400506dd94f812"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Shelf_Small1.glb",
+      "bytes": 7636,
+      "sha256": "049cccc756b5b530649c8fea23334e5575710064ca4e412103807f6d46fbcc3a"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Shelf_Small2.glb",
+      "bytes": 5860,
+      "sha256": "393d126cc9989df4e4274fe240c26f88680a5a95ed91cbd5986311f8a6a5c4b8"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Shelf_Small3.glb",
+      "bytes": 3672,
+      "sha256": "42d6f7d2196c0f02ca976dfdea4af068fa7243749690a3fda039db523166a5b4"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Spoon.glb",
+      "bytes": 3528,
+      "sha256": "ce02ceaf05fc7a21da97de3eabd2e93926e1db630f205a22469db64b090478ac"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Stool.glb",
+      "bytes": 11524,
+      "sha256": "49c6738e146c6291a752c726af6c28aad162144c41b35461114a374429e61e61"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Table_RoundLarge.glb",
+      "bytes": 11848,
+      "sha256": "350b3eb246f7f329341c921d2fa7408350a8bb459f695a3116572e548fa0e83e"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Table_RoundSmall.glb",
+      "bytes": 11844,
+      "sha256": "38d5736c17b95433969d67c20badca83e2cb4d9e05a4ae3db32ca6250e255e1e"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Table_RoundSmall2.glb",
+      "bytes": 14776,
+      "sha256": "8ffc9f1b1801c43c9215a22c43bf8a73bbe40770073bf809ee0be484aec2b16a"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Trashcan_Cylindric.glb",
+      "bytes": 7992,
+      "sha256": "3803ffdc3d78d7c12a072bef8f76d27870d9791b48957c4ab39c2e70d1e9b042"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Trashcan_Green.glb",
+      "bytes": 15812,
+      "sha256": "f4c6fad0e9e609ef0abfb17d306013c15f6cb5d9de729c213b92acc87c0d59e5"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Trashcan_Large.glb",
+      "bytes": 12940,
+      "sha256": "5d611f3d20917462fb15c23d5f6eb20a713dd631f4ca0b1d5d27b2218388ffbb"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Trashcan_Small1.glb",
+      "bytes": 7448,
+      "sha256": "f52de86b39cd4ee8504a8719e436b6cfc766765cc3dce5764af9c350373ee80d"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Trashcan_Small2.glb",
+      "bytes": 8920,
+      "sha256": "0f4e5f24b2efb396ff0ccd538b584c08d3a954d1c79d6b94d72a8240cdd89063"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Window_Large1.glb",
+      "bytes": 12604,
+      "sha256": "8aa00f2a08142f3782a7bdcb7d49bf575f31f0528b2b6ee9cd211aed1e177d28"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Window_Large2.glb",
+      "bytes": 17932,
+      "sha256": "81e956f11f10305af4ce3f59a5f3bf47a414ab75de8df41cd08e25aee5c6df51"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Window_Round1.glb",
+      "bytes": 4472,
+      "sha256": "5bd5721694c30e1cadb800978dca2751125e5a392eeb98f6a7e4e16fd6b2ab32"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Window_Round2.glb",
+      "bytes": 4716,
+      "sha256": "bc0c7771fc8a434235d133f559dd869409e108ea78d66532dd279fb613e72efc"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Window_Round3.glb",
+      "bytes": 5244,
+      "sha256": "9ee2735ee26d1d9d6159fc6bdac7cd454352d6d7d379f30a62a5f3c7dc7dc736"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Window_Small1.glb",
+      "bytes": 6908,
+      "sha256": "a7d50fb0d6455063f8c07a956870b8149b463bc26e520599b230c671822e4f17"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Window_Small2.glb",
+      "bytes": 7796,
+      "sha256": "c117085983ee815c3e69f53dfb0ae025822cc458bee3b16c06ca5eb19d3002e4"
+    },
+    {
+      "path": "furniture-editor/library/models/house-interior/Window_Small3.glb",
+      "bytes": 6020,
+      "sha256": "69a4b2eafff1d55a0a24720307d761f4809a5fa659854caf8078c5311f3cc62b"
+    },
+    {
+      "path": "furniture-editor/library/models/office/ricoh-printer.glb",
+      "bytes": 1003812,
+      "sha256": "88c07363e9afc420c7f05e0f9c67ae7815a82383680e80470bca1e58b0f4e002"
+    },
+    {
+      "path": "furniture-editor/library/models/office/whiteboard-mobile.glb",
+      "bytes": 162552,
+      "sha256": "75e6cb0003bff1e7dc27f1a35669824beeee5ed80e3082deb3f2652d4c43e3f7"
+    },
+    {
+      "path": "furniture-editor/library/models/onboard/ammo-box-lod0.glb",
+      "bytes": 8288,
+      "sha256": "8a01b96043ceadc6d7dfaa7dc9878f77d8ad8cb588b3b46a14fb65bd106ca529"
+    },
+    {
+      "path": "furniture-editor/library/models/onboard/barricade-lod0.glb",
+      "bytes": 10636,
+      "sha256": "f2d0a18b7b28842d03081a5cceba41649b1aa88a5ed4785a8f588f92c32f918a"
+    },
+    {
+      "path": "furniture-editor/library/models/onboard/door-frame-lod0.glb",
+      "bytes": 8768,
+      "sha256": "311281c8d0e273ad49f8ac50bf69aa80e295e815296289ccef074923407d2d29"
+    },
+    {
+      "path": "furniture-editor/library/models/onboard/floor-tile-lod0.glb",
+      "bytes": 11992,
+      "sha256": "4f00e78874fb7f00b879505c097da9f9f2432318c0691c538c856278c1ea3c16"
+    },
+    {
+      "path": "furniture-editor/library/models/onboard/free-pack-boxes.glb",
+      "bytes": 768888,
+      "sha256": "b17bb05508aa085b438513634affeb02a54c77fef1ad9b1d76509865a162847e"
+    },
+    {
+      "path": "furniture-editor/library/models/onboard/goose-low-poly.glb",
+      "bytes": 80780,
+      "sha256": "cb8767f6e834d81185c8221f7cb1730b5b738eda2449b884f3b9f8c33f2a514a"
+    },
+    {
+      "path": "furniture-editor/library/models/onboard/patrol-carbine-lod0.glb",
+      "bytes": 26776,
+      "sha256": "2210de3341ab87cf4ef6fafa033e329afdf513643d268bfa066525b9f1106cf0"
+    },
+    {
+      "path": "furniture-editor/library/models/onboard/pillar-lod0.glb",
+      "bytes": 7044,
+      "sha256": "f8ea293f258a83d67ade16ab6c46bb2d5da265c347f38e859b93a00acf1eb639"
+    },
+    {
+      "path": "furniture-editor/library/models/onboard/security-door-lod0.glb",
+      "bytes": 16140,
+      "sha256": "70d4fb5db1e15df953220220e2950903e705debdc6b120dee5fd42d49067d012"
+    },
+    {
+      "path": "furniture-editor/library/models/onboard/service-canister-lod0.glb",
+      "bytes": 26472,
+      "sha256": "183966e8b55e0afb10ecc0463d748d903a5e33267b0f2db0664d1e02966892e3"
+    },
+    {
+      "path": "furniture-editor/library/models/onboard/service-pistol-lod0.glb",
+      "bytes": 26232,
+      "sha256": "10d43152637961a90713680c3484482c0db322b08b7c49d5793f9ea77d0b359a"
+    },
+    {
+      "path": "furniture-editor/library/models/onboard/tv-remote-psx.glb",
+      "bytes": 116412,
+      "sha256": "c15619c415ea13c61c9a38627de5c93e9cda046b57d02833980d946be483841a"
+    },
+    {
+      "path": "furniture-editor/library/models/onboard/tv-with-a-wall-mount.glb",
+      "bytes": 557592,
+      "sha256": "6230a6bae2de00e0068dcbc98740f25a2391c4c1898eeff818cc1ef04cff7e17"
+    },
+    {
+      "path": "furniture-editor/library/models/onboard/vortex-mixer.glb",
+      "bytes": 313168,
+      "sha256": "40eae513614575e7f64c85246a1428b4ee7ecbd53a1a7b6ca082f53933d9106d"
+    },
+    {
+      "path": "furniture-editor/library/models/onboard/wall-panel-lod0.glb",
+      "bytes": 11900,
+      "sha256": "ec12dfae624e029935b52cf878dbd2b64a9ada8692935aadc9eb8e24b4722869"
+    },
+    {
+      "path": "furniture-editor/library/office-catalog.mjs",
+      "bytes": 1972,
+      "sha256": "cc8eb34691058dc9b5f0fff66b33ca37318b41a4eeb88b60c78c99080b0c05fb"
+    },
+    {
+      "path": "furniture-editor/library/onboard-catalog.mjs",
+      "bytes": 11457,
+      "sha256": "aa61d6cb5f03065a93c6db53b683daaa31a433576d602b7eb255ab37c745502b"
+    },
+    {
+      "path": "furniture-editor/library/procedural-mesh.mjs",
+      "bytes": 5356,
+      "sha256": "398fd24b81c5e4b8392a734631b035be06d6ee64f73ccd7d498d38964fed6355"
+    },
+    {
+      "path": "furniture-editor/library/procedural.mjs",
+      "bytes": 7866,
+      "sha256": "4c7e56b2bfb320e6ec11ec590825359ddf8c0b96c495ba66dc6485f215716cd7"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/fps/bench-instrument.png",
+      "bytes": 8102,
+      "sha256": "953cab3c3bcdd4411974a8c19507fd0037b7794f9a635a9c3c9b2b54b309219d"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/fps/binder-vacuum-oven.png",
+      "bytes": 19292,
+      "sha256": "b5cf04a40565ffd8044404f542668b9bc1acce2d9abf5f84150fc9b389b79458"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/fps/binders.png",
+      "bytes": 9792,
+      "sha256": "db737181285a126a74c24604cc74efdb36914420a0af91900562fc3e17f04cec"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/fps/cartridge-open.png",
+      "bytes": 22678,
+      "sha256": "f4b89cea0c06699526638acacfb2bab9ef1063b67fee28ed9f51a8d507b494f4"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/fps/cartridge-rack.png",
+      "bytes": 24230,
+      "sha256": "5b9ab08434b2c2965a7deaf7666926b07b45fa3224459f8c3d1d34baeb4ca8e6"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/fps/cartridge.png",
+      "bytes": 28723,
+      "sha256": "ba5aa8b30b38cb867790b20ca3f1184e49e39f90b6e982e6ad6fb3cb3e5bc5cf"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/fps/centrifuge.png",
+      "bytes": 10810,
+      "sha256": "6b868e74eaac8b784be12026a0f0ec797ec282ec13d825c126787479eb78d1b4"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/fps/lab-bench.png",
+      "bytes": 11243,
+      "sha256": "a5be771e7c1f3d032c57cf7cd4c91f5d902b2fc486000e51d92fb9cee503037e"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/fps/lab-cabinet.png",
+      "bytes": 6068,
+      "sha256": "f6ecef613103e1d74c15c6651064f03b5e244083bd2304cebe578a540100f1e5"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/fps/lab-cart.png",
+      "bytes": 11038,
+      "sha256": "604815a5c47a2ee30c80e6356f933a3baccde581cf615556e9d591b66d140cd8"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/fps/lab-freezer.png",
+      "bytes": 6271,
+      "sha256": "96afa3d7d150c1c731ede92982cb0714b8f65c9997314613ef9a4da4a1ba45fb"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/fps/laboratory-drying-oven.png",
+      "bytes": 37177,
+      "sha256": "89ce3f1efcbee2cbfbdfdf300fafc4f7177fc530378c70db82f1db3588ae0fbd"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/fps/strip-light.png",
+      "bytes": 9269,
+      "sha256": "4a64a2e4a0d7cc4e13b42837b2ba8bbf55ccbe3ccc22ef30a793164db0147588"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/fps/tip-box.png",
+      "bytes": 8219,
+      "sha256": "5be4c7f990f2094b83069978678f991c897234363fdf2db3a3bf71634be12bf5"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/fps/tube-rack.png",
+      "bytes": 10256,
+      "sha256": "cc049db0ceedd09ae9e2437d69384580eab66d803ee127e4248d36fb49226ea7"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/fps/wall-vent.png",
+      "bytes": 30085,
+      "sha256": "cbbdbb6c4d0be3212ea4c3249f8f8b51b19cbe60093df4a82b140a5f1407fdcc"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/genexpert/genexpert-16.png",
+      "bytes": 28054,
+      "sha256": "6cc5e6761b9179d252c42d55fac622b51e34e24a9dd71f57f98d601d8be6e961"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/genexpert/genexpert-infinity-80.png",
+      "bytes": 40553,
+      "sha256": "f99ce5ee546452370dfffb71f8d1aa91c79a05cd593e1b773cd80d3f65d57511"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Bathroom_Bathtub.webp",
+      "bytes": 2074,
+      "sha256": "99e05e88fc9e9d01761c4ad6d923d8d33e2cf473d05baa533d5aa3923138e834"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Bathroom_Mirror1.webp",
+      "bytes": 1874,
+      "sha256": "d5e3d4a033b840998bc57b8fbb28511963ab7b165d69969ad1d56307434fa61a"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Bathroom_Mirror2.webp",
+      "bytes": 1920,
+      "sha256": "519aa88ba49670ee735630dbd945719dcca4bd641d8116862d735c283d33bb30"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Bathroom_Shower1.webp",
+      "bytes": 2214,
+      "sha256": "0ec8c0ef5df13f00252e2334c96041a63994b2e55d7c26e06cb8881f1945a2fe"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Bathroom_Sink.webp",
+      "bytes": 2444,
+      "sha256": "5ef0611317df3c6ff6b5c6011a5ff44dc259a59e1da7ebfe44c543bc2f8ef1f0"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Bathroom_Toilet.webp",
+      "bytes": 2650,
+      "sha256": "99fe77ea74cd4486f971f3b81fdab3607c99d33336d259bbc72a8643bc03ed6f"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Bathroom_Toilet2.webp",
+      "bytes": 2356,
+      "sha256": "e23fba7701c03a57280209d6ad46f1c9bfd9d95e714e66e894584fefd4a551f8"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Bathroom_ToiletPaper.webp",
+      "bytes": 2640,
+      "sha256": "d71773ade4753eda90003caa3cc7450d680b2cf9c22b5fca45e66e043d45cc50"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Bathroom_ToiletPaperPile.webp",
+      "bytes": 2796,
+      "sha256": "9a796e869368a3f8cc07222fd403dd954a21b6fd870fe833922055a89dc0abaf"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Bathroom_Towel.webp",
+      "bytes": 1958,
+      "sha256": "baf57d5ff1c31cd08e634e1a3fc6501eadfadf3f1c204ee9eda545d5832de9ae"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Bathroom_WashingMachine.webp",
+      "bytes": 3924,
+      "sha256": "58bf369d35f90668274d79573be43569da1963a5d7705ca91dac50d2e7834004"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Bed_Bunk.webp",
+      "bytes": 5412,
+      "sha256": "b89e67bebceaa14239d6cd189c63456f2eb5c6b92966ed44ca97d18f66294bdf"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Bed_King.webp",
+      "bytes": 3704,
+      "sha256": "621d3eeda4b459ee5c07a0c77c05804b972386b10b98382ca3da02feeeceb846"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Bed_Single.webp",
+      "bytes": 3010,
+      "sha256": "d4ffa78095cb5a8e6559736e0a0d16538994064f249634ebaa4030e3ac367ec8"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Bookshelf.webp",
+      "bytes": 2242,
+      "sha256": "919da8f58a2e23cacaee503da9f877c43317d1ed1ba4997bf956bfbddf87f3c8"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Carpet_1.webp",
+      "bytes": 2646,
+      "sha256": "2fca0e62fe2c148b9b8431f8f9e4075767b830de04d961d4b8a0201092ba849a"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Carpet_2.webp",
+      "bytes": 2980,
+      "sha256": "5440a6f1d6ba903b1eae066e4ce4e5e461e1beff3c76864e68cfd4d479ae25b1"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Carpet_Round.webp",
+      "bytes": 2434,
+      "sha256": "49c9d84907f7d5f9aaa5c4f3805d4a5ec3fa3bb06dffdb969932cccea022b4f7"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Chair_1.webp",
+      "bytes": 2912,
+      "sha256": "0619369fcec336a2683cc3ada1674e25cada58e0c16d8f44551bc401890739a9"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Chair_2.webp",
+      "bytes": 3174,
+      "sha256": "c1ed48e9e9590f469d117fd614563d6881f67099d8925192bd638f80c83f48a1"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Chair_3.webp",
+      "bytes": 3312,
+      "sha256": "8cdc790e1378ca177cbb15b0cc4445e974be0b3c6aa4af20e701387b8d58ba95"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Chair_4.webp",
+      "bytes": 3484,
+      "sha256": "5c6ecf2ea11519fc46e667dae271204332f09d52187b41a7640700cf269d92c9"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Column_Round1.webp",
+      "bytes": 3600,
+      "sha256": "48afc4d10a08d869fac945217884688ab9873c3bf40816df8accd749e9fe930b"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Column_Round2.webp",
+      "bytes": 1932,
+      "sha256": "68b0523cc1302bd03ef2c2b4028d2f67ac13c9ab5361485c9ffb8dfe2963d09f"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Column_Round3.webp",
+      "bytes": 1636,
+      "sha256": "13bdc132c5447141f483199618b7e77ea994fb3b22c6c4146498c3a4dd16da51"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Column_SquareBig.webp",
+      "bytes": 1874,
+      "sha256": "59a5e83d06e6cbbe9974b0888e12735412bc4ed3c875dcad32c73d7b2f0e6c29"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Column_SquareSmall.webp",
+      "bytes": 2212,
+      "sha256": "3632e9b781de4993535fdf7a64f14088d60e833e510df088b5ccadc52df65177"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Couch_L.webp",
+      "bytes": 2536,
+      "sha256": "c8cd9947cfc1245f814cac6aa96d8de82357aa0feae96663ed7abda70016f803"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Couch_Large1.webp",
+      "bytes": 2558,
+      "sha256": "8383364c5c18df46eefb405afdc0fe6410ef5082055288980559e1da853843a2"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Couch_Large2.webp",
+      "bytes": 2380,
+      "sha256": "aed6d779f30dd6968546e5bf680604f1623bf4f74dfbe4ef2de6c3a700b44e28"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Couch_Large3.webp",
+      "bytes": 2130,
+      "sha256": "bb4087f786bc195b73d08ec3ca4feb9f6b5649c4f06b33fb4e85377da86145e7"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Couch_Medium1.webp",
+      "bytes": 2558,
+      "sha256": "c332c88ba3511e990e72b9650220c2bc7aa3b78a74afa6ea4fac16f2fdd6f68f"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Couch_Medium2.webp",
+      "bytes": 2818,
+      "sha256": "1fe95ca1f30f9e15a28ea6a453349d731f3ed30fce05bcb58fa25259a35c3633"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Couch_Small1.webp",
+      "bytes": 3108,
+      "sha256": "08c80f9ba2feaa65cbb103fc8ec447b658a83d2bdca3bc7915138e43c719dc5a"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Couch_Small2.webp",
+      "bytes": 2940,
+      "sha256": "bb4c1bebcb49c710bafbe8d746dfb8de3447efbc8960999a947e9932dd910e84"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Curtains_Double.webp",
+      "bytes": 2218,
+      "sha256": "dbe83a846d5bf4855f96df2bb3ca87292d4d7d80a98f2202277177b3d984d43a"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Curtains_Single.webp",
+      "bytes": 1374,
+      "sha256": "3bcf8b8a7fe30f1c0d1ede3652c768a6d5047709f1950766cb09a464bff096ae"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Door_1.webp",
+      "bytes": 1196,
+      "sha256": "c568d7152829dc2d0832b917fbf408e41664ce1fb74a1f1cf26334cd222acbfa"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Door_2.webp",
+      "bytes": 1342,
+      "sha256": "d7c1f40c2b51137e7323c09133c948af16e1a07ca1ece602e25a6ea04f15748e"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Door_3.webp",
+      "bytes": 1874,
+      "sha256": "565c74bb1cf9f7e3e428c232c262a9838bdecb44e5d0ae7684dc741f8ebd2b60"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Door_4.webp",
+      "bytes": 1640,
+      "sha256": "c0878bc63c045db5f1d590a3581195521b0665f0904bf0f35de854646960e53a"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Door_5.webp",
+      "bytes": 1754,
+      "sha256": "8f5c5ab56770f85012d17b4491c221e9282410396a06119d8996f72315f4ecb1"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Door_6.webp",
+      "bytes": 1638,
+      "sha256": "626e06f30ad0eb2701588ef55e926b20b77a914dc9c8cce9b06a09653ee86cc1"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Door_7.webp",
+      "bytes": 1154,
+      "sha256": "a20f26873cc04773a6f788b594dc4b94d34b0e2dff6a7576e71cab4f22da78b7"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Door_8.webp",
+      "bytes": 1788,
+      "sha256": "be16905b7975952ed2e4040085e018ccd39d1cdb5409b1334b82fd18e82823d1"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Door_9.webp",
+      "bytes": 1588,
+      "sha256": "1581482c8564ac5ca8836a71aae9c10dd22ffa1f72edaeedfa7ae98de5a01302"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Door_Double.webp",
+      "bytes": 3060,
+      "sha256": "b52b5779815f4d3e89621e16d9d52127cacd2426b80f2ee1afcc3cc157acf0e0"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Drawer_1.webp",
+      "bytes": 2480,
+      "sha256": "ef6e7a6e1a78fd0e72650d4f3c87f555bbd6bf0e2914bccb626c83c245f44eb7"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Drawer_2.webp",
+      "bytes": 2076,
+      "sha256": "878ce55b1b4bc84caa1562180a696fd8c878b92e1e711c5b95cc827c03aeef57"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Drawer_3.webp",
+      "bytes": 2722,
+      "sha256": "012d8b1278cc7c3b9e046dda794ff4d5e2e2dcf02fc575bae9538e3f9095e609"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Drawer_5.webp",
+      "bytes": 2800,
+      "sha256": "7779cf21d0a0aa874e44c7d92a4bb9f206f856eb912688d0bc78f76a057bac31"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Fireplace.webp",
+      "bytes": 3536,
+      "sha256": "331b03b8c5f85c0020f403a93c3323d8182813c744495bcf751411ae09f73878"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Fork.webp",
+      "bytes": 1318,
+      "sha256": "bbbfe15b247a20ff30822eb08566e312c491672c5e3dc8308b451e65c72b820e"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Houseplant_1.webp",
+      "bytes": 3600,
+      "sha256": "598c6f7796cda693cb0576b47e2d3ed4f8a2bd639e29f6f9d0a97fb909e6b750"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Houseplant_2.webp",
+      "bytes": 2612,
+      "sha256": "ea4150b9156d71783f92cbab4d4270354df57665d4570d3db356ab42ddd0404b"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Houseplant_3.webp",
+      "bytes": 2246,
+      "sha256": "83a146cbaf246f55169f3b47255ccac817c4dc59b0366c176dcf194727ba8f27"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Houseplant_4.webp",
+      "bytes": 2118,
+      "sha256": "71ba0f2a8c6ae476b681643201cd9c8839cc7d25ecf9c73fe0bbf8659925a600"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Houseplant_5.webp",
+      "bytes": 3958,
+      "sha256": "f6d9fb90ba3119ac587ca0e4f164d0e2125c1e09f39bd8c924ffd250c9400070"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Houseplant_6.webp",
+      "bytes": 4422,
+      "sha256": "12789f47a5577b69113c245ba7d14cd9664035be4561431acf75280db1cfcaef"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Houseplant_7.webp",
+      "bytes": 4186,
+      "sha256": "28679c828d7fc41e20e49bb46bc453f86a9bcb922531b51607bc817959e2372e"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Houseplant_8.webp",
+      "bytes": 2450,
+      "sha256": "158df6131c999aba45f197ee44fc66d7264ecc27280172dc379cab657f610477"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Kitchen_1Drawers.webp",
+      "bytes": 2066,
+      "sha256": "f0ddaad36f3c2d91b5c1cb37d6edf837a074b46d8259bda4b41b662890da936b"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Kitchen_2Drawers.webp",
+      "bytes": 2268,
+      "sha256": "debb2a34d75ec45b4a7543365e925a5e844353034d8a6cfcd458b3bb21f5d177"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Kitchen_3Drawers.webp",
+      "bytes": 2468,
+      "sha256": "ce29d2973736f1d6eed5d2dd1d8c91b5986be9763399099142c7436c08b1b74b"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Kitchen_Cabinet1.webp",
+      "bytes": 2060,
+      "sha256": "b186d513de66e8352196bc734e2f1df8c9fc0ce87ca7adb4f79e70dd75107e57"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Kitchen_Cabinet2.webp",
+      "bytes": 2104,
+      "sha256": "adec773dba1d20b1bc5fcb009773382699de6bf6730247873004666940b2bad4"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Kitchen_CabinetSmall.webp",
+      "bytes": 2434,
+      "sha256": "092125292e269fb368fe7478884e353084bac4187a3d680453f27e490023d2d5"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Kitchen_Fridge.webp",
+      "bytes": 1998,
+      "sha256": "5fb1a17403bc5502c5c4a3a049f830eb8a3a30661bae901222b73671a7a14933"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Kitchen_Oven.webp",
+      "bytes": 3602,
+      "sha256": "233e6180dc574e0b1744dd00b25c9639917aa8ec9b6f791e1ba2668c357fc0da"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Kitchen_Oven_Large.webp",
+      "bytes": 3806,
+      "sha256": "3d5275c5120d0974382e3d1edbfd5eb57661ea3faee2514e1d12bf203d0bc2dc"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Kitchen_Sink.webp",
+      "bytes": 2062,
+      "sha256": "8d7db74ae3d1b47a025354f9a750cdba3fec915113e1799eb00ab00f0e3d7ebd"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Knife.webp",
+      "bytes": 1254,
+      "sha256": "b5c7d9d58d0d0d7e31b528774fd7adc8b769d05875d9695c934cee4adcefc38c"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Light_Ceiling1.webp",
+      "bytes": 1492,
+      "sha256": "b8af2a506199812cf40ca60b78e534042b833c4a50993ef5fdb072072094952d"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Light_Ceiling2.webp",
+      "bytes": 1292,
+      "sha256": "44f926e38babb967f79acd2727e8ca356fbed1aa08c904be4710a6e457f3f14e"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Light_Ceiling3.webp",
+      "bytes": 2832,
+      "sha256": "58404a72f6797f76b8d61918c1fbfebf4a5ff7035cd5bf0dc9777bddec60cb7e"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Light_Ceiling4.webp",
+      "bytes": 2244,
+      "sha256": "4956a7ef6af479dbb278e96750972553f7016f24b1f1683c53a170d462cd08d8"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Light_Ceiling5.webp",
+      "bytes": 1672,
+      "sha256": "886e164162bd459470036e9009c5cd07452390f319f6b107c1b90d253b84c228"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Light_Ceiling6.webp",
+      "bytes": 1792,
+      "sha256": "19d37b11b479d0185f5102845bffb252507353c53dc3495bf3d1ff4f8def0145"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Light_CeilingSingle.webp",
+      "bytes": 1832,
+      "sha256": "2a7b09c1d2ae46006602de54ad49c959dfee709967f44ad5e773fefac932dd95"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Light_Chandelier.webp",
+      "bytes": 2524,
+      "sha256": "039cf2ed85828e3840b826887b6fff54f11b24dc627c663faa9d4444f37db38e"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Light_Cube.webp",
+      "bytes": 2528,
+      "sha256": "9737e1fea139f8f9acf03d5413904af38b8dfcc83c1d4ace135ac9236625dfe0"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Light_Cube2.webp",
+      "bytes": 2620,
+      "sha256": "88432ae328d0b786912b4f478d6ceafc556f99208441c64de88d8ed520d413d1"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Light_Desk.webp",
+      "bytes": 2238,
+      "sha256": "61e8b7ccf19bc07faf1f6926129ebd3df2c263d0123cb414bf5d26f6bf61c331"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Light_Floor1.webp",
+      "bytes": 1170,
+      "sha256": "d0ec59ad4d52ed7bfb39e114a30e022c5e197712fe849178780320a076868489"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Light_Floor2.webp",
+      "bytes": 1818,
+      "sha256": "5cc480db2f9a3a96098c47230c0f4658aee4721b2eab06e53f9dc65e1b63e3dc"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Light_Floor3.webp",
+      "bytes": 1802,
+      "sha256": "b0e25dd8a137d8a435719dad386c77611e6ead638ba3cdcb35d389985fe8a29e"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Light_Floor4.webp",
+      "bytes": 1890,
+      "sha256": "65bacd4ced67608680fe89533f62819f9f25d15e37455f565240509efc2a2e10"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Light_Icosahedron.webp",
+      "bytes": 2920,
+      "sha256": "8ea106f5eb4a04e69c7c7f88cd6e3281b1ee271582ed4cb93b1f61f75de57675"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Light_Icosahedron2.webp",
+      "bytes": 3610,
+      "sha256": "569635a4a52212ca95fcb3523a5b1b4c05b3b0cf7162de15bf8fd3a728da85fe"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Light_Small.webp",
+      "bytes": 1762,
+      "sha256": "689d7c4c4119ba43773ef48ff45669a540c98d66b891c1b276197f08d604395f"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Light_Stand1.webp",
+      "bytes": 1278,
+      "sha256": "9245477b6f965d92ad8ee4bc47129fb5567626847c8786a824e3797842b57cf7"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Light_Stand2.webp",
+      "bytes": 1246,
+      "sha256": "2ba1187804747f97d63459ee8052f2e23fd212c82422b5f23d9e1b27d257d64e"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/NightStand_1.webp",
+      "bytes": 3902,
+      "sha256": "81397148073d969485b4634b46e8d0988d355f908c3469b24d54ddef8f6586a8"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/NightStand_2.webp",
+      "bytes": 4956,
+      "sha256": "dec5dfa06d98c9dff93b7576f09160f0fb0e5ff4a597b9189b7a902e124aed60"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/NightStand_3.webp",
+      "bytes": 3854,
+      "sha256": "c3ef3f3421b2e662a1d94a4640fae46b5234428eede25836fd7535545bda8c8b"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Plate_1.webp",
+      "bytes": 1368,
+      "sha256": "f7240bc1ba4f18d07a7d8ee7ee2b9db9f9148e0f742b713d9f8071eb995ff44b"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Plate_2.webp",
+      "bytes": 1840,
+      "sha256": "c7bd77f0eb362918391fdd902688d9f79b5cffc9c482952834ac508b629341ec"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Plate_3.webp",
+      "bytes": 1442,
+      "sha256": "e03cd1e784ae575d3c53c5c6a4571a199bd2f2a9a0de2e420d449de5a20f49b8"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Shelf_1.webp",
+      "bytes": 1390,
+      "sha256": "f10e789c775660369c5d7d810d10f76dbf2487d8e022cacce8ae0db29eb538f3"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Shelf_2.webp",
+      "bytes": 1566,
+      "sha256": "8bd6329951b5cf40392d1566d2d3b91cce142998c809efaad8c35bdca9d59895"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Shelf_Large.webp",
+      "bytes": 2298,
+      "sha256": "c5eda5be4cf19249dde033e21454773986e339476d55dd602f478efc184fb1d9"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Shelf_Small1.webp",
+      "bytes": 1738,
+      "sha256": "3e4b1bcca282ca4f943f013259937d57bf431d1ecd5574251ed78be011a559a9"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Shelf_Small2.webp",
+      "bytes": 1972,
+      "sha256": "7d45630d81a6821e73d718f8a6f809f9f64d766792fc07afdfc74a975816ae01"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Shelf_Small3.webp",
+      "bytes": 1860,
+      "sha256": "d18b51ca4c0fb7fc2ab65d1402ee0bb452dcedfd4631df1c0052e772827f2397"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Spoon.webp",
+      "bytes": 1258,
+      "sha256": "c83ba35c8b510ea41e3f3a81fe4168610ed5c26540e32ab8a9aabf6b27956eff"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Stool.webp",
+      "bytes": 3044,
+      "sha256": "103037f2d8b128bca5e5c55286a4dd5e1964be23a7a6a582e99df4f334b8a458"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Table_RoundLarge.webp",
+      "bytes": 2616,
+      "sha256": "8454836101c4d4084b4a15d17b5b1b9b621586f274b804ba67d5780fb40a09f3"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Table_RoundSmall.webp",
+      "bytes": 2674,
+      "sha256": "63533747b50d2eca5aad7d06add1697a18712f88afeaa119e5c0e9aa1f4c0bf0"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Table_RoundSmall2.webp",
+      "bytes": 3278,
+      "sha256": "0d0ccaf98b48ff3ca771ed6d38ef97c70030c81db01e09d1f7d31a2955e7ae5e"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Trashcan_Cylindric.webp",
+      "bytes": 2160,
+      "sha256": "3a0ebe56d80bee5e2ecc8746b8567d75205d0fb6cde2991c619923d3f328865b"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Trashcan_Green.webp",
+      "bytes": 2532,
+      "sha256": "d70ecf6e9e8dd362bde4cb1a6b7a4973d9f412c2b7fef1cee7176c5bc73523e8"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Trashcan_Large.webp",
+      "bytes": 2142,
+      "sha256": "8274f70c62098f0220ce9ac788f891e4e9663e3c99cbe7c1a0247e38831362f3"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Trashcan_Small1.webp",
+      "bytes": 2492,
+      "sha256": "b0aa46462410722182953db721e6cbbd4abb90363b4a8c9a8924ddf16fd16dad"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Trashcan_Small2.webp",
+      "bytes": 2266,
+      "sha256": "1134f4f9cd00689f32f4a4379b2a1a9cbdb6725b370205d1a04666e32d345f54"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Window_Large1.webp",
+      "bytes": 3362,
+      "sha256": "25ff361d5555dbe6890144208940ca27923c68bbd55f6d89e6345532936e6146"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Window_Large2.webp",
+      "bytes": 4562,
+      "sha256": "b32d2845ca87867d43effe470db772c00bbf633e54c53f08d64b94d7196a2549"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Window_Round1.webp",
+      "bytes": 2140,
+      "sha256": "b3d743b0edbd8969d821ac3e77a4aa74118a5235f0f8d1b76aa6ca7946706985"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Window_Round2.webp",
+      "bytes": 2400,
+      "sha256": "3abc34d3ac29a315d39379ee70efb781439e6c2f9087af95037f659d80c2892c"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Window_Round3.webp",
+      "bytes": 2888,
+      "sha256": "5c83f67febc0c157888b4e6bc01e5a17a1100c2d89aeebd82cd4c416a8430d10"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Window_Small1.webp",
+      "bytes": 2464,
+      "sha256": "8f6bd76df9813781708e2a9ffd118cd298471079e0d82bb59e0e26f27b11aec9"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Window_Small2.webp",
+      "bytes": 2590,
+      "sha256": "1b17ae6e17f3e8640eaedef8adaa1e8876fc8d8c209bee55f2547d7d202880f2"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/house-interior/Window_Small3.webp",
+      "bytes": 2094,
+      "sha256": "947fd1a5c593fabe531daaddcc9129d635b40cc4b980314b4ba74ad9532805ed"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/lab-furniture/biosafety-cabinet.png",
+      "bytes": 15452,
+      "sha256": "45a113c973a6ff48bed7d3e56ed074c374d154a9fef98f47cdb10e4ae52f0a1b"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/lab-furniture/shoe-rack.png",
+      "bytes": 25104,
+      "sha256": "d102e999f50f0617ed776d49bdde697997064fcf1f7487bc06d6279478f192db"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/lab-furniture/shoe-shelf.png",
+      "bytes": 5512,
+      "sha256": "750bdbc925fec8cb7248ebca6424a813703786537b99a85c60167512500b5605"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/lab-furniture/shoes.png",
+      "bytes": 30023,
+      "sha256": "b67a3ce99df60a1bc90c3a015479563e6d6f5ed89b6b6347de5f1b7b32553197"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/office/ricoh-printer.png",
+      "bytes": 58802,
+      "sha256": "fef04d8a830edf71537e91f3426e7727673d8b05cf4475fd054e4063d8626a36"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/office/whiteboard-mobile.png",
+      "bytes": 10285,
+      "sha256": "91e4145d259b51fc73018e418e4efc3e374992302be56187558628caa3a3bd9c"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/onboard/ammo-box-lod0.png",
+      "bytes": 4063,
+      "sha256": "033269ebfdc587610760b51265c9856f0919d108cec055e46a9fed239d83652e"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/onboard/barricade-lod0.png",
+      "bytes": 4632,
+      "sha256": "9bc79adb69dd38646b5567389cedbf0c9be662f609534b628c318fb2ada4b870"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/onboard/door-frame-lod0.png",
+      "bytes": 2864,
+      "sha256": "3ec5cd504a41db2ff67f548277b3b48ab8399fdad12461db5837d0c06ad138c5"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/onboard/floor-tile-lod0.png",
+      "bytes": 4207,
+      "sha256": "b99aa9778689f475baedb321e37043755d971e83c4186e1d8aac3ef76ff12486"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/onboard/free-pack-boxes.png",
+      "bytes": 6698,
+      "sha256": "5948411256fe0e5ed4a53cce87f345f6ffebff24800c750647979bcbcb4827f0"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/onboard/goose-low-poly.png",
+      "bytes": 5560,
+      "sha256": "39884f988afb6c6a5d67826300c48b95d619cfb81fd5476551027f67a1583c60"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/onboard/patrol-carbine-lod0.png",
+      "bytes": 3617,
+      "sha256": "4b5b04168d5f6c6b00a9676e0595bcd6b2a27cc96a9aaf10c19690f8e3c66617"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/onboard/pillar-lod0.png",
+      "bytes": 1972,
+      "sha256": "bb67de270b969423706c018cb01147e99c832e2d572f7025a4029d65c75316f9"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/onboard/security-door-lod0.png",
+      "bytes": 2950,
+      "sha256": "67d5abfa2e25ad373defbeac8c9a42f0032299c61fb28edb7cea4cd17bf9b337"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/onboard/service-canister-lod0.png",
+      "bytes": 3823,
+      "sha256": "ac14f3b7ecc187fbf0d5bb7cc2fe1e81e97b5874da1d5190efadb6328e907750"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/onboard/service-pistol-lod0.png",
+      "bytes": 4244,
+      "sha256": "bf7df4691be39c9f0d80c1d40a476389f6a2a6b599b4668b834773d282470ace"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/onboard/tv-remote-psx.png",
+      "bytes": 4738,
+      "sha256": "04682a9af304bffc3404eb51b108a6fbea36b08f74e42518ad9ae86b45b6e636"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/onboard/tv-with-a-wall-mount.png",
+      "bytes": 7271,
+      "sha256": "5c32ec40607c81c0b5f6972599423ffea5ed33b54c1930061b9da7812e46e019"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/onboard/vortex-mixer.png",
+      "bytes": 17683,
+      "sha256": "d29aed5595f6b1ba55b3880ea75206a4dd57cf078e65b408cd856c58a6b447be"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/onboard/wall-panel-lod0.png",
+      "bytes": 3137,
+      "sha256": "c9f3fbca4e48145742f4fed3c1554cbe955a0bcafd43f0844b4b5fc4465a3fe8"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/reuse/barrel.webp",
+      "bytes": 2928,
+      "sha256": "8ab26b8da21fe6cd9bcbec43a642d78c71b8b6da8df30df69eccfff63a101774"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/reuse/bollard.webp",
+      "bytes": 1586,
+      "sha256": "0bae88b32f6383913470b3361e594f5beb26c70da43a19ef24f82568def651e6"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/reuse/container.webp",
+      "bytes": 2948,
+      "sha256": "8c334fab08ae19f82d5c77212f3e784ffd5cca321c530630e612f98702e34a95"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/reuse/generator.webp",
+      "bytes": 2984,
+      "sha256": "201a53a80d09d55e082825b00412cdb19e03d07b2da277fdd93e720fe162c8b4"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/reuse/hvac.webp",
+      "bytes": 3480,
+      "sha256": "40cbdf3a68934dfe0ae79dd361f614fc2a1e59126d6420418452b5e4b269f831"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/reuse/jerrycan.webp",
+      "bytes": 2174,
+      "sha256": "5dded3c1fef1f17cfdf0f9bbffc17020c380d1b02edb8836791f8ebba0db4807"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/reuse/jersey.webp",
+      "bytes": 1622,
+      "sha256": "68de631337db76130725a8b17da97235580bca7184c900ece71cbb6669e76072"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/reuse/rack.webp",
+      "bytes": 8080,
+      "sha256": "5389e097f9d7b16291fb98705045c67b893a232ff9167d6a3fbd7c3a42710687"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/reuse/reel.webp",
+      "bytes": 3526,
+      "sha256": "5c380f9f0ef85b72db566674dc3fd983ae8ece1997c11a2f22c9d05c3f693da8"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/reuse/sandbags.webp",
+      "bytes": 2384,
+      "sha256": "f56151d5fbc6a4139ca2171e13b38cdd3e6801fb6913b2182f64ada2acc80dce"
+    },
+    {
+      "path": "furniture-editor/library/thumbs/reuse/worktable.webp",
+      "bytes": 3620,
+      "sha256": "8156796a68a4e1c59a46d5f406c448c0ba6758766f69e9ccdff2a061e2f5a437"
+    },
+    {
+      "path": "furniture-editor/library/zip.mjs",
+      "bytes": 5179,
+      "sha256": "70151dabe4ae9190a58b7bac6e3e14c8b2701d473fe303f8e1846b43684562e3"
+    },
+    {
+      "path": "furniture-editor/main.mjs",
+      "bytes": 46401,
+      "sha256": "cbb389854e9f9ca554c1fef0274502c00be6effe8c63a4ab406244b0adc05e16"
+    },
+    {
+      "path": "furniture-editor/model-alignment.mjs",
+      "bytes": 1416,
+      "sha256": "8d4cc9b1df0fd767722d04ada9fabce6bcbca3da4918191d8319f7a8ad07b831"
+    },
+    {
+      "path": "furniture-editor/new.css",
+      "bytes": 24421,
+      "sha256": "964f43c1ef6f105f07af7165cd68faa9f3e2d7ce35bb8adf86cab92695847f99"
+    },
+    {
+      "path": "furniture-editor/new.html",
+      "bytes": 24840,
+      "sha256": "12b73f6daabe4ef75767de0425cc2ade8f6aafb466867ab4ba48dbd562535cb9"
+    },
+    {
+      "path": "furniture-editor/new.mjs",
+      "bytes": 124728,
+      "sha256": "970f3b6c3190b3332a1219eaf1866189f0d4646f674e6df3d3bf3be736fe604b"
+    },
+    {
+      "path": "furniture-editor/project-limits.mjs",
+      "bytes": 1292,
+      "sha256": "8bae58394ad0fce499e34af9360d9aec891d6259465856780526d5ffe55950fd"
+    },
+    {
+      "path": "furniture-editor/selection-dock.mjs",
+      "bytes": 5466,
+      "sha256": "53786417cb53dbb58f1c5252681ed4a820cf8401f2e96eb8d89be55eee576b94"
+    },
+    {
+      "path": "furniture-editor/smart-placement.mjs",
+      "bytes": 7846,
+      "sha256": "b96248408301b2d80c2c945059f5e40357d88c5c6b6b30ce3ba455dde79c4b76"
+    },
+    {
+      "path": "furniture-editor/snap-highlights.mjs",
+      "bytes": 3028,
+      "sha256": "d200ce594e8860a99a556923a85c196bc53c03d6756b30879e260ed1f412ae47"
+    },
+    {
+      "path": "furniture-editor/soft-placement.mjs",
+      "bytes": 881,
+      "sha256": "6b77cca0cb2a587a381792c1adacdf24e44e9c9a599f3784914b6528dc82959b"
+    },
+    {
+      "path": "furniture-editor/studio-ui.mjs",
+      "bytes": 3377,
+      "sha256": "8ee7a8a463cd4946ed0b62a6e475180978394948a828fb2d227fa994f9670918"
+    },
+    {
+      "path": "furniture-editor/wall-mounts.mjs",
+      "bytes": 8475,
+      "sha256": "4df0b847d675ba1be09338ffb295e9d30b1817cefeca1034d0a98dd3f9d14af0"
+    },
+    {
+      "path": "index.html",
+      "bytes": 619,
+      "sha256": "648aa0d051068e296709604d58fe697881592a671d92684335106af39fe9fc6e"
+    },
+    {
+      "path": "levels/floor5-prepared.json",
+      "bytes": 1761561,
+      "sha256": "89283f437623457a10da37be29a282a41591f202270051ba940549ba01b4b050"
+    },
+    {
+      "path": "levels/manifest.json",
+      "bytes": 381,
+      "sha256": "057c2b53d412e1a2f33905269328b2bd51c35d1104aa032e90cd2da956dafdf0"
+    },
+    {
+      "path": "levels/synthetic-demo.json",
+      "bytes": 8045,
+      "sha256": "d7d3d7f136cb9b334d371b8b7d9fc97bac4e0fd3bec1d0954efd3cc1b9637b62"
+    },
+    {
+      "path": "licenses/action-audio.txt",
+      "bytes": 432,
+      "sha256": "709141fb65b5a3113523f5ef4e1f0a1cd262136f159e4e37801084c918e26b9d"
+    },
+    {
+      "path": "licenses/ambientcg-CC0-1.0.txt",
+      "bytes": 7048,
+      "sha256": "a2010f343487d3f7618affe54f789f5487602331c0a8d03f49e9a7c547cf0499"
+    },
+    {
+      "path": "licenses/free-firearm-sound-library-CC0.txt",
+      "bytes": 7048,
+      "sha256": "a2010f343487d3f7618affe54f789f5487602331c0a8d03f49e9a7c547cf0499"
+    },
+    {
+      "path": "licenses/genexpert-user-supplied.txt",
+      "bytes": 1421,
+      "sha256": "d07683efc566076c148cb3173d94a564cbeda183610d8f8b084a9490451488e8"
+    },
+    {
+      "path": "licenses/kenney-furniture-kit-CC0.txt",
+      "bytes": 614,
+      "sha256": "bc0de1a0742cb490f9ed4bae0bd284286ebb27e23149b9917c7d8c0d590b8b29"
+    },
+    {
+      "path": "licenses/kenney-impact-sounds-CC0.txt",
+      "bytes": 608,
+      "sha256": "b49aa9c56b04528b95913de13e506a0f7c5e807b9925db9bfef86af1f91120db"
+    },
+    {
+      "path": "licenses/kenney-sci-fi-sounds-CC0.txt",
+      "bytes": 571,
+      "sha256": "a9767b25c3533f69d03af136480efad08efba19a9f0d89616992b34c79fd6186"
+    },
+    {
+      "path": "licenses/nord01-original.txt",
+      "bytes": 1343,
+      "sha256": "feffd364dc0b869909e1c3ccce3ea08f4c5271ffa896fc0ad44d32ddaa324427"
+    },
+    {
+      "path": "licenses/polyhaven-CC0-1.0.txt",
+      "bytes": 7048,
+      "sha256": "a2010f343487d3f7618affe54f789f5487602331c0a8d03f49e9a7c547cf0499"
+    },
+    {
+      "path": "licenses/quaternius-characters-CC0.txt",
+      "bytes": 1228,
+      "sha256": "d9e4bfbcc178d8436267077762f740248f2a2f6573f0ad31eec5e468dd3aa722"
+    },
+    {
+      "path": "licenses/riposte-MIT.txt",
+      "bytes": 1641,
+      "sha256": "31116c5cebfdadacd80f9c236c72b623b5d9cdc696786814717f2221a8081a5a"
+    },
+    {
+      "path": "licenses/riposte-NOTICE.md",
+      "bytes": 3978,
+      "sha256": "620679a042ed3df2acd4cc5e42cf678c70d5bb1cc2513e0ad4876414f9381891"
+    },
+    {
+      "path": "licenses/riposte-sfx-credits.json",
+      "bytes": 241550,
+      "sha256": "6a07ac64a552960c532900bba81af285f372a83fc46b3790e82ce37908f08dcf"
+    },
+    {
+      "path": "licenses/studio-office-models.md",
+      "bytes": 2215,
+      "sha256": "d2da7f1793ec2a4b3a4fda204b5135840941c32bff93f0b6d30b3ba9210332a6"
+    },
+    {
+      "path": "licenses/three-LICENSE",
+      "bytes": 1081,
+      "sha256": "bfe119ea4fd413f5f7ca3fcd63adb0c4a073ed39daa2fe7d3e6b769e21272601"
+    },
+    {
+      "path": "licenses/yuka-LICENSE",
+      "bytes": 1072,
+      "sha256": "5053117e2e3ef2326460d86f6073271c9d7ef56ebda09e2983538003293d593e"
+    },
+    {
+      "path": "robots.txt",
+      "bytes": 26,
+      "sha256": "331ea9090db0c9f6f597bd9840fd5b171830f6e0b3ba1cb24dfa91f0c95aedc1"
+    },
+    {
+      "path": "src/floor5-data.js",
+      "bytes": 279976,
+      "sha256": "5f1e306072124f997ef4049b72b86c9097dc731cce7dfdf1c5635ebff5ff3487"
+    },
+    {
+      "path": "src/fps/action-audio.mjs",
+      "bytes": 3704,
+      "sha256": "08128606a219a5045b4384fc74571e5353cd76cba7567cfda5536859b8d1f74b"
+    },
+    {
+      "path": "src/fps/action-models.mjs",
+      "bytes": 3173,
+      "sha256": "dd402d0e4f4bdd0e97089c305dbecaceda1d7c99c1968875faa4f97ba856aa25"
+    },
+    {
+      "path": "src/fps/action-rules.mjs",
+      "bytes": 11568,
+      "sha256": "bd86fe48ee6627d062848cf32e02bf4eb88f67ef6d530dbb543ef71ff5a39f2c"
+    },
+    {
+      "path": "src/fps/action-visuals.mjs",
+      "bytes": 9350,
+      "sha256": "d244fe11d15d56f7b3db32a03f42e45477cf8e0771a89f15da57f48efb6179f7"
+    },
+    {
+      "path": "src/fps/app.mjs",
+      "bytes": 33328,
+      "sha256": "3d104ace29c893deb6381963790039d4e0425323ef663d0d1fb1e65d9ba859d7"
+    },
+    {
+      "path": "src/fps/audio.mjs",
+      "bytes": 17304,
+      "sha256": "88f111ae52dd7fc32d1f707649267bde97614fe49247028adae2827947df30b3"
+    },
+    {
+      "path": "src/fps/authored-hand-data.mjs",
+      "bytes": 849739,
+      "sha256": "a061ad5d251ec2247dd9ca2d5bb979a32692f6f45815e9437cc708a74eb78fbe"
+    },
+    {
+      "path": "src/fps/bot-tactics.mjs",
+      "bytes": 5949,
+      "sha256": "b107fc0990be37a8acd168d1aaab5f03490c2f33ad50191b2497d470a0f3c043"
+    },
+    {
+      "path": "src/fps/bots.mjs",
+      "bytes": 31493,
+      "sha256": "de7ad789473cf78002844eedd7c91378d34606d46870b9bd361c966dd34f4b33"
+    },
+    {
+      "path": "src/fps/business-hostage.mjs",
+      "bytes": 1299,
+      "sha256": "e8ea9e68528058576e7fa11446a7cd5f79d773e1c8e74b99a90313f4e84a45a3"
+    },
+    {
+      "path": "src/fps/cartridge-props.mjs",
+      "bytes": 9065,
+      "sha256": "11c5227e48c858dc35c75285d98bd47f5bc11434a61ee962c8f88c0fcf60ca4e"
+    },
+    {
+      "path": "src/fps/cartridge-v11.mjs",
+      "bytes": 40152,
+      "sha256": "ef3a05f033d81afc50a4829aa9bfd97768c797a0b698bb2772373151d6814172"
+    },
+    {
+      "path": "src/fps/character-actors.mjs",
+      "bytes": 6868,
+      "sha256": "3c847b874a7a994b4a249fd5753d8cdeeab480e7e3c45a93fcec6387767f2c7e"
+    },
+    {
+      "path": "src/fps/character-footwear.mjs",
+      "bytes": 6783,
+      "sha256": "0dbd0294b8282894e3d052e045143ced954472fbcaa463529afb379c755b30db"
+    },
+    {
+      "path": "src/fps/character-library.mjs",
+      "bytes": 23145,
+      "sha256": "1f11cf5b57ea17ee629e19b649986c891a04487343027cd3abe9da93ee7ba228"
+    },
+    {
+      "path": "src/fps/character-overrides.mjs",
+      "bytes": 3817,
+      "sha256": "44914746c8c597113b5ed7f86b52da588f2af76136302206ce0477a8af30bbad"
+    },
+    {
+      "path": "src/fps/character-roles.mjs",
+      "bytes": 2663,
+      "sha256": "73f61dcbf5c2304044d4ecb99b4d58c8103cf1b1be3a96728eb345daf1cb20dd"
+    },
+    {
+      "path": "src/fps/character-runtime-contract.mjs",
+      "bytes": 7873,
+      "sha256": "45024debc0793bcf2905b3aecc1f424135f59746036299d22b11a4f1faf01bb9"
+    },
+    {
+      "path": "src/fps/character-selection.mjs",
+      "bytes": 3257,
+      "sha256": "be20b77ef515e1d637705ec501ef1abf0d28e518e019d4e0d0958645f7a51228"
+    },
+    {
+      "path": "src/fps/combat-audio.mjs",
+      "bytes": 929,
+      "sha256": "7d06bc47205755c709eaf4260e7f2738c6a7868f93e366075265e074bbe8dcbd"
+    },
+    {
+      "path": "src/fps/combat-flow.mjs",
+      "bytes": 8296,
+      "sha256": "97dc4a767de80ec7097c03bb9b99559be8d62a8448c0b14562e84a82db3295e6"
+    },
+    {
+      "path": "src/fps/combat-hud.mjs",
+      "bytes": 5310,
+      "sha256": "85647f03adf4e9de562f4390d8d4b8818cff30468862946c4d20f3ed89bf5335"
+    },
+    {
+      "path": "src/fps/combat-visuals.mjs",
+      "bytes": 5998,
+      "sha256": "88098ff90499efea292f8c34b7900545338b29d29c25edeaa4178d7ea53485a7"
+    },
+    {
+      "path": "src/fps/config.mjs",
+      "bytes": 5737,
+      "sha256": "5636c73871d5ff7fdcedf951b7e14214c44be767c2baea5778413f947485ee98"
+    },
+    {
+      "path": "src/fps/control-deployment.mjs",
+      "bytes": 1878,
+      "sha256": "4c96540a060739261fef709d0d68170e0009f03fd003c8315fea8c230c5b0f33"
+    },
+    {
+      "path": "src/fps/decor.mjs",
+      "bytes": 11278,
+      "sha256": "8c38d27a61c24d6e218d37ef4c7214cc6db4d1cd1c56ed909cc4219e64ddfd36"
+    },
+    {
+      "path": "src/fps/destructible-glass.mjs",
+      "bytes": 2462,
+      "sha256": "6aec04483c8a6d68f38c717348fdc12d6086d5d5d115ea06adc896faec5ccec7"
+    },
+    {
+      "path": "src/fps/door-visuals.mjs",
+      "bytes": 8247,
+      "sha256": "2d0e15e6fb7e29ee8fa0aac788384e4c1ffe7ed10980b1441f1bb433d82a1542"
+    },
+    {
+      "path": "src/fps/doors.mjs",
+      "bytes": 4884,
+      "sha256": "be8052b51f1793fd09257c37824cf63653c08ebf9b9d64cb58c2b87158fe4f6b"
+    },
+    {
+      "path": "src/fps/dwarf-rig.mjs",
+      "bytes": 7695,
+      "sha256": "6c0c087558b4a1f03b49543b6453d80b768d9ffa4d1434e341bd7af77083788f"
+    },
+    {
+      "path": "src/fps/effects.mjs",
+      "bytes": 9005,
+      "sha256": "ab2e836a9470113ce16e6db31cedb4aee0700efc3638c8523d9a1306d21d3324"
+    },
+    {
+      "path": "src/fps/facility-assets.mjs",
+      "bytes": 7581,
+      "sha256": "fe7acabc8965c0612d296054ccf2ff40992c42602778cb4c5ebcbd48cc1fd1aa"
+    },
+    {
+      "path": "src/fps/facility-details-view.mjs",
+      "bytes": 6262,
+      "sha256": "cf9413c27e33f66b5b160dedf7802377a6e13583f427adbdfdb3886c94f991e3"
+    },
+    {
+      "path": "src/fps/facility-details.mjs",
+      "bytes": 6583,
+      "sha256": "d8fd4dce905454f98345474c95d8b3bff772800272802a6bfadc4cb26e1b0a87"
+    },
+    {
+      "path": "src/fps/facility-scene.mjs",
+      "bytes": 12245,
+      "sha256": "29356e62d31a167610da191b70aef6f6c16aeb804df067eb80403cddfce3ee18"
+    },
+    {
+      "path": "src/fps/fictional-equipment.mjs",
+      "bytes": 4417,
+      "sha256": "69b310d51123b57397c46503752b0a4f462f38474ffb8175bdf923546f7b1d66"
+    },
+    {
+      "path": "src/fps/focus-hud.mjs",
+      "bytes": 7912,
+      "sha256": "730661f3b12e914897f49ed7c16525f9f9a0bcdb92441f0d1c466101b2eb95b3"
+    },
+    {
+      "path": "src/fps/frame-time-window.mjs",
+      "bytes": 977,
+      "sha256": "377b5de0db846c28a7c1e3d718a090158ee5d60b08150599e614374d5d44439b"
+    },
+    {
+      "path": "src/fps/frosted-door.mjs",
+      "bytes": 2089,
+      "sha256": "9ee89fe8b932d729bf52807f5bdfe5bb43d659b33683f6d6ea5220decbe70699"
+    },
+    {
+      "path": "src/fps/furnishings.mjs",
+      "bytes": 9452,
+      "sha256": "6e66d4814ee2952197e65a9331383bc6281f346fb3993d651482b7b308ef743e"
+    },
+    {
+      "path": "src/fps/game.mjs",
+      "bytes": 40019,
+      "sha256": "f74e58f4295675a6075d1280446c7c48e8673ebae6b9ed1099072e5c67233c75"
+    },
+    {
+      "path": "src/fps/glass-visuals.mjs",
+      "bytes": 3721,
+      "sha256": "d1e3a41c192e5dc71afefac68df804166bd0ab3dc4d13567d0f173b7a9fae35f"
+    },
+    {
+      "path": "src/fps/grenade-assist.mjs",
+      "bytes": 6626,
+      "sha256": "086a86e227b8afdd52021a9557d5c2081a4d29b22d5251d7866a23878237a3a8"
+    },
+    {
+      "path": "src/fps/grenade-physics.mjs",
+      "bytes": 5098,
+      "sha256": "d18ff71ce6a9a6f326203377ccf17a9c6c7e35b1b5162407594097b271b89610"
+    },
+    {
+      "path": "src/fps/hand-materials.mjs",
+      "bytes": 7784,
+      "sha256": "c11965f87a2f0da16543209f2093d6067fdd0c2941c6752612cdb84d63654db5"
+    },
+    {
+      "path": "src/fps/level-adapter.mjs",
+      "bytes": 5175,
+      "sha256": "c7a3bc2ea1b628472562aa9ff3e05a02e2a4a970dd6ec475a43933e4473a86d5"
+    },
+    {
+      "path": "src/fps/living-floor-art.mjs",
+      "bytes": 8450,
+      "sha256": "e9a938aaccc9f944dc145baf112338254520e61a7e1056560ab65aba3633c185"
+    },
+    {
+      "path": "src/fps/living-floor-plan.mjs",
+      "bytes": 11852,
+      "sha256": "a661a978ce20f924baaf54c642cd36ce985709b1541573897b4ad94a076d5fc6"
+    },
+    {
+      "path": "src/fps/living-floor-scene.mjs",
+      "bytes": 19689,
+      "sha256": "38662126d1790b787d2fa3b13eeba814d3594be3f3042a33e89d53978085db13"
+    },
+    {
+      "path": "src/fps/materials.mjs",
+      "bytes": 6021,
+      "sha256": "5a286f41dfd8a299873101aeccb1c4e35f4246197504f320a5a0c7a0fc9f4c0b"
+    },
+    {
+      "path": "src/fps/minimap-cache.mjs",
+      "bytes": 4026,
+      "sha256": "361dec3c9c566833e98395e6e0975593e8f75d2750e7aed1d6461eab913e0c3d"
+    },
+    {
+      "path": "src/fps/mobile-controls.mjs",
+      "bytes": 7097,
+      "sha256": "c1d5dcc375f1ffc8088d0045b9ffe179c495aa721b61cfe3ec4ee261d11a32d1"
+    },
+    {
+      "path": "src/fps/model-primitives.mjs",
+      "bytes": 51532,
+      "sha256": "724721bb078b65282e9000be48aae0e9ed8497953276335a91996fe584c45661"
+    },
+    {
+      "path": "src/fps/models.mjs",
+      "bytes": 6623,
+      "sha256": "e64f57ec93e952fcdcacfc4c2737377a652c9ef946c67b6d4ba2e73d959cb8b0"
+    },
+    {
+      "path": "src/fps/navigation.mjs",
+      "bytes": 9704,
+      "sha256": "1f122eae8cb8ddc4c3c52b7cf1338c3c9a5d40342110a9540197d3b2366c2229"
+    },
+    {
+      "path": "src/fps/physics.mjs",
+      "bytes": 21514,
+      "sha256": "b114917e71bdb54ee9aeb6f9b36a357b7c4dd1c10e316c1096d9d830521f56ec"
+    },
+    {
+      "path": "src/fps/player-names.mjs",
+      "bytes": 1795,
+      "sha256": "f7eb15649c66f1acd9854a9798b074f9508a0b3c36cc24686e94de87d9732493"
+    },
+    {
+      "path": "src/fps/presentation-hands.mjs",
+      "bytes": 5864,
+      "sha256": "6d7ec34b66682b78a0869215ba9c5440af778e1bf084d446d1223cdd3b1847ed"
+    },
+    {
+      "path": "src/fps/presentation-lightfield.mjs",
+      "bytes": 3328,
+      "sha256": "4449c3740608563db285b03bae5d3dea8db88b5cf3c1c2a771db937200c8bd90"
+    },
+    {
+      "path": "src/fps/presentation-motion.mjs",
+      "bytes": 5302,
+      "sha256": "e3034fc59b5ee28df71e0e1e51ccb43ad1c90dcdb9fcaa7949b25d4245342e2e"
+    },
+    {
+      "path": "src/fps/private-character-store.mjs",
+      "bytes": 5976,
+      "sha256": "ad83bcc112bfb646ecffc39aa14f9928cc416f2eba9dbb3609641a5cf2a827d8"
+    },
+    {
+      "path": "src/fps/project-batches.mjs",
+      "bytes": 6236,
+      "sha256": "c710525887a5321fabb99a0b798e98677db025d3014b1b5cf50347657afc3559"
+    },
+    {
+      "path": "src/fps/project-visibility.mjs",
+      "bytes": 1970,
+      "sha256": "017d0a78a0674a213ddecebe2e56c292d3700252368d7800013162053a64f422"
+    },
+    {
+      "path": "src/fps/render-budget.mjs",
+      "bytes": 1064,
+      "sha256": "81bbbdd55d26b2b152f71dba77aa898ac4d2682290983d360da2df7041a0c383"
+    },
+    {
+      "path": "src/fps/render-engine.mjs",
+      "bytes": 31047,
+      "sha256": "865eaac10c6ca09b6a1faa85cefea10da12788647e24b6d5ca173216790ed8a7"
+    },
+    {
+      "path": "src/fps/render.mjs",
+      "bytes": 18724,
+      "sha256": "c7bdd2d2a4f91ecbe9711a95a5b1d260f730c77179b55e57fced4af11a4608e2"
+    },
+    {
+      "path": "src/fps/riposte-audio.mjs",
+      "bytes": 3077,
+      "sha256": "3569cc2b5641979b99fa67a106846f1e2c589cff5fee6ebe320a235720436c9d"
+    },
+    {
+      "path": "src/fps/riposte-fps-math.mjs",
+      "bytes": 2548,
+      "sha256": "6ab19915fca0fcbd175caa0c8a79f3e0b996a494462e01de49378f4d26732cc3"
+    },
+    {
+      "path": "src/fps/riposte-fx-pool.mjs",
+      "bytes": 2146,
+      "sha256": "eea8b5a0a319705de7bfb6a538c16fe637dd02975fac4b5b68b1fdb7811f34a2"
+    },
+    {
+      "path": "src/fps/riposte-pbr-materials.mjs",
+      "bytes": 1853,
+      "sha256": "74419ceca80e1bb8bdf2d805a105f9ae3aa6a9f43e7ecab1bc4e31618f87828e"
+    },
+    {
+      "path": "src/fps/riposte-procedural-props.mjs",
+      "bytes": 7430,
+      "sha256": "b39ea37dcc0dcdb24491ea14e1ebd83f91bd97804cf1c57b96f4228c75154b4f"
+    },
+    {
+      "path": "src/fps/riposte-props.mjs",
+      "bytes": 1582,
+      "sha256": "d2586825ffd488a3f766929443a8224cd22bf6483dc83eaec0ac19c85764558f"
+    },
+    {
+      "path": "src/fps/riposte-recoil.mjs",
+      "bytes": 4002,
+      "sha256": "fc2e91819c98ee6eff00d661e89e2fb8657e47a6ea323388edba762c8af568f6"
+    },
+    {
+      "path": "src/fps/room-visuals.mjs",
+      "bytes": 18028,
+      "sha256": "b800a92e5fd5e45a630a1d9097ab2f161529ad76f9ccd214ded7c390fbf5c9ee"
+    },
+    {
+      "path": "src/fps/skinned-clone.mjs",
+      "bytes": 752,
+      "sha256": "f2d8f10c03cfccf08d11128ca40eee3bdfc7f7eeb50b3a392207638dc9463dec"
+    },
+    {
+      "path": "src/fps/smoke-detectors.mjs",
+      "bytes": 2316,
+      "sha256": "185ede947f2f8e4dcf010af756cf63494277f9d1cfde0161508d449b5a294a5e"
+    },
+    {
+      "path": "src/fps/start-elevators.mjs",
+      "bytes": 2526,
+      "sha256": "b23e866b245439e2553a07ea66ebc38d1f16012287697c86c292bac53b220d12"
+    },
+    {
+      "path": "src/fps/static-asset-library.mjs",
+      "bytes": 4985,
+      "sha256": "02f1cebe74cd7da2f34242218a2f2b73d09f1d117443d00d29a26d6138f2713a"
+    },
+    {
+      "path": "src/fps/strike-kit-audio.mjs",
+      "bytes": 6803,
+      "sha256": "fff6646dec72d4508b372e2e79e1400d115a843d83e93b3107922f6b83c5ee1a"
+    },
+    {
+      "path": "src/fps/strike-kit-environment.mjs",
+      "bytes": 7240,
+      "sha256": "a0c4c27678f969f87ba93fe48b9d10801d63b964c3b3e96186ce6b0aa778b73c"
+    },
+    {
+      "path": "src/fps/strike-kit-hands.mjs",
+      "bytes": 11219,
+      "sha256": "f40f9db67762c97aefe78c245802634e3e8acf02d8c2d791b30527682f1e84ee"
+    },
+    {
+      "path": "src/fps/strike-kit-models.mjs",
+      "bytes": 14817,
+      "sha256": "781f2aa6ac1126cb9721619cb563101305154e6f61024db412b37bf10458259a"
+    },
+    {
+      "path": "src/fps/strike-kit-timing.mjs",
+      "bytes": 1638,
+      "sha256": "4df24f89b1c2d919a1e35b361d1a57bef3d89c40686790a326f454727fc3ad40"
+    },
+    {
+      "path": "src/fps/tactical-controls.mjs",
+      "bytes": 8123,
+      "sha256": "4350bd909b249541ffa48311286a36a0a50983ba1479485d424f6caee65f963b"
+    },
+    {
+      "path": "src/fps/tactical-map.mjs",
+      "bytes": 3532,
+      "sha256": "1339964627c320e3f79c752a52113b4ba07c539f2054ae68be3d83578e1e5fda"
+    },
+    {
+      "path": "src/fps/tactical-rules.mjs",
+      "bytes": 4471,
+      "sha256": "ab4e45008906338dc8b74c933179731d4a8891d9e1cdb8db22b23cc5e77f322d"
+    },
+    {
+      "path": "src/fps/throwable-cartridge.mjs",
+      "bytes": 9936,
+      "sha256": "4e1ae695145b153337f3a7e3bc4955cb9397ca8577b0eddd6cefac80abdeb5d0"
+    },
+    {
+      "path": "src/fps/tracer-batch.mjs",
+      "bytes": 3292,
+      "sha256": "afe868a57697e6b115e70f0ce9c0706d7a5a940985b42eef879d010b093c3a4f"
+    },
+    {
+      "path": "src/fps/trajectory-cache.mjs",
+      "bytes": 3370,
+      "sha256": "dc59fbe793294a0358ea393e74e409ca6c0a3b98a5e9f1b8153760d298790a3d"
+    },
+    {
+      "path": "src/fps/view-character-appearance.mjs",
+      "bytes": 6814,
+      "sha256": "2fc650a267cf82147a7f4c6a6ba24ae8f42ddc90f37a02b4a5a0e247efc01b6b"
+    },
+    {
+      "path": "src/fps/view-surface.mjs",
+      "bytes": 3960,
+      "sha256": "fa23a5872d33ccff8d85404e18d35920d94cc18b78dfc60c20fc1bbcbc8cd418"
+    },
+    {
+      "path": "src/fps/visual-depth.mjs",
+      "bytes": 7168,
+      "sha256": "ca03c44d9703054001fe8ea84a3cb926bc91ecaf8c194bfd3f593ffe3b89e356"
+    },
+    {
+      "path": "src/fps/walk-start.mjs",
+      "bytes": 742,
+      "sha256": "5bc33c8fb85be594a6ce584ffacf8ee18b9abaf1b607cd16c055fbdbed885432"
+    },
+    {
+      "path": "src/fps/world.mjs",
+      "bytes": 9295,
+      "sha256": "0e2262dddad71641434b36c636805c6d6e646217174c439ed05a233d8322e27e"
+    },
+    {
+      "path": "src/world.js",
+      "bytes": 19677,
+      "sha256": "1ebcd89ac4e7f803e6a11633877cdb57fc1bdb635a72716d222b465677e39a77"
+    },
+    {
+      "path": "studio/index.html",
+      "bytes": 7462,
+      "sha256": "f161dd8f24b22623ace9d969f408dcfad0f41ebf79c4b3d857dae6b5eca9acb4"
+    },
+    {
+      "path": "studio/style.css",
+      "bytes": 6209,
+      "sha256": "003791306432388faacde5913349743cc9bf280e38d79c5001dbd769298a8204"
+    },
+    {
+      "path": "vendor/package.json",
+      "bytes": 33,
+      "sha256": "a90fc33418afa2b9cbf4768524b021135b965ecdf993457505bfae3ac44a8428"
+    },
+    {
+      "path": "vendor/three/addons/geometries/RoundedBoxGeometry.js",
+      "bytes": 6476,
+      "sha256": "c1b7c9bd2cddff2e3f3a0723f618a3d364a47450e3d25771d21faed88410bec8"
+    },
+    {
+      "path": "vendor/three/addons/loaders/GLTFLoader.js",
+      "bytes": 114739,
+      "sha256": "67ac5551fdafa6e349bd80c8f8e5e39c136d6b2fb1ad647db9abb21dc86f9e4a"
+    },
+    {
+      "path": "vendor/three/addons/math/Capsule.js",
+      "bytes": 3543,
+      "sha256": "be54c3c58483a7f6b0184dbc6ffdcea58ac13515a7d9fd19ed675b9edfc5f319"
+    },
+    {
+      "path": "vendor/three/addons/math/Octree.js",
+      "bytes": 14863,
+      "sha256": "f71364b8d033e03acef6d33c81198e11595f8053cdceffaf77d3040c541eb536"
+    },
+    {
+      "path": "vendor/three/addons/utils/BufferGeometryUtils.js",
+      "bytes": 35539,
+      "sha256": "fda7e946b8e0b5ab39b779206589e7a1079a22eb24efb89d7223e03fdfb1f751"
+    },
+    {
+      "path": "vendor/three/three.core.js",
+      "bytes": 1403455,
+      "sha256": "eb077d2417f61d3e6d9264c317cabc4ea35769ed6b0ab533067292a550784c20"
+    },
+    {
+      "path": "vendor/three/three.module.js",
+      "bytes": 603113,
+      "sha256": "c8211c69345d2e9949dc7a8ac969380497aa0600a5a8ac6a459c8cd02dd9cb8a"
+    },
+    {
+      "path": "vendor/yuka/yuka.module.js",
+      "bytes": 442887,
+      "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
+    }
+  ],
+  "bytes": 42823601,
+  "sourceDirectoriesExcluded": [
+    "references",
+    "reviews",
+    "docs",
+    "archive",
+    "prototypes",
+    "tests",
+    "tools"
+  ],
+  "playableLayoutStillPublic": true,
+  "precisionPack": {
+    "version": "0.14.0",
+    "sourceReference": "BenDBSS/Riposte-Frontline-Source@31ca050d",
+    "note": "Prior release provenance remains historical; see docs/precision-pack.md for this patch."
+  },
+  "priorReleaseProvenance": {
+    "gameVersion": "0.15.3",
+    "release": {
+      "mode": "public-release",
+      "publicReleaseEligible": true,
+      "policySha256": "5dab16d82ec68989fe81c651cc088791ac0abb4cab58eceee3efbf8aacad939f",
+      "derivatives": [
+        {
+          "id": "cartridge-v11.3",
+          "source": {
+            "repository": "capstere/the",
+            "commit": "890d9e62e133390d74e2415cd02eb920f47c4fad",
+            "path": "cartridge-qc/app/Generisk_Cartridge_QC_v11.3.html",
+            "sha256": "8d471a3cca3c2626820c4a9001d7d52c8a61fea831348b06ab41aafd21384f24"
+          },
+          "runtimeFiles": [
+            {
+              "path": "src/fps/cartridge-props.mjs",
+              "sha256": "11c5227e48c858dc35c75285d98bd47f5bc11434a61ee962c8f88c0fcf60ca4e"
+            },
+            {
+              "path": "src/fps/cartridge-v11.mjs",
+              "sha256": "ef3a05f033d81afc50a4829aa9bfd97768c797a0b698bb2772373151d6814172"
+            }
+          ],
+          "runtimeDigest": "693cc4139eed938985286796d59acfe39167531a9ff2794033b177961822f58d",
+          "distributionApproved": true
+        },
+        {
+          "id": "nord01-facility",
+          "source": {
+            "repository": "capstere/onboard",
+            "commit": "566ae1fadabb1f45d644e04cdbeebefb0b81a197",
+            "path": "asset-portfolio/nord-01/source/build_assets.py",
+            "sha256": "14de641905d6fe2a70c377d74132a8d0fe1b28b890a3019168993e3ff25adde4"
+          },
+          "runtimeFiles": [
+            {
+              "path": "assets/fps/models/nord01-access_terminal-lod0.glb",
+              "sha256": "8fcd1685b7908e27e98daae25fae0fa75da13c3b88f3aa966db6694839ba538c"
+            },
+            {
+              "path": "assets/fps/models/nord01-access_terminal-lod2.glb",
+              "sha256": "6af1b9a3f74a827cb66024e7b44140e7427dee006a6ad3302d1f008d6f54fdfe"
+            },
+            {
+              "path": "assets/fps/models/nord01-medical_case-lod0.glb",
+              "sha256": "c7579a593d944d0f32f3554b8ca0b0254de65ae0658d2de0204ef695b6a52b10"
+            },
+            {
+              "path": "assets/fps/models/nord01-security_locker-lod0.glb",
+              "sha256": "4368ceb4cd3a26d1c8a3ead0413f71cd5204274410b46b031c423b5d1388b277"
+            },
+            {
+              "path": "assets/fps/models/nord01-security_locker-lod2.glb",
+              "sha256": "a08cb42c5a564981f520c2c38aaed6f82e448926a501cf7fe6b0dd14a56a5028"
+            },
+            {
+              "path": "assets/fps/models/nord01-strip_light-lod0.glb",
+              "sha256": "11785a1708dfae00d37628e3f06dee5cf95175ce49b0fc5bd867f0bd83b96f53"
+            },
+            {
+              "path": "assets/fps/models/nord01-supply_crate-lod0.glb",
+              "sha256": "a021e8b54ee354f0a41e4ceaa37b994e68e444b8d715033d47d6f3d4bed3a67d"
+            },
+            {
+              "path": "assets/fps/models/nord01-wall_vent-lod0.glb",
+              "sha256": "25482d2abec3a01920b9f213bf5df6223ac5df4df3a578a53da7c095e2c97757"
+            },
+            {
+              "path": "assets/fps/models/nord01-wall_vent-lod2.glb",
+              "sha256": "5b0b934e822c8275bfee08812a3dbd1940fda3d8174f6247b336824748e8ef99"
+            }
+          ],
+          "runtimeDigest": "8a7ce0c88e66352a739f9ac0deaabfa0d88a8b78bd073f8fc99d67deee3dad6f",
+          "distributionApproved": true
+        },
+        {
+          "id": "responsiveness-riposte-2026-10-26",
+          "source": {
+            "repository": "BenDBSS/Riposte-Frontline-Source",
+            "commit": "31ca050d8ce59f4885c01a3237f68cdf186c9b60",
+            "path": "LICENSE",
+            "sha256": "31116c5cebfdadacd80f9c236c72b623b5d9cdc696786814717f2221a8081a5a"
+          },
+          "runtimeFiles": [
+            {
+              "path": "assets/fps/audio/riposte-f_draw-1.mp3",
+              "sha256": "055b67b634c6ffa4c31d2978e2d2ad66ef5903db57a783073f6bdd21507a36df"
+            },
+            {
+              "path": "assets/fps/audio/riposte-f_dry-1.mp3",
+              "sha256": "ac4071825b15d6c612791ccbf1d6588e89384e83706b5214137a2d01ec0f4be8"
+            },
+            {
+              "path": "assets/fps/audio/riposte-f_knife_hit-1.mp3",
+              "sha256": "23262da97855db49c7b447ef452a1831f52c493c38099809ae61921e26a4d536"
+            },
+            {
+              "path": "assets/fps/audio/riposte-f_knife-1.mp3",
+              "sha256": "0619b408af2f73a7d88920c677f27e4926aa23fbe10ae3bb01a71606cc542ac7"
+            },
+            {
+              "path": "assets/fps/audio/riposte-f_pickup-1.mp3",
+              "sha256": "740798c14fa1031b9bc961a990ef4b51d3e75b10c50fc4a4296434d61da03b6f"
+            },
+            {
+              "path": "assets/fps/audio/riposte-f_throw-1.mp3",
+              "sha256": "c66d3cb60e956769618f3e51a722403938558baba3ff40b4c26f6a30334c38bd"
+            },
+            {
+              "path": "assets/fps/audio/riposte-g_ak_near-1.mp3",
+              "sha256": "83903cae0a6ff3fc38d15335c756dececdca3b438bd4543194d159f0f24416bd"
+            },
+            {
+              "path": "assets/fps/audio/riposte-g_ak_pov-1.mp3",
+              "sha256": "ad71df1ab06a9f861b1b21e0e4ac8d21b67555a276b440c4c9973a941c3cd8a2"
+            },
+            {
+              "path": "assets/fps/audio/riposte-g_glock_near-1.mp3",
+              "sha256": "4b464f68eafe8fe7d973ef8e718735740a1d47dcba814bd31061fcc8bfa40d70"
+            },
+            {
+              "path": "assets/fps/audio/riposte-g_glock_pov-1.mp3",
+              "sha256": "e23a810637a60a827e1b4cca2787dbaa53435bfcdedacf07776208c8e8766938"
+            },
+            {
+              "path": "assets/fps/audio/riposte-g_pistol_near-1.mp3",
+              "sha256": "1a64cb02ecde5c7303682dd3b13db828a9653d142d80bf77c984cc5efea04c73"
+            },
+            {
+              "path": "assets/fps/audio/riposte-g_pistol_pov-1.mp3",
+              "sha256": "1a06b8dfdb7f988d374b4cc7ade8d5e2668d372495acc183f372a4c18812f76d"
+            },
+            {
+              "path": "assets/fps/audio/riposte-g_rifle_near-1.mp3",
+              "sha256": "018f9e05f8d3cce83cbf6c198b519ac96657c195916302554a8a6c4a7c6dd19b"
+            },
+            {
+              "path": "assets/fps/audio/riposte-g_rifle_pov-1.mp3",
+              "sha256": "9664c864ccb245a197b5e6648c07e19a24a1570a1b96eb06c3d03759172037c8"
+            },
+            {
+              "path": "assets/fps/audio/riposte-g_shotgun_near-1.mp3",
+              "sha256": "052485d780558975e085b1a161ecb2f39111a83565108ba21485ae92023937b5"
+            },
+            {
+              "path": "assets/fps/audio/riposte-g_shotgun_pov-1.mp3",
+              "sha256": "189606cada57b5146a6a710cf3e07b59374b7d84f467c32d82316858e45390d3"
+            },
+            {
+              "path": "assets/fps/audio/riposte-g_smg_near-1.mp3",
+              "sha256": "853e5dee2cc35ba7e0e8cdc2d8c23a55d47eeb5a8188992e58fdd7ccf23bf60f"
+            },
+            {
+              "path": "assets/fps/audio/riposte-g_smg_pov-1.mp3",
+              "sha256": "61c52c3d4d99106598f9cd0fdae87651976b3e0b62b7b86a27881d104ddf3a6e"
+            },
+            {
+              "path": "assets/fps/audio/riposte-g_sniper_near-1.mp3",
+              "sha256": "f5e878aab4a37750ba67073e8cee11cdb3ed8b7de3250d74602a4374281ea153"
+            },
+            {
+              "path": "assets/fps/audio/riposte-g_sniper_pov-1.mp3",
+              "sha256": "708dcaffda71978780ced2480b8a5c8df7e8261b15352f288fde90ac52a035f6"
+            },
+            {
+              "path": "assets/fps/audio/riposte-i_concrete-1.mp3",
+              "sha256": "ab7b1356c9d71e1ee30bf5733269a6bf4b060e37e76344de386d9fc88a027ce0"
+            },
+            {
+              "path": "assets/fps/audio/riposte-i_flesh-1.mp3",
+              "sha256": "0889917beb655427bb17c945a09cc5f5a1fac82a0aba03190e3b44610acbc3e6"
+            },
+            {
+              "path": "assets/fps/audio/riposte-i_glass-1.mp3",
+              "sha256": "6b9d4df93ae96d9c6342a69593813172d81a83360b50d414f0ab637ba7d333cd"
+            },
+            {
+              "path": "assets/fps/audio/riposte-i_metal-1.mp3",
+              "sha256": "683dbec0592ae7013c9615e6d351270a62ce807dac884c25ff541fd6dcbdfcbb"
+            },
+            {
+              "path": "assets/fps/audio/riposte-i_wood-1.mp3",
+              "sha256": "a22b4299deb3f5df74a925c4d116f1fe48aed0af63e757303ee74fe9559da553"
+            },
+            {
+              "path": "assets/fps/materials/riposte/paintwood/map.webp",
+              "sha256": "fde5a948c16580f30fc4a603854cd333c75f7297e2b57eecf58ebecc3eeec496"
+            },
+            {
+              "path": "assets/fps/materials/riposte/paintwood/normal.webp",
+              "sha256": "7bad73fe9efd75a2b1ebdb2132a58d642499d4fe546314671482bd9d481bd618"
+            },
+            {
+              "path": "assets/fps/materials/riposte/paintwood/rough.webp",
+              "sha256": "256eaa44465647923a507a638c380bb3b42975202df87aa8760c11399e292127"
+            },
+            {
+              "path": "assets/fps/materials/riposte/steel/map.webp",
+              "sha256": "477dde2780633ea3b69ace1b355c77b97665c178d8ab7a536c52bf9a4b709c5c"
+            },
+            {
+              "path": "assets/fps/materials/riposte/steel/normal.webp",
+              "sha256": "cf533f66c5203be667635877b7bbc1a76655e9d621d5eb296a9d810f214aabec"
+            },
+            {
+              "path": "assets/fps/materials/riposte/steel/rough.webp",
+              "sha256": "820c4d627c2163b2ca0827d875e027dce73cafc0ebbcb7bc1ee853eaf6815606"
+            },
+            {
+              "path": "assets/fps/materials/riposte/timber/map.webp",
+              "sha256": "f6d466a7c87119251b42da7daba599c55623faf9cd58b66706392b11e43a48d6"
+            },
+            {
+              "path": "assets/fps/materials/riposte/timber/normal.webp",
+              "sha256": "438b1eeb7d09847f1297b7df979010d469930c2145cb55d9362a5ea3139a0c5d"
+            },
+            {
+              "path": "assets/fps/materials/riposte/timber/rough.webp",
+              "sha256": "c39dac1088336d7f94af5c06e233d0efd7a377eebf9096e0893a02f023b4f312"
+            },
+            {
+              "path": "licenses/riposte-MIT.txt",
+              "sha256": "31116c5cebfdadacd80f9c236c72b623b5d9cdc696786814717f2221a8081a5a"
+            },
+            {
+              "path": "licenses/riposte-NOTICE.md",
+              "sha256": "620679a042ed3df2acd4cc5e42cf678c70d5bb1cc2513e0ad4876414f9381891"
+            },
+            {
+              "path": "licenses/riposte-sfx-credits.json",
+              "sha256": "6a07ac64a552960c532900bba81af285f372a83fc46b3790e82ce37908f08dcf"
+            },
+            {
+              "path": "src/fps/action-rules.mjs",
+              "sha256": "bd86fe48ee6627d062848cf32e02bf4eb88f67ef6d530dbb543ef71ff5a39f2c"
+            },
+            {
+              "path": "src/fps/action-visuals.mjs",
+              "sha256": "98ec9acbb1d8b64c57e93f96715986b0d63e8fc2b4921ee2adcc6b020c4f6359"
+            },
+            {
+              "path": "src/fps/app.mjs",
+              "sha256": "d9235e915bfd7d9bc333c5c1b835b8cdf31ee4fe38c1c8a9605843b60577b410"
+            },
+            {
+              "path": "src/fps/bots.mjs",
+              "sha256": "09cbda3b567d985fe1b257e185663e8531e3c0c5d52ec557fd1e6526b483c6c4"
+            },
+            {
+              "path": "src/fps/door-visuals.mjs",
+              "sha256": "2813e0e0b02434493266ae4ef232d2688bd52429e4966f65dae99a2cb7b2d8a4"
+            },
+            {
+              "path": "src/fps/doors.mjs",
+              "sha256": "1331fc0715131667dae19b15724c09ae80ef3164fe4922cd48c90975c4acb6de"
+            },
+            {
+              "path": "src/fps/effects.mjs",
+              "sha256": "ab2e836a9470113ce16e6db31cedb4aee0700efc3638c8523d9a1306d21d3324"
+            },
+            {
+              "path": "src/fps/facility-scene.mjs",
+              "sha256": "72d0e3bd0cb73082cb07e542af1d24d7f8820d712841dee6653dd35d7961a35d"
+            },
+            {
+              "path": "src/fps/game.mjs",
+              "sha256": "9bf4425b76db853a6f5bdddcc19e7798647f86238d65c8726311f75becc0d6f7"
+            },
+            {
+              "path": "src/fps/living-floor-scene.mjs",
+              "sha256": "f1a62e50916c701dbe644df3ebe3aedd3d3f0740a9fa160c88a30e86007f5264"
+            },
+            {
+              "path": "src/fps/physics.mjs",
+              "sha256": "60a6874ad4e6072248df25b8ccef5d3b5400a2e123dc82cf63a439082797b08b"
+            },
+            {
+              "path": "src/fps/presentation-lightfield.mjs",
+              "sha256": "4449c3740608563db285b03bae5d3dea8db88b5cf3c1c2a771db937200c8bd90"
+            },
+            {
+              "path": "src/fps/render.mjs",
+              "sha256": "f64611c394f9a125e7db9ebafad9be967b9fcad9467d30d52382ac002687b75e"
+            },
+            {
+              "path": "src/fps/riposte-audio.mjs",
+              "sha256": "3569cc2b5641979b99fa67a106846f1e2c589cff5fee6ebe320a235720436c9d"
+            },
+            {
+              "path": "src/fps/riposte-fps-math.mjs",
+              "sha256": "6ab19915fca0fcbd175caa0c8a79f3e0b996a494462e01de49378f4d26732cc3"
+            },
+            {
+              "path": "src/fps/riposte-fx-pool.mjs",
+              "sha256": "eea8b5a0a319705de7bfb6a538c16fe637dd02975fac4b5b68b1fdb7811f34a2"
+            },
+            {
+              "path": "src/fps/riposte-pbr-materials.mjs",
+              "sha256": "74419ceca80e1bb8bdf2d805a105f9ae3aa6a9f43e7ecab1bc4e31618f87828e"
+            },
+            {
+              "path": "src/fps/riposte-procedural-props.mjs",
+              "sha256": "b39ea37dcc0dcdb24491ea14e1ebd83f91bd97804cf1c57b96f4228c75154b4f"
+            },
+            {
+              "path": "src/fps/riposte-props.mjs",
+              "sha256": "d2586825ffd488a3f766929443a8224cd22bf6483dc83eaec0ac19c85764558f"
+            },
+            {
+              "path": "src/fps/world.mjs",
+              "sha256": "2e692c370f226245144a3bc732ecdd2bbe6345ee836f7432c92348be1226377e"
+            }
+          ],
+          "runtimeDigest": "6c2847ef170c14dc6335cb711c8ec480a0f907b6a42b1847c1e1ad4b1cdb324f",
+          "distributionApproved": true
+        }
+      ]
+    }
+  },
+  "ownerLayout": {
+    "revision": 1,
+    "wallSpans": 339,
+    "glazedSpans": 16,
+    "windowSpans": 16,
+    "doors": 51,
+    "doorLeaves": 65,
+    "navAndCollisionShareSource": true,
+    "sealedFutureTerrace": "D01T",
+    "sourceRuntimeHashes": {
+      "src/floor5-data.js": "5f1e306072124f997ef4049b72b86c9097dc731cce7dfdf1c5635ebff5ff3487",
+      "src/world.js": "a6bfcfcd35c426808bc67c8de705801c8ee3ee96930c38737fa046ebcdfbc676",
+      "src/fps/world.mjs": "7e0a67e4bc65db8defc8b2dea802fc42f6adc196570738a3f5d3d86a6798fe81",
+      "src/fps/doors.mjs": "452e4d3f78c34afdfd5eb8589dabb81e6abcb9b4d8af19ad620dab2c52b6c46b",
+      "src/fps/furnishings.mjs": "6e66d4814ee2952197e65a9331383bc6281f346fb3993d651482b7b308ef743e",
+      "src/fps/living-floor-plan.mjs": "cee35cfaf26547244acd35ffa7a6f1006634fd288dae5446763a925583c52038"
+    },
+    "priorManifestStalePaths": [
+      "fps/index.html",
+      "fps/style.css",
+      "src/fps/app.mjs",
+      "src/fps/game.mjs",
+      "src/fps/model-primitives.mjs",
+      "src/fps/render-engine.mjs",
+      "src/fps/render.mjs"
+    ]
+  },
+  "facilityDetails": {
+    "toilets": 12,
+    "basins": 12,
+    "kitchenDevices": 7,
+    "displayLabProps": 15,
+    "facadeSpans": 43,
+    "breakablePanes": 170,
+    "glassRules": "breaking shot stops; later rays pass; round reset restores panes; structural frames and excluded/outside scope remain solid",
+    "displayLabs": [
+      "X21",
+      "X06"
+    ],
+    "limitations": [
+      "Generic lab dressing, not a measured equipment inventory.",
+      "Excluded volumes and exterior floor boundaries stay inaccessible after breaking glazing.",
+      "No appliance simulation or lift/terrace access."
+    ]
+  },
+  "levelRelease": {
+    "schemaVersion": 2,
+    "compatibleWith": [
+      "0.18.0"
+    ],
+    "defaultLevel": "floor5-prepared",
+    "publicLevels": [
+      "synthetic-demo",
+      "floor5-prepared"
+    ],
+    "modelUnitsVerifiedAsMetres": false,
+    "privatePreview": "browser-local"
+  },
+  "studioFurniture": {
+    "editorVersion": "5.8.0",
+    "catalogueObjects": 301,
+    "addedObjects": 22,
+    "labAndShoeObjects": 4,
+    "uploadedOfficeModels": 2,
+    "fpsObjects": 16,
+    "perPairShoeColour": true,
+    "measuredSupportSurfaces": true,
+    "sourceMap": "docs/fps-furniture-library.md",
+    "officeAttribution": "licenses/studio-office-models.md"
+  }
+}

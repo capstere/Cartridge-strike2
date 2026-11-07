@@ -1,0 +1,18 @@
+/** Glass panes and bounded cosmetic fragments. No gameplay RNG or shard colliders.
+ * Static panes upload matrices ONLY when their authoritative revision changes. */
+import * as T from '../../vendor/three/three.module.js';
+export class GlassVisuals{
+ constructor(scene,state,registry){
+  this.state=state;this.root=new T.Group();this.root.name='destructible-glass';scene.add(this.root);this.version=-1;this.batches=[];this.matrix=new T.Matrix4();this.q=new T.Quaternion();this.euler=new T.Euler();this.pos=new T.Vector3();this.scale=new T.Vector3();this.zero=new T.Matrix4().makeScale(0,0,0);this.geometry=new T.BoxGeometry(1,1,1);const buckets=new Map();
+  for(const pane of state.panes.values())for(const part of pane.parts){const key=`${Math.floor(part.x/12)}/${Math.floor(part.z/12)}/${part.material}`;if(!buckets.has(key))buckets.set(key,[]);buckets.get(key).push({pane,part});}
+  for(const parts of buckets.values()){const material=registry.get(parts[0].part.material==='frosted'?'frostedGlass':'glass',{forceSinglePass:true});const mesh=new T.InstancedMesh(this.geometry,material,parts.length);mesh.name='glass-pane-batch';mesh.instanceMatrix.setUsage(T.DynamicDrawUsage);mesh.castShadow=false;mesh.receiveShadow=false;mesh.frustumCulled=true;this.root.add(mesh);this.batches.push({mesh,parts});}
+  this.shardGeometry=new T.BufferGeometry();this.shardGeometry.setAttribute('position',new T.Float32BufferAttribute([-.6,-.25,0,.5,-.4,0,.2,.6,0],3));this.shardGeometry.computeVertexNormals();this.shardMaterial=new T.MeshStandardMaterial({color:0xa3d4df,roughness:.19,metalness:.25,side:T.DoubleSide});this.shards=new T.InstancedMesh(this.shardGeometry,this.shardMaterial,128);this.shards.name='glass-shards-bounded';this.shards.instanceMatrix.setUsage(T.DynamicDrawUsage);this.shards.frustumCulled=false;this.shards.count=0;this.root.add(this.shards);this.particles=Array.from({length:128},()=>({alive:false}));this.cursor=0;this.hadParticles=false;this.sync();for(const {mesh} of this.batches){mesh.computeBoundingBox();mesh.computeBoundingSphere();}
+ }
+ sync(){if(this.version===this.state.revision)return;this.version=this.state.revision;for(const {mesh,parts} of this.batches){parts.forEach(({pane,part:b},i)=>{if(pane.broken){mesh.setMatrixAt(i,this.zero);return;}this.q.setFromAxisAngle(T.Object3D.DEFAULT_UP,b.angle||0);this.matrix.compose(this.pos.set(b.x,b.y,b.z),this.q,this.scale.set(b.w,b.h,b.d));mesh.setMatrixAt(i,this.matrix);});mesh.instanceMatrix.needsUpdate=true;}}
+ events(events,game){for(const e of events){if(e.type==='round'){for(const p of this.particles)p.alive=false;this.shards.count=0;this.hadParticles=false;}if(e.type!=='glass-break')continue;
+  // Twelve short-lived fragments per hit, recycled rather than allocated.
+  for(let i=0;i<12;i++){const p=this.particles[this.cursor++%128],a=(i*2.399963+this.cursor*.17),speed=.55+(i%5)*.17;Object.assign(p,{alive:true,born:game.state.time,x:e.x,y:e.y,z:e.z,vx:Math.sin(a)*speed,vy:.5+(i%4)*.18,vz:Math.cos(a)*speed,spin:a,size:.045+(i%3)*.02});}
+ }}
+ update(time){this.sync();let n=0;for(const p of this.particles){if(!p.alive)continue;const t=Math.max(0,time-p.born),y=p.y+p.vy*t-4.9*t*t;if(t>.85||y<.035){p.alive=false;continue;}this.q.setFromEuler(this.euler.set(p.spin+t*5,p.spin*.7+t*3,0));this.matrix.compose(this.pos.set(p.x+p.vx*t,y,p.z+p.vz*t),this.q,this.scale.setScalar(p.size));this.shards.setMatrixAt(n++,this.matrix);}this.shards.count=n;if(n||this.hadParticles)this.shards.instanceMatrix.needsUpdate=true;this.hadParticles=n>0;}
+ dispose(){this.root.removeFromParent();for(const {mesh}of this.batches)mesh.dispose();this.shards.dispose();this.geometry.dispose();this.shardGeometry.dispose();this.shardMaterial.dispose();}
+}

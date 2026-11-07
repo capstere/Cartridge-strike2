@@ -1,0 +1,144 @@
+{
+  "date": "2026-11-06",
+  "sourceCommit": "f0bad6110ee4d96f96090fb93af7573bf89a6a24",
+  "level": "floor5-prepared",
+  "viewport": [
+    1100,
+    660
+  ],
+  "cameraHeight": 1.6,
+  "lookAtHeight": 1.35,
+  "renderer": "Chromium 153 / software WebGL via SwiftShader",
+  "method": "Arranged game-scene cameras, no actors or first-person overlay; renderer assetsReady awaited; frame loop stopped; material properties/textures changed in browser memory only. PNG captures assembled as JPG comparison sheets.",
+  "studyChanges": [
+    "Shared carpet and office-carpet tint #42494F, roughness .98, normalScale .14",
+    "Shared wall #E8E7E1, roughness .84, normalScale .05; ceiling #E1E3DF, roughness .96, normalScale .04",
+    "Vinyl/labVinyl color map replaced with a locally generated neutral #C5CBC7 micrograin map; roughness .62, metalness 0; normal/roughness maps removed for this study",
+    "Painted white/blue/black registry metal variants changed to metalness 0 and roughness .57",
+    "Existing dark-gloss-laminate map replaced with locally generated #4D5555 micrograin; roughness .58, metalness 0"
+  ],
+  "limitations": [
+    "Partial material study, not the complete proposed art pass. Room-specific paint, new patina, glass changes, contact masks, furniture recoloring and graphic cleanup are not demonstrated.",
+    "Shared material changes affect all users of that material in the temporary scene; final implementation must use the room/part scoping in the direction document.",
+    "Three scene lights unchanged. No real-time lights, geometry, collision, transforms or game data added/edited.",
+    "Counters describe direct scene renders in these fixtures. They are not complete gameplay frame costs or hardware FPS measurements.",
+    "No source photographs or Jedi renders/textures are included."
+  ],
+  "captures": [
+    {
+      "fixture": {
+        "id": "corridor",
+        "room": "C02",
+        "point": {
+          "x": 6.698999999999998,
+          "z": 16.548000000000002
+        },
+        "look": {
+          "x": -14.3948,
+          "z": 16.548000000000002
+        }
+      },
+      "version": "current",
+      "calls": 429,
+      "triangles": 207440,
+      "lights": 3,
+      "canOccupy": true
+    },
+    {
+      "fixture": {
+        "id": "corridor",
+        "room": "C02",
+        "point": {
+          "x": 6.698999999999998,
+          "z": 16.548000000000002
+        },
+        "look": {
+          "x": -14.3948,
+          "z": 16.548000000000002
+        }
+      },
+      "version": "study",
+      "calls": 429,
+      "triangles": 207440,
+      "lights": 3,
+      "canOccupy": true
+    },
+    {
+      "fixture": {
+        "id": "lab",
+        "room": "I02",
+        "point": {
+          "x": -20.2428,
+          "z": -9.7782
+        },
+        "look": {
+          "x": -26.5706,
+          "z": -4.64828
+        }
+      },
+      "version": "current",
+      "calls": 1341,
+      "triangles": 401168,
+      "lights": 3,
+      "canOccupy": true
+    },
+    {
+      "fixture": {
+        "id": "lab",
+        "room": "I02",
+        "point": {
+          "x": -20.2428,
+          "z": -9.7782
+        },
+        "look": {
+          "x": -26.5706,
+          "z": -4.64828
+        }
+      },
+      "version": "study",
+      "calls": 1341,
+      "triangles": 401168,
+      "lights": 3,
+      "canOccupy": true
+    },
+    {
+      "fixture": {
+        "id": "hissrum12",
+        "room": "I12",
+        "point": {
+          "x": -20.0102,
+          "z": -21.896
+        },
+        "look": {
+          "x": -21.581,
+          "z": -27.825
+        }
+      },
+      "version": "current",
+      "calls": 131,
+      "triangles": 33102,
+      "lights": 3,
+      "canOccupy": true
+    },
+    {
+      "fixture": {
+        "id": "hissrum12",
+        "room": "I12",
+        "point": {
+          "x": -20.0102,
+          "z": -21.896
+        },
+        "look": {
+          "x": -21.581,
+          "z": -27.825
+        }
+      },
+      "version": "study",
+      "calls": 131,
+      "triangles": 33102,
+      "lights": 3,
+      "canOccupy": true
+    }
+  ],
+  "errors": []
+}

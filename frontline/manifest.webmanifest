@@ -1,0 +1,46 @@
+{
+ "id": "/cartridge-strike/frontline/",
+ "name": "Cartridge Strike: Frontline",
+ "short_name": "Cartridge Strike",
+ "description": "FPS en ligne dans le navigateur : solo contre des bots ou en ligne entre amis.",
+ "start_url": "./",
+ "scope": "./",
+ "display": "fullscreen",
+ "display_override": [
+  "fullscreen",
+  "standalone"
+ ],
+ "orientation": "landscape",
+ "categories": [
+  "games"
+ ],
+ "background_color": "#0E110D",
+ "theme_color": "#0E110D",
+ "prefer_related_applications": false,
+ "icons": [
+  {
+   "src": "icons/icon-192.41681d11.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icons/icon-512.8dc2a70e.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icons/maskable-192.41681d11.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "maskable"
+  },
+  {
+   "src": "icons/maskable-512.8dc2a70e.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}

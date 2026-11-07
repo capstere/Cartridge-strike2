@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover,user-scalable=no">
+  <meta name="color-scheme" content="dark"><title>Cartridge-Strike · Unit 05</title>
+  <link rel="icon" href="data:,"><link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="focus-hud.css">
+  <link rel="stylesheet" href="../ui/cs-theme.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Barlow:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap">
+  <link rel="stylesheet" href="menu-modern.css?v=2">
+  <link rel="stylesheet" href="lobby.css?v=2">
+  <link rel="stylesheet" href="../ui/cs-mobile.css?v=3">
+  <link rel="stylesheet" href="hud.css?v=4">
+  <link rel="stylesheet" href="match-loading.css?v=2">
+  <script type="importmap">{"imports":{"three":"../vendor/three/three.module.js","three/addons/":"../vendor/three/addons/"}}</script>
+<meta name="robots" content="noindex,nofollow"></head>
+<body>
+  <canvas id="game" aria-label="Cartridge-Strike spelvy"></canvas>
+  <div id="loading" role="status"><i class="mm-spin" aria-hidden="true"></i>Bygger Unit 05…</div>
+  <main id="menu" class="panel-screen menu-modern lobby" data-side="analysts">
+    <canvas id="lobby-stage" aria-label="Förhandsvisning av din karaktär"></canvas>
+    <div class="lb-grade" aria-hidden="true"><i class="lb-vig"></i><i class="lb-scan"></i><i class="lb-beam"></i></div>
+    <header class="lb-bar">
+      <a class="lb-brand" href="./" aria-label="Cartridge-Strike"><span class="lb-mark" aria-hidden="true"><i></i></span><span>CARTRIDGE<b>//STRIKE</b></span></a>
+      <nav class="lb-nav" aria-label="Huvudmeny">
+        <a class="is-current" href="./" aria-current="page">Spela</a>
+        <a href="../character-design/">Karaktärsstudio</a>
+        <a href="../furniture-editor/">Möbelstudio</a>
+        <a href="../studio/">Alla studior</a>
+      </nav>
+      <div class="lb-tools"><button type="button" id="mm-open-settings" class="lb-icon" aria-controls="mm-settings" aria-label="Inställningar &amp; kontroller"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg><span>Inställningar</span></button></div>
+    </header>
+
+    <section class="lb-left">
+      <header class="lb-intro intro">
+        <p class="lb-tag eyebrow"><span class="status-dot"></span>UNIT 05 · VÅNING 5 · 5 MOT 5</p>
+        <h1 class="lb-title"><span>Cartridge</span><span>Strike</span></h1>
+        <p class="lb-lead lead">Två lag. En våning. Ett uppdrag.</p>
+        <div class="mission-strip" hidden><div><span></span></div><div><span></span></div></div>
+      </header>
+
+      <div class="lb-block">
+        <div class="lb-label"><b>01</b>Lag</div>
+        <div class="lb-teams" role="group" aria-label="Välj lag">
+          <button class="team-option selected" data-team="analysts" aria-pressed="true"><span class="team-icon analysts">A</span><span class="lb-tinfo"><strong>Analysts</strong><small>Start · Cargo Lift</small><em>Försvara, stoppa räddningen och desarmera.</em></span><span class="radio-dot"></span></button>
+          <button class="team-option" data-team="counterAnalysts" aria-pressed="false"><span class="team-icon counter">CA</span><span class="lb-tinfo"><strong>Counter Analysts</strong><small>Start · Transit Lift</small><em>Plantera i North Laboratory eller rädda båda gisslan.</em></span><span class="radio-dot"></span></button>
+        </div>
+      </div>
+
+      <div class="lb-block">
+        <div class="lb-label"><b>02</b>Spelläge</div>
+        <div class="mode-picker lb-mode"><div class="lb-seg" id="lb-mode-seg" role="radiogroup" aria-label="Spelläge"></div><label for="game-mode" class="sr-only">Spelläge</label><select id="game-mode" aria-label="Spelläge"><option value="classic">Klassiska rundor · bomb och gisslan</option><option value="endless">Endless Action · oändlig auto-respawn</option></select><p id="mode-description">Klassiska rundor. Först till fem vinster.</p><label id="loadout-row" hidden>Startvapen <select id="loadout" aria-label="Startvapen"><option value="smg">Pulse SMG</option><option value="shotgun">Breach Shotgun</option><option value="sniper">Scout Rifle</option><option value="bazooka">Rocket Launcher</option></select></label></div>
+      </div>
+
+      <div class="lb-launch">
+        <button id="start" class="primary"><span class="lb-start-k">Enter</span><span class="lb-start-t">Starta match</span><span class="lb-start-a" aria-hidden="true">→</span></button>
+      </div>
+    </section>
+
+    <aside class="lb-right">
+      <div class="lb-plate">
+        <p class="lb-plate-k">Operatör · <span id="lb-team-name">Analysts</span></p>
+        <h2 id="lb-op-name">Originalkaraktär</h2>
+        <div id="character-picker" class="mode-picker lb-char">
+          <label for="player-character" class="lb-label"><b>03</b>Karaktär</label><select id="player-character" aria-describedby="character-status"><option value="">Originalkaraktär</option></select>
+          <p id="character-status" role="status"></p><div class="character-actions"><a class="text-link" href="../character-design/">Öppna karaktärsstudion →</a>
+          <button id="delete-character" type="button" class="text-link" hidden>Ta bort spelkopian</button></div>
+        </div>
+      </div>
+      <dl class="lb-brief">
+        <div><dt>Bana</dt><dd>Unit 05 · Våning 5</dd></div>
+        <div><dt>Format</dt><dd>5 mot 5</dd></div>
+        <div class="lb-brief-obj"><dt>Uppdrag</dt><dd id="lb-objective">Försvara, stoppa räddningen och desarmera.</dd></div>
+      </dl>
+    </aside>
+
+    <details class="mm-more lb-drawer" id="mm-settings"><summary><span>Inställningar &amp; kontroller</span><b aria-hidden="true">×</b></summary>
+      <label class="seed-row">Matchseed <input id="seed" type="number" value="42" min="1" max="999999" aria-label="Matchseed"></label>
+      <div id="menu-settings"></div>
+      <details open><summary>Kontroller</summary><div class="controls-list"><span>WASD <b>Rör dig</b></span><span>Shift <b>Smyg</b></span><span>Ctrl / Space <b>Huka / hoppa</b></span><span>Mus / R <b>Skjut / ladda om</b></span><span>Högerklick / F <b>Siktesläge / zoom</b></span><span>E <b>Uppdrag</b></span><span>B / Tab <b>Köp / resultat</b></span><span>1–5 / Q <b>Utrustning / senaste</b></span><span>G / M <b>Släpp / taktisk karta</b></span><span>V <b>Inspektera vapnet</b></span></div></details>
+      <p class="small start-note">Dator: högerklick för sikte. Mobil: SIKTA eller dubbeltryck till höger. Esc / PAUS pausar.</p>
+    </details>
+
+    <footer class="lb-foot"><span id="game-version">CARTRIDGE-STRIKE / VERSION 0.18.0</span><a href="../credits.html" target="_blank" rel="noopener">Licenser</a></footer>
+  </main>
+  <div id="hud" hidden>
+    <div class="top-hud"><div class="score analysts"><strong id="score-a">0</strong><span>ANALYSTS <small id="alive-a">5 kvar</small></span></div><div class="round-clock"><small id="round-label">RUNDA 1</small><b id="timer">0:15</b><small id="phase">KÖPFAS</small></div><div class="score counter"><span>COUNTER ANALYSTS <small id="alive-ca">5 kvar</small></span><strong id="score-ca">0</strong></div></div>
+    <div class="map-panel"><p id="location">Unit 05</p><canvas id="minimap" width="224" height="158" aria-label="Karta med lagkamrater och uppdrag"></canvas><small>M taktiska vägar · B köp</small></div>
+    <div id="killfeed" aria-live="polite"></div>
+    <div id="objectives"><span id="bomb-status"></span><span id="hostage-status"></span></div>
+    <div id="crosshair"><i></i><i></i><i></i><i></i></div><div id="hitmarker">×</div>
+    <div id="prompt"><kbd>E</kbd><span id="prompt-text"></span><div class="progress"><div id="action-progress"></div></div></div>
+    <div id="notification" role="status"></div><aside id="radio-menu" hidden aria-label="Radiokommandon"><strong>RADIO <kbd>Z</kbd></strong><div id="radio-options"></div><small>Tryck 1–6 · Z stänger</small></aside><div id="radio-caption" aria-live="polite"></div><div id="spawn-protection" hidden>SPAWNSKYDD · skjuter du försvinner skyddet</div>
+    <div id="round-result" hidden><small id="result-kicker">RUNDA AVGJORD</small><h2 id="result-title"></h2><p id="result-reason"></p></div>
+    <div id="spectate" hidden>UTSLAGEN · <span></span><small id="death-cause"></small><small id="respawn-status">← → Byt lagkamrat · Nästa runda startar automatiskt</small><button id="death-restart">STARTA OM MATCHEN <kbd>Enter</kbd></button></div>
+    <div class="bottom-hud"><div class="vitals"><span class="health-symbol">+</span><strong id="health">100</strong><div><span>HÄLSA</span><small id="armor"></small></div></div><div class="inventory"><div id="weapon-slots"></div><small id="money">800 ¤</small></div><div class="ammo"><small id="weapon-name">PISTOL</small><strong id="ammo">20 <span>/ 120</span></strong><span id="reload-text"></span></div></div>
+    <div class="key-hints">V inspektera &nbsp; Z radio &nbsp; SHIFT smyg &nbsp; CTRL huka &nbsp; SPACE hopp &nbsp; R ladda om &nbsp; E interagera &nbsp; G släpp &nbsp; ESC paus</div>
+    <div id="difficulty-label"></div><div id="perf"></div>
+  </div>
+  <div id="flash-overlay"></div><div id="damage-overlay"></div><div id="damage-direction">⌃</div><div id="smoke-overlay"></div>
+  <section id="buy" class="modal-overlay" hidden><div class="buy-card card"><div class="card-top"><span>UTRUSTNING <b id="buy-money"></b></span><button class="close" id="close-buy" aria-label="Stäng köpmenyn">×</button></div><h2>Välj din utrustning.</h2><p id="buy-note">Köp under köpfas i egen startzon.</p><div id="shop"></div><div id="buy-message" role="status"></div><button id="return-buy" class="primary">TILLBAKA TILL SPELET →</button></div></section>
+  <section id="pause" class="modal-overlay" hidden><div class="card pause-card"><p class="eyebrow">MATCHEN ÄR PAUSAD</p><h2>Ta ett andetag.</h2><p>Alla rundtimers och botar väntar.</p><div id="pause-settings"></div><button id="resume" class="primary">FORTSÄTT →</button><button id="restart" class="secondary">NY MATCH / VÄLJ LAG</button><div class="controls-list"><span>E <b>Håll för plantera / desarmera</b></span><span>4 <b>Cykla cartridge-granater</b></span><span>5 <b>Uppdragsbomb</b></span><span>Tab <b>Resultattavla</b></span></div></div></section>
+  <section id="scoreboard" class="modal-overlay" hidden><div class="card scoreboard-card"><div class="card-top"><span>MATCHRESULTAT</span><span id="board-round"></span></div><div id="score-tables"></div><p class="small">Håll Tab · Gisslan räknas inte in i lagen</p></div></section>
+  <section id="match-end" class="modal-overlay" hidden><div class="card pause-card"><p class="eyebrow">MATCHEN ÄR AVGJORD</p><h2 id="match-winner"></h2><p id="match-score"></p><button id="new-match" class="primary">SPELA IGEN →</button></div></section>
+  <div id="mobile-controls" hidden aria-label="Mobilstyrning">
+    <div class="mobile-look-zone" data-mobile-look aria-label="Dra fingret här för att sikta"></div>
+    <div class="mobile-stick-zone" data-mobile-stick-zone aria-label="Rör dig med vänster tumme">
+      <div class="mobile-stick" data-mobile-stick><div class="mobile-stick-nub" data-mobile-nub></div></div>
+    </div>
+    <button type="button" class="mobile-button mobile-pause" data-mobile-action="pause" aria-label="Pausa spelet">PAUS</button>
+    <button type="button" class="mobile-button mobile-restart" data-mobile-action="restart" aria-label="Starta om matchen efter död">SPELA IGEN</button>
+    <button type="button" class="mobile-button mobile-buy" data-mobile-action="buy" aria-label="Köp vapen">KÖP</button>
+    <button type="button" class="mobile-button mobile-reload" data-mobile-action="reload" aria-label="Ladda om">LADDA</button>
+    <button type="button" class="mobile-button mobile-weapon" data-mobile-action="weapon" aria-label="Byt vapen">VAPEN</button>
+    <button type="button" class="mobile-button mobile-grenade" data-mobile-action="grenade" aria-label="Välj granat">GRAN.</button>
+    <button type="button" class="mobile-button mobile-fire" data-mobile-action="fire" aria-label="Skjut">ELD</button>
+    <button type="button" class="mobile-button mobile-jump" data-mobile-action="jump" aria-label="Hoppa">HOPP</button>
+    <button type="button" class="mobile-button mobile-crouch" data-mobile-action="crouch" aria-label="Huka">HUKA</button>
+    <button type="button" class="mobile-button mobile-interact" data-mobile-action="interact" aria-label="Håll för att interagera">HÅLL E</button>
+    <button type="button" class="mobile-button mobile-sneak" data-mobile-action="sneak" aria-label="Håll för att smyga">SMYG</button>
+    <button type="button" class="mobile-button mobile-drop" data-mobile-action="drop" aria-label="Släpp föremål">SLÄPP</button>
+    <div class="mobile-portrait-note">Vrid telefonen till liggande läge för bättre spelkontroll</div>
+  </div>
+  <div id="fatal" hidden><h2>Spelet kunde inte startas</h2><pre></pre><p>Ladda om sidan och öppna spelet i en separat webbläsarflik på datorn.</p></div>
+  <script type="module" src="../src/fps/app.mjs?v=floor5-environment-1"></script>
+  <script type="module" src="../src/fps/lobby-stage.mjs?v=2"></script>
+  <script type="module" src="../ui/cs-mobile.mjs?v=2"></script>
+  <script type="module" src="../src/fps/hud-shell.mjs?v=1"></script>
+  <script type="module" src="../src/fps/match-flow.mjs?v=5"></script>
+</body></html>

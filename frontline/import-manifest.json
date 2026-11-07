@@ -1,0 +1,21 @@
+{
+  "name": "Cartridge Strike: Frontline",
+  "source": "BenDBSS/Riposte-Frontline-Source",
+  "upstream_sha": "31ca050d8ce59f4885c01a3237f68cdf186c9b60",
+  "upstream_license": "MIT with NOTICE.md exclusions",
+  "imported": "2026-10-26",
+  "original_sfx_credits": "source/assets/sfx/credits.json",
+  "excluded": [
+    "assets/apercu.jpg",
+    "assets/logo.webp",
+    "assets/rankup.mp3",
+    "assets/sfx/fin/m_defeat.mp3",
+    "assets/sfx/fin/m_victory.mp3",
+    ".git/",
+    "dist/",
+    "assets/deck/",
+    "assets/icon/",
+    "assets/anim/"
+  ],
+  "runtime": "frontline/index.html"
+}

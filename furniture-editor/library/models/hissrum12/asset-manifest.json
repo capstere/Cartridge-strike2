@@ -1,0 +1,509 @@
+{
+  "schemaVersion": 1,
+  "sourceRepository": "capstere/jedi",
+  "sourceCommit": "0ed0c4defed19578c42e660f4c2fbae2dfc1e686",
+  "sourceSha": {
+    "planner-core.js": "05fe611468787deadb99dd4b2fd37ec9a22c90b56d87150b7a2a06af72dd98c3",
+    "object-library.js": "1e0f9f473782bf2e40d858d67f4e12bc927e883569cc34457117d0a9e6b3ab5e"
+  },
+  "excluded": [
+    {
+      "type": "sampleBag",
+      "reason": "Internal model is explicitly marked private/do not publish by Hissrum12 source"
+    }
+  ],
+  "models": [
+    {
+      "id": "hissrum12:pallet",
+      "sourceType": "pallet",
+      "name": "EUR-pall",
+      "category": "Transport",
+      "sourceDimensions": [
+        1.2,
+        0.8,
+        0.144
+      ],
+      "defaultParams": {},
+      "triangles": 960,
+      "vertices": 1236,
+      "materials": 4,
+      "sha256": "cf41c639445438370dae89b7ee330a93fff3734d58c0b2b8cc344054cefa5852",
+      "bytes": 39056
+    },
+    {
+      "id": "hissrum12:palletBins",
+      "sourceType": "palletBins",
+      "name": "Pall med 4 kärl",
+      "category": "Avfall",
+      "sourceDimensions": [
+        1.2,
+        0.8,
+        0.94
+      ],
+      "defaultParams": {},
+      "triangles": 1808,
+      "vertices": 2708,
+      "materials": 9,
+      "sha256": "961e85a02e0bf213d6c29520e91348de5664a4fbdb392edbf302597e1bbabdc6",
+      "bytes": 83312
+    },
+    {
+      "id": "hissrum12:fridge",
+      "sourceType": "fridge",
+      "name": "Kyl / frys",
+      "category": "Förvaring",
+      "sourceDimensions": [
+        0.6,
+        0.66,
+        1.85
+      ],
+      "defaultParams": {},
+      "triangles": 204,
+      "vertices": 366,
+      "materials": 5,
+      "sha256": "093774feba0c3d76d5c100fcf385325e802aefcbe6760e2db78ddd5300df2fea",
+      "bytes": 14412
+    },
+    {
+      "id": "hissrum12:yellowBin",
+      "sourceType": "yellowBin",
+      "name": "Gult avfallskärl",
+      "category": "Avfall",
+      "sourceDimensions": [
+        0.56,
+        0.36,
+        0.79
+      ],
+      "defaultParams": {},
+      "triangles": 212,
+      "vertices": 368,
+      "materials": 6,
+      "sha256": "7cf574413d26f49b73c7a74d216aff6dc396575131ea53e06d51730190211dea",
+      "bytes": 15268
+    },
+    {
+      "id": "hissrum12:wheelBin",
+      "sourceType": "wheelBin",
+      "name": "Sopkärl på hjul",
+      "category": "Avfall",
+      "sourceDimensions": [
+        0.59,
+        0.74,
+        1.08
+      ],
+      "defaultParams": {},
+      "triangles": 424,
+      "vertices": 512,
+      "materials": 4,
+      "sha256": "24e35be66f79c8309c3784f67b01db738f52c31337c50c82069c531aa2a2c3b0",
+      "bytes": 18480
+    },
+    {
+      "id": "hissrum12:shelf",
+      "sourceType": "shelf",
+      "name": "Lagerhylla",
+      "category": "Förvaring",
+      "sourceDimensions": [
+        1,
+        0.45,
+        1.8
+      ],
+      "defaultParams": {},
+      "triangles": 1072,
+      "vertices": 2084,
+      "materials": 4,
+      "sha256": "7cadb447bc378a6b3d2ad5a28d51e7156fce119133d3591ab8e43d4d69533965",
+      "bytes": 60064
+    },
+    {
+      "id": "hissrum12:cart",
+      "sourceType": "cart",
+      "name": "IPT-vagn",
+      "category": "Transport",
+      "sourceDimensions": [
+        1,
+        0.55,
+        1.15
+      ],
+      "defaultParams": {},
+      "triangles": 2024,
+      "vertices": 2428,
+      "materials": 5,
+      "sha256": "9e624c4f096ad5aa5d3c189c314162a41a08c233c9a45a31d75d0a598e7b80be",
+      "bytes": 74828
+    },
+    {
+      "id": "hissrum12:material",
+      "sourceType": "material",
+      "name": "Materialpall",
+      "category": "Transport",
+      "sourceDimensions": [
+        1.2,
+        0.8,
+        1.1
+      ],
+      "defaultParams": {},
+      "triangles": 1360,
+      "vertices": 1966,
+      "materials": 9,
+      "sha256": "2209b22bc31c71863a87ddaf2334ff95785d2998fbc1a61e0e4dcef72b9d35a3",
+      "bytes": 62796
+    },
+    {
+      "id": "hissrum12:largeWheelBin",
+      "sourceType": "largeWheelBin",
+      "name": "Stort svart sopkärl",
+      "category": "Avfall",
+      "sourceDimensions": [
+        0.8,
+        0.9,
+        1.18
+      ],
+      "defaultParams": {},
+      "triangles": 1564,
+      "vertices": 1994,
+      "materials": 6,
+      "sha256": "65c6d97f911c2043eb6cbf1f869dc0f1553287582db81683d26efbc8bde97c3b",
+      "bytes": 62452
+    },
+    {
+      "id": "hissrum12:palletTruck",
+      "sourceType": "palletTruck",
+      "name": "Manuell palltruck",
+      "category": "Transport",
+      "sourceDimensions": [
+        0.55,
+        1.55,
+        1.22
+      ],
+      "defaultParams": {},
+      "triangles": 958,
+      "vertices": 1109,
+      "materials": 6,
+      "sha256": "e77870193f9fda9091f4d7f8447ebdbe0e008e68d3859e51e6b1d25967d84aa5",
+      "bytes": 37564
+    },
+    {
+      "id": "hissrum12:cageCart",
+      "sourceType": "cageCart",
+      "name": "Galler-tvättvagn",
+      "category": "Transport",
+      "sourceDimensions": [
+        0.78,
+        0.72,
+        1.52
+      ],
+      "defaultParams": {},
+      "triangles": 2990,
+      "vertices": 3472,
+      "materials": 7,
+      "sha256": "7f32f6c10f71a73cb7eb19ce474568c3932b040802c67f80b1b637aed8aa831c",
+      "bytes": 107240
+    },
+    {
+      "id": "hissrum12:dryIceDrum",
+      "sourceType": "dryIceDrum",
+      "name": "Torr-is-tunna",
+      "category": "Avfall",
+      "sourceDimensions": [
+        0.5,
+        0.5,
+        0.9
+      ],
+      "defaultParams": {},
+      "triangles": 1888,
+      "vertices": 2268,
+      "materials": 7,
+      "sha256": "5d721698c334034f2ee1fcb7dcfd099e61780d86ec5e3735f23d87c5df6a81c4",
+      "bytes": 71744
+    },
+    {
+      "id": "hissrum12:nitrogenTank",
+      "sourceType": "nitrogenTank",
+      "name": "Kvävetank",
+      "category": "Laboratorium",
+      "sourceDimensions": [
+        0.34,
+        0.34,
+        1.55
+      ],
+      "defaultParams": {
+        "stand": true
+      },
+      "triangles": 1244,
+      "vertices": 1358,
+      "materials": 8,
+      "sha256": "808a32cdf97895c9313cc498c56cef82b013a4807b82b3eb385c4e4b9dab9b27",
+      "bytes": 46788
+    },
+    {
+      "id": "hissrum12:extinguisher",
+      "sourceType": "extinguisher",
+      "name": "Brandsläckare",
+      "category": "Väggmonterat",
+      "sourceDimensions": [
+        0.24,
+        0.22,
+        0.6
+      ],
+      "defaultParams": {},
+      "triangles": 806,
+      "vertices": 890,
+      "materials": 7,
+      "sha256": "49de683befea21835160ac76c900f0d180a831af2be0df13ceb61405eed9fb1d",
+      "bytes": 32164
+    },
+    {
+      "id": "hissrum12:extinguisherBracket",
+      "sourceType": "extinguisherBracket",
+      "name": "Väggfäste för brandsläckare",
+      "category": "Väggmonterat",
+      "sourceDimensions": [
+        0.18,
+        0.1,
+        0.36
+      ],
+      "defaultParams": {},
+      "triangles": 204,
+      "vertices": 240,
+      "materials": 2,
+      "sha256": "51b841a7020feeb2a8977ec00aa0d09f65f7fa1e17ea63d17dfa0359b483975f",
+      "bytes": 9156
+    },
+    {
+      "id": "hissrum12:creformCart",
+      "sourceType": "creformCart",
+      "name": "CREFORM referensvagn",
+      "category": "Transport",
+      "sourceDimensions": [
+        0.82,
+        0.52,
+        0.95
+      ],
+      "defaultParams": {},
+      "triangles": 3568,
+      "vertices": 3936,
+      "materials": 5,
+      "sha256": "86e9fe6e9bab22077e26e7b3d17eb54c38dc0bdf7c58dfd4846d470289f54b12",
+      "bytes": 120344
+    },
+    {
+      "id": "hissrum12:creformIptCart",
+      "sourceType": "creformIptCart",
+      "name": "IPT CREFORM-vagn 750 × 450",
+      "category": "Transport",
+      "sourceDimensions": [
+        0.82,
+        0.52,
+        1.12
+      ],
+      "defaultParams": {},
+      "triangles": 5344,
+      "vertices": 5758,
+      "materials": 5,
+      "sha256": "d1383a9adc3319286a364cc263b903cb0d1382f524ab51b4c6c2cceddb81e2ad",
+      "bytes": 174744
+    },
+    {
+      "id": "hissrum12:creformTallRack",
+      "sourceType": "creformTallRack",
+      "name": "CREFORM-vagn 900 × 600 × H1800",
+      "category": "Transport",
+      "sourceDimensions": [
+        0.97,
+        0.67,
+        1.8
+      ],
+      "defaultParams": {},
+      "triangles": 4576,
+      "vertices": 4916,
+      "materials": 5,
+      "sha256": "dcd3399e0822a21e58a1a9d81666f2904621c8b7faa707fb7434dbed90ed3fff",
+      "bytes": 149928
+    },
+    {
+      "id": "hissrum12:creformLowRack",
+      "sourceType": "creformLowRack",
+      "name": "CREFORM-vagn 800 × 400, 3 plan",
+      "category": "Transport",
+      "sourceDimensions": [
+        0.87,
+        0.47,
+        1.04
+      ],
+      "defaultParams": {},
+      "triangles": 4624,
+      "vertices": 4982,
+      "materials": 5,
+      "sha256": "44c5ded453d005fd9b947b118886a352fc43e78228c1505350e0ff89bc58901d",
+      "bytes": 151808
+    },
+    {
+      "id": "hissrum12:creformBuilder",
+      "sourceType": "creformBuilder",
+      "name": "CREFORM Builder",
+      "category": "Förvaring",
+      "sourceDimensions": [
+        0.87,
+        0.57,
+        1.2
+      ],
+      "defaultParams": {
+        "levels": 3,
+        "pipeDiameter": 0.028,
+        "wheels": 4,
+        "brakes": 2
+      },
+      "triangles": 4464,
+      "vertices": 4872,
+      "materials": 5,
+      "sha256": "d7ef59e468f6be030cb2b00fc46bcb558804b82863215adf31ca8200950c4e45",
+      "bytes": 148180
+    },
+    {
+      "id": "hissrum12:plasticBoxSmall",
+      "sourceType": "plasticBoxSmall",
+      "name": "Liten plastlåda",
+      "category": "Förvaring",
+      "sourceDimensions": [
+        0.3,
+        0.4,
+        0.18
+      ],
+      "defaultParams": {},
+      "triangles": 240,
+      "vertices": 362,
+      "materials": 3,
+      "sha256": "83817e0d69af2e5bc85097c1ac906eb372c5936d8addbc39d326164313f1be77",
+      "bytes": 13040
+    },
+    {
+      "id": "hissrum12:plasticBoxLarge",
+      "sourceType": "plasticBoxLarge",
+      "name": "Stor plastlåda",
+      "category": "Förvaring",
+      "sourceDimensions": [
+        0.59,
+        0.39,
+        0.31
+      ],
+      "defaultParams": {},
+      "triangles": 240,
+      "vertices": 362,
+      "materials": 3,
+      "sha256": "3423153146bbf41d905657476bcab0cb8d994185bd0a241fa5321368abbbb793",
+      "bytes": 13032
+    },
+    {
+      "id": "hissrum12:phoneArm",
+      "sourceType": "phoneArm",
+      "name": "Mobiltelefon på väggarm",
+      "category": "Väggmonterat",
+      "sourceDimensions": [
+        0.26,
+        0.36,
+        0.3
+      ],
+      "defaultParams": {
+        "reach": 0.25,
+        "direction": 0
+      },
+      "triangles": 626,
+      "vertices": 771,
+      "materials": 5,
+      "sha256": "5d8a4c1e952f462313075ba849675f84d4ba927ba834c4881d57029a81302ccd",
+      "bytes": 26720
+    },
+    {
+      "id": "hissrum12:gloveHolder",
+      "sourceType": "gloveHolder",
+      "name": "Nitrilhandskar med hållare",
+      "category": "Väggmonterat",
+      "sourceDimensions": [
+        0.27,
+        0.12,
+        0.17
+      ],
+      "defaultParams": {
+        "color": "blue"
+      },
+      "triangles": 440,
+      "vertices": 597,
+      "materials": 7,
+      "sha256": "ed17ea037080c1ca0d9ae62b889cb0d96ba508d87959167f1c0b1f630df7f716",
+      "bytes": 22960
+    },
+    {
+      "id": "hissrum12:carton",
+      "sourceType": "carton",
+      "name": "Brun kartong",
+      "category": "Förvaring",
+      "sourceDimensions": [
+        0.5,
+        0.36,
+        0.32
+      ],
+      "defaultParams": {
+        "open": false
+      },
+      "triangles": 360,
+      "vertices": 594,
+      "materials": 5,
+      "sha256": "ae7bcb2f76013e6ff9ebbb8fc02a36b779f5687e6cd95817f38c1149bc12c5aa",
+      "bytes": 20764
+    },
+    {
+      "id": "hissrum12:knife",
+      "sourceType": "knife",
+      "name": "Kartongkniv",
+      "category": "Verktyg",
+      "sourceDimensions": [
+        0.18,
+        0.035,
+        0.026
+      ],
+      "defaultParams": {},
+      "triangles": 152,
+      "vertices": 276,
+      "materials": 5,
+      "sha256": "2e5afd33833e8c66f2a8b5413357c2ad4e63d823790a162349919dff96b99ac5",
+      "bytes": 11960
+    },
+    {
+      "id": "hissrum12:mallet",
+      "sourceType": "mallet",
+      "name": "Plasthammare",
+      "category": "Verktyg",
+      "sourceDimensions": [
+        0.3,
+        0.11,
+        0.055
+      ],
+      "defaultParams": {},
+      "triangles": 620,
+      "vertices": 658,
+      "materials": 6,
+      "sha256": "2f43e58b82934049207be017794621406182cfea1ded0408c7abed48ec0ddb7a",
+      "bytes": 24740
+    },
+    {
+      "id": "hissrum12:sign",
+      "sourceType": "sign",
+      "name": "5S-skylt / etikett",
+      "category": "5S",
+      "sourceDimensions": [
+        0.45,
+        0.014,
+        0.18
+      ],
+      "defaultParams": {
+        "text": "IPT SAMPLE POINTS"
+      },
+      "triangles": 294,
+      "vertices": 361,
+      "materials": 3,
+      "sha256": "7bf2b1d324584a6e16b0ad154cbe44424e72e55852687c24e6c35caf3ef3be60",
+      "bytes": 13320
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+<!doctype html><html lang="sv"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Cartridge Strike · Licenser</title><style>body{max-width:70rem;margin:2rem auto;padding:0 1rem;font:16px/1.6 system-ui}pre{white-space:pre-wrap;overflow-wrap:anywhere}a{overflow-wrap:anywhere}</style></head><body><a href="./fps/">Till spelet</a><h1>Källor och licenser</h1><p><a href="./licenses/genexpert-user-supplied.txt">GeneXpert-modeller · användaruppladdade, publicering beställd av användaren</a></p><ul><li><a href="./licenses/action-audio.txt">licenses/action-audio.txt</a></li>
+<li><a href="./licenses/ambientcg-CC0-1.0.txt">licenses/ambientcg-CC0-1.0.txt</a></li>
+<li><a href="./licenses/free-firearm-sound-library-CC0.txt">licenses/free-firearm-sound-library-CC0.txt</a></li>
+<li><a href="./licenses/kenney-furniture-kit-CC0.txt">licenses/kenney-furniture-kit-CC0.txt</a></li>
+<li><a href="./licenses/kenney-impact-sounds-CC0.txt">licenses/kenney-impact-sounds-CC0.txt</a></li>
+<li><a href="./licenses/kenney-sci-fi-sounds-CC0.txt">licenses/kenney-sci-fi-sounds-CC0.txt</a></li>
+<li><a href="./licenses/nord01-original.txt">licenses/nord01-original.txt</a></li>
+<li><a href="./licenses/polyhaven-CC0-1.0.txt">licenses/polyhaven-CC0-1.0.txt</a></li>
+<li><a href="./licenses/quaternius-characters-CC0.txt">licenses/quaternius-characters-CC0.txt</a></li>
+<li><a href="./licenses/riposte-MIT.txt">licenses/riposte-MIT.txt</a></li>
+<li><a href="./licenses/riposte-NOTICE.md">licenses/riposte-NOTICE.md</a></li>
+<li><a href="./licenses/riposte-sfx-credits.json">licenses/riposte-sfx-credits.json</a></li>
+<li><a href="./licenses/three-LICENSE">licenses/three-LICENSE</a></li>
+<li><a href="./licenses/yuka-LICENSE">licenses/yuka-LICENSE</a></li></ul><pre># Cartridge Strike: actual third-party reuse
+
+Audited 2026-10-14. Runtime dependencies and assets are local. Exact files, source archive hashes and individual SHA-256 hashes are recorded in [docs/fps-assets.json](docs/fps-assets.json). `package-lock.json` pins npm package integrity. Private floor plans and photographs were not sent to any asset provider.
+
+## Three.js 0.180.0 — MIT
+
+Copyright © 2010–2025 Three.js authors. Full upstream license: [licenses/three-LICENSE](licenses/three-LICENSE).
+
+Source: [Three.js r180](https://github.com/mrdoob/three.js/tree/r180). Vendored in `vendor/three/`: `three.core.js`, `three.module.js`, `addons/math/Capsule.js`, `addons/math/Octree.js`, `addons/loaders/GLTFLoader.js`, `addons/utils/BufferGeometryUtils.js`, and `addons/geometries/RoundedBoxGeometry.js`.
+
+Three supplies rendering, GLB asset loading and actual Capsule/Octree collision, using the project&#39;s accepted floor geometry. Collision/movement follows the approach inspected in the [official r180 FPS example](https://github.com/mrdoob/three.js/blob/r180/examples/games_fps.html). The example&#39;s level and external models were not imported. Original upstream MIT notices remain with the vendored code. `src/fps/physics.mjs` adapts `Octree.split` in a bounded `FloorOctree` subclass to propagate subdivision limits to children; intersection algorithms remain upstream.
+
+## Yuka 0.7.8 — MIT
+
+Copyright © 2022 Yuka authors. Full upstream license: [licenses/yuka-LICENSE](licenses/yuka-LICENSE).
+
+Source: [Yuka](https://github.com/Mugen87/yuka), exact npm release `0.7.8`, locally vendored in `vendor/yuka/yuka.module.js`. AI executes Yuka `MemorySystem`/`MemoryRecord`, `StateMachine`, `Vehicle` and `SeekBehavior`; navigation uses `Graph`, `NavNode`, `NavEdge` and `AStar` with routes generated from the accepted floor and project-specific team/objective behavior.
+
+[Dive](https://github.com/Mugen87/dive) was inspected for perception/steering organization; no Dive models, audio, map or navmesh was imported. Dive&#39;s code license does not license its mixed-source assets. No Valve or Counter-Strike assets are used.
+
+## Kenney Furniture Kit — CC0 1.0
+
+Source: [official Furniture Kit](https://kenney.nl/assets/furniture-kit). The downloaded archive&#39;s license identifies **Furniture Kit 2.0**, while the website update list says 1.0; the archive SHA-256, not a floating version label, identifies these bytes. License copied unchanged to [licenses/kenney-furniture-kit-CC0.txt](licenses/kenney-furniture-kit-CC0.txt).
+
+Selected self-contained GLBs: `chairDesk`, `computerScreen`, `bookcaseClosedDoors`, and `pottedPlant` in `assets/fps/models/`. Source geometry/material bytes are unchanged; runtime normalizes origins and scales models to the shared physical furniture envelopes. These are standard furnishing assumptions, not evidence of exact real-world inventory. All four selected package previews were visually inspected; bounding coordinates were inspected for every selected GLB.
+
+## Kenney Impact Sounds 1.0 and Sci-Fi Sounds 1.0 — CC0 1.0
+
+Sources: [Impact Sounds](https://kenney.nl/assets/impact-sounds), [Sci-Fi Sounds](https://kenney.nl/assets/sci-fi-sounds). Licenses copied unchanged to [Impact license](licenses/kenney-impact-sounds-CC0.txt) and [Sci-Fi license](licenses/kenney-sci-fi-sounds-CC0.txt).
+
+Fifteen selected `.ogg` files in `assets/fps/audio/` are decoded and actually played by `src/fps/audio.mjs`: three carpet footsteps, three concrete footsteps, metal/soft/generic impacts, two explosion layers, a laser transient and a computer cue. Concrete footsteps are pitch-adjusted as a stylized vinyl proxy; the pack does not claim a vinyl recording. Runtime filtering, pitch, distance, wall damping and volume adapt the source samples. Additional original Web Audio synthesis supplies per-weapon transients, plastic-bag rustle, grenade hiss, bomb beeps and result cues. No audio source bytes are altered.
+
+All three Kenney archives explicitly permit personal, educational and commercial use under [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/). Attribution is optional; credit is retained here: **Kenney — www.kenney.nl**.
+
+## Development-only tooling
+
+Playwright `1.55.1` (`@playwright/test`, Apache-2.0) runs browser acceptance checks. It is not a runtime network dependency and is not shipped as game code. Its package contains the upstream license in `node_modules/@playwright/test/LICENSE` after `npm ci`.
+
+## ambientCG and Poly Haven — four local PBR sets, CC0 1.0
+
+Created using **Fabric045**, **Concrete034** and **Wood051** from ambientCG.com, by Lennart Demes, licensed under the Creative Commons CC0 1.0 Universal License. [Provider license](https://docs.ambientcg.com/license/) explicitly covers redistribution of raw assets in games. Full legal code retained in `licenses/ambientcg-CC0-1.0.txt`.
+
+Official sources: [Fabric045](https://ambientcg.com/view?id=Fabric045), [Concrete034](https://ambientcg.com/view?id=Concrete034), [Wood051](https://ambientcg.com/view?id=Wood051). Their dated **1K-JPG** downloads are pinned by archive and individual file SHA-256 in `docs/fps-assets.json`. Only twelve required color/OpenGL-normal/roughness JPEGs are shipped in `assets/fps/materials/`; no high resolution archive, displacement, blend or USD assets are included.
+
+`src/fps/materials.mjs` actually loads these maps locally. Colors use sRGB, normal/roughness use data space, UVs are in metres. Source bytes are unchanged. Runtime tinting gives carpet its blue office palette and walls warm off-white paint. Concrete034 is a smooth concrete source adapted with low relief and a subdued green tint as an **artistic epoxy/vinyl proxy**, not a claim that the provider recorded a vinyl material. Wood keeps its source grain. The fourth set is [White Plaster 02 by Rob Tuytel, Poly Haven](https://polyhaven.com/a/white_plaster_02), downloaded as three 1K JPEG maps. [Poly Haven licenses its assets CC0](https://polyhaven.com/license); the full legal code is retained in `licenses/polyhaven-CC0-1.0.txt`. Individual upstream URLs/MD5 and local SHA-256 values pin these files. The color-map contribution is reduced at runtime to 14% for walls and 10% for ceilings to represent opaque paint over bare plaster; standard PBR normal/roughness remain. Filename normalization changes no source bytes. Each selected color image was visually inspected. Private floor photos were not uploaded to either provider.
+
+The synthetic screen/paper atlases, geometric cups, folders, jackets, cables, cartridge cartons, whiteboard diagrams and restrained sole scuffs in `src/fps/decor.mjs` are original project content. They contain no actual workplace data. New ambient ventilation/equipment hum and damage cues in `src/fps/audio.mjs` use original Web Audio synthesis plus the already licensed Kenney impacts. Audio perception remains separate from bot hearing.
+
+## Cartridge v11.3 — owner-authorized 0.7 derivative
+
+The visual prefab in `src/fps/cartridge-v11.mjs` reuses the user&#39;s private model at `capstere/the@890d9e62e133390d74e2415cd02eb920f47c4fad`. This is **not a CC0/MIT asset**. On 2026-10-14 the owner explicitly approved public release of the reviewed Cartridge model and version 0.7; this does not grant a general license to private source material. Only model geometry/material construction was adapted; no QC interface, reports, drawings or original photographs are included. The source and derivative hashes, units and modifications are recorded privately in `assets/fps/cartridge-v11.provenance.json`. Public packaging checks the exact derivative hashes and scoped authorization in `docs/fps-release-policy.json`; changed derivatives require a fresh review record.
+
+## Quaternius dressed character adaptation (2026-10-22)
+
+Universal Base Characters **Standard/free** and Universal Animation Library
+**Standard/free**, by Quaternius, CC0 1.0. Sources:
+https://quaternius.itch.io/universal-base-characters
+https://quaternius.itch.io/universal-animation-library
+
+Two modified skinned humanoids, original face/eye/hair topology, covered uniform
+partitions and cloth envelopes, and thirteen authored clips retargeted to each
+source rest skeleton. Boots, equipment, role patches and local fabric detail are
+original game additions. Source archives are not shipped. Exact hashes and
+original licence: docs/fps-assets.json and licenses/quaternius-characters-CC0.txt.
+This does not imply author endorsement.
+
+The default hostage appearance uses the repository-provided
+`Business_Man_Quaternius_Anims.glb`, by Quaternius, with its native rig, material
+and thirteen animation clips. The original file is unchanged and shared by both
+hostages. See the same CC0 character and animation licence above.
+
+## Original action presentation (0.8)
+
+`action-models.mjs` and the bearded fantasy dwarf geometry in `action-visuals.mjs` are original project geometry. They do not use the uploaded planner&#39;s Kenney character assets or commercial game models. Existing Quaternius humanoid licensing remains unchanged. Seven `action-*.ogg` files are local synthetic utterances, generated by `tools/action/generate_audio.py` using eSpeak and processed by FFmpeg. Neither executable is bundled. See `licenses/action-audio.txt` and per-file hashes in `docs/fps-assets.json`. No commercial game voice recordings were copied.
+
+## Facility sequence additions (private review, 2026-10-25)
+
+Six recorded reload-mechanism sounds come from **The Free Firearm Sound Library**, Ben Jaszczak et al. / Still North Media, CC0-1.0. The unchanged processed MP3 cuts were retrieved from Riposte: Frontline commit `31ca050d8ce59f4885c01a3237f68cdf186c9b60`; its NOTICE preserves the source licenses for these sounds. Per-cue source recordings, edits, file hashes and credits are in `docs/fps-assets.json`; full CC0 terms are in `licenses/free-firearm-sound-library-CC0.txt`. That original six-cue integration did not include Riposte engine code; the additional licensed integration below is recorded separately.
+
+Six **NORD-01** model types (nine selected GLBs) are original project-owned procedural assets. The runtime derivatives restore the source&#39;s bevel modifiers; repeated fixtures share GPU resources. See `licenses/nord01-original.txt`. Their explicit public release approval remains pending. The full portfolio, editable master and private source references are excluded from runtime packaging.
+
+## Riposte integration (2026-10-26)
+
+Selected MIT code from BenDBSS / Riposte: Frontline 5.6.0, commit `31ca050d8ce59f4885c01a3237f68cdf186c9b60`, is adapted via the imported Reuse Lab at `e2c94bf847c905fd3d9021f7e17d26a3ff72a298`: panel-door construction, pallet prefab, bounded instanced decal pool, local PBR loader, wrapped-angle steering and animation easing. The runtime uses nine CC0 paintwood/steel/timber maps and 25 CC0 weapon, impact and foley cuts (479,035 bytes combined). Original bytes, per-file sources and hashes are recorded in `docs/fps-assets.json` and `reviews/responsiveness-riposte/reuse-provenance.json`.
+
+`licenses/riposte-MIT.txt`, `licenses/riposte-NOTICE.md` and `licenses/riposte-sfx-credits.json` ship with the filtered runtime. No restricted animation packs, commercial voices, music, trademarks, map geometry or external services are imported. Existing Cartridge and floor geometry retain their separate provenance.
+## Studio office models (2026-11-04)
+
+Low Poly Whiteboard by tankop1 and Ricoh Printer by Nol22 are used under
+Creative Commons Attribution 4.0. The uploaded GLB files are unchanged; the
+studio applies display rotation/scale and generates preview thumbnails.
+Full author links, original source links, licences and changes:
+<a href="licenses/studio-office-models.md">Whiteboard and Ricoh attribution</a>.
+
+## Studio FPS furniture (2026-11-04)
+
+Laboratory drying oven by GokouFG is used under Creative Commons Attribution 4.0.
+The optimized GLB is preserved from the project's onboard model collection.
+Full creator, source, license, changes and the 16-object provenance map:
+<a href="docs/fps-furniture-library.md">FPS furniture and drying oven attribution</a>.
+
+</pre></body></html>
