@@ -1,0 +1,63 @@
+:root{
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  color:#17353e;background:#f4f6f1;font-synthesis:none;
+}
+*{box-sizing:border-box}
+body{margin:0;min-width:320px}
+a{color:inherit;text-decoration:none}
+a:focus-visible,summary:focus-visible{outline:3px solid #068e89;outline-offset:5px;border-radius:6px}
+.site-header{max-width:1328px;margin:auto;padding:23px clamp(18px,4vw,48px);
+  display:flex;align-items:center;justify-content:space-between;gap:20px}
+.wordmark{display:inline-flex;gap:12px;align-items:center;font-size:.82rem;font-weight:850;letter-spacing:.11em;line-height:1.15}
+.wordmark b{font-weight:850}.wordmark small{display:block;font-size:.66rem;color:#6c8483;letter-spacing:.22em;margin-top:5px}
+.wordmark-mark{display:grid;place-items:center;width:41px;height:41px;color:#edfbf4;background:#184650;border-radius:11px;letter-spacing:-.04em;font-size:1rem}
+nav{display:flex;align-items:center;gap:clamp(12px,3vw,34px);font-weight:700;font-size:.87rem}
+nav a{padding:9px 2px;border-bottom:2px solid transparent;color:#547071}
+nav a:hover,nav .current{color:#153d42;border-color:#1e8f7e}
+main{max-width:1328px;margin:auto;padding:30px clamp(18px,4vw,48px) 64px}
+.intro{max-width:950px;margin:10px 0 42px}
+.eyebrow{margin:0 0 15px;font-size:.71rem;letter-spacing:.15em;font-weight:800;color:#21746e}
+.dot{display:inline-block;width:7px;height:7px;background:#4ab394;border-radius:100%;margin-right:9px;vertical-align:1px}
+h1{font-size:clamp(3rem,6vw,5.8rem);letter-spacing:-.075em;font-weight:800;line-height:.97;margin:0 0 22px}
+h1 em{color:#278d7e;font-style:normal}
+.intro-copy{font-size:clamp(1rem,1.8vw,1.2rem);line-height:1.62;color:#567173;max-width:650px;margin:0}
+.process{display:flex;flex-wrap:wrap;align-items:center;gap:12px;color:#5d7778;font-size:.83rem;margin-top:24px}
+.process b{color:#276f68;font-variant-numeric:tabular-nums;padding-right:5px}
+.choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+.studio-card{background:#fff;border:1px solid #d8e3da;border-radius:22px;overflow:hidden;
+  box-shadow:0 8px 32px #173d3e0a;display:flex;flex-direction:column;min-width:0;transition:transform .2s,box-shadow .2s}
+.studio-card:hover{transform:translateY(-3px);box-shadow:0 14px 38px #173d3e18}
+.card-art{height:250px;position:relative;overflow:hidden;isolation:isolate}
+.art-character{background:radial-gradient(circle at 50% 70%,#bae4d3 2%,#8fc5bc 55%,#71aaa7 100%)}
+.art-level{background:radial-gradient(circle at 50% 60%,#ffedd1 2%,#d6e3c9 60%,#b9d3c1 100%)}
+.character-drawing,.room-drawing{position:absolute;inset:8px 0 0;width:100%;height:calc(100% - 8px);filter:drop-shadow(0 9px 10px #20474720)}
+.orbit{position:absolute;border:1px solid #e7fffda6;border-radius:50%;aspect-ratio:1;top:-118px;left:calc(50% - 193px);width:386px}
+.orbit-two{top:-65px;left:calc(50% - 145px);width:290px}
+.art-tag,.art-tools{position:absolute;font-size:.66rem;font-weight:800;letter-spacing:.13em;border-radius:100px}
+.art-tag{top:18px;left:20px;color:#f6fff7;background:#164e54e8;padding:9px 12px}
+.art-tools{bottom:13px;right:18px;color:#194e4e;background:#f6fff5d9;padding:8px 11px;backdrop-filter:blur(8px)}
+.card-body{padding:clamp(22px,3vw,34px);display:flex;flex-direction:column;flex:1}
+.card-number{font-size:.69rem;letter-spacing:.15em;font-weight:800;color:#2a8b80}
+h2{font-size:clamp(1.6rem,2.5vw,2.35rem);line-height:1.12;letter-spacing:-.05em;margin:12px 0 13px}
+.card-body>p:not(.card-note){color:#557075;font-size:.96rem;line-height:1.68;margin:0 0 27px;max-width:49ch}
+.card-link{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#164951;color:#fff;border-radius:12px;padding:17px 20px;font-weight:780;font-size:.96rem;margin-top:auto;min-height:58px}
+.card-link:hover{background:#1c6c6c}
+.card-link span{font-size:1.3rem;font-weight:400}
+.card-note{font-size:.78rem;line-height:1.55;color:#6c8182;margin:12px 0 0}
+.secondary{margin-top:32px;border-radius:20px;background:#e9eee7;border:1px solid #d8e2d9;padding:clamp(20px,3vw,32px)}
+.secondary-main{display:flex;gap:25px;align-items:center;justify-content:space-between}
+.secondary h2{font-size:1.6rem;margin:6px 0 6px}
+.secondary-main p:not(.eyebrow){color:#627879;margin:0;font-size:.9rem;line-height:1.5}
+.secondary-links{display:flex;gap:10px;flex-wrap:wrap}
+.secondary-links a,.legacy a{font-size:.84rem;font-weight:760;padding:12px 16px;background:#fff;border:1px solid #ccd9d1;border-radius:9px;white-space:nowrap}
+.secondary-links a:hover,.legacy a:hover{background:#dff4e8;border-color:#62aa95}
+.legacy{border-top:1px solid #d2ddd3;margin-top:26px;padding-top:17px}
+.legacy summary{cursor:pointer;display:table;color:#577373;font-size:.83rem;font-weight:750}
+.legacy>div{padding:10px 0 4px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.legacy p{font-size:.85rem;line-height:1.5;max-width:670px;color:#637778}
+footer{border-top:1px solid #dbe3dc;max-width:1232px;margin:0 auto;padding:24px 0 36px;display:flex;gap:18px;justify-content:space-between;align-items:center;color:#647c7c}
+footer p{font-size:.82rem;line-height:1.65;max-width:920px;margin:0}
+footer strong{color:#264d51}footer a{font-size:.85rem;font-weight:750;white-space:nowrap;text-decoration:underline;text-underline-offset:4px}
+@media(max-width:900px){.choices{grid-template-columns:1fr}.card-art{height:235px}.secondary-main{align-items:flex-start;flex-direction:column;gap:16px}main{padding-top:15px}.intro{margin-bottom:32px}}
+@media(max-width:580px){.site-header{padding:16px}.wordmark{font-size:.7rem;letter-spacing:.06em}.wordmark-mark{width:36px;height:36px}.site-header nav{font-size:.8rem}.intro{margin:14px 0 29px}.intro-copy{font-size:.96rem}.process{gap:8px;font-size:.72rem}.process span:nth-child(even){display:none}.process span:nth-child(odd){background:#e5eee8;border-radius:8px;padding:7px 9px}.card-art{height:202px}.card-body{padding:20px}.secondary{margin-top:20px;padding:19px}.secondary-links{display:grid;width:100%}.secondary-links a{white-space:normal}footer{margin:0 16px;padding:20px 0;display:block}footer a{display:inline-block;margin-top:14px}}
+@media(prefers-reduced-motion:reduce){.studio-card{transition:none}}

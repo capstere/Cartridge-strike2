@@ -1,0 +1,3 @@
+Cartridge Strike action audio
+
+Original synthetic English radio lines and a non-graphic vocal effect, generated locally using eSpeak and processed using FFmpeg. No commercial-game recordings or imitated real-person voices are included. These generated clips may be used, modified and redistributed with this project. The speech engine and FFmpeg are not bundled. Exact generation commands and texts: tools/action/generate_audio.py.

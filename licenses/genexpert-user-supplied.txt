@@ -1,0 +1,27 @@
+GeneXpert static game models — user-supplied assets
+
+The uploader supplied these two GLB files and explicitly requested their
+inclusion, push and merge in capstere/cartridge-strike on 2026-11-03:
+
+GeneXpert_16_Module_LowPoly.glb
+SHA-256 ac5e661222d3ddbe26e4b9ed84107f40f829594c1a21e596c81c9c8694dc9d2c
+Runtime: furniture-editor/library/models/genexpert/genexpert-16.glb
+
+GeneXpert_Infinity_80_v4.glb
+SHA-256 6dfd5e859edc05b06d529f914db0666a24d7d2f3e39328131cff8574c7eabfe1
+Runtime: furniture-editor/library/models/genexpert/genexpert-infinity-80.glb
+
+The runtime GLBs are byte-for-byte copies of the supplied files. Geometry,
+materials, embedded artwork, model proportions and +Z front direction are
+retained. Catalogue thumbnails are renders of these same models.
+
+The uploader's request records authorization for inclusion in this game;
+it does not establish a third-party open licence or verify ownership of all
+embedded artwork. These files are NOT labelled CC0, MIT or manufacturer-
+licensed. Cepheid and GeneXpert names/logos remain the marks of their
+respective owners. No manufacturer endorsement is implied.
+
+These are static furnishing/obstacle assets, not interactive instruments or
+medical software. No diagnostic functionality, patient/sample data, workplace
+reference photographs, private floor plans or operating instructions are added
+by this integration. Original embedded textures remain as supplied.
