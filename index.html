@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Cartridge-Strike 2 – Provspela Lovable RC1</title>
+  <link rel="icon" href="data:,">
+  <style>
+    html,body{min-height:100%;margin:0;background:#0a111b;color:#e7edf4;font:16px system-ui,-apple-system,Segoe UI,sans-serif}
+    main{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;text-align:center;padding:1.5rem;box-sizing:border-box}
+    h1{margin:0;font-size:clamp(1.7rem,5vw,3rem);letter-spacing:.03em}
+    p{margin:0;color:#a8b8c8}
+    a{padding:.9rem 1.3rem;border-radius:6px;background:#237fca;color:#fff;font-weight:700;text-decoration:none}
+    a:focus-visible{outline:3px solid #fff;outline-offset:3px}
+  </style>
+</head>
+<body>
+  <main>
+    <h1>CARTRIDGE // STRIKE</h1>
+    <p>Öppnar spelets lobby…</p>
+    <a id="play" href="./fps/">Starta spelet</a>
+  </main>
+  <script>
+    const target = new URL('./fps/', location.href);
+    target.search = location.search;
+    target.hash = location.hash;
+    document.getElementById('play').href = target.href;
+    location.replace(target.href);
+  </script>
+  <noscript>JavaScript måste vara aktiverat för att spela Cartridge-Strike.</noscript>
+</body>
+</html>
