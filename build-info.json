@@ -550,9 +550,14 @@
       "sha256": "35bce0dfeef5d4719823974cffb569806fc3ee936fc245d797ef5df9ba95b93d"
     },
     {
+      "path": "fps/hud.css",
+      "bytes": 34553,
+      "sha256": "4a460523309111b71f72beeff9cc3013c9d2fdbce8e6f901c06fc7411df0d9a4"
+    },
+    {
       "path": "fps/index.html",
-      "bytes": 13398,
-      "sha256": "c6a50fd363feacf960233886ed8cacfe69ea779dbc1a0294adbd25fbfcee73fc"
+      "bytes": 13384,
+      "sha256": "facee5c7514d8fe8941855d9289d5ebf70149b765032f7bfb783672dc8f82001"
     },
     {
       "path": "fps/style.css",
@@ -1813,6 +1818,11 @@
       "path": "src/fps/hand-materials.mjs",
       "bytes": 7784,
       "sha256": "c11965f87a2f0da16543209f2093d6067fdd0c2941c6752612cdb84d63654db5"
+    },
+    {
+      "path": "src/fps/hud-shell.mjs",
+      "bytes": 6216,
+      "sha256": "b96abff4f9824b6da90f2d4712eb261e4926d979b6de189c217e49e619e40357"
     },
     {
       "path": "src/fps/level-adapter.mjs",

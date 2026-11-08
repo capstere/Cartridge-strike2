@@ -40,7 +40,7 @@ function ensureDetail() {
 }
 function showDetail(w) {
   const d = ensureDetail();
-  if (!w) { d.innerHTML = '<small>VALD UTRUSTNING</small><p>Peka eller tryck på ett föremål för att se detaljer. Klick köper.</p>'; return; }
+  if (!w) { d.innerHTML = '<small>VALD UTRUSTNING</small><p>Välj utrustning till vänster. Tryck på en vara för att köpa.</p>'; return; }
   const bar = (label, v, max, txt) => `<div>${label}<i style="--v:${Math.min(100, Math.round(v / max * 100))}%"></i><b>${txt}</b></div>`;
   let stats = '';
   if (w.slot === 'grenade') stats = `<div>MAX<i style="--v:${w.limit * 50}%"></i><b>${w.limit}</b></div>`;
