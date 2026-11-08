@@ -22,12 +22,6 @@
     <div class="lb-grade" aria-hidden="true"><i class="lb-vig"></i><i class="lb-scan"></i><i class="lb-beam"></i></div>
     <header class="lb-bar">
       <a class="lb-brand" href="./" aria-label="Cartridge-Strike"><span class="lb-mark" aria-hidden="true"><i></i></span><span>CARTRIDGE<b>//STRIKE</b></span></a>
-      <nav class="lb-nav" aria-label="Huvudmeny">
-        <a class="is-current" href="./" aria-current="page">Spela</a>
-        <a href="../character-design/">Karaktärsstudio</a>
-        <a href="../furniture-editor/">Möbelstudio</a>
-        <a href="../studio/">Alla studior</a>
-      </nav>
       <div class="lb-tools"><button type="button" id="mm-open-settings" class="lb-icon" aria-controls="mm-settings" aria-label="Inställningar &amp; kontroller"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg><span>Inställningar</span></button></div>
     </header>
 
@@ -63,8 +57,7 @@
         <h2 id="lb-op-name">Originalkaraktär</h2>
         <div id="character-picker" class="mode-picker lb-char">
           <label for="player-character" class="lb-label"><b>03</b>Karaktär</label><select id="player-character" aria-describedby="character-status"><option value="">Originalkaraktär</option></select>
-          <p id="character-status" role="status"></p><div class="character-actions"><a class="text-link" href="../character-design/">Öppna karaktärsstudion →</a>
-          <button id="delete-character" type="button" class="text-link" hidden>Ta bort spelkopian</button></div>
+          <p id="character-status" role="status"></p><div class="character-actions"><button id="delete-character" type="button" class="text-link" hidden>Ta bort spelkopian</button></div>
         </div>
       </div>
       <dl class="lb-brief">

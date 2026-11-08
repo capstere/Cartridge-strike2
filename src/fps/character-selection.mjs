@@ -25,10 +25,10 @@ export async function setupCharacterMenu({getTeam,getSeed}){
  for(const row of rows){const option=new Option(characterOptionLabel(row,rows)+(row.compatible?'':' · behöver sparas om'),row.id);select.append(option);}
  if(id&&!rows.some(r=>r.id===id))select.append(new Option('Sparad karaktär saknas på denna enhet',id));
  select.value=id;remove.hidden=!id||!rows.some(r=>r.id===id);
- if(!status.textContent)say(rows.length?'Sparade på denna enhet. Bara din spelare använder designen.':'Inga spelkopior ännu. Öppna studion och välj Spara för spelet.');
+ if(!status.textContent)say(rows.length?'Sparade på denna enhet. Bara din spelare använder designen.':'Inga lokalt sparade spelkaraktärer hittades. Originalkaraktären är tillgänglig.');
  const navigate=value=>{document.getElementById('start').disabled=true;select.disabled=true;say('Laddar karaktären…');location.assign(characterMenuURL(location.href,value,{team:getTeam(),seed:getSeed()}));};
  select.onchange=()=>navigate(select.value);
- remove.onclick=async()=>{if(!confirm('Ta bort den här lokala spelkopian? Projektet i ateljén finns kvar.'))return;remove.disabled=true;try{await deletePrivateCharacter(select.value);navigate('');}catch(e){say(e.message);remove.disabled=false;}};
+ remove.onclick=async()=>{if(!confirm('Ta bort den här lokala spelkopian? Detta påverkar inte andra sparade filer.'))return;remove.disabled=true;try{await deletePrivateCharacter(select.value);navigate('');}catch(e){say(e.message);remove.disabled=false;}};
  return {id,loaded(name){try{if(id)localStorage.setItem(CHARACTER_PREFERENCE,id);else localStorage.removeItem(CHARACTER_PREFERENCE);}catch{say('Valet används nu men kunde inte kommas ihåg i denna webbläsare.');return;}
   if(name)say(name+' · Lokalt sparad. Händerna matchar. Välj lag och starta match.');
  },error(message){say(message+' Välj Originalkaraktär eller en annan sparad karaktär för att fortsätta.');}};

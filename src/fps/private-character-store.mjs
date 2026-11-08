@@ -53,8 +53,8 @@ export async function loadPrivateCharacter(id){
  if(!validCharacterId(id))throw Error('Ogiltig privat karaktärslänk.');
  const db=await database();let row;
  try{row=await new Promise((resolve,reject)=>{const tx=db.transaction('drafts','readonly'),r=tx.objectStore('drafts').get(id);tx.oncomplete=()=>resolve(r.result);tx.onerror=()=>reject(Error('Provkaraktären kunde inte läsas.'));});}finally{db.close();}
- if(!row||row.schema!==PRIVATE_CHARACTER_SCHEMA)throw Error('Den sparade karaktären saknas på denna enhet. Öppna studion och välj Spara för spelet igen.');
+ if(!row||row.schema!==PRIVATE_CHARACTER_SCHEMA)throw Error('Den sparade karaktären saknas på denna enhet. Välj Originalkaraktär eller en annan sparad spelkopia.');
  inspectPrivateGLB(row.bytes);
- if(await characterHash(row.bytes)!==row.sha256)throw Error('Karaktärens kontrollsumma stämmer inte. Öppna studion och välj Spara för spelet igen.');
+ if(await characterHash(row.bytes)!==row.sha256)throw Error('Karaktärens kontrollsumma stämmer inte. Välj Originalkaraktär eller en annan sparad spelkopia.');
  return row;
 }
