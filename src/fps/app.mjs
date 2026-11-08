@@ -45,14 +45,14 @@ async function preparePrivateCharacter(){
  try{
  privateCharacterDraft=await loadPrivateCharacter(id);
  const original=await fetch(new URL('../../assets/fps/models/quaternius-operator-male.glb',import.meta.url));
- if(!original.ok||await characterHash(await original.arrayBuffer())!==privateCharacterDraft.sourceHash)throw Error('Originalkaraktären har uppdaterats. Öppna studion och välj Spara för spelet igen.');
+ if(!original.ok||await characterHash(await original.arrayBuffer())!==privateCharacterDraft.sourceHash)throw Error('Den sparade karaktären behöver uppdateras. Välj Originalkaraktär eller en kompatibel spelkopia.');
  await loadCharacterLibrary();
  installPrivateCharacter(await new GLTFLoader().parseAsync(privateCharacterDraft.bytes.slice(0),''));
  if(!rehearsalMode){setPrivateCharacterActors([team+'-0']);characterMenu.loaded(privateCharacterDraft.name);return;}
  const note=document.createElement('p');note.id='private-character-note';note.textContent='Privat provmatch: '+privateCharacterDraft.name+'. Du och lagkamrat A-02 använder din design. Händer och korta ärmar i förstaperson matchar din karaktär. Inget laddas upp.';
  document.querySelector('.intro').append(note);
  const exit=document.createElement('a');exit.id='original-character-match';exit.href='./?avatar=';exit.textContent='Spela med originalkaraktärerna';document.querySelector('.intro').append(exit);
- const studio=document.createElement('a');studio.href='../character-design/';studio.textContent=' · Tillbaka till min design';document.querySelector('.intro').append(studio);
+
  document.querySelector('[data-team="counterAnalysts"]').disabled=true;
  }catch(e){if(rehearsalMode)throw e;characterSelectionFailed=true;privateCharacterDraft=null;characterMenu.error(e.message);}
 }

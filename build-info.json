@@ -535,94 +535,9 @@
       "sha256": "e445d3f7dbeee8152d0078e8729727caf4d039e3e23b21d9d4290b51c53b87c1"
     },
     {
-      "path": "character-design/anatomy-accessories.mjs",
-      "bytes": 16669,
-      "sha256": "80fd4506c5515539baaf6edb63e244d07500934833ea5bc7c6dc3853ca3f1199"
-    },
-    {
-      "path": "character-design/app.mjs",
-      "bytes": 43454,
-      "sha256": "edaf3d6f6fa7ec4712e13a268efc3b04d2124610780cd53f595e5eaec795c51c"
-    },
-    {
-      "path": "character-design/cloth-preview.mjs",
-      "bytes": 7012,
-      "sha256": "61b64f7e771e11520ddb2f36cd98594f132e49d1217b64c1d5cf3c7c7deb2b53"
-    },
-    {
-      "path": "character-design/creative-controls.mjs",
-      "bytes": 15793,
-      "sha256": "30673eb154f705a70048d00d6cd51ddedb95c98c4d6a6477d5f63ec9ba3d5a58"
-    },
-    {
-      "path": "character-design/creative-schema.mjs",
-      "bytes": 10083,
-      "sha256": "b2e04a406eca17b4ed46855c7597762201723f762d92b5bacd6f26374beb5df8"
-    },
-    {
-      "path": "character-design/dwarf-fit.mjs",
-      "bytes": 749,
-      "sha256": "5d893a990d470acac15a90dc7d6e4320d62bb137798d94a142da0e9631b2c2b8"
-    },
-    {
-      "path": "character-design/fashion-preview.mjs",
-      "bytes": 17011,
-      "sha256": "660e3103131d4e2f12c0bd035f4e1188f16fe34f3e28d5eaa8d880310e4d1a6e"
-    },
-    {
-      "path": "character-design/fiber-hair.mjs",
-      "bytes": 7122,
-      "sha256": "5d07afee789820b0c942560cd420509d967f358d6e1afe0a15b7fe9838312b78"
-    },
-    {
-      "path": "character-design/private-match.mjs",
-      "bytes": 1565,
-      "sha256": "ed2de48b5820c710802591fd21efe47be6a29a56a99ac10244bac8da34885ac6"
-    },
-    {
-      "path": "character-design/project-schema.mjs",
-      "bytes": 18990,
-      "sha256": "7c59eb63b8623f8ce63887683916d4d99cb7b9d5ca84aa5a5a7a296e031d9ca1"
-    },
-    {
-      "path": "character-design/runtime-export.mjs",
-      "bytes": 3576,
-      "sha256": "c89ffd665ef5afe7e4a29f68ac3a4441ad512c6041b5f637f56a08d162fedee8"
-    },
-    {
-      "path": "character-design/runtime-package.mjs",
-      "bytes": 2920,
-      "sha256": "87dff594a6a601356a9885e43b433840e7107ba767b02fbe9c37309cba6b3ce0"
-    },
-    {
-      "path": "character-design/sculpt-controls.mjs",
-      "bytes": 7139,
-      "sha256": "fe01bc8d81816d0f34b644b0010a9c397a5929d984ab215220f04fcb9019b892"
-    },
-    {
-      "path": "character-design/sculpt-engine.mjs",
-      "bytes": 17587,
-      "sha256": "98f2dec7b844ddc0f1d016b14f66ea883d69730916e11272a4168c998e3634de"
-    },
-    {
-      "path": "character-design/sculpt-schema.mjs",
-      "bytes": 1887,
-      "sha256": "183f7beb0de1d6e1c56502414d1200e732f711c9838e0c9905a5792796811fd8"
-    },
-    {
-      "path": "character-design/studio-controls.mjs",
-      "bytes": 9921,
-      "sha256": "086f284d06846a86ec3a2f7898df3be5c85c43218dee3b59e041d93a44d815ba"
-    },
-    {
-      "path": "character-design/workbench.mjs",
-      "bytes": 23391,
-      "sha256": "fe0a98b37c2cda260fc6dd6dfc13ed01d44cb6a226de0470698f03074a8394e8"
-    },
-    {
       "path": "credits.html",
-      "bytes": 14024,
-      "sha256": "da1d5f099b091f243c9260e6c49e8bceea2d09543e54bb306533864a74560dbe"
+      "bytes": 13997,
+      "sha256": "3f9d910f81665171eea1dc06a4498b55190a83495bcddab79ef1d03d9a43b666"
     },
     {
       "path": "docs/fps-furniture-library.md",
@@ -636,28 +551,13 @@
     },
     {
       "path": "fps/index.html",
-      "bytes": 11012,
-      "sha256": "9769f19ac95aca5d902c4fadc6f941718895165198bd9ca04cf80d663dad1ba1"
+      "bytes": 13398,
+      "sha256": "c6a50fd363feacf960233886ed8cacfe69ea779dbc1a0294adbd25fbfcee73fc"
     },
     {
       "path": "fps/style.css",
       "bytes": 29996,
       "sha256": "deb5f649b51b6571d3f71f14ef3ab6c9e627ad05dc2da7f7eaa2d86e26637cd8"
-    },
-    {
-      "path": "fps/walk.html",
-      "bytes": 1805,
-      "sha256": "0782c68b51c8b5bd8becc08c5a606fd306160f46b960a9415dd53cf3a48916ad"
-    },
-    {
-      "path": "fps/walk.mjs",
-      "bytes": 4746,
-      "sha256": "680f521f1c04dfc28c897650defff0beeea5d2e144999d8300f3837058f6239c"
-    },
-    {
-      "path": "furniture-editor/adjacent-room.mjs",
-      "bytes": 3204,
-      "sha256": "6cee4867f25fe5cbfbedc6a9bdd469a47627c44d6610eb9bf168c391378f50ae"
     },
     {
       "path": "furniture-editor/appearance.mjs",
@@ -670,11 +570,6 @@
       "sha256": "4c798a285999c3c37f428582f17e724f95036b9c1026ce1c331d52bc0d708793"
     },
     {
-      "path": "furniture-editor/build/architecture-preview.mjs",
-      "bytes": 6436,
-      "sha256": "c9699c57933e7bd5fab545a98915ab43a259c217dd10e25d9351ab521c3c993e"
-    },
-    {
       "path": "furniture-editor/build/architecture.mjs",
       "bytes": 14492,
       "sha256": "c9b95f9dd02c64f840a56c7b7d92debc64584ede221a0a045340abfe32dd63c9"
@@ -685,24 +580,9 @@
       "sha256": "93ac715afe46b5dc9025642912f6a1df2e0f248ee92599b0b5a2c54097634bb5"
     },
     {
-      "path": "furniture-editor/build/direct-manipulation.mjs",
-      "bytes": 11172,
-      "sha256": "65e2bc20d3a19a6d480a42addebd6aebc1ba6cb6a4fa408a9c9f459d15ea45c4"
-    },
-    {
       "path": "furniture-editor/build/door-traversal.mjs",
       "bytes": 1234,
       "sha256": "b8b12db83c03031fda6eaf1b6a11d7c453dc5d398066df092b235a213193fed2"
-    },
-    {
-      "path": "furniture-editor/build/draft-save.mjs",
-      "bytes": 6144,
-      "sha256": "f90b0f686a4670de3559c88d9b9792c9c66f82497d172698e30f4bc77334b543"
-    },
-    {
-      "path": "furniture-editor/build/empty-interior.mjs",
-      "bytes": 2019,
-      "sha256": "3e4fdbe957811475db94cfbb7b4d504690c27e4cdc77037d2722586c990e1443"
     },
     {
       "path": "furniture-editor/build/environment-art.mjs",
@@ -780,16 +660,6 @@
       "sha256": "84fd8d395a19b2e49da0a33ec6cdd5b6b9df1782faa474255009e7b587b27795"
     },
     {
-      "path": "furniture-editor/build/room-drag.mjs",
-      "bytes": 1951,
-      "sha256": "b18601c806dbea5598135a5185dcdc7d6d6f81a50c18a8af3b7f5013707b28e2"
-    },
-    {
-      "path": "furniture-editor/build/safe-save.mjs",
-      "bytes": 1308,
-      "sha256": "2131baad4911a14f3e54eb044a18cc066c8d1477dceb6ff1b143caebd29c8492"
-    },
-    {
       "path": "furniture-editor/build/surface-style.mjs",
       "bytes": 5845,
       "sha256": "30e49facbdfd22de9526bf3fdb32af740cd501e27bd0b32b3fabac8fcacd32ef"
@@ -818,36 +688,6 @@
       "path": "furniture-editor/core.mjs",
       "bytes": 15018,
       "sha256": "d8d05b776c3d213c7d9e954c380258316fe82ea9cc0f58a73be271661b07e8b5"
-    },
-    {
-      "path": "furniture-editor/furniture-clipboard.mjs",
-      "bytes": 3674,
-      "sha256": "5ae1feb999d59531f0f1c9571274f6953bf170aa88acec3837cfc4ac8c8dc41c"
-    },
-    {
-      "path": "furniture-editor/furniture-handles.mjs",
-      "bytes": 6748,
-      "sha256": "3d3f66c0b121bbdc0854e9d59e78b5f3d6f40baba1f0ac735a27b7b090c70488"
-    },
-    {
-      "path": "furniture-editor/furniture-surfaces.mjs",
-      "bytes": 1273,
-      "sha256": "544963f2905aa2a231e977720c69472038ec179ab81c227ad08c3f2040ffa9b2"
-    },
-    {
-      "path": "furniture-editor/furniture-transforms.mjs",
-      "bytes": 2080,
-      "sha256": "2f731af6c96cff941becf0136aeab636f3380b861f9cc3cd0a7389efa894fa9e"
-    },
-    {
-      "path": "furniture-editor/furniture-translation.mjs",
-      "bytes": 3775,
-      "sha256": "7587b1e5ceee0e7aecc421ebcfa9db972437f89eee72e42feace3b071924e0d7"
-    },
-    {
-      "path": "furniture-editor/index.html",
-      "bytes": 26051,
-      "sha256": "8ce62942b4b8dca4ed5d80c35a48d7da4a5302889244332f32353ff7c672f487"
     },
     {
       "path": "furniture-editor/library/catalog.mjs",
@@ -1625,874 +1465,9 @@
       "sha256": "4c7e56b2bfb320e6ec11ec590825359ddf8c0b96c495ba66dc6485f215716cd7"
     },
     {
-      "path": "furniture-editor/library/thumbs/fps/bench-instrument.png",
-      "bytes": 8102,
-      "sha256": "953cab3c3bcdd4411974a8c19507fd0037b7794f9a635a9c3c9b2b54b309219d"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/fps/binder-vacuum-oven.png",
-      "bytes": 19292,
-      "sha256": "b5cf04a40565ffd8044404f542668b9bc1acce2d9abf5f84150fc9b389b79458"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/fps/binders.png",
-      "bytes": 9792,
-      "sha256": "db737181285a126a74c24604cc74efdb36914420a0af91900562fc3e17f04cec"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/fps/cartridge-open.png",
-      "bytes": 22678,
-      "sha256": "f4b89cea0c06699526638acacfb2bab9ef1063b67fee28ed9f51a8d507b494f4"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/fps/cartridge-rack.png",
-      "bytes": 24230,
-      "sha256": "5b9ab08434b2c2965a7deaf7666926b07b45fa3224459f8c3d1d34baeb4ca8e6"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/fps/cartridge.png",
-      "bytes": 28723,
-      "sha256": "ba5aa8b30b38cb867790b20ca3f1184e49e39f90b6e982e6ad6fb3cb3e5bc5cf"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/fps/centrifuge.png",
-      "bytes": 10810,
-      "sha256": "6b868e74eaac8b784be12026a0f0ec797ec282ec13d825c126787479eb78d1b4"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/fps/lab-bench.png",
-      "bytes": 11243,
-      "sha256": "a5be771e7c1f3d032c57cf7cd4c91f5d902b2fc486000e51d92fb9cee503037e"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/fps/lab-cabinet.png",
-      "bytes": 6068,
-      "sha256": "f6ecef613103e1d74c15c6651064f03b5e244083bd2304cebe578a540100f1e5"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/fps/lab-cart.png",
-      "bytes": 11038,
-      "sha256": "604815a5c47a2ee30c80e6356f933a3baccde581cf615556e9d591b66d140cd8"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/fps/lab-freezer.png",
-      "bytes": 6271,
-      "sha256": "96afa3d7d150c1c731ede92982cb0714b8f65c9997314613ef9a4da4a1ba45fb"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/fps/laboratory-drying-oven.png",
-      "bytes": 37177,
-      "sha256": "89ce3f1efcbee2cbfbdfdf300fafc4f7177fc530378c70db82f1db3588ae0fbd"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/fps/strip-light.png",
-      "bytes": 9269,
-      "sha256": "4a64a2e4a0d7cc4e13b42837b2ba8bbf55ccbe3ccc22ef30a793164db0147588"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/fps/tip-box.png",
-      "bytes": 8219,
-      "sha256": "5be4c7f990f2094b83069978678f991c897234363fdf2db3a3bf71634be12bf5"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/fps/tube-rack.png",
-      "bytes": 10256,
-      "sha256": "cc049db0ceedd09ae9e2437d69384580eab66d803ee127e4248d36fb49226ea7"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/fps/wall-vent.png",
-      "bytes": 30085,
-      "sha256": "cbbdbb6c4d0be3212ea4c3249f8f8b51b19cbe60093df4a82b140a5f1407fdcc"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/genexpert/genexpert-16.png",
-      "bytes": 28054,
-      "sha256": "6cc5e6761b9179d252c42d55fac622b51e34e24a9dd71f57f98d601d8be6e961"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/genexpert/genexpert-infinity-80.png",
-      "bytes": 40553,
-      "sha256": "f99ce5ee546452370dfffb71f8d1aa91c79a05cd593e1b773cd80d3f65d57511"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Bathroom_Bathtub.webp",
-      "bytes": 2074,
-      "sha256": "99e05e88fc9e9d01761c4ad6d923d8d33e2cf473d05baa533d5aa3923138e834"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Bathroom_Mirror1.webp",
-      "bytes": 1874,
-      "sha256": "d5e3d4a033b840998bc57b8fbb28511963ab7b165d69969ad1d56307434fa61a"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Bathroom_Mirror2.webp",
-      "bytes": 1920,
-      "sha256": "519aa88ba49670ee735630dbd945719dcca4bd641d8116862d735c283d33bb30"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Bathroom_Shower1.webp",
-      "bytes": 2214,
-      "sha256": "0ec8c0ef5df13f00252e2334c96041a63994b2e55d7c26e06cb8881f1945a2fe"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Bathroom_Sink.webp",
-      "bytes": 2444,
-      "sha256": "5ef0611317df3c6ff6b5c6011a5ff44dc259a59e1da7ebfe44c543bc2f8ef1f0"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Bathroom_Toilet.webp",
-      "bytes": 2650,
-      "sha256": "99fe77ea74cd4486f971f3b81fdab3607c99d33336d259bbc72a8643bc03ed6f"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Bathroom_Toilet2.webp",
-      "bytes": 2356,
-      "sha256": "e23fba7701c03a57280209d6ad46f1c9bfd9d95e714e66e894584fefd4a551f8"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Bathroom_ToiletPaper.webp",
-      "bytes": 2640,
-      "sha256": "d71773ade4753eda90003caa3cc7450d680b2cf9c22b5fca45e66e043d45cc50"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Bathroom_ToiletPaperPile.webp",
-      "bytes": 2796,
-      "sha256": "9a796e869368a3f8cc07222fd403dd954a21b6fd870fe833922055a89dc0abaf"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Bathroom_Towel.webp",
-      "bytes": 1958,
-      "sha256": "baf57d5ff1c31cd08e634e1a3fc6501eadfadf3f1c204ee9eda545d5832de9ae"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Bathroom_WashingMachine.webp",
-      "bytes": 3924,
-      "sha256": "58bf369d35f90668274d79573be43569da1963a5d7705ca91dac50d2e7834004"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Bed_Bunk.webp",
-      "bytes": 5412,
-      "sha256": "b89e67bebceaa14239d6cd189c63456f2eb5c6b92966ed44ca97d18f66294bdf"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Bed_King.webp",
-      "bytes": 3704,
-      "sha256": "621d3eeda4b459ee5c07a0c77c05804b972386b10b98382ca3da02feeeceb846"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Bed_Single.webp",
-      "bytes": 3010,
-      "sha256": "d4ffa78095cb5a8e6559736e0a0d16538994064f249634ebaa4030e3ac367ec8"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Bookshelf.webp",
-      "bytes": 2242,
-      "sha256": "919da8f58a2e23cacaee503da9f877c43317d1ed1ba4997bf956bfbddf87f3c8"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Carpet_1.webp",
-      "bytes": 2646,
-      "sha256": "2fca0e62fe2c148b9b8431f8f9e4075767b830de04d961d4b8a0201092ba849a"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Carpet_2.webp",
-      "bytes": 2980,
-      "sha256": "5440a6f1d6ba903b1eae066e4ce4e5e461e1beff3c76864e68cfd4d479ae25b1"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Carpet_Round.webp",
-      "bytes": 2434,
-      "sha256": "49c9d84907f7d5f9aaa5c4f3805d4a5ec3fa3bb06dffdb969932cccea022b4f7"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Chair_1.webp",
-      "bytes": 2912,
-      "sha256": "0619369fcec336a2683cc3ada1674e25cada58e0c16d8f44551bc401890739a9"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Chair_2.webp",
-      "bytes": 3174,
-      "sha256": "c1ed48e9e9590f469d117fd614563d6881f67099d8925192bd638f80c83f48a1"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Chair_3.webp",
-      "bytes": 3312,
-      "sha256": "8cdc790e1378ca177cbb15b0cc4445e974be0b3c6aa4af20e701387b8d58ba95"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Chair_4.webp",
-      "bytes": 3484,
-      "sha256": "5c6ecf2ea11519fc46e667dae271204332f09d52187b41a7640700cf269d92c9"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Column_Round1.webp",
-      "bytes": 3600,
-      "sha256": "48afc4d10a08d869fac945217884688ab9873c3bf40816df8accd749e9fe930b"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Column_Round2.webp",
-      "bytes": 1932,
-      "sha256": "68b0523cc1302bd03ef2c2b4028d2f67ac13c9ab5361485c9ffb8dfe2963d09f"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Column_Round3.webp",
-      "bytes": 1636,
-      "sha256": "13bdc132c5447141f483199618b7e77ea994fb3b22c6c4146498c3a4dd16da51"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Column_SquareBig.webp",
-      "bytes": 1874,
-      "sha256": "59a5e83d06e6cbbe9974b0888e12735412bc4ed3c875dcad32c73d7b2f0e6c29"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Column_SquareSmall.webp",
-      "bytes": 2212,
-      "sha256": "3632e9b781de4993535fdf7a64f14088d60e833e510df088b5ccadc52df65177"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Couch_L.webp",
-      "bytes": 2536,
-      "sha256": "c8cd9947cfc1245f814cac6aa96d8de82357aa0feae96663ed7abda70016f803"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Couch_Large1.webp",
-      "bytes": 2558,
-      "sha256": "8383364c5c18df46eefb405afdc0fe6410ef5082055288980559e1da853843a2"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Couch_Large2.webp",
-      "bytes": 2380,
-      "sha256": "aed6d779f30dd6968546e5bf680604f1623bf4f74dfbe4ef2de6c3a700b44e28"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Couch_Large3.webp",
-      "bytes": 2130,
-      "sha256": "bb4087f786bc195b73d08ec3ca4feb9f6b5649c4f06b33fb4e85377da86145e7"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Couch_Medium1.webp",
-      "bytes": 2558,
-      "sha256": "c332c88ba3511e990e72b9650220c2bc7aa3b78a74afa6ea4fac16f2fdd6f68f"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Couch_Medium2.webp",
-      "bytes": 2818,
-      "sha256": "1fe95ca1f30f9e15a28ea6a453349d731f3ed30fce05bcb58fa25259a35c3633"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Couch_Small1.webp",
-      "bytes": 3108,
-      "sha256": "08c80f9ba2feaa65cbb103fc8ec447b658a83d2bdca3bc7915138e43c719dc5a"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Couch_Small2.webp",
-      "bytes": 2940,
-      "sha256": "bb4c1bebcb49c710bafbe8d746dfb8de3447efbc8960999a947e9932dd910e84"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Curtains_Double.webp",
-      "bytes": 2218,
-      "sha256": "dbe83a846d5bf4855f96df2bb3ca87292d4d7d80a98f2202277177b3d984d43a"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Curtains_Single.webp",
-      "bytes": 1374,
-      "sha256": "3bcf8b8a7fe30f1c0d1ede3652c768a6d5047709f1950766cb09a464bff096ae"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Door_1.webp",
-      "bytes": 1196,
-      "sha256": "c568d7152829dc2d0832b917fbf408e41664ce1fb74a1f1cf26334cd222acbfa"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Door_2.webp",
-      "bytes": 1342,
-      "sha256": "d7c1f40c2b51137e7323c09133c948af16e1a07ca1ece602e25a6ea04f15748e"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Door_3.webp",
-      "bytes": 1874,
-      "sha256": "565c74bb1cf9f7e3e428c232c262a9838bdecb44e5d0ae7684dc741f8ebd2b60"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Door_4.webp",
-      "bytes": 1640,
-      "sha256": "c0878bc63c045db5f1d590a3581195521b0665f0904bf0f35de854646960e53a"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Door_5.webp",
-      "bytes": 1754,
-      "sha256": "8f5c5ab56770f85012d17b4491c221e9282410396a06119d8996f72315f4ecb1"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Door_6.webp",
-      "bytes": 1638,
-      "sha256": "626e06f30ad0eb2701588ef55e926b20b77a914dc9c8cce9b06a09653ee86cc1"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Door_7.webp",
-      "bytes": 1154,
-      "sha256": "a20f26873cc04773a6f788b594dc4b94d34b0e2dff6a7576e71cab4f22da78b7"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Door_8.webp",
-      "bytes": 1788,
-      "sha256": "be16905b7975952ed2e4040085e018ccd39d1cdb5409b1334b82fd18e82823d1"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Door_9.webp",
-      "bytes": 1588,
-      "sha256": "1581482c8564ac5ca8836a71aae9c10dd22ffa1f72edaeedfa7ae98de5a01302"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Door_Double.webp",
-      "bytes": 3060,
-      "sha256": "b52b5779815f4d3e89621e16d9d52127cacd2426b80f2ee1afcc3cc157acf0e0"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Drawer_1.webp",
-      "bytes": 2480,
-      "sha256": "ef6e7a6e1a78fd0e72650d4f3c87f555bbd6bf0e2914bccb626c83c245f44eb7"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Drawer_2.webp",
-      "bytes": 2076,
-      "sha256": "878ce55b1b4bc84caa1562180a696fd8c878b92e1e711c5b95cc827c03aeef57"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Drawer_3.webp",
-      "bytes": 2722,
-      "sha256": "012d8b1278cc7c3b9e046dda794ff4d5e2e2dcf02fc575bae9538e3f9095e609"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Drawer_5.webp",
-      "bytes": 2800,
-      "sha256": "7779cf21d0a0aa874e44c7d92a4bb9f206f856eb912688d0bc78f76a057bac31"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Fireplace.webp",
-      "bytes": 3536,
-      "sha256": "331b03b8c5f85c0020f403a93c3323d8182813c744495bcf751411ae09f73878"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Fork.webp",
-      "bytes": 1318,
-      "sha256": "bbbfe15b247a20ff30822eb08566e312c491672c5e3dc8308b451e65c72b820e"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Houseplant_1.webp",
-      "bytes": 3600,
-      "sha256": "598c6f7796cda693cb0576b47e2d3ed4f8a2bd639e29f6f9d0a97fb909e6b750"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Houseplant_2.webp",
-      "bytes": 2612,
-      "sha256": "ea4150b9156d71783f92cbab4d4270354df57665d4570d3db356ab42ddd0404b"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Houseplant_3.webp",
-      "bytes": 2246,
-      "sha256": "83a146cbaf246f55169f3b47255ccac817c4dc59b0366c176dcf194727ba8f27"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Houseplant_4.webp",
-      "bytes": 2118,
-      "sha256": "71ba0f2a8c6ae476b681643201cd9c8839cc7d25ecf9c73fe0bbf8659925a600"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Houseplant_5.webp",
-      "bytes": 3958,
-      "sha256": "f6d9fb90ba3119ac587ca0e4f164d0e2125c1e09f39bd8c924ffd250c9400070"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Houseplant_6.webp",
-      "bytes": 4422,
-      "sha256": "12789f47a5577b69113c245ba7d14cd9664035be4561431acf75280db1cfcaef"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Houseplant_7.webp",
-      "bytes": 4186,
-      "sha256": "28679c828d7fc41e20e49bb46bc453f86a9bcb922531b51607bc817959e2372e"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Houseplant_8.webp",
-      "bytes": 2450,
-      "sha256": "158df6131c999aba45f197ee44fc66d7264ecc27280172dc379cab657f610477"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Kitchen_1Drawers.webp",
-      "bytes": 2066,
-      "sha256": "f0ddaad36f3c2d91b5c1cb37d6edf837a074b46d8259bda4b41b662890da936b"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Kitchen_2Drawers.webp",
-      "bytes": 2268,
-      "sha256": "debb2a34d75ec45b4a7543365e925a5e844353034d8a6cfcd458b3bb21f5d177"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Kitchen_3Drawers.webp",
-      "bytes": 2468,
-      "sha256": "ce29d2973736f1d6eed5d2dd1d8c91b5986be9763399099142c7436c08b1b74b"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Kitchen_Cabinet1.webp",
-      "bytes": 2060,
-      "sha256": "b186d513de66e8352196bc734e2f1df8c9fc0ce87ca7adb4f79e70dd75107e57"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Kitchen_Cabinet2.webp",
-      "bytes": 2104,
-      "sha256": "adec773dba1d20b1bc5fcb009773382699de6bf6730247873004666940b2bad4"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Kitchen_CabinetSmall.webp",
-      "bytes": 2434,
-      "sha256": "092125292e269fb368fe7478884e353084bac4187a3d680453f27e490023d2d5"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Kitchen_Fridge.webp",
-      "bytes": 1998,
-      "sha256": "5fb1a17403bc5502c5c4a3a049f830eb8a3a30661bae901222b73671a7a14933"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Kitchen_Oven.webp",
-      "bytes": 3602,
-      "sha256": "233e6180dc574e0b1744dd00b25c9639917aa8ec9b6f791e1ba2668c357fc0da"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Kitchen_Oven_Large.webp",
-      "bytes": 3806,
-      "sha256": "3d5275c5120d0974382e3d1edbfd5eb57661ea3faee2514e1d12bf203d0bc2dc"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Kitchen_Sink.webp",
-      "bytes": 2062,
-      "sha256": "8d7db74ae3d1b47a025354f9a750cdba3fec915113e1799eb00ab00f0e3d7ebd"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Knife.webp",
-      "bytes": 1254,
-      "sha256": "b5c7d9d58d0d0d7e31b528774fd7adc8b769d05875d9695c934cee4adcefc38c"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Light_Ceiling1.webp",
-      "bytes": 1492,
-      "sha256": "b8af2a506199812cf40ca60b78e534042b833c4a50993ef5fdb072072094952d"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Light_Ceiling2.webp",
-      "bytes": 1292,
-      "sha256": "44f926e38babb967f79acd2727e8ca356fbed1aa08c904be4710a6e457f3f14e"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Light_Ceiling3.webp",
-      "bytes": 2832,
-      "sha256": "58404a72f6797f76b8d61918c1fbfebf4a5ff7035cd5bf0dc9777bddec60cb7e"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Light_Ceiling4.webp",
-      "bytes": 2244,
-      "sha256": "4956a7ef6af479dbb278e96750972553f7016f24b1f1683c53a170d462cd08d8"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Light_Ceiling5.webp",
-      "bytes": 1672,
-      "sha256": "886e164162bd459470036e9009c5cd07452390f319f6b107c1b90d253b84c228"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Light_Ceiling6.webp",
-      "bytes": 1792,
-      "sha256": "19d37b11b479d0185f5102845bffb252507353c53dc3495bf3d1ff4f8def0145"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Light_CeilingSingle.webp",
-      "bytes": 1832,
-      "sha256": "2a7b09c1d2ae46006602de54ad49c959dfee709967f44ad5e773fefac932dd95"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Light_Chandelier.webp",
-      "bytes": 2524,
-      "sha256": "039cf2ed85828e3840b826887b6fff54f11b24dc627c663faa9d4444f37db38e"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Light_Cube.webp",
-      "bytes": 2528,
-      "sha256": "9737e1fea139f8f9acf03d5413904af38b8dfcc83c1d4ace135ac9236625dfe0"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Light_Cube2.webp",
-      "bytes": 2620,
-      "sha256": "88432ae328d0b786912b4f478d6ceafc556f99208441c64de88d8ed520d413d1"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Light_Desk.webp",
-      "bytes": 2238,
-      "sha256": "61e8b7ccf19bc07faf1f6926129ebd3df2c263d0123cb414bf5d26f6bf61c331"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Light_Floor1.webp",
-      "bytes": 1170,
-      "sha256": "d0ec59ad4d52ed7bfb39e114a30e022c5e197712fe849178780320a076868489"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Light_Floor2.webp",
-      "bytes": 1818,
-      "sha256": "5cc480db2f9a3a96098c47230c0f4658aee4721b2eab06e53f9dc65e1b63e3dc"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Light_Floor3.webp",
-      "bytes": 1802,
-      "sha256": "b0e25dd8a137d8a435719dad386c77611e6ead638ba3cdcb35d389985fe8a29e"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Light_Floor4.webp",
-      "bytes": 1890,
-      "sha256": "65bacd4ced67608680fe89533f62819f9f25d15e37455f565240509efc2a2e10"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Light_Icosahedron.webp",
-      "bytes": 2920,
-      "sha256": "8ea106f5eb4a04e69c7c7f88cd6e3281b1ee271582ed4cb93b1f61f75de57675"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Light_Icosahedron2.webp",
-      "bytes": 3610,
-      "sha256": "569635a4a52212ca95fcb3523a5b1b4c05b3b0cf7162de15bf8fd3a728da85fe"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Light_Small.webp",
-      "bytes": 1762,
-      "sha256": "689d7c4c4119ba43773ef48ff45669a540c98d66b891c1b276197f08d604395f"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Light_Stand1.webp",
-      "bytes": 1278,
-      "sha256": "9245477b6f965d92ad8ee4bc47129fb5567626847c8786a824e3797842b57cf7"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Light_Stand2.webp",
-      "bytes": 1246,
-      "sha256": "2ba1187804747f97d63459ee8052f2e23fd212c82422b5f23d9e1b27d257d64e"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/NightStand_1.webp",
-      "bytes": 3902,
-      "sha256": "81397148073d969485b4634b46e8d0988d355f908c3469b24d54ddef8f6586a8"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/NightStand_2.webp",
-      "bytes": 4956,
-      "sha256": "dec5dfa06d98c9dff93b7576f09160f0fb0e5ff4a597b9189b7a902e124aed60"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/NightStand_3.webp",
-      "bytes": 3854,
-      "sha256": "c3ef3f3421b2e662a1d94a4640fae46b5234428eede25836fd7535545bda8c8b"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Plate_1.webp",
-      "bytes": 1368,
-      "sha256": "f7240bc1ba4f18d07a7d8ee7ee2b9db9f9148e0f742b713d9f8071eb995ff44b"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Plate_2.webp",
-      "bytes": 1840,
-      "sha256": "c7bd77f0eb362918391fdd902688d9f79b5cffc9c482952834ac508b629341ec"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Plate_3.webp",
-      "bytes": 1442,
-      "sha256": "e03cd1e784ae575d3c53c5c6a4571a199bd2f2a9a0de2e420d449de5a20f49b8"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Shelf_1.webp",
-      "bytes": 1390,
-      "sha256": "f10e789c775660369c5d7d810d10f76dbf2487d8e022cacce8ae0db29eb538f3"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Shelf_2.webp",
-      "bytes": 1566,
-      "sha256": "8bd6329951b5cf40392d1566d2d3b91cce142998c809efaad8c35bdca9d59895"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Shelf_Large.webp",
-      "bytes": 2298,
-      "sha256": "c5eda5be4cf19249dde033e21454773986e339476d55dd602f478efc184fb1d9"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Shelf_Small1.webp",
-      "bytes": 1738,
-      "sha256": "3e4b1bcca282ca4f943f013259937d57bf431d1ecd5574251ed78be011a559a9"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Shelf_Small2.webp",
-      "bytes": 1972,
-      "sha256": "7d45630d81a6821e73d718f8a6f809f9f64d766792fc07afdfc74a975816ae01"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Shelf_Small3.webp",
-      "bytes": 1860,
-      "sha256": "d18b51ca4c0fb7fc2ab65d1402ee0bb452dcedfd4631df1c0052e772827f2397"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Spoon.webp",
-      "bytes": 1258,
-      "sha256": "c83ba35c8b510ea41e3f3a81fe4168610ed5c26540e32ab8a9aabf6b27956eff"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Stool.webp",
-      "bytes": 3044,
-      "sha256": "103037f2d8b128bca5e5c55286a4dd5e1964be23a7a6a582e99df4f334b8a458"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Table_RoundLarge.webp",
-      "bytes": 2616,
-      "sha256": "8454836101c4d4084b4a15d17b5b1b9b621586f274b804ba67d5780fb40a09f3"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Table_RoundSmall.webp",
-      "bytes": 2674,
-      "sha256": "63533747b50d2eca5aad7d06add1697a18712f88afeaa119e5c0e9aa1f4c0bf0"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Table_RoundSmall2.webp",
-      "bytes": 3278,
-      "sha256": "0d0ccaf98b48ff3ca771ed6d38ef97c70030c81db01e09d1f7d31a2955e7ae5e"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Trashcan_Cylindric.webp",
-      "bytes": 2160,
-      "sha256": "3a0ebe56d80bee5e2ecc8746b8567d75205d0fb6cde2991c619923d3f328865b"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Trashcan_Green.webp",
-      "bytes": 2532,
-      "sha256": "d70ecf6e9e8dd362bde4cb1a6b7a4973d9f412c2b7fef1cee7176c5bc73523e8"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Trashcan_Large.webp",
-      "bytes": 2142,
-      "sha256": "8274f70c62098f0220ce9ac788f891e4e9663e3c99cbe7c1a0247e38831362f3"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Trashcan_Small1.webp",
-      "bytes": 2492,
-      "sha256": "b0aa46462410722182953db721e6cbbd4abb90363b4a8c9a8924ddf16fd16dad"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Trashcan_Small2.webp",
-      "bytes": 2266,
-      "sha256": "1134f4f9cd00689f32f4a4379b2a1a9cbdb6725b370205d1a04666e32d345f54"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Window_Large1.webp",
-      "bytes": 3362,
-      "sha256": "25ff361d5555dbe6890144208940ca27923c68bbd55f6d89e6345532936e6146"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Window_Large2.webp",
-      "bytes": 4562,
-      "sha256": "b32d2845ca87867d43effe470db772c00bbf633e54c53f08d64b94d7196a2549"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Window_Round1.webp",
-      "bytes": 2140,
-      "sha256": "b3d743b0edbd8969d821ac3e77a4aa74118a5235f0f8d1b76aa6ca7946706985"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Window_Round2.webp",
-      "bytes": 2400,
-      "sha256": "3abc34d3ac29a315d39379ee70efb781439e6c2f9087af95037f659d80c2892c"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Window_Round3.webp",
-      "bytes": 2888,
-      "sha256": "5c83f67febc0c157888b4e6bc01e5a17a1100c2d89aeebd82cd4c416a8430d10"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Window_Small1.webp",
-      "bytes": 2464,
-      "sha256": "8f6bd76df9813781708e2a9ffd118cd298471079e0d82bb59e0e26f27b11aec9"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Window_Small2.webp",
-      "bytes": 2590,
-      "sha256": "1b17ae6e17f3e8640eaedef8adaa1e8876fc8d8c209bee55f2547d7d202880f2"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/house-interior/Window_Small3.webp",
-      "bytes": 2094,
-      "sha256": "947fd1a5c593fabe531daaddcc9129d635b40cc4b980314b4ba74ad9532805ed"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/lab-furniture/biosafety-cabinet.png",
-      "bytes": 15452,
-      "sha256": "45a113c973a6ff48bed7d3e56ed074c374d154a9fef98f47cdb10e4ae52f0a1b"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/lab-furniture/shoe-rack.png",
-      "bytes": 25104,
-      "sha256": "d102e999f50f0617ed776d49bdde697997064fcf1f7487bc06d6279478f192db"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/lab-furniture/shoe-shelf.png",
-      "bytes": 5512,
-      "sha256": "750bdbc925fec8cb7248ebca6424a813703786537b99a85c60167512500b5605"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/lab-furniture/shoes.png",
-      "bytes": 30023,
-      "sha256": "b67a3ce99df60a1bc90c3a015479563e6d6f5ed89b6b6347de5f1b7b32553197"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/office/ricoh-printer.png",
-      "bytes": 58802,
-      "sha256": "fef04d8a830edf71537e91f3426e7727673d8b05cf4475fd054e4063d8626a36"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/office/whiteboard-mobile.png",
-      "bytes": 10285,
-      "sha256": "91e4145d259b51fc73018e418e4efc3e374992302be56187558628caa3a3bd9c"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/onboard/ammo-box-lod0.png",
-      "bytes": 4063,
-      "sha256": "033269ebfdc587610760b51265c9856f0919d108cec055e46a9fed239d83652e"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/onboard/barricade-lod0.png",
-      "bytes": 4632,
-      "sha256": "9bc79adb69dd38646b5567389cedbf0c9be662f609534b628c318fb2ada4b870"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/onboard/door-frame-lod0.png",
-      "bytes": 2864,
-      "sha256": "3ec5cd504a41db2ff67f548277b3b48ab8399fdad12461db5837d0c06ad138c5"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/onboard/floor-tile-lod0.png",
-      "bytes": 4207,
-      "sha256": "b99aa9778689f475baedb321e37043755d971e83c4186e1d8aac3ef76ff12486"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/onboard/free-pack-boxes.png",
-      "bytes": 6698,
-      "sha256": "5948411256fe0e5ed4a53cce87f345f6ffebff24800c750647979bcbcb4827f0"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/onboard/goose-low-poly.png",
-      "bytes": 5560,
-      "sha256": "39884f988afb6c6a5d67826300c48b95d619cfb81fd5476551027f67a1583c60"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/onboard/patrol-carbine-lod0.png",
-      "bytes": 3617,
-      "sha256": "4b5b04168d5f6c6b00a9676e0595bcd6b2a27cc96a9aaf10c19690f8e3c66617"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/onboard/pillar-lod0.png",
-      "bytes": 1972,
-      "sha256": "bb67de270b969423706c018cb01147e99c832e2d572f7025a4029d65c75316f9"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/onboard/security-door-lod0.png",
-      "bytes": 2950,
-      "sha256": "67d5abfa2e25ad373defbeac8c9a42f0032299c61fb28edb7cea4cd17bf9b337"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/onboard/service-canister-lod0.png",
-      "bytes": 3823,
-      "sha256": "ac14f3b7ecc187fbf0d5bb7cc2fe1e81e97b5874da1d5190efadb6328e907750"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/onboard/service-pistol-lod0.png",
-      "bytes": 4244,
-      "sha256": "bf7df4691be39c9f0d80c1d40a476389f6a2a6b599b4668b834773d282470ace"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/onboard/tv-remote-psx.png",
-      "bytes": 4738,
-      "sha256": "04682a9af304bffc3404eb51b108a6fbea36b08f74e42518ad9ae86b45b6e636"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/onboard/tv-with-a-wall-mount.png",
-      "bytes": 7271,
-      "sha256": "5c32ec40607c81c0b5f6972599423ffea5ed33b54c1930061b9da7812e46e019"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/onboard/vortex-mixer.png",
-      "bytes": 17683,
-      "sha256": "d29aed5595f6b1ba55b3880ea75206a4dd57cf078e65b408cd856c58a6b447be"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/onboard/wall-panel-lod0.png",
-      "bytes": 3137,
-      "sha256": "c9f3fbca4e48145742f4fed3c1554cbe955a0bcafd43f0844b4b5fc4465a3fe8"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/reuse/barrel.webp",
-      "bytes": 2928,
-      "sha256": "8ab26b8da21fe6cd9bcbec43a642d78c71b8b6da8df30df69eccfff63a101774"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/reuse/bollard.webp",
-      "bytes": 1586,
-      "sha256": "0bae88b32f6383913470b3361e594f5beb26c70da43a19ef24f82568def651e6"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/reuse/container.webp",
-      "bytes": 2948,
-      "sha256": "8c334fab08ae19f82d5c77212f3e784ffd5cca321c530630e612f98702e34a95"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/reuse/generator.webp",
-      "bytes": 2984,
-      "sha256": "201a53a80d09d55e082825b00412cdb19e03d07b2da277fdd93e720fe162c8b4"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/reuse/hvac.webp",
-      "bytes": 3480,
-      "sha256": "40cbdf3a68934dfe0ae79dd361f614fc2a1e59126d6420418452b5e4b269f831"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/reuse/jerrycan.webp",
-      "bytes": 2174,
-      "sha256": "5dded3c1fef1f17cfdf0f9bbffc17020c380d1b02edb8836791f8ebba0db4807"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/reuse/jersey.webp",
-      "bytes": 1622,
-      "sha256": "68de631337db76130725a8b17da97235580bca7184c900ece71cbb6669e76072"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/reuse/rack.webp",
-      "bytes": 8080,
-      "sha256": "5389e097f9d7b16291fb98705045c67b893a232ff9167d6a3fbd7c3a42710687"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/reuse/reel.webp",
-      "bytes": 3526,
-      "sha256": "5c380f9f0ef85b72db566674dc3fd983ae8ece1997c11a2f22c9d05c3f693da8"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/reuse/sandbags.webp",
-      "bytes": 2384,
-      "sha256": "f56151d5fbc6a4139ca2171e13b38cdd3e6801fb6913b2182f64ada2acc80dce"
-    },
-    {
-      "path": "furniture-editor/library/thumbs/reuse/worktable.webp",
-      "bytes": 3620,
-      "sha256": "8156796a68a4e1c59a46d5f406c448c0ba6758766f69e9ccdff2a061e2f5a437"
-    },
-    {
       "path": "furniture-editor/library/zip.mjs",
       "bytes": 5179,
       "sha256": "70151dabe4ae9190a58b7bac6e3e14c8b2701d473fe303f8e1846b43684562e3"
-    },
-    {
-      "path": "furniture-editor/main.mjs",
-      "bytes": 46401,
-      "sha256": "cbb389854e9f9ca554c1fef0274502c00be6effe8c63a4ab406244b0adc05e16"
     },
     {
       "path": "furniture-editor/model-alignment.mjs",
@@ -2500,59 +1475,14 @@
       "sha256": "8d4cc9b1df0fd767722d04ada9fabce6bcbca3da4918191d8319f7a8ad07b831"
     },
     {
-      "path": "furniture-editor/new.css",
-      "bytes": 24421,
-      "sha256": "964f43c1ef6f105f07af7165cd68faa9f3e2d7ce35bb8adf86cab92695847f99"
-    },
-    {
-      "path": "furniture-editor/new.html",
-      "bytes": 24840,
-      "sha256": "12b73f6daabe4ef75767de0425cc2ade8f6aafb466867ab4ba48dbd562535cb9"
-    },
-    {
-      "path": "furniture-editor/new.mjs",
-      "bytes": 124728,
-      "sha256": "970f3b6c3190b3332a1219eaf1866189f0d4646f674e6df3d3bf3be736fe604b"
-    },
-    {
       "path": "furniture-editor/project-limits.mjs",
       "bytes": 1292,
       "sha256": "8bae58394ad0fce499e34af9360d9aec891d6259465856780526d5ffe55950fd"
     },
     {
-      "path": "furniture-editor/selection-dock.mjs",
-      "bytes": 5466,
-      "sha256": "53786417cb53dbb58f1c5252681ed4a820cf8401f2e96eb8d89be55eee576b94"
-    },
-    {
-      "path": "furniture-editor/smart-placement.mjs",
-      "bytes": 7846,
-      "sha256": "b96248408301b2d80c2c945059f5e40357d88c5c6b6b30ce3ba455dde79c4b76"
-    },
-    {
-      "path": "furniture-editor/snap-highlights.mjs",
-      "bytes": 3028,
-      "sha256": "d200ce594e8860a99a556923a85c196bc53c03d6756b30879e260ed1f412ae47"
-    },
-    {
-      "path": "furniture-editor/soft-placement.mjs",
-      "bytes": 881,
-      "sha256": "6b77cca0cb2a587a381792c1adacdf24e44e9c9a599f3784914b6528dc82959b"
-    },
-    {
-      "path": "furniture-editor/studio-ui.mjs",
-      "bytes": 3377,
-      "sha256": "8ee7a8a463cd4946ed0b62a6e475180978394948a828fb2d227fa994f9670918"
-    },
-    {
       "path": "furniture-editor/wall-mounts.mjs",
       "bytes": 8475,
       "sha256": "4df0b847d675ba1be09338ffb295e9d30b1817cefeca1034d0a98dd3f9d14af0"
-    },
-    {
-      "path": "index.html",
-      "bytes": 619,
-      "sha256": "648aa0d051068e296709604d58fe697881592a671d92684335106af39fe9fc6e"
     },
     {
       "path": "levels/floor5-prepared.json",
@@ -2651,8 +1581,8 @@
     },
     {
       "path": "robots.txt",
-      "bytes": 26,
-      "sha256": "331ea9090db0c9f6f597bd9840fd5b171830f6e0b3ba1cb24dfa91f0c95aedc1"
+      "bytes": 160,
+      "sha256": "a3d27b3ca5ce32341fa9f96f01169b521b1657c05d1860c45d1e53a6258e9e8b"
     },
     {
       "path": "src/floor5-data.js",
@@ -2681,8 +1611,8 @@
     },
     {
       "path": "src/fps/app.mjs",
-      "bytes": 33328,
-      "sha256": "3d104ace29c893deb6381963790039d4e0425323ef663d0d1fb1e65d9ba859d7"
+      "bytes": 33167,
+      "sha256": "d6782e9fd8fc0523765c6f54e5db363aab604b3fcd0e79921ae1e26115f772f2"
     },
     {
       "path": "src/fps/audio.mjs",
@@ -2751,8 +1681,8 @@
     },
     {
       "path": "src/fps/character-selection.mjs",
-      "bytes": 3257,
-      "sha256": "be20b77ef515e1d637705ec501ef1abf0d28e518e019d4e0d0958645f7a51228"
+      "bytes": 3283,
+      "sha256": "03493fe417bf407f689e9f7d09f0aa0f6822534a1a3d0891c86ac4f0573609f9"
     },
     {
       "path": "src/fps/combat-audio.mjs",
@@ -2961,8 +1891,8 @@
     },
     {
       "path": "src/fps/private-character-store.mjs",
-      "bytes": 5976,
-      "sha256": "ad83bcc112bfb646ecffc39aa14f9928cc416f2eba9dbb3609641a5cf2a827d8"
+      "bytes": 5992,
+      "sha256": "5bc1f07e467661d07052e698830f5fb086823a90d7c65b0da069f835de02d913"
     },
     {
       "path": "src/fps/project-batches.mjs",
@@ -3106,8 +2036,8 @@
     },
     {
       "path": "src/fps/view-character-appearance.mjs",
-      "bytes": 6814,
-      "sha256": "2fc650a267cf82147a7f4c6a6ba24ae8f42ddc90f37a02b4a5a0e247efc01b6b"
+      "bytes": 6829,
+      "sha256": "c0e13b0fcd1a2b3f755b3f3a1d34cce08055fe19053cc9b107406d6a80f8e7d7"
     },
     {
       "path": "src/fps/view-surface.mjs",
@@ -3133,16 +2063,6 @@
       "path": "src/world.js",
       "bytes": 19677,
       "sha256": "1ebcd89ac4e7f803e6a11633877cdb57fc1bdb635a72716d222b465677e39a77"
-    },
-    {
-      "path": "studio/index.html",
-      "bytes": 7462,
-      "sha256": "f161dd8f24b22623ace9d969f408dcfad0f41ebf79c4b3d857dae6b5eca9acb4"
-    },
-    {
-      "path": "studio/style.css",
-      "bytes": 6209,
-      "sha256": "003791306432388faacde5913349743cc9bf280e38d79c5001dbd769298a8204"
     },
     {
       "path": "vendor/package.json",
@@ -3584,17 +2504,5 @@
     ],
     "modelUnitsVerifiedAsMetres": false,
     "privatePreview": "browser-local"
-  },
-  "studioFurniture": {
-    "editorVersion": "5.8.0",
-    "catalogueObjects": 301,
-    "addedObjects": 22,
-    "labAndShoeObjects": 4,
-    "uploadedOfficeModels": 2,
-    "fpsObjects": 16,
-    "perPairShoeColour": true,
-    "measuredSupportSurfaces": true,
-    "sourceMap": "docs/fps-furniture-library.md",
-    "officeAttribution": "licenses/studio-office-models.md"
   }
 }

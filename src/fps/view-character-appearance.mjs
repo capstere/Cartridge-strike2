@@ -7,7 +7,7 @@ export const SHIRT_FRACTION=.32;
 function textureColor(material,u,v){
  const color=material.color.clone(),texture=material.map;if(!texture)return color;
  texture.updateMatrix();const uv=texture.transformUv(new T.Vector2(u,v)),im=texture.image;
- if(!im?.width||!im?.height)throw Error('Karaktärens tröjtextur kunde inte läsas. Skapa provmatchen igen i studion.');
+ if(!im?.width||!im?.height)throw Error('Karaktärens tröjtextur kunde inte läsas. Välj en annan spelkaraktär i lobbyn.');
  const x=Math.min(im.width-1,Math.max(0,Math.floor(uv.x*im.width))),y=Math.min(im.height-1,Math.max(0,Math.floor(uv.y*im.height)));let rgba;
  if(im.data){rgba=im.data.subarray((y*im.width+x)*4,(y*im.width+x)*4+4);}
  else{const c=document.createElement('canvas');c.width=c.height=1;const ctx=c.getContext('2d',{willReadFrequently:true});ctx.drawImage(im,x,y,1,1,0,0,1,1);rgba=ctx.getImageData(0,0,1,1).data;}
@@ -19,7 +19,7 @@ export function createPrivateViewAppearance(asset){
   if(o.material?.name==='jacket-fabric')shirts.push(o);
   if(o.material?.name==='face-skin')faces.add(o.material);
  });
- if(gloves.size!==1||!shirts.length||faces.size!==1)throw Error('Karaktärens hand- och ärmmaterial kunde inte matchas. Skapa provmatchen igen i studion.');
+ if(gloves.size!==1||!shirts.length||faces.size!==1)throw Error('Karaktärens hand- och ärmmaterial kunde inte matchas. Välj en annan spelkaraktär i lobbyn.');
  const hand=[...gloves][0],face=[...faces][0],shirt=shirts[0].material;
  if(hand.map||hand.vertexColors)throw Error('Texturmålade händer kräver separat förstapersonsstöd. Använd pilotens handfärg.');
  const skin=new T.Color(0,0,0);let count=0;
@@ -32,7 +32,7 @@ export function createPrivateViewAppearance(asset){
  skin.multiplyScalar(1/count);
  // Exported torso artwork is masked away from sleeves at this reserved UV.
  const cloth=textureColor(shirt,.005,.005);
- if([...skin.toArray(),...cloth.toArray()].some(v=>!Number.isFinite(v)||v<0||v>1.001))throw Error('Karaktärens färgdata är ogiltiga. Skapa provmatchen igen i studion.');
+ if([...skin.toArray(),...cloth.toArray()].some(v=>!Number.isFinite(v)||v<0||v>1.001))throw Error('Karaktärens färgdata är ogiltiga. Välj en annan spelkaraktär i lobbyn.');
  const colorBytes=new Uint8Array(128*4),roughBytes=new Uint8Array(128*4);
  for(let y=0;y<128;y++){const covered=(y+.5)/128<SHIRT_FRACTION,c=(covered?cloth:skin).clone().convertLinearToSRGB(),r=covered?shirt.roughness:face.roughness;
   for(let k=0;k<3;k++){colorBytes[y*4+k]=Math.round(c.toArray()[k]*255);roughBytes[y*4+k]=Math.round(r*255);}colorBytes[y*4+3]=roughBytes[y*4+3]=255;
