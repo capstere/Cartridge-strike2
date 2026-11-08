@@ -273,3 +273,125 @@ html #mobile-controls .mobile-pause,html #mobile-controls .mobile-more{border-ra
   html #hud .score>strong{font-size:22px!important}
   html #hud .round-clock b{font-size:20px!important}
 }
+
+/* ================= TACTICAL INDUSTRIAL // HUD POLISH =================
+   Keep the legacy gameplay widgets visually aligned with the cinematic lobby.
+   Presentation-only: no game state, hit targets or keyboard controls changed. */
+:root{
+  --h-mu:#aab6c5;
+  --h-dim:#8693a5;
+  --h-ln:#ffffff24;
+  --h-ln2:#ffffff40;
+}
+
+/* Pause, equipment and scoreboard are one family of tactical menus. */
+html #buy .cs-buy-detail .cs-big,
+html #buy #shop button .cs-ico{color:var(--h-ac)}
+html #buy #return-buy{
+  width:calc(100% - 40px)!important;
+  max-width:calc(100% - 40px);
+  min-width:0;
+  box-sizing:border-box;
+  white-space:normal;
+  text-align:center;
+  justify-self:center;
+  overflow-wrap:break-word;
+}
+html #buy .buy-card{min-width:0}
+html #pause .pause-card>h2{overflow-wrap:normal}
+html #scoreboard th,html #scoreboard .small{color:var(--h-mu)!important}
+
+/* Legacy encounter HUD (control, medals, radio and recaps) previously used
+   green/teal panels unrelated to the Analysts/Counter Analysts palette. */
+html #hud #control-card,
+html[data-hud=clean] #hud #control-card{
+  background:var(--h-plate)!important;
+  color:var(--h-wh)!important;
+  border:1px solid var(--h-ln)!important;
+  border-left:2px solid var(--h-ac)!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  font-family:var(--h-body);
+}
+html #hud #control-card[data-state=contested]{border-left-color:var(--h-amber)!important}
+html #hud #control-card small{color:var(--h-ac)!important}
+html #hud #control-card[data-state=contested] small{color:var(--h-amber)!important}
+html #hud #control-card .control-progress i{background:var(--h-ac)!important}
+html #hud #control-name{font-family:var(--h-disp);font-weight:700;letter-spacing:.04em}
+html #hud #control-state,html #hud #control-card footer{font-family:var(--h-mono);color:var(--h-mu)!important}
+html #hud #combat-session{background:var(--h-plate)!important;border-left:2px solid var(--h-ac)!important;border-radius:0!important;color:var(--h-wh)!important}
+html #hud #combat-session>span{color:var(--h-mu)!important;font-family:var(--h-mono)}
+html #hud #combat-session small{color:var(--h-mu)!important}
+html #hud #combat-medal,
+html[data-hud=clean] #hud #combat-medal{
+  background:var(--h-plate)!important;
+  border:1px solid var(--h-ln)!important;
+  border-top:2px solid var(--h-amber)!important;
+  border-radius:0!important;
+  color:var(--h-wh)!important;
+  font-family:var(--h-disp);
+}
+html #hud #combat-medal[data-kind=capture]{border-top-color:var(--h-ac)!important}
+html #hud #combat-medal small{color:var(--h-amber)!important;font-family:var(--h-mono)}
+html #hud #combat-medal[data-kind=capture] small{color:var(--h-ac)!important}
+html #hud #combat-medal span{color:var(--h-mu)!important}
+html #hud #combat-warning{background:#20140feb!important;border-left:2px solid var(--h-red)!important;border-radius:0!important;color:#ffd4ca!important;font-family:var(--h-mono)}
+html #hud #combat-recap{background:var(--h-plate)!important;border-left:2px solid var(--h-amber)!important;border-radius:0!important;color:var(--h-wh)!important}
+html #hud #combat-recap small{color:var(--h-amber)!important;font-family:var(--h-mono)}
+html #hud #combat-recap span{color:var(--h-mu)!important}
+html #hud #radio-caption,
+html #hud #grenade-preview-note{
+  background:var(--h-plate)!important;
+  color:var(--h-wh)!important;
+  border-left:2px solid var(--h-ac);
+  border-radius:0!important;
+  font-family:var(--h-mono);
+}
+html #hud #grenade-preview-note span{color:var(--h-mu)!important}
+html #hud #spawn-protection{background:var(--h-plate)!important;border-left:2px solid var(--h-ac);color:var(--h-wh)!important}
+html .focus-session-summary{background:var(--h-plate);border-color:var(--h-ln2);border-radius:0;color:var(--h-wh)}
+
+/* Thumb controls retain their original hitbox/gesture behavior; only the
+   visual treatment follows the dark steel / faction accent system. */
+html #mobile-controls .mobile-button,
+html[data-hud=clean] #mobile-controls .mobile-button{
+  background:var(--h-plate)!important;
+  border-color:var(--h-ln2)!important;
+  color:var(--h-wh)!important;
+  font-family:var(--h-disp)!important;
+  font-weight:700!important;
+  letter-spacing:.07em!important;
+  text-shadow:none!important;
+  box-shadow:none!important;
+}
+html #mobile-controls .mobile-button.pressed,
+html[data-hud=clean] #mobile-controls .mobile-button.pressed,
+html #mobile-controls .mobile-button.active,
+html #mobile-controls .mobile-button[aria-pressed=true]{
+  background:var(--h-ac)!important;
+  color:var(--h-g0)!important;
+  border-color:var(--h-ac)!important;
+}
+html #mobile-controls .mobile-fire,
+html[data-hud=clean] #mobile-controls .mobile-fire{background:#391610ed!important;border-color:var(--h-red)!important;color:var(--h-wh)!important}
+html #mobile-controls .mobile-fire.pressed,
+html[data-hud=clean] #mobile-controls .mobile-fire.pressed{background:var(--h-red)!important;color:#fff!important}
+html #mobile-controls .mobile-stick{background:var(--h-plate)!important;border-color:var(--h-ln2)!important}
+html #mobile-controls .mobile-stick-nub{background:#eef2f72b!important;border-color:#eef2f773!important}
+html #mobile-controls #mobile-utilities,
+html[data-hud=clean] #mobile-controls #mobile-utilities{background:#06090ef2!important;border:1px solid var(--h-ln2)!important;border-radius:0!important}
+
+/* Avoid horizontal overflows from the buy-menu CTA in compact landscape. */
+@media (orientation:landscape) and (max-height:520px){
+  html #buy #return-buy{
+    width:calc(100% - 16px)!important;
+    max-width:calc(100% - 16px);
+    min-width:0;
+    margin:6px 8px 8px!important;
+    padding:6px 8px!important;
+    line-height:1.05;
+  }
+}
+@media (prefers-reduced-motion:reduce){
+  html #hud #killfeed>div,html #hud #round-result,html #buy #buy-message:not(:empty){animation:none!important}
+}
