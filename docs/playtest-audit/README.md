@@ -50,7 +50,7 @@ No universal P0 was reproduced on the WebGL-capable path. A machine without a wo
 
 **Screenshots.** [844×390 HUD before](touch-before.jpg) · [After](touch-after.jpg) · [932×430 Endless before](endless-before.jpg) · [After](endless-after.jpg) · [Final Classic result](match-result.jpg).
 
-[Landscape lobby](lobby-932.jpg) · [Touch shop](shop-932.jpg) · [Tactical map](tactical-map.jpg) · [Scoreboard](scoreboard.jpg) · [Pause and settings](pause.jpg).
+[Landscape lobby](lobby-932.jpg) · [Touch purchase before](shop-932-before.jpg) · [After](shop-932.jpg) · [Tactical map](tactical-map.jpg) · [Scoreboard](scoreboard.jpg) · [Pause and settings](pause.jpg).
 
 ## Architecture and performance
 
@@ -84,7 +84,7 @@ The main renderer and lobby preview have separate frame schedulers. The preview 
 
 ## Reproduction commands
 
-The Node suite passed 158/158, and the manifest and published-map door checks passed. The standalone launch regression passed with the controller, engine and font held, including a real retry into gameplay and the post-match return. Earlier browser runs hit automation timeouts on the shared software renderer. One timed out tapping pause in the original mobile smoke. Dedicated input and lifecycle runs separately exercised that action successfully.
+The Node suite passed 158/158, and the manifest and published-map door checks passed. The standalone launch regression passed with the controller, engine and font held, including a real retry into gameplay and the post-match return. Earlier browser runs hit automation timeouts on the shared software renderer. One timed out tapping pause in the original mobile smoke. The final 844×390 mobile smoke passed, including immediate manual firing after the settings change. A cold default-graphics 1280×720 desktop smoke also timed out waiting 180 s for engine readiness on the shared software renderer. The same default-graphics smoke passed in isolation with one lock request, no mobile overlay and a live buy phase. Its lock request is stubbed by the repository test. The separate lower-graphics desktop journey acquired real mouse lock and completed the match. Physical hardware startup time remains open.
 
 Run from the repository root with Node. For browser runs, install Playwright Core and Chromium in the environment used by the repository's existing browser scripts. Serve the repository with `python3 -m http.server 8765` in another terminal.
 
