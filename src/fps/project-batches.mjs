@@ -57,17 +57,24 @@ export async function buildFpsFurniture(items,root,options){
   if(!cells.has(key)){const group=new T.Group();group.name='floor5-cell-'+key;root.add(group);cells.set(key,group);}
   return cells.get(key);
  };
- let instancedItems=0;const independent=new Map();
+ let instancedItems=0;const independent=new Map(),detailIds=new Set();
  for(const list of variants.values()){
   const template=models.get(list[0].id);template.updateMatrixWorld(true);
-  const meshes=[];let canInstance=true;
+  const meshes=[];let rigidOpaque=true,reflected=false;
   template.traverse(node=>{
-   if(!node.visible||node.isLOD||node.isSkinnedMesh||node.isInstancedMesh||node.morphTargetInfluences)canInstance=false;
-   if(node.isMesh){meshes.push(node);if([].concat(node.material).some(m=>m.transparent)||node.matrixWorld.determinant()<0)canInstance=false;}
+   if(!node.visible||node.isLOD||node.isSkinnedMesh||node.isInstancedMesh||node.morphTargetInfluences)rigidOpaque=false;
+   if(!node.isMesh)return;
+   meshes.push(node);
+   if([].concat(node.material).some(m=>m.transparent))rigidOpaque=false;
+   if(node.matrixWorld.determinant()<0)reflected=true;
   });
-  if(!canInstance){
+  if(!rigidOpaque||reflected){
+   // Dense mirrored kits keep their original meshes. Their cell may straddle a
+   // doorway even when one opaque wall completely hides the individual kit.
+   const cullIndividually=rigidOpaque&&meshes.length>=32;
    // Some LOD classes carry constructor-only state. Build them through their original factory.
    for(const [i,item] of list.entries()){const cell=cellFor(item);
+    if(cullIndividually)detailIds.add(item.id);
     if(i===0){template.position.set(item.x,item.elevation||0,item.z);template.rotation.y=item.yaw||0;cell.add(template);}
     else{if(!independent.has(cell))independent.set(cell,[]);independent.get(cell).push(item);}
    }
@@ -102,7 +109,10 @@ export async function buildFpsFurniture(items,root,options){
   const box=bounds.setFromObject(object).clone();
   if(!box.isEmpty())regions.push({object,box,hidden:false});
  };
- for(const group of cells.values())register(group);
+ for(const group of cells.values()){
+  register(group);
+  for(const item of group.children)if(detailIds.has(item.userData.editId))register(item);
+ }
  return {cells:cells.size,variants:variants.size,instancedItems,register,update(camera){
   camera.updateMatrixWorld();frustum.setFromProjectionMatrix(projection.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse));
   const moved=occlusion.update(camera.position);

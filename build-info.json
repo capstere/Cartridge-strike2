@@ -1941,8 +1941,8 @@
     },
     {
       "path": "src/fps/project-batches.mjs",
-      "bytes": 6236,
-      "sha256": "c710525887a5321fabb99a0b798e98677db025d3014b1b5cf50347657afc3559"
+      "bytes": 6678,
+      "sha256": "6cc7aa3443b769a402a0366d7c853c39176ccd9151545bb74dd209dd0f3e09be"
     },
     {
       "path": "src/fps/project-visibility.mjs",
@@ -2170,7 +2170,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 42924998,
+  "bytes": 42925440,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",
