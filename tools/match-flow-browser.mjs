@@ -74,7 +74,11 @@ try {
     history.replaceState(null, '', url);
   });
   await retry.click();
-  await page.locator('#hud').waitFor({ state: 'visible', timeout: 120000 });
+  await page.waitForFunction(() => window.__csFlow?.flow.failed ||
+    (window.__fps?.game.player && !document.getElementById('hud').hidden),
+    null, { polling: 200, timeout: 240000 });
+  assert.ok(await page.evaluate(() => !__csFlow.flow.failed), await page.locator('#csl-err-text').textContent());
+  await page.evaluate(() => __fps.stopFrameLoop());
   assert.equal(await page.evaluate(() => __fps.game.team), 'counterAnalysts');
   assert.equal(await page.evaluate(() => __fps.game.actors.length), 10);
   assert.ok(await page.evaluate(() => __csFlow.music.track.paused));

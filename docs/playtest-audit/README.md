@@ -9,11 +9,16 @@ The playable core held up through a complete six-round Classic match, an Endless
 | Environment | What ran |
 | --- | --- |
 | Public GitHub Pages, cloud desktop Chrome | Opened the public root and reached `/fps/`. Selected Counter Analysts and inspected the original-character selector. Three.js failed to create its WebGL context. Start, error, back and retry were exercised on the deployed build. The failure recurred after reload. |
+| Public GitHub Pages, Chromium with software WebGL | Followed the real public root redirect, selected Counter Analysts, started the default Floor 5, entered buy phase with 12/72 and paused lobby music, opened Pause and returned to the lobby. The successful run served 265 live responses through a certificate-validating HTTPS transport in the test environment. No local files or test-mode API supplied gameplay. |
 | Local copy of main and the audit branch | Static HTTP server, real Chromium 153 with SwiftShader WebGL, existing engine, assets and normal HTML entry point. Tested keyboard, pointer lock, mouse, touch emulation, menu states and complete match results. Optional Google Fonts could be unavailable, so screenshots also exercise the fallback typefaces. |
 | Controlled browser and engine runs | The existing `?test` interface allows advancing actual simulation time and reading actor, inventory and UI state. Full-match runs used the real prepared Floor 5. Fault injection held or failed real HTTP requests. Short loading regressions used the smaller published synthetic level. |
 | Outside this session | Physical iPhone/Android, Safari and Firefox, GPU/thermal profiling, headphone or speaker listening, long-session heap snapshots and subjective human-versus-bot difficulty. |
 
 The public WebGL failure prevented play in that browser. It establishes a reproducible failure-recovery defect, but does not establish that Pages is broken for all players. [Published failure screenshot](pages-webgl.jpg)
+
+## Published release check
+
+GitHub recorded the merge of [gameplay fixes in PR #3](https://github.com/capstere/Cartridge-strike2/pull/3) at 20:52 UTC while the final evidence checks were running. This audit issued no merge or deployment request. The [Pages deployment](https://github.com/capstere/Cartridge-strike2/actions/runs/42697093296) succeeded. At 20:58 UTC, the public FPS HTML, loading controller, engine entry module, HUD stylesheet and build manifest all matched the audited files byte-for-byte. A second real browser, with working software WebGL, then verified the updated public player journey through gameplay, pause and return. The public run that began just before deployment used the old controller and timed out after 256 live responses. The fresh post-deployment run used the new controller, reached the HUD after 265 live responses and reported no uncaught page errors or failing responses. These were separate loads with different timing. Both used simulated touch, the real Pages URL, a trusted HTTPS transport and optional web fonts disabled. The remaining review changes concern evidence and test timing.
 
 ## Verified findings and corrections
 
@@ -50,7 +55,7 @@ No universal P0 was reproduced on the WebGL-capable path. A machine without a wo
 
 **Screenshots.** [844×390 HUD before](touch-before.jpg) · [After](touch-after.jpg) · [932×430 Endless before](endless-before.jpg) · [After](endless-after.jpg) · [Final Classic result](match-result.jpg).
 
-[Landscape lobby](lobby-932.jpg) · [Touch shop](shop-932.jpg) · [Tactical map](tactical-map.jpg) · [Scoreboard](scoreboard.jpg) · [Pause and settings](pause.jpg).
+[Landscape lobby](lobby-932.jpg) · [Touch purchase before](shop-932-before.jpg) · [After](shop-932.jpg) · [Tactical map](tactical-map.jpg) · [Scoreboard](scoreboard.jpg) · [Pause and settings](pause.jpg).
 
 ## Architecture and performance
 
@@ -84,7 +89,7 @@ The main renderer and lobby preview have separate frame schedulers. The preview 
 
 ## Reproduction commands
 
-The Node suite passed 158/158, and the manifest and published-map door checks passed. The standalone launch regression passed with the controller, engine and font held, including a real retry into gameplay and the post-match return. Earlier browser runs hit automation timeouts on the shared software renderer. One timed out tapping pause in the original mobile smoke. Dedicated input and lifecycle runs separately exercised that action successfully.
+The Node suite passed 158/158, and the manifest and published-map door checks passed. The standalone launch regression passed with the controller, engine and font held, including a real retry into gameplay and the post-match return. Earlier browser runs hit automation timeouts on the shared software renderer. One timed out tapping pause in the original mobile smoke. The final 844×390 mobile smoke passed, including immediate manual firing after the settings change. A cold default-graphics 1280×720 desktop smoke also timed out waiting 180 s for engine readiness on the shared software renderer. The same default-graphics smoke passed in isolation with one lock request, no mobile overlay and a live buy phase. Its lock request is stubbed by the repository test. The separate lower-graphics desktop journey acquired real mouse lock and completed the match. Physical hardware startup time remains open.
 
 Run from the repository root with Node. For browser runs, install Playwright Core and Chromium in the environment used by the repository's existing browser scripts. Serve the repository with `python3 -m http.server 8765` in another terminal.
 
