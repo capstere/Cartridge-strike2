@@ -21,13 +21,17 @@ On the M1, median frame time was 16.7 ms in both views before and after the chan
 
 The November 9 audit verified the earlier launch and replay fixes through gameplay, pause and lobby return on the published site. [Gameplay fixes in PR #3](https://github.com/capstere/Cartridge-strike2/pull/3) · [Verification in PR #4](https://github.com/capstere/Cartridge-strike2/pull/4) · [Audit and screenshots](docs/playtest-audit/README.md)
 
-## Remaining work, in order
+## November 10 handover checks
 
-| Work | Check that closes it |
+| Check | Status |
 | --- | --- |
-| Physical mobile controls and audio | At approximately 844×390 and 932×430, test simultaneous move/aim/fire, reload, jump, hold an objective, buy, rotate, background and resume. Record device, browser, safe-area clearance and whether the theme stops and resumes correctly. |
-| Human play and bot behavior | Play both factions and objective routes, including spectator cycling. For repeatable stalls, spawn kills or collision snags record seed, room, position and steps. |
-| Saved characters | On a device with a compatible saved character, verify selection, first- and third-person appearance, cancellation, retry and replay. Exercise the recovery path with an incompatible copy. |
+| Both factions and both objective routes | **PASS on Pages.** The browser drove the player slot through a plant and a defuse in North Laboratory. A player escort and a bot escort rescued both hostages. After a combat death, the spectator camera cycled through living teammates in both directions. [Seeds, routes and screenshots](docs/playtest-audit/november-10/README.md#objective-routes-and-spectator-controls) |
+| Saved characters | **PASS on Pages.** A fresh Studio export appeared in first and third person on both teams. Cancel, retry, replay and recovery from an incompatible copy passed in an isolated local browser profile. [Character checks and reproduction](docs/playtest-audit/november-10/README.md#device-local-character-studio-pilot) |
+| Published rendering | **PASS on Pages.** All nine views matched pixel for pixel. The open Cargo Lift saved 352 world draws. [Rendering PR](https://github.com/capstere/Cartridge-strike2/pull/6) |
+
+## Remaining work
+
+Physical iPhone and Android controls and audio are **pending**. No handset was available for the November 10 check. Use the device session at the top of this handover and also record how aiming, hit feedback and bot difficulty feel to the player. The recorded browser routes cover objective outcomes and spectator behavior.
 
 ## Verification
 
@@ -39,7 +43,7 @@ node tools/verify-owner-runtime.mjs
 node --experimental-loader ./tools/vendor-three-test-loader.mjs tools/owner-door-traversal.mjs --prepared
 ```
 
-For browser regression checks, install the locked tooling and matching Chromium once. Start the HTTP server from step 1 in a separate terminal, then run the relevant smoke tests from the repo root.
+For browser regression checks, install the locked tooling and matching Chromium once. Start the HTTP server in a separate terminal, then run the relevant smoke tests from the repo root.
 
 ```sh
 npm ci --prefix frontline/source/tools/dev
