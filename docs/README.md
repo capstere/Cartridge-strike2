@@ -4,7 +4,7 @@ The [handover](../HANDOVER.md) contains the current work queue. The [November 9 
 
 | Area | References |
 | --- | --- |
-| Rendering and HUD | [Render efficiency](render-efficiency.md) · [Detail efficiency](detail-efficiency.md) · [Focus HUD](focus-hud.md) · [Touch controls](mobile-controls.md) |
+| Rendering and HUD | [Populated Endless profile](endless-profile/README.md) · [Render efficiency](render-efficiency.md) · [Detail efficiency](detail-efficiency.md) · [Focus HUD](focus-hud.md) · [Touch controls](mobile-controls.md) |
 | Combat and objectives | [Floor 5 bot tactics](floor5-bot-tactics.md) · [Precision weapons](precision-pack.md) · [Throwables](throwable-cartridges.md) · [Grenade awareness](grenade-awareness.md) · [Hostages](business-hostages.md) |
 | Layout and traversal | [Level format decisions](level-project-decisions.md) · [Owner layout release](../OWNER_LAYOUT_RELEASE.md) · [Glass passages](glass-passages.md) · [Facility detail release](../FACILITY_DETAILS_RELEASE.md) |
 | Floor 5 residents | [Living zombies, animation mapping and validation](zombies/gameplay.md) |

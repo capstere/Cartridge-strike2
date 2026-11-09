@@ -1,19 +1,25 @@
 # Cartridge-Strike 2 handover
 
-**Next hands-on task** — test controls and audio on a physical handset. The November 9 spawn profile and its proposed rendering change await review in [PR #6](https://github.com/capstere/Cartridge-strike2/pull/6).
+**First open task — test physical mobile controls and audio.** Play on an iPhone and an Android phone in landscape, near 844×390 and 932×430 where available. Record the model, OS, browser, viewport and safe-area clearance. Move, aim and fire together, reload, jump, hold an objective and buy. Rotate, background and resume during the lobby and a match. Listen for the lobby theme stopping on Start and resuming on return. Record any failure with its screen position and steps. [Play the published build](https://capstere.github.io/Cartridge-strike2/)
 
-Floor 5 now has neutral Meshy residents in both regular match types. The 20-cycle match lifecycle check is complete. The gameplay notes contain the animation mapping, before/after frame samples, lifecycle method and handset coverage. [Living zombies on Floor 5](docs/zombies/gameplay.md)
+Floor 5 has neutral Meshy residents in Classic and Endless. The 20-cycle match lifecycle check passed. The feature was merged in [PR #7](https://github.com/capstere/Cartridge-strike2/pull/7) and verified on Pages in [PR #8](https://github.com/capstere/Cartridge-strike2/pull/8). [Living zombies, frame samples and published captures](docs/zombies/gameplay.md)
 
-The launch, replay, lobby music, shop and mobile input fixes landed in [PR #3](https://github.com/capstere/Cartridge-strike2/pull/3). The final verification landed in [PR #4](https://github.com/capstere/Cartridge-strike2/pull/4). The published game passed lobby → match → pause → lobby. The November 9 suite passed 158 tests, verified 432 runtime files and traversed 51 interactive doors in both directions. [Full audit and screenshots](docs/playtest-audit/README.md) · [Play](https://capstere.github.io/Cartridge-strike2/)
+## Completed — profile the populated Floor 5 Endless spawn
 
-## Reproduce the separate spawn profile
+**PASS** on the integrated Floor 5 build. Nine frozen-world camera comparisons matched pixel for pixel. The open elevator saved 352 world draws with the zombie integration present. [Integration results](docs/endless-profile/README.md#november-10-integration-check)
 
-1. From the repo root run `python3 -m http.server 8765`. Open `http://127.0.0.1:8765/fps/?test&realtime&seed=42`. Select **Analysts**, **Endless Action** and **Originalkaraktär**. Use the default Floor 5 map, low graphics and an 844×390 viewport for the initial comparison. Keep all ten actors. Record the camera position and direction before moving.
-2. Capture a cold launch and a warm launch. Separate time to the first playable frame from steady play. At the elevator and again during a busy encounter, record draw calls, triangles, median and p95 frame time, sample count, browser, device and graphics backend. Keep the view and settings fixed across comparisons.
-3. Trace the render passes and the largest contributors with a browser frame capture or temporary local instrumentation. The engine counts both the world and first-person weapon passes. The November 9 elevator samples recorded **2,251–2,284 draw calls per frame** on SwiftShader. That observation leaves the dominant source and the impact on a hardware GPU open. [Renderer](src/fps/render.mjs) · [Render passes and counters](src/fps/render-engine.mjs) · [Render budget](src/fps/render-budget.mjs)
-4. Compare a hardware desktop, iPhone and Android when available. Without a physical device, do the draw-call breakdown in Chromium, record the backend and leave the device rows open. The existing render smoke checks controlled scenarios with bots disabled or removed. Use the populated realtime scene for this comparison. [Render smoke](tools/render-performance-smoke.cjs)
+A fixed-camera trace found **1,045 of 2,270 elevator draws came from furniture cells**. Inside two of those cells, four mirrored monitor, keyboard and mouse kits in I04 submitted 88 draws apiece. Each kit fit entirely behind an opaque wall. The change gives dense, rigid mirrored furnishings their own visibility check inside the existing cell. The first-person SMG submitted 19 draws.
 
-**Done when** the handover contains a reproducible scene, a results table and evidence identifying the dominant contributor or the next experiment that would distinguish the remaining causes. If a small fix is demonstrated, include before/after results for the same scene and check movement, aiming, visibility and the lobby return. A measurement pass is a valid outcome when the data do not justify a change.
+| Apple M1 / Metal trace | World draws before → after | First-person draws | Total draws before → after | Triangles before → after |
+| --- | ---: | ---: | ---: | ---: |
+| Analysts Cargo Lift, 1 s | 2,251 → 1,899 | 19 | 2,270 → 1,918 | 1,061,778 → 1,057,554 |
+| C08 firefight, about 24 s | 4,030 → 2,358 | 19 | 4,049 → 2,377 | 932,362 → 912,298 |
+
+To reproduce, serve the repository with `python3 -m http.server 8765` and open `http://127.0.0.1:8765/fps/?test&realtime&seed=42`. Use the default prepared Floor 5, Analysts, Endless Action, Originalkaraktär, Pulse SMG, low graphics, 844×390 and all ten team actors. The untouched spawn eye is `(-20.541, 1.58, -30.03999)` facing `(0, 0, 1)`. The profiler also places an observation camera in C08 at `(20, 1.58, -5.4)` facing `(0.70441, 0, 0.70979)` while the two squads play normally. After installing the locked browser tooling below, run `node tools/endless-floor5-profile.cjs` and `node tools/floor5-workstation-visibility.cjs`.
+
+On the M1, median frame time was 16.7 ms in both views before and after the change. The measurements cover local Chromium with touch emulation. Physical iPhone and Android measurements remain open. [Cold and warm results, pass breakdown and raw samples](docs/endless-profile/README.md)
+
+The November 9 audit verified the earlier launch and replay fixes through gameplay, pause and lobby return on the published site. [Gameplay fixes in PR #3](https://github.com/capstere/Cartridge-strike2/pull/3) · [Verification in PR #4](https://github.com/capstere/Cartridge-strike2/pull/4) · [Audit and screenshots](docs/playtest-audit/README.md)
 
 ## Remaining work, in order
 
