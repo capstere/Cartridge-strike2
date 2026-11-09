@@ -535,6 +535,11 @@
       "sha256": "e445d3f7dbeee8152d0078e8729727caf4d039e3e23b21d9d4290b51c53b87c1"
     },
     {
+      "path": "audio/Preparation.mp3",
+      "bytes": 1394923,
+      "sha256": "b8d3fc426201159c2c9a240667341ceb88a341fbeb6102eb84be6c6af3b6bd01"
+    },
+    {
       "path": "credits.html",
       "bytes": 13997,
       "sha256": "3f9d910f81665171eea1dc06a4498b55190a83495bcddab79ef1d03d9a43b666"
@@ -546,18 +551,33 @@
     },
     {
       "path": "fps/focus-hud.css",
-      "bytes": 12618,
-      "sha256": "35bce0dfeef5d4719823974cffb569806fc3ee936fc245d797ef5df9ba95b93d"
+      "bytes": 12622,
+      "sha256": "de8aaa7fba51284424d01093b4afac9bc2018192fe60a1fb01c4446024ad4224"
     },
     {
       "path": "fps/hud.css",
-      "bytes": 34553,
-      "sha256": "4a460523309111b71f72beeff9cc3013c9d2fdbce8e6f901c06fc7411df0d9a4"
+      "bytes": 35692,
+      "sha256": "d5d1e7a2e80b0bb564897088ae4228d21fc905804edfcb094e21f75b1e76324d"
     },
     {
       "path": "fps/index.html",
-      "bytes": 13384,
-      "sha256": "facee5c7514d8fe8941855d9289d5ebf70149b765032f7bfb783672dc8f82001"
+      "bytes": 13508,
+      "sha256": "9e6086febe7765047f5ab0df9a7f8907281c15ffeba3d0b74763635165c4951f"
+    },
+    {
+      "path": "fps/lobby.css",
+      "bytes": 16918,
+      "sha256": "94e08df5078ee00d6a3027b89624f6eef7e343f56a20fc5dee8ffea7f82d40ff"
+    },
+    {
+      "path": "fps/match-loading.css",
+      "bytes": 7093,
+      "sha256": "821006084c9cbc6b7df5631e6fea51e1a674977b7d6be0440fed8e2221cded00"
+    },
+    {
+      "path": "fps/menu-modern.css",
+      "bytes": 6936,
+      "sha256": "65f162fffefcc33966f9caf47e8d687210749bd7c95e43c5aeafe8109c4066dc"
     },
     {
       "path": "fps/style.css",
@@ -1490,6 +1510,11 @@
       "sha256": "4df0b847d675ba1be09338ffb295e9d30b1817cefeca1034d0a98dd3f9d14af0"
     },
     {
+      "path": "index.html",
+      "bytes": 1414,
+      "sha256": "ac3d4f921bd73f7234393ce437306e465f3da5020eebf1b82b80730dc9e5e5a7"
+    },
+    {
       "path": "levels/floor5-prepared.json",
       "bytes": 1761561,
       "sha256": "89283f437623457a10da37be29a282a41591f202270051ba940549ba01b4b050"
@@ -1616,8 +1641,8 @@
     },
     {
       "path": "src/fps/app.mjs",
-      "bytes": 33167,
-      "sha256": "d6782e9fd8fc0523765c6f54e5db363aab604b3fcd0e79921ae1e26115f772f2"
+      "bytes": 33733,
+      "sha256": "50251ee1e00367195104526bfa10e519f8717ca7afcee8fefadd2034c9095635"
     },
     {
       "path": "src/fps/audio.mjs",
@@ -1686,8 +1711,8 @@
     },
     {
       "path": "src/fps/character-selection.mjs",
-      "bytes": 3283,
-      "sha256": "03493fe417bf407f689e9f7d09f0aa0f6822534a1a3d0891c86ac4f0573609f9"
+      "bytes": 3344,
+      "sha256": "9631e751ccbc32a75df488e3ab41501ff4023133c25470a265029d8327f56204"
     },
     {
       "path": "src/fps/combat-audio.mjs",
@@ -1776,8 +1801,8 @@
     },
     {
       "path": "src/fps/focus-hud.mjs",
-      "bytes": 7912,
-      "sha256": "730661f3b12e914897f49ed7c16525f9f9a0bcdb92441f0d1c466101b2eb95b3"
+      "bytes": 7816,
+      "sha256": "ab1db5a675d62246bf22b28a0237d3b7b413ceba23a206868c2123216b7d13b5"
     },
     {
       "path": "src/fps/frame-time-window.mjs",
@@ -1821,8 +1846,8 @@
     },
     {
       "path": "src/fps/hud-shell.mjs",
-      "bytes": 6216,
-      "sha256": "b96abff4f9824b6da90f2d4712eb261e4926d979b6de189c217e49e619e40357"
+      "bytes": 6624,
+      "sha256": "1ef7beabf8878dd9c3d79f31de600f92d7d71b27bd12f39ad6494a931bde9ce1"
     },
     {
       "path": "src/fps/level-adapter.mjs",
@@ -1843,6 +1868,16 @@
       "path": "src/fps/living-floor-scene.mjs",
       "bytes": 19689,
       "sha256": "38662126d1790b787d2fa3b13eeba814d3594be3f3042a33e89d53978085db13"
+    },
+    {
+      "path": "src/fps/lobby-stage.mjs",
+      "bytes": 8291,
+      "sha256": "23c28b8213174125248f0a21f7e6ac9471fdede5fba79d2bdb070bc5b87a8191"
+    },
+    {
+      "path": "src/fps/match-flow.mjs",
+      "bytes": 11646,
+      "sha256": "a712d2da90f5a7721c4c296f6202107661386c9f76c0a22e6732c4d8b0b639dc"
     },
     {
       "path": "src/fps/materials.mjs",
@@ -2075,6 +2110,21 @@
       "sha256": "1ebcd89ac4e7f803e6a11633877cdb57fc1bdb635a72716d222b465677e39a77"
     },
     {
+      "path": "ui/cs-mobile.css",
+      "bytes": 4873,
+      "sha256": "f5b56e84d5fc854e338b498772939dca876cc5cd1f02949264fb2995db535afe"
+    },
+    {
+      "path": "ui/cs-mobile.mjs",
+      "bytes": 1109,
+      "sha256": "e8c20533e41b1c155f2cfff2bed4b55c0f5843bd191937f212c1d3573d23513b"
+    },
+    {
+      "path": "ui/cs-theme.css",
+      "bytes": 1007,
+      "sha256": "adfcfef760cf3b6bc65a2e8bf15a7d4f4374f8032f04805cbea52b0051fafdd9"
+    },
+    {
       "path": "vendor/package.json",
       "bytes": 33,
       "sha256": "a90fc33418afa2b9cbf4768524b021135b965ecdf993457505bfae3ac44a8428"
@@ -2120,7 +2170,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 42823601,
+  "bytes": 42924998,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

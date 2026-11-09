@@ -1,6 +1,9 @@
-import {writeFile,mkdir} from 'node:fs/promises';
+import {writeFile,mkdir,readFile} from 'node:fs/promises';
 import {createWorld} from '../src/fps/world.mjs';
-const w=createWorld(),rows=[];
+const levelProject = process.argv.includes('--prepared')
+ ? JSON.parse(await readFile(new URL('../levels/floor5-prepared.json', import.meta.url), 'utf8'))
+ : undefined;
+const w=createWorld({levelProject}),rows=[];
 for(const d of w.doors.doors)for(const side of [-1,1]){
  // Derive existing capsule clearance, never remove geometry to manufacture PASS.
  // Short vestibules may not have 1.4 m of straight run-up on both sides.

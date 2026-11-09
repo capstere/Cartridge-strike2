@@ -70,7 +70,7 @@ function group() {
     (cols.find(x => x.c.test(w)) || cols[0]).col.append(b);
   }
   shop.replaceChildren(...cols.filter(x => x.col.children.length > 1).map(x => x.col));
-  showDetail(null);
+  if (!detail) showDetail(null);
   grouping = false;
 }
 
@@ -82,10 +82,16 @@ function initBuy() {
   top?.insertBefore(clock, $('close-buy'));
   const msg = $('buy-message');
   new MutationObserver(() => msg.classList.toggle('cs-err', !!msg.textContent && !/köpt\.?$/i.test(msg.textContent.trim()))).observe(msg, { childList: true, characterData: true, subtree: true });
-  setInterval(() => {
+  const syncClock = () => {
     if ($('buy').hidden) return;
     clock.innerHTML = `${($('phase')?.textContent || '').toUpperCase()}<b>${$('timer')?.textContent || ''}</b>`;
-  }, 250);
+  };
+  const clockChanges = new MutationObserver(syncClock);
+  new MutationObserver(() => {
+    if ($('buy').hidden) showDetail(null);
+    else syncClock();
+  }).observe($('buy'), { attributes: true, attributeFilter: ['hidden'] });
+  for (const id of ['phase', 'timer']) clockChanges.observe($(id), { childList: true });
 }
 
 function winnerOf(text) { return /^Counter/i.test(text) ? 'counterAnalysts' : /^Analysts/i.test(text) ? 'analysts' : ''; }
@@ -102,6 +108,7 @@ function init() {
   const card = document.querySelector('#match-end .pause-card');
   if (card && !card.querySelector('.cs-strip')) card.insertAdjacentHTML('afterbegin', '<i class="cs-strip" aria-hidden="true"></i>');
   const sync = () => { const t = team(); if (html.dataset.csTeam !== t) html.dataset.csTeam = t; };
-  sync(); setInterval(sync, 500);
+  sync();
+  new MutationObserver(sync).observe($('menu'), { attributes: true, attributeFilter: ['data-side'] });
 }
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();

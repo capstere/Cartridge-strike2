@@ -143,6 +143,5 @@ export class FocusHud {
     let interact = !!p.action || this.mobile.state.interact;
     if (p.alive && g.phase === 'active') interact ||= !!g.interaction(p) || !!g.world.doors?.nearest(p);
     this.contextButton('interact', interact);
-    this.mobile.root.classList.toggle('hud-manual-trigger', !this.buttons.get('fire')?.hidden);
   }
 }

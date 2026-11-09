@@ -4,14 +4,14 @@
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover,user-scalable=no">
   <meta name="color-scheme" content="dark"><title>Cartridge-Strike · Unit 05</title>
   <link rel="icon" href="data:,"><link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="focus-hud.css">
+  <link rel="stylesheet" href="focus-hud.css?v=2">
   <link rel="stylesheet" href="../ui/cs-theme.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Barlow:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Barlow:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap">
   <link rel="stylesheet" href="menu-modern.css?v=2">
   <link rel="stylesheet" href="lobby.css?v=2">
-  <link rel="stylesheet" href="../ui/cs-mobile.css?v=3">
-  <link rel="stylesheet" href="hud.css?v=4">
-  <link rel="stylesheet" href="match-loading.css?v=2">
+  <link rel="stylesheet" href="../ui/cs-mobile.css?v=4">
+  <link rel="stylesheet" href="hud.css?v=5">
+  <link rel="stylesheet" href="match-loading.css?v=3">
   <script type="importmap">{"imports":{"three":"../vendor/three/three.module.js","three/addons/":"../vendor/three/addons/"}}</script>
 <meta name="robots" content="noindex,nofollow"></head>
 <body>
@@ -47,7 +47,7 @@
       </div>
 
       <div class="lb-launch">
-        <button id="start" class="primary"><span class="lb-start-k">Enter</span><span class="lb-start-t">Starta match</span><span class="lb-start-a" aria-hidden="true">→</span></button>
+        <button id="start" class="primary" onclick="this.dataset.launchRequested='1'"><span class="lb-start-k">Enter</span><span class="lb-start-t">Starta match</span><span class="lb-start-a" aria-hidden="true">→</span></button>
       </div>
     </section>
 
@@ -91,7 +91,7 @@
     <div id="difficulty-label"></div><div id="perf"></div>
   </div>
   <div id="flash-overlay"></div><div id="damage-overlay"></div><div id="damage-direction">⌃</div><div id="smoke-overlay"></div>
-  <section id="buy" class="modal-overlay" hidden><div class="buy-card card"><div class="card-top"><span>UTRUSTNING <b id="buy-money"></b></span><button class="close" id="close-buy" aria-label="Stäng köpmenyn">×</button></div><h2>Välj utrustning</h2><p id="buy-note">Köp under köpfas i egen startzon.</p><div id="shop"></div><div id="buy-message" role="status"></div><button id="return-buy" class="primary">TILLBAKA TILL SPELET →</button></div></section>
+  <section id="buy" class="modal-overlay" hidden><div class="buy-card card"><div class="card-top"><span>UTRUSTNING <b id="buy-money"></b></span><button class="close" id="close-buy" aria-label="Stäng köpmenyn">×</button></div><div class="buy-heading"><h2>Välj utrustning</h2><p id="buy-note">Köp under köpfas i egen startzon.</p></div><div id="shop"></div><div id="buy-message" role="status"></div><button id="return-buy" class="primary">TILLBAKA TILL SPELET →</button></div></section>
   <section id="pause" class="modal-overlay" hidden><div class="card pause-card"><p class="eyebrow">MATCHEN ÄR PAUSAD</p><h2>PAUSAD</h2><p>Alla rundtimers och botar väntar.</p><div id="pause-settings"></div><button id="resume" class="primary">FORTSÄTT →</button><button id="restart" class="secondary">TILLBAKA TILL LOBBYN</button><div class="controls-list"><span>E <b>Håll för plantera / desarmera</b></span><span>4 <b>Cykla cartridge-granater</b></span><span>5 <b>Uppdragsbomb</b></span><span>Tab <b>Resultattavla</b></span></div></div></section>
   <section id="scoreboard" class="modal-overlay" hidden><div class="card scoreboard-card"><div class="card-top"><span>RESULTATTAVLA</span><span id="board-round"></span></div><div id="score-tables"></div><p class="small">Håll Tab · Gisslan räknas inte in i lagen</p></div></section>
   <section id="match-end" class="modal-overlay" hidden><div class="card pause-card"><p class="eyebrow">MATCHEN ÄR AVGJORD</p><h2 id="match-winner"></h2><p id="match-score"></p><button id="new-match" class="primary">SPELA IGEN →</button></div></section>
@@ -115,9 +115,9 @@
     <div class="mobile-portrait-note">Vrid telefonen till liggande läge för bättre spelkontroll</div>
   </div>
   <div id="fatal" hidden><h2>Spelet kunde inte startas</h2><pre></pre><p>Ladda om sidan och öppna spelet i en separat webbläsarflik på datorn.</p></div>
-  <script type="module" src="../src/fps/app.mjs?v=floor5-environment-1"></script>
-  <script type="module" src="../src/fps/lobby-stage.mjs?v=2"></script>
+  <script type="module" async src="../src/fps/match-flow.mjs?v=6"></script>
+  <script type="module" src="../src/fps/app.mjs?v=floor5-environment-2"></script>
+  <script type="module" src="../src/fps/lobby-stage.mjs?v=3"></script>
   <script type="module" src="../ui/cs-mobile.mjs?v=2"></script>
-  <script type="module" src="../src/fps/hud-shell.mjs?v=1"></script>
-  <script type="module" src="../src/fps/match-flow.mjs?v=5"></script>
+  <script type="module" src="../src/fps/hud-shell.mjs?v=2"></script>
 </body></html>

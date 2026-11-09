@@ -2,7 +2,7 @@
 // Lifecycle:  lobby-ready (DOM interactive) → engine-ready (app.mjs hides #loading after
 // world, renderer and assets resolve) → match-ready (app.mjs start() ran, #hud shown).
 // STARTA MATCH is always clickable. If the engine isn't ready yet, the click is held here and
-// the original #start handler (app.mjs) is triggered once it is, so match setup is unchanged.
+// the engine launches from its normal match handler once its assets are ready.
 const $ = id => document.getElementById(id);
 const html = document.documentElement;
 const menu = $('menu'), startBtn = $('start'), engineNote = $('loading'), fatalBox = $('fatal');
@@ -15,55 +15,21 @@ const TIPS = [
   'Cartridge-granater cyklas med 4. Uppdragsbomben ligger på 5.',
 ];
 
-/* ---------------- Lobby theme (Web Audio: gapless loop, own gain, independent of game SFX) ---------------- */
+/* A single streaming element belongs to the lobby for the lifetime of this page. */
+const track = new Audio();
+track.preload = 'none';
+track.loop = true;
+track.volume = .55;
+track.src = '../audio/Preparation.mp3';
 const music = {
-  ctx: null, gain: null, src: null, buffer: null, bufferP: null,
+  track,
   wanted: (() => { try { return sessionStorage.getItem(MUSIC_KEY) !== 'off'; } catch { return true; } })(),
-  url: null,
-  async load() {
-    if (this.bufferP) return this.bufferP;
-    this.bufferP = (async () => {
-      // Lovable hosting serves the track from its asset CDN (pointer file); a plain static host
-      // (e.g. GitHub Pages) uses the original file at public/audio/Preparation.mp3 instead.
-      const sources = [];
-      try { const r = await fetch('../audio/lobby-theme.mp3.asset.json', { cache: 'force-cache' }); if (r.ok) sources.push((await r.json()).url); } catch {}
-      sources.push('../audio/Preparation.mp3');
-      let data = null;
-      for (const url of sources) {
-        try { const r = await fetch(url, { cache: 'force-cache' }); if (r.ok && /audio|octet/.test(r.headers.get('content-type') || 'audio')) { data = await r.arrayBuffer(); this.url = url; break; } } catch {}
-      }
-      if (!data) throw new Error('track not found');
-      this.ensureCtx();
-      this.buffer = await this.ctx.decodeAudioData(data);
-      return this.buffer;
-    })().catch(e => { console.warn('Lobby theme unavailable:', e.message); this.bufferP = null; return null; });
-    return this.bufferP;
-  },
-  ensureCtx() {
-    if (this.ctx) return;
-    const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
-    this.ctx = new AC(); this.gain = this.ctx.createGain(); this.gain.gain.value = 0; this.gain.connect(this.ctx.destination);
-  },
   allowed() { return this.wanted && !menu.hidden && !flow.active && !document.hidden; },
-  async play() {
-    if (!this.allowed() || this.src) return;
-    this.ensureCtx(); if (!this.ctx) return;
-    if (this.ctx.state === 'suspended') { try { await this.ctx.resume(); } catch {} }
-    if (this.ctx.state !== 'running') return; // still blocked by autoplay policy — wait for a gesture
-    const buf = await this.load(); if (!buf || !this.allowed() || this.src) return;
-    const s = this.ctx.createBufferSource(); s.buffer = buf; s.loop = true; s.connect(this.gain); s.start();
-    this.src = s;
-    const g = this.gain.gain, t = this.ctx.currentTime; g.cancelScheduledValues(t); g.setValueAtTime(g.value, t); g.linearRampToValueAtTime(.55, t + 1.2);
-    syncButton();
+  stop() { track.pause(); },
+  sync() {
+    if (!this.allowed()) return this.stop();
+    if (track.paused) track.play().catch(() => {}); // A later user gesture can retry autoplay.
   },
-  stop(fade = .6) {
-    const s = this.src; if (!s) return; this.src = null;
-    const g = this.gain.gain, t = this.ctx.currentTime; g.cancelScheduledValues(t); g.setValueAtTime(g.value, t); g.linearRampToValueAtTime(0, t + fade);
-    try { s.stop(t + fade + .02); } catch {}
-    setTimeout(() => { try { s.disconnect(); } catch {} if (!this.src && this.ctx?.state === 'running' && menu.hidden) this.ctx.suspend().catch(() => {}); }, (fade + .1) * 1000);
-    syncButton();
-  },
-  sync() { if (this.allowed()) this.play(); else this.stop(); },
 };
 
 let musicBtn;
@@ -91,7 +57,7 @@ function addMusicButton() {
 const ui = {};
 function buildOverlay() {
   const el = document.createElement('section');
-  el.id = 'cs-loading'; el.hidden = true; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-labelledby', 'csl-map');
+  el.id = 'cs-loading'; el.hidden = true; el.tabIndex = -1; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-labelledby', 'csl-map');
   el.innerHTML = `
     <div class="csl-grade" aria-hidden="true"></div>
     <header class="csl-top"><span class="csl-brand"><i class="csl-mk"><b></b></i>CARTRIDGE<b>//STRIKE</b></span><span class="csl-mode" id="csl-mode"></span></header>
@@ -117,24 +83,25 @@ function buildOverlay() {
   ui.back.onclick = ui.cancel.onclick = () => flow.toLobby();
 }
 
-const engineReady = () => engineNote.hidden || getComputedStyle(engineNote).display === 'none';
+const engineReady = () => engineNote.hidden;
 const engineFailed = () => !fatalBox.hidden;
 
 const flow = {
-  active: false, releasing: false, attempt: 0, slowTimer: 0, poll: 0,
+  active: false, failed: false, attempt: 0, slowTimer: 0, hardTimer: 0, exitTimer: 0,
   snapshot() {
-    const team = menu.dataset.side || document.querySelector('.team-option.selected')?.dataset.team || 'analysts';
+    const team = document.querySelector('.team-option.selected')?.dataset.team || menu.dataset.side || 'analysts';
     const modeSel = $('game-mode');
     return {
       team, teamName: team === 'counterAnalysts' ? 'Counter Analysts' : 'Analysts',
       mode: modeSel?.options[modeSel.selectedIndex]?.text || 'Klassiska rundor',
       map: (document.title.split('·')[1] || document.querySelector('.lb-brief dd')?.textContent || 'Unit 05').trim(),
-      brief: $('lb-objective')?.textContent || '',
+      brief: document.querySelector('.team-option.selected em')?.textContent || '',
     };
   },
   begin() {
     if (this.active) return;                    // duplicate clicks / Enter presses
-    this.active = true; this.attempt++;
+    clearTimeout(this.exitTimer);
+    this.active = true; this.failed = false; this.attempt++;
     const s = this.snapshot();
     html.dataset.csLoadTeam = s.team;
     ui.map.textContent = s.map; ui.mode.textContent = s.mode.toUpperCase();
@@ -142,84 +109,62 @@ const flow = {
     ui.brief.textContent = s.brief; ui.tip.textContent = TIPS[(this.attempt + Math.floor(Math.random() * TIPS.length)) % TIPS.length];
     ui.error.hidden = true; ui.cancel.hidden = false; ui.root.classList.remove('is-error', 'is-out');
     ui.root.hidden = false; html.classList.add('cs-loading-open');
-    music.stop(.6);
-    this.status();
+    menu.inert = true;
+    ui.root.focus();
+    music.stop();
     clearTimeout(this.slowTimer);
     const limit = Number(new URLSearchParams(location.search).get('loadTimeout')) || 120;
     this.slowTimer = setTimeout(() => { if (this.active && !engineReady()) setStatus(`${engineText()} · det tar längre tid än vanligt`); }, Math.min(20, limit / 2) * 1000);
     clearTimeout(this.hardTimer);
-    this.hardTimer = setTimeout(() => { if (this.active && !this.releasing && !engineReady()) this.fail('Banan svarar inte. Kontrollera anslutningen och försök igen.'); }, limit * 1000);
-    this.watch();
+    this.hardTimer = setTimeout(() => { if (this.active && !this.failed && !engineReady()) this.fail('Banan svarar inte. Kontrollera anslutningen och försök igen.'); }, limit * 1000);
+    this.status();
   },
   status() {
+    if (!this.active || this.failed) return;
     if (engineFailed()) return this.fail();
     if (!engineReady()) { setStatus(engineText()); return; }
     if (document.hidden) { setStatus('Väntar på att fliken blir aktiv'); return; }
-    this.enter();
-  },
-  watch() {
-    clearTimeout(this.poll);
-    this.failed = false;
-    const tick = () => { if (!this.active || this.releasing || this.failed) return; this.status(); if (this.active && !this.releasing) this.poll = setTimeout(tick, 120); };
-    tick();
-  },
-  enter() {
-    if (this.releasing) return;
-    this.releasing = true; setStatus('Startar match');
-    // Two frames so the status paints, then hand over to the untouched app.mjs start handler.
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-      if (!this.active) { this.releasing = false; return; }
-      startBtn.disabled = false;
-      bypass = true; try { startBtn.click(); } finally { bypass = false; }
-      const hudUp = () => !$('hud').hidden && menu.hidden;
-      let n = 0;
-      const wait = () => {
-        if (!this.active) return;
-        if (engineFailed()) { this.releasing = false; return this.fail(); }
-        if (hudUp()) return this.done();
-        if (++n > 150) { this.releasing = false; return this.fail('Matchen startade inte. Försök igen.'); }
-        setTimeout(wait, 40);
-      };
-      wait();
-    }));
-  },
-  explainMouseLock() {
-    // A delayed auto-start has no click to lock the mouse with, so app.mjs opens pause with a
-    // "mouse lock failed" note. Say what the player needs to do instead.
-    let n = 0;
-    const check = () => {
-      const pause = $('pause'), p = pause?.querySelector('p:not(.eyebrow)');
-      if (pause && !pause.hidden && p && /Muslås/.test(p.textContent)) { p.textContent = 'Matchen är redo. Klicka på Fortsätt för att börja.'; $('resume')?.focus(); return; }
-      if (++n < 20) setTimeout(check, 50);
-    };
-    check();
+    if (startBtn.disabled) return this.fail($('character-status').textContent);
+    // A warm launch keeps the original click's user activation for mouse lock and audio.
+    startBtn.dispatchEvent(new Event('cs-start-match'));
+    if (menu.hidden && !$('hud').hidden) this.done();
+    else this.fail('Matchen startade inte. Försök igen.');
   },
   done() {
-    if (!navigator.userActivation?.isActive) this.explainMouseLock();
     clearTimeout(this.slowTimer); clearTimeout(this.hardTimer);
     ui.root.classList.add('is-out');
-    setTimeout(() => { ui.root.hidden = true; ui.root.classList.remove('is-out'); html.classList.remove('cs-loading-open'); }, 420);
-    this.active = false; this.releasing = false;
+    this.exitTimer = setTimeout(() => { ui.root.hidden = true; ui.root.classList.remove('is-out'); html.classList.remove('cs-loading-open'); }, 420);
+    menu.inert = false;
+    this.active = false;
   },
   fail(msg) {
     clearTimeout(this.slowTimer); clearTimeout(this.hardTimer); this.failed = true;
     const detail = msg || (fatalBox.querySelector('pre')?.textContent || '').split('\n')[0] || 'Ett spelobjekt kunde inte laddas.';
-    ui.errText.textContent = detail.slice(0, 220);
+    ui.errText.textContent = /WebGL context/i.test(detail)
+      ? 'WebGL 2 kunde inte starta. Aktivera grafikacceleration i webbläsaren eller prova en annan webbläsare.'
+      : detail.slice(0, 220);
     ui.error.hidden = false; ui.cancel.hidden = true; ui.root.classList.add('is-error');
     setStatus('Laddningen avbröts');
     ui.retry.focus();
   },
   retry() {
-    // Engine boot failed inside app.mjs; a reload re-runs it (browser cache keeps assets) and
-    // relaunches straight into loading with the same selections (stored by the lobby itself).
-    if (engineFailed() || !engineReady()) { try { sessionStorage.setItem('cs-autostart', '1'); } catch {} location.reload(); return; }
-    this.active = false; this.releasing = false; this.begin();
+    if (engineFailed() || !engineReady()) {
+      const url = new URL(location.href);
+      url.searchParams.set('team', this.snapshot().team);
+      url.searchParams.set('seed', $('seed').value || '42');
+      history.replaceState(null, '', url);
+      try { sessionStorage.setItem('cs-autostart', '1'); } catch {}
+      location.reload();
+      return;
+    }
+    this.active = false; this.begin();
   },
   toLobby() {
-    clearTimeout(this.slowTimer); clearTimeout(this.hardTimer); this.active = false; this.releasing = false;
+    clearTimeout(this.slowTimer); clearTimeout(this.hardTimer);
+    this.active = false; this.failed = false;
     ui.root.hidden = true; html.classList.remove('cs-loading-open');
-    if (engineFailed()) fatalBox.hidden = false;
-    music.sync(); startBtn.focus();
+    menu.inert = false;
+    music.sync(); (startBtn.disabled ? $('player-character') : startBtn).focus();
   },
 };
 const engineText = () => {
@@ -230,31 +175,46 @@ const engineText = () => {
 const setStatus = t => { if (ui.status) ui.status.textContent = t; };
 
 /* ---------------- Wiring ---------------- */
-let bypass = false;
 function intercept(e) {
-  if (bypass) return;
   if (!e.target.closest || !e.target.closest('#start')) return;
   e.preventDefault(); e.stopImmediatePropagation();
-  // Gesture: unlock audio contexts now (game SFX unlock happens in app.mjs on the real click).
   flow.begin();
 }
 function init() {
+  const options = [...menu.querySelectorAll('.team-option')];
+  const selectTeam = option => {
+    for (const item of options) {
+      item.classList.toggle('selected', item === option);
+      item.setAttribute('aria-pressed', String(item === option));
+    }
+    menu.dataset.side = option.dataset.team;
+  };
+  for (const option of options) option.addEventListener('click', () => selectTeam(option));
+  const query = new URLSearchParams(location.search);
+  if (!query.has('character') && query.get('team') === 'counterAnalysts') selectTeam(options.find(b => b.dataset.team === 'counterAnalysts'));
   buildOverlay(); addMusicButton();
-  startBtn.disabled = false; startBtn.removeAttribute('disabled');
-  // app.mjs re-applies disabled=characterSelectionFailed when ready; keep it enabled otherwise.
-  new MutationObserver(() => { if (startBtn.disabled && !engineReady()) startBtn.disabled = false; })
-    .observe(startBtn, { attributes: true, attributeFilter: ['disabled'] });
+  html.classList.add('cs-flow-ready');
   document.addEventListener('click', intercept, true);
-  // First permitted interaction starts the theme (autoplay policy).
-  const kick = () => { music.ensureCtx(); music.sync(); };
+  const kick = e => {
+    if (!e.target.closest?.('#start, .cs-music') && music.allowed()) music.sync();
+  };
   for (const t of ['pointerdown', 'keydown', 'touchend']) addEventListener(t, kick, { capture: true, passive: true });
-  music.load();
   new MutationObserver(() => music.sync()).observe(menu, { attributes: true, attributeFilter: ['hidden'] });
-  document.addEventListener('visibilitychange', () => { music.sync(); if (flow.active && !document.hidden) flow.status(); });
-  addEventListener('orientationchange', () => { if (flow.active) setTimeout(() => flow.status(), 300); });
-  addEventListener('keydown', e => { if (flow.active && e.key === 'Escape' && ui.error.hidden) { e.stopImmediatePropagation(); flow.toLobby(); } }, true);
-  new MutationObserver(() => { if (flow.active && engineFailed()) flow.fail(); }).observe(fatalBox, { attributes: true, attributeFilter: ['hidden'] });
-  try { if (sessionStorage.getItem('cs-autostart')) { sessionStorage.removeItem('cs-autostart'); flow.begin(); } } catch {}
+  document.addEventListener('visibilitychange', () => { music.sync(); flow.status(); });
+  addEventListener('pagehide', () => music.stop());
+  addEventListener('pageshow', e => { if (e.persisted) music.sync(); });
+  addEventListener('keydown', e => { if (flow.active && e.key === 'Escape') { e.preventDefault(); e.stopImmediatePropagation(); flow.toLobby(); } }, true);
+  const updates = new MutationObserver(() => flow.status());
+  updates.observe(engineNote, { attributes: true, attributeFilter: ['hidden'], childList: true, subtree: true });
+  updates.observe(fatalBox, { attributes: true, attributeFilter: ['hidden'] });
+  let launchRequested = startBtn.dataset.launchRequested === '1';
+  delete startBtn.dataset.launchRequested;
+  try {
+    if (sessionStorage.getItem('cs-autostart')) launchRequested = true;
+    sessionStorage.removeItem('cs-autostart');
+  } catch {}
   window.__csFlow = { flow, music }; // test hook (read-only use)
+  if (launchRequested && !menu.hidden) flow.begin();
 }
-if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+// Loaded after the lobby markup, independently of the engine module graph.
+init();

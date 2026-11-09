@@ -32,8 +32,7 @@ async function openOriginal(browser, mobile) {
   await page.goto(ORIGIN + '/fps/?test&realtime', { waitUntil: 'domcontentloaded', timeout: 60000 });
   await page.waitForFunction(() => {
     const fatal = document.getElementById('fatal');
-    const start = document.getElementById('start');
-    return !!start && !start.disabled || !!fatal && !fatal.hidden;
+    return !!globalThis.__fps || !!fatal && !fatal.hidden;
   }, null, { timeout: 180000, polling: 400 });
   const error = await page.locator('#fatal').evaluate(el => el.hidden ? '' : el.textContent);
   assert.equal(error, '', 'Game failed booting: ' + error);
@@ -63,6 +62,9 @@ async function openOriginal(browser, mobile) {
   try {
     // The mobile browser is intentionally missing Pointer Lock.
     const { context: mobileCtx, page, state } = await openOriginal(browser, true);
+    // The input checks below advance their own combat frames. An unattended live
+    // match can otherwise kill the player or change rounds between two touch events.
+    await page.evaluate(() => __fps.stopFrameLoop());
     assert.equal(state.mobile, true, 'Expected touchscreen detection');
     assert.equal(state.controlsVisible, true, 'Touch overlay should appear when a match starts');
     assert.equal(state.graphics, 'low', 'Fresh mobile visits should start with low graphics');
