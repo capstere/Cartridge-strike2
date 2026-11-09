@@ -1,5 +1,7 @@
 # Nästa steg för Cartridge Strike
 
+Den här planen beskriver originalprojektet i oktober 2026. Aktuella uppgifter för den fristående FPS-versionen finns i [HANDOVER.md](../HANDOVER.md).
+
 Status 29 oktober 2026. Detta är en prioriterad arbetsplan, inte påståenden om färdiga funktioner. Håll varje spelmekanik i en egen PR med motor-, bot-, render- och webbläsarprov. Floor 5 utan `?level=` och projektformatets schema 2 ska fortsätta fungera.
 
 ## 1. Byggbibliotek och objekt

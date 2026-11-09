@@ -79,6 +79,8 @@ The main renderer and lobby preview have separate frame schedulers. The preview 
 
 ## Codex handoff in priority order
 
+These priorities were recorded during the November 9 playtest. For the current task and its status, see the [active handover](../../HANDOVER.md).
+
 | Order | Work and suspected cause | Reproduction and acceptance |
 | --- | --- | --- |
 | **1. Hardware frame-time and startup profile** | The resource transfer and the difference between spawn views justify measuring GPU and asset costs. Inspect draw submissions, actor posing, model loading and texture uploads in the renderers. [Renderer](../../src/fps/render.mjs) · [Engine renderer](../../src/fps/render-engine.mjs) | Run cold and warm Floor 5 on an iPhone, an Android phone and a hardware desktop. Use a fixed side, seed 42, camera and settings at the elevator and a busy encounter. Collect first actionable frame, transfer, p50/p95 frame time and draw calls. Compare like for like before selecting a draw-call or loading optimization. |
