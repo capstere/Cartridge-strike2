@@ -1,0 +1,282 @@
+{
+  "schema": "cartridge-strike-zombie-animation-review-v1",
+  "source": "user supplied GLB files, direct metadata and bone-motion inspection",
+  "clips": {
+    "Tattered Wanderer": {
+      "filename": "Meshy_AI_Tattered_Wanderer_20261109_animated_mixamo_All_animation.glb",
+      "sizeBytes": 15391864,
+      "skinJoints": 66,
+      "animations": [
+        {
+          "name": "Running",
+          "durationSeconds": 0.6333,
+          "suggestedUse": "Jakt / snabb förflyttning",
+          "playback": "Loop",
+          "hipHorizontalDisplacementMeters": 0.0,
+          "requiresRootMotionReview": false
+        },
+        {
+          "name": "Walking",
+          "durationSeconds": 1.0333,
+          "suggestedUse": "Vandrar i korridorer",
+          "playback": "Loop",
+          "hipHorizontalDisplacementMeters": 0.0,
+          "requiresRootMotionReview": false
+        },
+        {
+          "name": "Angry_Ground_Stomp",
+          "durationSeconds": 1.3667,
+          "suggestedUse": "Hotsignal: stampning när zombien upptäcker spelaren",
+          "playback": "Engång",
+          "hipHorizontalDisplacementMeters": 0.005,
+          "requiresRootMotionReview": false
+        },
+        {
+          "name": "Burpee_Exercise",
+          "durationSeconds": 3.1667,
+          "suggestedUse": "Oroväckande rörelser upp och ned från golvet; sekvens vid dramatisk plats",
+          "playback": "Sekvens eller loop",
+          "hipHorizontalDisplacementMeters": 0.0,
+          "requiresRootMotionReview": false
+        },
+        {
+          "name": "Chair_Sit_Idle_M",
+          "durationSeconds": 10.6667,
+          "suggestedUse": "Sitter vid stol eller i fikarum, kroppslig oro",
+          "playback": "Loop",
+          "hipHorizontalDisplacementMeters": 0.0,
+          "requiresRootMotionReview": false
+        },
+        {
+          "name": "Dead",
+          "durationSeconds": 2.9667,
+          "suggestedUse": "Vanlig dödsanimation, håll sista posen",
+          "playback": "Engång",
+          "hipHorizontalDisplacementMeters": 0.574,
+          "requiresRootMotionReview": true
+        },
+        {
+          "name": "Fall_Dead_from_Abdominal_Injury",
+          "durationSeconds": 3.5,
+          "suggestedUse": "Död/fall efter allvarlig kroppsskada",
+          "playback": "Engång",
+          "hipHorizontalDisplacementMeters": 0.911,
+          "requiresRootMotionReview": true
+        },
+        {
+          "name": "Gunshot_Reaction",
+          "durationSeconds": 3.0,
+          "suggestedUse": "Synlig kulträffsreaktion (begränsad frekvens)",
+          "playback": "Engång",
+          "hipHorizontalDisplacementMeters": 0.095,
+          "requiresRootMotionReview": false
+        },
+        {
+          "name": "Injured_Walk",
+          "durationSeconds": 8.6667,
+          "suggestedUse": "Skadad, långsam förflyttning",
+          "playback": "Loop",
+          "hipHorizontalDisplacementMeters": 0.0,
+          "requiresRootMotionReview": false
+        },
+        {
+          "name": "Knock_Down",
+          "durationSeconds": 2.5,
+          "suggestedUse": "Blir omkullslagen utan att nödvändigtvis dö",
+          "playback": "Engång",
+          "hipHorizontalDisplacementMeters": 0.65,
+          "requiresRootMotionReview": true
+        },
+        {
+          "name": "Shot_and_Blown_Back",
+          "durationSeconds": 2.6667,
+          "suggestedUse": "Kraftigt kast bakåt vid explosion, kräver kontroll av root movement",
+          "playback": "Engång",
+          "hipHorizontalDisplacementMeters": 3.796,
+          "requiresRootMotionReview": true
+        },
+        {
+          "name": "Shot_and_Fall_Backward",
+          "durationSeconds": 3.5,
+          "suggestedUse": "Bakåtfallsdöd, välj vid fritt utrymme",
+          "playback": "Engång",
+          "hipHorizontalDisplacementMeters": 0.999,
+          "requiresRootMotionReview": true
+        },
+        {
+          "name": "Shot_and_Fall_Forward",
+          "durationSeconds": 2.1667,
+          "suggestedUse": "Framåtfallsdöd, välj vid fritt utrymme",
+          "playback": "Engång",
+          "hipHorizontalDisplacementMeters": 0.851,
+          "requiresRootMotionReview": true
+        },
+        {
+          "name": "Sit_to_standTransition_Female_2",
+          "durationSeconds": 2.2667,
+          "suggestedUse": "Reser sig ur sittande innan patrull/jakt",
+          "playback": "Engång",
+          "hipHorizontalDisplacementMeters": 0.363,
+          "requiresRootMotionReview": false
+        },
+        {
+          "name": "Skill_01",
+          "durationSeconds": 1.0667,
+          "suggestedUse": "Särskild rörelse, måste förhandsgranskas innan beteendet namnges",
+          "playback": "Engång",
+          "hipHorizontalDisplacementMeters": 0.179,
+          "requiresRootMotionReview": false
+        },
+        {
+          "name": "mage_soell_cast_2",
+          "durationSeconds": 3.0,
+          "suggestedUse": "Särskild gest, kan bli hot/ryckning efter visuell kontroll",
+          "playback": "Engång",
+          "hipHorizontalDisplacementMeters": 0.0,
+          "requiresRootMotionReview": false
+        }
+      ]
+    },
+    "The Hollow Walker": {
+      "filename": "Meshy_AI_The_Hollow_Walker_20261109_animated_mixamo_All_animation.glb",
+      "sizeBytes": 24296488,
+      "skinJoints": 68,
+      "animations": [
+        {
+          "name": "Running",
+          "durationSeconds": 0.6333,
+          "suggestedUse": "Snabb förföljelse",
+          "playback": "Loop",
+          "hipHorizontalDisplacementMeters": 0.0,
+          "requiresRootMotionReview": false
+        },
+        {
+          "name": "Walking",
+          "durationSeconds": 1.0333,
+          "suggestedUse": "Vanlig vandring",
+          "playback": "Loop",
+          "hipHorizontalDisplacementMeters": 0.0,
+          "requiresRootMotionReview": false
+        },
+        {
+          "name": "Angry_Ground_Stomp_2",
+          "durationSeconds": 1.8,
+          "suggestedUse": "Aggressivt markstamp, varningsreaktion",
+          "playback": "Engång",
+          "hipHorizontalDisplacementMeters": 0.001,
+          "requiresRootMotionReview": false
+        },
+        {
+          "name": "Dead",
+          "durationSeconds": 2.9667,
+          "suggestedUse": "Vanlig död",
+          "playback": "Engång",
+          "hipHorizontalDisplacementMeters": 0.652,
+          "requiresRootMotionReview": true
+        },
+        {
+          "name": "Fall_Dead_from_Abdominal_Injury",
+          "durationSeconds": 3.5,
+          "suggestedUse": "Död efter kroppsskada",
+          "playback": "Engång",
+          "hipHorizontalDisplacementMeters": 1.055,
+          "requiresRootMotionReview": true
+        },
+        {
+          "name": "Gunshot_Reaction",
+          "durationSeconds": 3.0,
+          "suggestedUse": "Kulträffsreaktion",
+          "playback": "Engång",
+          "hipHorizontalDisplacementMeters": 0.089,
+          "requiresRootMotionReview": false
+        },
+        {
+          "name": "Head_Hold_in_Pain",
+          "durationSeconds": 3.7,
+          "suggestedUse": "Tar sig åt huvudet, oro eller efter huvudskada",
+          "playback": "Engång",
+          "hipHorizontalDisplacementMeters": 0.009,
+          "requiresRootMotionReview": false
+        },
+        {
+          "name": "Hit_Reaction",
+          "durationSeconds": 1.6333,
+          "suggestedUse": "Träffreaktion, har nära 1 m sidledes animationstranslation",
+          "playback": "Engång",
+          "hipHorizontalDisplacementMeters": 0.9,
+          "requiresRootMotionReview": true
+        },
+        {
+          "name": "Idle_8",
+          "durationSeconds": 8.0,
+          "suggestedUse": "Står stilla, tittar och väntar",
+          "playback": "Loop",
+          "hipHorizontalDisplacementMeters": 0.0,
+          "requiresRootMotionReview": false
+        },
+        {
+          "name": "Knock_Down_1",
+          "durationSeconds": 3.2667,
+          "suggestedUse": "Faller/knuffas ned, kan senare resa sig",
+          "playback": "Engång",
+          "hipHorizontalDisplacementMeters": 0.939,
+          "requiresRootMotionReview": true
+        },
+        {
+          "name": "Limping_Walk_3_inplace",
+          "durationSeconds": 2.8667,
+          "suggestedUse": "Haltar efter skada / sömngångarlik vandring",
+          "playback": "Loop",
+          "hipHorizontalDisplacementMeters": 0.002,
+          "requiresRootMotionReview": false
+        },
+        {
+          "name": "Shot_and_Blown_Back",
+          "durationSeconds": 2.6667,
+          "suggestedUse": "Kraftigt bakåtkast vid explosion, kräver root-motion hantering",
+          "playback": "Engång",
+          "hipHorizontalDisplacementMeters": 4.018,
+          "requiresRootMotionReview": true
+        },
+        {
+          "name": "Shot_and_Fall_Forward",
+          "durationSeconds": 2.1667,
+          "suggestedUse": "Framåtfallsdöd",
+          "playback": "Engång",
+          "hipHorizontalDisplacementMeters": 0.929,
+          "requiresRootMotionReview": true
+        },
+        {
+          "name": "Stand_Up4",
+          "durationSeconds": 1.6667,
+          "suggestedUse": "Reser sig från liggande/låg position",
+          "playback": "Engång",
+          "hipHorizontalDisplacementMeters": 0.732,
+          "requiresRootMotionReview": true
+        },
+        {
+          "name": "Toss_and_Turn",
+          "durationSeconds": 17.6333,
+          "suggestedUse": "Ligger ned och vrider sig; möjlig viloscen i Lounge",
+          "playback": "Loop",
+          "hipHorizontalDisplacementMeters": 0.0,
+          "requiresRootMotionReview": false
+        },
+        {
+          "name": "dying_backwards",
+          "durationSeconds": 2.2,
+          "suggestedUse": "Bakåtriktad dödsanimation",
+          "playback": "Engång",
+          "hipHorizontalDisplacementMeters": 0.73,
+          "requiresRootMotionReview": true
+        }
+      ]
+    }
+  },
+  "notes": [
+    "This is an analysis catalog, not a drop-in executable configuration.",
+    "Do not assume effects/attacks exist for ambiguously named Skill_01 or mage_soell_cast_2.",
+    "Root bone translation is not physics movement. Strip or reconcile with existing world collision.",
+    "No model has a named melee bite/scratch attack clip."
+  ]
+}
