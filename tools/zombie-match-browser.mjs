@@ -6,7 +6,7 @@ import {chromium} from '../frontline/source/tools/dev/node_modules/playwright-co
 const origin=process.env.FPS_TEST_ORIGIN||'http://127.0.0.1:8765';
 const captures=process.env.FPS_CAPTURE_DIR;
 if(captures)await mkdir(captures,{recursive:true});
-const browser=await chromium.launch({channel:'chromium',args:['--use-angle=metal']});
+const browser=await chromium.launch({channel:'chromium',args:process.platform==='darwin'?['--use-angle=metal']:[]});
 try{
  for(const mobile of [false,true]){
   const mode=mobile?'endless':'classic',page=await browser.newPage({viewport:mobile?{width:844,height:390}:{width:1280,height:720},hasTouch:mobile,isMobile:mobile});
@@ -15,6 +15,10 @@ try{
   await page.goto(origin+'/fps/?test&seed=42',{waitUntil:'domcontentloaded'});
   await page.locator('#lb-mode-seg [data-value='+mode+']').click();await page.locator('#start').click();
   await page.waitForFunction(()=>window.__fps?.game.player && !document.querySelector('#hud').hidden && document.querySelector('#cs-loading').hidden,null,{timeout:120000});
+  // A cold desktop Pages load can outlast the Start click's pointer-lock activation.
+  // Resume through the normal Continue control before sampling the simulation.
+  if(await page.locator('#resume').isVisible())await page.locator('#resume').click();
+  await page.waitForFunction(()=>__fps.modal===null && !__fps.game.state.paused);
   const start=await page.evaluate(()=>{
    const f=__fps,g=f.game;f.stopFrameLoop();g.state.buyDeadline=g.state.time;g.step(1/60);
    return {mode:g.state.mode,teams:g.actors.map(a=>a.team),zombies:g.state.zombies.map(z=>[z.model,z.behavior]),counts:[...f.renderer.zombieVisuals.sources.values()].map(s=>s.clips.size)};

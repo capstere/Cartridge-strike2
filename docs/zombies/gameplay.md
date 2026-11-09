@@ -65,6 +65,16 @@ The core suite passed 165 tests and the runtime manifest verified 439 files. The
 
 In Chromium, normal lobby selections started desktop Classic and touch-layout Endless. Both residents rendered with their own skeletons. The guided match check positioned the observer at the actual lounge and desk, woke each resident, fired a pistol, and exercised knockdown, recovery and death with the nine team bots present. The plain FPS address also started and returned both modes to the lobby with two shared geometries and two shared materials across the five or three skeletons.
 
+### Published game
+
+After the feature merge at `4753c9c`, both plain public lobby launches loaded the two model bundles, rendered the expected skeletons and returned to the lobby. Eleven published file digests matched the tested build. Guided checks on the deployed game observed both wake-up clips, pistol damage, knockdown, recovery and a held death pose in each mode. A cold desktop launch can ask the player to press **Continue** to acquire pointer lock. The browser check follows that prompt before advancing simulation. [Pages deployment](https://github.com/capstere/Cartridge-strike2/actions/runs/42719090306)
+
+The desktop Classic capture shows Tattered on the I16 desk chair. The touch-layout Endless capture shows Hollow in the I25 lounge. Both use a positioned observer inside the running published match.
+
+![Tattered Wanderer seated at the desk in Meeting Room B in Classic](captures/classic-office.png)
+
+![The Hollow Walker resting between lounge chairs in touch-layout Endless](captures/endless-lounge.png)
+
 ### Frame timing
 
 Apple M1, ANGLE Metal, Chromium 153. Each row sampled 180 rendering callbacks in a populated Endless match with a fixed view of the lounge, after a short warmup. One Hollow Walker was in view on the feature build. The comparison build was main at `2957bed`.
