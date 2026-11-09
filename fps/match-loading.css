@@ -75,3 +75,7 @@ html.cs-loading-open #loading{visibility:hidden}
 .lobby .cs-music .cs-x{display:none}
 .lobby .cs-music.is-off{color:var(--lb-mute,#8a96a8)}
 .lobby .cs-music.is-off .cs-wave{display:none}.lobby .cs-music.is-off .cs-x{display:block}
+
+/* The launch dialog presents boot errors. Keep a live-match fatal error visible. */
+html.cs-flow-ready #menu:not([hidden]) ~ #fatal{display:none}
+#cs-loading.is-out{pointer-events:none}

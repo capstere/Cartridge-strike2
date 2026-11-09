@@ -132,11 +132,11 @@ html #buy .card-top>span:first-child{font-family:var(--h-mono);color:var(--h-mu)
 html #buy #buy-money{font-family:var(--h-disp)!important;font-weight:800;font-size:28px;letter-spacing:.02em;color:var(--h-ok)!important;margin-left:10px;vertical-align:-4px}
 html #buy .cs-buy-clock{margin-left:auto;font-family:var(--h-mono);font-size:10px;letter-spacing:.2em;color:var(--h-mu)}
 html #buy .cs-buy-clock b{font-family:var(--h-disp);font-size:24px;font-weight:700;letter-spacing:.04em;color:var(--h-wh);margin-left:8px;vertical-align:-3px;font-variant-numeric:tabular-nums}
-html #buy .buy-card>h2{grid-column:1;margin:16px 22px 0!important;font-size:30px!important}
-html #buy #buy-note{grid-column:1;grid-row:2;align-self:end;margin:0 22px 0 auto!important;font-family:var(--h-mono);font-size:10px;letter-spacing:.08em;color:var(--h-mu)!important;padding-bottom:6px}
-html #buy .buy-card>h2{grid-row:2}
+html #buy .buy-heading{grid-area:2/1;display:flex;flex-wrap:wrap;align-items:baseline;column-gap:16px;row-gap:4px;padding:12px 22px 0}
+html #buy .buy-heading h2{margin:0!important;font-size:30px!important}
+html #buy #buy-note{margin:0!important;font-family:var(--h-mono);font-size:10px;letter-spacing:.08em;color:var(--h-mu)!important;padding-bottom:6px}
 html #buy #shop{grid-column:1;grid-row:3;display:grid!important;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px!important;padding:16px 22px!important;overflow-y:auto;min-height:0;align-content:start;overscroll-behavior:contain}
-html #buy .cs-buy-col{display:flex;flex-direction:column;gap:6px;min-width:0}
+html #buy .cs-buy-col{container-type:inline-size;display:flex;flex-direction:column;gap:6px;min-width:0}
 html #buy .cs-buy-col>h3{display:flex;align-items:baseline;gap:10px;margin:0 0 4px;font-family:var(--h-disp);font-weight:700;font-size:18px;letter-spacing:.1em;text-transform:uppercase;color:var(--h-wh)}
 html #buy .cs-buy-col>h3 b{font-family:var(--h-mono);font-size:10px;color:var(--h-ac);font-weight:600}
 html #buy #shop button{position:relative;display:grid!important;grid-template-columns:auto 1fr auto;grid-template-rows:auto auto;align-items:center;column-gap:12px;row-gap:2px;min-height:64px!important;padding:10px 12px!important;text-align:left;background:#0c1119!important;border:1px solid var(--h-ln)!important;border-radius:0!important;color:var(--h-wh)!important;transition:border-color .12s,background .12s}
@@ -156,7 +156,7 @@ html #buy #shop button.cs-owned{border-color:#5fd3a066!important}
 html #buy #shop button.cs-owned::before{content:"";position:absolute;left:-1px;top:-1px;bottom:-1px;width:3px;background:var(--h-ok)}
 html #buy .cs-buy-detail{grid-column:2;grid-row:2/4;border-left:1px solid var(--h-ln);padding:18px 20px;display:flex;flex-direction:column;gap:12px;min-height:0;overflow-y:auto}
 html #buy .cs-buy-detail small{font-family:var(--h-mono);font-size:9.5px;letter-spacing:.24em;color:var(--h-mu)}
-html #buy .cs-buy-detail h4{margin:0;font-family:var(--h-disp);font-weight:800;font-size:28px;letter-spacing:.02em;text-transform:uppercase;line-height:1}
+html #buy .cs-buy-detail h4{overflow-wrap:anywhere;margin:0;font-family:var(--h-disp);font-weight:800;font-size:28px;letter-spacing:.02em;text-transform:uppercase;line-height:1}
 html #buy .cs-buy-detail .cs-big{height:70px;color:#a9c4ff}.cs-buy-detail .cs-big svg{width:100%;height:100%;fill:currentColor}
 html #buy .cs-buy-detail dl{margin:0;display:grid;gap:8px}
 html #buy .cs-buy-detail dl div{display:grid;grid-template-columns:90px 1fr auto;align-items:center;gap:10px;font-family:var(--h-mono);font-size:10px;letter-spacing:.1em;color:var(--h-mu)}
@@ -223,7 +223,7 @@ html #mobile-controls .mobile-pause,html #mobile-controls .mobile-more{border-ra
   html #buy .card-top{padding:6px 12px!important}
   html #buy #buy-money{font-size:22px}
   html #buy .cs-buy-clock b{font-size:18px}
-  html #buy .buy-card>h2,html #buy #buy-note{display:none}
+  html #buy .buy-heading{display:none}
   html #buy #shop{grid-row:2;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px!important;padding:8px 12px!important}
   html #buy .cs-buy-col>h3{font-size:13px;margin:0}
   html #buy #shop button{min-height:46px!important;padding:5px 8px!important;column-gap:6px}
@@ -233,7 +233,7 @@ html #mobile-controls .mobile-pause,html #mobile-controls .mobile-more{border-ra
   html #buy .cs-buy-detail{grid-row:2;padding:8px 12px;gap:6px}
   html #buy .cs-buy-detail h4{font-size:18px}
   html #buy .cs-buy-detail .cs-big{height:34px}
-  html #buy .cs-buy-detail p{display:none}
+  html #buy .cs-buy-detail p{font-size:12px}
   html #buy .cs-buy-detail dl div{grid-template-columns:62px 1fr auto;font-size:9px}
   html #buy #buy-message{grid-row:3;font-size:12px;margin:0 12px!important}
   html #buy #return-buy{grid-row:3;margin:6px 10px 8px!important;min-height:44px;font-size:13px!important;letter-spacing:.06em!important;padding:0 8px}
@@ -394,4 +394,26 @@ html[data-hud=clean] #mobile-controls #mobile-utilities{background:#06090ef2!imp
 }
 @media (prefers-reduced-motion:reduce){
   html #hud #killfeed>div,html #hud #round-result,html #buy #buy-message:not(:empty){animation:none!important}
+}
+
+/* Keep magazine and reserve inside the space beside the touch weapon switch. */
+@media (orientation:landscape) and (max-height:520px){
+  html.touch-fps[data-hud=clean] #hud #round-label{max-width:none}
+  html.touch-fps[data-hud=clean] #hud #control-card{
+    width:min(340px,calc(100vw - 160px));
+    grid-template-columns:minmax(0,1fr) max-content;
+  }
+  html.touch-fps[data-hud=clean] #hud #control-card footer{margin:0}
+  html.touch-fps[data-hud=clean] #hud .ammo{padding:3px!important}
+  html.touch-fps[data-hud=clean] #hud .ammo strong{font-size:21px!important}
+  html.touch-fps[data-hud=clean] #hud .ammo strong span{font-size:10px!important}
+}
+
+@container (max-width:245px){
+  html #buy #shop button{grid-template-columns:minmax(0,1fr) auto}
+  html #buy #shop button .cs-ico{display:none}
+  html #buy #shop button strong{grid-area:1/1/2/3;white-space:normal;overflow-wrap:anywhere}
+  html #buy #shop button em{grid-area:2/2}
+  html #buy #shop button small{grid-column:1!important}
+  html #buy #shop button.cs-other::after{position:static;grid-area:2/1;text-align:left}
 }

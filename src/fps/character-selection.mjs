@@ -31,5 +31,7 @@ export async function setupCharacterMenu({getTeam,getSeed}){
  remove.onclick=async()=>{if(!confirm('Ta bort den här lokala spelkopian? Detta påverkar inte andra sparade filer.'))return;remove.disabled=true;try{await deletePrivateCharacter(select.value);navigate('');}catch(e){say(e.message);remove.disabled=false;}};
  return {id,loaded(name){try{if(id)localStorage.setItem(CHARACTER_PREFERENCE,id);else localStorage.removeItem(CHARACTER_PREFERENCE);}catch{say('Valet används nu men kunde inte kommas ihåg i denna webbläsare.');return;}
   if(name)say(name+' · Lokalt sparad. Händerna matchar. Välj lag och starta match.');
- },error(message){say(message+' Välj Originalkaraktär eller en annan sparad karaktär för att fortsätta.');}};
+ },error(message){
+  say(message.includes('Välj Originalkaraktär') ? message : message+' Välj Originalkaraktär eller en annan sparad karaktär för att fortsätta.');
+ }};
 }

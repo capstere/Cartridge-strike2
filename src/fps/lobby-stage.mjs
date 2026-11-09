@@ -114,6 +114,7 @@ let stage=null;
 async function boot(){
   // Wait until app.mjs finished loading the level and any private character design.
   await new Promise(r=>{const ok=()=>$('loading').hidden||$('loading').style.display==='none';if(ok())return r();const mo=new MutationObserver(()=>{if(ok()){mo.disconnect();r();}});mo.observe($('loading'),{attributes:true});});
+  if (!$('fatal').hidden) return;
   try{await loadCharacterLibrary();stage=makeStage();syncTeam();}catch(e){console.warn('Lobby preview unavailable:',e.message);}
 }
 syncTeam();boot();
