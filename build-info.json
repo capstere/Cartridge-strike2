@@ -470,6 +470,16 @@
       "sha256": "780a0473bc7202fae47647986918dede4598286c3e2ec95ac03710aa8d00405c"
     },
     {
+      "path": "assets/fps/zombies/hollow.glb.gz",
+      "bytes": 3268124,
+      "sha256": "b6de52bc2085af04a1e1681784cf9f2532f03a6f64f7fc2b75683c82fdb967c9"
+    },
+    {
+      "path": "assets/fps/zombies/tattered.glb.gz",
+      "bytes": 2903692,
+      "sha256": "f8c7c5138a04835c30d5b755cdb9b2e25e9abfd729e5fca8afb8ff21a00d0462"
+    },
+    {
       "path": "assets/models/1c72ef12bf0604e0ece223bd1142bfcf4fcbecb0770b387461d9b3a478a6f6c7.glb",
       "bytes": 21012,
       "sha256": "1c72ef12bf0604e0ece223bd1142bfcf4fcbecb0770b387461d9b3a478a6f6c7"
@@ -1631,8 +1641,8 @@
     },
     {
       "path": "src/fps/action-rules.mjs",
-      "bytes": 11568,
-      "sha256": "bd86fe48ee6627d062848cf32e02bf4eb88f67ef6d530dbb543ef71ff5a39f2c"
+      "bytes": 11722,
+      "sha256": "f36835a3fd61a7f79781bda1c034d48ba97ffb377494a045fa8cd89c5b253ff4"
     },
     {
       "path": "src/fps/action-visuals.mjs",
@@ -1641,18 +1651,23 @@
     },
     {
       "path": "src/fps/app.mjs",
-      "bytes": 33733,
-      "sha256": "50251ee1e00367195104526bfa10e519f8717ca7afcee8fefadd2034c9095635"
+      "bytes": 33756,
+      "sha256": "388bf5977fd59c780fad8aa132aee25ce474d8f395f95ce9632a2e03cea65c2b"
     },
     {
       "path": "src/fps/audio.mjs",
-      "bytes": 17304,
-      "sha256": "88f111ae52dd7fc32d1f707649267bde97614fe49247028adae2827947df30b3"
+      "bytes": 17443,
+      "sha256": "698e8e5fd9ce17b5811f6c0d58e2b204f14b308f5d434a54b7113488fbcd10e1"
     },
     {
       "path": "src/fps/authored-hand-data.mjs",
       "bytes": 849739,
       "sha256": "a061ad5d251ec2247dd9ca2d5bb979a32692f6f45815e9437cc708a74eb78fbe"
+    },
+    {
+      "path": "src/fps/body-recovery.mjs",
+      "bytes": 1354,
+      "sha256": "019810ea6ababa2f76b6ab815dd3624781cdf7b95d63b93066596c0130fb68fc"
     },
     {
       "path": "src/fps/bot-tactics.mjs",
@@ -1661,8 +1676,8 @@
     },
     {
       "path": "src/fps/bots.mjs",
-      "bytes": 31493,
-      "sha256": "de7ad789473cf78002844eedd7c91378d34606d46870b9bd361c966dd34f4b33"
+      "bytes": 31363,
+      "sha256": "d89fba7dfa08f23acdad1569959825889e283ec5426a2a83022b7099ec44f92c"
     },
     {
       "path": "src/fps/business-hostage.mjs",
@@ -1721,8 +1736,8 @@
     },
     {
       "path": "src/fps/combat-flow.mjs",
-      "bytes": 8296,
-      "sha256": "97dc4a767de80ec7097c03bb9b99559be8d62a8448c0b14562e84a82db3295e6"
+      "bytes": 8340,
+      "sha256": "7515494cbc30291d68c09482db1f6c69a3e4ec224a0a3faffe39933e7c68c0ff"
     },
     {
       "path": "src/fps/combat-hud.mjs",
@@ -1821,8 +1836,8 @@
     },
     {
       "path": "src/fps/game.mjs",
-      "bytes": 40019,
-      "sha256": "f74e58f4295675a6075d1280446c7c48e8673ebae6b9ed1099072e5c67233c75"
+      "bytes": 40952,
+      "sha256": "0ec6757051c20c66d861578a1ad72c32e34ee3a8db34b960262d1bcc02b33899"
     },
     {
       "path": "src/fps/glass-visuals.mjs",
@@ -1831,8 +1846,8 @@
     },
     {
       "path": "src/fps/grenade-assist.mjs",
-      "bytes": 6626,
-      "sha256": "086a86e227b8afdd52021a9557d5c2081a4d29b22d5251d7866a23878237a3a8"
+      "bytes": 6641,
+      "sha256": "e35dd9374892f027d22b64c3ddbd13fd3c9630fc1766fbb8b03e9b8b05ffe973"
     },
     {
       "path": "src/fps/grenade-physics.mjs",
@@ -1961,8 +1976,8 @@
     },
     {
       "path": "src/fps/render.mjs",
-      "bytes": 18724,
-      "sha256": "c7bdd2d2a4f91ecbe9711a95a5b1d260f730c77179b55e57fced4af11a4608e2"
+      "bytes": 19206,
+      "sha256": "832c7cd163125b1478f8a72468ac877d2856b4672d82af2a3e93f8da5734c912"
     },
     {
       "path": "src/fps/riposte-audio.mjs",
@@ -2105,6 +2120,26 @@
       "sha256": "0e2262dddad71641434b36c636805c6d6e646217174c439ed05a233d8322e27e"
     },
     {
+      "path": "src/fps/zombie-poses.mjs",
+      "bytes": 3371,
+      "sha256": "a592ed58c116f7b06cdf234e893b60dd2996339733c70487f58fe8423e3d99ed"
+    },
+    {
+      "path": "src/fps/zombie-sites.mjs",
+      "bytes": 2031,
+      "sha256": "81520abf23c54e8c19e5f451456d2536bc757c42296171713e3a8a5bfd0fc9b8"
+    },
+    {
+      "path": "src/fps/zombie-visuals.mjs",
+      "bytes": 5371,
+      "sha256": "0f5d90a6db50be53f4924476bcd5d460c6cd2c6442b4bd26c8886eaa4be8c32c"
+    },
+    {
+      "path": "src/fps/zombies.mjs",
+      "bytes": 10588,
+      "sha256": "e42fd70a7a633fc936a5905f459fc8ce03027acf30c23d6587c829143ac253ae"
+    },
+    {
       "path": "src/world.js",
       "bytes": 19677,
       "sha256": "1ebcd89ac4e7f803e6a11633877cdb57fc1bdb635a72716d222b465677e39a77"
@@ -2170,7 +2205,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 42925440,
+  "bytes": 49121631,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

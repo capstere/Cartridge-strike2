@@ -111,3 +111,7 @@ The core suite passed 158 tests. The runtime verifier checked all 432 files and 
 | Physical iPhone | Open. Record Safari, device, render backend where exposed, frame timings and the input/audio checks in the handover. |
 | Physical Android | Open. Record Chrome, device, render backend, frame timings and the same input/audio checks. |
 | Published GitHub Pages | The earlier audit covers the deployed lobby, gameplay and return. These before/after measurements used locally served checkouts. |
+
+## November 10 integration check
+
+**PASS** on Apple M1 Chromium/Metal after bringing the rendering change together with the published zombie integration from main `ad2479e`. The test compared the coarse furniture cells and individual workstation checks on identical live frames. Nine sampled views had zero changed pixels. The open Analysts lift submitted 1,901 world draws with the change and 2,253 using coarse cells. The C08 sightline submitted 1,993 and 3,665 respectively. The I04 desk remained visible. Touch movement, aiming, return to lobby and both zombie match regression cases passed. The core suite passed 165 tests, the runtime manifest verified 439 files and the prepared door sweep passed all 102 crossings.

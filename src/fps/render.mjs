@@ -15,6 +15,8 @@ import {buildFacilityScene} from './facility-scene.mjs';
 import {installFocusLighting} from './strike-kit-environment.mjs';
 import {VisualDepth} from './visual-depth.mjs';
 import {inspectPose} from './view-surface.mjs';
+import {ZombieVisuals} from './zombie-visuals.mjs';
+import {isZombieFloor} from './zombie-sites.mjs';
 import {CombatVisuals} from './combat-visuals.mjs';
 /** Presentation-quality entrypoint. The engine, game state and geometry remain separate.
  * The engine imports the public model API. Arcade visual effects remain separate
@@ -73,6 +75,7 @@ export class Renderer extends EngineRenderer {
     this.renderer.render=(scene,camera)=>{
       if(scene===this.scene&&!this.inDepthPass)this.doorVisuals?.update(camera,this.renderer.shadowMap.enabled?this.lights:[]);
       if(scene===this.scene&&!this.inDepthPass){
+        this.zombieVisuals?.update(this.presentationGame,camera);
         this.projectBatches?.update(camera);
         this.floorEnvironment?.update(camera,this.presentationGame?.state.time||0,this.settings,world);
       }
@@ -87,7 +90,8 @@ export class Renderer extends EngineRenderer {
     this.combatVisuals=new CombatVisuals(this.scene,world,settings);
     this.presentationDisposed=false;this.presentationRestores=[];this.presentationField=null;
     // Stage the field before the existing app declares its assets ready. Never bake in render().
-    this.assetsReady=this.assetsReady.then(async()=>{
+    if(isZombieFloor(world))this.zombieVisuals=new ZombieVisuals(this.scene,settings.mobile);
+    this.assetsReady=Promise.all([this.assetsReady,this.zombieVisuals?.ready]).then(async()=>{
       if(this.presentationDisposed)return;
       if(world.projectScene){
        this.projectFurniture=new THREE.Group();this.scene.add(this.projectFurniture);
@@ -226,16 +230,23 @@ export class Renderer extends EngineRenderer {
     // Door instance culling runs at the world-draw hook, after camera/lights update.
     this.presentationGame=game;this.glassVisuals?.update(game.state.time);this.combatVisuals?.update(game);this.livingScene?.update(game.state.time);this.actionVisuals?.update(game,this.camera);super.render(game,viewActor,dt);
   }
-  events(events,game){this.glassVisuals?.events(events,game);this.combatVisuals?.events(events,game);super.events(events.filter(e=>e.type!=='hit'||(e.sourceId===game.player?.id&&game.actors.some(a=>a.id===e.actorId&&a.team!==game.player.team))),game);this.actionVisuals?.events(events,game);}
+  events(events,game){
+    this.glassVisuals?.events(events,game);this.combatVisuals?.events(events,game);
+    const playerHit=e=>e.sourceId===game.player?.id && (
+      game.actors.some(a=>a.id===e.actorId && a.team!==game.player.team) ||
+      game.state.zombies?.some(z=>z.id===e.actorId));
+    super.events(events.filter(e=>e.type!=='hit'||playerHit(e)),game);
+    this.actionVisuals?.events(events,game);
+  }
   resetTransient(){
-    super.resetTransient();this.inspectAt=-Infinity;this.combatVisuals?.clear();this.actionVisuals?.clear();
+    super.resetTransient();this.zombieVisuals?.clear();this.inspectAt=-Infinity;this.combatVisuals?.clear();this.actionVisuals?.clear();
     // New rounds must not inherit recoil springs or footsteps from the previous life.
     for(const model of this.weaponCache?.values()||[])if(model.userData.presentationMotion)model.userData.presentationMotion.time=null;
     for(const model of this.actors?.values()||[]){if(model.userData.presentationGait)model.userData.presentationGait.time=null;if(model.userData.avatar){model.userData.avatar.time=-1;model.userData.avatar.death=null;}}
   }
   dispose(){
     if(this.presentationDisposed)return;this.presentationDisposed=true;
-    this.floorEnvironment?.dispose();this.glassVisuals?.dispose();this.detailScene?.dispose();this.doorVisuals?.dispose();this.riposteProps?.dispose();
+    this.zombieVisuals?.dispose();this.floorEnvironment?.dispose();this.glassVisuals?.dispose();this.detailScene?.dispose();this.doorVisuals?.dispose();this.riposteProps?.dispose();
     this.focusLighting?.dispose();this.facilityScene?.dispose();
     for(const restore of this.presentationRestores||[])restore();
      for(const m of this.floor5PatternMaterials?.values()||[])m.dispose();this.floor5PatternMaterials?.clear();

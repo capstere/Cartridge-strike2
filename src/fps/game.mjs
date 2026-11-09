@@ -1,3 +1,6 @@
+import {rejoinNavigation} from './body-recovery.mjs';
+import {populateZombies,tickZombies,reactZombie} from './zombies.mjs';
+import {zombieRay,zombiePosition} from './zombie-poses.mjs';
 import {missionRoomName} from './player-names.mjs';
 import { grenadeLaunch, advanceGrenade } from './grenade-physics.mjs';
 import { shotSpread } from './tactical-rules.mjs';
@@ -9,7 +12,10 @@ import {prepareActionRound,tickActionState,recordActionDeath,sendRadio,launchRoc
 export { CONFIG, TEAMS, WEAPONS, DIFFICULTIES, DEFAULT_DIFFICULTY };
 
 export const distance = (a, b) => Math.hypot(a.x - b.x, a.z - b.z);
-export const eye = actor => ({ x: actor.x, y: actor.y + actor.height - .12, z: actor.z });
+export const eye = actor => {
+  const p=actor.kind==='zombie'?zombiePosition(actor,actor.bodyTime):actor;
+  return {x:p.x,y:p.y+actor.height-.12,z:p.z};
+};
 export const direction = (yaw, pitch = 0) => ({ x: -Math.sin(yaw) * Math.cos(pitch), y: Math.sin(pitch), z: -Math.cos(yaw) * Math.cos(pitch) });
 const point = a => ({ x: a.x, y: a.y ?? 0, z: a.z });
 const clamp = (x, min, max) => Math.max(min, Math.min(max, x));
@@ -34,8 +40,12 @@ export function resolveRound(state, candidates = []) {
 }
 
 function rayActor(origin, dir, actor, limit) {
-  const min = { x: actor.x - actor.radius, y: actor.y + .04, z: actor.z - actor.radius };
-  const max = { x: actor.x + actor.radius, y: actor.y + actor.height, z: actor.z + actor.radius };
+  if(actor.kind==='zombie')return zombieRay(origin,dir,actor,limit,rayBox);
+  return rayBox(origin,dir,actor,limit);
+}
+function rayBox(origin, dir, actor, limit, depth=actor.radius) {
+  const min = { x: actor.x - actor.radius, y: actor.y + .04, z: actor.z - depth };
+  const max = { x: actor.x + actor.radius, y: actor.y + actor.height, z: actor.z + depth };
   let near = 0, far = limit;
   for (const axis of ['x', 'y', 'z']) {
     if (Math.abs(dir[axis]) < EPS) { if (origin[axis] < min[axis] || origin[axis] > max[axis]) return null; }
@@ -53,7 +63,7 @@ export class Game {
     this.world = world; this.config = { ...CONFIG, ...config }; this.seed = seed;
     this.random = seededRandom(seed); this.team = team; this.autoplay = autoplay;
     this.events = []; this.soundEvents = []; this.eventSerial = 0; this.accumulator = 0;
-    this.state = { phase: 'menu', time: 0, round: 0, difficulty: DIFFICULTIES[difficulty] ? difficulty : DEFAULT_DIFFICULTY, pendingDifficulty: null, score: { analysts: 0, counterAnalysts: 0 }, lossStreak: { analysts: 0, counterAnalysts: 0 }, actors: [], hostages: [], bomb: { status: 'none' }, grenades: [], smokes: [], drops: [], result: null, deadline: Infinity, paused: false, history: [] };
+    this.state = { phase: 'menu', time: 0, round: 0, difficulty: DIFFICULTIES[difficulty] ? difficulty : DEFAULT_DIFFICULTY, pendingDifficulty: null, score: { analysts: 0, counterAnalysts: 0 }, lossStreak: { analysts: 0, counterAnalysts: 0 }, actors: [], hostages: [], zombies: [], bomb: { status: 'none' }, grenades: [], smokes: [], drops: [], result: null, deadline: Infinity, paused: false, history: [] };
     this.config.difficulty = this.state.difficulty;
   }
   get actors() { return this.state.actors; }
@@ -107,6 +117,7 @@ export class Game {
     prepareActionRound(this);
     this.world.setElevatorProgress?.(s.phase==='buy'?0:1);
     initializeCombat(this);
+    populateZombies(this);
     this.squadTactics=new SquadTactics(this);
     this.emit('round', null, { round: s.round });
   }
@@ -137,7 +148,7 @@ export class Game {
       s.phase = 'active'; this.emit('start', null);
     }
     this.roundCandidates = []; this.pendingDamage = [];
-    this.world.doors?.update(s.time,dt,[...this.actors,...this.hostages,...(this.config.wanderers?s.wanderers||[]:[])]);
+    this.world.doors?.update(s.time,dt,[...this.actors,...this.hostages,...s.zombies,...(this.config.wanderers?s.wanderers||[]:[])]);
     tickActionState(this,dt);
     for (const actor of this.actors) {
       if (!actor.alive) continue;
@@ -155,6 +166,7 @@ export class Game {
       this.interact(actor, controls);
       actor.interactHeld = !!controls.interact;
     }
+    tickZombies(this,dt);
     this.updateGrenades(dt);
     updateRockets(this,dt,rayActor);
     for (const hit of this.pendingDamage) this.damage(hit.target, hit.amount, hit.source, hit.kind, hit);
@@ -200,7 +212,7 @@ export class Game {
   }
   moveBody(actor, dx, dy, dz) {
     const before = point(actor), projectedY = Math.max(0, actor.y + dy);
-    const bodies = [...this.actors.filter(a => a.alive), ...this.hostages.filter(h => h.alive!==false && !h.rescued)].filter(other => other !== actor &&
+    const bodies = [...this.actors.filter(a => a.alive), ...this.hostages.filter(h => h.alive!==false && !h.rescued), ...this.state.zombies.filter(z=>z.alive)].filter(other => other !== actor &&
       projectedY < other.y + other.height - .02 && projectedY + actor.height > other.y + .02);
     let x = actor.x, z = actor.z, remainingX = dx, remainingZ = dz;
     actor.blockedBy = null;
@@ -326,12 +338,12 @@ export class Game {
     // friendly fire is disabled. We must not shoot *through* them.
     for (const other of [...this.actors,
       ...(this.config.hostageDamage ? this.hostages : []),
-      ...(this.config.wanderers ? this.state.wanderers || [] : [])]) {
+      ...(this.state.zombies||[]), ...(this.config.wanderers ? this.state.wanderers || [] : [])]) {
       if (other === actor || !other.alive || other.rescued) continue;
       const hit = rayActor(from, dir, other, nearest);
       if (hit !== null && hit < nearest) { nearest = hit; target = other; }
     }
-    if (!target || target.team === actor.team || !target.team) return null;
+    if (!target || target.team === actor.team || (!target.team && target.kind!=='zombie')) return null;
     const endpoint = {
       x: from.x + dir.x * nearest, y: from.y + dir.y * nearest, z: from.z + dir.z * nearest,
     };
@@ -359,7 +371,7 @@ export class Game {
       const dir = direction(actor.yaw + (this.random() - .5) * spread, actor.pitch + (this.random() - .5) * spread);
       const wall = this.world.raycast(origin, dir, w.range, { vision: false });
       let nearest = wall?.distance ?? w.range, victim = null;
-      for (const target of [...this.actors,...(this.config.hostageDamage?this.hostages:[]),...(this.config.wanderers?this.state.wanderers||[]:[])]) {
+      for (const target of [...this.actors,...(this.state.zombies||[]),...(this.config.hostageDamage?this.hostages:[]),...(this.config.wanderers?this.state.wanderers||[]:[])]) {
         if (!target.alive || target.rescued || target === actor) continue;
         const hit = rayActor(origin, dir, target, nearest);
         if (hit !== null && hit < nearest) { nearest = hit; victim = target; }
@@ -380,6 +392,7 @@ export class Game {
   damage(target, amount, source, kind = 'shot', context = {}) {
     if (this.phase !== 'active' || !target?.alive || !Number.isFinite(amount) || amount <= 0 || (source && source.team && source.team === target.team && !this.config.friendlyFire && !(source===target&&kind==='bazooka'))) return false;
     if(target.spawnProtectedUntil>this.state.time)return false;
+    if(kind==='stomp' && (!source?.alive || source.behavior!=='attack'))return false;
     if(target.kind==='hostage'&&!this.config.hostageDamage)return false;
     if(target.kind==='dwarf'&&!this.config.wanderers)return false;
     if (target.isPlayer && source && !source.isPlayer && source.team !== target.team) amount *= DIFFICULTIES[this.state.difficulty].humanDamage;
@@ -393,13 +406,14 @@ export class Game {
     const detail = { sourceId: source?.id, sourceName: source?.name, targetName: target.name, weapon: kind, amount: dealt, hp: target.hp,
       point: { ...hitPoint }, direction: { ...incoming }, sourcePosition: { ...sourcePosition }, ...hitPoint };
     this.emit('damage', target, detail); this.emit('hit', target, detail);
+    if(target.kind==='zombie')reactZombie(this,target,kind,detail,source);
     if (target.hp > 0) return true;
     target.alive = false; target.deaths++; target.action = null; target.reloadUntil = 0; target.deathAt = this.state.time;
     target.deathCause = { sourceId: source?.id, sourceName: source?.name, weapon: kind, point: { ...hitPoint }, direction: { ...incoming } };
-    if (source && source!==target && target.team && source.team!==target.team) { source.kills++; source.money = Math.min(this.config.maxMoney, source.money + this.config.killMoney); }
+    if (source?.team && source!==target && target.team && source.team!==target.team) { source.kills++; source.money = Math.min(this.config.maxMoney, source.money + this.config.killMoney); }
     if (target.inventory?.primary) this.dropItem(target, target.inventory.primary);
     if(target.kind==='hostage'){target.escortId=null;target.path=[];}
-    recordActionDeath(this,target,source);
+    if(target.kind!=='zombie')recordActionDeath(this,target,source);
     if (this.bomb.carrierId === target.id) Object.assign(this.bomb, { status: 'dropped', carrierId: null, ...point(target) });
     for (const hostage of this.hostages) if (hostage.escortId === target.id) { hostage.escortId = null; hostage.path = []; }
     this.emit('kill', target, { ...detail, deathAt: target.deathAt }); return true;
@@ -440,7 +454,7 @@ export class Game {
       this.state.smokes.push({ ...point(grenade), y: grenade.y + 1, id: grenade.id, radius: c.smokeRadius, until: this.state.time + c.smokeDuration }); return;
     }
     const owner = this.actors.find(a => a.id === grenade.ownerId), origin = { ...point(grenade), y: grenade.y + .08 };
-    for (const actor of [...this.actors,...(this.config.hostageDamage?this.hostages:[]),...(this.config.wanderers?this.state.wanderers||[]:[])]) {
+    for (const actor of [...this.actors,...(this.state.zombies||[]),...(this.config.hostageDamage?this.hostages:[]),...(this.config.wanderers?this.state.wanderers||[]:[])]) {
       if (!actor.alive||actor.rescued) continue;
       const target = eye(actor), d = Math.hypot(target.x - origin.x, target.y - origin.y, target.z - origin.z);
       if (grenade.type === 'he') {
@@ -515,7 +529,9 @@ export class Game {
       const rescue = this.world.anchors.rescue;
       const target = distance(escort, rescue) < rescue.radius + 1 ? rescue : escort;
       if (this.state.time >= hostage.pathAt && (distance(hostage, target) > .85 || distance(hostage, rescue) < rescue.radius + 2)) {
-        hostage.path = this.world.findPath(hostage, target); hostage.pathAt = this.state.time + .65;
+        hostage.path = this.world.findPath(hostage, target);
+        if(!hostage.path.length)hostage.path=rejoinNavigation(this,hostage);
+        hostage.pathAt = this.state.time + .65;
       }
       while (hostage.path.length && distance(hostage, hostage.path[0]) < .07) hostage.path.shift();
       const next = hostage.path[0];

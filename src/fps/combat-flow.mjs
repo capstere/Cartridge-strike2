@@ -81,7 +81,7 @@ export function combatEvent(g,e){
   if(head)source.combat.headHits++;
   g.emit('combat-hit',source,{head,amount:e.amount,targetId:victim.id,lethal:e.hp<=0});
  }
- if(e.type!=='kill')return;
+ if(e.type!=='kill'||g.state.zombies?.some(z=>z.id===e.actorId))return;
  if(victim){
   const received=victim.combat.incoming;
   victim.combat.recap={attacker:source?.name||e.sourceName||'Miljön',weapon:e.weapon,

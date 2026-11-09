@@ -2,7 +2,11 @@
 
 **First open task — test physical mobile controls and audio.** Play on an iPhone and an Android phone in landscape, near 844×390 and 932×430 where available. Record the model, OS, browser, viewport and safe-area clearance. Move, aim and fire together, reload, jump, hold an objective and buy. Rotate, background and resume during the lobby and a match. Listen for the lobby theme stopping on Start and resuming on return. Record any failure with its screen position and steps. [Play the published build](https://capstere.github.io/Cartridge-strike2/)
 
+Floor 5 has neutral Meshy residents in Classic and Endless. The 20-cycle match lifecycle check passed. The feature was merged in [PR #7](https://github.com/capstere/Cartridge-strike2/pull/7) and verified on Pages in [PR #8](https://github.com/capstere/Cartridge-strike2/pull/8). [Living zombies, frame samples and published captures](docs/zombies/gameplay.md)
+
 ## Completed — profile the populated Floor 5 Endless spawn
+
+**PASS** on the integrated Floor 5 build. Nine frozen-world camera comparisons matched pixel for pixel. The open elevator saved 352 world draws with the zombie integration present. [Integration results](docs/endless-profile/README.md#november-10-integration-check)
 
 A fixed-camera trace found **1,045 of 2,270 elevator draws came from furniture cells**. Inside two of those cells, four mirrored monitor, keyboard and mouse kits in I04 submitted 88 draws apiece. Each kit fit entirely behind an opaque wall. The change gives dense, rigid mirrored furnishings their own visibility check inside the existing cell. The first-person SMG submitted 19 draws.
 
@@ -22,7 +26,6 @@ The November 9 audit verified the earlier launch and replay fixes through gamepl
 | Work | Check that closes it |
 | --- | --- |
 | Physical mobile controls and audio | At approximately 844×390 and 932×430, test simultaneous move/aim/fire, reload, jump, hold an objective, buy, rotate, background and resume. Record device, browser, safe-area clearance and whether the theme stops and resumes correctly. |
-| Match lifecycle over time | Run 20 lobby → Classic/Endless → buy → pause → lobby cycles. Compare settled geometry, textures, audio nodes and event listeners against the warm baseline. Trace any sustained growth to its owner. |
 | Human play and bot behavior | Play both factions and objective routes, including spectator cycling. For repeatable stalls, spawn kills or collision snags record seed, room, position and steps. |
 | Saved characters | On a device with a compatible saved character, verify selection, first- and third-person appearance, cancellation, retry and replay. Exercise the recovery path with an incompatible copy. |
 
