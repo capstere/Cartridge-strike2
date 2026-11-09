@@ -4,6 +4,10 @@
 
 Detta är en separat testversion av **Cartridge-Strike** som endast innehåller det spelbara FPS-spelet och tillhörande spelresurser. Den påverkar inte originalprojektet `capstere/cartridge-strike`.
 
+## För Codex
+
+Läs [HANDOVER.md](HANDOVER.md) och börja med den första öppna uppgiften. Där finns mätningen från Endless, hur den kan upprepas och vad som räknas som färdigt. [Dokumentationsindex](docs/README.md) · [Speltest med skärmbilder](docs/playtest-audit/README.md).
+
 ## Spela
 
 - Välj **Analysts** eller **Counter Analysts**, spelläge och karaktär i lobbyn.
@@ -29,7 +33,7 @@ Detta är en separat testversion av **Cartridge-Strike** som endast innehåller 
 Kör från reporoten:
 
 ```bash
-node --experimental-loader ./tools/vendor-three-test-loader.mjs --test src/fps/*.test.mjs
+node --experimental-loader ./tools/vendor-three-test-loader.mjs --test src/fps/*.test.mjs tools/*.test.mjs
 node tools/verify-owner-runtime.mjs
 ```
 
