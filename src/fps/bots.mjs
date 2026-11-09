@@ -1,6 +1,7 @@
 // Yuka's StateMachine, MemorySystem and steering are executed here, not merely
 // bundled. Collision and paths come only from the accepted floor adapter.
 import { MemorySystem, SeekBehavior, State, StateMachine, Vector3, Vehicle } from '../../vendor/yuka/yuka.module.js';
+import {physicalRecoveryClear} from './body-recovery.mjs';
 import { WEAPONS } from './config.mjs';
 import {actionObjective,friendlyLineClear} from './action-rules.mjs';
 import {angleDifference} from './riposte-fps-math.mjs';
@@ -52,6 +53,11 @@ export class BotController {
   perceive() {
     const { game, actor } = this, now = game.state.time, c = game.config;
     const enemies = game.actors.filter(a => a.team !== actor.team && a.alive);
+    // A bot can defend either team against a visibly approaching aggressor.
+    for(const z of game.state.zombies||[]){
+      if(z.alive && ['pursuing','attack'].includes(z.behavior) && distance(actor,z)<5)enemies.push(z);
+      else if(this.memory.hasRecord(z))this.memory.deleteRecord(z);
+    }
     for (const enemy of enemies) {
       if (!this.memory.hasRecord(enemy)) this.memory.createRecord(enemy);
       const record = this.memory.getRecord(enemy), d = distance(actor, enemy), bearing = Math.atan2(-(enemy.x - actor.x), -(enemy.z - actor.z));
@@ -68,7 +74,7 @@ export class BotController {
           record.timeBecameVisible = now;
         } else record.focusTime = Math.min(this.profile.settleTime, (record.focusTime ?? 0) + now - record.lastSeenAt);
         record.lastSeenAt = now;
-        if (now>=record.reactionAt&&now - this.lastContactReport > 4) {
+        if (enemy.team&&now>=record.reactionAt&&now - this.lastContactReport > 4) {
           // Team reports only positions actually seen; stale contacts decay. This
           // shared memory never reads enemy positions while choosing a route.
           const contacts = game.tacticalContacts ??= [];
@@ -87,7 +93,7 @@ export class BotController {
     for (const event of game.soundEvents) {
       const sourceId = event.actorId ?? event.ownerId;
       if (event.serial <= this.heardSerial || !sourceId || event.team === actor.team) continue;
-      const enemy = enemies.find(a => a.id === sourceId); if (!enemy) continue;
+      const enemy = enemies.find(a => a.id === sourceId); if (!enemy || enemy.kind==='zombie') continue;
       const clear = game.world.segmentClear(eye(actor), { x: event.x, y: event.y + 1, z: event.z }, { vision: false });
       let radius = event.type === 'shot' ? 38 : event.type === 'step' ? (event.mode === 'run' ? 12 : event.mode === 'sneak' ? 2.5 : 2) : event.type === 'he' ? 45 : 7;
       if (!clear) radius *= .28;
@@ -411,17 +417,10 @@ export class BotController {
     }
   }
   physicalRecoveryClear(p){
-    // Body contact can push a capsule into the conservative clearance reserved
-    // for the opposite door swing. Probe a short walk back onto the graph with
-    // the real physics; movement still executes normally, never by teleport.
-    const {game:g,actor:a}=this,w=g.world;if(!w.navigation.clear(p,p,a.radius))return false;
-    const probe={x:a.x,y:a.y,z:a.z,height:a.height,radius:a.radius,vy:0},steps=Math.ceil(distance(a,p)/.06);
-    const known=g.actors.concat(g.hostages).filter(o=>o!==a&&o.alive!==false&&!o.rescued&&(!o.team||o.team===a.team)&&distance(a,o)<4);
-    for(let i=0;i<steps;i++){
-      w.move(probe,(p.x-a.x)/steps,0,(p.z-a.z)/steps);
-      if(known.some(o=>distance(o,probe)<a.radius+o.radius+.001))return false;
-    }
-    return distance(probe,p)<.04;
+    const {game:g,actor:a}=this;
+    const known=g.actors.concat(g.hostages,g.state.zombies||[]).filter(o=>o!==a && o.alive!==false &&
+      !o.rescued && (!o.team||o.team===a.team) && distance(a,o)<4);
+    return physicalRecoveryClear(g.world,a,p,known);
   }
   localBlockers(){return this.pathBlocker?.until>this.game.state.time?[this.pathBlocker]:[];}
   follow(dt, input) {

@@ -1,10 +1,12 @@
 # Cartridge-Strike 2 handover
 
-**First open task — profile the Endless spawn on Floor 5.** Find out which part of the scene accounts for the draw calls at the Analysts elevator. Use that result to decide whether a targeted optimization is warranted.
+**Next hands-on task** — test controls and audio on a physical handset. The November 9 spawn profile and its proposed rendering change await review in [PR #6](https://github.com/capstere/Cartridge-strike2/pull/6).
+
+Floor 5 now has neutral Meshy residents in both regular match types. The 20-cycle match lifecycle check is complete. The gameplay notes contain the animation mapping, before/after frame samples, lifecycle method and handset coverage. [Living zombies on Floor 5](docs/zombies/gameplay.md)
 
 The launch, replay, lobby music, shop and mobile input fixes landed in [PR #3](https://github.com/capstere/Cartridge-strike2/pull/3). The final verification landed in [PR #4](https://github.com/capstere/Cartridge-strike2/pull/4). The published game passed lobby → match → pause → lobby. The November 9 suite passed 158 tests, verified 432 runtime files and traversed 51 interactive doors in both directions. [Full audit and screenshots](docs/playtest-audit/README.md) · [Play](https://capstere.github.io/Cartridge-strike2/)
 
-## 1. Reproduce and explain the rendering cost
+## Reproduce the separate spawn profile
 
 1. From the repo root run `python3 -m http.server 8765`. Open `http://127.0.0.1:8765/fps/?test&realtime&seed=42`. Select **Analysts**, **Endless Action** and **Originalkaraktär**. Use the default Floor 5 map, low graphics and an 844×390 viewport for the initial comparison. Keep all ten actors. Record the camera position and direction before moving.
 2. Capture a cold launch and a warm launch. Separate time to the first playable frame from steady play. At the elevator and again during a busy encounter, record draw calls, triangles, median and p95 frame time, sample count, browser, device and graphics backend. Keep the view and settings fixed across comparisons.
@@ -18,7 +20,6 @@ The launch, replay, lobby music, shop and mobile input fixes landed in [PR #3](h
 | Work | Check that closes it |
 | --- | --- |
 | Physical mobile controls and audio | At approximately 844×390 and 932×430, test simultaneous move/aim/fire, reload, jump, hold an objective, buy, rotate, background and resume. Record device, browser, safe-area clearance and whether the theme stops and resumes correctly. |
-| Match lifecycle over time | Run 20 lobby → Classic/Endless → buy → pause → lobby cycles. Compare settled geometry, textures, audio nodes and event listeners against the warm baseline. Trace any sustained growth to its owner. |
 | Human play and bot behavior | Play both factions and objective routes, including spectator cycling. For repeatable stalls, spawn kills or collision snags record seed, room, position and steps. |
 | Saved characters | On a device with a compatible saved character, verify selection, first- and third-person appearance, cancellation, retry and replay. Exercise the recovery path with an incompatible copy. |
 

@@ -14,7 +14,7 @@ const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
 const point = v => ({ x: Number(v?.x) || 0, y: Number(v?.y) || 0, z: Number(v?.z) || 0 });
 const ALIASES = { weaponSwitch: 'switch', grenadeThrow: 'throw', grenadeBounce: 'bounce',
   roundResult: 'result', bombBeep: 'beep', bombPlant: 'plant', bombDefuse: 'defuse',
-  explosion: 'he', dryfire: 'empty', footstep: 'step' };
+  'zombie-stomp':'step', explosion: 'he', dryfire: 'empty', footstep: 'step' };
 
 export class AudioSystem {
   constructor(world, settings = {}) {
@@ -266,6 +266,8 @@ export class AudioSystem {
         this.sample('impactMetal_light_000', sound, .2, 1.1, .3);
         this.sample('impactMetal_medium_000', sound, .24, 1.35, .65); break;
       case 'switch': this.sample('impactMetal_light_001', sound, .21, 1.6); this.noise(sound, .1, .06, 3100); break;
+      case 'zombie-windup':
+        this.noise(sound,.34,.14,850);this.tone(sound,108,.32,.12,'triangle',65);break;
       case 'rustle': this.noise(sound, .18, event.mode === 'sneak' ? .015 : .075, 7800); break;
       case 'jump': this.sample('impactSoft_medium_000', sound, .17, 1.4); this.noise(sound, .09, .05, 1400); break;
       case 'land': this.sample('impactSoft_medium_000', sound, .45, .85); break;
