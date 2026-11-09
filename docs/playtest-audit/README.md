@@ -9,11 +9,16 @@ The playable core held up through a complete six-round Classic match, an Endless
 | Environment | What ran |
 | --- | --- |
 | Public GitHub Pages, cloud desktop Chrome | Opened the public root and reached `/fps/`. Selected Counter Analysts and inspected the original-character selector. Three.js failed to create its WebGL context. Start, error, back and retry were exercised on the deployed build. The failure recurred after reload. |
+| Public GitHub Pages, Chromium with software WebGL | Followed the real public root redirect, selected Counter Analysts, started the default Floor 5, entered buy phase with 12/72 and paused lobby music, opened Pause and returned to the lobby. The successful run served 265 live responses through a certificate-validating HTTPS transport in the test environment. No local files or test-mode API supplied gameplay. |
 | Local copy of main and the audit branch | Static HTTP server, real Chromium 153 with SwiftShader WebGL, existing engine, assets and normal HTML entry point. Tested keyboard, pointer lock, mouse, touch emulation, menu states and complete match results. Optional Google Fonts could be unavailable, so screenshots also exercise the fallback typefaces. |
 | Controlled browser and engine runs | The existing `?test` interface allows advancing actual simulation time and reading actor, inventory and UI state. Full-match runs used the real prepared Floor 5. Fault injection held or failed real HTTP requests. Short loading regressions used the smaller published synthetic level. |
 | Outside this session | Physical iPhone/Android, Safari and Firefox, GPU/thermal profiling, headphone or speaker listening, long-session heap snapshots and subjective human-versus-bot difficulty. |
 
 The public WebGL failure prevented play in that browser. It establishes a reproducible failure-recovery defect, but does not establish that Pages is broken for all players. [Published failure screenshot](pages-webgl.jpg)
+
+## Published release check
+
+GitHub recorded the merge of [gameplay fixes in PR #3](https://github.com/capstere/Cartridge-strike2/pull/3) at 20:52 UTC while the final evidence checks were running. This audit issued no merge or deployment request. The [Pages deployment](https://github.com/capstere/Cartridge-strike2/actions/runs/42697093296) succeeded. At 20:58 UTC, the public FPS HTML, loading controller, engine entry module, HUD stylesheet and build manifest all matched the audited files byte-for-byte. A second real browser, with working software WebGL, then verified the updated public player journey through gameplay, pause and return. The public run that began just before deployment used the old controller and timed out after 256 live responses. The fresh post-deployment run used the new controller, reached the HUD after 265 live responses and reported no uncaught page errors or failing responses. These were separate loads with different timing. Both used simulated touch, the real Pages URL, a trusted HTTPS transport and optional web fonts disabled. The remaining review changes concern evidence and test timing.
 
 ## Verified findings and corrections
 
