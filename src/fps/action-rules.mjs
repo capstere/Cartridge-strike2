@@ -1,6 +1,7 @@
 import {controlObjective,combatSpawnCandidates,activeControl} from './combat-flow.mjs';
 /** Arcade rules. Simulation time only; visual/audio systems never own damage or respawns. */
 import {seededRandom, WEAPONS} from './config.mjs';
+import {zombiePosition} from './zombie-poses.mjs';
 import {BotController} from './bots.mjs';
 export const MODES=Object.freeze({classic:'Klassiska rundor',endless:'Endless Action · auto-respawn'});
 export const RADIO=Object.freeze([
@@ -15,7 +16,7 @@ const dist=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 const pos=a=>({x:a.x,y:a.y||0,z:a.z});
 const eye=a=>({...pos(a),y:(a.y||0)+(a.height||1.7)-.12});
 export const isEndless=g=>g.state.mode==='endless';
-const aliveBodies=g=>[...g.actors,...g.hostages,...(g.config.wanderers?g.state.wanderers||[]:[])].filter(a=>a.alive!==false&&!a.rescued);
+const aliveBodies=g=>[...g.actors,...g.hostages,...(g.state.zombies||[]),...(g.config.wanderers?g.state.wanderers||[]:[])].filter(a=>a.alive!==false&&!a.rescued);
 
 export function prepareActionRound(g){
  g.world.doors?.reset();
@@ -118,7 +119,7 @@ export function friendlyLineClear(bot){
  const a=bot.actor,e=bot.target?.entity;if(!e)return true;
  const dx=e.x-a.x,dz=e.z-a.z,len=dx*dx+dz*dz;if(len<.01)return true;
  return !aliveBodies(bot.game).some(b=>{
-  if(b===a||b===e||b.team&&b.team!==a.team)return false;
+  if(b===a||b===e||b.kind==='zombie'||b.team&&b.team!==a.team)return false;
   const t=((b.x-a.x)*dx+(b.z-a.z)*dz)/len;
   return t>0&&t<1&&Math.hypot(b.x-a.x-t*dx,b.z-a.z-t*dz)<(b.radius||.2)+.07;
  });
@@ -145,7 +146,7 @@ export function updateRockets(g,dt,rayActor){
    const owner=g.actors.find(a=>a.id===r.ownerId),radius=4.6;
    g.emit('rocket-explosion',null,{...origin,ownerId:r.ownerId,team:r.team,radius});
    for(const a of aliveBodies(g)){
-    const center={...pos(a),y:a.y+a.height*.55};const distance=Math.hypot(a.x-origin.x,center.y-origin.y,a.z-origin.z);
+    const center={...(a.kind==='zombie'?zombiePosition(a,a.bodyTime):pos(a)),y:a.y+a.height*.55};const distance=Math.hypot(center.x-origin.x,center.y-origin.y,center.z-origin.z);
     if(distance>=radius&&a!==hit)continue;
     if(a!==hit&&!g.world.segmentClear(origin,center,{vision:false}))continue;
     g.pendingDamage.push({target:a,amount:a===hit?150:135*Math.max(0,1-distance/radius),source:owner,kind:'bazooka',point:center,sourcePosition:origin});

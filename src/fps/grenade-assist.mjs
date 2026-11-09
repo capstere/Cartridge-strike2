@@ -42,7 +42,7 @@ export class GrenadeAssist {
   }
 
   reset() {
-    this.predictionCache.clear();
+    this.game=null;this.predictionCache.clear();
     this.group.visible=false;this.note.hidden=true;this.danger.hidden=true;
     this.preview=null;this.threat=null;this.weapon=null;this.pathAt=this.warningAt=-Infinity;
   }
