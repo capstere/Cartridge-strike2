@@ -4,6 +4,8 @@
 
 The playable core held up through a complete six-round Classic match, an Endless death and respawn, repeated starts, real mouse input and simulated touch. The largest regressions were at the boundaries of a match. An early Start click could disappear, a failed launch could trap the player under a stack trace, and the results screen could reopen over the lobby. The changes in this branch address those failures. Physical-phone performance and audio quality still need a device session.
 
+The November 10 follow-up verified both objective routes, spectator cycling and saved-character recovery on Pages. [Seeds, screenshots and reproduction](november-10/README.md)
+
 ## Where the evidence came from
 
 | Environment | What ran |
