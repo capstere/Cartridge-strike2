@@ -70,6 +70,11 @@
       "sha256": "7e7afbc429f8e026260bd9987d17bfd5f6efcd96aad102bc62a6328b92185e96"
     },
     {
+      "path": "assets/fps/audio/ffsl-f_charge_rifle-2.mp3",
+      "bytes": 7437,
+      "sha256": "aef6339f5b640178699f14c41cce9b143f20423f73b96bcc46905bd76a4c07e2"
+    },
+    {
       "path": "assets/fps/audio/ffsl-f_magin_pistol.mp3",
       "bytes": 4197,
       "sha256": "83d64cd3bfbf2aa32f0aab60ff33ce68ce48f03d1e210a57cd505c5ccfcec0c8"
@@ -78,6 +83,16 @@
       "path": "assets/fps/audio/ffsl-f_magin_rifle-1.mp3",
       "bytes": 3141,
       "sha256": "b571d0085ed95ad51565a5198535ed06088a71a4210d9de5c93231b2e8f72e94"
+    },
+    {
+      "path": "assets/fps/audio/ffsl-f_magin_rifle-2.mp3",
+      "bytes": 2277,
+      "sha256": "facc7e9b43a3fa18c9242ddb43ccafa36d173ad752b62233471557bdd2734ba2"
+    },
+    {
+      "path": "assets/fps/audio/ffsl-f_magin_smg.mp3",
+      "bytes": 2085,
+      "sha256": "7e621c75971eb90478c795123838d5d427310b1e341855dbd43366eb7247ad4c"
     },
     {
       "path": "assets/fps/audio/ffsl-f_magout_pistol.mp3",
@@ -90,9 +105,44 @@
       "sha256": "81a8699d6b4f0530a97c371b5dfc6f9148475a1ee898a397c7b954e962b4c50f"
     },
     {
+      "path": "assets/fps/audio/ffsl-f_magout_rifle-2.mp3",
+      "bytes": 4461,
+      "sha256": "a7a324712ab4451895ed6b4761fcad91f304f191ca4480695f2ecff146d640f6"
+    },
+    {
+      "path": "assets/fps/audio/ffsl-f_magout_smg.mp3",
+      "bytes": 2421,
+      "sha256": "7e87adb1cd3929ae1332c890c03faa1fc10dd271236dfd72bc7282c5ec8dd9f2"
+    },
+    {
+      "path": "assets/fps/audio/ffsl-f_pickup-2.mp3",
+      "bytes": 4197,
+      "sha256": "7617847fe8574cf324650659e1c291d3df3bcb34c487d66f51f478ac4c204d7d"
+    },
+    {
+      "path": "assets/fps/audio/ffsl-f_shell-1.mp3",
+      "bytes": 4053,
+      "sha256": "30daad02826cfef6b18e237315180fce9a9a9159a88ddd1b4dff583733730dab"
+    },
+    {
+      "path": "assets/fps/audio/ffsl-f_shell-2.mp3",
+      "bytes": 5085,
+      "sha256": "b8c078b31e6e7a2bab8ee435f2dd1a0b6e953fdfab7e60281d54488b19d28a3c"
+    },
+    {
+      "path": "assets/fps/audio/ffsl-f_shell-3.mp3",
+      "bytes": 4653,
+      "sha256": "dbc06f01c4edf94805990c4035b0b8564bc2aa5a924f6fdfe8908a864bbd42c2"
+    },
+    {
       "path": "assets/fps/audio/ffsl-f_slide_pistol-1.mp3",
       "bytes": 1869,
       "sha256": "1045bc354b1655704cba2ee77bed1d56536d57ecb292e838fb715d212eb837b3"
+    },
+    {
+      "path": "assets/fps/audio/ffsl-f_stow-2.mp3",
+      "bytes": 3837,
+      "sha256": "a6c476be02a807be60a244f28ed26106ef86bf618bc81c10f95507b7a95be101"
     },
     {
       "path": "assets/fps/audio/footstep_carpet_000.ogg",
@@ -1631,8 +1681,8 @@
     },
     {
       "path": "src/fps/action-audio.mjs",
-      "bytes": 3704,
-      "sha256": "08128606a219a5045b4384fc74571e5353cd76cba7567cfda5536859b8d1f74b"
+      "bytes": 2963,
+      "sha256": "b788715ed1cf8ab0c883d8fc12a514a3318f4f57e379051c474bad503b9a2404"
     },
     {
       "path": "src/fps/action-models.mjs",
@@ -1965,6 +2015,11 @@
       "sha256": "017d0a78a0674a213ddecebe2e56c292d3700252368d7800013162053a64f422"
     },
     {
+      "path": "src/fps/reload-foley.mjs",
+      "bytes": 3748,
+      "sha256": "8f000ffa4c7e39137118b1bb2e7520d1adadf7977b6d37bf6e49c7417780e421"
+    },
+    {
       "path": "src/fps/render-budget.mjs",
       "bytes": 1064,
       "sha256": "81bbbdd55d26b2b152f71dba77aa898ac4d2682290983d360da2df7041a0c383"
@@ -2041,8 +2096,8 @@
     },
     {
       "path": "src/fps/strike-kit-audio.mjs",
-      "bytes": 6803,
-      "sha256": "fff6646dec72d4508b372e2e79e1400d115a843d83e93b3107922f6b83c5ee1a"
+      "bytes": 6725,
+      "sha256": "429c74d686dc12d37dceb38453e83a2841eaecd98c4816a91598c065507fc93c"
     },
     {
       "path": "src/fps/strike-kit-environment.mjs",
@@ -2205,7 +2260,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 49121631,
+  "bytes": 49165066,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",
