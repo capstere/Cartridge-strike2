@@ -27,5 +27,10 @@ export function zombieSites(world) {
       chair={...p,yaw,room:item.roomId,seat:{id,x:item.x-.08*Math.sin(yaw),z:item.z-.08*Math.cos(yaw)}}; break;
     }
   }
-  const sites={bed,chair,patrol};cache.set(world,sites);return sites;
+  // C05 opens through BYGG-D-0034 at (16.50, -12.05). This spot is
+  // south of its swing and off the through-route, on the C08 floor slab.
+  const point={x:18,y:0,z:-14,yaw:Math.PI*.78};
+  const dancer=world.roomAt(point.x,point.z)?.id==='C08' && safe(point) &&
+    world.onFloor(point.x,point.z) && world.canOccupy(point.x,point.z,.90,1.8) ? point : null;
+  const sites={bed,chair,patrol,dancer};cache.set(world,sites);return sites;
 }

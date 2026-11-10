@@ -1,5 +1,6 @@
 /** Simulation owns clip selection and time. Both original Mixamo rigs face +Z. */
 export const POSES = {
+  danceman: {dance:'All_Night_Dance',jazz:'Jazz_Hands',strut:'Flirty_Strut_inplace',groove:'Groovy_Walk',dead:'Dead'},
   hollow: {
     walk: 'Walking', run: 'Running', limp: 'Limping_Walk_3_inplace', idle: 'Idle_8',
     sleep: 'Toss_and_Turn', rise: 'Stand_Up4', pain: 'Head_Hold_in_Pain',
@@ -18,6 +19,7 @@ export const POSES = {
 
 // One-shot timings are from the GLB samplers (30 fps). The renderer reads the clips themselves.
 export const LENGTH = {
+  All_Night_Dance:245/30, Jazz_Hands:82/30, Flirty_Strut_inplace:96/30, Groovy_Walk:149/30,
   Stand_Up4: 50/30, Sit_to_standTransition_Female_2: 68/30, Head_Hold_in_Pain: 111/30,
   Angry_Ground_Stomp: 41/30, Angry_Ground_Stomp_2: 54/30, Gunshot_Reaction: 3,
   Hit_Reaction: 49/30, Knock_Down: 75/30, Knock_Down_1: 98/30, Shot_and_Blown_Back: 80/30,

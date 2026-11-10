@@ -53,22 +53,23 @@ try{
     await page.locator('#lb-mode-seg [data-value='+mode+']').click();await page.locator('#start').click();
     await page.waitForFunction(()=>window.__fps?.game.player&&!document.querySelector('#hud').hidden&&document.querySelector('#cs-loading').hidden,null,{timeout:120000});
     const start=await page.evaluate(()=>{const g=__fps.game;lifecycleProbe.games.push(new WeakRef(g));return [g.state.mode,g.actors.length,g.state.zombies.length];});
-    assert.deepEqual(start,[mode,10,3]);
+    assert.deepEqual(start,[mode,10,4]);
     await page.keyboard.press('b');await page.locator('#shop [data-item=armor]').click();
     await page.locator('#return-buy').click();assert.equal(await page.evaluate(()=>__fps.game.player.armor),100);
     await page.keyboard.press('3');await page.keyboard.press(mode==='classic'?'2':'1');
-    // Visit both residents, including GPU skinning and their live animation actions.
+    // Visit every resident rig and run Danceman's proximity loop before backgrounding.
     const visits=await page.evaluate(()=>{
       const f=__fps,g=f.game,p=g.player,home={x:p.x,z:p.z,yaw:p.yaw,pitch:p.pitch};
       g.state.buyDeadline=g.state.time;g.step(1/60);
-      const result=g.state.zombies.slice(0,2).map(z=>{
+      const result=[...g.state.zombies.slice(0,2),g.state.zombies.at(-1)].map(z=>{
         const pos=z.seat||z;Object.assign(p,{x:pos.x,z:pos.z-1.15,yaw:Math.PI,pitch:-.4});
-        f.render();const v=f.renderer.zombieVisuals.instances.get(z.id);
+        f.step({},0);const v=f.renderer.zombieVisuals.instances.get(z.id);
         return v.root.visible && v.root.getObjectByProperty('isSkinnedMesh',true).skeleton.boneTexture!=null;
       });
-      Object.assign(p,home);f.render();return result;
+      if(!f.audio.floorAudio.music)throw Error('Danceman music missing near the final viewpoint');
+      Object.assign(p,home);f.step({},0);return result;
     });
-    assert.deepEqual(visits,[true,true]);
+    assert.deepEqual(visits,[true,true,true]);
     await cover.bringToFront();
     await page.waitForFunction(()=>document.hidden&&__fps.game.state.paused,null,{polling:50});
     const paused=()=>page.evaluate(()=>[__fps.game.state.time,__fps.renderer.renderer.info.render.frame]);
@@ -82,12 +83,12 @@ try{
         const r=ref.deref();if(r)gpu[id]=[r.info.memory.geometries,r.info.memory.textures,r.info.programs.length];
       }
       return {gpu,instances:f.renderer.zombieVisuals.instances.size,retained:probe.games.filter(r=>r.deref()).length,
-        ambient:f.audio.ambient.length,voices:f.audio.active.size,pending:[...probe.pending.values()].sort()};
+        music:!!f.audio.floorAudio.music,ambient:f.audio.ambient.length,voices:f.audio.active.size,pending:[...probe.pending.values()].sort()};
     });
     const row={i,mode,...sample,dom:await cd.send('Memory.getDOMCounters'),contexts:contexts.size,audioNodes:audioNodes.size};
     rows.push(row);console.log(JSON.stringify(row));
-    assert.deepEqual(row.pending,['game','lobby']);assert.equal(row.instances,3);assert.equal(row.contexts,1);
-    assert.equal(row.voices+row.ambient,0);assert.equal(row.retained,1);
+    assert.deepEqual(row.pending,['game','lobby']);assert.equal(row.instances,4);assert.equal(row.contexts,1);
+    assert.equal(row.music,false);assert.equal(row.voices+row.ambient,0);assert.equal(row.retained,1);
   }
   const measured=rows.filter(r=>r.i>0);
   for(const row of measured){

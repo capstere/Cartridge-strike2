@@ -21,7 +21,7 @@ try{
   await page.waitForFunction(()=>__fps.modal===null && !__fps.game.state.paused);
   const start=await page.evaluate(()=>{
    const f=__fps,g=f.game;f.stopFrameLoop();g.state.buyDeadline=g.state.time;g.step(1/60);
-   return {mode:g.state.mode,teams:g.actors.map(a=>a.team),zombies:g.state.zombies.map(z=>[z.model,z.behavior]),counts:[...f.renderer.zombieVisuals.sources.values()].map(s=>s.clips.size)};
+   return {mode:g.state.mode,teams:g.actors.map(a=>a.team),zombies:g.state.zombies.filter(z=>z.model!=='danceman').map(z=>[z.model,z.behavior]),counts:['hollow','tattered'].map(k=>f.renderer.zombieVisuals.sources.get(k).clips.size)};
   });
   assert.equal(start.mode,mode);assert.equal(start.teams.filter(t=>t==='analysts').length,5);assert.equal(start.teams.filter(t=>t==='counterAnalysts').length,5);
   assert.deepEqual(start.counts,[16,16]);assert.equal(start.zombies.length,mobile?3:5);

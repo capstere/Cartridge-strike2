@@ -20,6 +20,11 @@
       "sha256": "8848008569ae5a35733f1ecc9456cd90a6c505cf3ccde375de7e228bd4a264d4"
     },
     {
+      "path": "assets/fps/Danceman/Danceman.glb",
+      "bytes": 5738204,
+      "sha256": "3a8e003ac5ae18e0691de8dcb1d0e89d95636dca486afc7faa0546f070e224f4"
+    },
+    {
       "path": "assets/fps/audio/action-backup.ogg",
       "bytes": 8228,
       "sha256": "fef76af35ab2311c58622ca8a84dc2cac56e806f8c627fdbce05b49a4cd26c16"
@@ -58,6 +63,11 @@
       "path": "assets/fps/audio/computerNoise_000.ogg",
       "bytes": 119024,
       "sha256": "1527944e16eb14b48ee03fe3e7ce6aae94262833a4e1f83928d451a7414fe4e1"
+    },
+    {
+      "path": "assets/fps/audio/danceman.mp3",
+      "bytes": 76612,
+      "sha256": "614160889d0857044fe9b09c4807884eaf36371cd5684542bff30e0ee097ba46"
     },
     {
       "path": "assets/fps/audio/explosionCrunch_000.ogg",
@@ -208,6 +218,11 @@
       "path": "assets/fps/audio/lowFrequency_explosion_000.ogg",
       "bytes": 14317,
       "sha256": "3cb48d86dab63140cfb9aaeea4d4a6846abaca5831d157d8adbec0490da26343"
+    },
+    {
+      "path": "assets/fps/audio/prepare-to-fight.mp3",
+      "bytes": 31599,
+      "sha256": "5c4eb87f8d5de0a5449a25b4eb8f55b1a2af5b8693bde678a752191deaaf70f8"
     },
     {
       "path": "assets/fps/audio/riposte-f_draw-1.mp3",
@@ -1681,8 +1696,8 @@
     },
     {
       "path": "src/fps/action-audio.mjs",
-      "bytes": 2963,
-      "sha256": "b788715ed1cf8ab0c883d8fc12a514a3318f4f57e379051c474bad503b9a2404"
+      "bytes": 3348,
+      "sha256": "a4e23a6a145aadafb609d657bfe4fa937d0183e49cc701158145baedc733eded"
     },
     {
       "path": "src/fps/action-models.mjs",
@@ -1701,13 +1716,13 @@
     },
     {
       "path": "src/fps/app.mjs",
-      "bytes": 33756,
-      "sha256": "388bf5977fd59c780fad8aa132aee25ce474d8f395f95ce9632a2e03cea65c2b"
+      "bytes": 33844,
+      "sha256": "cd9dbbe77033e0aa0c245071d4d09422bc9dda62e5f9f91ebb7daec073f40db7"
     },
     {
       "path": "src/fps/audio.mjs",
-      "bytes": 17443,
-      "sha256": "698e8e5fd9ce17b5811f6c0d58e2b204f14b308f5d434a54b7113488fbcd10e1"
+      "bytes": 17538,
+      "sha256": "d16e4c861fce3004211ba3c870442ffe88e8e88b4ad1101a64b235aa9744c718"
     },
     {
       "path": "src/fps/authored-hand-data.mjs",
@@ -1865,6 +1880,11 @@
       "sha256": "69b310d51123b57397c46503752b0a4f462f38474ffb8175bdf923546f7b1d66"
     },
     {
+      "path": "src/fps/floor-audio.mjs",
+      "bytes": 3113,
+      "sha256": "2de54b3c8cf3858b6063cee104f74f30e3904be6abe11371f4fea9b8de610abd"
+    },
+    {
       "path": "src/fps/focus-hud.mjs",
       "bytes": 7816,
       "sha256": "ab1db5a675d62246bf22b28a0237d3b7b413ceba23a206868c2123216b7d13b5"
@@ -1886,8 +1906,8 @@
     },
     {
       "path": "src/fps/game.mjs",
-      "bytes": 40952,
-      "sha256": "0ec6757051c20c66d861578a1ad72c32e34ee3a8db34b960262d1bcc02b33899"
+      "bytes": 40983,
+      "sha256": "175cbc671be2742447ac9164f8692c7776c4eb4e6138199f1187d0e8f647ca47"
     },
     {
       "path": "src/fps/glass-visuals.mjs",
@@ -2176,23 +2196,23 @@
     },
     {
       "path": "src/fps/zombie-poses.mjs",
-      "bytes": 3371,
-      "sha256": "a592ed58c116f7b06cdf234e893b60dd2996339733c70487f58fe8423e3d99ed"
+      "bytes": 3582,
+      "sha256": "8b10f6cfb7a45f68f81f37b385eb0bc0c51bac96f7653ae1929baf42d05de23d"
     },
     {
       "path": "src/fps/zombie-sites.mjs",
-      "bytes": 2031,
-      "sha256": "81520abf23c54e8c19e5f451456d2536bc757c42296171713e3a8a5bfd0fc9b8"
+      "bytes": 2398,
+      "sha256": "1d7cce03bacdad1a82dc1c3adb3e4674590614a428b7ab49bbb96cf9a4aa54cd"
     },
     {
       "path": "src/fps/zombie-visuals.mjs",
-      "bytes": 5371,
-      "sha256": "0f5d90a6db50be53f4924476bcd5d460c6cd2c6442b4bd26c8886eaa4be8c32c"
+      "bytes": 5427,
+      "sha256": "299c6e1edcb95c2560ee710daa9baccec653a98f15a35c3e20bafe559e831631"
     },
     {
       "path": "src/fps/zombies.mjs",
-      "bytes": 10588,
-      "sha256": "e42fd70a7a633fc936a5905f459fc8ce03027acf30c23d6587c829143ac253ae"
+      "bytes": 11563,
+      "sha256": "c9ce8e3a726c25750902fedac8aaf334dba6c33933778c549a9f839daf6ae1ab"
     },
     {
       "path": "src/world.js",
@@ -2260,7 +2280,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 49165066,
+  "bytes": 55016802,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",
