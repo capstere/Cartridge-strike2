@@ -1,13 +1,12 @@
 /** Strike Kit audio: authored cached PCM + simulation-synchronised reload Foley.
- * Gunshots are original synthesized sound-design layers. Six recorded CC0
- * mechanical cues are registered in reviews/industrial-reference/audio-provenance.json. No external network, new AI hearing events or match-RNG calls.
+ * Gunshots are original synthesized sound-design layers. The recorded pistol
+ * magazine and slide cues keep the original Strike Kit mix. No external network, new AI hearing events or match-RNG calls.
  */
 import {AudioSystem as CombatAudio} from './combat-audio.mjs';
 import {kitWeapon,RELOAD_CUES,reloadIsEmpty} from './strike-kit-timing.mjs';
 export const KIT_AUDIO_VERSION='strike-kit-audio-2';
 export const KIT_FOLEY = Object.freeze({
- 'p9:out:0':'f_magout_pistol.mp3', 'p9:in:0':'f_magin_pistol.mp3', 'p9:action:0':'f_slide_pistol-1.mp3',
- 'cr4:out:0':'f_magout_rifle-1.mp3', 'cr4:in:0':'f_magin_rifle-1.mp3', 'cr4:action:0':'f_charge_rifle-1.mp3'
+ 'p9:out:0':'f_magout_pistol.mp3', 'p9:in:0':'f_magin_pistol.mp3', 'p9:action:0':'f_slide_pistol-1.mp3'
 });
 export function kitPCM(kind,weapon='p9',sampleRate=48000,variant=0){
  const rifle=weapon==='cr4',duration=kind==='shot'?(rifle?.34:.29):kind==='tail'?.48:kind==='out'?.20:kind==='in'?.23:.16;
@@ -38,7 +37,7 @@ export class AudioSystem extends CombatAudio{
  constructor(world,settings){super(world,settings);this.kitBuffers=new Map();this.kitReloads=new Map();this.kitStats={shots:0,foley:0,tails:0,cancelled:0};this.kitReady=false;this.recordedFoley=new Map();this.foleyLoadPromise=null;}
  async unlock(){const ok=await super.unlock();if(!ok||this.disposed)return false;
   if(!this.kitReady){
-  for(const weapon of['p9','cr4'])for(const kind of['shot','tail','release','out','in','action','draw'])for(let v=0;v<(kind==='shot'?3:1);v++){
+  for(const weapon of['p9','cr4'])for(const kind of (weapon==='cr4'?['shot','tail','draw']:['shot','tail','release','out','in','action','draw']))for(let v=0;v<(kind==='shot'?3:1);v++){
    const pcm=kitPCM(kind,weapon,this.context.sampleRate,v),buffer=this.context.createBuffer(1,pcm.length,this.context.sampleRate);buffer.copyToChannel(pcm,0);this.kitBuffers.set(`${weapon}:${kind}:${v}`,buffer);
   }this.kitReady=true;
   }
@@ -63,7 +62,7 @@ export class AudioSystem extends CombatAudio{
   source.connect(c.gain);this.track(source,c,buffer.duration+.005);
  }
  play(e){
-  if(e.type==='reload'&&kitWeapon(e.weapon)){
+  if(e.type==='reload'&&(e.weapon==='p9'||e.weapon==='p12')){
    const a=this.game?.actors.find(a=>a.id===e.actorId);this.kitReloads.set(e.actorId,{event:{...e},at:e.time,duration:e.duration||1.55,empty:reloadIsEmpty(a,e.weapon),stage:0});return;
   }
   if(e.type==='shot'&&kitWeapon(e.weapon)&&this.kitReady){
