@@ -49,7 +49,7 @@ test('both source rigs, all audited clip names, timing, original vertex and anim
 test('normal populations, actual seat, full reclining footprint, clear mission interactions and compatible custom maps',()=>{
  for(const mode of ['classic','endless'])for(const mobile of [false,true]){
   const g=game({mode,mobile}),zs=g.state.zombies;
-  assert.equal(zs.length,mobile?3:5);assert.equal(g.actors.length,10);
+  assert.equal(zs.filter(z=>z.model!=='danceman').length,mobile?3:5);assert.equal(g.actors.length,10);
   assert.equal(world.roomAt(zs[0].x,zs[0].z).id,'I25');assert.ok(world.canOccupy(zs[0].x,zs[0].z,1.04));
   const item=world.projectScene.items.find(o=>o.id===zs[1].seat.id);
   assert.equal(item.kind,'chair');assert.ok(distance(zombiePosition(zs[1],0),item)<.1);assert.ok(distance(zs[1],item)>.59);
@@ -65,7 +65,7 @@ test('normal populations, actual seat, full reclining footprint, clear mission i
 
 test('every authored clip has a reachable behavior on the prepared floor',()=>{
  const seen={hollow:new Set(),tattered:new Set()},g=game();quiet(g);
- const observe=()=>{for(const z of g.state.zombies)seen[z.model].add(z.clip);};
+ const observe=()=>{for(const z of g.state.zombies)seen[z.model]?.add(z.clip);};
  observe();
  for(const z of g.state.zombies.slice(0,2)){
    const actor=g.actors[0];Object.assign(actor,{x:z.x,z:z.z});g.emit('shot',actor,{weapon:'p9'});

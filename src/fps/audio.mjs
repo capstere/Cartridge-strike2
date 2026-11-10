@@ -36,8 +36,7 @@ export class AudioSystem {
     this.stats = { played: 0, occluded: 0, stale: 0, duplicates: 0, dropped: 0 };
   }
 
-  /** Call directly from a start/resume click, before awaiting other work. */
-  async unlock() {
+  initializeContext() {
     if (this.disposed) return false;
     const AudioContextClass = globalThis.AudioContext || globalThis.webkitAudioContext;
     if (!AudioContextClass) return false;
@@ -63,6 +62,12 @@ export class AudioSystem {
         }
       }));
     }
+    return true;
+  }
+
+  /** Call directly from a start/resume click, before awaiting other work. */
+  async unlock() {
+    if (!this.initializeContext()) return false;
     if (this.context.state === 'suspended') await this.context.resume();
     await this.loadPromise;
     return this.context.state === 'running';

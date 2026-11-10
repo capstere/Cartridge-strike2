@@ -2,14 +2,19 @@
 import {AudioSystem as BaseAudio} from './audio.mjs';
 import {RADIO} from './action-rules.mjs';
 import {PRIMARY_RELOADS,ReloadFoley} from './reload-foley.mjs';
+import {FloorAudio} from './floor-audio.mjs';
 export class AudioSystem extends BaseAudio{
- constructor(world,settings){super(world,settings);this.voiceBuffers=new Map();this.reloadFoley=new ReloadFoley();this.voicePromise=null;}
+ constructor(world,settings){super(world,settings);this.voiceBuffers=new Map();this.reloadFoley=new ReloadFoley();this.voicePromise=null;this.floorAudio=new FloorAudio();}
+ async prepareFloorAudio(){
+  try{if(this.initializeContext())await this.floorAudio.load(this);}
+  catch(e){this.errors.push('Floor audio: '+e.message);}
+ }
  async unlock(){
   const ok=await super.unlock();if(!ok)return false;
   this.voicePromise??=Promise.all([...RADIO.map(r=>r.id),'death'].map(async id=>{
    try{const response=await fetch(new URL(`../../assets/fps/audio/action-${id}.ogg`,import.meta.url));if(!response.ok)throw Error(`HTTP ${response.status}`);const buffer=await this.context.decodeAudioData(await response.arrayBuffer());if(!this.disposed)this.voiceBuffers.set(id,buffer);}
    catch(e){this.errors.push(`action-${id}: ${e.message}`);}
-  }));await Promise.all([this.voicePromise,this.reloadFoley.load(this)]);return true;
+  }));await Promise.all([this.voicePromise,this.reloadFoley.load(this),this.floorAudio.load(this)]);return true;
  }
  play(event){
   if(event.type==='radio'){
@@ -33,8 +38,9 @@ export class AudioSystem extends BaseAudio{
  handle(events,listener,time){
   const previous=this.lastSimTime;
   super.handle(events,listener,time);
+  this.floorAudio.update(this,events,listener?.floorAudioReady);
   this.reloadFoley.update(this,previous,time);
  }
- reset(){super.reset();this.reloadFoley?.voices.clear();}
- async dispose(){this.reloadFoley.buffers.clear();this.voiceBuffers.clear();await super.dispose();}
+ reset(){super.reset();this.floorAudio?.reset();this.reloadFoley?.voices.clear();}
+ async dispose(){this.floorAudio.buffers.clear();this.reloadFoley.buffers.clear();this.voiceBuffers.clear();await super.dispose();}
 }

@@ -1,5 +1,5 @@
 import {rejoinNavigation} from './body-recovery.mjs';
-import {populateZombies,tickZombies,reactZombie} from './zombies.mjs';
+import {populateZombies,tickZombies,tickDance,reactZombie} from './zombies.mjs';
 import {zombieRay,zombiePosition} from './zombie-poses.mjs';
 import {missionRoomName} from './player-names.mjs';
 import { grenadeLaunch, advanceGrenade } from './grenade-physics.mjs';
@@ -139,6 +139,7 @@ export class Game {
     if (s.paused || ['menu', 'match'].includes(s.phase)) return;
     s.time += dt;
     if (s.phase === 'result') { if (s.time + EPS >= s.resultDeadline) this.beginRound(); return; }
+    tickDance(this);
     if (s.phase === 'buy') {
       const remaining=s.buyDeadline-s.time;
       this.world.setElevatorProgress?.(remaining<=EPS?1:1-remaining/1.5);

@@ -4,7 +4,7 @@ import {cloneSkinned} from './skinned-clone.mjs';
 import {POSES,zombiePosition} from './zombie-poses.mjs';
 
 async function loadModel(kind){
-  const url=new URL('../../assets/fps/zombies/'+kind+'.glb.gz',import.meta.url);
+  const url=new URL(kind==='danceman'?'../../assets/fps/Danceman/Danceman.glb':'../../assets/fps/zombies/'+kind+'.glb.gz',import.meta.url);
   const response=await fetch(url);if(!response.ok)throw Error('Zombie model '+kind+' HTTP '+response.status);
   const packed=await response.arrayBuffer();
   // Some static hosts supply Content-Encoding. Browsers then decompress before fetch resolves.
@@ -38,7 +38,7 @@ export class ZombieVisuals{
   constructor(scene,mobile){
     this.scene=scene;this.mobile=mobile;this.sources=new Map();this.instances=new Map();
     this.frustum=new T.Frustum();this.projection=new T.Matrix4();this.sphere=new T.Sphere(new T.Vector3(),1.65);
-    this.ready=Promise.all(['hollow','tattered'].map(async kind=>{
+    this.ready=Promise.all(Object.keys(POSES).map(async kind=>{
       const source=await loadModel(kind);if(this.disposed)releaseSource(source);else this.sources.set(kind,source);
     }));
   }

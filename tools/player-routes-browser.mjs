@@ -155,7 +155,7 @@ try {
     const setup = await page.evaluate(()=>{
       const g=__fps.game;
       return [g.seed,g.state.mode,g.actors.filter(a=>a.team==='analysts').length,
-        g.actors.filter(a=>a.team==='counterAnalysts').length,g.actors.filter(a=>a.isPlayer).length,g.state.zombies.length];
+        g.actors.filter(a=>a.team==='counterAnalysts').length,g.actors.filter(a=>a.isPlayer).length,g.state.zombies.filter(z=>z.model!=='danceman').length];
     });
     assert.deepEqual(setup,[seed,'classic',5,5,1,5]);
     const report = await page.evaluate(playRoute,task);

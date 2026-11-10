@@ -30,6 +30,19 @@ function spawn(g,home,index){
   return z;
 }
 
+function nextDance(g,z){
+  if(!z.dances.length){
+    const bag=['dance','jazz','strut','groove'];
+    for(let i=bag.length-1;i>0;i--){
+      const j=Math.floor(g.danceRandom()*(i+1));
+      [bag[i],bag[j]]=[bag[j],bag[i]];
+    }
+    if(POSES.danceman[bag[3]]===z.clip)[bag[0],bag[3]]=[bag[3],bag[0]];
+    z.dances=bag;
+  }
+  pose(z,g.state.time,'dancing',z.dances.pop());
+}
+
 export function populateZombies(g){
   g.state.zombies=[]; if(!isZombieFloor(g.world))return;
   const sites=zombieSites(g.world); g.zombieSites=sites; g.zombieRandom=seededRandom((g.seed^0x1973)+g.state.round*379);
@@ -42,6 +55,13 @@ export function populateZombies(g){
   for(const [p,model,rest] of homes.slice(0,g.config.mobile?3:5)){
     if(!p||occupied(g,p)||zones.some(o=>distance(o,p)<o.radius+1))continue;
     g.state.zombies.push(spawn(g,{...p,model,rest},g.state.zombies.length));
+  }
+  if(sites.dancer){
+    g.danceRandom=seededRandom((g.seed^0x4d414e)+g.state.round);
+    const dancer={...sites.dancer,id:'danceman',model:'danceman',kind:'zombie',name:'Danceman',
+      radius:.24,height:1.7,hp:100,armor:0,deaths:0,alive:true,dances:[]};
+    nextDance(g,dancer);
+    g.state.zombies.push(dancer);
   }
 }
 
@@ -179,10 +199,16 @@ function tickOne(g,z,dt){
   if(moving.has(z.behavior))move(g,z,dt);
 }
 
+export function tickDance(g){
+  const z=g.state.zombies.find(resident=>resident.model==='danceman');
+  if(z?.alive && g.state.time>=z.until)nextDance(g,z);
+}
+
 export function tickZombies(g,dt){
   const list=g.state.zombies;
   for(let i=0;i<list.length;i++){
     const z=list[i];
+    if(z.model==='danceman')continue;
     if(z.alive){tickOne(g,z,dt);continue;}
     if(g.state.mode!=='endless'||g.state.time<z.revisitAt)continue;
     z.revisitAt=g.state.time+5;
@@ -198,6 +224,10 @@ export function tickZombies(g,dt){
 
 export function reactZombie(g,z,kind,hit,source){
   const t=g.state.time, was=z.behavior, blast=kind==='he'||kind==='bazooka';
+  if(z.model==='danceman'){
+    if(z.hp<=0)pose(z,t,'dead','dead');
+    return;
+  }
   if(source){z.lastKnown={x:source.x,z:source.z};z.memoryUntil=t+6;}
   if(z.hp<=0){
     z.path=[];z.goal=null;z.targetId=null;z.attackId=null;z.impactAt=Infinity;z.revisitAt=t+55;
