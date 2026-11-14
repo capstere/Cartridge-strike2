@@ -636,8 +636,8 @@
     },
     {
       "path": "fps/index.html",
-      "bytes": 13508,
-      "sha256": "9e6086febe7765047f5ab0df9a7f8907281c15ffeba3d0b74763635165c4951f"
+      "bytes": 13913,
+      "sha256": "dab59a695bbd4898e7318b26163cad1466d3970909439ea3518d72c5efd8372d"
     },
     {
       "path": "fps/lobby.css",
@@ -1716,8 +1716,8 @@
     },
     {
       "path": "src/fps/app.mjs",
-      "bytes": 33844,
-      "sha256": "cd9dbbe77033e0aa0c245071d4d09422bc9dda62e5f9f91ebb7daec073f40db7"
+      "bytes": 34671,
+      "sha256": "9c875c9ecf64808a9d077c4c6a6cfdc03b7fa9ac5c228c9f9fe147355a3baeb1"
     },
     {
       "path": "src/fps/audio.mjs",
@@ -1900,6 +1900,11 @@
       "sha256": "9ee89fe8b932d729bf52807f5bdfe5bb43d659b33683f6d6ea5220decbe70699"
     },
     {
+      "path": "src/fps/fullscreen.mjs",
+      "bytes": 1066,
+      "sha256": "c768f1624a5fab770b1840942e6b9458d2636408f3f171b9f3eb8dd436d67b46"
+    },
+    {
       "path": "src/fps/furnishings.mjs",
       "bytes": 9452,
       "sha256": "6e66d4814ee2952197e65a9331383bc6281f346fb3993d651482b7b308ef743e"
@@ -1961,8 +1966,8 @@
     },
     {
       "path": "src/fps/match-flow.mjs",
-      "bytes": 11646,
-      "sha256": "a712d2da90f5a7721c4c296f6202107661386c9f76c0a22e6732c4d8b0b639dc"
+      "bytes": 12135,
+      "sha256": "06af703ff82722094c77ae604f736fc87c5225b2f8ad66815b351ffe940471be"
     },
     {
       "path": "src/fps/materials.mjs",
@@ -1976,8 +1981,8 @@
     },
     {
       "path": "src/fps/mobile-controls.mjs",
-      "bytes": 7097,
-      "sha256": "c1d5dcc375f1ffc8088d0045b9ffe179c495aa721b61cfe3ec4ee261d11a32d1"
+      "bytes": 7129,
+      "sha256": "76673d6fc38dc9e9c84f0a94668cd1b7a305f88513e1aca938ee5d30108b3277"
     },
     {
       "path": "src/fps/model-primitives.mjs",
@@ -2280,7 +2285,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 55016802,
+  "bytes": 55019621,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

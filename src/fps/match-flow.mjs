@@ -1,3 +1,4 @@
+import {createFullscreenController} from './fullscreen.mjs';
 // CARTRIDGE-STRIKE // lobby theme + lobby → loading → match flow (presentation layer).
 // Lifecycle:  lobby-ready (DOM interactive) → engine-ready (app.mjs hides #loading after
 // world, renderer and assets resolve) → match-ready (app.mjs start() ran, #hud shown).
@@ -5,6 +6,7 @@
 // the engine launches from its normal match handler once its assets are ready.
 const $ = id => document.getElementById(id);
 const html = document.documentElement;
+const fullscreen = createFullscreenController(document);
 const menu = $('menu'), startBtn = $('start'), engineNote = $('loading'), fatalBox = $('fatal');
 const MUSIC_KEY = 'cs-lobby-music';
 const TIPS = [
@@ -98,7 +100,7 @@ const flow = {
       brief: document.querySelector('.team-option.selected em')?.textContent || '',
     };
   },
-  begin() {
+  begin(fullscreenRequested = false) {
     if (this.active) return;                    // duplicate clicks / Enter presses
     clearTimeout(this.exitTimer);
     this.active = true; this.failed = false; this.attempt++;
@@ -117,16 +119,16 @@ const flow = {
     this.slowTimer = setTimeout(() => { if (this.active && !engineReady()) setStatus(`${engineText()} · det tar längre tid än vanligt`); }, Math.min(20, limit / 2) * 1000);
     clearTimeout(this.hardTimer);
     this.hardTimer = setTimeout(() => { if (this.active && !this.failed && !engineReady()) this.fail('Banan svarar inte. Kontrollera anslutningen och försök igen.'); }, limit * 1000);
-    this.status();
+    this.status(fullscreenRequested);
   },
-  status() {
+  status(fullscreenRequested = false) {
     if (!this.active || this.failed) return;
     if (engineFailed()) return this.fail();
     if (!engineReady()) { setStatus(engineText()); return; }
     if (document.hidden) { setStatus('Väntar på att fliken blir aktiv'); return; }
     if (startBtn.disabled) return this.fail($('character-status').textContent);
     // A warm launch keeps the original click's user activation for mouse lock and audio.
-    startBtn.dispatchEvent(new Event('cs-start-match'));
+    startBtn.dispatchEvent(new CustomEvent('cs-start-match', { detail: { fullscreenRequested } }));
     if (menu.hidden && !$('hud').hidden) this.done();
     else this.fail('Matchen startade inte. Försök igen.');
   },
@@ -157,9 +159,11 @@ const flow = {
       location.reload();
       return;
     }
-    this.active = false; this.begin();
+    const fullscreenRequested = fullscreen.resume(); // Retry is another direct user gesture.
+    this.active = false; this.begin(fullscreenRequested);
   },
   toLobby() {
+    fullscreen.exit();
     clearTimeout(this.slowTimer); clearTimeout(this.hardTimer);
     this.active = false; this.failed = false;
     ui.root.hidden = true; html.classList.remove('cs-loading-open');
@@ -178,7 +182,8 @@ const setStatus = t => { if (ui.status) ui.status.textContent = t; };
 function intercept(e) {
   if (!e.target.closest || !e.target.closest('#start')) return;
   e.preventDefault(); e.stopImmediatePropagation();
-  flow.begin();
+  const fullscreenRequested = !startBtn.disabled && !flow.active && fullscreen.start();
+  flow.begin(fullscreenRequested);
 }
 function init() {
   const options = [...menu.querySelectorAll('.team-option')];
@@ -213,7 +218,7 @@ function init() {
     if (sessionStorage.getItem('cs-autostart')) launchRequested = true;
     sessionStorage.removeItem('cs-autostart');
   } catch {}
-  window.__csFlow = { flow, music }; // test hook (read-only use)
+  window.__csFlow = { flow, music, fullscreen }; // test hook (read-only use)
   if (launchRequested && !menu.hidden) flow.begin();
 }
 // Loaded after the lobby markup, independently of the engine module graph.

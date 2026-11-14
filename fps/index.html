@@ -2,7 +2,7 @@
 <html lang="sv">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover,user-scalable=no">
-  <meta name="color-scheme" content="dark"><title>Cartridge-Strike · Unit 05</title>
+  <meta name="color-scheme" content="dark"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><title>Cartridge-Strike · Unit 05</title>
   <link rel="icon" href="data:,"><link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="focus-hud.css?v=2">
   <link rel="stylesheet" href="../ui/cs-theme.css">
@@ -92,7 +92,7 @@
   </div>
   <div id="flash-overlay"></div><div id="damage-overlay"></div><div id="damage-direction">⌃</div><div id="smoke-overlay"></div>
   <section id="buy" class="modal-overlay" hidden><div class="buy-card card"><div class="card-top"><span>UTRUSTNING <b id="buy-money"></b></span><button class="close" id="close-buy" aria-label="Stäng köpmenyn">×</button></div><div class="buy-heading"><h2>Välj utrustning</h2><p id="buy-note">Köp under köpfas i egen startzon.</p></div><div id="shop"></div><div id="buy-message" role="status"></div><button id="return-buy" class="primary">TILLBAKA TILL SPELET →</button></div></section>
-  <section id="pause" class="modal-overlay" hidden><div class="card pause-card"><p class="eyebrow">MATCHEN ÄR PAUSAD</p><h2>PAUSAD</h2><p>Alla rundtimers och botar väntar.</p><div id="pause-settings"></div><button id="resume" class="primary">FORTSÄTT →</button><button id="restart" class="secondary">TILLBAKA TILL LOBBYN</button><div class="controls-list"><span>E <b>Håll för plantera / desarmera</b></span><span>4 <b>Cykla cartridge-granater</b></span><span>5 <b>Uppdragsbomb</b></span><span>Tab <b>Resultattavla</b></span></div></div></section>
+  <section id="pause" class="modal-overlay" hidden><div class="card pause-card"><p class="eyebrow">MATCHEN ÄR PAUSAD</p><h2>PAUSAD</h2><p>Alla rundtimers och botar väntar.</p><div id="pause-settings"></div><button id="resume" class="primary">FORTSÄTT →</button><button id="fullscreen-toggle" class="secondary" type="button" hidden>AKTIVERA HELSKÄRM</button><p id="fullscreen-hint" class="small" hidden>iPhone Safari kan inte öppna en vanlig flik i helskärm. Välj Dela → Lägg till på hemskärmen för en app-liknande vy.</p><button id="restart" class="secondary">TILLBAKA TILL LOBBYN</button><div class="controls-list"><span>E <b>Håll för plantera / desarmera</b></span><span>4 <b>Cykla cartridge-granater</b></span><span>5 <b>Uppdragsbomb</b></span><span>Tab <b>Resultattavla</b></span></div></div></section>
   <section id="scoreboard" class="modal-overlay" hidden><div class="card scoreboard-card"><div class="card-top"><span>RESULTATTAVLA</span><span id="board-round"></span></div><div id="score-tables"></div><p class="small">Håll Tab · Gisslan räknas inte in i lagen</p></div></section>
   <section id="match-end" class="modal-overlay" hidden><div class="card pause-card"><p class="eyebrow">MATCHEN ÄR AVGJORD</p><h2 id="match-winner"></h2><p id="match-score"></p><button id="new-match" class="primary">SPELA IGEN →</button></div></section>
   <div id="mobile-controls" hidden aria-label="Mobilstyrning">
@@ -115,7 +115,7 @@
     <div class="mobile-portrait-note">Vrid telefonen till liggande läge för bättre spelkontroll</div>
   </div>
   <div id="fatal" hidden><h2>Spelet kunde inte startas</h2><pre></pre><p>Ladda om sidan och öppna spelet i en separat webbläsarflik på datorn.</p></div>
-  <script type="module" async src="../src/fps/match-flow.mjs?v=6"></script>
+  <script type="module" async src="../src/fps/match-flow.mjs?v=7"></script>
   <script type="module" src="../src/fps/app.mjs?v=floor5-environment-2"></script>
   <script type="module" src="../src/fps/lobby-stage.mjs?v=3"></script>
   <script type="module" src="../ui/cs-mobile.mjs?v=2"></script>
