@@ -155,7 +155,7 @@ export class MobileControls {
     // Both APIs are best effort. In particular, iOS Safari does not support
     // arbitrary-element fullscreen or programmatic orientation locking.
     try {
-      if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
+      if (!window.__csFlow?.fullscreen && !document.fullscreenElement && document.documentElement.requestFullscreen) {
         const result = document.documentElement.requestFullscreen({ navigationUI: 'hide' });
         result?.catch?.(() => {});
       }
