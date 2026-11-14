@@ -1,3 +1,4 @@
+import {createFullscreenController} from './fullscreen.mjs';
 // CARTRIDGE-STRIKE // lobby theme + lobby → loading → match flow (presentation layer).
 // Lifecycle:  lobby-ready (DOM interactive) → engine-ready (app.mjs hides #loading after
 // world, renderer and assets resolve) → match-ready (app.mjs start() ran, #hud shown).
@@ -5,6 +6,7 @@
 // the engine launches from its normal match handler once its assets are ready.
 const $ = id => document.getElementById(id);
 const html = document.documentElement;
+const fullscreen = createFullscreenController(document);
 const menu = $('menu'), startBtn = $('start'), engineNote = $('loading'), fatalBox = $('fatal');
 const MUSIC_KEY = 'cs-lobby-music';
 const TIPS = [
@@ -157,9 +159,11 @@ const flow = {
       location.reload();
       return;
     }
+    fullscreen.resume(); // Retry is another direct user gesture.
     this.active = false; this.begin();
   },
   toLobby() {
+    fullscreen.exit();
     clearTimeout(this.slowTimer); clearTimeout(this.hardTimer);
     this.active = false; this.failed = false;
     ui.root.hidden = true; html.classList.remove('cs-loading-open');
@@ -178,6 +182,7 @@ const setStatus = t => { if (ui.status) ui.status.textContent = t; };
 function intercept(e) {
   if (!e.target.closest || !e.target.closest('#start')) return;
   e.preventDefault(); e.stopImmediatePropagation();
+  if (!startBtn.disabled && !flow.active) fullscreen.start();
   flow.begin();
 }
 function init() {
@@ -213,7 +218,7 @@ function init() {
     if (sessionStorage.getItem('cs-autostart')) launchRequested = true;
     sessionStorage.removeItem('cs-autostart');
   } catch {}
-  window.__csFlow = { flow, music }; // test hook (read-only use)
+  window.__csFlow = { flow, music, fullscreen }; // test hook (read-only use)
   if (launchRequested && !menu.hidden) flow.begin();
 }
 // Loaded after the lobby markup, independently of the engine module graph.
