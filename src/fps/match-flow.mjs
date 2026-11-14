@@ -100,7 +100,7 @@ const flow = {
       brief: document.querySelector('.team-option.selected em')?.textContent || '',
     };
   },
-  begin() {
+  begin(fullscreenRequested = false) {
     if (this.active) return;                    // duplicate clicks / Enter presses
     clearTimeout(this.exitTimer);
     this.active = true; this.failed = false; this.attempt++;
@@ -119,16 +119,16 @@ const flow = {
     this.slowTimer = setTimeout(() => { if (this.active && !engineReady()) setStatus(`${engineText()} · det tar längre tid än vanligt`); }, Math.min(20, limit / 2) * 1000);
     clearTimeout(this.hardTimer);
     this.hardTimer = setTimeout(() => { if (this.active && !this.failed && !engineReady()) this.fail('Banan svarar inte. Kontrollera anslutningen och försök igen.'); }, limit * 1000);
-    this.status();
+    this.status(fullscreenRequested);
   },
-  status() {
+  status(fullscreenRequested = false) {
     if (!this.active || this.failed) return;
     if (engineFailed()) return this.fail();
     if (!engineReady()) { setStatus(engineText()); return; }
     if (document.hidden) { setStatus('Väntar på att fliken blir aktiv'); return; }
     if (startBtn.disabled) return this.fail($('character-status').textContent);
     // A warm launch keeps the original click's user activation for mouse lock and audio.
-    startBtn.dispatchEvent(new Event('cs-start-match'));
+    startBtn.dispatchEvent(new CustomEvent('cs-start-match', { detail: { fullscreenRequested } }));
     if (menu.hidden && !$('hud').hidden) this.done();
     else this.fail('Matchen startade inte. Försök igen.');
   },
@@ -159,8 +159,8 @@ const flow = {
       location.reload();
       return;
     }
-    fullscreen.resume(); // Retry is another direct user gesture.
-    this.active = false; this.begin();
+    const fullscreenRequested = fullscreen.resume(); // Retry is another direct user gesture.
+    this.active = false; this.begin(fullscreenRequested);
   },
   toLobby() {
     fullscreen.exit();
@@ -182,8 +182,8 @@ const setStatus = t => { if (ui.status) ui.status.textContent = t; };
 function intercept(e) {
   if (!e.target.closest || !e.target.closest('#start')) return;
   e.preventDefault(); e.stopImmediatePropagation();
-  if (!startBtn.disabled && !flow.active) fullscreen.start();
-  flow.begin();
+  const fullscreenRequested = !startBtn.disabled && !flow.active && fullscreen.start();
+  flow.begin(fullscreenRequested);
 }
 function init() {
   const options = [...menu.querySelectorAll('.team-option')];

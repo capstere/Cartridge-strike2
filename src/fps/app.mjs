@@ -201,11 +201,11 @@ function frame(now){try{if(!renderBudget.shouldRender(now,document.hidden,!!moda
 function fatal(error){cancelAnimationFrame(raf);grenadeAssist?.reset();$('fatal').hidden=false;$('fatal').querySelector('pre').textContent=error.stack||String(error);$('loading').hidden=true;console.error(error);}
 team = document.querySelector('.team-option.selected').dataset.team;
 for (const option of document.querySelectorAll('[data-team]')) option.addEventListener('click', () => { team = option.dataset.team; });
-function launchMatch(){
+function launchMatch(event){
  if(modal!=='menu' || !audio || !$('loading').hidden || characterSelectionFailed || !$('fatal').hidden)return;
  mobile.attemptLandscape();
  start(document.querySelector('.team-option.selected').dataset.team);
- if(!mobile.enabled && navigator.userActivation && !navigator.userActivation.isActive){
+ if(!mobile.enabled && navigator.userActivation && !navigator.userActivation.isActive && !event?.detail?.fullscreenRequested){
    showPause();$('pause').querySelector('p:not(.eyebrow)').textContent='Matchen är redo. Klicka på Fortsätt för att börja.';
    $('resume').focus();return;
  }
