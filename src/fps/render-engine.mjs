@@ -3,6 +3,7 @@ import {syncWeaponAppearance} from './view-character-appearance.mjs?v=6.1.2';
 import {refreshActorCharacter} from './character-actors.mjs?v=6.1.2';
 import {privateCharacterAppearance} from './character-library.mjs?v=6.1.2';
 import { FrameTimeWindow } from './frame-time-window.mjs';
+import { AdaptiveResolution } from './adaptive-resolution.mjs';
 import { TracerBatch } from './tracer-batch.mjs';
 import { createThrownCartridge, updateThrownCartridge } from './throwable-cartridge.mjs';
 import * as THREE from '../../vendor/three/three.module.js';
@@ -31,7 +32,7 @@ export function freezeStaticTransforms(root){root.updateWorldMatrix(true,true);r
 }
 export class Renderer{
  constructor(canvas,world,settings){
-  this.world=world;this.settings=settings;this.neutralLighting=world.project?.intent?.floor5Preparation?.runtimeLighting==='neutral-daylight';this.renderer=new THREE.WebGLRenderer({canvas,antialias:!settings.mobile,powerPreference:settings.mobile?'low-power':'high-performance'});this.renderer.info.autoReset=false;this.quality=settings.graphics;this.renderer.setPixelRatio(Math.min(devicePixelRatio,settings.mobile?(settings.graphics==='low'?.78:1):(settings.graphics==='low'?.85:1.5)));this.renderer.outputColorSpace=THREE.SRGBColorSpace;this.renderer.toneMapping=THREE.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1.04;this.renderer.shadowMap.enabled=!this.neutralLighting&&settings.graphics!=='low';this.renderer.shadowMap.type=THREE.PCFSoftShadowMap;this.renderer.shadowMap.autoUpdate=false;this.shadowAt=-Infinity;
+  this.world=world;this.settings=settings;this.neutralLighting=world.project?.intent?.floor5Preparation?.runtimeLighting==='neutral-daylight';this.renderer=new THREE.WebGLRenderer({canvas,antialias:!settings.mobile,powerPreference:settings.mobile?'low-power':'high-performance'});this.renderer.info.autoReset=false;this.quality=settings.graphics;this.adaptiveResolution=new AdaptiveResolution();this.resScale=1;this.adaptiveActive=false;this.renderer.setPixelRatio(Math.min(devicePixelRatio,settings.mobile?(settings.graphics==='low'?.78:1):(settings.graphics==='low'?.85:1))*this.resScale);this.renderer.outputColorSpace=THREE.SRGBColorSpace;this.renderer.toneMapping=THREE.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1.04;this.renderer.shadowMap.enabled=!this.neutralLighting&&settings.graphics!=='low';this.renderer.shadowMap.type=THREE.PCFSoftShadowMap;this.renderer.shadowMap.autoUpdate=false;this.shadowAt=-Infinity;
   this.scene=new THREE.Scene();this.scene.background=new THREE.Color(0x28353d);if(this.neutralLighting){
    this.scene.add(new THREE.HemisphereLight(0xffffff,0xe3e3df,2.1));
    const daylight=new THREE.DirectionalLight(0xfffaf2,.65);daylight.position.set(-4,7,3);this.scene.add(daylight);
@@ -85,9 +86,24 @@ export class Renderer{
   // Keep the warm-up material alive: disposing it releases its shader refs.
   this.warmup={milliseconds:performance.now()-started,programs:this.renderer.info.programs.length,textures:textures.size};
  }
- updateLights(p,t){
+ updateLights(p,t,active=false){
   const standard=this.settings.graphics!=='low',shadows=standard&&!this.neutralLighting;
-  if(this.quality!==this.settings.graphics){this.quality=this.settings.graphics;this.renderer.setPixelRatio(Math.min(devicePixelRatio,this.settings.mobile?(standard?1:.78):(standard?1.5:.85)));this.resize();this.shadowAt=-Infinity;this.lightAt=-1;}
+  const baseRatio=Math.min(devicePixelRatio,this.settings.mobile?(standard?1:.78):(standard?1:.85));
+  if(this.quality!==this.settings.graphics){
+   this.quality=this.settings.graphics;this.adaptiveResolution.arm(t);
+   this.frameTimes.clear();this.lastFrame=performance.now();
+   this.renderer.setPixelRatio(baseRatio*this.resScale);
+   this.resize();this.shadowAt=-Infinity;this.lightAt=-1;
+  }
+  if(this.adaptiveActive!==active){
+   this.adaptiveActive=active;this.adaptiveResolution.arm(t);
+   this.frameTimes.clear();this.lastFrame=performance.now();
+  }
+  if(active&&this.adaptiveResolution.update(t,this.frameTimes.mean,this.frameTimes.count)){
+   this.resScale=this.adaptiveResolution.scale;
+   this.renderer.setPixelRatio(baseRatio*this.resScale);
+   this.resize();this.frameTimes.clear();this.lastFrame=performance.now();
+  }
   this.renderer.shadowMap.enabled=shadows;
   // Animated casters update at 30 Hz; contact shadows and all gameplay/render
   // motion stay per-frame. Do not redraw two static room maps at 60+ Hz.
@@ -111,7 +127,7 @@ export class Renderer{
 
  render(game,viewActor,dt){const s=game.state,p=viewActor||game.player||this.world.anchors.analysts[0],h=p.height||1.72,t=s.time;const eye=h-.12,bob=this.settings.reducedMotion?0:Math.sin(t*11)*(p.moving?.018:0)*(1-(p.aimAmount||0)*.9);this.camera.position.set(p.x,p.y+eye+bob,p.z);this.camera.rotation.set(p.pitch||0,p.yaw||0,0);this.camera.updateMatrixWorld();
  this.actorFrustum.setFromProjectionMatrix(this.actorProjection.multiplyMatrices(this.camera.projectionMatrix,this.camera.matrixWorldInverse));this.stats.posedActors=0;this.stats.culledActors=0;
- this.tracerBatch.update(t);this.updateLights(p,t);this.combatEffects.update(t,this.effectTime==null?0:Math.max(0,Math.min(.1,t-this.effectTime)),this.camera);this.effectTime=t;
+ this.tracerBatch.update(t);this.updateLights(p,t,s.phase==='active'&&!s.paused);this.combatEffects.update(t,this.effectTime==null?0:Math.max(0,Math.min(.1,t-this.effectTime)),this.camera);this.effectTime=t;
  for(const a of [...s.actors,...s.hostages]){
   if(!this.neutralLighting){
    let caster=this.actorShadows.get(a.id);
@@ -159,7 +175,7 @@ export class Renderer{
  this.effects=this.effects.filter(f=>{if(t>f.until){this.disposeTransient(f.mesh);return false;}if(f.billboard){f.mesh.quaternion.copy(this.camera.quaternion);f.mesh.position.copy(f.origin).addScaledVector(f.velocity,Math.max(0,t-f.start));}f.mesh.material.opacity=(f.until-t)/Math.max(.001,f.until-f.start);return true;});
  if(p.weapon!==this.lastWeapon){if(this.weaponModel)this.viewScene.remove(this.weaponModel);this.weaponModel=this.weaponCache.get(p.weapon);if(!this.weaponModel){this.weaponModel=makeWeapon(p.weapon||'p9');this.weaponCache.set(p.weapon,this.weaponModel);}this.viewScene.add(this.weaponModel);this.lastWeapon=p.weapon;this.switchAt=t;}
  if(this.weaponModel){syncWeaponAppearance(this.weaponModel,privateCharacterAppearance(p.id));this.recoil*=Math.exp(-dt*18);const pose=animateWeapon(this.weaponModel,p,t,dt,{reducedMotion:this.settings.reducedMotion,recoil:this.recoil,shotAt:this.shotAt??-Infinity,switchAt:this.switchAt,throwAt:this.throwAt??-Infinity,swingAt:this.swingAt??-Infinity});this.weaponModel.visible=p.alive!==false&&s.phase!=='menu'&&!(p.weapon==='sniper'&&p.aimAmount>.92);this.muzzle.visible=this.weaponModel.visible&&t<(this.muzzleUntil||0);this.weaponModel.updateMatrixWorld(true);const muzzle=pose?.muzzle||this.weaponModel.userData.muzzle||new THREE.Vector3(0,.08,-.4);this.muzzle.position.copy(pose?.muzzle||this.weaponModel.localToWorld(muzzle.clone()));this.muzzle.rotation.z=t*83;}
- this.facilityScene?.update(this.camera);this.renderer.info.reset();this.renderer.autoClear=true;this.renderer.render(this.scene,this.camera);if(this.weaponModel?.visible){this.renderer.autoClear=false;this.renderer.clearDepth();this.renderer.render(this.viewScene,this.viewCamera);}this.stats.drawCalls=this.renderer.info.render.calls;this.stats.triangles=this.renderer.info.render.triangles;const now=performance.now();this.stats.fps=this.frameTimes.push(now-this.lastFrame);this.lastFrame=now;
+ this.facilityScene?.update(this.camera);this.renderer.info.reset();this.renderer.autoClear=true;this.renderer.render(this.scene,this.camera);if(this.weaponModel?.visible){this.renderer.autoClear=false;this.renderer.clearDepth();this.renderer.render(this.viewScene,this.viewCamera);}this.stats.drawCalls=this.renderer.info.render.calls;this.stats.triangles=this.renderer.info.render.triangles;const now=performance.now();this.stats.fps=this.frameTimes.push(now-this.lastFrame);this.stats.resolutionScale=this.resScale;this.stats.pixelRatio=this.renderer.getPixelRatio();this.lastFrame=now;
  }
  smokeOpacity(actor,smokes){let value=0;for(const sm of smokes){const d=Math.hypot(actor.x-sm.x,actor.z-sm.z);if(d<(sm.radius||3)&&this.world.segmentClear({x:actor.x,y:(actor.y||0)+1,z:actor.z},{x:sm.x,y:Math.max(.5,sm.y),z:sm.z},{vision:false}))value=Math.max(value,Math.min(.97,((sm.radius||3)-d)*.8));}return value;}
  resetTransient(){this.tracerBatch.clear();this.combatEffects.clear();this.effectTime=null;this.lightAt=-1;this.shadowAt=-Infinity;for(const model of this.actors.values()){model.userData.fall=null;model.rotation.set(0,0,0);}for(const f of this.effects)this.disposeTransient(f.mesh);this.effects=[];for(const map of [this.grenades,this.smokes,this.drops]){for(const m of map.values())this.disposeTransient(m);map.clear();}this.recoil=0;this.hitUntil=0;this.damageUntil=0;this.damageDirection=null;this.shotAt=-1;this.throwAt=-1;this.swingAt=-1;this.muzzleUntil=0;this.switchAt=-1;this.muzzle.visible=false;this.bombModel.visible=false;this.lastWeapon='';this.frameTimes.clear();this.lastFrame=performance.now();}
