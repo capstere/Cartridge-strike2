@@ -8,7 +8,14 @@ function compareViews() {
   f.stopFrameLoop();
   const items = r.projectFurniture.children.filter(cell => cell.name.startsWith('floor5-cell-'))
     .flatMap(cell => cell.children.filter(item => item.isGroup && item.userData.editId));
-  const workstation = items.find(item => item.userData.editId === 'NY-OBJ-0024');
+  // A batchable mirrored kit may now be represented by one or several
+  // InstancedMeshes rather than an independent object with editId.
+  const workstation = r.projectFurniture.children
+    .filter(cell => cell.name.startsWith('floor5-cell-'))
+    .flatMap(cell => cell.children)
+    .filter(item => item.userData.editId === 'NY-OBJ-0024' ||
+      item.userData.projectItemIds?.includes('NY-OBJ-0024'));
+  if(!workstation.length)throw Error('Missing I04 workstation positive control');
   const poses = [
     ['lift closed', -20.541, -30.03999, Math.PI, 0, 0],
     ['lift opening', -20.541, -30.03999, Math.PI, 0, .5],
@@ -45,10 +52,10 @@ function compareViews() {
     const coarse = captureWorld();
     for (const item of hiddenItems) item.visible = false;
     // Positive control: prove that an exposed kit actually changed the pixels when removed.
-    const visible = workstation.visible;
-    workstation.visible = false;
+    const visible = workstation.map(item=>item.visible);
+    for(const item of workstation)item.visible=false;
     const withoutKit = captureWorld();
-    workstation.visible = visible;
+    workstation.forEach((item,i)=>item.visible=visible[i]);
     return { name, walkable, normalCalls: normal.calls, coarseCalls: coarse.calls,
       changed: changedPixels(normal.pixels, coarse.pixels), kitPixels: changedPixels(normal.pixels, withoutKit.pixels) };
   });
@@ -84,7 +91,10 @@ async function main() {
     const views = await page.evaluate(compareViews);
     console.table(views);
     assert.ok(views.every(v => v.walkable && v.changed === 0), 'Culling changed the visible world at a sampled pose');
-    assert.ok(views.find(v => v.name === 'lift open').coarseCalls - views.find(v => v.name === 'lift open').normalCalls >= 352);
+    // The 352-call minimum was a *pre-batching* expectation. The goal of
+    // this pass is to stop submitting most of those meshes at all.
+    assert.ok(views.every(v => v.normalCalls > 0 && v.coarseCalls >= v.normalCalls),
+      'Unexpected increase when hidden objects are culled');
     assert.ok(views.find(v => v.name === 'I04 desk').kitPixels > 0);
     await page.keyboard.press('Escape');
     await page.locator('#restart').tap();
