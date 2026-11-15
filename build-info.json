@@ -1715,9 +1715,14 @@
       "sha256": "d244fe11d15d56f7b3db32a03f42e45477cf8e0771a89f15da57f48efb6179f7"
     },
     {
+      "path": "src/fps/adaptive-resolution.mjs",
+      "bytes": 816,
+      "sha256": "2b4b2f1b07c16eb7baf18f26d2b58797da42d2e1a46933016ae76e37be3fdbfa"
+    },
+    {
       "path": "src/fps/app.mjs",
-      "bytes": 34671,
-      "sha256": "9c875c9ecf64808a9d077c4c6a6cfdc03b7fa9ac5c228c9f9fe147355a3baeb1"
+      "bytes": 34672,
+      "sha256": "d7ee3b426678141dc599368ee54c026ca23fd1618c6e6c167cb3dcf387d870d0"
     },
     {
       "path": "src/fps/audio.mjs",
@@ -1817,7 +1822,7 @@
     {
       "path": "src/fps/config.mjs",
       "bytes": 5737,
-      "sha256": "5636c73871d5ff7fdcedf951b7e14214c44be767c2baea5778413f947485ee98"
+      "sha256": "8ee08b6809385cdab44fdb58235e3089ac5dc8c686e0db2e54dbc9dcbffefe89"
     },
     {
       "path": "src/fps/control-deployment.mjs",
@@ -2031,8 +2036,8 @@
     },
     {
       "path": "src/fps/project-batches.mjs",
-      "bytes": 6678,
-      "sha256": "6cc7aa3443b769a402a0366d7c853c39176ccd9151545bb74dd209dd0f3e09be"
+      "bytes": 7883,
+      "sha256": "e9bde640846824c471d379e975d38328163b29084f86fea3372d2795b3e1f626"
     },
     {
       "path": "src/fps/project-visibility.mjs",
@@ -2051,13 +2056,13 @@
     },
     {
       "path": "src/fps/render-engine.mjs",
-      "bytes": 31047,
-      "sha256": "865eaac10c6ca09b6a1faa85cefea10da12788647e24b6d5ca173216790ed8a7"
+      "bytes": 31937,
+      "sha256": "495f2f3d07dd1762ecc26f8ade132157ba8ece5d351bd4dc86d841118dd4bb9d"
     },
     {
       "path": "src/fps/render.mjs",
-      "bytes": 19206,
-      "sha256": "832c7cd163125b1478f8a72468ac877d2856b4672d82af2a3e93f8da5734c912"
+      "bytes": 19220,
+      "sha256": "943830be3d8deb9b2f92c06288c4b1f1103c2ee41027d99a3d039b44679d7be1"
     },
     {
       "path": "src/fps/riposte-audio.mjs",
@@ -2186,8 +2191,8 @@
     },
     {
       "path": "src/fps/visual-depth.mjs",
-      "bytes": 7168,
-      "sha256": "ca03c44d9703054001fe8ea84a3cb926bc91ecaf8c194bfd3f593ffe3b89e356"
+      "bytes": 7163,
+      "sha256": "fffc09302fa4eab9772610f4e9095f122206685b71a067076f53cd3944947bfa"
     },
     {
       "path": "src/fps/walk-start.mjs",
@@ -2285,7 +2290,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 55019621,
+  "bytes": 55022542,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

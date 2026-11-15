@@ -155,11 +155,11 @@ async function openOriginal(browser, mobile) {
       g.reticleTarget = () => other;
       const aimed = __fps.input();
       const before = g.item(p).ammo;
-      __fps.step(null,.25);
+      for(let frame=0;frame<5;frame++)__fps.step(null,.05);
       const after = g.item(p).ammo;
       g.reticleTarget = () => null;
       const empty = __fps.input();
-      __fps.step(null,.25);
+      for(let frame=0;frame<5;frame++)__fps.step(null,.05);
       return { aimed: aimed.autoFire && aimed.fire, count: before-after,
         empty: empty.autoFire || empty.fire, held: p.fireHeld,
         remaining: g.item(p).ammo, fatal: document.getElementById('fatal').hidden };

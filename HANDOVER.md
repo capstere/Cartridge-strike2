@@ -53,3 +53,18 @@ node tools/mobile-smoke.cjs
 ```
 
 When handing work back, update the first open task, link any measurements or PR, and distinguish published-site play, local browser play, simulation and physical-device observations.
+
+## November 15 — performance pass implementation
+
+See [the 2026-11-15 performance pass](docs/performance-pass.md) for source-verified
+rendering changes, tests, the earlier 1,918/2,377 draw-call baseline and explicit
+validation limits. Desktop standard pixel ratio is lowered, a gated adaptive
+resolution controller samples real active-frame intervals, simulation catch-up
+is capped, mirrored opaque furniture can batch with correct face winding, and
+non-Floor-5 SSAO is cheaper. **These changes do not yet constitute measured
+FPS gains on physical laptops or mobile devices.**
+
+Continue the first open task above and run the after-change
+`tools/endless-floor5-profile.cjs` and `tools/floor5-workstation-visibility.cjs`
+tests before claiming an improvement. Record before/after frame p95, draws,
+triangles, visual differences and device/browser characteristics.

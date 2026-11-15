@@ -12,7 +12,31 @@ function appearanceKey(item){
 }
 // Merge repeated opaque parts once in model space (for example 24 identical shelf rails).
 // The same fitted geometry then serves every spatial cell without multiplying vertex storage.
-function compactModel(meshes){
+// Preserve front-facing triangles when baking a negative-determinant transform.
+// BufferGeometry.applyMatrix4 adjusts normals, but does not reverse winding.
+export function bakeRigidPart(node){
+ const geometry=node.geometry.clone().applyMatrix4(node.matrixWorld);
+ if(node.matrixWorld.determinant()<0){
+  const index=geometry.getIndex();
+  if(index){
+   for(let i=0;i<index.count;i+=3){
+    const second=index.getX(i+1);
+    index.setX(i+1,index.getX(i+2));index.setX(i+2,second);
+   }
+   index.needsUpdate=true;
+  }else{
+   for(const attribute of Object.values(geometry.attributes)){
+    for(let i=0;i<attribute.count;i+=3)for(let component=0;component<attribute.itemSize;component++){
+     const values=attribute.array,b=(i+1)*attribute.itemSize+component,c=(i+2)*attribute.itemSize+component;
+     const old=values[b];values[b]=values[c];values[c]=old;
+    }
+    attribute.needsUpdate=true;
+   }
+  }
+ }
+ return geometry;
+}
+export function compactModel(meshes){
  const parts=new Map(),model=new T.Group();
  for(const mesh of meshes){
   const material=mesh.material,geometry=mesh.geometry;
@@ -32,9 +56,12 @@ function compactModel(meshes){
  }
  for(const group of parts.values()){
   const source=group[0],m=new T.Mesh(source.geometry,source.material);
-  if(group.length===1){m.matrixAutoUpdate=false;m.matrix.copy(source.matrixWorld);}
+  if(group.length===1){
+   if(source.matrixWorld.determinant()<0)m.geometry=bakeRigidPart(source);
+   else{m.matrixAutoUpdate=false;m.matrix.copy(source.matrixWorld);}
+  }
   else{
-   const copies=group.map(node=>node.geometry.clone().applyMatrix4(node.matrixWorld));
+   const copies=group.map(bakeRigidPart);
    m.geometry=mergeGeometries(copies);copies.forEach(g=>g.dispose());
    if(!m.geometry)throw Error('Möbeldelarnas geometrier kunde inte sammanfogas.');
   }
@@ -60,17 +87,20 @@ export async function buildFpsFurniture(items,root,options){
  let instancedItems=0;const independent=new Map(),detailIds=new Set();
  for(const list of variants.values()){
   const template=models.get(list[0].id);template.updateMatrixWorld(true);
-  const meshes=[];let rigidOpaque=true,reflected=false;
+  const meshes=[];let rigidOpaque=true;
   template.traverse(node=>{
    if(!node.visible||node.isLOD||node.isSkinnedMesh||node.isInstancedMesh||node.morphTargetInfluences)rigidOpaque=false;
    if(!node.isMesh)return;
    meshes.push(node);
    if([].concat(node.material).some(m=>m.transparent))rigidOpaque=false;
-   if(node.matrixWorld.determinant()<0)reflected=true;
+   // Unsupported mirrored tangent bases or interleaved/morph attributes keep
+   // the previous safe independent-model path.
+   if(node.matrixWorld.determinant()<0 && (node.geometry.getAttribute('tangent')||
+      Object.values(node.geometry.attributes).some(a=>a.isInterleavedBufferAttribute)||
+      Object.values(node.geometry.morphAttributes).some(a=>a.length)))rigidOpaque=false;
   });
-  if(!rigidOpaque||reflected){
-   // Dense mirrored kits keep their original meshes. Their cell may straddle a
-   // doorway even when one opaque wall completely hides the individual kit.
+  if(!rigidOpaque){
+   // Special, non-batchable models retain the original independent-model path.
    const cullIndividually=rigidOpaque&&meshes.length>=32;
    // Some LOD classes carry constructor-only state. Build them through their original factory.
    for(const [i,item] of list.entries()){const cell=cellFor(item);

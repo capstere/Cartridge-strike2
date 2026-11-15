@@ -22,7 +22,7 @@ export const TEAMMATE_DIFFICULTY = Object.freeze({ ...DIFFICULTIES.normal, id: '
   burstMin: 4, burstMax: 6, pauseMin: .18, pauseMax: .35, humanDamage: 1 });
 export const CONFIG = Object.freeze({
   difficulty: DEFAULT_DIFFICULTY, mode: 'classic', friendlyFire: false, hostageDamage: false, wanderers: true, respawnDelay: 3, spawnProtection: 1.8,
-  fixedStep: 1 / 60, maxCatchUp: .25, buyTime: 15, roundTime: 120, bombTime: 40,
+  fixedStep: 1 / 60, maxCatchUp: .05, buyTime: 15, roundTime: 120, bombTime: 40,
   plantTime: 3, defuseTime: 5, resultTime: 5, matchWins: 5,
   health: 100, startMoney: 800, winMoney: 3250, lossMoney: 1400,
   lossIncrement: 500, maxLossMoney: 3400, killMoney: 300, maxMoney: 16000,

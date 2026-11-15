@@ -189,8 +189,8 @@ export class Renderer extends EngineRenderer {
     const p=game.player;if(!p?.alive||game.state.paused||game.phase!=='active'||p.reloadUntil>game.state.time)return false;
     this.inspectAt=game.state.time;this.inspectActor=p.id;this.inspectWeapon=p.weapon;return true;
   }
-  updateLights(p,t){
-    super.updateLights(p,t);
+  updateLights(p,t,active){
+    super.updateLights(p,t,active);
     for(const light of this.lights){if(!light.visible)continue;const room=this.world.roomAt(light.position.x,light.position.z);light.color.setHex(['I01','I02','I03'].includes(room?.id)?0xeaf4ff:room?.name?.includes('PENTRY')?0xffdfad:0xffefd9);}
   }
   applyInspection(){
