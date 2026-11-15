@@ -24,3 +24,16 @@ jobs:
         run: node tools/verify-owner-runtime.mjs
       - name: Validate prepared Floor 5 door traversal
         run: node --experimental-loader ./tools/vendor-three-test-loader.mjs tools/owner-door-traversal.mjs --prepared
+      - name: Install Chromium test browser
+        run: |
+          npm ci --prefix frontline/source/tools/dev
+          node frontline/source/tools/dev/node_modules/playwright-core/cli.js install --with-deps chromium
+      - name: Test live mobile, match flow and Floor 5 visibility
+        timeout-minutes: 12
+        run: |
+          python3 -m http.server 8765 >/tmp/fps-server.log 2>&1 &
+          server=$!
+          trap 'kill $server || true' EXIT
+          node tools/mobile-smoke.cjs
+          node tools/match-flow-browser.mjs
+          node tools/floor5-workstation-visibility.cjs
