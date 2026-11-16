@@ -1,0 +1,18 @@
+Repository: capstere/Cartridge-strike2. Read AGENTS.md, HANDOVER.md and this package's 00–05 documents. The explicit assignment is multiplayer preparation/implementation; retain the existing physical-mobile backlog. This package audited main at c794a0331e4d3d34cd3d0a01daba0804e14adce3. Inspect current main and adapt to verified changes; do not overwrite newer work.
+
+Implement only this pass. Use an isolated branch, small coherent commits, and push a reviewable PR if GitHub access is available. Do not auto-merge or deploy publicly based solely on this planning package. Do not purchase infrastructure. Preserve offline Classic/Endless and the Tactical Industrial presentation. Work autonomously on implementation choices; ask Jesper only for an external dependency that genuinely blocks this pass. Treat the original ZIP as reference, not a production implementation. Do not create a parallel game engine.
+
+Run required existing checks from HANDOVER plus the meaningful new tests. Update runtime hashes when needed. Document exact commands, results, limitations and the next pass under docs/multiplayer/. Do not claim tests on Pi, physical phones or real external networks unless actually performed. Finish with concise user-facing setup/test instructions and a PR link or local commit identifier if pushing is unavailable.
+
+PASS 1 — PROVE THE SHARED ENGINE AND FRAMEWORK BOUNDARY
+
+Goal: a tested headless foundation that preserves the current offline game. Do not start by copying the standalone cube arena into /multiplayer.
+
+1. Trace Game/app/world/physics/level-adapter and transitive imports. Verify the current manifest/default prepared map and all mutable caches. Record concrete ownership boundaries and single-player assumptions, including damage scaling, input routing, bot creation, pause and local-player presentation.
+2. Make the minimal controller/input refactor needed for two independent human actors. Keep backward-compatible offline input and actor identity. Separate controllerType from client-local isPlayer. Ensure PvP damage does not inherit local-player bot difficulty reductions. Whitelist network-eligible commands; internal moveWorld cannot be a network input.
+3. Extract/share movement for authoritative simulation and later prediction without duplicating physics. Demonstrate actual headless Node map/world construction; no DOM renderer shims masking architectural dependencies. Load synthetic-demo first, then verify floor5-prepared headless construction.
+4. Prove fresh per-room mutable state. Mutating a door/glass in world A must not affect B. Inspect transitive caches, not only the createWorld fresh flag.
+5. Run a small dependency/API spike for a compatible pinned Colyseus server/SDK pair. Check current official docs and actual installed APIs. Prefer built-in input/prediction/rewind facilities where they fit; document an actual mismatch before replacing them. Record selected Node LTS and dependency locks. Do not guess exact API names from this plan.
+6. Add tests for independent human inputs, unchanged offline behaviour, ownership validation and world isolation. Prove server can advance fixed simulation without double accumulation. Produce the proposed LocalSession/NetworkSession interface based on real app consumers.
+
+Exit: tested shared foundation and API decision, dependency lockfiles, PR and short next-step handover. Full network gameplay is not the acceptance criterion for this pass. If headless construction is blocked, finish a minimal reproducible failing test and concrete bounded fix; do not mark foundation PASS or proceed to a second engine.

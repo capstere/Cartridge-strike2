@@ -1,0 +1,19 @@
+Repository: capstere/Cartridge-strike2. Read AGENTS.md, HANDOVER.md and this package's 00–05 documents. The explicit assignment is multiplayer preparation/implementation; retain the existing physical-mobile backlog. This package audited main at c794a0331e4d3d34cd3d0a01daba0804e14adce3. Inspect current main and adapt to verified changes; do not overwrite newer work.
+
+Implement only this pass. Use an isolated branch, small coherent commits, and push a reviewable PR if GitHub access is available. Do not auto-merge or deploy publicly based solely on this planning package. Do not purchase infrastructure. Preserve offline Classic/Endless and the Tactical Industrial presentation. Work autonomously on implementation choices; ask Jesper only for an external dependency that genuinely blocks this pass. Treat the original ZIP as reference, not a production implementation. Do not create a parallel game engine.
+
+Run required existing checks from HANDOVER plus the meaningful new tests. Update runtime hashes when needed. Document exact commands, results, limitations and the next pass under docs/multiplayer/. Do not claim tests on Pi, physical phones or real external networks unless actually performed. Finish with concise user-facing setup/test instructions and a PR link or local commit identifier if pushing is unavailable.
+
+PASS 2 — TWO REAL CLIENTS IN THE EXISTING GAME PRESENTATION
+
+Prerequisite: pass 1 is integrated or explicitly available on the working branch and its tests pass. Read its actual results.
+
+1. Implement a Colyseus private-room server and NetworkSession adapter. Server owns session→actor mapping, teams and initial spawn. Explicit room creation/join with a room cap; a full room must not silently send friends into different matches.
+2. Implement version/map/config handshake and ready-state loading. Use synthetic-demo for the first test, with fixed geometry/door states and bundled default models. Mismatched clients must receive a clear explanation before spawning.
+3. Use validated input per actor and fixed simulation; implement local prediction/reconciliation and timestamp-buffered remote interpolation now, not as a distant polish phase. Initial target 60 Hz simulation, 20 Hz patches, with input batching. One clock owner and one replay owner.
+4. Add one weapon using existing weapon data, server-enforced ammo/reload/cadence, hitscan without rewind for this local milestone, score, death and respawn. Bind fire to the correct validated input orientation/tick. Shared hitboxes, no prototype sphere. Cosmetic immediate muzzle feedback must reconcile by action ID; damage is authoritative.
+5. Implement lifeId/reset events and proper teardown. Pausing/settings/backgrounding clears local controls but never pauses the room. No bot takes a human slot; no solo restart command resets a remote match. Neutralize stale input server-side.
+6. Disable unsupported online systems consistently (bomb, hostages, residents, zombies, bots, shop/economy, grenades and private GLBs), keeping them offline. Preserve reusable renderer/audio/HUD; show actual human names safely as text.
+7. Build real local-server integration tests with two browser contexts: join same room, independent simultaneous movement, aim/fire/reload, one kill counted once, respawn, leave/rejoin, room full and version mismatch. Test simulated 100 ms RTT/jitter for movement. Capture cleanup counts over repeated joins.
+
+Exit: independently controllable two-player local vertical slice with prediction, reused FPS presentation and passing offline regression. Record that internet combat remains gated on bounded rewind and real-network validation in later passes. Do not describe this milestone as a finished 5v5 game.

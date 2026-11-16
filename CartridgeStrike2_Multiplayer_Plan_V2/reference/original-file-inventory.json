@@ -1,0 +1,60 @@
+{
+  "archive_sha256": "61abfc60cdaffa77eb978fb8cc54985f2c6b0cf77686a8148fa470b7a7a1ad98",
+  "files": [
+    {
+      "path": "cartridge-multiplayer-mvp/README.md",
+      "size_bytes": 11808,
+      "sha256": "3d399a22326eda21f8c318e82aa4d8ba2fbf22fce68f9c9f9c462df5536bbc62"
+    },
+    {
+      "path": "cartridge-multiplayer-mvp/client/multiplayer/main.mjs",
+      "size_bytes": 7975,
+      "sha256": "ecf9f0c1d216998ff90ec33482a6718f6aa1d7fe31ebf9fcf91f66f81d7cab45"
+    },
+    {
+      "path": "cartridge-multiplayer-mvp/client/multiplayer/style.css",
+      "size_bytes": 2190,
+      "sha256": "76f93b1baf7bd857658ac211ecbb3e348a838cfc7c5683fa707e0d7a724b32f5"
+    },
+    {
+      "path": "cartridge-multiplayer-mvp/client/multiplayer/index.html",
+      "size_bytes": 2005,
+      "sha256": "6cdbb54c756afb04906fd123644338c034156c805cf9474aeb55fc8565932f8b"
+    },
+    {
+      "path": "cartridge-multiplayer-mvp/server/install-service.sh",
+      "size_bytes": 934,
+      "sha256": "6d7aa88f4620349d5ce512c2334b83f323212afcaf13eec7df43ef76f71fe7ed"
+    },
+    {
+      "path": "cartridge-multiplayer-mvp/server/.gitignore",
+      "size_bytes": 25,
+      "sha256": "9c72e304c63bff641f2e96131cb4c75d71726ffcb49a6a7af2741ff361ff2249"
+    },
+    {
+      "path": "cartridge-multiplayer-mvp/server/server.mjs",
+      "size_bytes": 4647,
+      "sha256": "62ac6b99914dd581e2ad84b1f92473698ee1697e5a0f444d8b59734f06a1e10f"
+    },
+    {
+      "path": "cartridge-multiplayer-mvp/server/.env.example",
+      "size_bytes": 245,
+      "sha256": "af2bc5ca8c5a53c1cc1eaf16f2d75e50edeeb82d568a4894fa895b6939b96da6"
+    },
+    {
+      "path": "cartridge-multiplayer-mvp/server/arena-logic.mjs",
+      "size_bytes": 3665,
+      "sha256": "3938e5eb48bfb3695acd5079ea287416ee6abf0e9f88940ca3efcd02580f331c"
+    },
+    {
+      "path": "cartridge-multiplayer-mvp/server/package.json",
+      "size_bytes": 264,
+      "sha256": "7cb32a839fe311a57153eb528961addfe624c145fc96cefba9785c82b6932ca3"
+    },
+    {
+      "path": "cartridge-multiplayer-mvp/server/test/arena.test.mjs",
+      "size_bytes": 1510,
+      "sha256": "b655f9e5577482be0e9277dfda8872c74e26885d56056de04cbb588671b486a9"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+Repository: capstere/Cartridge-strike2. Read AGENTS.md, HANDOVER.md and this package's 00–05 documents. The explicit assignment is multiplayer preparation/implementation; retain the existing physical-mobile backlog. This package audited main at c794a0331e4d3d34cd3d0a01daba0804e14adce3. Inspect current main and adapt to verified changes; do not overwrite newer work.
+
+Implement only this pass. Use an isolated branch, small coherent commits, and push a reviewable PR if GitHub access is available. Do not auto-merge or deploy publicly based solely on this planning package. Do not purchase infrastructure. Preserve offline Classic/Endless and the Tactical Industrial presentation. Work autonomously on implementation choices; ask Jesper only for an external dependency that genuinely blocks this pass. Treat the original ZIP as reference, not a production implementation. Do not create a parallel game engine.
+
+Run required existing checks from HANDOVER plus the meaningful new tests. Update runtime hashes when needed. Document exact commands, results, limitations and the next pass under docs/multiplayer/. Do not claim tests on Pi, physical phones or real external networks unless actually performed. Finish with concise user-facing setup/test instructions and a PR link or local commit identifier if pushing is unavailable.
+
+PASS 3 — REAL FLOOR 5, CORRECT COMBAT AND RECONNECTION
+
+Prerequisite: pass 2 is proven. This pass makes the pilot representative of Cartridge-Strike 2.
+
+1. Load the exact public floor5-prepared LevelProject on server and client with a canonical collision/gameplay hash. Preserve furniture-editor shared dependencies and current rendering optimizations. Do not substitute classic-floor5 or a hand-authored replica.
+2. Synchronize required door/elevator state for accessible routes and safe spawn selection. Give late joiners complete current world state. For glass choose explicit intact/unbreakable online MVP or fully server-authoritative breaking with rewind history; document and show the choice. No local-only mutations.
+3. Implement bounded server hitscan lag compensation using the verified framework facilities where suitable. Validate clock/tick mapping and history bounds. Preserve correct dynamic occlusion for all enabled doors/glass. Rewind must not roll back ammo, kills or room time. Test moving targets, corners, door transitions, duplicate fire, simultaneous damage, and old-life shots.
+4. Finish bounded reconnect grace (proposed 15 seconds), stale connection callbacks, session ownership, join/leave during death, server interruption and stale map/build UX. No duplicated actor/score/spawn protection. Clear buffers and old UI listeners.
+5. Expand to four and ten clients with a two-team cap of five per side. Bots remain off. Tests must distinguish load clients from human play. Check one room plus an isolation test with two rooms.
+6. Measure step p95/p99, event-loop delay, bandwidth, client frame percentiles, reconciliation corrections and memory for the real map. Apply only 3–5 highest-value changes justified by these measurements; document deferred optimizations. Do not run a broad visual redesign or unrelated performance rewrite.
+7. Run the network matrix, 30-minute soak and lifecycle regressions from 04_ACCEPTANCE_AND_OPERATIONS.md. Keep FAIL/NOT RUN gates explicit. If the current host cannot support the chosen target, give measured bottlenecks and lower the advertised cap; do not claim Pi capacity from desktop tests.
+
+Exit: integrated private online pilot ready for deployment packaging, with measured supported capacity and reproducible tests. Physical host/internet acceptance can remain NOT RUN until pass 4. Update a specific operations handover rather than an open-ended wishlist.

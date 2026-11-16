@@ -1,0 +1,19 @@
+Repository: capstere/Cartridge-strike2. Read AGENTS.md, HANDOVER.md and this package's 00–05 documents. The explicit assignment is multiplayer preparation/implementation; retain the existing physical-mobile backlog. This package audited main at c794a0331e4d3d34cd3d0a01daba0804e14adce3. Inspect current main and adapt to verified changes; do not overwrite newer work.
+
+Implement only this pass. Use an isolated branch, small coherent commits, and push a reviewable PR if GitHub access is available. Do not auto-merge or deploy publicly based solely on this planning package. Do not purchase infrastructure. Preserve offline Classic/Endless and the Tactical Industrial presentation. Work autonomously on implementation choices; ask Jesper only for an external dependency that genuinely blocks this pass. Treat the original ZIP as reference, not a production implementation. Do not create a parallel game engine.
+
+Run required existing checks from HANDOVER plus the meaningful new tests. Update runtime hashes when needed. Document exact commands, results, limitations and the next pass under docs/multiplayer/. Do not claim tests on Pi, physical phones or real external networks unless actually performed. Finish with concise user-facing setup/test instructions and a PR link or local commit identifier if pushing is unavailable.
+
+PASS 4 — REPRODUCIBLE DEPLOYMENT AND REAL-NETWORK PILOT
+
+Prerequisite: prior passes meet their gates. Read Jesper's host details from 01_DINA_FORBEREDELSER.md. If host access is absent, still finish the release artifact, runbook, CI and local verification; name the exact remaining host checks.
+
+1. Produce matched client/server release artifacts with checksums, version manifest, map/config/protocol hashes and pinned dependency lockfiles. Exclude secrets and server operational files from Pages output. Do not remove shared source required by FPS.
+2. Provide exact local development, Pi/Linux ARM64, environment and non-root systemd instructions. Include explicit env loading, restart policy, log rotation, health/readiness and metric collection. Verify on ARM64 if available; otherwise mark the build/runtime check NOT RUN.
+3. Add focused CI jobs: existing offline suites plus headless/network tests, two-browser smoke, protocol compatibility and artifact-content checks. Keep bounded runtime and short retention for diagnostic traces; retain failure evidence. Do not upload full node_modules or repeated game asset archives as test artifacts.
+4. Prepare Quick Tunnel pilot commands and explain that the temporary hostname can change. Test HTTP matchmaking and WSS gameplay end-to-end when authorized access exists. Compare direct/local server timing with the tunnel to identify network overhead. Do not infer success from /health alone.
+5. Run two real clients on different networks if available, then repeat measured four/ten-client load. Record Pi model, cooling, thermal state, OS, Node, server tick/bandwidth and client frame times. Never substitute emulation for physical-device claims.
+6. Prepare coordinated client/server rollout, interruption notice and rollback using previous release. Commit/push a reviewable PR. Public deployment or merge requires an explicit instruction outside this preparation package; finish all reviewable artifacts first.
+7. Deliver a short Swedish operator guide: commands Jesper runs, the link he opens, how a friend joins the same room, how to stop/restart, and where he sees errors. Keep credentials out of screenshots/logs/docs. State precisely whether 2, 4 or 10 players were verified, and which next feature is eligible.
+
+Exit: reproducible operational release and honest acceptance report. If real Pi/network access was not available, hand over a ready-to-run deployment package and a short concrete pending checklist; do not call it deployed or production-ready.
