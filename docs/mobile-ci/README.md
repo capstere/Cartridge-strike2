@@ -94,8 +94,8 @@ separate Pages deployment artifact is required for publication and is retained.
 ## Validation and reproduction
 
 Start the local HTTP server and install the locked browser tooling from HANDOVER.
-Run `MOBILE_BASELINE=1 node tools/mobile-reliability-browser.mjs` on base source
-with this harness copied in, and `node tools/mobile-reliability-browser.mjs` on
+Run `MOBILE_PROFILE=1 MOBILE_BASELINE=1 node tools/mobile-reliability-browser.mjs` on base source
+with this harness copied in, and `MOBILE_PROFILE=1 node tools/mobile-reliability-browser.mjs` on
 changed source. The baseline switch only disables assertions for the three known
 bugs; normal startup, actual movement/fire, cleanup and error checks stay active.
 Set `FPS_TEST_ORIGIN` to verify the same harness against Pages.
@@ -113,3 +113,18 @@ background/resume and full-screen behavior. Record device/OS/browser and timings
 Browser emulation cannot verify touch hardware latency, thermal throttling,
 Safari audio interruptions, notches, battery use or sustained handset FPS.
 Longer matched rendering profiles and physical latency measurements remain open.
+
+
+## Software-runner correction after PR #16
+
+The initial focused CI run passed its 844-wide gameplay assertions, but timed
+out before finishing both widths. Its optional 60-frame pacing collection
+measured 2,283 ms median / 2,517 ms p95 per frame on the software renderer.
+Sampling alone consumed about 137 seconds per viewport, making it unsuitable
+for a regression job and unrelated to physical-handset performance. Run
+`MOBILE_PROFILE=1` for measured local profiling. Default CI runs skip only that
+unasserted pacing sample; every movement/fire, pointer, rotation, audio, rendering
+context and cleanup assertion remains. The six-minute step deadline is retained.
+The shipped gameplay fixes passed on Pages at both viewport sizes; main's fast
+CI passed in 1m31s versus the earlier 10m28s full post-merge job. Required full PR
+regression checks still run, including the corrected focused test.
