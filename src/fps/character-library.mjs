@@ -1,3 +1,4 @@
+import {skinSampler} from './skin-sampler.mjs';
 import {getCharacterOverride,loadCharacterOverrides,clearCharacterOverrides} from './character-overrides.mjs?v=6.1.2';
 import {createRuntimeViewAppearance} from './view-character-appearance.mjs?v=6.1.2';
 import {makeFittedFootwear} from './character-footwear.mjs?v=6.1.2';
@@ -196,7 +197,8 @@ const v=new T.Vector3(),inv=new T.Matrix4();
 export function posedBounds(root){
  root.updateMatrixWorld(true);inv.copy(root.matrixWorld).invert();const b=new T.Box3();
  root.traverseVisible(o=>{if(!o.isMesh)return;if(o.isSkinnedMesh)o.skeleton.update();
-  for(let i=0;i<o.geometry.attributes.position.count;i++){o.getVertexPosition(i,v).applyMatrix4(o.matrixWorld).applyMatrix4(inv);b.expandByPoint(v);}
+  const sample=skinSampler(o);
+  for(let i=0;i<o.geometry.attributes.position.count;i++){sample(i,v).applyMatrix4(o.matrixWorld).applyMatrix4(inv);b.expandByPoint(v);}
  });return b;
 }
 function play(state,map,name,active,fade=.16){

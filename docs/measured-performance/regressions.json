@@ -1,0 +1,117 @@
+{
+  "finalStatus": "PASS",
+  "checks": [
+    {
+      "name": "core",
+      "command": "node --experimental-loader ./tools/vendor-three-test-loader.mjs --test src/fps/*.test.mjs tools/*.test.mjs",
+      "exit": 0,
+      "seconds": 40.1,
+      "status": "PASS"
+    },
+    {
+      "name": "manifest",
+      "command": "node tools/verify-owner-runtime.mjs",
+      "exit": 0,
+      "seconds": 0.2,
+      "status": "PASS"
+    },
+    {
+      "name": "doors",
+      "command": "node --experimental-loader ./tools/vendor-three-test-loader.mjs tools/owner-door-traversal.mjs --prepared",
+      "exit": 0,
+      "seconds": 1.6,
+      "status": "PASS"
+    },
+    {
+      "name": "actor-visibility",
+      "command": "node tools/actor-occlusion-browser.mjs",
+      "exit": 0,
+      "seconds": 8.4,
+      "status": "PASS"
+    },
+    {
+      "name": "workstation",
+      "command": "PROFILE_ANGLE=metal node tools/floor5-workstation-visibility.cjs",
+      "exit": 0,
+      "seconds": 6.4,
+      "status": "PASS"
+    },
+    {
+      "name": "mobile",
+      "command": "node tools/mobile-smoke.cjs",
+      "exit": 0,
+      "seconds": 102.2,
+      "status": "PASS"
+    },
+    {
+      "name": "match-flow",
+      "command": "node tools/match-flow-browser.mjs",
+      "exit": 0,
+      "seconds": 23.6,
+      "status": "PASS"
+    },
+    {
+      "name": "bot-tactics",
+      "command": "node tools/bot-tactics-browser.mjs",
+      "exit": 0,
+      "seconds": 78.5,
+      "status": "PASS"
+    },
+    {
+      "name": "routes",
+      "command": "node tools/player-routes-browser.mjs",
+      "exit": 0,
+      "seconds": 27.8,
+      "status": "PASS"
+    },
+    {
+      "name": "glass",
+      "command": "node tools/glass-passages-browser.mjs",
+      "exit": 0,
+      "seconds": 50.7,
+      "status": "PASS"
+    },
+    {
+      "name": "zombies",
+      "command": "node tools/zombie-match-browser.mjs",
+      "exit": 0,
+      "seconds": 12.5,
+      "status": "PASS"
+    },
+    {
+      "name": "danceman",
+      "command": "node tools/danceman-browser.mjs",
+      "exit": 1,
+      "seconds": 14.8,
+      "status": "initial failure; corrected retest PASS",
+      "retest": {
+        "status": "PASS",
+        "reason": "Advance elapsed simulation time under the PR #13 catch-up cap",
+        "output": "{\"mode\":\"classic\",\"report\":{\"clips\":[\"All_Night_Dance\",\"Groovy_Walk\",\"Flirty_Strut_inplace\",\"Jazz_Hands\",\"All_Night_Dance\"],\"where\":[18,0,-14],\"room\":\"C08\",\"players\":10,\"crowd\":6,\"near\":0.4726518988609314,\"away\":0.15259726345539093,\"stopped\":true,\"oneLoop\":true,\"cutoff\":872.7205200195312,\"muted\":true,\"loop\":true,\"starts\":[[1,\"active\"]],\"errors\":[],\"visible\":true},\"death\":{\"alive\":false,\"hits\":[77,54,31,8,0],\"same\":true,\"clip\":\"Dead\",\"final\":true,\"time\":2.9666666984558105,\"music\":false},\"next\":{\"restored\":true,\"starts\":[[1,\"active\"],[2,\"active\"]]}}\n{\"mode\":\"endless\",\"report\":{\"clips\":[\"Jazz_Hands\",\"Flirty_Strut_inplace\",\"Groovy_Walk\",\"All_Night_Dance\",\"Groovy_Walk\"],\"where\":[18,0,-14],\"room\":\"C08\",\"players\":10,\"crowd\":4,\"near\":0.47756141424179077,\"away\":0.15264734625816345,\"stopped\":true,\"oneLoop\":true,\"cutoff\":872.7205200195312,\"muted\":true,\"loop\":true,\"starts\":[[1,\"active\"]],\"errors\":[],\"visible\":true},\"death\":{\"alive\":false,\"hits\":[77,54,31,8,0],\"same\":true,\"clip\":\"Dead\",\"final\":true,\"time\":2.9666666984558105,\"music\":false},\"next\":{\"respawn\":true,\"starts\":[[1,\"active\"]]}}\n"
+      }
+    },
+    {
+      "name": "lifecycle",
+      "command": "node tools/match-lifecycle-browser.mjs",
+      "exit": 0,
+      "seconds": 89.2,
+      "status": "PASS"
+    },
+    {
+      "name": "render-smoke",
+      "command": "node tools/render-performance-smoke.cjs",
+      "exit": 1,
+      "seconds": 71.9,
+      "status": "initial failure; corrected retest PASS",
+      "retest": {
+        "status": "PASS",
+        "reason": "Measure actual browser elapsed time; software rendering cannot guarantee a frame inside a 650 ms host wait",
+        "output": "RENDER PERFORMANCE PASS {\"mobile\":{\"maxDifference\":0,\"rawMaxDifference\":0,\"differentChannels\":0,\"rmse\":0,\"changedPixelRatio\":0,\"commandsIdentical\":true,\"cacheBuilds\":0,\"cacheEntries\":2,\"hiddenDraws\":0,\"wallCount\":494,\"shot\":{\"spent\":1,\"count\":1,\"legacyObjects\":0},\"reset\":true,\"idleFrames\":1},\"desktop\":{\"maxDifference\":0,\"rawMaxDifference\":0,\"differentChannels\":0,\"rmse\":0,\"changedPixelRatio\":0,\"commandsIdentical\":true,\"cacheBuilds\":0,\"cacheEntries\":2,\"hiddenDraws\":2,\"wallCount\":494,\"shot\":{\"spent\":1,\"count\":1,\"legacyObjects\":0},\"reset\":true,\"idleFrames\":1},\"tracers\":{\"before\":32,\"after\":1,\"initial\":1,\"final\":1,\"expired\":0,\"stable\":true}}\n"
+      }
+    }
+  ],
+  "simulationFixedSteps": 10800,
+  "pairedBrowserReplays": 6,
+  "pixelComparisons": 25,
+  "exactVertexSamples": 4655215
+}

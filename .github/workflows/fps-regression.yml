@@ -37,3 +37,4 @@ jobs:
           node tools/mobile-smoke.cjs
           node tools/match-flow-browser.mjs
           node tools/floor5-workstation-visibility.cjs
+          node tools/actor-occlusion-browser.mjs

@@ -1,0 +1,215 @@
+{
+  "views": [
+    {
+      "tick": 60,
+      "name": "lift",
+      "before": 1911,
+      "after": 1493,
+      "hidden": 5,
+      "changed": 0
+    },
+    {
+      "tick": 60,
+      "name": "lift door",
+      "before": 1233,
+      "after": 1233,
+      "hidden": 0,
+      "changed": 0
+    },
+    {
+      "tick": 60,
+      "name": "C08",
+      "before": 1653,
+      "after": 1569,
+      "hidden": 1,
+      "changed": 0
+    },
+    {
+      "tick": 60,
+      "name": "C08 back",
+      "before": 383,
+      "after": 196,
+      "hidden": 6,
+      "changed": 0
+    },
+    {
+      "tick": 60,
+      "name": "I04",
+      "before": 715,
+      "after": 675,
+      "hidden": 5,
+      "changed": 0
+    },
+    {
+      "tick": 360,
+      "name": "lift",
+      "before": 2019,
+      "after": 1601,
+      "hidden": 5,
+      "changed": 0
+    },
+    {
+      "tick": 360,
+      "name": "lift door",
+      "before": 1429,
+      "after": 1429,
+      "hidden": 0,
+      "changed": 0
+    },
+    {
+      "tick": 360,
+      "name": "C08",
+      "before": 1653,
+      "after": 1235,
+      "hidden": 5,
+      "changed": 0
+    },
+    {
+      "tick": 360,
+      "name": "C08 back",
+      "before": 390,
+      "after": 203,
+      "hidden": 6,
+      "changed": 0
+    },
+    {
+      "tick": 360,
+      "name": "I04",
+      "before": 842,
+      "after": 720,
+      "hidden": 5,
+      "changed": 0
+    },
+    {
+      "tick": 720,
+      "name": "lift",
+      "before": 2019,
+      "after": 1263,
+      "hidden": 9,
+      "changed": 0
+    },
+    {
+      "tick": 720,
+      "name": "lift door",
+      "before": 1091,
+      "after": 1091,
+      "hidden": 0,
+      "changed": 0
+    },
+    {
+      "tick": 720,
+      "name": "C08",
+      "before": 1653,
+      "after": 1485,
+      "hidden": 2,
+      "changed": 0
+    },
+    {
+      "tick": 720,
+      "name": "C08 back",
+      "before": 390,
+      "after": 203,
+      "hidden": 6,
+      "changed": 0
+    },
+    {
+      "tick": 720,
+      "name": "I04",
+      "before": 685,
+      "after": 675,
+      "hidden": 2,
+      "changed": 0
+    },
+    {
+      "tick": 1440,
+      "name": "lift",
+      "before": 1998,
+      "after": 1315,
+      "hidden": 9,
+      "changed": 0
+    },
+    {
+      "tick": 1440,
+      "name": "lift door",
+      "before": 1125,
+      "after": 1125,
+      "hidden": 0,
+      "changed": 0
+    },
+    {
+      "tick": 1440,
+      "name": "C08",
+      "before": 1932,
+      "after": 1848,
+      "hidden": 1,
+      "changed": 0
+    },
+    {
+      "tick": 1440,
+      "name": "C08 back",
+      "before": 264,
+      "after": 209,
+      "hidden": 3,
+      "changed": 0
+    },
+    {
+      "tick": 1440,
+      "name": "I04",
+      "before": 693,
+      "after": 683,
+      "hidden": 2,
+      "changed": 0
+    },
+    {
+      "tick": 2700,
+      "name": "lift",
+      "before": 2037,
+      "after": 1679,
+      "hidden": 5,
+      "changed": 0
+    },
+    {
+      "tick": 2700,
+      "name": "lift door",
+      "before": 1211,
+      "after": 1211,
+      "hidden": 0,
+      "changed": 0
+    },
+    {
+      "tick": 2700,
+      "name": "C08",
+      "before": 1800,
+      "after": 1646,
+      "hidden": 2,
+      "changed": 0
+    },
+    {
+      "tick": 2700,
+      "name": "C08 back",
+      "before": 342,
+      "after": 287,
+      "hidden": 3,
+      "changed": 0
+    },
+    {
+      "tick": 2700,
+      "name": "I04",
+      "before": 738,
+      "after": 683,
+      "hidden": 3,
+      "changed": 0
+    }
+  ],
+  "bounds": {
+    "vertices": 4655215,
+    "failures": 0,
+    "samplingDifferences": 0
+  },
+  "sampling": {
+    "originalMs": 168.19999706745148,
+    "cachedMs": 132,
+    "scans": 1170,
+    "vertices": 1140118
+  }
+}

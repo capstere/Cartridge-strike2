@@ -13,19 +13,31 @@ export function distanceSegment(x,z,a,b){const dx=b[0]-a[0],dz=b[1]-a[1],t=Math.
 
 /** Static two-dimensional broad phase. It never changes the authoritative geometry. */
 export class SpatialIndex {
-  constructor(size=2){this.size=size;this.cells=new Map();this.marks=new WeakMap();this.queryId=0;}
+  constructor(size=2){this.size=size;this.cells=new Map();this.marks=new WeakMap();this.queryId=0;this.cached=[];this.lastQuery=null;this.lastCell=null;}
   insert(item,bounds){
+    this.lastQuery=null;this.lastCell=null;
     for(let x=Math.floor(bounds.minX/this.size);x<=Math.floor(bounds.maxX/this.size);x++)for(let z=Math.floor(bounds.minZ/this.size);z<=Math.floor(bounds.maxZ/this.size);z++){
       const key=`${x},${z}`,cell=this.cells.get(key)||[];cell.push(item);this.cells.set(key,cell);
     }
   }
-  at(x,z){return this.cells.get(`${Math.floor(x/this.size)},${Math.floor(z/this.size)}`)||[];}
+  at(x,z){
+    const ix=Math.floor(x/this.size),iz=Math.floor(z/this.size),last=this.lastCell;
+    if(last&&last.x===ix&&last.z===iz)return last.items;
+    const items=this.cells.get(`${ix},${iz}`)||[];this.lastCell={x:ix,z:iz,items};return items;
+  }
   query(x,z,r,out){
-    out.length=0;const stamp=++this.queryId;
-    for(let ix=Math.floor((x-r)/this.size);ix<=Math.floor((x+r)/this.size);ix++)for(let iz=Math.floor((z-r)/this.size);iz<=Math.floor((z+r)/this.size);iz++){
+    out.length=0;
+    const minX=Math.floor((x-r)/this.size),maxX=Math.floor((x+r)/this.size),minZ=Math.floor((z-r)/this.size),maxZ=Math.floor((z+r)/this.size),last=this.lastQuery;
+    // Membership depends only on the cell rectangle. Box poses/disabled flags
+    // are still read by the unchanged narrow phase on every collision query.
+    if(last&&last[0]===minX&&last[1]===maxX&&last[2]===minZ&&last[3]===maxZ){for(const item of this.cached)out.push(item);return out;}
+    const stamp=++this.queryId;
+    for(let ix=minX;ix<=maxX;ix++)for(let iz=minZ;iz<=maxZ;iz++){
       const cell=this.cells.get(`${ix},${iz}`);if(!cell)continue;
       for(const item of cell)if(this.marks.get(item)!==stamp){this.marks.set(item,stamp);out.push(item);}
-    }return out;
+    }
+    this.lastQuery=[minX,maxX,minZ,maxZ];this.cached.length=0;for(const item of out)this.cached.push(item);
+    return out;
   }
   nearby(x,z,r){const out=new Set();for(let ix=Math.floor((x-r)/this.size);ix<=Math.floor((x+r)/this.size);ix++)for(let iz=Math.floor((z-r)/this.size);iz<=Math.floor((z+r)/this.size);iz++)for(const p of this.cells.get(`${ix},${iz}`)||[])out.add(p);return out;}
 }

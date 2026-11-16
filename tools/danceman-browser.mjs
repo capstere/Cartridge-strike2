@@ -32,7 +32,7 @@ try{
       const z=g.state.zombies.find(z=>z.model==='danceman'),p=g.player,w=g.world;
       if(g.phase==='buy'){
         if(starts.length)throw Error('Announced during buy');
-        while(g.phase==='buy')f.step({},.1);
+        while(g.phase==='buy')f.step({},g.config.maxCatchUp);
       }
       const home={x:p.x,y:p.y,z:p.z};
       function view(x,dz){
@@ -43,6 +43,13 @@ try{
       const v=f.renderer.zombieVisuals.instances.get(z.id),m=a.floorAudio.music;
       if(!m || !v.root.visible)throw Error('Missing near scene or loop');
       window.danceView=view;
+      // Advance real simulated seconds: Game.update caps catch-up per call.
+      // A requested .1 s no longer means .1 s after the PR #13 cap.
+      window.danceAdvance=seconds=>{
+        const until=g.state.time+seconds;
+        for(let i=0;i<Math.ceil(seconds/g.config.fixedStep)+1 && g.state.time+1e-8<until;i++)f.step({},g.config.fixedStep);
+        if(g.state.time+1e-8<until)throw Error('Simulation did not reach the requested deadline');
+      };
       window.danceHome=home;
       const clips=[z.clip],where=[z.x,z.y,z.z];
       for(let i=0;i<4;i++){
@@ -88,10 +95,10 @@ try{
       const before=snapshot(),hits=[];let n=0;
       while(z.alive && n++<12){
         p.yaw=Math.atan2(p.x-z.x,p.z-z.z);p.pitch=Math.atan2(z.y+.97-(p.y+p.height-.12),Math.hypot(p.x-z.x,p.z-z.z));
-        f.step({fire:true,yaw:p.yaw,pitch:p.pitch},1/60);hits.push(z.hp);for(let i=0;i<4;i++)f.step({},.1);
+        f.step({fire:true,yaw:p.yaw,pitch:p.pitch},1/60);hits.push(z.hp);danceAdvance(.4);
       }
       const same=snapshot()===before;
-      for(let i=0;i<35;i++)f.step({},.1);
+      danceAdvance(3.5);
       const dead={alive:z.alive,hits,same,clip:v.clip,final:v.final,time:v.current.time,music:!!a.floorAudio.music};
       return dead;
     });
@@ -99,12 +106,12 @@ try{
     const next=await page.evaluate(()=>{
       const f=__fps,g=f.game,p=g.player,z=g.state.zombies.at(-1),dead={};
       if(g.state.mode==='endless'){
-        g.damage(p,10000,null);for(let i=0;i<45;i++)f.step({},.1);
+        g.damage(p,10000,null);danceAdvance(4.5);
         dead.respawn=p.alive && p.deaths>0 && !z.alive;
       }else{
         g.finishRound({winner:'analysts',reason:'elimination',at:g.state.time});
-        for(let i=0;i<300 && g.state.round===1;i++)f.step({},.1);
-        while(g.phase==='buy')f.step({},.1);
+        for(let i=0;i<300 && g.state.round===1;i++)f.step({},g.config.maxCatchUp);
+        while(g.phase==='buy')f.step({},g.config.maxCatchUp);
         dead.restored=g.state.zombies.at(-1).alive;
       }
       return {...dead,starts:[...starts]};
