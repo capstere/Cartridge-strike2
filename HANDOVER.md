@@ -88,3 +88,15 @@ software-render menu tests now measure the actual simulation/browser clock.
 **Next actionable task remains the physical iPhone/Android session at the top.**
 GPU execution-time attribution, broader hardware/thermal sampling, shader-variant
 cost and whole-map portal culling remain open; no physical-device pass is claimed.
+
+## November 16 — asset loading and memory
+
+Three measured improvements: lossless Danceman gzip loading, shared immutable
+operator animation splits, and shared skin palettes within each cloned avatar.
+[Measurements, dependency/disposal audit and remaining work](docs/asset-memory/README.md).
+Cold recorded model/audio HTTP transfer falls 16.11 → 12.19 MB; active skeletons
+102 → 18; track arrays 8.94 → 1.89 MB. Twenty-cycle before/after cleanup is stable;
+warmed game/lobby GPU textures fall 230/14 → 163/7. Local readiness timings do
+not improve, so no startup-speed gain is claimed. Original GLBs, all clips,
+textures and gameplay remain intact. Physical handset testing remains the first
+open task; Safari, real network and whole-renderer async teardown stress remain open.

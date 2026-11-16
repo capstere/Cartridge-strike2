@@ -38,3 +38,4 @@ jobs:
           node tools/match-flow-browser.mjs
           node tools/floor5-workstation-visibility.cjs
           node tools/actor-occlusion-browser.mjs
+          node tools/asset-sharing-browser.mjs

@@ -25,6 +25,11 @@
       "sha256": "3a8e003ac5ae18e0691de8dcb1d0e89d95636dca486afc7faa0546f070e224f4"
     },
     {
+      "path": "assets/fps/Danceman/Danceman.glb.gz",
+      "bytes": 1810602,
+      "sha256": "d7c2f2d4a9f31d87d33a51c676026c7b7a0eea552d84ddab6ea822fc26c206cf"
+    },
+    {
       "path": "assets/fps/audio/action-backup.ogg",
       "bytes": 8228,
       "sha256": "fef76af35ab2311c58622ca8a84dc2cac56e806f8c627fdbce05b49a4cd26c16"
@@ -1781,8 +1786,8 @@
     },
     {
       "path": "src/fps/character-library.mjs",
-      "bytes": 23211,
-      "sha256": "735ebb482d3593eef94eb0fb3e146533444526af93a179d8a32bfd036425e1fc"
+      "bytes": 22762,
+      "sha256": "1785d7ee6eb617cc3aaa9e7cb087affa2d0e9ffcf8ee3272c877c4366571b680"
     },
     {
       "path": "src/fps/character-overrides.mjs",
@@ -2116,8 +2121,8 @@
     },
     {
       "path": "src/fps/skinned-clone.mjs",
-      "bytes": 752,
-      "sha256": "f2d8f10c03cfccf08d11128ca40eee3bdfc7f7eeb50b3a392207638dc9463dec"
+      "bytes": 1063,
+      "sha256": "3b62dcad7b8dde734d23942e8e199d0aad76ef3022470b34d0338dfa65ab6709"
     },
     {
       "path": "src/fps/smoke-detectors.mjs",
@@ -2226,8 +2231,8 @@
     },
     {
       "path": "src/fps/zombie-visuals.mjs",
-      "bytes": 5427,
-      "sha256": "299c6e1edcb95c2560ee710daa9baccec653a98f15a35c3e20bafe559e831631"
+      "bytes": 5430,
+      "sha256": "dd94cfe176899f3daccf8022c3b8b7a60a4094350a0d07844434687c5a8a3503"
     },
     {
       "path": "src/fps/zombies.mjs",
@@ -2300,7 +2305,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 55029079,
+  "bytes": 56839546,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",
