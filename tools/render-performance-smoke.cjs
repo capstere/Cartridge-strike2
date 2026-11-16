@@ -17,10 +17,15 @@ async function boot(browser,mobile){
  await page.goto(origin+'/fps/?test',{waitUntil:'domcontentloaded',timeout:60000});
  await page.waitForFunction(()=>globalThis.__fps||!document.getElementById('fatal').hidden,null,{timeout:180000});
  assert.equal(await page.locator('#fatal').isVisible(),false);
- const before=await page.evaluate(()=>__fps.renderBudget.stats.idle);
+ const before=await page.evaluate(()=>({frames:__fps.renderBudget.stats.idle,time:performance.now()}));
  await page.waitForTimeout(650);
- const idle=await page.evaluate(()=>__fps.renderBudget.stats.idle);
- assert.ok(idle>before&&idle-before<=8,'Menus should redraw without a full-rate render loop');
+ // Software WebGL can take longer than 650 ms for a single menu frame.
+ // Require progress, then test the 10 Hz cap against actual browser elapsed
+ // time instead of treating the host's requested wait as a frame guarantee.
+ await page.waitForFunction(n=>__fps.renderBudget.stats.idle>n,before.frames,{timeout:15000});
+ const after=await page.evaluate(()=>({frames:__fps.renderBudget.stats.idle,time:performance.now()}));
+ const idleFrames=after.frames-before.frames,elapsed=after.time-before.time;
+ assert.ok(idleFrames>0&&idleFrames<=Math.ceil(elapsed/100)+1,'Menus must retain the 10 Hz cap: '+JSON.stringify({before,after}));
  await page.evaluate(()=>__fps.stopFrameLoop());
  await page.locator('#start').click();
  await page.evaluate(()=>{
@@ -28,7 +33,7 @@ async function boot(browser,mobile){
   for(const a of __fps.game.actors)if(!a.isPlayer){a.alive=false;a.bot=null;}
   __fps.step({},.02);
  });
- return {context,page,errors,idleFrames:idle-before};
+ return {context,page,errors,idleFrames};
 }
 (async()=>{
  fs.mkdirSync('test-results',{recursive:true});

@@ -68,3 +68,23 @@ Continue the first open task above and run the after-change
 `tools/endless-floor5-profile.cjs` and `tools/floor5-workstation-visibility.cjs`
 tests before claiming an improvement. Record before/after frame p95, draws,
 triangles, visual differences and device/browser characteristics.
+
+## November 16 — measured rendering and simulation optimization
+
+**PASS in local Chromium / Apple M1 Metal and simulation.** The pass starts at
+PR #13's merged main and adds three measured changes: opaque-wall actor draw
+culling after posing, spatial-index query reuse, and exact cached bone matrices
+for CPU skin sampling. Three matched repetitions reduced active-combat median
+CPU work by 20.5% in touch emulation and 14.1% on desktop at identical resolution.
+Median display interval remains 16.7 ms; C08 p95 remains about 33 ms.
+
+[Raw measurements, source fingerprints, tests and remaining work](docs/measured-performance/README.md).
+Six paired browser traces and 10,800 simulation steps retained identical recorded
+state/events. All 192 unit tests, 102 door traversals, 25 pixel comparisons and the
+relevant browser/lifecycle checks passed. A floor-interior shortcut was rejected
+because isolated measurement did not establish a benefit. The old Danceman and
+software-render menu tests now measure the actual simulation/browser clock.
+
+**Next actionable task remains the physical iPhone/Android session at the top.**
+GPU execution-time attribution, broader hardware/thermal sampling, shader-variant
+cost and whole-map portal culling remain open; no physical-device pass is claimed.

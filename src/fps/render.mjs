@@ -1,3 +1,4 @@
+import {ActorOcclusion} from './actor-occlusion.mjs';
 import {preparedFloorFinish} from '../../furniture-editor/build/floor5-appearance.mjs';
 import {microFinishMaterial} from '../../furniture-editor/build/pattern-materials.mjs?v=5.6.1';
 import {buildEnvironment} from '../../furniture-editor/build/environment-visuals.mjs';
@@ -71,12 +72,14 @@ export class Renderer extends EngineRenderer {
     window.addEventListener('keydown',this.onInspectKey);
     // Intercept only the engine's world draw; recursive offscreen/composite draws
     // use the unmodified native renderer. Restore this hook at final teardown.
+    this.actorOcclusion=this.neutralLighting?new ActorOcclusion(world):null;
     this.nativeRender=this.renderer.render.bind(this.renderer);this.inDepthPass=false;
     this.renderer.render=(scene,camera)=>{
       if(scene===this.scene&&!this.inDepthPass)this.doorVisuals?.update(camera,this.renderer.shadowMap.enabled?this.lights:[]);
       if(scene===this.scene&&!this.inDepthPass){
         this.zombieVisuals?.update(this.presentationGame,camera);
         this.projectBatches?.update(camera);
+        this.actorOcclusion?.update(this.actors.values(),camera);
         this.floorEnvironment?.update(camera,this.presentationGame?.state.time||0,this.settings,world);
       }
       if(scene===this.scene&&!this.inDepthPass&&this.visualDepth&&this.settings.graphics!=='low'){

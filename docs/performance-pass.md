@@ -59,3 +59,10 @@ npm ci --prefix frontline/source/tools/dev
 node tools/endless-floor5-profile.cjs
 node tools/floor5-workstation-visibility.cjs
 ```
+
+## Measured follow-up — November 16
+
+The [measured rendering and simulation pass](measured-performance/README.md)
+starts at this PR’s merged main, retains these changes, and reports matched
+Cargo Lift, C08 and active-combat runs with source fingerprints and raw samples.
+Physical handset and GPU-execution measurements remain open.

@@ -1715,6 +1715,11 @@
       "sha256": "d244fe11d15d56f7b3db32a03f42e45477cf8e0771a89f15da57f48efb6179f7"
     },
     {
+      "path": "src/fps/actor-occlusion.mjs",
+      "bytes": 4068,
+      "sha256": "6c87cc5e4632823333d99cf91c89a9979bdbedbf772e19d24302792d13efad65"
+    },
+    {
       "path": "src/fps/adaptive-resolution.mjs",
       "bytes": 816,
       "sha256": "2b4b2f1b07c16eb7baf18f26d2b58797da42d2e1a46933016ae76e37be3fdbfa"
@@ -1776,8 +1781,8 @@
     },
     {
       "path": "src/fps/character-library.mjs",
-      "bytes": 23145,
-      "sha256": "1f11cf5b57ea17ee629e19b649986c891a04487343027cd3abe9da93ee7ba228"
+      "bytes": 23211,
+      "sha256": "735ebb482d3593eef94eb0fb3e146533444526af93a179d8a32bfd036425e1fc"
     },
     {
       "path": "src/fps/character-overrides.mjs",
@@ -2006,8 +2011,8 @@
     },
     {
       "path": "src/fps/physics.mjs",
-      "bytes": 21514,
-      "sha256": "b114917e71bdb54ee9aeb6f9b36a357b7c4dd1c10e316c1096d9d830521f56ec"
+      "bytes": 22250,
+      "sha256": "ad8e1c469c7578d40b786680c5e381e9f917374d6c7ae50dcfc9dfae4bc4d887"
     },
     {
       "path": "src/fps/player-names.mjs",
@@ -2061,8 +2066,8 @@
     },
     {
       "path": "src/fps/render.mjs",
-      "bytes": 19220,
-      "sha256": "943830be3d8deb9b2f92c06288c4b1f1103c2ee41027d99a3d039b44679d7be1"
+      "bytes": 19417,
+      "sha256": "e262b21ed22b5157984119c86161b84a9e7b57032790d4743f2c5b7ed3e1eb54"
     },
     {
       "path": "src/fps/riposte-audio.mjs",
@@ -2103,6 +2108,11 @@
       "path": "src/fps/room-visuals.mjs",
       "bytes": 18028,
       "sha256": "b800a92e5fd5e45a630a1d9097ab2f161529ad76f9ccd214ded7c390fbf5c9ee"
+    },
+    {
+      "path": "src/fps/skin-sampler.mjs",
+      "bytes": 1470,
+      "sha256": "b20472d1a08fddd41a3a9be798a84a44bc3082f2c1cdd1b8d95453db2422cfc4"
     },
     {
       "path": "src/fps/skinned-clone.mjs",
@@ -2290,7 +2300,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 55022542,
+  "bytes": 55029079,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

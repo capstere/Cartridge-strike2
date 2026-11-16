@@ -1,0 +1,2468 @@
+{
+  "before": {
+    "revision": "ca9d6dc1cdf88bfcfec558d25cb37fc147ffabdc",
+    "browser": "153.0.8010.12",
+    "platform": "darwin",
+    "runs": [
+      {
+        "mobile": true,
+        "run": 0,
+        "settings": {
+          "backend": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+          "viewport": [
+            844,
+            390
+          ],
+          "dpr": 2,
+          "graphics": "low",
+          "seed": 42,
+          "actors": 10,
+          "bots": 9,
+          "residents": 4
+        },
+        "shots": 21,
+        "stateHash": "e873daa5ecd7168701c18dcef97a908f0825e5339428da217826585b0f9b43ea",
+        "eventHash": "6923919a336b81c7c3e240af2fbc0d66e4386eaeb2666b5349c9f6482397e89f",
+        "summary": {
+          "lift": {
+            "frames": 240,
+            "median": 16.69999999999891,
+            "p95": 33.29999999999927,
+            "p99": 33.399999999999636,
+            "over25": 16,
+            "over50": 0,
+            "workMedian": 16.5,
+            "workP95": 24,
+            "draws": [
+              1942,
+              1966
+            ],
+            "triangles": [
+              1070534,
+              1085262
+            ],
+            "buffers": [
+              "658x304"
+            ],
+            "timers": {
+              "doors": {
+                "calls": 240,
+                "ms": 18.899999141693115
+              },
+              "physicsMove": {
+                "calls": 5488,
+                "ms": 61.89999878406525
+              },
+              "bots": {
+                "calls": 2160,
+                "ms": 116.1000007390976
+              },
+              "lineOfSight": {
+                "calls": 575,
+                "ms": 2.399999976158142
+              },
+              "navigation": {
+                "calls": 51,
+                "ms": 144.39999997615814
+              },
+              "simulation": {
+                "calls": 240,
+                "ms": 273.7999986410141
+              },
+              "gpuSubmission": {
+                "calls": 480,
+                "ms": 3512.300001144409
+              },
+              "render": {
+                "calls": 240,
+                "ms": 3942.700000166893
+              }
+            }
+          },
+          "c08": {
+            "frames": 240,
+            "median": 16.700000000000728,
+            "p95": 33.39999999999782,
+            "p99": 66.69999999999709,
+            "over25": 36,
+            "over50": 3,
+            "workMedian": 18.799999952316284,
+            "workP95": 22.09999990463257,
+            "draws": [
+              1819,
+              2044
+            ],
+            "triangles": [
+              857038,
+              1011820
+            ],
+            "buffers": [
+              "658x304"
+            ],
+            "timers": {
+              "doors": {
+                "calls": 240,
+                "ms": 13.399999856948853
+              },
+              "physicsMove": {
+                "calls": 5492,
+                "ms": 55.999998688697815
+              },
+              "lineOfSight": {
+                "calls": 1481,
+                "ms": 8.099999904632568
+              },
+              "bots": {
+                "calls": 1657,
+                "ms": 114.60000050067902
+              },
+              "navigation": {
+                "calls": 66,
+                "ms": 159.09999978542328
+              },
+              "simulation": {
+                "calls": 240,
+                "ms": 294.1000003814697
+              },
+              "gpuSubmission": {
+                "calls": 480,
+                "ms": 3344.099999308586
+              },
+              "render": {
+                "calls": 240,
+                "ms": 4369.399998784065
+              },
+              "occupancy": {
+                "calls": 147,
+                "ms": 0.5000001192092896
+              },
+              "clearance": {
+                "calls": 6,
+                "ms": 0.3999999761581421
+              }
+            }
+          },
+          "combat": {
+            "frames": 1080,
+            "median": 16.700000000000728,
+            "p95": 33.29999999999927,
+            "p99": 33.400000000001455,
+            "over25": 69,
+            "over50": 4,
+            "workMedian": 16.5,
+            "workP95": 20.899999976158142,
+            "draws": [
+              1672,
+              2044
+            ],
+            "triangles": [
+              752454,
+              1085262
+            ],
+            "buffers": [
+              "658x304"
+            ],
+            "timers": {
+              "doors": {
+                "calls": 1080,
+                "ms": 83.5000010728836
+              },
+              "physicsMove": {
+                "calls": 26315,
+                "ms": 273.1999980211258
+              },
+              "bots": {
+                "calls": 9217,
+                "ms": 495.2000011205673
+              },
+              "lineOfSight": {
+                "calls": 4176,
+                "ms": 22.299999117851257
+              },
+              "simulation": {
+                "calls": 1080,
+                "ms": 1074.1000012159348
+              },
+              "gpuSubmission": {
+                "calls": 2160,
+                "ms": 15313.5
+              },
+              "render": {
+                "calls": 1080,
+                "ms": 17459.300000667572
+              },
+              "navigation": {
+                "calls": 222,
+                "ms": 476.4999997615814
+              },
+              "clearance": {
+                "calls": 11,
+                "ms": 0.7000000476837158
+              },
+              "occupancy": {
+                "calls": 147,
+                "ms": 0.5000001192092896
+              }
+            }
+          }
+        }
+      },
+      {
+        "mobile": true,
+        "run": 1,
+        "settings": {
+          "backend": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+          "viewport": [
+            844,
+            390
+          ],
+          "dpr": 2,
+          "graphics": "low",
+          "seed": 42,
+          "actors": 10,
+          "bots": 9,
+          "residents": 4
+        },
+        "shots": 21,
+        "stateHash": "e873daa5ecd7168701c18dcef97a908f0825e5339428da217826585b0f9b43ea",
+        "eventHash": "6923919a336b81c7c3e240af2fbc0d66e4386eaeb2666b5349c9f6482397e89f",
+        "summary": {
+          "lift": {
+            "frames": 240,
+            "median": 16.69999999999891,
+            "p95": 33.399999999999636,
+            "p99": 33.400000000001455,
+            "over25": 29,
+            "over50": 0,
+            "workMedian": 17.299999952316284,
+            "workP95": 22.899999976158142,
+            "draws": [
+              1942,
+              1966
+            ],
+            "triangles": [
+              1070534,
+              1085262
+            ],
+            "buffers": [
+              "658x304"
+            ],
+            "timers": {
+              "doors": {
+                "calls": 240,
+                "ms": 20.399999380111694
+              },
+              "physicsMove": {
+                "calls": 5488,
+                "ms": 62.80000030994415
+              },
+              "bots": {
+                "calls": 2160,
+                "ms": 122.49999952316284
+              },
+              "lineOfSight": {
+                "calls": 575,
+                "ms": 3.8000001907348633
+              },
+              "navigation": {
+                "calls": 51,
+                "ms": 152.0000001192093
+              },
+              "simulation": {
+                "calls": 240,
+                "ms": 285.8999990224838
+              },
+              "gpuSubmission": {
+                "calls": 480,
+                "ms": 3659.699999809265
+              },
+              "render": {
+                "calls": 240,
+                "ms": 4152.300000071526
+              }
+            }
+          },
+          "c08": {
+            "frames": 240,
+            "median": 16.700000000000728,
+            "p95": 33.30000000000291,
+            "p99": 66.69999999999709,
+            "over25": 25,
+            "over50": 3,
+            "workMedian": 18,
+            "workP95": 20.899999976158142,
+            "draws": [
+              1819,
+              2044
+            ],
+            "triangles": [
+              857038,
+              1011820
+            ],
+            "buffers": [
+              "658x304"
+            ],
+            "timers": {
+              "doors": {
+                "calls": 240,
+                "ms": 17.399999141693115
+              },
+              "physicsMove": {
+                "calls": 5492,
+                "ms": 52.70000088214874
+              },
+              "lineOfSight": {
+                "calls": 1481,
+                "ms": 7.699999809265137
+              },
+              "bots": {
+                "calls": 1657,
+                "ms": 111.0999995470047
+              },
+              "navigation": {
+                "calls": 66,
+                "ms": 157.80000019073486
+              },
+              "simulation": {
+                "calls": 240,
+                "ms": 288.69999980926514
+              },
+              "gpuSubmission": {
+                "calls": 480,
+                "ms": 3134.7999999523163
+              },
+              "render": {
+                "calls": 240,
+                "ms": 4165.899999856949
+              },
+              "occupancy": {
+                "calls": 147,
+                "ms": 0.5999999046325684
+              },
+              "clearance": {
+                "calls": 6,
+                "ms": 0.3999999761581421
+              }
+            }
+          },
+          "combat": {
+            "frames": 1080,
+            "median": 16.69999999999891,
+            "p95": 16.80000000000291,
+            "p99": 33.400000000001455,
+            "over25": 47,
+            "over50": 4,
+            "workMedian": 15.600000023841858,
+            "workP95": 20,
+            "draws": [
+              1672,
+              2044
+            ],
+            "triangles": [
+              752454,
+              1085262
+            ],
+            "buffers": [
+              "658x304"
+            ],
+            "timers": {
+              "doors": {
+                "calls": 1080,
+                "ms": 89.89999854564667
+              },
+              "physicsMove": {
+                "calls": 26315,
+                "ms": 261.7999984025955
+              },
+              "bots": {
+                "calls": 9217,
+                "ms": 481.6000018119812
+              },
+              "lineOfSight": {
+                "calls": 4176,
+                "ms": 20.899999976158142
+              },
+              "simulation": {
+                "calls": 1080,
+                "ms": 1052.4999977350235
+              },
+              "gpuSubmission": {
+                "calls": 2160,
+                "ms": 14358.200003385544
+              },
+              "render": {
+                "calls": 1080,
+                "ms": 16554.100000739098
+              },
+              "navigation": {
+                "calls": 222,
+                "ms": 466.90000081062317
+              },
+              "clearance": {
+                "calls": 11,
+                "ms": 0.6999999284744263
+              },
+              "occupancy": {
+                "calls": 147,
+                "ms": 0.5999999046325684
+              }
+            }
+          }
+        }
+      },
+      {
+        "mobile": true,
+        "run": 2,
+        "settings": {
+          "backend": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+          "viewport": [
+            844,
+            390
+          ],
+          "dpr": 2,
+          "graphics": "low",
+          "seed": 42,
+          "actors": 10,
+          "bots": 9,
+          "residents": 4
+        },
+        "shots": 21,
+        "stateHash": "e873daa5ecd7168701c18dcef97a908f0825e5339428da217826585b0f9b43ea",
+        "eventHash": "6923919a336b81c7c3e240af2fbc0d66e4386eaeb2666b5349c9f6482397e89f",
+        "summary": {
+          "lift": {
+            "frames": 240,
+            "median": 16.699999999999818,
+            "p95": 16.800000000000182,
+            "p99": 33.399999999999636,
+            "over25": 11,
+            "over50": 0,
+            "workMedian": 16.700000047683716,
+            "workP95": 19.199999928474426,
+            "draws": [
+              1942,
+              1966
+            ],
+            "triangles": [
+              1070534,
+              1085262
+            ],
+            "buffers": [
+              "658x304"
+            ],
+            "timers": {
+              "doors": {
+                "calls": 240,
+                "ms": 16.800000309944153
+              },
+              "physicsMove": {
+                "calls": 5488,
+                "ms": 60.50000071525574
+              },
+              "bots": {
+                "calls": 2160,
+                "ms": 107.60000026226044
+              },
+              "lineOfSight": {
+                "calls": 575,
+                "ms": 3.2999998331069946
+              },
+              "navigation": {
+                "calls": 51,
+                "ms": 137.90000021457672
+              },
+              "simulation": {
+                "calls": 240,
+                "ms": 257.1999999284744
+              },
+              "gpuSubmission": {
+                "calls": 480,
+                "ms": 3388.799999833107
+              },
+              "render": {
+                "calls": 240,
+                "ms": 3842.400000810623
+              }
+            }
+          },
+          "c08": {
+            "frames": 240,
+            "median": 16.700000000000728,
+            "p95": 33.39999999999782,
+            "p99": 50.10000000000218,
+            "over25": 32,
+            "over50": 3,
+            "workMedian": 18.399999976158142,
+            "workP95": 21.100000023841858,
+            "draws": [
+              1819,
+              2044
+            ],
+            "triangles": [
+              857038,
+              1011820
+            ],
+            "buffers": [
+              "658x304"
+            ],
+            "timers": {
+              "doors": {
+                "calls": 240,
+                "ms": 14.299999833106995
+              },
+              "physicsMove": {
+                "calls": 5492,
+                "ms": 56.19999897480011
+              },
+              "lineOfSight": {
+                "calls": 1481,
+                "ms": 7.100000262260437
+              },
+              "bots": {
+                "calls": 1657,
+                "ms": 112.20000076293945
+              },
+              "navigation": {
+                "calls": 66,
+                "ms": 160.20000052452087
+              },
+              "simulation": {
+                "calls": 240,
+                "ms": 290.2999999523163
+              },
+              "gpuSubmission": {
+                "calls": 480,
+                "ms": 3219.2999987602234
+              },
+              "render": {
+                "calls": 240,
+                "ms": 4260.299999117851
+              },
+              "occupancy": {
+                "calls": 147,
+                "ms": 1.1999998092651367
+              },
+              "clearance": {
+                "calls": 6,
+                "ms": 0.19999992847442627
+              }
+            }
+          },
+          "combat": {
+            "frames": 1080,
+            "median": 16.69999999999891,
+            "p95": 16.799999999999272,
+            "p99": 33.400000000001455,
+            "over25": 39,
+            "over50": 4,
+            "workMedian": 15.600000023841858,
+            "workP95": 19.299999952316284,
+            "draws": [
+              1672,
+              2044
+            ],
+            "triangles": [
+              752454,
+              1085262
+            ],
+            "buffers": [
+              "658x304"
+            ],
+            "timers": {
+              "doors": {
+                "calls": 1080,
+                "ms": 81.5
+              },
+              "physicsMove": {
+                "calls": 26315,
+                "ms": 247.59999763965607
+              },
+              "bots": {
+                "calls": 9217,
+                "ms": 468.9000015258789
+              },
+              "lineOfSight": {
+                "calls": 4176,
+                "ms": 20.700000762939453
+              },
+              "simulation": {
+                "calls": 1080,
+                "ms": 1002.8999991416931
+              },
+              "gpuSubmission": {
+                "calls": 2160,
+                "ms": 13987.800001502037
+              },
+              "render": {
+                "calls": 1080,
+                "ms": 16106.100000143051
+              },
+              "navigation": {
+                "calls": 222,
+                "ms": 461.6000007390976
+              },
+              "clearance": {
+                "calls": 11,
+                "ms": 0.3999999761581421
+              },
+              "occupancy": {
+                "calls": 147,
+                "ms": 1.1999998092651367
+              }
+            }
+          }
+        }
+      },
+      {
+        "mobile": false,
+        "run": 0,
+        "settings": {
+          "backend": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+          "viewport": [
+            1280,
+            720
+          ],
+          "dpr": 2,
+          "graphics": "standard",
+          "seed": 42,
+          "actors": 10,
+          "bots": 9,
+          "residents": 5
+        },
+        "shots": 21,
+        "stateHash": "3e53707e90ce7c69ab0ff460fd12dc7fdd41e343f88af21943267375162bded9",
+        "eventHash": "7a804d95174352abde71ff2326a6746fc1a598017b4cfc2883c670f2655cacb0",
+        "summary": {
+          "lift": {
+            "frames": 240,
+            "median": 16.69999999999891,
+            "p95": 33.399999999999636,
+            "p99": 33.400000000001455,
+            "over25": 36,
+            "over50": 0,
+            "workMedian": 18.5,
+            "workP95": 21.5,
+            "draws": [
+              1940,
+              1964
+            ],
+            "triangles": [
+              1097334,
+              1119480
+            ],
+            "buffers": [
+              "1280x720"
+            ],
+            "timers": {
+              "doors": {
+                "calls": 240,
+                "ms": 18.499998807907104
+              },
+              "physicsMove": {
+                "calls": 5716,
+                "ms": 60.49999928474426
+              },
+              "bots": {
+                "calls": 2160,
+                "ms": 112.30000019073486
+              },
+              "lineOfSight": {
+                "calls": 575,
+                "ms": 3.5000001192092896
+              },
+              "navigation": {
+                "calls": 52,
+                "ms": 148.99999964237213
+              },
+              "simulation": {
+                "calls": 240,
+                "ms": 273.29999828338623
+              },
+              "gpuSubmission": {
+                "calls": 480,
+                "ms": 3746.300000309944
+              },
+              "render": {
+                "calls": 240,
+                "ms": 4283.400000810623
+              }
+            }
+          },
+          "c08": {
+            "frames": 240,
+            "median": 16.700000000000728,
+            "p95": 33.400000000001455,
+            "p99": 66.59999999999854,
+            "over25": 57,
+            "over50": 3,
+            "workMedian": 19.899999976158142,
+            "workP95": 23.899999976158142,
+            "draws": [
+              1764,
+              1974
+            ],
+            "triangles": [
+              824110,
+              1030844
+            ],
+            "buffers": [
+              "1280x720"
+            ],
+            "timers": {
+              "doors": {
+                "calls": 240,
+                "ms": 16.199999690055847
+              },
+              "physicsMove": {
+                "calls": 5492,
+                "ms": 55.90000033378601
+              },
+              "lineOfSight": {
+                "calls": 1481,
+                "ms": 7.999999642372131
+              },
+              "bots": {
+                "calls": 1657,
+                "ms": 114.30000007152557
+              },
+              "navigation": {
+                "calls": 66,
+                "ms": 162
+              },
+              "simulation": {
+                "calls": 240,
+                "ms": 298.19999980926514
+              },
+              "gpuSubmission": {
+                "calls": 480,
+                "ms": 3552.49999833107
+              },
+              "render": {
+                "calls": 240,
+                "ms": 4690.900000452995
+              },
+              "occupancy": {
+                "calls": 147,
+                "ms": 0.40000009536743164
+              },
+              "clearance": {
+                "calls": 6,
+                "ms": 0.5
+              }
+            }
+          },
+          "combat": {
+            "frames": 1080,
+            "median": 16.700000000000728,
+            "p95": 33.30000000000291,
+            "p99": 33.400000000001455,
+            "over25": 110,
+            "over50": 4,
+            "workMedian": 17.700000047683716,
+            "workP95": 21.40000009536743,
+            "draws": [
+              1617,
+              1974
+            ],
+            "triangles": [
+              719526,
+              1112062
+            ],
+            "buffers": [
+              "1280x720"
+            ],
+            "timers": {
+              "doors": {
+                "calls": 1080,
+                "ms": 84.3999992609024
+              },
+              "physicsMove": {
+                "calls": 26826,
+                "ms": 271.4000018835068
+              },
+              "bots": {
+                "calls": 9217,
+                "ms": 490.29999899864197
+              },
+              "lineOfSight": {
+                "calls": 4176,
+                "ms": 23.499998569488525
+              },
+              "simulation": {
+                "calls": 1080,
+                "ms": 1064.5999994277954
+              },
+              "gpuSubmission": {
+                "calls": 2160,
+                "ms": 15699.899997472763
+              },
+              "render": {
+                "calls": 1080,
+                "ms": 18169.600000739098
+              },
+              "navigation": {
+                "calls": 222,
+                "ms": 474.399999499321
+              },
+              "clearance": {
+                "calls": 11,
+                "ms": 0.7000000476837158
+              },
+              "occupancy": {
+                "calls": 148,
+                "ms": 0.40000009536743164
+              }
+            }
+          }
+        }
+      },
+      {
+        "mobile": false,
+        "run": 1,
+        "settings": {
+          "backend": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+          "viewport": [
+            1280,
+            720
+          ],
+          "dpr": 2,
+          "graphics": "standard",
+          "seed": 42,
+          "actors": 10,
+          "bots": 9,
+          "residents": 5
+        },
+        "shots": 21,
+        "stateHash": "3e53707e90ce7c69ab0ff460fd12dc7fdd41e343f88af21943267375162bded9",
+        "eventHash": "7a804d95174352abde71ff2326a6746fc1a598017b4cfc2883c670f2655cacb0",
+        "summary": {
+          "lift": {
+            "frames": 240,
+            "median": 16.699999999999818,
+            "p95": 33.30000000000109,
+            "p99": 33.399999999999636,
+            "over25": 27,
+            "over50": 0,
+            "workMedian": 17.799999952316284,
+            "workP95": 20.799999952316284,
+            "draws": [
+              1940,
+              1964
+            ],
+            "triangles": [
+              1097334,
+              1119480
+            ],
+            "buffers": [
+              "1280x720"
+            ],
+            "timers": {
+              "doors": {
+                "calls": 240,
+                "ms": 16.699999928474426
+              },
+              "physicsMove": {
+                "calls": 5716,
+                "ms": 56.99999964237213
+              },
+              "bots": {
+                "calls": 2160,
+                "ms": 114.3000009059906
+              },
+              "lineOfSight": {
+                "calls": 575,
+                "ms": 2.800000309944153
+              },
+              "navigation": {
+                "calls": 52,
+                "ms": 148.59999990463257
+              },
+              "simulation": {
+                "calls": 240,
+                "ms": 270.0000001192093
+              },
+              "gpuSubmission": {
+                "calls": 480,
+                "ms": 3557.0000002384186
+              },
+              "render": {
+                "calls": 240,
+                "ms": 4117.89999961853
+              }
+            }
+          },
+          "c08": {
+            "frames": 240,
+            "median": 16.700000000000728,
+            "p95": 33.400000000001455,
+            "p99": 66.59999999999854,
+            "over25": 80,
+            "over50": 3,
+            "workMedian": 21.5,
+            "workP95": 27.899999976158142,
+            "draws": [
+              1764,
+              1974
+            ],
+            "triangles": [
+              824110,
+              1030844
+            ],
+            "buffers": [
+              "1280x720"
+            ],
+            "timers": {
+              "doors": {
+                "calls": 240,
+                "ms": 17.700000286102295
+              },
+              "physicsMove": {
+                "calls": 5492,
+                "ms": 58.799999713897705
+              },
+              "lineOfSight": {
+                "calls": 1481,
+                "ms": 8.499999284744263
+              },
+              "bots": {
+                "calls": 1657,
+                "ms": 124.69999992847443
+              },
+              "navigation": {
+                "calls": 66,
+                "ms": 171.9999998807907
+              },
+              "simulation": {
+                "calls": 240,
+                "ms": 320.99999964237213
+              },
+              "gpuSubmission": {
+                "calls": 480,
+                "ms": 3827.7999992370605
+              },
+              "render": {
+                "calls": 240,
+                "ms": 5063.799999117851
+              },
+              "occupancy": {
+                "calls": 147,
+                "ms": 0.9000000953674316
+              },
+              "clearance": {
+                "calls": 6,
+                "ms": 0.40000009536743164
+              }
+            }
+          },
+          "combat": {
+            "frames": 1080,
+            "median": 16.700000000000728,
+            "p95": 33.30000000000291,
+            "p99": 33.400000000001455,
+            "over25": 134,
+            "over50": 4,
+            "workMedian": 17.399999976158142,
+            "workP95": 24.799999952316284,
+            "draws": [
+              1617,
+              1974
+            ],
+            "triangles": [
+              719526,
+              1112062
+            ],
+            "buffers": [
+              "1280x720"
+            ],
+            "timers": {
+              "doors": {
+                "calls": 1080,
+                "ms": 92.80000138282776
+              },
+              "physicsMove": {
+                "calls": 26826,
+                "ms": 275.60000014305115
+              },
+              "bots": {
+                "calls": 9217,
+                "ms": 499.69999837875366
+              },
+              "lineOfSight": {
+                "calls": 4176,
+                "ms": 23.399998784065247
+              },
+              "simulation": {
+                "calls": 1080,
+                "ms": 1099.8000010252
+              },
+              "gpuSubmission": {
+                "calls": 2160,
+                "ms": 15555.199999451637
+              },
+              "render": {
+                "calls": 1080,
+                "ms": 18218.700000286102
+              },
+              "navigation": {
+                "calls": 222,
+                "ms": 485.099999666214
+              },
+              "clearance": {
+                "calls": 11,
+                "ms": 0.5999999046325684
+              },
+              "occupancy": {
+                "calls": 148,
+                "ms": 0.9000000953674316
+              }
+            }
+          }
+        }
+      },
+      {
+        "mobile": false,
+        "run": 2,
+        "settings": {
+          "backend": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+          "viewport": [
+            1280,
+            720
+          ],
+          "dpr": 2,
+          "graphics": "standard",
+          "seed": 42,
+          "actors": 10,
+          "bots": 9,
+          "residents": 5
+        },
+        "shots": 21,
+        "stateHash": "3e53707e90ce7c69ab0ff460fd12dc7fdd41e343f88af21943267375162bded9",
+        "eventHash": "7a804d95174352abde71ff2326a6746fc1a598017b4cfc2883c670f2655cacb0",
+        "summary": {
+          "lift": {
+            "frames": 240,
+            "median": 16.699999999999818,
+            "p95": 33.399999999999636,
+            "p99": 33.400000000001455,
+            "over25": 50,
+            "over50": 0,
+            "workMedian": 19.699999928474426,
+            "workP95": 23.600000023841858,
+            "draws": [
+              1940,
+              1964
+            ],
+            "triangles": [
+              1097334,
+              1119480
+            ],
+            "buffers": [
+              "1280x720"
+            ],
+            "timers": {
+              "doors": {
+                "calls": 240,
+                "ms": 21.700001001358032
+              },
+              "physicsMove": {
+                "calls": 5716,
+                "ms": 62.69999957084656
+              },
+              "bots": {
+                "calls": 2160,
+                "ms": 116.50000059604645
+              },
+              "lineOfSight": {
+                "calls": 575,
+                "ms": 3.4000000953674316
+              },
+              "navigation": {
+                "calls": 52,
+                "ms": 152.79999995231628
+              },
+              "simulation": {
+                "calls": 240,
+                "ms": 284.70000064373016
+              },
+              "gpuSubmission": {
+                "calls": 480,
+                "ms": 3949.400000691414
+              },
+              "render": {
+                "calls": 240,
+                "ms": 4512.700000405312
+              }
+            }
+          },
+          "c08": {
+            "frames": 240,
+            "median": 16.700000000000728,
+            "p95": 33.400000000001455,
+            "p99": 50,
+            "over25": 83,
+            "over50": 2,
+            "workMedian": 21.799999952316284,
+            "workP95": 27.200000047683716,
+            "draws": [
+              1764,
+              1974
+            ],
+            "triangles": [
+              824110,
+              1030844
+            ],
+            "buffers": [
+              "1280x720"
+            ],
+            "timers": {
+              "doors": {
+                "calls": 240,
+                "ms": 17.100000262260437
+              },
+              "physicsMove": {
+                "calls": 5492,
+                "ms": 58.60000133514404
+              },
+              "lineOfSight": {
+                "calls": 1481,
+                "ms": 8.199999690055847
+              },
+              "bots": {
+                "calls": 1657,
+                "ms": 131.90000009536743
+              },
+              "navigation": {
+                "calls": 66,
+                "ms": 177.80000042915344
+              },
+              "simulation": {
+                "calls": 240,
+                "ms": 322.8000010251999
+              },
+              "gpuSubmission": {
+                "calls": 480,
+                "ms": 3925.899999499321
+              },
+              "render": {
+                "calls": 240,
+                "ms": 5130.599999189377
+              },
+              "occupancy": {
+                "calls": 147,
+                "ms": 0.9999998807907104
+              },
+              "clearance": {
+                "calls": 6,
+                "ms": 0.3999999761581421
+              }
+            }
+          },
+          "combat": {
+            "frames": 1080,
+            "median": 16.700000000000728,
+            "p95": 33.39999999999782,
+            "p99": 33.400000000001455,
+            "over25": 178,
+            "over50": 3,
+            "workMedian": 18.399999976158142,
+            "workP95": 25.100000023841858,
+            "draws": [
+              1617,
+              1974
+            ],
+            "triangles": [
+              719526,
+              1112062
+            ],
+            "buffers": [
+              "1280x720"
+            ],
+            "timers": {
+              "doors": {
+                "calls": 1080,
+                "ms": 87.19999825954437
+              },
+              "physicsMove": {
+                "calls": 26826,
+                "ms": 281.3000034093857
+              },
+              "bots": {
+                "calls": 9217,
+                "ms": 518.7000006437302
+              },
+              "lineOfSight": {
+                "calls": 4176,
+                "ms": 21.299999594688416
+              },
+              "simulation": {
+                "calls": 1080,
+                "ms": 1114.600001335144
+              },
+              "gpuSubmission": {
+                "calls": 2160,
+                "ms": 17026.299998998642
+              },
+              "render": {
+                "calls": 1080,
+                "ms": 19645.699998259544
+              },
+              "navigation": {
+                "calls": 222,
+                "ms": 505.50000047683716
+              },
+              "clearance": {
+                "calls": 11,
+                "ms": 0.5
+              },
+              "occupancy": {
+                "calls": 148,
+                "ms": 0.9999998807907104
+              }
+            }
+          }
+        }
+      }
+    ],
+    "runtimeSources": {
+      "src/fps/physics.mjs": "b114917e71bdb54ee9aeb6f9b36a357b7c4dd1c10e316c1096d9d830521f56ec",
+      "src/fps/render.mjs": "943830be3d8deb9b2f92c06288c4b1f1103c2ee41027d99a3d039b44679d7be1",
+      "src/fps/character-library.mjs": "1f11cf5b57ea17ee629e19b649986c891a04487343027cd3abe9da93ee7ba228",
+      "src/fps/actor-occlusion.mjs": null,
+      "src/fps/skin-sampler.mjs": null
+    },
+    "workingTreeRuntimeChanges": false
+  },
+  "after": {
+    "revision": "ca9d6dc1cdf88bfcfec558d25cb37fc147ffabdc",
+    "browser": "153.0.8010.12",
+    "platform": "darwin",
+    "runs": [
+      {
+        "mobile": true,
+        "run": 0,
+        "settings": {
+          "backend": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+          "viewport": [
+            844,
+            390
+          ],
+          "dpr": 2,
+          "graphics": "low",
+          "seed": 42,
+          "actors": 10,
+          "bots": 9,
+          "residents": 4
+        },
+        "shots": 21,
+        "stateHash": "e873daa5ecd7168701c18dcef97a908f0825e5339428da217826585b0f9b43ea",
+        "eventHash": "6923919a336b81c7c3e240af2fbc0d66e4386eaeb2666b5349c9f6482397e89f",
+        "summary": {
+          "lift": {
+            "frames": 240,
+            "median": 16.699999999999818,
+            "p95": 16.799999999999272,
+            "p99": 16.80000000000109,
+            "over25": 1,
+            "over50": 0,
+            "workMedian": 13.399999976158142,
+            "workP95": 15.799999952316284,
+            "draws": [
+              1524,
+              1548
+            ],
+            "triangles": [
+              806836,
+              821564
+            ],
+            "buffers": [
+              "658x304"
+            ],
+            "timers": {
+              "doors": {
+                "calls": 240,
+                "ms": 20.59999966621399
+              },
+              "physicsMove": {
+                "calls": 5488,
+                "ms": 57.00000059604645
+              },
+              "bots": {
+                "calls": 2160,
+                "ms": 95.7999986410141
+              },
+              "lineOfSight": {
+                "calls": 575,
+                "ms": 2.3000000715255737
+              },
+              "navigation": {
+                "calls": 51,
+                "ms": 119.3999993801117
+              },
+              "simulation": {
+                "calls": 240,
+                "ms": 238.19999933242798
+              },
+              "gpuSubmission": {
+                "calls": 480,
+                "ms": 2687.0000001192093
+              },
+              "render": {
+                "calls": 240,
+                "ms": 3096
+              }
+            }
+          },
+          "c08": {
+            "frames": 240,
+            "median": 16.700000000000728,
+            "p95": 33.29999999999927,
+            "p99": 50,
+            "over25": 20,
+            "over50": 2,
+            "workMedian": 17.600000023841858,
+            "workP95": 20.199999928474426,
+            "draws": [
+              1735,
+              1960
+            ],
+            "triangles": [
+              803800,
+              958582
+            ],
+            "buffers": [
+              "658x304"
+            ],
+            "timers": {
+              "doors": {
+                "calls": 240,
+                "ms": 18.600000739097595
+              },
+              "physicsMove": {
+                "calls": 5492,
+                "ms": 54.599998235702515
+              },
+              "lineOfSight": {
+                "calls": 1481,
+                "ms": 7.5
+              },
+              "bots": {
+                "calls": 1657,
+                "ms": 98.80000114440918
+              },
+              "navigation": {
+                "calls": 66,
+                "ms": 133.90000021457672
+              },
+              "simulation": {
+                "calls": 240,
+                "ms": 266.2999995946884
+              },
+              "gpuSubmission": {
+                "calls": 480,
+                "ms": 3086.2999997138977
+              },
+              "render": {
+                "calls": 240,
+                "ms": 4057.9999997615814
+              },
+              "occupancy": {
+                "calls": 147,
+                "ms": 0.5
+              },
+              "clearance": {
+                "calls": 6,
+                "ms": 0.2999999523162842
+              }
+            }
+          },
+          "combat": {
+            "frames": 1080,
+            "median": 16.69999999999891,
+            "p95": 16.799999999999272,
+            "p99": 33.39999999999782,
+            "over25": 22,
+            "over50": 3,
+            "workMedian": 12.399999976158142,
+            "workP95": 18.100000023841858,
+            "draws": [
+              1210,
+              1960
+            ],
+            "triangles": [
+              518212,
+              958582
+            ],
+            "buffers": [
+              "658x304"
+            ],
+            "timers": {
+              "doors": {
+                "calls": 1080,
+                "ms": 89.40000081062317
+              },
+              "physicsMove": {
+                "calls": 26315,
+                "ms": 244.49999690055847
+              },
+              "bots": {
+                "calls": 9217,
+                "ms": 423.60000133514404
+              },
+              "lineOfSight": {
+                "calls": 4176,
+                "ms": 21.19999921321869
+              },
+              "simulation": {
+                "calls": 1080,
+                "ms": 945.3999973535538
+              },
+              "gpuSubmission": {
+                "calls": 2160,
+                "ms": 11855.999999284744
+              },
+              "render": {
+                "calls": 1080,
+                "ms": 13858.40000128746
+              },
+              "navigation": {
+                "calls": 222,
+                "ms": 407.300000667572
+              },
+              "clearance": {
+                "calls": 11,
+                "ms": 0.5
+              },
+              "occupancy": {
+                "calls": 147,
+                "ms": 0.5
+              }
+            }
+          }
+        }
+      },
+      {
+        "mobile": true,
+        "run": 1,
+        "settings": {
+          "backend": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+          "viewport": [
+            844,
+            390
+          ],
+          "dpr": 2,
+          "graphics": "low",
+          "seed": 42,
+          "actors": 10,
+          "bots": 9,
+          "residents": 4
+        },
+        "shots": 21,
+        "stateHash": "e873daa5ecd7168701c18dcef97a908f0825e5339428da217826585b0f9b43ea",
+        "eventHash": "6923919a336b81c7c3e240af2fbc0d66e4386eaeb2666b5349c9f6482397e89f",
+        "summary": {
+          "lift": {
+            "frames": 240,
+            "median": 16.699999999999818,
+            "p95": 16.700000000000728,
+            "p99": 16.800000000000182,
+            "over25": 1,
+            "over50": 0,
+            "workMedian": 13.5,
+            "workP95": 15.799999952316284,
+            "draws": [
+              1524,
+              1548
+            ],
+            "triangles": [
+              806836,
+              821564
+            ],
+            "buffers": [
+              "658x304"
+            ],
+            "timers": {
+              "doors": {
+                "calls": 240,
+                "ms": 18.49999976158142
+              },
+              "physicsMove": {
+                "calls": 5488,
+                "ms": 55.40000057220459
+              },
+              "bots": {
+                "calls": 2160,
+                "ms": 97.89999985694885
+              },
+              "lineOfSight": {
+                "calls": 575,
+                "ms": 3.5999996662139893
+              },
+              "navigation": {
+                "calls": 51,
+                "ms": 117.29999995231628
+              },
+              "simulation": {
+                "calls": 240,
+                "ms": 236.10000014305115
+              },
+              "gpuSubmission": {
+                "calls": 480,
+                "ms": 2713.999999523163
+              },
+              "render": {
+                "calls": 240,
+                "ms": 3097.0000005960464
+              }
+            }
+          },
+          "c08": {
+            "frames": 240,
+            "median": 16.700000000000728,
+            "p95": 33.29999999999927,
+            "p99": 50.099999999998545,
+            "over25": 20,
+            "over50": 3,
+            "workMedian": 17.600000023841858,
+            "workP95": 20.300000071525574,
+            "draws": [
+              1735,
+              1960
+            ],
+            "triangles": [
+              803800,
+              958582
+            ],
+            "buffers": [
+              "658x304"
+            ],
+            "timers": {
+              "doors": {
+                "calls": 240,
+                "ms": 15.999998807907104
+              },
+              "physicsMove": {
+                "calls": 5492,
+                "ms": 53.40000069141388
+              },
+              "lineOfSight": {
+                "calls": 1481,
+                "ms": 8.699999809265137
+              },
+              "bots": {
+                "calls": 1657,
+                "ms": 96.40000021457672
+              },
+              "navigation": {
+                "calls": 66,
+                "ms": 129.799999833107
+              },
+              "simulation": {
+                "calls": 240,
+                "ms": 259.5999993085861
+              },
+              "gpuSubmission": {
+                "calls": 480,
+                "ms": 3146.399999856949
+              },
+              "render": {
+                "calls": 240,
+                "ms": 4089.0000002384186
+              },
+              "occupancy": {
+                "calls": 147,
+                "ms": 0.6000000238418579
+              },
+              "clearance": {
+                "calls": 6,
+                "ms": 0.30000007152557373
+              }
+            }
+          },
+          "combat": {
+            "frames": 1080,
+            "median": 16.69999999999891,
+            "p95": 16.799999999999272,
+            "p99": 33.30000000000291,
+            "over25": 22,
+            "over50": 4,
+            "workMedian": 12.399999976158142,
+            "workP95": 18.299999952316284,
+            "draws": [
+              1210,
+              1960
+            ],
+            "triangles": [
+              518212,
+              958582
+            ],
+            "buffers": [
+              "658x304"
+            ],
+            "timers": {
+              "doors": {
+                "calls": 1080,
+                "ms": 87.79999911785126
+              },
+              "physicsMove": {
+                "calls": 26315,
+                "ms": 242.20000171661377
+              },
+              "bots": {
+                "calls": 9217,
+                "ms": 412.3000007867813
+              },
+              "lineOfSight": {
+                "calls": 4176,
+                "ms": 23.00000011920929
+              },
+              "simulation": {
+                "calls": 1080,
+                "ms": 925.4999980926514
+              },
+              "gpuSubmission": {
+                "calls": 2160,
+                "ms": 11973.500000596046
+              },
+              "render": {
+                "calls": 1080,
+                "ms": 13893.300001740456
+              },
+              "navigation": {
+                "calls": 222,
+                "ms": 391.69999969005585
+              },
+              "clearance": {
+                "calls": 11,
+                "ms": 0.40000009536743164
+              },
+              "occupancy": {
+                "calls": 147,
+                "ms": 0.6000000238418579
+              }
+            }
+          }
+        }
+      },
+      {
+        "mobile": true,
+        "run": 2,
+        "settings": {
+          "backend": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+          "viewport": [
+            844,
+            390
+          ],
+          "dpr": 2,
+          "graphics": "low",
+          "seed": 42,
+          "actors": 10,
+          "bots": 9,
+          "residents": 4
+        },
+        "shots": 21,
+        "stateHash": "e873daa5ecd7168701c18dcef97a908f0825e5339428da217826585b0f9b43ea",
+        "eventHash": "6923919a336b81c7c3e240af2fbc0d66e4386eaeb2666b5349c9f6482397e89f",
+        "summary": {
+          "lift": {
+            "frames": 240,
+            "median": 16.699999999999818,
+            "p95": 16.800000000000182,
+            "p99": 16.80000000000109,
+            "over25": 2,
+            "over50": 0,
+            "workMedian": 14.600000023841858,
+            "workP95": 17.799999952316284,
+            "draws": [
+              1524,
+              1548
+            ],
+            "triangles": [
+              806836,
+              821564
+            ],
+            "buffers": [
+              "658x304"
+            ],
+            "timers": {
+              "doors": {
+                "calls": 240,
+                "ms": 19.30000066757202
+              },
+              "physicsMove": {
+                "calls": 5488,
+                "ms": 59.80000030994415
+              },
+              "bots": {
+                "calls": 2160,
+                "ms": 101.49999988079071
+              },
+              "lineOfSight": {
+                "calls": 575,
+                "ms": 3.6999998092651367
+              },
+              "navigation": {
+                "calls": 51,
+                "ms": 121.69999980926514
+              },
+              "simulation": {
+                "calls": 240,
+                "ms": 251.900000333786
+              },
+              "gpuSubmission": {
+                "calls": 480,
+                "ms": 2978.8999996185303
+              },
+              "render": {
+                "calls": 240,
+                "ms": 3388.9999994039536
+              }
+            }
+          },
+          "c08": {
+            "frames": 240,
+            "median": 16.700000000000728,
+            "p95": 33.39999999999782,
+            "p99": 50,
+            "over25": 23,
+            "over50": 1,
+            "workMedian": 17.799999952316284,
+            "workP95": 20.600000023841858,
+            "draws": [
+              1735,
+              1960
+            ],
+            "triangles": [
+              803800,
+              958582
+            ],
+            "buffers": [
+              "658x304"
+            ],
+            "timers": {
+              "doors": {
+                "calls": 240,
+                "ms": 15.599999904632568
+              },
+              "physicsMove": {
+                "calls": 5492,
+                "ms": 52.299999475479126
+              },
+              "lineOfSight": {
+                "calls": 1481,
+                "ms": 7.699999928474426
+              },
+              "bots": {
+                "calls": 1657,
+                "ms": 96.49999916553497
+              },
+              "navigation": {
+                "calls": 66,
+                "ms": 131.5000001192093
+              },
+              "simulation": {
+                "calls": 240,
+                "ms": 261.2000000476837
+              },
+              "gpuSubmission": {
+                "calls": 480,
+                "ms": 3176.6000007390976
+              },
+              "render": {
+                "calls": 240,
+                "ms": 4126.300000309944
+              },
+              "occupancy": {
+                "calls": 147,
+                "ms": 0.9000000953674316
+              },
+              "clearance": {
+                "calls": 6,
+                "ms": 0.2999999523162842
+              }
+            }
+          },
+          "combat": {
+            "frames": 1080,
+            "median": 16.69999999999891,
+            "p95": 16.799999999999272,
+            "p99": 33.400000000001455,
+            "over25": 25,
+            "over50": 2,
+            "workMedian": 12.700000047683716,
+            "workP95": 18.399999976158142,
+            "draws": [
+              1210,
+              1960
+            ],
+            "triangles": [
+              518212,
+              958582
+            ],
+            "buffers": [
+              "658x304"
+            ],
+            "timers": {
+              "doors": {
+                "calls": 1080,
+                "ms": 83.6999979019165
+              },
+              "physicsMove": {
+                "calls": 26315,
+                "ms": 239.5000010728836
+              },
+              "bots": {
+                "calls": 9217,
+                "ms": 414.6999992132187
+              },
+              "lineOfSight": {
+                "calls": 4176,
+                "ms": 21.399999260902405
+              },
+              "simulation": {
+                "calls": 1080,
+                "ms": 931.9999998807907
+              },
+              "gpuSubmission": {
+                "calls": 2160,
+                "ms": 12223.800000429153
+              },
+              "render": {
+                "calls": 1080,
+                "ms": 14158.199999451637
+              },
+              "navigation": {
+                "calls": 222,
+                "ms": 394.8000000715256
+              },
+              "clearance": {
+                "calls": 11,
+                "ms": 0.5
+              },
+              "occupancy": {
+                "calls": 147,
+                "ms": 0.9000000953674316
+              }
+            }
+          }
+        }
+      },
+      {
+        "mobile": false,
+        "run": 0,
+        "settings": {
+          "backend": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+          "viewport": [
+            1280,
+            720
+          ],
+          "dpr": 2,
+          "graphics": "standard",
+          "seed": 42,
+          "actors": 10,
+          "bots": 9,
+          "residents": 5
+        },
+        "shots": 21,
+        "stateHash": "3e53707e90ce7c69ab0ff460fd12dc7fdd41e343f88af21943267375162bded9",
+        "eventHash": "7a804d95174352abde71ff2326a6746fc1a598017b4cfc2883c670f2655cacb0",
+        "summary": {
+          "lift": {
+            "frames": 240,
+            "median": 16.69999999999891,
+            "p95": 16.80000000000109,
+            "p99": 33.30000000000109,
+            "over25": 11,
+            "over50": 0,
+            "workMedian": 15.700000047683716,
+            "workP95": 21.300000071525574,
+            "draws": [
+              1522,
+              1546
+            ],
+            "triangles": [
+              833636,
+              855782
+            ],
+            "buffers": [
+              "1280x720"
+            ],
+            "timers": {
+              "doors": {
+                "calls": 240,
+                "ms": 16.499999284744263
+              },
+              "physicsMove": {
+                "calls": 5716,
+                "ms": 69.30000019073486
+              },
+              "bots": {
+                "calls": 2160,
+                "ms": 105.50000035762787
+              },
+              "lineOfSight": {
+                "calls": 575,
+                "ms": 3.000000238418579
+              },
+              "navigation": {
+                "calls": 52,
+                "ms": 131.4999998807907
+              },
+              "simulation": {
+                "calls": 240,
+                "ms": 272.0999993085861
+              },
+              "gpuSubmission": {
+                "calls": 480,
+                "ms": 3178.9999994039536
+              },
+              "render": {
+                "calls": 240,
+                "ms": 3716.2999991178513
+              }
+            }
+          },
+          "c08": {
+            "frames": 240,
+            "median": 16.700000000000728,
+            "p95": 33.400000000001455,
+            "p99": 50,
+            "over25": 36,
+            "over50": 2,
+            "workMedian": 18.799999952316284,
+            "workP95": 20.90000009536743,
+            "draws": [
+              1680,
+              1890
+            ],
+            "triangles": [
+              770872,
+              977606
+            ],
+            "buffers": [
+              "1280x720"
+            ],
+            "timers": {
+              "doors": {
+                "calls": 240,
+                "ms": 16.700000643730164
+              },
+              "physicsMove": {
+                "calls": 5492,
+                "ms": 56.0999995470047
+              },
+              "lineOfSight": {
+                "calls": 1481,
+                "ms": 8.000000834465027
+              },
+              "bots": {
+                "calls": 1657,
+                "ms": 97.8000009059906
+              },
+              "navigation": {
+                "calls": 66,
+                "ms": 131.10000002384186
+              },
+              "simulation": {
+                "calls": 240,
+                "ms": 263.7000013589859
+              },
+              "gpuSubmission": {
+                "calls": 480,
+                "ms": 3296.7000012397766
+              },
+              "render": {
+                "calls": 240,
+                "ms": 4332.900000333786
+              },
+              "occupancy": {
+                "calls": 147,
+                "ms": 0.8999999761581421
+              },
+              "clearance": {
+                "calls": 6,
+                "ms": 0.19999992847442627
+              }
+            }
+          },
+          "combat": {
+            "frames": 1080,
+            "median": 16.69999999999891,
+            "p95": 16.80000000000109,
+            "p99": 33.400000000001455,
+            "over25": 43,
+            "over50": 3,
+            "workMedian": 15.199999928474426,
+            "workP95": 19.40000009536743,
+            "draws": [
+              1208,
+              1890
+            ],
+            "triangles": [
+              485284,
+              977606
+            ],
+            "buffers": [
+              "1280x720"
+            ],
+            "timers": {
+              "doors": {
+                "calls": 1080,
+                "ms": 92.90000128746033
+              },
+              "physicsMove": {
+                "calls": 26826,
+                "ms": 299.79999589920044
+              },
+              "bots": {
+                "calls": 9217,
+                "ms": 454.4000016450882
+              },
+              "lineOfSight": {
+                "calls": 4176,
+                "ms": 23.200001001358032
+              },
+              "simulation": {
+                "calls": 1080,
+                "ms": 1064.0999999046326
+              },
+              "gpuSubmission": {
+                "calls": 2160,
+                "ms": 13550.500002026558
+              },
+              "render": {
+                "calls": 1080,
+                "ms": 15920.300002098083
+              },
+              "navigation": {
+                "calls": 222,
+                "ms": 410.7999997138977
+              },
+              "clearance": {
+                "calls": 11,
+                "ms": 0.3999999761581421
+              },
+              "occupancy": {
+                "calls": 148,
+                "ms": 1
+              }
+            }
+          }
+        }
+      },
+      {
+        "mobile": false,
+        "run": 1,
+        "settings": {
+          "backend": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+          "viewport": [
+            1280,
+            720
+          ],
+          "dpr": 2,
+          "graphics": "standard",
+          "seed": 42,
+          "actors": 10,
+          "bots": 9,
+          "residents": 5
+        },
+        "shots": 21,
+        "stateHash": "3e53707e90ce7c69ab0ff460fd12dc7fdd41e343f88af21943267375162bded9",
+        "eventHash": "7a804d95174352abde71ff2326a6746fc1a598017b4cfc2883c670f2655cacb0",
+        "summary": {
+          "lift": {
+            "frames": 240,
+            "median": 16.69999999999891,
+            "p95": 16.700000000000728,
+            "p99": 16.80000000000109,
+            "over25": 2,
+            "over50": 0,
+            "workMedian": 15.5,
+            "workP95": 18,
+            "draws": [
+              1522,
+              1546
+            ],
+            "triangles": [
+              833636,
+              855782
+            ],
+            "buffers": [
+              "1280x720"
+            ],
+            "timers": {
+              "doors": {
+                "calls": 240,
+                "ms": 18.59999978542328
+              },
+              "physicsMove": {
+                "calls": 5716,
+                "ms": 70.29999935626984
+              },
+              "bots": {
+                "calls": 2160,
+                "ms": 106.00000190734863
+              },
+              "lineOfSight": {
+                "calls": 575,
+                "ms": 4.0000001192092896
+              },
+              "navigation": {
+                "calls": 52,
+                "ms": 129.90000009536743
+              },
+              "simulation": {
+                "calls": 240,
+                "ms": 273.00000071525574
+              },
+              "gpuSubmission": {
+                "calls": 480,
+                "ms": 3007.9999994039536
+              },
+              "render": {
+                "calls": 240,
+                "ms": 3546.699998855591
+              }
+            }
+          },
+          "c08": {
+            "frames": 240,
+            "median": 16.700000000000728,
+            "p95": 33.400000000001455,
+            "p99": 49.89999999999782,
+            "over25": 62,
+            "over50": 2,
+            "workMedian": 20.200000047683716,
+            "workP95": 24.59999990463257,
+            "draws": [
+              1680,
+              1890
+            ],
+            "triangles": [
+              770872,
+              977606
+            ],
+            "buffers": [
+              "1280x720"
+            ],
+            "timers": {
+              "doors": {
+                "calls": 240,
+                "ms": 18.399999976158142
+              },
+              "physicsMove": {
+                "calls": 5492,
+                "ms": 58.899999499320984
+              },
+              "lineOfSight": {
+                "calls": 1481,
+                "ms": 6.299999713897705
+              },
+              "bots": {
+                "calls": 1657,
+                "ms": 103.50000083446503
+              },
+              "navigation": {
+                "calls": 66,
+                "ms": 137.59999978542328
+              },
+              "simulation": {
+                "calls": 240,
+                "ms": 285.69999945163727
+              },
+              "gpuSubmission": {
+                "calls": 480,
+                "ms": 3650.8000004291534
+              },
+              "render": {
+                "calls": 240,
+                "ms": 4780.799999952316
+              },
+              "occupancy": {
+                "calls": 147,
+                "ms": 1.2000000476837158
+              },
+              "clearance": {
+                "calls": 6,
+                "ms": 0.2999999523162842
+              }
+            }
+          },
+          "combat": {
+            "frames": 1080,
+            "median": 16.69999999999891,
+            "p95": 33.29999999999927,
+            "p99": 33.400000000001455,
+            "over25": 63,
+            "over50": 3,
+            "workMedian": 13.5,
+            "workP95": 22.200000047683716,
+            "draws": [
+              1208,
+              1890
+            ],
+            "triangles": [
+              485284,
+              977606
+            ],
+            "buffers": [
+              "1280x720"
+            ],
+            "timers": {
+              "doors": {
+                "calls": 1080,
+                "ms": 92.40000069141388
+              },
+              "physicsMove": {
+                "calls": 26826,
+                "ms": 307.49999701976776
+              },
+              "bots": {
+                "calls": 9217,
+                "ms": 444.7000014781952
+              },
+              "lineOfSight": {
+                "calls": 4176,
+                "ms": 19.80000066757202
+              },
+              "simulation": {
+                "calls": 1080,
+                "ms": 1068.599999666214
+              },
+              "gpuSubmission": {
+                "calls": 2160,
+                "ms": 12879.79999947548
+              },
+              "render": {
+                "calls": 1080,
+                "ms": 15301.49999833107
+              },
+              "navigation": {
+                "calls": 222,
+                "ms": 410.80000030994415
+              },
+              "clearance": {
+                "calls": 11,
+                "ms": 0.39999985694885254
+              },
+              "occupancy": {
+                "calls": 148,
+                "ms": 1.3000000715255737
+              }
+            }
+          }
+        }
+      },
+      {
+        "mobile": false,
+        "run": 2,
+        "settings": {
+          "backend": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+          "viewport": [
+            1280,
+            720
+          ],
+          "dpr": 2,
+          "graphics": "standard",
+          "seed": 42,
+          "actors": 10,
+          "bots": 9,
+          "residents": 5
+        },
+        "shots": 21,
+        "stateHash": "3e53707e90ce7c69ab0ff460fd12dc7fdd41e343f88af21943267375162bded9",
+        "eventHash": "7a804d95174352abde71ff2326a6746fc1a598017b4cfc2883c670f2655cacb0",
+        "summary": {
+          "lift": {
+            "frames": 240,
+            "median": 16.699999999999818,
+            "p95": 33.30000000000109,
+            "p99": 33.399999999999636,
+            "over25": 28,
+            "over50": 0,
+            "workMedian": 17.59999990463257,
+            "workP95": 23.600000023841858,
+            "draws": [
+              1522,
+              1546
+            ],
+            "triangles": [
+              833636,
+              855782
+            ],
+            "buffers": [
+              "1280x720"
+            ],
+            "timers": {
+              "doors": {
+                "calls": 240,
+                "ms": 20.09999990463257
+              },
+              "physicsMove": {
+                "calls": 5716,
+                "ms": 70.00000023841858
+              },
+              "bots": {
+                "calls": 2160,
+                "ms": 111.29999911785126
+              },
+              "lineOfSight": {
+                "calls": 575,
+                "ms": 3.7999995946884155
+              },
+              "navigation": {
+                "calls": 52,
+                "ms": 132.60000026226044
+              },
+              "simulation": {
+                "calls": 240,
+                "ms": 279.0999995470047
+              },
+              "gpuSubmission": {
+                "calls": 480,
+                "ms": 3529.20000064373
+              },
+              "render": {
+                "calls": 240,
+                "ms": 4096.200000405312
+              }
+            }
+          },
+          "c08": {
+            "frames": 240,
+            "median": 16.700000000000728,
+            "p95": 33.400000000001455,
+            "p99": 50,
+            "over25": 36,
+            "over50": 2,
+            "workMedian": 18.799999952316284,
+            "workP95": 21.399999976158142,
+            "draws": [
+              1680,
+              1890
+            ],
+            "triangles": [
+              770872,
+              977606
+            ],
+            "buffers": [
+              "1280x720"
+            ],
+            "timers": {
+              "doors": {
+                "calls": 240,
+                "ms": 17.69999873638153
+              },
+              "physicsMove": {
+                "calls": 5492,
+                "ms": 54.500001430511475
+              },
+              "lineOfSight": {
+                "calls": 1481,
+                "ms": 8.299999117851257
+              },
+              "bots": {
+                "calls": 1657,
+                "ms": 97.0999995470047
+              },
+              "navigation": {
+                "calls": 66,
+                "ms": 132.0999995470047
+              },
+              "simulation": {
+                "calls": 240,
+                "ms": 267.0999995470047
+              },
+              "gpuSubmission": {
+                "calls": 480,
+                "ms": 3314.8999993801117
+              },
+              "render": {
+                "calls": 240,
+                "ms": 4349.600000023842
+              },
+              "occupancy": {
+                "calls": 147,
+                "ms": 0.10000002384185791
+              },
+              "clearance": {
+                "calls": 6,
+                "ms": 0
+              }
+            }
+          },
+          "combat": {
+            "frames": 1080,
+            "median": 16.700000000000728,
+            "p95": 33.29999999999927,
+            "p99": 33.400000000001455,
+            "over25": 61,
+            "over50": 3,
+            "workMedian": 15.199999928474426,
+            "workP95": 20.199999928474426,
+            "draws": [
+              1208,
+              1890
+            ],
+            "triangles": [
+              485284,
+              977606
+            ],
+            "buffers": [
+              "1280x720"
+            ],
+            "timers": {
+              "doors": {
+                "calls": 1080,
+                "ms": 94.9999989271164
+              },
+              "physicsMove": {
+                "calls": 26826,
+                "ms": 292.5000032186508
+              },
+              "bots": {
+                "calls": 9217,
+                "ms": 449.3999990224838
+              },
+              "lineOfSight": {
+                "calls": 4176,
+                "ms": 23.599998593330383
+              },
+              "simulation": {
+                "calls": 1080,
+                "ms": 1059.099999666214
+              },
+              "gpuSubmission": {
+                "calls": 2160,
+                "ms": 13673.299998521805
+              },
+              "render": {
+                "calls": 1080,
+                "ms": 16077.700000405312
+              },
+              "navigation": {
+                "calls": 222,
+                "ms": 411.30000042915344
+              },
+              "clearance": {
+                "calls": 11,
+                "ms": 0.10000002384185791
+              },
+              "occupancy": {
+                "calls": 148,
+                "ms": 0.10000002384185791
+              }
+            }
+          }
+        }
+      }
+    ],
+    "runtimeSources": {
+      "src/fps/physics.mjs": "ad8e1c469c7578d40b786680c5e381e9f917374d6c7ae50dcfc9dfae4bc4d887",
+      "src/fps/render.mjs": "e262b21ed22b5157984119c86161b84a9e7b57032790d4743f2c5b7ed3e1eb54",
+      "src/fps/character-library.mjs": "735ebb482d3593eef94eb0fb3e146533444526af93a179d8a32bfd036425e1fc",
+      "src/fps/actor-occlusion.mjs": "6c87cc5e4632823333d99cf91c89a9979bdbedbf772e19d24302792d13efad65",
+      "src/fps/skin-sampler.mjs": "b20472d1a08fddd41a3a9be798a84a44bc3082f2c1cdd1b8d95453db2422cfc4"
+    },
+    "workingTreeRuntimeChanges": true
+  }
+}
