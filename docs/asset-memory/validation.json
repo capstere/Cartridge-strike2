@@ -25,6 +25,8 @@
   "limits": [
     "No physical handset",
     "No whole-renderer async-load teardown stress",
-    "No startup-time improvement established"
-  ]
+    "No startup-time improvement established",
+    "Saved-character end-to-end harness needs an external Studio export fixture; contract tests pass."
+  ],
+  "ciFirstRun": "Existing browser checks passed; new sharing test exceeded default 30-second click deadline on software WebGL. Test now has explicit 180-second operation deadlines and a separate five-minute CI step; assertions unchanged."
 }
