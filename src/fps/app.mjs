@@ -222,6 +222,9 @@ $('game').addEventListener('mousedown',e=>{if(e.button!==0||modal)return;if(docu
 document.addEventListener('pointerlockchange',()=>{if(mobile.enabled)return;if(document.pointerLockElement=== $('game')&&modal){unlockMouse();return;}if(document.pointerLockElement!==$('game')){clearInput();if(!modal&&game.player?.alive)showPause();}});window.addEventListener('blur',()=>{clearInput();if(!modal)showPause();});document.addEventListener('visibilitychange',()=>{if(document.hidden){clearInput();if(!modal)showPause();}});
 
 function updateMode(){settings.mode=$('game-mode').value;$('loadout-row').hidden=settings.mode!=='endless';$('mode-description').textContent=settings.mode==='endless'?'Återuppstå efter 3 sekunder. Fritt vapenval med B. Valbara kontrollområden samlar striden. Ingen sluttid.':'Bomb + gisslan. Först till fem rundor. Ingen respawn under rundan.';saveSettings();}
+// A viewport rotation can cover the game with the portrait prompt without blur.
+// Freeze combat/audio and require an explicit resume after either orientation change.
+if(mobile.enabled)matchMedia('(orientation: portrait)').addEventListener('change',()=>{clearInput();if(!modal)showPause();});
 $('game-mode').value=['classic','endless'].includes(settings.mode)?settings.mode:'classic';$('loadout').value=settings.loadout||'smg';$('game-mode').onchange=updateMode;$('loadout').onchange=()=>{settings.loadout=$('loadout').value;saveSettings();};
 $('radio-options').innerHTML=RADIO.map((r,i)=>`<div><kbd>${i+1}</kbd><span>${r.text}<small>${r.label}</small></span></div>`).join('');updateMode();
 

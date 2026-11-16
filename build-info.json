@@ -1731,8 +1731,8 @@
     },
     {
       "path": "src/fps/app.mjs",
-      "bytes": 34672,
-      "sha256": "d7ee3b426678141dc599368ee54c026ca23fd1618c6e6c167cb3dcf387d870d0"
+      "bytes": 34966,
+      "sha256": "a55de42ea88e7396dbb9bb852ad3f73580182b4086dcdd50e96296ba63f33806"
     },
     {
       "path": "src/fps/audio.mjs",
@@ -1996,8 +1996,8 @@
     },
     {
       "path": "src/fps/mobile-controls.mjs",
-      "bytes": 7129,
-      "sha256": "76673d6fc38dc9e9c84f0a94668cd1b7a305f88513e1aca938ee5d30108b3277"
+      "bytes": 7394,
+      "sha256": "814f02e05eb6096bd3f64c0a8bfde6ec3c1d34853b3cf6aae31aa90cf4cf27f4"
     },
     {
       "path": "src/fps/model-primitives.mjs",
@@ -2166,8 +2166,8 @@
     },
     {
       "path": "src/fps/tactical-controls.mjs",
-      "bytes": 8123,
-      "sha256": "4350bd909b249541ffa48311286a36a0a50983ba1479485d424f6caee65f963b"
+      "bytes": 8248,
+      "sha256": "4295b8afcab33a28ef2ecd451f1860b644f9aeb2eb317ffb7059714dc61b79f2"
     },
     {
       "path": "src/fps/tactical-map.mjs",
@@ -2305,7 +2305,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 56839546,
+  "bytes": 56840230,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

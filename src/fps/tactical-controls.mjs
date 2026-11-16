@@ -95,8 +95,10 @@ export class TacticalControls {
     const g = this.getGame(), p = g?.player;
     if (!p || !this.playing()) { this.reset(); return; }
     if (g !== this.game || p.weapon !== this.weapon || g.state.round !== this.round) {
+      const newRound = g !== this.game || g.state.round !== this.round;
       this.reset(); this.game = g; this.weapon = p.weapon; this.round = g.state.round;
-      this.mobile.clear();
+      if (newRound) this.mobile.clear();
+      else this.mobile.clearActions();
     }
     if (!canAim(p.weapon) || p.reloadUntil || p.action) this.wanted = false;
     this.reload.tick(g, this.settings.autoReload, this.isInteracting());

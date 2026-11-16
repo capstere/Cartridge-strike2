@@ -94,8 +94,8 @@ export class MobileControls {
         const record = this.buttonPointers.get(e.pointerId);
         if (record !== button) return;
         this.buttonPointers.delete(e.pointerId);
-        button.classList.remove('pressed');
-        if (HELD.has(action)) this.state[action] = false;
+        if (![...this.buttonPointers.values()].includes(button)) button.classList.remove('pressed');
+        if (HELD.has(action)) this.state[action] = [...this.buttonPointers.values()].some(b => b.dataset.mobileAction === action);
       };
       button.addEventListener('pointerdown', e => {
         if (!this.visible || (e.pointerType === 'mouse' && e.button !== 0)) return;
@@ -129,14 +129,19 @@ export class MobileControls {
 
   input() { return { ...this.state }; }
 
-  clear() {
-    this.state.forward = this.state.strafe = 0;
+  // Weapon changes release held actions without stealing the thumbs' drag ownership.
+  clearActions() {
     for (const action of HELD) this.state[action] = false;
-    this.stickId = this.lookId = null;
     this.buttonPointers.clear();
+    if (this.root) for (const button of this.root.querySelectorAll('.mobile-button')) button.classList.remove('pressed');
+  }
+
+  clear() {
+    this.clearActions();
+    this.state.forward = this.state.strafe = 0;
+    this.stickId = this.lookId = null;
     if (this.stick) this.stick.classList.remove('active');
     if (this.nub) this.nub.style.transform = '';
-    if (this.root) for (const button of this.root.querySelectorAll('.mobile-button')) button.classList.remove('pressed');
   }
 
   show(show, alive = true) {

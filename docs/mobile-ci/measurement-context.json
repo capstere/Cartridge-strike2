@@ -1,0 +1,18 @@
+{
+  "base": "5b8660527b14a403ded5f486e4e3c2917c36acf9",
+  "hardware": "Apple M1",
+  "os": "macOS 26.6.2",
+  "browser": "Chromium 153.0.8010.12",
+  "backend": "ANGLE Metal",
+  "emulation": true,
+  "physicalDevices": false,
+  "sampleFramesPerViewport": 60,
+  "repetitions": 1,
+  "note": "Behavior reproductions at two viewport sizes; short pacing samples do not establish FPS improvement.",
+  "availableDeviceTooling": "xcrun devicectl and simctl unavailable; adb not installed",
+  "afterSourceSha256": {
+    "src/fps/app.mjs": "a55de42ea88e7396dbb9bb852ad3f73580182b4086dcdd50e96296ba63f33806",
+    "src/fps/mobile-controls.mjs": "814f02e05eb6096bd3f64c0a8bfde6ec3c1d34853b3cf6aae31aa90cf4cf27f4",
+    "src/fps/tactical-controls.mjs": "4295b8afcab33a28ef2ecd451f1860b644f9aeb2eb317ffb7059714dc61b79f2"
+  }
+}
