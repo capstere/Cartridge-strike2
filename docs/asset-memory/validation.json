@@ -1,0 +1,32 @@
+{
+  "status": "PASS",
+  "checks": {
+    "units": "194/194",
+    "runtime": "459 files",
+    "doors": "102/102",
+    "actorVisibility": "25 views, zero changed bytes; 4,655,215 exact vertices",
+    "assetSharing": {
+      "disposed": true,
+      "operators": 10,
+      "tracks": 8580,
+      "poses": 208,
+      "distinctActions": true
+    },
+    "lifecycle": "20 measured cycles before and after, both pass",
+    "browser": [
+      "mobile/desktop controls",
+      "match-flow loading/cancel/retry/team/audio/return",
+      "player plant/defuse/rescue/spectator routes",
+      "Classic/Endless zombies",
+      "Classic/Endless Danceman",
+      "render/HUD/minimap/tracers"
+    ]
+  },
+  "limits": [
+    "No physical handset",
+    "No whole-renderer async-load teardown stress",
+    "No startup-time improvement established",
+    "Saved-character end-to-end harness needs an external Studio export fixture; contract tests pass."
+  ],
+  "ciFirstRun": "Existing browser checks passed; new sharing test exceeded default 30-second click deadline on software WebGL. Test now has explicit 180-second operation deadlines and a separate five-minute CI step; assertions unchanged."
+}

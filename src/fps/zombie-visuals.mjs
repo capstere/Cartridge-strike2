@@ -4,7 +4,7 @@ import {cloneSkinned} from './skinned-clone.mjs';
 import {POSES,zombiePosition} from './zombie-poses.mjs';
 
 async function loadModel(kind){
-  const url=new URL(kind==='danceman'?'../../assets/fps/Danceman/Danceman.glb':'../../assets/fps/zombies/'+kind+'.glb.gz',import.meta.url);
+  const url=new URL(kind==='danceman'?'../../assets/fps/Danceman/Danceman.glb.gz':'../../assets/fps/zombies/'+kind+'.glb.gz',import.meta.url);
   const response=await fetch(url);if(!response.ok)throw Error('Zombie model '+kind+' HTTP '+response.status);
   const packed=await response.arrayBuffer();
   // Some static hosts supply Content-Encoding. Browsers then decompress before fetch resolves.

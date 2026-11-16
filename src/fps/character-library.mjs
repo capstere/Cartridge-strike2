@@ -1,3 +1,4 @@
+import {cloneSkinned} from './skinned-clone.mjs';
 import {skinSampler} from './skin-sampler.mjs';
 import {getCharacterOverride,loadCharacterOverrides,clearCharacterOverrides} from './character-overrides.mjs?v=6.1.2';
 import {createRuntimeViewAppearance} from './view-character-appearance.mjs?v=6.1.2';
@@ -42,13 +43,6 @@ export async function loadDefaultHostages(){
   .then(installDefaultHostageTemplate).catch(e=>{hostagePending=null;throw new Error('Gisslanmodellen kunde inte laddas: '+e.message);});
  return hostagePending;
 }
-/** Clone the hierarchy AND each skeleton. Mesh buffers/textures remain shared. */
-function cloneSkinned(source){
- const root=source.clone(true),map=new Map(),original=[],copies=[];source.traverse(n=>original.push(n));root.traverse(n=>copies.push(n));
- for(let i=0;i<original.length;i++)map.set(original[i],copies[i]);
- for(const [a,b]of map)if(a.isSkinnedMesh){b.skeleton=new T.Skeleton(a.skeleton.bones.map(bone=>map.get(bone)),a.skeleton.boneInverses.map(m=>m.clone()));b.bindMatrix.copy(a.bindMatrix);b.bindMatrixInverse.copy(a.bindMatrixInverse);b.frustumCulled=false;}
- return root;
-}
 const hash=id=>[...String(id)].reduce((n,c)=>(Math.imul(n,31)+c.charCodeAt(0))>>>0,7);
 function fabricTexture(){
  if(typeof document==='undefined')return null;
@@ -58,8 +52,13 @@ function fabricTexture(){
 }
 let fabric=null;
 const upperName=n=>/^(clavicle_|upperarm_|lowerarm_|hand_|thumb_|index_|middle_|ring_|pinky_)/.test(n);
-function upperClip(clip){return new T.AnimationClip('upper-'+clip.name,clip.duration,clip.tracks.filter(t=>upperName(t.name.split('.')[0])).map(t=>t.clone()));}
-function lowerClip(clip){return new T.AnimationClip('lower-'+clip.name,clip.duration,clip.tracks.filter(t=>!upperName(t.name.split('.')[0])).map(t=>t.clone()));}
+// Clips/tracks are immutable templates; mixers own all playback state.
+const splitClips=new WeakMap();
+function splitClip(clip,upper){
+ let pair=splitClips.get(clip);
+ if(!pair){pair=[false,true].map(isUpper=>new T.AnimationClip((isUpper?'upper-':'lower-')+clip.name,clip.duration,clip.tracks.filter(t=>upperName(t.name.split('.')[0])===isUpper)));splitClips.set(clip,pair);}
+ return pair[upper?1:0];
+}
 export function createAuthoredAvatar(team,id,isHostage=false,options={}){
  if(!options.ignoreOverrides&&privateCharacterApplies(id)&&!isHostage)return createPrivateAvatar(id);
  const entry=!options.ignoreOverrides&&getCharacterOverride(isHostage?'hostage':'player',id);
@@ -129,7 +128,7 @@ export function createAuthoredAvatar(team,id,isHostage=false,options={}){
 }
 function finishAvatar({asset,root,bones,materials,meshes,shoes,footSamples=[],seed,gender,ownedGeometry,isHostage,normalize}){
  const mixer=new T.AnimationMixer(root),clips=new Map(asset.animations.map(c=>[c.name,c]));
- const base=new Map(),upper=new Map();for(const [name,clip]of clips){base.set(name,mixer.clipAction(isHostage?clip:lowerClip(clip)));if(!isHostage)upper.set(name,mixer.clipAction(upperClip(clip)));}
+ const base=new Map(),upper=new Map();for(const [name,clip]of clips){base.set(name,mixer.clipAction(isHostage?clip:splitClip(clip,false)));if(!isHostage)upper.set(name,mixer.clipAction(splitClip(clip,true)));}
  const idle=base.get('Idle_Loop');idle.play();if(!isHostage)upper.get('Pistol_Idle_Loop').play();mixer.update(0);root.updateMatrixWorld(true);root.traverse(o=>{if(o.isSkinnedMesh)o.skeleton.update();});
  const holder=new T.Group();holder.name='authored-humanoid-'+gender;holder.rotation.y=Math.PI;holder.add(root);
  const bounds=posedBounds(root),scale=normalize?1.69/(bounds.max.y-bounds.min.y):1;holder.scale.setScalar(scale);holder.position.y=-bounds.min.y*scale+.004;

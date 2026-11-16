@@ -1,0 +1,6403 @@
+{
+  "revision": "working tree; see source hashes",
+  "runs": [
+    {
+      "repetition": 0,
+      "cache": "cold",
+      "lobbyMs": 3027.697875,
+      "matchMs": 4579.666916,
+      "transfer": 46452222,
+      "requests": 382,
+      "resources": {
+        "meshes": 3811,
+        "geometries": 1981,
+        "textures": 145,
+        "skinMeshes": 122,
+        "skeletons": 18,
+        "boneGroups": 18,
+        "clips": 65,
+        "clipBytes": 1888480,
+        "gpu": {
+          "geometries": 545,
+          "textures": 114
+        },
+        "textureImages": [
+          {
+            "name": "",
+            "w": 128,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 128,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "WhitePlaster02/Color/1,1",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "WhitePlaster02/NormalGL/1,1",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "WhitePlaster02/Roughness/1,1",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "fine-steel-brushing",
+            "w": 128,
+            "h": 128
+          },
+          {
+            "name": "Fabric045/Color/0.65,0.65",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Fabric045/NormalGL/0.65,0.65",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Fabric045/Roughness/0.65,0.65",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "WhitePlaster02/Color/0.6,0.6",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "WhitePlaster02/NormalGL/0.6,0.6",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "WhitePlaster02/Roughness/0.6,0.6",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "floor5-vinyl-grain",
+            "w": 128,
+            "h": 128
+          },
+          {
+            "name": "floor5-vinyl-roughness",
+            "w": 128,
+            "h": 128
+          },
+          {
+            "name": "Concrete034/Color/1.1,0.55",
+            "w": 1024,
+            "h": 512
+          },
+          {
+            "name": "Concrete034/NormalGL/1.1,0.55",
+            "w": 1024,
+            "h": 512
+          },
+          {
+            "name": "Concrete034/Roughness/1.1,0.55",
+            "w": 1024,
+            "h": 512
+          },
+          {
+            "name": "floor5-dark-tile",
+            "w": 256,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 1024,
+            "h": 512
+          },
+          {
+            "name": "colormap",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "colormap",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "colormap",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "colormap",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "Image_0",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Image_2",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Image_1",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "fictional-equipment-printer",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "colormap",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 1024,
+            "h": 512
+          },
+          {
+            "name": "fictional-equipment-plate",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "fictional-equipment-console",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 64
+          },
+          {
+            "name": "fictional-equipment-array",
+            "w": 1024,
+            "h": 650
+          },
+          {
+            "name": "fictional-equipment-screen",
+            "w": 1024,
+            "h": 576
+          },
+          {
+            "name": "",
+            "w": 64,
+            "h": 64
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 896
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 896
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 896
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 896
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 896
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 896
+          },
+          {
+            "name": "floor5-botanical-voile",
+            "w": 512,
+            "h": 768
+          },
+          {
+            "name": "",
+            "w": 2048,
+            "h": 864
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 576
+          },
+          {
+            "name": "",
+            "w": 64,
+            "h": 64
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "T_Eye_Brown",
+            "w": 256,
+            "h": 256
+          },
+          {
+            "name": "T_Superhero_Male_Ligh",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "T_Superhero_Male_Normal",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "",
+            "w": 64,
+            "h": 64
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 64,
+            "h": 64
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 64,
+            "h": 64
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "T_Eye_Brown",
+            "w": 256,
+            "h": 256
+          },
+          {
+            "name": "T_Superhero_Female_Light_BaseColor",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "T_Superhero_Female_Normal",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "business_man_albedo",
+            "w": 2048,
+            "h": 2048
+          },
+          {
+            "name": "business_man_orm(AO_rough_metal)",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "business_man_normal",
+            "w": 2048,
+            "h": 2048
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "texture_0",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "texture_0_metallic_roughness",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Image_0",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Image_3",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Image_2",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Image_1",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "00000213833318D0",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 64,
+            "h": 64
+          },
+          {
+            "name": "",
+            "w": 128,
+            "h": 128
+          },
+          {
+            "name": "fitted-work-glove-color",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "fitted-work-glove-normal",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "fitted-work-glove-roughness",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "tailored-ripstop-sleeve-color",
+            "w": 256,
+            "h": 256
+          },
+          {
+            "name": "tailored-ripstop-sleeve-normal",
+            "w": 256,
+            "h": 256
+          },
+          {
+            "name": "tailored-ripstop-sleeve-roughness",
+            "w": 256,
+            "h": 256
+          }
+        ],
+        "audioBytes": 13362496,
+        "assets": [
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/Danceman/Danceman.glb.gz",
+            "body": 1810602,
+            "transfer": 1810902
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/zombies/tattered.glb.gz",
+            "body": 2903692,
+            "transfer": 2903992
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/zombies/hollow.glb.gz",
+            "body": 3268124,
+            "transfer": 3268424
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/footstep_carpet_000.ogg",
+            "body": 6353,
+            "transfer": 6653
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/footstep_carpet_001.ogg",
+            "body": 6411,
+            "transfer": 6711
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/footstep_carpet_002.ogg",
+            "body": 6411,
+            "transfer": 6711
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/footstep_concrete_000.ogg",
+            "body": 5808,
+            "transfer": 6108
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/footstep_concrete_001.ogg",
+            "body": 6308,
+            "transfer": 6608
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/footstep_concrete_002.ogg",
+            "body": 6255,
+            "transfer": 6555
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/impactMetal_light_000.ogg",
+            "body": 7651,
+            "transfer": 7951
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/impactMetal_light_001.ogg",
+            "body": 6967,
+            "transfer": 7267
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/impactMetal_medium_000.ogg",
+            "body": 7117,
+            "transfer": 7417
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/impactSoft_medium_000.ogg",
+            "body": 5351,
+            "transfer": 5651
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/impactGeneric_light_000.ogg",
+            "body": 5827,
+            "transfer": 6127
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/explosionCrunch_000.ogg",
+            "body": 28274,
+            "transfer": 28574
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/lowFrequency_explosion_000.ogg",
+            "body": 14317,
+            "transfer": 14617
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/laserSmall_000.ogg",
+            "body": 7286,
+            "transfer": 7586
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/computerNoise_000.ogg",
+            "body": 119024,
+            "transfer": 119324
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/prepare-to-fight.mp3",
+            "body": 31599,
+            "transfer": 31899
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/danceman.mp3",
+            "body": 76612,
+            "transfer": 76912
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/models/e445d3f7dbeee8152d0078e8729727caf4d039e3e23b21d9d4290b51c53b87c1.glb",
+            "body": 5160,
+            "transfer": 5460
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/models/9c4b643b35b92a91a5def38040b8847b6fe2619668e8fa3830832a43c41e4249.glb",
+            "body": 31440,
+            "transfer": 31740
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/models/3b5d4800c66d183cc683d417d02be848bed2702ef62db6137aa07bc08463eea4.glb",
+            "body": 29008,
+            "transfer": 29308
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/models/1c72ef12bf0604e0ece223bd1142bfcf4fcbecb0770b387461d9b3a478a6f6c7.glb",
+            "body": 21012,
+            "transfer": 21312
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/models/7ad94bef7ed7f3afc20f4fdb54e54c6c2ac12c31ccaf375bbb91808373a31131.glb",
+            "body": 5016,
+            "transfer": 5316
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/models/c78f8d61efd9d947ec37a76160e0cc48edd52d134312b738bcfd05729a32c980.glb",
+            "body": 37404,
+            "transfer": 37704
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/models/88a28fae22960ba24a74b6eaf467bd26bff34f8943e52c37be0725c9169b045f.glb",
+            "body": 26196,
+            "transfer": 26496
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/models/9f68f0d5fab99c2503a0b151cfce5865681937b3d06194e13c24dc1eda0fa66a.glb",
+            "body": 70984,
+            "transfer": 71284
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/models/3d5497250923f7858e0693c1027462592bc066952ad0c010df28aa0cb62c24aa.glb",
+            "body": 15016,
+            "transfer": 15316
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/models/9e69f0d7242efd9cd38978735f89ffd899f5e12a8091a17457e1d9843fbc0611.glb",
+            "body": 48588,
+            "transfer": 48888
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/models/dadc53c65e93676065394489c251ad588c84087640f78624df9a64180df1c009.glb",
+            "body": 104544,
+            "transfer": 104844
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/models/9ba73bd3da6869340575ce5857bcb98b8ddfdd2b9c449c3d55e94c93d47908be.glb",
+            "body": 48596,
+            "transfer": 48896
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/models/c8aeb532b334e63a6a5a49021111f15a27bfd444e760a12eea962701f8b20300.glb",
+            "body": 26220,
+            "transfer": 26520
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/loungechair.glb",
+            "body": 9648,
+            "transfer": 9948
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/onboard/security-door-lod0.glb",
+            "body": 16140,
+            "transfer": 16440
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Door_Double.glb",
+            "body": 36612,
+            "transfer": 36912
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/chairdesk.glb",
+            "body": 39016,
+            "transfer": 39316
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/shelf.glb",
+            "body": 60064,
+            "transfer": 60364
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/fridge.glb",
+            "body": 14412,
+            "transfer": 14712
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/kitchensink.glb",
+            "body": 23480,
+            "transfer": 23780
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/creformTallRack.glb",
+            "body": 149928,
+            "transfer": 150228
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/material.glb",
+            "body": 62796,
+            "transfer": 63096
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/wheelBin.glb",
+            "body": 18480,
+            "transfer": 18780
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/lamproundfloor.glb",
+            "body": 6600,
+            "transfer": 6900
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/bench.glb",
+            "body": 10756,
+            "transfer": 11056
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/pottedplant.glb",
+            "body": 7576,
+            "transfer": 7876
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/onboard/tv-with-a-wall-mount.glb",
+            "body": 557592,
+            "transfer": 557892
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Bed_Single.glb",
+            "body": 18576,
+            "transfer": 18876
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/food-kit/cup-coffee.glb",
+            "body": 18616,
+            "transfer": 18916
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/kitchencoffeemachine.glb",
+            "body": 13332,
+            "transfer": 13632
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/food-kit/donut.glb",
+            "body": 22104,
+            "transfer": 22404
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/food-kit/plate.glb",
+            "body": 19216,
+            "transfer": 19516
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/food-kit/soda-can.glb",
+            "body": 27124,
+            "transfer": 27424
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Shelf_2.glb",
+            "body": 7536,
+            "transfer": 7836
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/genexpert/genexpert-infinity-80.glb",
+            "body": 984184,
+            "transfer": 984484
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/genexpert/genexpert-16.glb",
+            "body": 1113824,
+            "transfer": 1114124
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/yellowBin.glb",
+            "body": 15268,
+            "transfer": 15568
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Kitchen_Sink.glb",
+            "body": 24444,
+            "transfer": 24744
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/plasticBoxSmall.glb",
+            "body": 13040,
+            "transfer": 13340
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/gloveHolder.glb",
+            "body": 22960,
+            "transfer": 23260
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/plasticBoxLarge.glb",
+            "body": 13032,
+            "transfer": 13332
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/kitchenfridgesmall.glb",
+            "body": 12988,
+            "transfer": 13288
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Fork.glb",
+            "body": 4520,
+            "transfer": 4820
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Houseplant_1.glb",
+            "body": 8964,
+            "transfer": 9264
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Houseplant_6.glb",
+            "body": 15080,
+            "transfer": 15380
+          }
+        ]
+      },
+      "heap": {
+        "usedSize": 74735408,
+        "totalSize": 80707584,
+        "embedderHeapUsedSize": 9324912,
+        "backingStorageSize": 111985926
+      }
+    },
+    {
+      "repetition": 0,
+      "cache": "warm",
+      "lobbyMs": 2509.2045,
+      "matchMs": 3927.1933750000007,
+      "transfer": 10180395,
+      "requests": 369,
+      "resources": {
+        "meshes": 3811,
+        "geometries": 1981,
+        "textures": 145,
+        "skinMeshes": 122,
+        "skeletons": 18,
+        "boneGroups": 18,
+        "clips": 65,
+        "clipBytes": 1888480,
+        "gpu": {
+          "geometries": 545,
+          "textures": 114
+        },
+        "textureImages": [
+          {
+            "name": "",
+            "w": 128,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 128,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "WhitePlaster02/Color/1,1",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "WhitePlaster02/NormalGL/1,1",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "WhitePlaster02/Roughness/1,1",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "fine-steel-brushing",
+            "w": 128,
+            "h": 128
+          },
+          {
+            "name": "Fabric045/Color/0.65,0.65",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Fabric045/NormalGL/0.65,0.65",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Fabric045/Roughness/0.65,0.65",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "WhitePlaster02/Color/0.6,0.6",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "WhitePlaster02/NormalGL/0.6,0.6",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "WhitePlaster02/Roughness/0.6,0.6",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "floor5-vinyl-grain",
+            "w": 128,
+            "h": 128
+          },
+          {
+            "name": "floor5-vinyl-roughness",
+            "w": 128,
+            "h": 128
+          },
+          {
+            "name": "Concrete034/Color/1.1,0.55",
+            "w": 1024,
+            "h": 512
+          },
+          {
+            "name": "Concrete034/NormalGL/1.1,0.55",
+            "w": 1024,
+            "h": 512
+          },
+          {
+            "name": "Concrete034/Roughness/1.1,0.55",
+            "w": 1024,
+            "h": 512
+          },
+          {
+            "name": "floor5-dark-tile",
+            "w": 256,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 1024,
+            "h": 512
+          },
+          {
+            "name": "colormap",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "colormap",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "colormap",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "colormap",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "Image_0",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Image_2",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Image_1",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "fictional-equipment-printer",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "colormap",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 1024,
+            "h": 512
+          },
+          {
+            "name": "fictional-equipment-plate",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "fictional-equipment-console",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 64
+          },
+          {
+            "name": "fictional-equipment-array",
+            "w": 1024,
+            "h": 650
+          },
+          {
+            "name": "fictional-equipment-screen",
+            "w": 1024,
+            "h": 576
+          },
+          {
+            "name": "",
+            "w": 64,
+            "h": 64
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 896
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 896
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 896
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 896
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 896
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 896
+          },
+          {
+            "name": "floor5-botanical-voile",
+            "w": 512,
+            "h": 768
+          },
+          {
+            "name": "",
+            "w": 2048,
+            "h": 864
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 576
+          },
+          {
+            "name": "",
+            "w": 64,
+            "h": 64
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "T_Eye_Brown",
+            "w": 256,
+            "h": 256
+          },
+          {
+            "name": "T_Superhero_Male_Ligh",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "T_Superhero_Male_Normal",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "",
+            "w": 64,
+            "h": 64
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 64,
+            "h": 64
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 64,
+            "h": 64
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "T_Eye_Brown",
+            "w": 256,
+            "h": 256
+          },
+          {
+            "name": "T_Superhero_Female_Light_BaseColor",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "T_Superhero_Female_Normal",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "business_man_albedo",
+            "w": 2048,
+            "h": 2048
+          },
+          {
+            "name": "business_man_orm(AO_rough_metal)",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "business_man_normal",
+            "w": 2048,
+            "h": 2048
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "texture_0",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "texture_0_metallic_roughness",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Image_0",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Image_3",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Image_2",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Image_1",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "00000213833318D0",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 64,
+            "h": 64
+          },
+          {
+            "name": "",
+            "w": 128,
+            "h": 128
+          },
+          {
+            "name": "fitted-work-glove-color",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "fitted-work-glove-normal",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "fitted-work-glove-roughness",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "tailored-ripstop-sleeve-color",
+            "w": 256,
+            "h": 256
+          },
+          {
+            "name": "tailored-ripstop-sleeve-normal",
+            "w": 256,
+            "h": 256
+          },
+          {
+            "name": "tailored-ripstop-sleeve-roughness",
+            "w": 256,
+            "h": 256
+          }
+        ],
+        "audioBytes": 13362496,
+        "assets": [
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/Danceman/Danceman.glb.gz",
+            "body": 1810602,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/zombies/hollow.glb.gz",
+            "body": 3268124,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/zombies/tattered.glb.gz",
+            "body": 2903692,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/footstep_carpet_000.ogg",
+            "body": 6353,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/footstep_carpet_001.ogg",
+            "body": 6411,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/footstep_carpet_002.ogg",
+            "body": 6411,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/footstep_concrete_000.ogg",
+            "body": 5808,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/footstep_concrete_001.ogg",
+            "body": 6308,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/footstep_concrete_002.ogg",
+            "body": 6255,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/impactMetal_light_000.ogg",
+            "body": 7651,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/impactMetal_light_001.ogg",
+            "body": 6967,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/impactMetal_medium_000.ogg",
+            "body": 7117,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/impactSoft_medium_000.ogg",
+            "body": 5351,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/impactGeneric_light_000.ogg",
+            "body": 5827,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/explosionCrunch_000.ogg",
+            "body": 28274,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/lowFrequency_explosion_000.ogg",
+            "body": 14317,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/laserSmall_000.ogg",
+            "body": 7286,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/computerNoise_000.ogg",
+            "body": 119024,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/prepare-to-fight.mp3",
+            "body": 31599,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/danceman.mp3",
+            "body": 76612,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/loungechair.glb",
+            "body": 9648,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/onboard/security-door-lod0.glb",
+            "body": 16140,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Door_Double.glb",
+            "body": 36612,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/chairdesk.glb",
+            "body": 39016,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/shelf.glb",
+            "body": 60064,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/fridge.glb",
+            "body": 14412,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/kitchensink.glb",
+            "body": 23480,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/creformTallRack.glb",
+            "body": 149928,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/material.glb",
+            "body": 62796,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/wheelBin.glb",
+            "body": 18480,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/lamproundfloor.glb",
+            "body": 6600,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/bench.glb",
+            "body": 10756,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/pottedplant.glb",
+            "body": 7576,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/onboard/tv-with-a-wall-mount.glb",
+            "body": 557592,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Bed_Single.glb",
+            "body": 18576,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/food-kit/cup-coffee.glb",
+            "body": 18616,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/kitchencoffeemachine.glb",
+            "body": 13332,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/food-kit/plate.glb",
+            "body": 19216,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/food-kit/donut.glb",
+            "body": 22104,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/food-kit/soda-can.glb",
+            "body": 27124,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Shelf_2.glb",
+            "body": 7536,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/genexpert/genexpert-infinity-80.glb",
+            "body": 984184,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/genexpert/genexpert-16.glb",
+            "body": 1113824,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/yellowBin.glb",
+            "body": 15268,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Kitchen_Sink.glb",
+            "body": 24444,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/plasticBoxSmall.glb",
+            "body": 13040,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/gloveHolder.glb",
+            "body": 22960,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/plasticBoxLarge.glb",
+            "body": 13032,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/kitchenfridgesmall.glb",
+            "body": 12988,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Fork.glb",
+            "body": 4520,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Houseplant_1.glb",
+            "body": 8964,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Houseplant_6.glb",
+            "body": 15080,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Houseplant_7.glb",
+            "body": 14896,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Houseplant_8.glb",
+            "body": 17836,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Houseplant_4.glb",
+            "body": 8840,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Houseplant_2.glb",
+            "body": 10672,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Spoon.glb",
+            "body": 3528,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Door_7.glb",
+            "body": 10152,
+            "transfer": 0
+          }
+        ]
+      },
+      "heap": {
+        "usedSize": 74758352,
+        "totalSize": 81231872,
+        "embedderHeapUsedSize": 9202744,
+        "backingStorageSize": 111984892
+      }
+    },
+    {
+      "repetition": 1,
+      "cache": "cold",
+      "lobbyMs": 2689.6178330000002,
+      "matchMs": 4105.242667,
+      "transfer": 46452224,
+      "requests": 382,
+      "resources": {
+        "meshes": 3811,
+        "geometries": 1981,
+        "textures": 145,
+        "skinMeshes": 122,
+        "skeletons": 18,
+        "boneGroups": 18,
+        "clips": 65,
+        "clipBytes": 1888480,
+        "gpu": {
+          "geometries": 545,
+          "textures": 114
+        },
+        "textureImages": [
+          {
+            "name": "",
+            "w": 128,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 128,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "WhitePlaster02/Color/1,1",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "WhitePlaster02/NormalGL/1,1",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "WhitePlaster02/Roughness/1,1",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "fine-steel-brushing",
+            "w": 128,
+            "h": 128
+          },
+          {
+            "name": "Fabric045/Color/0.65,0.65",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Fabric045/NormalGL/0.65,0.65",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Fabric045/Roughness/0.65,0.65",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "WhitePlaster02/Color/0.6,0.6",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "WhitePlaster02/NormalGL/0.6,0.6",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "WhitePlaster02/Roughness/0.6,0.6",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "floor5-vinyl-grain",
+            "w": 128,
+            "h": 128
+          },
+          {
+            "name": "floor5-vinyl-roughness",
+            "w": 128,
+            "h": 128
+          },
+          {
+            "name": "Concrete034/Color/1.1,0.55",
+            "w": 1024,
+            "h": 512
+          },
+          {
+            "name": "Concrete034/NormalGL/1.1,0.55",
+            "w": 1024,
+            "h": 512
+          },
+          {
+            "name": "Concrete034/Roughness/1.1,0.55",
+            "w": 1024,
+            "h": 512
+          },
+          {
+            "name": "floor5-dark-tile",
+            "w": 256,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 1024,
+            "h": 512
+          },
+          {
+            "name": "colormap",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "colormap",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "colormap",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "colormap",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "Image_0",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Image_2",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Image_1",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "fictional-equipment-printer",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "colormap",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 1024,
+            "h": 512
+          },
+          {
+            "name": "fictional-equipment-plate",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "fictional-equipment-console",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 64
+          },
+          {
+            "name": "fictional-equipment-array",
+            "w": 1024,
+            "h": 650
+          },
+          {
+            "name": "fictional-equipment-screen",
+            "w": 1024,
+            "h": 576
+          },
+          {
+            "name": "",
+            "w": 64,
+            "h": 64
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 896
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 896
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 896
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 896
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 896
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 896
+          },
+          {
+            "name": "floor5-botanical-voile",
+            "w": 512,
+            "h": 768
+          },
+          {
+            "name": "",
+            "w": 2048,
+            "h": 864
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 576
+          },
+          {
+            "name": "",
+            "w": 64,
+            "h": 64
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "T_Eye_Brown",
+            "w": 256,
+            "h": 256
+          },
+          {
+            "name": "T_Superhero_Male_Ligh",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "T_Superhero_Male_Normal",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "",
+            "w": 64,
+            "h": 64
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 64,
+            "h": 64
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 64,
+            "h": 64
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "T_Eye_Brown",
+            "w": 256,
+            "h": 256
+          },
+          {
+            "name": "T_Superhero_Female_Light_BaseColor",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "T_Superhero_Female_Normal",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "business_man_albedo",
+            "w": 2048,
+            "h": 2048
+          },
+          {
+            "name": "business_man_orm(AO_rough_metal)",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "business_man_normal",
+            "w": 2048,
+            "h": 2048
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "texture_0",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "texture_0_metallic_roughness",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Image_0",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Image_3",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Image_2",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Image_1",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "00000213833318D0",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 64,
+            "h": 64
+          },
+          {
+            "name": "",
+            "w": 128,
+            "h": 128
+          },
+          {
+            "name": "fitted-work-glove-color",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "fitted-work-glove-normal",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "fitted-work-glove-roughness",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "tailored-ripstop-sleeve-color",
+            "w": 256,
+            "h": 256
+          },
+          {
+            "name": "tailored-ripstop-sleeve-normal",
+            "w": 256,
+            "h": 256
+          },
+          {
+            "name": "tailored-ripstop-sleeve-roughness",
+            "w": 256,
+            "h": 256
+          }
+        ],
+        "audioBytes": 13362496,
+        "assets": [
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/Danceman/Danceman.glb.gz",
+            "body": 1810602,
+            "transfer": 1810902
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/zombies/tattered.glb.gz",
+            "body": 2903692,
+            "transfer": 2903992
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/zombies/hollow.glb.gz",
+            "body": 3268124,
+            "transfer": 3268424
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/footstep_carpet_000.ogg",
+            "body": 6353,
+            "transfer": 6653
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/footstep_carpet_001.ogg",
+            "body": 6411,
+            "transfer": 6711
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/footstep_carpet_002.ogg",
+            "body": 6411,
+            "transfer": 6711
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/footstep_concrete_000.ogg",
+            "body": 5808,
+            "transfer": 6108
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/footstep_concrete_001.ogg",
+            "body": 6308,
+            "transfer": 6608
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/footstep_concrete_002.ogg",
+            "body": 6255,
+            "transfer": 6555
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/impactMetal_light_000.ogg",
+            "body": 7651,
+            "transfer": 7951
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/impactMetal_light_001.ogg",
+            "body": 6967,
+            "transfer": 7267
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/impactMetal_medium_000.ogg",
+            "body": 7117,
+            "transfer": 7417
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/impactSoft_medium_000.ogg",
+            "body": 5351,
+            "transfer": 5651
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/impactGeneric_light_000.ogg",
+            "body": 5827,
+            "transfer": 6127
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/explosionCrunch_000.ogg",
+            "body": 28274,
+            "transfer": 28574
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/lowFrequency_explosion_000.ogg",
+            "body": 14317,
+            "transfer": 14617
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/laserSmall_000.ogg",
+            "body": 7286,
+            "transfer": 7586
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/computerNoise_000.ogg",
+            "body": 119024,
+            "transfer": 119324
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/prepare-to-fight.mp3",
+            "body": 31599,
+            "transfer": 31899
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/danceman.mp3",
+            "body": 76612,
+            "transfer": 76912
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/models/e445d3f7dbeee8152d0078e8729727caf4d039e3e23b21d9d4290b51c53b87c1.glb",
+            "body": 5160,
+            "transfer": 5460
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/models/9c4b643b35b92a91a5def38040b8847b6fe2619668e8fa3830832a43c41e4249.glb",
+            "body": 31440,
+            "transfer": 31740
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/models/3b5d4800c66d183cc683d417d02be848bed2702ef62db6137aa07bc08463eea4.glb",
+            "body": 29008,
+            "transfer": 29308
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/models/1c72ef12bf0604e0ece223bd1142bfcf4fcbecb0770b387461d9b3a478a6f6c7.glb",
+            "body": 21012,
+            "transfer": 21312
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/models/7ad94bef7ed7f3afc20f4fdb54e54c6c2ac12c31ccaf375bbb91808373a31131.glb",
+            "body": 5016,
+            "transfer": 5316
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/models/c78f8d61efd9d947ec37a76160e0cc48edd52d134312b738bcfd05729a32c980.glb",
+            "body": 37404,
+            "transfer": 37704
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/models/88a28fae22960ba24a74b6eaf467bd26bff34f8943e52c37be0725c9169b045f.glb",
+            "body": 26196,
+            "transfer": 26496
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/models/9f68f0d5fab99c2503a0b151cfce5865681937b3d06194e13c24dc1eda0fa66a.glb",
+            "body": 70984,
+            "transfer": 71284
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/models/3d5497250923f7858e0693c1027462592bc066952ad0c010df28aa0cb62c24aa.glb",
+            "body": 15016,
+            "transfer": 15316
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/models/9e69f0d7242efd9cd38978735f89ffd899f5e12a8091a17457e1d9843fbc0611.glb",
+            "body": 48588,
+            "transfer": 48888
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/models/dadc53c65e93676065394489c251ad588c84087640f78624df9a64180df1c009.glb",
+            "body": 104544,
+            "transfer": 104844
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/models/9ba73bd3da6869340575ce5857bcb98b8ddfdd2b9c449c3d55e94c93d47908be.glb",
+            "body": 48596,
+            "transfer": 48896
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/models/c8aeb532b334e63a6a5a49021111f15a27bfd444e760a12eea962701f8b20300.glb",
+            "body": 26220,
+            "transfer": 26520
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/loungechair.glb",
+            "body": 9648,
+            "transfer": 9948
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/onboard/security-door-lod0.glb",
+            "body": 16140,
+            "transfer": 16440
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Door_Double.glb",
+            "body": 36612,
+            "transfer": 36912
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/chairdesk.glb",
+            "body": 39016,
+            "transfer": 39316
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/shelf.glb",
+            "body": 60064,
+            "transfer": 60364
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/fridge.glb",
+            "body": 14412,
+            "transfer": 14712
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/kitchensink.glb",
+            "body": 23480,
+            "transfer": 23780
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/creformTallRack.glb",
+            "body": 149928,
+            "transfer": 150228
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/material.glb",
+            "body": 62796,
+            "transfer": 63096
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/wheelBin.glb",
+            "body": 18480,
+            "transfer": 18780
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/lamproundfloor.glb",
+            "body": 6600,
+            "transfer": 6900
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/bench.glb",
+            "body": 10756,
+            "transfer": 11056
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/pottedplant.glb",
+            "body": 7576,
+            "transfer": 7876
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/onboard/tv-with-a-wall-mount.glb",
+            "body": 557592,
+            "transfer": 557892
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Bed_Single.glb",
+            "body": 18576,
+            "transfer": 18876
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/food-kit/cup-coffee.glb",
+            "body": 18616,
+            "transfer": 18916
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/food-kit/plate.glb",
+            "body": 19216,
+            "transfer": 19516
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/kitchencoffeemachine.glb",
+            "body": 13332,
+            "transfer": 13632
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/food-kit/donut.glb",
+            "body": 22104,
+            "transfer": 22404
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/food-kit/soda-can.glb",
+            "body": 27124,
+            "transfer": 27424
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Shelf_2.glb",
+            "body": 7536,
+            "transfer": 7836
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/genexpert/genexpert-infinity-80.glb",
+            "body": 984184,
+            "transfer": 984484
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/genexpert/genexpert-16.glb",
+            "body": 1113824,
+            "transfer": 1114124
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/yellowBin.glb",
+            "body": 15268,
+            "transfer": 15568
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Kitchen_Sink.glb",
+            "body": 24444,
+            "transfer": 24744
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/plasticBoxSmall.glb",
+            "body": 13040,
+            "transfer": 13340
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/gloveHolder.glb",
+            "body": 22960,
+            "transfer": 23260
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/plasticBoxLarge.glb",
+            "body": 13032,
+            "transfer": 13332
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Fork.glb",
+            "body": 4520,
+            "transfer": 4820
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/kitchenfridgesmall.glb",
+            "body": 12988,
+            "transfer": 13288
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Houseplant_1.glb",
+            "body": 8964,
+            "transfer": 9264
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Houseplant_6.glb",
+            "body": 15080,
+            "transfer": 15380
+          }
+        ]
+      },
+      "heap": {
+        "usedSize": 75062676,
+        "totalSize": 80183296,
+        "embedderHeapUsedSize": 9300472,
+        "backingStorageSize": 111985913
+      }
+    },
+    {
+      "repetition": 1,
+      "cache": "warm",
+      "lobbyMs": 2492.4965420000008,
+      "matchMs": 3900.310375000001,
+      "transfer": 10180395,
+      "requests": 369,
+      "resources": {
+        "meshes": 3811,
+        "geometries": 1981,
+        "textures": 145,
+        "skinMeshes": 122,
+        "skeletons": 18,
+        "boneGroups": 18,
+        "clips": 65,
+        "clipBytes": 1888480,
+        "gpu": {
+          "geometries": 545,
+          "textures": 114
+        },
+        "textureImages": [
+          {
+            "name": "",
+            "w": 128,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 128,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "WhitePlaster02/Color/1,1",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "WhitePlaster02/NormalGL/1,1",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "WhitePlaster02/Roughness/1,1",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "fine-steel-brushing",
+            "w": 128,
+            "h": 128
+          },
+          {
+            "name": "Fabric045/Color/0.65,0.65",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Fabric045/NormalGL/0.65,0.65",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Fabric045/Roughness/0.65,0.65",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "WhitePlaster02/Color/0.6,0.6",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "WhitePlaster02/NormalGL/0.6,0.6",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "WhitePlaster02/Roughness/0.6,0.6",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "floor5-vinyl-grain",
+            "w": 128,
+            "h": 128
+          },
+          {
+            "name": "floor5-vinyl-roughness",
+            "w": 128,
+            "h": 128
+          },
+          {
+            "name": "Concrete034/Color/1.1,0.55",
+            "w": 1024,
+            "h": 512
+          },
+          {
+            "name": "Concrete034/NormalGL/1.1,0.55",
+            "w": 1024,
+            "h": 512
+          },
+          {
+            "name": "Concrete034/Roughness/1.1,0.55",
+            "w": 1024,
+            "h": 512
+          },
+          {
+            "name": "floor5-dark-tile",
+            "w": 256,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 1024,
+            "h": 512
+          },
+          {
+            "name": "colormap",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "colormap",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "colormap",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "colormap",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "Image_0",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Image_2",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Image_1",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "fictional-equipment-printer",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "colormap",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 1024,
+            "h": 512
+          },
+          {
+            "name": "fictional-equipment-plate",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "fictional-equipment-console",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 64
+          },
+          {
+            "name": "fictional-equipment-array",
+            "w": 1024,
+            "h": 650
+          },
+          {
+            "name": "fictional-equipment-screen",
+            "w": 1024,
+            "h": 576
+          },
+          {
+            "name": "",
+            "w": 64,
+            "h": 64
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 896
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 896
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 896
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 896
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 896
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 896
+          },
+          {
+            "name": "floor5-botanical-voile",
+            "w": 512,
+            "h": 768
+          },
+          {
+            "name": "",
+            "w": 2048,
+            "h": 864
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 576
+          },
+          {
+            "name": "",
+            "w": 64,
+            "h": 64
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "T_Eye_Brown",
+            "w": 256,
+            "h": 256
+          },
+          {
+            "name": "T_Superhero_Male_Ligh",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "T_Superhero_Male_Normal",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "",
+            "w": 64,
+            "h": 64
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 64,
+            "h": 64
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 64,
+            "h": 64
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "T_Eye_Brown",
+            "w": 256,
+            "h": 256
+          },
+          {
+            "name": "T_Superhero_Female_Light_BaseColor",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "T_Superhero_Female_Normal",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "business_man_albedo",
+            "w": 2048,
+            "h": 2048
+          },
+          {
+            "name": "business_man_orm(AO_rough_metal)",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "business_man_normal",
+            "w": 2048,
+            "h": 2048
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "texture_0",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "texture_0_metallic_roughness",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Image_0",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Image_3",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Image_2",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Image_1",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "00000213833318D0",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 64,
+            "h": 64
+          },
+          {
+            "name": "",
+            "w": 128,
+            "h": 128
+          },
+          {
+            "name": "fitted-work-glove-color",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "fitted-work-glove-normal",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "fitted-work-glove-roughness",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "tailored-ripstop-sleeve-color",
+            "w": 256,
+            "h": 256
+          },
+          {
+            "name": "tailored-ripstop-sleeve-normal",
+            "w": 256,
+            "h": 256
+          },
+          {
+            "name": "tailored-ripstop-sleeve-roughness",
+            "w": 256,
+            "h": 256
+          }
+        ],
+        "audioBytes": 13362496,
+        "assets": [
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/Danceman/Danceman.glb.gz",
+            "body": 1810602,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/zombies/hollow.glb.gz",
+            "body": 3268124,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/zombies/tattered.glb.gz",
+            "body": 2903692,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/footstep_carpet_000.ogg",
+            "body": 6353,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/footstep_carpet_001.ogg",
+            "body": 6411,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/footstep_carpet_002.ogg",
+            "body": 6411,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/footstep_concrete_000.ogg",
+            "body": 5808,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/footstep_concrete_001.ogg",
+            "body": 6308,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/footstep_concrete_002.ogg",
+            "body": 6255,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/impactMetal_light_000.ogg",
+            "body": 7651,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/impactMetal_light_001.ogg",
+            "body": 6967,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/impactMetal_medium_000.ogg",
+            "body": 7117,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/impactSoft_medium_000.ogg",
+            "body": 5351,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/impactGeneric_light_000.ogg",
+            "body": 5827,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/explosionCrunch_000.ogg",
+            "body": 28274,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/lowFrequency_explosion_000.ogg",
+            "body": 14317,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/laserSmall_000.ogg",
+            "body": 7286,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/computerNoise_000.ogg",
+            "body": 119024,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/prepare-to-fight.mp3",
+            "body": 31599,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/danceman.mp3",
+            "body": 76612,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/loungechair.glb",
+            "body": 9648,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/onboard/security-door-lod0.glb",
+            "body": 16140,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Door_Double.glb",
+            "body": 36612,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/chairdesk.glb",
+            "body": 39016,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/shelf.glb",
+            "body": 60064,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/fridge.glb",
+            "body": 14412,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/kitchensink.glb",
+            "body": 23480,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/creformTallRack.glb",
+            "body": 149928,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/material.glb",
+            "body": 62796,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/wheelBin.glb",
+            "body": 18480,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/lamproundfloor.glb",
+            "body": 6600,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/bench.glb",
+            "body": 10756,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/pottedplant.glb",
+            "body": 7576,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/onboard/tv-with-a-wall-mount.glb",
+            "body": 557592,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Bed_Single.glb",
+            "body": 18576,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/food-kit/cup-coffee.glb",
+            "body": 18616,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/kitchencoffeemachine.glb",
+            "body": 13332,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/food-kit/plate.glb",
+            "body": 19216,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/food-kit/donut.glb",
+            "body": 22104,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/food-kit/soda-can.glb",
+            "body": 27124,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Shelf_2.glb",
+            "body": 7536,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/genexpert/genexpert-infinity-80.glb",
+            "body": 984184,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/genexpert/genexpert-16.glb",
+            "body": 1113824,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/yellowBin.glb",
+            "body": 15268,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Kitchen_Sink.glb",
+            "body": 24444,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/plasticBoxSmall.glb",
+            "body": 13040,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/gloveHolder.glb",
+            "body": 22960,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/plasticBoxLarge.glb",
+            "body": 13032,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/kitchenfridgesmall.glb",
+            "body": 12988,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Fork.glb",
+            "body": 4520,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Houseplant_1.glb",
+            "body": 8964,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Houseplant_6.glb",
+            "body": 15080,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Houseplant_7.glb",
+            "body": 14896,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Houseplant_8.glb",
+            "body": 17836,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Houseplant_4.glb",
+            "body": 8840,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Houseplant_2.glb",
+            "body": 10672,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Spoon.glb",
+            "body": 3528,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Door_7.glb",
+            "body": 10152,
+            "transfer": 0
+          }
+        ]
+      },
+      "heap": {
+        "usedSize": 75082392,
+        "totalSize": 82018304,
+        "embedderHeapUsedSize": 9223184,
+        "backingStorageSize": 111984877
+      }
+    },
+    {
+      "repetition": 2,
+      "cache": "cold",
+      "lobbyMs": 2633.1248750000013,
+      "matchMs": 4081.174583,
+      "transfer": 46452222,
+      "requests": 382,
+      "resources": {
+        "meshes": 3811,
+        "geometries": 1981,
+        "textures": 145,
+        "skinMeshes": 122,
+        "skeletons": 18,
+        "boneGroups": 18,
+        "clips": 65,
+        "clipBytes": 1888480,
+        "gpu": {
+          "geometries": 545,
+          "textures": 114
+        },
+        "textureImages": [
+          {
+            "name": "",
+            "w": 128,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 128,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "WhitePlaster02/Color/1,1",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "WhitePlaster02/NormalGL/1,1",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "WhitePlaster02/Roughness/1,1",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "fine-steel-brushing",
+            "w": 128,
+            "h": 128
+          },
+          {
+            "name": "Fabric045/Color/0.65,0.65",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Fabric045/NormalGL/0.65,0.65",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Fabric045/Roughness/0.65,0.65",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "WhitePlaster02/Color/0.6,0.6",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "WhitePlaster02/NormalGL/0.6,0.6",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "WhitePlaster02/Roughness/0.6,0.6",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "floor5-vinyl-grain",
+            "w": 128,
+            "h": 128
+          },
+          {
+            "name": "floor5-vinyl-roughness",
+            "w": 128,
+            "h": 128
+          },
+          {
+            "name": "Concrete034/Color/1.1,0.55",
+            "w": 1024,
+            "h": 512
+          },
+          {
+            "name": "Concrete034/NormalGL/1.1,0.55",
+            "w": 1024,
+            "h": 512
+          },
+          {
+            "name": "Concrete034/Roughness/1.1,0.55",
+            "w": 1024,
+            "h": 512
+          },
+          {
+            "name": "floor5-dark-tile",
+            "w": 256,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 1024,
+            "h": 512
+          },
+          {
+            "name": "colormap",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "colormap",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "colormap",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "colormap",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "Image_0",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Image_2",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Image_1",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "fictional-equipment-printer",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "colormap",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 1024,
+            "h": 512
+          },
+          {
+            "name": "fictional-equipment-plate",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "fictional-equipment-console",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 64
+          },
+          {
+            "name": "fictional-equipment-array",
+            "w": 1024,
+            "h": 650
+          },
+          {
+            "name": "fictional-equipment-screen",
+            "w": 1024,
+            "h": 576
+          },
+          {
+            "name": "",
+            "w": 64,
+            "h": 64
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 896
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 896
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 896
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 896
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 896
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 896
+          },
+          {
+            "name": "floor5-botanical-voile",
+            "w": 512,
+            "h": 768
+          },
+          {
+            "name": "",
+            "w": 2048,
+            "h": 864
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 576
+          },
+          {
+            "name": "",
+            "w": 64,
+            "h": 64
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "T_Eye_Brown",
+            "w": 256,
+            "h": 256
+          },
+          {
+            "name": "T_Superhero_Male_Ligh",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "T_Superhero_Male_Normal",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "",
+            "w": 64,
+            "h": 64
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 64,
+            "h": 64
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 64,
+            "h": 64
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "T_Eye_Brown",
+            "w": 256,
+            "h": 256
+          },
+          {
+            "name": "T_Superhero_Female_Light_BaseColor",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "T_Superhero_Female_Normal",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "business_man_albedo",
+            "w": 2048,
+            "h": 2048
+          },
+          {
+            "name": "business_man_orm(AO_rough_metal)",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "business_man_normal",
+            "w": 2048,
+            "h": 2048
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "texture_0",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "texture_0_metallic_roughness",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Image_0",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Image_3",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Image_2",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Image_1",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "00000213833318D0",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 64,
+            "h": 64
+          },
+          {
+            "name": "",
+            "w": 128,
+            "h": 128
+          },
+          {
+            "name": "fitted-work-glove-color",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "fitted-work-glove-normal",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "fitted-work-glove-roughness",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "tailored-ripstop-sleeve-color",
+            "w": 256,
+            "h": 256
+          },
+          {
+            "name": "tailored-ripstop-sleeve-normal",
+            "w": 256,
+            "h": 256
+          },
+          {
+            "name": "tailored-ripstop-sleeve-roughness",
+            "w": 256,
+            "h": 256
+          }
+        ],
+        "audioBytes": 13362496,
+        "assets": [
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/Danceman/Danceman.glb.gz",
+            "body": 1810602,
+            "transfer": 1810902
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/zombies/hollow.glb.gz",
+            "body": 3268124,
+            "transfer": 3268424
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/zombies/tattered.glb.gz",
+            "body": 2903692,
+            "transfer": 2903992
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/footstep_carpet_000.ogg",
+            "body": 6353,
+            "transfer": 6653
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/footstep_carpet_001.ogg",
+            "body": 6411,
+            "transfer": 6711
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/footstep_carpet_002.ogg",
+            "body": 6411,
+            "transfer": 6711
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/footstep_concrete_000.ogg",
+            "body": 5808,
+            "transfer": 6108
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/footstep_concrete_001.ogg",
+            "body": 6308,
+            "transfer": 6608
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/footstep_concrete_002.ogg",
+            "body": 6255,
+            "transfer": 6555
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/impactMetal_light_000.ogg",
+            "body": 7651,
+            "transfer": 7951
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/impactMetal_light_001.ogg",
+            "body": 6967,
+            "transfer": 7267
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/impactMetal_medium_000.ogg",
+            "body": 7117,
+            "transfer": 7417
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/impactGeneric_light_000.ogg",
+            "body": 5827,
+            "transfer": 6127
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/explosionCrunch_000.ogg",
+            "body": 28274,
+            "transfer": 28574
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/impactSoft_medium_000.ogg",
+            "body": 5351,
+            "transfer": 5651
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/lowFrequency_explosion_000.ogg",
+            "body": 14317,
+            "transfer": 14617
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/laserSmall_000.ogg",
+            "body": 7286,
+            "transfer": 7586
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/computerNoise_000.ogg",
+            "body": 119024,
+            "transfer": 119324
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/prepare-to-fight.mp3",
+            "body": 31599,
+            "transfer": 31899
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/danceman.mp3",
+            "body": 76612,
+            "transfer": 76912
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/models/e445d3f7dbeee8152d0078e8729727caf4d039e3e23b21d9d4290b51c53b87c1.glb",
+            "body": 5160,
+            "transfer": 5460
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/models/9c4b643b35b92a91a5def38040b8847b6fe2619668e8fa3830832a43c41e4249.glb",
+            "body": 31440,
+            "transfer": 31740
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/models/3b5d4800c66d183cc683d417d02be848bed2702ef62db6137aa07bc08463eea4.glb",
+            "body": 29008,
+            "transfer": 29308
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/models/1c72ef12bf0604e0ece223bd1142bfcf4fcbecb0770b387461d9b3a478a6f6c7.glb",
+            "body": 21012,
+            "transfer": 21312
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/models/7ad94bef7ed7f3afc20f4fdb54e54c6c2ac12c31ccaf375bbb91808373a31131.glb",
+            "body": 5016,
+            "transfer": 5316
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/models/c78f8d61efd9d947ec37a76160e0cc48edd52d134312b738bcfd05729a32c980.glb",
+            "body": 37404,
+            "transfer": 37704
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/models/88a28fae22960ba24a74b6eaf467bd26bff34f8943e52c37be0725c9169b045f.glb",
+            "body": 26196,
+            "transfer": 26496
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/models/9f68f0d5fab99c2503a0b151cfce5865681937b3d06194e13c24dc1eda0fa66a.glb",
+            "body": 70984,
+            "transfer": 71284
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/models/3d5497250923f7858e0693c1027462592bc066952ad0c010df28aa0cb62c24aa.glb",
+            "body": 15016,
+            "transfer": 15316
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/models/9e69f0d7242efd9cd38978735f89ffd899f5e12a8091a17457e1d9843fbc0611.glb",
+            "body": 48588,
+            "transfer": 48888
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/models/dadc53c65e93676065394489c251ad588c84087640f78624df9a64180df1c009.glb",
+            "body": 104544,
+            "transfer": 104844
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/models/9ba73bd3da6869340575ce5857bcb98b8ddfdd2b9c449c3d55e94c93d47908be.glb",
+            "body": 48596,
+            "transfer": 48896
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/models/c8aeb532b334e63a6a5a49021111f15a27bfd444e760a12eea962701f8b20300.glb",
+            "body": 26220,
+            "transfer": 26520
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/loungechair.glb",
+            "body": 9648,
+            "transfer": 9948
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/onboard/security-door-lod0.glb",
+            "body": 16140,
+            "transfer": 16440
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Door_Double.glb",
+            "body": 36612,
+            "transfer": 36912
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/chairdesk.glb",
+            "body": 39016,
+            "transfer": 39316
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/shelf.glb",
+            "body": 60064,
+            "transfer": 60364
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/fridge.glb",
+            "body": 14412,
+            "transfer": 14712
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/kitchensink.glb",
+            "body": 23480,
+            "transfer": 23780
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/creformTallRack.glb",
+            "body": 149928,
+            "transfer": 150228
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/material.glb",
+            "body": 62796,
+            "transfer": 63096
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/wheelBin.glb",
+            "body": 18480,
+            "transfer": 18780
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/lamproundfloor.glb",
+            "body": 6600,
+            "transfer": 6900
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/bench.glb",
+            "body": 10756,
+            "transfer": 11056
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/pottedplant.glb",
+            "body": 7576,
+            "transfer": 7876
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/onboard/tv-with-a-wall-mount.glb",
+            "body": 557592,
+            "transfer": 557892
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Bed_Single.glb",
+            "body": 18576,
+            "transfer": 18876
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/food-kit/cup-coffee.glb",
+            "body": 18616,
+            "transfer": 18916
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/kitchencoffeemachine.glb",
+            "body": 13332,
+            "transfer": 13632
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/food-kit/plate.glb",
+            "body": 19216,
+            "transfer": 19516
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/food-kit/donut.glb",
+            "body": 22104,
+            "transfer": 22404
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/food-kit/soda-can.glb",
+            "body": 27124,
+            "transfer": 27424
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Shelf_2.glb",
+            "body": 7536,
+            "transfer": 7836
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/genexpert/genexpert-infinity-80.glb",
+            "body": 984184,
+            "transfer": 984484
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/genexpert/genexpert-16.glb",
+            "body": 1113824,
+            "transfer": 1114124
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/yellowBin.glb",
+            "body": 15268,
+            "transfer": 15568
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Kitchen_Sink.glb",
+            "body": 24444,
+            "transfer": 24744
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/plasticBoxSmall.glb",
+            "body": 13040,
+            "transfer": 13340
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/gloveHolder.glb",
+            "body": 22960,
+            "transfer": 23260
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/plasticBoxLarge.glb",
+            "body": 13032,
+            "transfer": 13332
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/kitchenfridgesmall.glb",
+            "body": 12988,
+            "transfer": 13288
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Fork.glb",
+            "body": 4520,
+            "transfer": 4820
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Houseplant_1.glb",
+            "body": 8964,
+            "transfer": 9264
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Houseplant_6.glb",
+            "body": 15080,
+            "transfer": 15380
+          }
+        ]
+      },
+      "heap": {
+        "usedSize": 75154996,
+        "totalSize": 80445440,
+        "embedderHeapUsedSize": 9190576,
+        "backingStorageSize": 111985924
+      }
+    },
+    {
+      "repetition": 2,
+      "cache": "warm",
+      "lobbyMs": 2474.3255409999983,
+      "matchMs": 3903.8241659999985,
+      "transfer": 10180395,
+      "requests": 369,
+      "resources": {
+        "meshes": 3811,
+        "geometries": 1981,
+        "textures": 145,
+        "skinMeshes": 122,
+        "skeletons": 18,
+        "boneGroups": 18,
+        "clips": 65,
+        "clipBytes": 1888480,
+        "gpu": {
+          "geometries": 545,
+          "textures": 114
+        },
+        "textureImages": [
+          {
+            "name": "",
+            "w": 128,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 128,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "WhitePlaster02/Color/1,1",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "WhitePlaster02/NormalGL/1,1",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "WhitePlaster02/Roughness/1,1",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "fine-steel-brushing",
+            "w": 128,
+            "h": 128
+          },
+          {
+            "name": "Fabric045/Color/0.65,0.65",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Fabric045/NormalGL/0.65,0.65",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Fabric045/Roughness/0.65,0.65",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "WhitePlaster02/Color/0.6,0.6",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "WhitePlaster02/NormalGL/0.6,0.6",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "WhitePlaster02/Roughness/0.6,0.6",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "floor5-vinyl-grain",
+            "w": 128,
+            "h": 128
+          },
+          {
+            "name": "floor5-vinyl-roughness",
+            "w": 128,
+            "h": 128
+          },
+          {
+            "name": "Concrete034/Color/1.1,0.55",
+            "w": 1024,
+            "h": 512
+          },
+          {
+            "name": "Concrete034/NormalGL/1.1,0.55",
+            "w": 1024,
+            "h": 512
+          },
+          {
+            "name": "Concrete034/Roughness/1.1,0.55",
+            "w": 1024,
+            "h": 512
+          },
+          {
+            "name": "floor5-dark-tile",
+            "w": 256,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 128
+          },
+          {
+            "name": "",
+            "w": 1024,
+            "h": 512
+          },
+          {
+            "name": "colormap",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "colormap",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "colormap",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "colormap",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "Image_0",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Image_2",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Image_1",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "fictional-equipment-printer",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "colormap",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 1024,
+            "h": 512
+          },
+          {
+            "name": "fictional-equipment-plate",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "fictional-equipment-console",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 64
+          },
+          {
+            "name": "fictional-equipment-array",
+            "w": 1024,
+            "h": 650
+          },
+          {
+            "name": "fictional-equipment-screen",
+            "w": 1024,
+            "h": 576
+          },
+          {
+            "name": "",
+            "w": 64,
+            "h": 64
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 869
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 896
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 896
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 896
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 896
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 896
+          },
+          {
+            "name": "",
+            "w": 640,
+            "h": 896
+          },
+          {
+            "name": "floor5-botanical-voile",
+            "w": 512,
+            "h": 768
+          },
+          {
+            "name": "",
+            "w": 2048,
+            "h": 864
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 576
+          },
+          {
+            "name": "",
+            "w": 64,
+            "h": 64
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 192,
+            "h": 192
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "T_Eye_Brown",
+            "w": 256,
+            "h": 256
+          },
+          {
+            "name": "T_Superhero_Male_Ligh",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "T_Superhero_Male_Normal",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "",
+            "w": 64,
+            "h": 64
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 64,
+            "h": 64
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 64,
+            "h": 64
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "T_Eye_Brown",
+            "w": 256,
+            "h": 256
+          },
+          {
+            "name": "T_Superhero_Female_Light_BaseColor",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "T_Superhero_Female_Normal",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "business_man_albedo",
+            "w": 2048,
+            "h": 2048
+          },
+          {
+            "name": "business_man_orm(AO_rough_metal)",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "business_man_normal",
+            "w": 2048,
+            "h": 2048
+          },
+          {
+            "name": "",
+            "w": 256,
+            "h": 96
+          },
+          {
+            "name": "texture_0",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "texture_0_metallic_roughness",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Image_0",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Image_3",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Image_2",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "Image_1",
+            "w": 1024,
+            "h": 1024
+          },
+          {
+            "name": "00000213833318D0",
+            "w": 512,
+            "h": 256
+          },
+          {
+            "name": "",
+            "w": 64,
+            "h": 64
+          },
+          {
+            "name": "",
+            "w": 128,
+            "h": 128
+          },
+          {
+            "name": "fitted-work-glove-color",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "fitted-work-glove-normal",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "fitted-work-glove-roughness",
+            "w": 512,
+            "h": 512
+          },
+          {
+            "name": "tailored-ripstop-sleeve-color",
+            "w": 256,
+            "h": 256
+          },
+          {
+            "name": "tailored-ripstop-sleeve-normal",
+            "w": 256,
+            "h": 256
+          },
+          {
+            "name": "tailored-ripstop-sleeve-roughness",
+            "w": 256,
+            "h": 256
+          }
+        ],
+        "audioBytes": 13362496,
+        "assets": [
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/Danceman/Danceman.glb.gz",
+            "body": 1810602,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/zombies/tattered.glb.gz",
+            "body": 2903692,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/zombies/hollow.glb.gz",
+            "body": 3268124,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/footstep_carpet_000.ogg",
+            "body": 6353,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/footstep_carpet_001.ogg",
+            "body": 6411,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/footstep_carpet_002.ogg",
+            "body": 6411,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/footstep_concrete_000.ogg",
+            "body": 5808,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/footstep_concrete_001.ogg",
+            "body": 6308,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/footstep_concrete_002.ogg",
+            "body": 6255,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/impactMetal_light_000.ogg",
+            "body": 7651,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/impactMetal_light_001.ogg",
+            "body": 6967,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/impactMetal_medium_000.ogg",
+            "body": 7117,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/impactSoft_medium_000.ogg",
+            "body": 5351,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/impactGeneric_light_000.ogg",
+            "body": 5827,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/explosionCrunch_000.ogg",
+            "body": 28274,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/lowFrequency_explosion_000.ogg",
+            "body": 14317,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/laserSmall_000.ogg",
+            "body": 7286,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/computerNoise_000.ogg",
+            "body": 119024,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/prepare-to-fight.mp3",
+            "body": 31599,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/assets/fps/audio/danceman.mp3",
+            "body": 76612,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/loungechair.glb",
+            "body": 9648,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/onboard/security-door-lod0.glb",
+            "body": 16140,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Door_Double.glb",
+            "body": 36612,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/chairdesk.glb",
+            "body": 39016,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/shelf.glb",
+            "body": 60064,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/fridge.glb",
+            "body": 14412,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/kitchensink.glb",
+            "body": 23480,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/creformTallRack.glb",
+            "body": 149928,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/material.glb",
+            "body": 62796,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/wheelBin.glb",
+            "body": 18480,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/lamproundfloor.glb",
+            "body": 6600,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/bench.glb",
+            "body": 10756,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/pottedplant.glb",
+            "body": 7576,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/onboard/tv-with-a-wall-mount.glb",
+            "body": 557592,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Bed_Single.glb",
+            "body": 18576,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/food-kit/cup-coffee.glb",
+            "body": 18616,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/kitchencoffeemachine.glb",
+            "body": 13332,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/food-kit/plate.glb",
+            "body": 19216,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/food-kit/donut.glb",
+            "body": 22104,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/food-kit/soda-can.glb",
+            "body": 27124,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Shelf_2.glb",
+            "body": 7536,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/genexpert/genexpert-infinity-80.glb",
+            "body": 984184,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/genexpert/genexpert-16.glb",
+            "body": 1113824,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/yellowBin.glb",
+            "body": 15268,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Kitchen_Sink.glb",
+            "body": 24444,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/plasticBoxSmall.glb",
+            "body": 13040,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/gloveHolder.glb",
+            "body": 22960,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/hissrum12/plasticBoxLarge.glb",
+            "body": 13032,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/furniture-kit/kitchenfridgesmall.glb",
+            "body": 12988,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Fork.glb",
+            "body": 4520,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Houseplant_1.glb",
+            "body": 8964,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Houseplant_6.glb",
+            "body": 15080,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Houseplant_7.glb",
+            "body": 14896,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Houseplant_8.glb",
+            "body": 17836,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Houseplant_4.glb",
+            "body": 8840,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Houseplant_2.glb",
+            "body": 10672,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Spoon.glb",
+            "body": 3528,
+            "transfer": 0
+          },
+          {
+            "url": "http://127.0.0.1:8765/furniture-editor/library/models/house-interior/Door_7.glb",
+            "body": 10152,
+            "transfer": 0
+          }
+        ]
+      },
+      "heap": {
+        "usedSize": 74750128,
+        "totalSize": 81231872,
+        "embedderHeapUsedSize": 9187424,
+        "backingStorageSize": 111984903
+      }
+    }
+  ],
+  "sourceHashes": {
+    "src/fps/character-library.mjs": "1785d7ee6eb617cc3aaa9e7cb087affa2d0e9ffcf8ee3272c877c4366571b680",
+    "src/fps/skinned-clone.mjs": "3b62dcad7b8dde734d23942e8e199d0aad76ef3022470b34d0338dfa65ab6709",
+    "src/fps/zombie-visuals.mjs": "dd94cfe176899f3daccf8022c3b8b7a60a4094350a0d07844434687c5a8a3503"
+  }
+}
