@@ -32,3 +32,5 @@ Första besöket på en touch-enhet väljer grafik **Låg** om inget tidigare gr
 20 deterministiska Node-tester och speltester i Chromium med mobil- respektive datorstyrning verifierar regler, zoom, dubbeltryck, omladdning, manuell granat, vapenbyte, paus och befintlig automatisk eld. Mobil-emulering är inte ett test på fysisk iPhone/Safari.
 
 Detaljer och källhänvisningar finns i [Precision Pack](precision-pack.md). Ripostes MIT-licens och undantag finns i `licenses/riposte-MIT.txt` och `licenses/riposte-NOTICE.md`. Inga skyddade logotyper, Mixamo-animationer eller musik importerades för denna uppdatering.
+
+Se [mobil- och CI-granskningen den 16 november](mobile-ci/README.md) för mätningar, vapenbyte med nedtryckta fingrar, pekarägarskap och paus vid rotation. Fysiska iPhone-/Android-tester återstår.

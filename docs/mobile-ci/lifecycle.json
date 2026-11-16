@@ -1,0 +1,770 @@
+[
+  {
+    "i": -3,
+    "mode": "classic",
+    "gpu": {
+      "game": [
+        1258,
+        155,
+        102
+      ],
+      "lobby-stage": [
+        29,
+        7,
+        10
+      ]
+    },
+    "instances": 4,
+    "retained": 1,
+    "music": false,
+    "ambient": 0,
+    "voices": 0,
+    "pending": [
+      "game",
+      "lobby"
+    ],
+    "dom": {
+      "documents": 1,
+      "nodes": 1468,
+      "jsEventListeners": 267
+    },
+    "contexts": 1,
+    "audioNodes": 3
+  },
+  {
+    "i": -2,
+    "mode": "endless",
+    "gpu": {
+      "game": [
+        1326,
+        162,
+        109
+      ],
+      "lobby-stage": [
+        29,
+        7,
+        10
+      ]
+    },
+    "instances": 4,
+    "retained": 1,
+    "music": false,
+    "ambient": 0,
+    "voices": 0,
+    "pending": [
+      "game",
+      "lobby"
+    ],
+    "dom": {
+      "documents": 1,
+      "nodes": 1484,
+      "jsEventListeners": 267
+    },
+    "contexts": 1,
+    "audioNodes": 3
+  },
+  {
+    "i": -1,
+    "mode": "classic",
+    "gpu": {
+      "game": [
+        1326,
+        162,
+        109
+      ],
+      "lobby-stage": [
+        29,
+        7,
+        10
+      ]
+    },
+    "instances": 4,
+    "retained": 1,
+    "music": false,
+    "ambient": 0,
+    "voices": 0,
+    "pending": [
+      "game",
+      "lobby"
+    ],
+    "dom": {
+      "documents": 1,
+      "nodes": 1479,
+      "jsEventListeners": 267
+    },
+    "contexts": 1,
+    "audioNodes": 3
+  },
+  {
+    "i": 0,
+    "mode": "endless",
+    "gpu": {
+      "game": [
+        1328,
+        162,
+        109
+      ],
+      "lobby-stage": [
+        29,
+        7,
+        10
+      ]
+    },
+    "instances": 4,
+    "retained": 1,
+    "music": false,
+    "ambient": 0,
+    "voices": 0,
+    "pending": [
+      "game",
+      "lobby"
+    ],
+    "dom": {
+      "documents": 1,
+      "nodes": 1484,
+      "jsEventListeners": 267
+    },
+    "contexts": 1,
+    "audioNodes": 3
+  },
+  {
+    "i": 1,
+    "mode": "classic",
+    "gpu": {
+      "game": [
+        1328,
+        162,
+        109
+      ],
+      "lobby-stage": [
+        29,
+        7,
+        10
+      ]
+    },
+    "instances": 4,
+    "retained": 1,
+    "music": false,
+    "ambient": 0,
+    "voices": 0,
+    "pending": [
+      "game",
+      "lobby"
+    ],
+    "dom": {
+      "documents": 1,
+      "nodes": 1479,
+      "jsEventListeners": 267
+    },
+    "contexts": 1,
+    "audioNodes": 3
+  },
+  {
+    "i": 2,
+    "mode": "endless",
+    "gpu": {
+      "game": [
+        1328,
+        162,
+        109
+      ],
+      "lobby-stage": [
+        29,
+        7,
+        10
+      ]
+    },
+    "instances": 4,
+    "retained": 1,
+    "music": false,
+    "ambient": 0,
+    "voices": 0,
+    "pending": [
+      "game",
+      "lobby"
+    ],
+    "dom": {
+      "documents": 1,
+      "nodes": 1481,
+      "jsEventListeners": 267
+    },
+    "contexts": 1,
+    "audioNodes": 3
+  },
+  {
+    "i": 3,
+    "mode": "classic",
+    "gpu": {
+      "game": [
+        1328,
+        162,
+        109
+      ],
+      "lobby-stage": [
+        29,
+        7,
+        10
+      ]
+    },
+    "instances": 4,
+    "retained": 1,
+    "music": false,
+    "ambient": 0,
+    "voices": 0,
+    "pending": [
+      "game",
+      "lobby"
+    ],
+    "dom": {
+      "documents": 1,
+      "nodes": 1480,
+      "jsEventListeners": 267
+    },
+    "contexts": 1,
+    "audioNodes": 3
+  },
+  {
+    "i": 4,
+    "mode": "endless",
+    "gpu": {
+      "game": [
+        1328,
+        162,
+        109
+      ],
+      "lobby-stage": [
+        29,
+        7,
+        10
+      ]
+    },
+    "instances": 4,
+    "retained": 1,
+    "music": false,
+    "ambient": 0,
+    "voices": 0,
+    "pending": [
+      "game",
+      "lobby"
+    ],
+    "dom": {
+      "documents": 1,
+      "nodes": 1485,
+      "jsEventListeners": 267
+    },
+    "contexts": 1,
+    "audioNodes": 3
+  },
+  {
+    "i": 5,
+    "mode": "classic",
+    "gpu": {
+      "game": [
+        1328,
+        162,
+        109
+      ],
+      "lobby-stage": [
+        29,
+        7,
+        10
+      ]
+    },
+    "instances": 4,
+    "retained": 1,
+    "music": false,
+    "ambient": 0,
+    "voices": 0,
+    "pending": [
+      "game",
+      "lobby"
+    ],
+    "dom": {
+      "documents": 1,
+      "nodes": 1479,
+      "jsEventListeners": 267
+    },
+    "contexts": 1,
+    "audioNodes": 3
+  },
+  {
+    "i": 6,
+    "mode": "endless",
+    "gpu": {
+      "game": [
+        1328,
+        162,
+        109
+      ],
+      "lobby-stage": [
+        29,
+        7,
+        10
+      ]
+    },
+    "instances": 4,
+    "retained": 1,
+    "music": false,
+    "ambient": 0,
+    "voices": 0,
+    "pending": [
+      "game",
+      "lobby"
+    ],
+    "dom": {
+      "documents": 1,
+      "nodes": 1487,
+      "jsEventListeners": 267
+    },
+    "contexts": 1,
+    "audioNodes": 3
+  },
+  {
+    "i": 7,
+    "mode": "classic",
+    "gpu": {
+      "game": [
+        1328,
+        162,
+        109
+      ],
+      "lobby-stage": [
+        29,
+        7,
+        10
+      ]
+    },
+    "instances": 4,
+    "retained": 1,
+    "music": false,
+    "ambient": 0,
+    "voices": 0,
+    "pending": [
+      "game",
+      "lobby"
+    ],
+    "dom": {
+      "documents": 1,
+      "nodes": 1481,
+      "jsEventListeners": 267
+    },
+    "contexts": 1,
+    "audioNodes": 3
+  },
+  {
+    "i": 8,
+    "mode": "endless",
+    "gpu": {
+      "game": [
+        1328,
+        162,
+        109
+      ],
+      "lobby-stage": [
+        29,
+        7,
+        10
+      ]
+    },
+    "instances": 4,
+    "retained": 1,
+    "music": false,
+    "ambient": 0,
+    "voices": 0,
+    "pending": [
+      "game",
+      "lobby"
+    ],
+    "dom": {
+      "documents": 1,
+      "nodes": 1486,
+      "jsEventListeners": 267
+    },
+    "contexts": 1,
+    "audioNodes": 3
+  },
+  {
+    "i": 9,
+    "mode": "classic",
+    "gpu": {
+      "game": [
+        1328,
+        162,
+        109
+      ],
+      "lobby-stage": [
+        29,
+        7,
+        10
+      ]
+    },
+    "instances": 4,
+    "retained": 1,
+    "music": false,
+    "ambient": 0,
+    "voices": 0,
+    "pending": [
+      "game",
+      "lobby"
+    ],
+    "dom": {
+      "documents": 1,
+      "nodes": 1479,
+      "jsEventListeners": 267
+    },
+    "contexts": 1,
+    "audioNodes": 3
+  },
+  {
+    "i": 10,
+    "mode": "endless",
+    "gpu": {
+      "game": [
+        1328,
+        162,
+        109
+      ],
+      "lobby-stage": [
+        29,
+        7,
+        10
+      ]
+    },
+    "instances": 4,
+    "retained": 1,
+    "music": false,
+    "ambient": 0,
+    "voices": 0,
+    "pending": [
+      "game",
+      "lobby"
+    ],
+    "dom": {
+      "documents": 1,
+      "nodes": 1481,
+      "jsEventListeners": 267
+    },
+    "contexts": 1,
+    "audioNodes": 3
+  },
+  {
+    "i": 11,
+    "mode": "classic",
+    "gpu": {
+      "game": [
+        1328,
+        162,
+        109
+      ],
+      "lobby-stage": [
+        29,
+        7,
+        10
+      ]
+    },
+    "instances": 4,
+    "retained": 1,
+    "music": false,
+    "ambient": 0,
+    "voices": 0,
+    "pending": [
+      "game",
+      "lobby"
+    ],
+    "dom": {
+      "documents": 1,
+      "nodes": 1479,
+      "jsEventListeners": 267
+    },
+    "contexts": 1,
+    "audioNodes": 3
+  },
+  {
+    "i": 12,
+    "mode": "endless",
+    "gpu": {
+      "game": [
+        1328,
+        162,
+        109
+      ],
+      "lobby-stage": [
+        29,
+        7,
+        10
+      ]
+    },
+    "instances": 4,
+    "retained": 1,
+    "music": false,
+    "ambient": 0,
+    "voices": 0,
+    "pending": [
+      "game",
+      "lobby"
+    ],
+    "dom": {
+      "documents": 1,
+      "nodes": 1484,
+      "jsEventListeners": 267
+    },
+    "contexts": 1,
+    "audioNodes": 3
+  },
+  {
+    "i": 13,
+    "mode": "classic",
+    "gpu": {
+      "game": [
+        1328,
+        162,
+        109
+      ],
+      "lobby-stage": [
+        29,
+        7,
+        10
+      ]
+    },
+    "instances": 4,
+    "retained": 1,
+    "music": false,
+    "ambient": 0,
+    "voices": 0,
+    "pending": [
+      "game",
+      "lobby"
+    ],
+    "dom": {
+      "documents": 1,
+      "nodes": 1479,
+      "jsEventListeners": 267
+    },
+    "contexts": 1,
+    "audioNodes": 3
+  },
+  {
+    "i": 14,
+    "mode": "endless",
+    "gpu": {
+      "game": [
+        1328,
+        162,
+        109
+      ],
+      "lobby-stage": [
+        29,
+        7,
+        10
+      ]
+    },
+    "instances": 4,
+    "retained": 1,
+    "music": false,
+    "ambient": 0,
+    "voices": 0,
+    "pending": [
+      "game",
+      "lobby"
+    ],
+    "dom": {
+      "documents": 1,
+      "nodes": 1481,
+      "jsEventListeners": 267
+    },
+    "contexts": 1,
+    "audioNodes": 3
+  },
+  {
+    "i": 15,
+    "mode": "classic",
+    "gpu": {
+      "game": [
+        1328,
+        162,
+        109
+      ],
+      "lobby-stage": [
+        29,
+        7,
+        10
+      ]
+    },
+    "instances": 4,
+    "retained": 1,
+    "music": false,
+    "ambient": 0,
+    "voices": 0,
+    "pending": [
+      "game",
+      "lobby"
+    ],
+    "dom": {
+      "documents": 1,
+      "nodes": 1479,
+      "jsEventListeners": 267
+    },
+    "contexts": 1,
+    "audioNodes": 3
+  },
+  {
+    "i": 16,
+    "mode": "endless",
+    "gpu": {
+      "game": [
+        1328,
+        162,
+        109
+      ],
+      "lobby-stage": [
+        29,
+        7,
+        10
+      ]
+    },
+    "instances": 4,
+    "retained": 1,
+    "music": false,
+    "ambient": 0,
+    "voices": 0,
+    "pending": [
+      "game",
+      "lobby"
+    ],
+    "dom": {
+      "documents": 1,
+      "nodes": 1481,
+      "jsEventListeners": 267
+    },
+    "contexts": 1,
+    "audioNodes": 3
+  },
+  {
+    "i": 17,
+    "mode": "classic",
+    "gpu": {
+      "game": [
+        1328,
+        162,
+        109
+      ],
+      "lobby-stage": [
+        29,
+        7,
+        10
+      ]
+    },
+    "instances": 4,
+    "retained": 1,
+    "music": false,
+    "ambient": 0,
+    "voices": 0,
+    "pending": [
+      "game",
+      "lobby"
+    ],
+    "dom": {
+      "documents": 1,
+      "nodes": 1480,
+      "jsEventListeners": 267
+    },
+    "contexts": 1,
+    "audioNodes": 3
+  },
+  {
+    "i": 18,
+    "mode": "endless",
+    "gpu": {
+      "game": [
+        1328,
+        162,
+        109
+      ],
+      "lobby-stage": [
+        29,
+        7,
+        10
+      ]
+    },
+    "instances": 4,
+    "retained": 1,
+    "music": false,
+    "ambient": 0,
+    "voices": 0,
+    "pending": [
+      "game",
+      "lobby"
+    ],
+    "dom": {
+      "documents": 1,
+      "nodes": 1481,
+      "jsEventListeners": 267
+    },
+    "contexts": 1,
+    "audioNodes": 3
+  },
+  {
+    "i": 19,
+    "mode": "classic",
+    "gpu": {
+      "game": [
+        1328,
+        162,
+        109
+      ],
+      "lobby-stage": [
+        29,
+        7,
+        10
+      ]
+    },
+    "instances": 4,
+    "retained": 1,
+    "music": false,
+    "ambient": 0,
+    "voices": 0,
+    "pending": [
+      "game",
+      "lobby"
+    ],
+    "dom": {
+      "documents": 1,
+      "nodes": 1479,
+      "jsEventListeners": 267
+    },
+    "contexts": 1,
+    "audioNodes": 3
+  },
+  {
+    "i": 20,
+    "mode": "endless",
+    "gpu": {
+      "game": [
+        1328,
+        162,
+        109
+      ],
+      "lobby-stage": [
+        29,
+        7,
+        10
+      ]
+    },
+    "instances": 4,
+    "retained": 1,
+    "music": false,
+    "ambient": 0,
+    "voices": 0,
+    "pending": [
+      "game",
+      "lobby"
+    ],
+    "dom": {
+      "documents": 1,
+      "nodes": 1481,
+      "jsEventListeners": 267
+    },
+    "contexts": 1,
+    "audioNodes": 3
+  }
+]

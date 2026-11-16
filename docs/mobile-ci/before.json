@@ -1,0 +1,176 @@
+[
+  {
+    "width": 844,
+    "combined": {
+      "meters": 0.051130434782608064,
+      "shots": 1
+    },
+    "pacing": {
+      "frames": 60,
+      "median": 16.699999999999818,
+      "p95": 16.800000000000182,
+      "over25": 1
+    },
+    "before": {
+      "input": {
+        "forward": 0.7304347826086957,
+        "strafe": 0,
+        "jump": false,
+        "crouch": false,
+        "sneak": false,
+        "fire": true,
+        "autoFire": false,
+        "interact": false,
+        "yaw": 3.0091526535897932,
+        "pitch": -0.03784
+      },
+      "ids": [
+        2,
+        3
+      ]
+    },
+    "switched": {
+      "input": {
+        "forward": 0,
+        "strafe": 0,
+        "jump": false,
+        "crouch": false,
+        "sneak": false,
+        "fire": false,
+        "autoFire": false,
+        "interact": false,
+        "yaw": 3.0048445404727286,
+        "pitch": -0.02772626104753169
+      },
+      "ids": [
+        null,
+        null
+      ]
+    },
+    "after": {
+      "forward": 0,
+      "strafe": 0,
+      "jump": false,
+      "crouch": false,
+      "sneak": false,
+      "fire": false,
+      "autoFire": false,
+      "interact": false,
+      "yaw": 3.0048445404727286,
+      "pitch": -0.02772626104753169
+    },
+    "settledReadMs": 45.380707999999686,
+    "held": false,
+    "rotation": {
+      "paused": false,
+      "modal": null,
+      "time": 1.5333333333333328,
+      "voices": 9,
+      "ambient": 1,
+      "music": false
+    },
+    "advanced": 0.6666666666666643,
+    "remainsPaused": false,
+    "renderer": {
+      "buffer": [
+        592,
+        273
+      ],
+      "lost": false,
+      "programs": 98
+    },
+    "cleanup": {
+      "voices": 0,
+      "ambient": 0,
+      "music": false
+    },
+    "errors": []
+  },
+  {
+    "width": 932,
+    "combined": {
+      "meters": 0.048999999999998406,
+      "shots": 1
+    },
+    "pacing": {
+      "frames": 60,
+      "median": 16.699999999999818,
+      "p95": 16.799999999999727,
+      "over25": 1
+    },
+    "before": {
+      "input": {
+        "forward": 0.7,
+        "strafe": 0,
+        "jump": false,
+        "crouch": false,
+        "sneak": false,
+        "fire": true,
+        "autoFire": false,
+        "interact": false,
+        "yaw": 3.0091526535897932,
+        "pitch": -0.03784
+      },
+      "ids": [
+        2,
+        3
+      ]
+    },
+    "switched": {
+      "input": {
+        "forward": 0,
+        "strafe": 0,
+        "jump": false,
+        "crouch": false,
+        "sneak": false,
+        "fire": false,
+        "autoFire": false,
+        "interact": false,
+        "yaw": 3.0048445404727286,
+        "pitch": -0.02772626104753169
+      },
+      "ids": [
+        null,
+        null
+      ]
+    },
+    "after": {
+      "forward": 0,
+      "strafe": 0,
+      "jump": false,
+      "crouch": false,
+      "sneak": false,
+      "fire": false,
+      "autoFire": false,
+      "interact": false,
+      "yaw": 3.0048445404727286,
+      "pitch": -0.02772626104753169
+    },
+    "settledReadMs": 36.96962499999972,
+    "held": false,
+    "rotation": {
+      "paused": false,
+      "modal": null,
+      "time": 1.5166666666666662,
+      "voices": 10,
+      "ambient": 1,
+      "music": false
+    },
+    "advanced": 0.6499999999999977,
+    "remainsPaused": false,
+    "renderer": {
+      "buffer": [
+        654,
+        301
+      ],
+      "lost": false,
+      "programs": 98
+    },
+    "cleanup": {
+      "voices": 0,
+      "ambient": 0,
+      "music": false
+    },
+    "errors": []
+  }
+]

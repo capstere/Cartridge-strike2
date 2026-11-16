@@ -100,3 +100,17 @@ warmed game/lobby GPU textures fall 230/14 → 163/7. Local readiness timings do
 not improve, so no startup-speed gain is claimed. Original GLBs, all clips,
 textures and gameplay remain intact. Physical handset testing remains the first
 open task; Safari, real network and whole-renderer async teardown stress remain open.
+
+
+## November 16 — mobile input and CI reliability
+
+Completed emulated reproduction and fixes at 844×390 and 932×430: weapon changes
+retain held movement/look pointers, multiple fingers retain a held action until
+its last release, and orientation changes pause combat/audio for explicit Resume.
+[Before/after samples, CI audit and validation](docs/mobile-ci/README.md).
+The CI policy removes the obsolete feature push trigger, cancels stale PR runs,
+keeps full pre-merge browser checks, and uses fast integrity/unit/door checks on
+main instead of repeating browser suites after merge. No FPS or physical-phone
+gain is claimed. The next genuine task remains the physical iPhone/Android
+session at the top, with particular attention to three-finger capture, rotations,
+safe areas and audio interruptions. Browser emulation does not close that task.

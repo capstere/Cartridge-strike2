@@ -1,0 +1,36 @@
+{
+  "status": "PASS",
+  "unitTests": 196,
+  "runtimeFiles": 459,
+  "doorTraversal": 102,
+  "focusedBrowserViewports": [
+    "844x390",
+    "932x430"
+  ],
+  "focusedCases": [
+    "native simultaneous movement/look/actual fire",
+    "weapon switch while dragging",
+    "two held fire owners",
+    "portrait/landscape pause and audio reset",
+    "resume and lobby cleanup"
+  ],
+  "browserRegressions": [
+    "desktop/mobile controls and auto-fire",
+    "match flow cancellation/retry/audio/lobby",
+    "20-cycle Classic/Endless tab-background lifecycle",
+    "Danceman both-mode audio/animation/death",
+    "objective and spectator player routes",
+    "render/HUD/minimap/tracer smoke"
+  ],
+  "physicalHandsets": false,
+  "artifactsAudit": {
+    "workflowRun": 43930343049,
+    "fpsArtifactCount": 0
+  },
+  "remaining": [
+    "physical iPhone Safari and Android Chrome",
+    "longer matched frame pacing",
+    "true input-to-photon latency",
+    "thermal/battery/safe areas and audio interruptions"
+  ]
+}
