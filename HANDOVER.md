@@ -114,3 +114,10 @@ main instead of repeating browser suites after merge. No FPS or physical-phone
 gain is claimed. The next genuine task remains the physical iPhone/Android
 session at the top, with particular attention to three-finger capture, rotations,
 safe areas and audio interruptions. Browser emulation does not close that task.
+
+
+The first focused CI run timed out collecting unasserted pacing samples on its
+software renderer (about 2.3 s/frame). The follow-up makes that profiling opt-in
+with `MOBILE_PROFILE=1`, preserving all regression assertions and the bounded
+step deadline. Main fast CI passed in 1m31s; Pages byte checks and both native
+emulated viewport checks passed. Physical-device validation remains open.
