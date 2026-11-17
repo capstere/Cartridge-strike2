@@ -162,7 +162,10 @@ It is jitter/delay coverage, not a claim of packet-loss simulation.
 CI preserves all prior Linux offline/visual/mobile gates and adds bounded LAN jobs on
 Linux Chromium, Windows Chromium and macOS WebKit. Linux uses SwiftShader;
 Windows selects Chromium's D3D11 WARP software backend and records/asserts the
-actual WebGL renderer. Software jobs use DPR 0.5 for
+actual WebGL renderer. The Windows browser harness uses Node 22; the target
+Pi/server Node 26.13.0 remains covered by the Linux foundation/LAN and macOS
+gameplay jobs. Windows-server Node 26.13 is not a deployment claim.
+Software jobs use DPR 0.5 for
 functional coverage; no software-renderer FPS or Pi capacity claim follows.
 Only small JSON/screenshots are retained for seven days. The build generator
 normalizes asset paths on Windows; CI checks out committed LF bytes there so
