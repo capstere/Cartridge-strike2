@@ -47,7 +47,7 @@ export class TacticalControls {
 
   playing() {
     const g = this.getGame();
-    return !!g?.player?.alive && !this.getModal() && !g.state.paused && ['buy', 'active'].includes(g.phase);
+    return !g?.network && !!g?.player?.alive && !this.getModal() && !g.state.paused && ['buy', 'active'].includes(g.phase);
   }
 
   setAim(value) {

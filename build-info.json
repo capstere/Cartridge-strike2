@@ -641,8 +641,8 @@
     },
     {
       "path": "fps/index.html",
-      "bytes": 13913,
-      "sha256": "dab59a695bbd4898e7318b26163cad1466d3970909439ea3518d72c5efd8372d"
+      "bytes": 14053,
+      "sha256": "4727a65712a0be3144d191c8934569ebe230686501e9862f3b8c9da4ab064ec3"
     },
     {
       "path": "fps/lobby.css",
@@ -658,6 +658,11 @@
       "path": "fps/menu-modern.css",
       "bytes": 6936,
       "sha256": "65f162fffefcc33966f9caf47e8d687210749bd7c95e43c5aeafe8109c4066dc"
+    },
+    {
+      "path": "fps/network.css",
+      "bytes": 1266,
+      "sha256": "bdebf6054dda3d81cf8656d9fd1fd70b491e0f0d8aad0e3107c442f107ab1798"
     },
     {
       "path": "fps/style.css",
@@ -1695,6 +1700,26 @@
       "sha256": "a3d27b3ca5ce32341fa9f96f01169b521b1657c05d1860c45d1e53a6258e9e8b"
     },
     {
+      "path": "shared/multiplayer/build.mjs",
+      "bytes": 438,
+      "sha256": "4343725aff9836f43ce92f58101d3b413b9549c8bcaa36f9f3f1f3216fd6fe89"
+    },
+    {
+      "path": "shared/multiplayer/input.mjs",
+      "bytes": 2781,
+      "sha256": "e960fdc1eee5a087712cf1c8d2d7e0343671951f951b9db96cc6fae546cd0de0"
+    },
+    {
+      "path": "shared/multiplayer/protocol.mjs",
+      "bytes": 1293,
+      "sha256": "2234296c13976582f89cf9aed8eb8897cab662451c9e6375022fe713a71924d1"
+    },
+    {
+      "path": "shared/multiplayer/rules.mjs",
+      "bytes": 1513,
+      "sha256": "d8b0c173e3dcff1c12169805dfeca12095794ed67fa94176be8037106ecf12eb"
+    },
+    {
       "path": "src/floor5-data.js",
       "bytes": 279976,
       "sha256": "5f1e306072124f997ef4049b72b86c9097dc731cce7dfdf1c5635ebff5ff3487"
@@ -1711,8 +1736,8 @@
     },
     {
       "path": "src/fps/action-rules.mjs",
-      "bytes": 11751,
-      "sha256": "8ba077cf94a8b1c18cb8d78491be2a0fbed1a1195328e666854428106cd27bac"
+      "bytes": 11991,
+      "sha256": "dc06ce38af619655ce6419838e07f4bd81c309563a2f3c0150e26bcfaa17b5bd"
     },
     {
       "path": "src/fps/action-visuals.mjs",
@@ -1731,8 +1756,8 @@
     },
     {
       "path": "src/fps/app.mjs",
-      "bytes": 34966,
-      "sha256": "a55de42ea88e7396dbb9bb852ad3f73580182b4086dcdd50e96296ba63f33806"
+      "bytes": 39432,
+      "sha256": "567b3e76d0b8be2998b361dbfbb28614bffc00e032c2a9b9cfedb1814c764d7c"
     },
     {
       "path": "src/fps/audio.mjs",
@@ -1926,8 +1951,8 @@
     },
     {
       "path": "src/fps/game.mjs",
-      "bytes": 37196,
-      "sha256": "256bb1cdcdd7cf92a98f6b3f3703ed87ee33f5e48785d8776af5745ca2b6ac89"
+      "bytes": 37724,
+      "sha256": "49fc056aaa4ab0840bf85027b244ab8b188de755e408604049a652e5a8926ca2"
     },
     {
       "path": "src/fps/glass-visuals.mjs",
@@ -1976,8 +2001,8 @@
     },
     {
       "path": "src/fps/lobby-stage.mjs",
-      "bytes": 8291,
-      "sha256": "23c28b8213174125248f0a21f7e6ac9471fdede5fba79d2bdb070bc5b87a8191"
+      "bytes": 8381,
+      "sha256": "4a29cd2f75bd3e527e0957ca7e641f37cc623abe3d7f5c01779790ed950ecab7"
     },
     {
       "path": "src/fps/match-flow.mjs",
@@ -1991,8 +2016,8 @@
     },
     {
       "path": "src/fps/minimap-cache.mjs",
-      "bytes": 4026,
-      "sha256": "361dec3c9c566833e98395e6e0975593e8f75d2750e7aed1d6461eab913e0c3d"
+      "bytes": 4049,
+      "sha256": "6b230405ee4a30b85cd47406442757f8dde76dc79d5bf19ad669c51dcd51d133"
     },
     {
       "path": "src/fps/mobile-controls.mjs",
@@ -2010,9 +2035,24 @@
       "sha256": "e64f57ec93e952fcdcacfc4c2737377a652c9ef946c67b6d4ba2e73d959cb8b0"
     },
     {
+      "path": "src/fps/movement.mjs",
+      "bytes": 5809,
+      "sha256": "4d1b966c1aeef13260ab9affbeb478bf9ca01978c0d62e1e354ed64c4593c84f"
+    },
+    {
       "path": "src/fps/navigation.mjs",
       "bytes": 9704,
       "sha256": "1f122eae8cb8ddc4c3c52b7cf1338c3c9a5d40342110a9540197d3b2366c2229"
+    },
+    {
+      "path": "src/fps/network/menu.mjs",
+      "bytes": 2983,
+      "sha256": "934f315c38c962d38e73d720e4fda95875c1bdc6303a90d813a950fbe40a4124"
+    },
+    {
+      "path": "src/fps/network/session.mjs",
+      "bytes": 11719,
+      "sha256": "148dc4a8d631d5aa3420c832540745d11ae722246967da4685a0b8a5bca6f815"
     },
     {
       "path": "src/fps/physics.mjs",
@@ -2066,13 +2106,13 @@
     },
     {
       "path": "src/fps/render-engine.mjs",
-      "bytes": 31937,
-      "sha256": "495f2f3d07dd1762ecc26f8ade132157ba8ece5d351bd4dc86d841118dd4bb9d"
+      "bytes": 32180,
+      "sha256": "de97e2c27a18c1d8473c895bfeed78bd9cdbe57881f86aabe5c74a56898f3535"
     },
     {
       "path": "src/fps/render.mjs",
-      "bytes": 19417,
-      "sha256": "e262b21ed22b5157984119c86161b84a9e7b57032790d4743f2c5b7ed3e1eb54"
+      "bytes": 19524,
+      "sha256": "51f41138f76549d9f15750db89be1201a612b06bc0ca2b7a64332c5729d3d935"
     },
     {
       "path": "src/fps/riposte-audio.mjs",
@@ -2166,8 +2206,8 @@
     },
     {
       "path": "src/fps/tactical-controls.mjs",
-      "bytes": 8248,
-      "sha256": "4295b8afcab33a28ef2ecd451f1860b644f9aeb2eb317ffb7059714dc61b79f2"
+      "bytes": 8263,
+      "sha256": "aa952909675e4c4eee53b1dbd373d47a357de5880f7566abed36e3fcc4e2abda"
     },
     {
       "path": "src/fps/tactical-map.mjs",
@@ -2260,6 +2300,16 @@
       "sha256": "adfcfef760cf3b6bc65a2e8bf15a7d4f4374f8032f04805cbea52b0051fafdd9"
     },
     {
+      "path": "vendor/colyseus/LICENSE",
+      "bytes": 1075,
+      "sha256": "58f5d8920f8d425a9eec9e8cb07f9d0ac5ac08d2aba15f98270c0caddb9de3e4"
+    },
+    {
+      "path": "vendor/colyseus/colyseus.js",
+      "bytes": 222653,
+      "sha256": "e5a315d6c7c8d09ac711a6954d44750a6678029c00a80aee719b4d9ee31fdc58"
+    },
+    {
       "path": "vendor/package.json",
       "bytes": 33,
       "sha256": "a90fc33418afa2b9cbf4768524b021135b965ecdf993457505bfae3ac44a8428"
@@ -2303,14 +2353,9 @@
       "path": "vendor/yuka/yuka.module.js",
       "bytes": 442887,
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
-    },
-    {
-      "path": "src/fps/movement.mjs",
-      "bytes": 5809,
-      "sha256": "4d1b966c1aeef13260ab9affbeb478bf9ca01978c0d62e1e354ed64c4593c84f"
     }
   ],
-  "bytes": 56843243,
+  "bytes": 57094816,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",
