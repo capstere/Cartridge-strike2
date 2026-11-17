@@ -46,11 +46,15 @@ async function join(page,endpoint,roomId='',name='Player'){
    !document.querySelector('#fatal').hidden||
    !document.querySelector('.network-form button').disabled&&
    !document.querySelector('#network-status').textContent.startsWith('Ansluter'));
+  if(await page.evaluate(()=>__fps.modal==='pause')){
+   await page.waitForFunction(()=>__fps.network?.connectionState==='connected');
+   await page.locator('#resume').click();await page.waitForFunction(()=>__fps.modal===null&&__fps.network.enabled);
+  }
   assert(await page.evaluate(()=>__fps.network?.view.player?.alive&&__fps.game.network&&__fps.modal===null),'joined player must enter playable state');
  }catch(error){
   const client=await page.evaluate(()=>({modal:__fps.modal,focused:document.hasFocus(),hidden:document.hidden,
    status:document.querySelector('#network-status').textContent,fatal:document.querySelector('#fatal').hidden?'':document.querySelector('#fatal pre').textContent,
-   room:__fps.network?.room?.roomId,problem:__fps.network?.problem,closed:__fps.network?.closed,
+   room:__fps.network?.room?.roomId,problem:__fps.network?.problem,closed:__fps.network?.closed,connection:__fps.network?.connectionState,
    alive:__fps.network?.view.player?.alive,draws:__fps.renderer.stats.drawCalls}));
   console.error('admission diagnostic',JSON.stringify({client,rooms:[...local.rooms].map(r=>({id:r.roomId,tick:r.sim.tickNumber,
    clients:r.clients.length,seats:[...r.seats.values()].map(s=>({id:s.id,ready:s.ready}))})),errors}));throw error;

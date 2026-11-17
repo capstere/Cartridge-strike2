@@ -87,3 +87,21 @@ test('same-tick lethal hits, duplicate fire and delayed previous-life input reta
  send(a,{lifeId:life,fire:true,fireId:2,yaw:Math.PI});await delay(100);assert.equal(shooter.inventory.primary.ammo,30);assert.equal(shooter.kills,1);
  assert(r.lag.metrics.accepted>=2,'both real input stamps passed validation');
 });
+
+test('coalesced reliable burst retains a short fire press and its aim without extra movement ticks',{timeout:10000},async t=>{
+ const {r,g,a,shooter,target}=await setup(t);
+ Object.assign(shooter,{x:20,z:-18,y:0,yaw:0,pitch:0,spawnProtectedUntil:0});
+ Object.assign(target,{x:20,z:-16,y:0,spawnProtectedUntil:0});await delay(250);
+ const original=r.fixedTick,buffer=r.inputs.get(a.sessionId),hp=target.hp,start=g.state.time;
+ // Hold only this test's simulation callback until the ordered WS batch has
+ // arrived, so the press and differently aimed release share one fixed tick.
+ r.fixedTick=function(){if(buffer.size<8&&g.state.time===start)return;return original.call(this);};
+ try{
+  send(a,{fire:true,fireId:1,yaw:Math.PI});
+  for(let i=0;i<7;i++)send(a,{fire:false,fireId:1,yaw:0});
+  await until(()=>target.hp<hp,'the short press uses its own orientation');
+  assert.equal(shooter.inventory.primary.ammo,29,'the batch fires once');
+  assert(r.metrics.coalesced>=7);assert.equal(buffer.size,0);
+  assert.equal(shooter.yaw,Math.PI,'release cannot substitute an arbitrary shot orientation');
+ }finally{r.fixedTick=original;}
+});

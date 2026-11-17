@@ -31,6 +31,12 @@ try{for(const [count,rtt] of scenarios){
   }
   const id=await pages[0].evaluate(async endpoint=>(await __fps.joinNetwork({endpoint,code:'load-123',name:'Rendered A',create:true})).room.roomId,url);
   await pages[1].evaluate(async({endpoint,id})=>__fps.joinNetwork({endpoint,roomId:id,code:'load-123',name:'Rendered C'}).then(()=>null),{endpoint:url,id});
+  if(count===2&&rtt===0){
+   await pages[0].evaluate(()=>{const end=performance.now()+4000;while(performance.now()<end){/* intentional main-thread stall */}});
+   await pages[0].waitForFunction(()=>performance.now()-__fps.network.lastPatch<200);
+   await delay(1200);
+   assert.equal(await pages[0].evaluate(()=>__fps.network.metrics.reconnects),0,'render stalls cannot disconnect a healthy socket');
+  }
   const client=new Client(url,{headers:{Origin:url}});
   for(let i=2;i<count;i++){
    const room=await client.joinById(id,{code:'load-123',name:'Protocol '+i,contract:info.contract});room.reconnection.enabled=false;
@@ -71,7 +77,10 @@ try{for(const [count,rtt] of scenarios){
     ownId:n.localPlayerId,draws:__fps.renderer.stats.drawCalls,renderer:gl.getParameter(ext?.UNMASKED_RENDERER_WEBGL||gl.RENDERER),
     fatal:!document.querySelector('#fatal').hidden,score:{...n.view.state.score},phase:n.view.phase,enabled:n.enabled,paused:n.view.state.paused,connection:n.connectionState};
   })));
-  if(measurements.some(m=>!m.metrics.confirmedShots))console.log('shot failure diagnostics',JSON.stringify({measurements,server:await rpc('sample')}));
+  if(measurements.some(m=>!m.metrics.confirmedShots)){
+   const diagnostic={measurements:measurements.map(({times,remoteDisplayOffset,metrics,...m})=>({...m,frameMs:stats(times),metrics:Object.fromEntries(Object.entries(metrics).map(([k,v])=>[k,Array.isArray(v)?stats(v):v]))})),server:await rpc('sample')};
+   console.log('shot failure diagnostics',JSON.stringify(diagnostic));await writeFile('test-results/pass3b/failure.json',JSON.stringify(diagnostic,null,2));
+  }
   for(const m of measurements){
    assert.equal(m.actorIds.length,count);assert.equal(new Set(m.actorIds).size,count);assert(m.allHuman);assert(!m.fatal);assert(m.metrics.confirmedShots>0);assert(m.metrics.suppressedShots>0);
    assert(m.teams.filter(t=>t==='analysts').length<=5&&m.teams.filter(t=>t==='counterAnalysts').length<=5);

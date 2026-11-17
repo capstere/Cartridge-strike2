@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {Client} from '@colyseus/sdk';
 import {WebSocket} from 'ws';
 import {createLocalServer} from '../local-server.mjs';
+import {MAX_BUFFERED_BYTES} from '../network-room.mjs';
 import {options,ready,own,send,until,delay} from './helpers.mjs';
 
 async function fixture(t){const local=await createLocalServer({port:0});t.after(()=>local.close());return {local,c:new Client(local.url,{headers:{Origin:local.url}})};}
@@ -96,4 +97,16 @@ test('an interrupted reconnect handshake expires safely and permits a fresh auth
  assert.notEqual(fresh.sessionId,sid);assert(own(fresh).lifeId>oldLife);
  assert.equal(r.sim.game.actors.length,2);
  await fresh.leave();await b.leave();await until(()=>local.rooms.size===0,'fresh-session cleanup');
+});
+
+test('a real corked WebSocket write backlog is bounded without stopping another player',{timeout:10000},async t=>{
+ const {local,c}=await fixture(t),a=await ready(await c.create('private-fps',options)),b=await ready(await c.joinById(a.roomId,options));
+ const r=[...local.rooms][0],client=r.seats.get(a.sessionId).client,tick=r.sim.tickNumber;
+ // Real ws/TCP write buffering, not a mocked bufferedAmount or snapshot loss.
+ client.cork();client.send('problem','x'.repeat(MAX_BUFFERED_BYTES+1024));
+ assert(client.ref.bufferedAmount>MAX_BUFFERED_BYTES);
+ await until(()=>!r.seats.has(a.sessionId),'slow transport disconnected',2000);
+ assert.equal(r.metrics.backpressure,1);assert.equal(r.sim.game.actors.length,1);
+ send(b,{strafe:1});await delay(50);assert(r.sim.tickNumber>tick);
+ await b.leave();await until(()=>local.rooms.size===0,'backpressure leaves no reservation');
 });

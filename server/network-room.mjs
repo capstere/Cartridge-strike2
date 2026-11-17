@@ -14,6 +14,7 @@ const hashCode=code=>createHash('sha256').update(code).digest();
 const validCode=code=>typeof code==='string'&&/^[A-Za-z0-9-]{6,64}$/.test(code);
 const teams=['analysts','counterAnalysts'];
 const seats=teams.flatMap(team=>Array.from({length:TEAM_CAPACITY},(_,i)=>`${team}-${i}`));
+export const MAX_BUFFERED_BYTES=256*1024;
 import {LagCompensation} from './lag-compensation.mjs';
 export class NetworkRoom extends Room {
   async onCreate(options) {
@@ -22,7 +23,7 @@ export class NetworkRoom extends Room {
     this.codeHash=hashCode(options.code);
     this.maxClients=ROOM_CAPACITY;this.maxMessagesPerSecond=120;this.patchRate=50;
     await this.setPrivate(true);
-    this.seats=new Map();this.lives=new Map();this.metrics={invalid:0,maxQueue:0,ticks:0,events:0,reconnects:0,drops:0};
+    this.seats=new Map();this.lives=new Map();this.metrics={invalid:0,maxQueue:0,coalesced:0,ticks:0,events:0,reconnects:0,drops:0,backpressure:0};
     this.sim=await createHeadlessSimulation({mapId:NETWORK_MAP,controllers:Object.fromEntries(seats.map(id=>[id,'human'])),config:NETWORK_CONFIG});
     if(this.sim.sourceHash!==CONTRACT.mapHash)throw Error('Server map differs from built contract. Run npm run build --prefix server.');
     if(createHash('sha256').update(collisionContract(this.sim.game.world)).digest('hex')!==CONTRACT.collisionHash)throw Error('Server collision differs from built contract.');
@@ -95,19 +96,39 @@ export class NetworkRoom extends Room {
     const frames=new Map(),actions=new Map();this.lag.shots.clear();
     for(const client of this.clients){
       const seat=this.seats.get(client.sessionId),buffer=this.inputs.get(client.sessionId);
+      // ws buffers writes when a peer stops reading. Bound that transport queue
+      // too, rather than retaining an unlimited stream of snapshots/events.
+      if(client.ref.readyState===1&&client.ref.bufferedAmount>MAX_BUFFERED_BYTES){
+        if(seat){seat.enabled=false;seat.revoked=true;}buffer.clear();
+        this.metrics.backpressure++;client.ref.terminate();continue;
+      }
       this.metrics.maxQueue=Math.max(this.metrics.maxQueue,buffer.size);
       if(!seat?.ready||!seat.enabled||!seat.connected||seat.client!==client){buffer.clear();if(seat&&this.clock.elapsedTime>seat.deadline)client.leave(4008);continue;}
-      const f=buffer.next();if(!f||!seat.actor.alive)continue; // no cached held movement/fire on silence
-      try{
-        const input=validateNetworkInput(wireInput(f),seat.actor,this.sim.tickNumber);
-        if(f.sampleTick<seat.lastSampleTick)throw Error('Regressed input tick');
-        seat.lastSampleTick=f.sampleTick;
-        const fire=f.fire&&f.fireId>seat.lastFire;
-        input.fire=fire&&this.lag.accept(seat,f,buffer.renderTime);input.reload=f.reloadId>seat.lastReload;
-        seat.lastFire=Math.max(seat.lastFire,f.fireId);seat.lastReload=Math.max(seat.lastReload,f.reloadId);
-        frames.set(client.sessionId,input);
-        actions.set(seat.id,`${seat.id}:${seat.actor.lifeId}:${seat.epoch}:${f.fireId}`);
-      }catch{this.metrics.invalid++;}
+      if(!seat.actor.alive){buffer.clear();continue;}
+      // Consume ordered arrivals once per authority tick. Replaying one queued
+      // frame per tick accumulated ~200 ms of avoidable input delay when a
+      // renderer sent catch-up frames faster than the server timer could drain.
+      // Coalesce controls, never simulation time. Preserve a short fire press
+      // with ITS orientation/tick/stamp even if a release follows in this batch.
+      let latest,shot,reload=false,consumed=0;
+      for(let f;(f=buffer.next());){
+        consumed++;
+        try{
+          const input=validateNetworkInput(wireInput(f),seat.actor,this.sim.tickNumber);
+          if(f.sampleTick<seat.lastSampleTick)throw Error('Regressed input tick');
+          seat.lastSampleTick=f.sampleTick;
+          latest={input,frame:f,stamp:buffer.renderTime};
+          if(f.fire&&f.fireId>seat.lastFire)shot=latest;
+          reload ||= f.reloadId>seat.lastReload;
+          seat.lastFire=Math.max(seat.lastFire,f.fireId);seat.lastReload=Math.max(seat.lastReload,f.reloadId);
+        }catch{this.metrics.invalid++;}
+      }
+      this.metrics.coalesced+=Math.max(0,consumed-1);
+      if(!latest)continue; // no cached held movement/fire on silence
+      const selected=shot||latest,{input,frame:f,stamp}=selected;
+      input.fire=!!shot&&this.lag.accept(seat,f,stamp);input.reload=reload;
+      frames.set(client.sessionId,input);
+      actions.set(seat.id,`${seat.id}:${seat.actor.lifeId}:${seat.epoch}:${f.fireId}`);
     }
     const oldLives=new Map(this.sim.game.actors.map(a=>[a.id,a.lifeId]));
     const events=this.sim.tick(frames);

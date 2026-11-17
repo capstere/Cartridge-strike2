@@ -89,10 +89,12 @@ test('wire bursts cannot accelerate simulation; overflow is bounded and oversize
  // Arrival and timer callbacks can interleave. Twelve is the pending queue cap,
  // not a lifetime limit on valid frames consumed across several clock ticks.
  for(let i=1;i<=40;i++)send(room,{strafe:1,fire:true,fireId:i});
- await until(()=>consumed>=2,'fixed ticks consume frames while the burst arrives');
+ await until(()=>room.input().lastProcessed>=40,'first burst is coalesced and acknowledged');
  for(let i=41;i<=80;i++)send(room,{strafe:1,fire:true,fireId:i});
  await until(()=>room.input().lastProcessed>=80,'overflow frames are acknowledged as discarded');
- assert.equal(authority.metrics.maxQueue,12);assert(consumed>12&&consumed<80,'interleaved burst still discards overflow');
+ assert.equal(authority.metrics.maxQueue,12);assert(consumed>=2&&consumed<80,'bursts cannot add authority steps');
+ assert(authority.metrics.coalesced>0,'queued controls coalesce without a lasting input backlog');
+ assert.equal(authority.inputs.get(room.sessionId).size,0,'authority drains the received batch each tick');
  assert(steps.every(s=>s.ticks===1&&s.distance<=NETWORK_CONFIG.runSpeed*NETWORK_CONFIG.fixedStep+.00001),'one shared movement step per tick');
  const ticks=authority.sim.tickNumber-startTick;
  assert(ammo-actor.inventory.primary.ammo<=1+Math.floor(ticks*NETWORK_CONFIG.fixedStep/WEAPONS.smg.interval),'server cadence rejects excess shot actions');

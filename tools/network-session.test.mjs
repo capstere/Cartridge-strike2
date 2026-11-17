@@ -2,6 +2,17 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {NetworkSession} from '../src/fps/network/session.mjs';
 
+test('render stalls do not masquerade as network loss; real silence still reconnects',()=>{
+ let drops=0;
+ const session={closed:false,connectionState:'connected',lastPatch:100,lastWatchdog:100,silenceSince:0,interruptConnection(){drops++;}};
+ const check=now=>NetworkSession.prototype.checkConnection.call(session,now);
+ check(4500);assert.equal(drops,0,'allow delayed socket tasks after a blocked main thread');
+ session.lastPatch=4510;check(5500);assert.equal(drops,0);
+ check(6500);check(7500);assert.equal(drops,0);
+ check(8500);assert.equal(drops,1,'sustained silence across running timer callbacks reconnects');
+ session.closed=true;check(9500);assert.equal(drops,1);
+});
+
 test('reconnect rejects old-epoch effects and disposed sessions ignore late callbacks',()=>{
   const session={closed:false,enabled:true,connectionState:'connected',seenEvent:0,events:[],localPlayerId:'a',
     room:{state:{actors:new Map([['b',{lifeId:3,controlEpoch:2}]])}}};

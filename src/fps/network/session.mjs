@@ -84,7 +84,8 @@ export class NetworkSession {
     await wait(()=>this.closed||room.state.actors.get(this.localPlayerId)?.ready);
     if(this.closed)throw Error(this.problem||'Room closed before spawn.');
     this.connectionState='connected';this.snapshot();this.view.state.phase='active';
-    this.watchdog=setInterval(()=>{if(!this.closed&&this.connectionState==='connected'&&performance.now()-this.lastPatch>3000)this.interruptConnection();},1000);
+    this.lastWatchdog=performance.now();this.silenceSince=0;
+    this.watchdog=setInterval(()=>this.checkConnection(performance.now()),1000);
     return this;
   }
   snapshot(){
@@ -226,6 +227,16 @@ export class NetworkSession {
     this.enabled=enabled;this.view.state.paused=!enabled;this.events=[];
     if(this.room&&this.lifeId&&this.connectionState!=='reconnecting')this.room.send('controls',{enabled,lifeId:this.lifeId,controlEpoch:this.controlEpoch});
     if(enabled&&this.prediction)this.prediction.reset();
+  }
+  checkConnection(now){
+    if(this.closed||this.connectionState!=='connected')return;
+    const stalled=now-this.lastWatchdog>1500;this.lastWatchdog=now;
+    // A blocked renderer/background timer cannot observe network liveness.
+    // Allow queued socket callbacks to run after resuming before declaring a
+    // silent connection dead. Input already stops after 1 s without a patch.
+    if(stalled||now-this.lastPatch<=1000){this.silenceSince=0;return;}
+    this.silenceSince ||= now;
+    if(now-this.silenceSince>=2000)this.interruptConnection();
   }
   beginReconnect(){
     if(this.closed||this.connectionState==='reconnecting')return;

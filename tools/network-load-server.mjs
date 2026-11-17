@@ -17,7 +17,7 @@ function instrument(){
   if(!seen.has(r)){
    seen.add(r);let last;
    for(const [obj,key,label] of [[r,'fixedTick','tick'],[r.sim,'tick','simulation'],[r,'project','projection'],[r,'broadcastPatch','serialization']]){
-    const original=obj[key];obj[key]=function(...args){const t=performance.now();if(label==='tick'){if(last!==undefined)push('interval',t-last);last=t;}try{return original.apply(this,args);}finally{push(label,performance.now()-t);}};
+    const original=obj[key];obj[key]=function(...args){const t=performance.now();if(label==='tick'){if(last!==undefined)push('interval',t-last);last=t;}try{return original.apply(this,args);}finally{push(label,performance.now()-t);if(label==='simulation')placeActors(r);}};
    }
    if(r.lag){const accept=r.lag.accept;r.lag.accept=function(seat,frame,stamp){if(stamp)push('shotAge',r.clock.elapsedTime-stamp);return accept.call(this,seat,frame,stamp);};}
   }
@@ -26,6 +26,12 @@ function instrument(){
    c.ref.send=function(data,...args){bytes+=typeof data==='string'?Buffer.byteLength(data):data.byteLength;return original.call(this,data,...args);};
    c.ref.on('message',data=>inBytes+=data.byteLength);
   }
+  placeActors(r);
+ }
+}
+function placeActors(r){
+  // Place a respawn before its first state projection, so no intermediate
+  // ordinary spawn can be interpolated into this controlled combat fixture.
   // Test-only combat placement on each new life. All movement, ammo, hits,
   // cooldowns, damage and respawn timing still pass through the real authority.
   for(const a of r.sim.game.actors){
@@ -37,7 +43,6 @@ function instrument(){
     Object.assign(a,{x,y:0,z,yaw:a.team==='analysts'?Math.PI:0,pitch:0});
    }
   }
- }
 }
 function snapshot(){
  instrument();
@@ -49,7 +54,7 @@ function snapshot(){
   rooms:[...local.rooms].map(r=>({id:r.roomId,clients:r.clients.length,seats:r.seats.size,actors:r.sim.game.actors.length,tick:r.sim.tickNumber,
    metrics:r.metrics,lag:r.lag?{...r.lag.metrics,ages:stats(r.lag.metrics.ages)}:undefined,histories:r.lag?.tickTimes.size,
    rewindEntities:r.lag?.rewind.groups?.map(g=>[...g.entities()].length),
-   inputMax:Math.max(0,...[...r.seats.keys()].map(sid=>r.inputs.get(sid).size)),
+   inputMax:Math.max(0,...[...r.seats.keys()].map(sid=>r.inputs.get(sid).size)),rtts:[...r.seats.values()].map(s=>s.rtt),
    listeners:r.clients.map(c=>c.ref.eventNames().reduce((n,name)=>n+c.ref.listenerCount(name),0)),
    listenerDetails:r.clients.map(c=>({sid:c.sessionId,events:Object.fromEntries(c.ref.eventNames().map(name=>[name,c.ref.listenerCount(name)]))})),
    score:{...r.sim.game.state.score},actorsState:r.sim.game.actors.map(a=>({id:a.id,lifeId:a.lifeId,kills:a.kills,deaths:a.deaths}))}))};
