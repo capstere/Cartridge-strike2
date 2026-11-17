@@ -12,12 +12,14 @@ Ingen publik bindning, routerändring, tunnel eller portvidarebefordran behövs.
 ## Förbered uppdateringen
 
 Kör följande i **Bash på Pi:n**, som användaren som äger checkouten. Behåll samma
-terminal och variabler genom uppdatering/verifiering. `ExecStart` ska redan starta
+terminal och variabler genom uppdatering/verifiering. Blocken avbryter vid
+kommandofel; öppna vid behov en ny terminal för rollback med den sparade sökvägen. `ExecStart` ska redan starta
 det här repots `server/local-server.mjs` (direkt med `--import register-shared.mjs`
 eller via `npm start --prefix server`). Om den startar en annan server, avbryt
 och anpassa inte den befintliga tjänsten efter gissningar.
 
 ```bash
+set -euo pipefail
 systemctl cat cartridge-strike2
 systemctl show cartridge-strike2 -p User -p WorkingDirectory -p ExecStart
 node --version
@@ -120,6 +122,7 @@ Om du öppnat en ny terminal: sätt `CS2_BACKUP` till den utskrivna backupmappen
 Återställ även en eventuell EnvironmentFile som du själv ändrade.
 
 ```bash
+set -euo pipefail
 CS2_REPO=$(cat "$CS2_BACKUP/repo")
 CS2_OLD=$(cat "$CS2_BACKUP/commit")
 CS2_DROP=/etc/systemd/system/cartridge-strike2.service.d/60-pass3a2-lan.conf

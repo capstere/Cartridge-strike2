@@ -164,7 +164,8 @@ Linux Chromium, Windows Chromium and macOS WebKit. Linux and Windows use
 Chromium's SwiftShader backend and record/assert the actual WebGL renderer.
 Windows' D3D11 WARP backend exceeded the 90-second first-scene warm-up deadline
 with all assets downloaded; SwiftShader built that scene in about 30 seconds
-in the earlier Windows run. Neither backend provides physical-GPU validation. Every LAN/server job uses the pinned Node 26.13.0.
+in the earlier Windows run. Neither backend provides physical-GPU validation.
+Every LAN/server job uses the pinned Node 26.13.0.
 Software jobs use DPR 0.5 on Linux and 0.25 on Windows for
 functional coverage; no software-renderer FPS or Pi capacity claim follows.
 Only small JSON/screenshots are retained for seven days. The build generator
@@ -204,7 +205,12 @@ Pi performance acceptance. The LAN/normal-launch server runs in a separate Node 
 I/O cannot hold up its HTTP/WS loop. Test-only IPC observes real server state and
 terminates sockets for loss checks; it exposes no HTTP test endpoints and never
 changes player state. Pending HTTP requests, server response completion and the
-actual WebGL renderer are retained on LAN loading failures.
+actual WebGL renderer are retained on LAN loading failures. On Windows CI only,
+the owned test driver/server processes request the OS high scheduling class
+(not real-time), recording that class, CPU count and memory. With two active
+software GPUs the normal-priority fixture stopped answering HTTP/IPC within its
+deadlines; the real Pi server has a separate CPU. This changes no browser
+security setting, simulation timing, production service or gameplay assertion.
 
 No running Pi service, router, tunnel or public listener was changed. The new PR
 is for review and must not be automatically merged. After its review/merge, the

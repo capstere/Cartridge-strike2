@@ -147,6 +147,7 @@ jobs:
           FPS_LAN_MOBILE_BROWSER: ${{ matrix.mobile }}
           FPS_NETWORK_ANGLE: ${{ runner.os == 'macOS' && 'metal' || 'swiftshader' }}
           FPS_NETWORK_DPR: ${{ runner.os == 'Windows' && '0.25' || '0.5' }}
+          FPS_NETWORK_TEST_PRIORITY: ${{ runner.os == 'Windows' && '1' || '0' }}
         run: npm run test:lan --prefix server
       - name: Normal desktop launch with real keys and pointer lock
         timeout-minutes: 3
@@ -154,6 +155,7 @@ jobs:
           FPS_NETWORK_LAN: '1'
           FPS_NETWORK_ANGLE: ${{ runner.os == 'macOS' && 'metal' || 'swiftshader' }}
           FPS_NETWORK_DPR: ${{ runner.os == 'Windows' && '0.25' || '0.5' }}
+          FPS_NETWORK_TEST_PRIORITY: ${{ runner.os == 'Windows' && '1' || '0' }}
         run: node --import ./server/register-shared.mjs tools/network-launch-browser.mjs
       - name: Keep compact LAN browser evidence
         if: always()
