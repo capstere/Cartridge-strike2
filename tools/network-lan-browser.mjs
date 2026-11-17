@@ -8,7 +8,7 @@ import {CONTRACT} from '../shared/multiplayer/build.mjs';
 process.chdir(fileURLToPath(new URL('../',import.meta.url)));
 const mobileEngine=process.env.FPS_LAN_MOBILE_BROWSER||'chromium',desktopEngine=process.env.FPS_LAN_DESKTOP_BROWSER||'chromium';
 const engines={chromium,webkit,firefox},errors=[],rows=[];
-const angle=process.env.FPS_NETWORK_ANGLE||(process.platform==='darwin'?'metal':process.platform==='win32'?'d3d11-warp':'swiftshader');
+const angle=process.env.FPS_NETWORK_ANGLE||(process.platform==='darwin'?'metal':'swiftshader');
 const launch=engine=>engines[engine].launch(engine==='chromium'?{channel:'chromium',args:['--use-angle='+angle,'--disable-background-timer-throttling','--disable-renderer-backgrounding','--disable-backgrounding-occluded-windows']}:{});
 let local=await createTestServer({lan:true,host:testLanHost(),port:0});
 const url=local.url,port=local.httpServer.address().port,host=local.config.host;
@@ -31,7 +31,7 @@ async function open(engine,mobile){
   assert.equal(await page.locator('#network-endpoint').inputValue(),url);
   const features=await page.evaluate(()=>{const gl=__fps.renderer.renderer.getContext(),ext=gl.getExtension('WEBGL_debug_renderer_info');return {secure:isSecureContext,subtle:!!crypto.subtle,touch:__fps.mobile.enabled,map:__fps.world.project?.name,fullscreen:!!document.documentElement.requestFullscreen,renderer:gl.getParameter(ext?.UNMASKED_RENDERER_WEBGL||gl.RENDERER)};});
   assert.equal(features.secure,false,'actual private-IP HTTP must exercise the insecure-context path');assert.equal(features.subtle,false);assert.equal(features.touch,mobile);
-  if(engine==='chromium'&&angle==='d3d11-warp')assert.match(features.renderer,/Direct3D11|D3D11/,'Windows must exercise the selected real WebGL renderer');
+  if(engine==='chromium'&&angle==='swiftshader')assert.match(features.renderer,/SwiftShader/,'Software CI must exercise real SwiftShader WebGL');
   rows.push({engine,mobile,version:browser.version(),features});console.log('LAN scene ready',engine,mobile,features.renderer);
   return page;
 }

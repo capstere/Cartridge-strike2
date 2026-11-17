@@ -6,7 +6,7 @@ import {createTestServer} from './network-test-server.mjs';
 import {testLanHost} from './network-lan-host.mjs';
 import {CONTRACT} from '../shared/multiplayer/build.mjs';
 const headed=process.env.FPS_NETWORK_HEADED==='1';
-const angle=process.env.FPS_NETWORK_ANGLE||(process.platform==='darwin'?'metal':process.platform==='win32'?'d3d11-warp':'swiftshader');
+const angle=process.env.FPS_NETWORK_ANGLE||(process.platform==='darwin'?'metal':'swiftshader');
 const local=await createTestServer({port:0,...(process.env.FPS_NETWORK_LAN==='1'?{lan:true,host:testLanHost()}:{})}),browsers=[],pages=[],errors=[];
 async function until(predicate,label,timeout=10000){const end=performance.now()+timeout;while(!predicate()){assert(performance.now()<end,label);await new Promise(r=>setTimeout(r,25));}}
 async function open(mobile){

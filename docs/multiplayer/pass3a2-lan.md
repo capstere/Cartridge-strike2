@@ -160,9 +160,11 @@ the entire client through its test proxy on one origin, preserving reliable orde
 It is jitter/delay coverage, not a claim of packet-loss simulation.
 
 CI preserves all prior Linux offline/visual/mobile gates and adds bounded LAN jobs on
-Linux Chromium, Windows Chromium and macOS WebKit. Linux uses SwiftShader;
-Windows selects Chromium's D3D11 WARP software backend and records/asserts the
-actual WebGL renderer. Every LAN/server job uses the pinned Node 26.13.0.
+Linux Chromium, Windows Chromium and macOS WebKit. Linux and Windows use
+Chromium's SwiftShader backend and record/assert the actual WebGL renderer.
+Windows' D3D11 WARP backend exceeded the 90-second first-scene warm-up deadline
+with all assets downloaded; SwiftShader built that scene in about 30 seconds
+in the earlier Windows run. Neither backend provides physical-GPU validation. Every LAN/server job uses the pinned Node 26.13.0.
 Software jobs use DPR 0.5 on Linux and 0.25 on Windows for
 functional coverage; no software-renderer FPS or Pi capacity claim follows.
 Only small JSON/screenshots are retained for seven days. The build generator
