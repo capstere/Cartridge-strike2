@@ -122,7 +122,7 @@ jobs:
             mobile: chromium
           - os: windows-latest
             mobile: chromium
-          - os: macos-14
+          - os: macos-15
             mobile: webkit
     runs-on: ${{ matrix.os }}
     timeout-minutes: 12
@@ -147,7 +147,7 @@ jobs:
         timeout-minutes: 7
         env:
           FPS_LAN_MOBILE_BROWSER: ${{ matrix.mobile }}
-          FPS_NETWORK_ANGLE: ${{ matrix.os == 'macos-14' && 'metal' || 'swiftshader' }}
+          FPS_NETWORK_ANGLE: ${{ runner.os == 'macOS' && 'metal' || 'swiftshader' }}
           FPS_NETWORK_DPR: '0.5'
         run: npm run test:lan --prefix server
       - name: Normal desktop launch with real keys and pointer lock
