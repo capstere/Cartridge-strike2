@@ -57,6 +57,13 @@ not establish physical-window mouse capture acceptance.
   the map's furniture dependencies into the runtime allowlist: 45 existing
   files were missing from the old synthetic slice's allowlist. No second scene
   implementation or placeholder laboratory is introduced.
+- Final review measured three resident model downloads and three parsed sources
+  despite zero online residents. The renderer now skips that initialization only
+  for the network slice. This removes **7,982,418 compressed payload bytes per
+  fresh client** and all three unused source models; the browser test rejects any
+  resident-model request online. All original assets and offline loading remain.
+  [Before/after loading evidence](floor5/resident-loading.json) records one native
+  sample each (6.24 / 5.80 s startup); that timing pair is not a statistical gain.
 - The existing authoritative Game advances all 51 hinged doors before movement
   and combat, using the original proximity opening, swing direction, hold timer
   and occupied-sweep safety. Schema patches include angle, target, sign and hold
@@ -118,14 +125,14 @@ form; repeated cleanup joins use that form's application handler.
 | Offline lifecycle | PASS, 20 measured match/lobby cycles after warmup; final plateau 1,329 geometries / 162 textures / 109 programs, 267 listeners, one retained Game, one audio context / three nodes / zero voices |
 | Native two-browser Floor 5 | PASS, loopback and 100 ms RTT with jitter, 20 + 4 leave/rejoin cycles; both players move/aim/shoot/reload, one counted kill, damage/death/respawn, D39 obstruction/opening, late world state, pause/orientation and empty-room cleanup |
 | Remote presentation | PASS, visible original operator follows interpolated body; actual `Walk_Loop` and `Death01` observed in rendered gameplay |
-| Normal Floor 5 launch without test hooks | PASS, two humans, actual keys/mouse, pointer lock on first Resume, 1.12 m movement, four shots, reload HUD and leaving without disturbing the other player |
-| Mac SwiftShader | FAIL at startup, second Floor 5 browser exceeds the 60 s readiness deadline; also reproduced at DPR 0.5 and with the first lobby frozen during second-page loading. No room/gameplay result is claimed for these runs. |
+| Normal Floor 5 launch without test hooks | PASS, two humans, actual keys/mouse, pointer lock on first Resume, 1.05 m movement, four shots, reload HUD and leaving without disturbing the other player |
+| Mac SwiftShader | Initial validation FAIL at startup, second Floor 5 browser exceeds the 60 s readiness deadline; also reproduced at DPR 0.5 and with the first lobby frozen during second-page loading. No room/gameplay result is claimed for these runs. |
 
 The network test also asserts unchanged first/final GPU allocations, model,
 callback and listener counts. Both scenarios finish with **1,642 geometries /
 98 textures**, two actor models, four SDK callbacks, one remote entry, 230 DOM
 listeners and zero audio voices. Every own confirmed shot reuses its immediate
-effect (13/13 loopback, 17/17 delayed), with no duplicate confirmation playback.
+effect (10/10 loopback, 13/13 delayed), with no duplicate confirmation playback.
 Both settled position errors and respawn errors are zero in these runs.
 
 Evidence: [native browser record](floor5/browser-native.json),
@@ -176,26 +183,27 @@ these are measured views, not a universal map or physical-phone FPS guarantee.
 
 | View | Loopback FPS / frame p95 | Delayed FPS / frame p95 | Draw calls | Mean render submission, loopback / delayed |
 | --- | --- | --- | --- | --- |
-| Cargo Lift, desktop | 60.0 / 16.8 ms | 60.0 / 16.8 ms | 1,081 | 8.28 / 8.55 ms |
-| Service Lift, mobile emulation | 60.0 / 16.7 ms | 60.0 / 16.8 ms | 79 | 1.56 / 1.34 ms |
-| C08, desktop facing the other human | 59.4 / 16.8 ms | 58.8 / 16.7 ms | 1,196 | 14.66 / 9.53 ms |
-| C08, mobile emulation facing back | 60.0 / 16.8 ms | 60.0 / 16.7 ms | 198 | 3.10 / 1.98 ms |
+| Cargo Lift, desktop | 60.0 / 16.8 ms | 60.0 / 16.8 ms | 1,081 | 8.86 / 9.70 ms |
+| Service Lift, mobile emulation | 60.0 / 16.8 ms | 60.0 / 16.8 ms | 79 | 1.27 / 1.41 ms |
+| C08, desktop facing the other human | 58.8 / 16.8 ms | 58.8 / 16.8 ms | 1,196 | 9.68 / 11.26 ms |
+| C08, mobile emulation facing back | 60.0 / 16.8 ms | 60.0 / 16.8 ms | 198 | 2.03 / 2.27 ms |
 
 Across the whole scripted matches, including travel, combat, menus and cleanup,
-server fixed-step elapsed p95 is **1.62 / 0.50 ms**, and client prediction/frame
+server fixed-step elapsed p95 is **0.55 / 0.63 ms**, and client prediction/frame
 submission p95 is **0.30–0.40 ms**. These elapsed timings include scheduling and
 GC; they are not GPU timer queries or isolated process CPU measurements. The
-largest server samples were 239.5 / 44.2 ms, and the delayed C08 desktop window
-had a 99.9 ms frame despite its low p95. Those isolated stalls remain a profiling
-target before longer soak or capacity claims. No speculative renderer/AI rewrite
-was justified by this two-human sample.
+largest server samples were 20.9 / 39.9 ms, and the C08 desktop windows had
+116.6 / 116.7 ms frames despite their low p95. Those isolated stalls remain a
+profiling target before longer soak or capacity claims. Apart from the measured
+unused resident loading above, no renderer/AI rewrite was justified by this
+two-human sample.
 
-Sampled JavaScript heaps across the four windows were 76.9–131.7 MiB loopback
-and 95.5–150.7 MiB delayed (not forced-GC retained-size measurements). Cleanup
+Sampled JavaScript heaps across the four windows were 86.8–137.6 MiB loopback
+and 84.7–141.3 MiB delayed (not forced-GC retained-size measurements). Cleanup
 checks use forced GC and explicit resource/listener counts. The delayed proxy
-carried 61,065 bytes upstream and 387,070 downstream across the match and four
-rejoins, 12,760 messages in total. Its first 4,096 ordered one-way delays had a
-52.0 ms median, 68.4 ms p95 and 73.8 ms maximum; ordered jitter can queue beyond
+carried 62,303 bytes upstream and 385,567 downstream across the match and four
+rejoins, 13,122 messages in total. Its first 4,096 ordered one-way delays had a
+52.2 ms median, 68.3 ms p95 and 70.8 ms maximum; ordered jitter can queue beyond
 the nominal 30–70 ms range. This is reliable WebSocket latency/jitter testing,
 not a packet-loss or external-internet test.
 

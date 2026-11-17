@@ -2346,8 +2346,8 @@
     },
     {
       "path": "src/fps/render.mjs",
-      "bytes": 19524,
-      "sha256": "51f41138f76549d9f15750db89be1201a612b06bc0ca2b7a64332c5729d3d935"
+      "bytes": 19545,
+      "sha256": "3732dd4b76f55fbf71c0b1488f194de077aed0a765001f74cfd18f727ad42bcb"
     },
     {
       "path": "src/fps/riposte-audio.mjs",
@@ -2590,7 +2590,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 58689753,
+  "bytes": 58689774,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

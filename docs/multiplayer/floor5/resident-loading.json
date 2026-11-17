@@ -1,0 +1,45 @@
+{
+  "scenario": "one fresh native browser creates a Floor 5 network room; no resident NPCs are enabled",
+  "before": {
+    "residents": 0,
+    "sources": 3,
+    "instances": 0,
+    "files": [
+      {
+        "path": "/assets/fps/Danceman/Danceman.glb.gz",
+        "bytes": 1810602,
+        "transfer": 1810902
+      },
+      {
+        "path": "/assets/fps/zombies/hollow.glb.gz",
+        "bytes": 3268124,
+        "transfer": 3268424
+      },
+      {
+        "path": "/assets/fps/zombies/tattered.glb.gz",
+        "bytes": 2903692,
+        "transfer": 2903992
+      }
+    ],
+    "elapsedMs": 6241.6337920000005,
+    "heap": 69233160,
+    "environment": {
+      "angle": "metal",
+      "testDpr": 1
+    }
+  },
+  "after": {
+    "residents": 0,
+    "sources": 0,
+    "instances": 0,
+    "files": [],
+    "elapsedMs": 5795.766625,
+    "heap": 66950236,
+    "environment": {
+      "angle": "metal",
+      "testDpr": 1
+    }
+  },
+  "removedEncodedBytes": 7982418,
+  "timingNote": "One sample per condition; startup and heap numbers are observations, not a statistical performance claim."
+}

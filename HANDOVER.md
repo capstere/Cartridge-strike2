@@ -195,6 +195,9 @@ replicated on late join and simulated with the same controller during prediction
 Generated map, resolved collision, configuration, protocol and build hashes gate
 admission. Online glass stays intact and solid. The two-human cap and existing
 Pulse SMG combat, scoring, respawn and SDK prediction/interpolation remain.
+Measured online-only loading of three unused resident models was removed
+(7,982,418 compressed bytes per fresh client); offline residents and all assets
+remain intact. The network browser test rejects those unnecessary requests.
 
 [Implementation, reproducible tests, measurements and limitations](docs/multiplayer/pass3a-floor5.md).
 Offline Classic/Endless state and event traces still match over 9,600 steps;

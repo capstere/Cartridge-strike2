@@ -15,6 +15,7 @@ fs.mkdirSync('test-results/network',{recursive:true});
 async function open(viewport={width:1280,height:720},mobile=false){
  const context=await browser.newContext({viewport,hasTouch:mobile,isMobile:mobile,deviceScaleFactor:testDpr}),page=await context.newPage();
  page.setDefaultTimeout(60000);page.on('pageerror',e=>errors.push(e.stack));
+ page.on('request',r=>{if(/assets\/fps\/(zombies\/|Danceman\/)/.test(r.url()))errors.push('Online slice requested an unused resident model: '+r.url());});
  page.on('response',r=>{if(r.status()>=400&&r.request().method()==='GET'&&/\.(glb|mjs|mp3|ogg|webp)(\?|$)/.test(r.url()))errors.push(`Asset HTTP ${r.status()}: ${r.url()}`);});
  await page.addInitScript(()=>localStorage.setItem('cartridge-settings',JSON.stringify({graphics:'low',volume:0,autoReload:false,mobileAutoFire:false})));
  await page.goto(local.url+'/fps/?network=local&test&realtime');
@@ -23,6 +24,7 @@ async function open(viewport={width:1280,height:720},mobile=false){
  await page.waitForFunction(()=>document.querySelector('#lb-objective').textContent.includes('inga uppdrag'));
  assert.match(await page.locator('.lb-brief').textContent(),/Floor 5 Laboratory/);
  assert.match(await page.locator('.lb-brief').textContent(),/1 mot 1/);
+ assert(await page.evaluate(()=>!__fps.renderer.zombieVisuals),'online renderer has no unused resident asset initialization');
  return page;
 }
 async function join(page,endpoint,roomId='',name='Player'){

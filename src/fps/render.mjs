@@ -93,7 +93,7 @@ export class Renderer extends EngineRenderer {
     this.combatVisuals=new CombatVisuals(this.scene,world,settings);
     this.presentationDisposed=false;this.presentationRestores=[];this.presentationField=null;
     // Stage the field before the existing app declares its assets ready. Never bake in render().
-    if(isZombieFloor(world))this.zombieVisuals=new ZombieVisuals(this.scene,settings.mobile);
+    if(!world.networkSlice&&isZombieFloor(world))this.zombieVisuals=new ZombieVisuals(this.scene,settings.mobile);
     this.assetsReady=Promise.all([this.assetsReady,this.zombieVisuals?.ready]).then(async()=>{
       if(this.presentationDisposed)return;
       if(world.projectScene){
