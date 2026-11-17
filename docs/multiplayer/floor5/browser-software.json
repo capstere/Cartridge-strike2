@@ -3004,5 +3004,6 @@
   "errors": [],
   "runtimeManifestSha256": "8a8070110037c1787b23443445489c75d178d23e85aeb326cf8b24f2f90be63f",
   "harnessSha256": "0769accb0b6021248482a269028f229a1909002c83d3617d678ea09d59fdb9c9",
-  "evidenceNote": "Compact observed results. The harness writes full arrays to ignored test-results/network/browser.json."
+  "evidenceNote": "Compact observed results. The harness writes full arrays to ignored test-results/network/browser.json.",
+  "validationScope": "Historical ad57289 Mac SwiftShader rendering/functionality record, before reliable-proxy correction. Does not establish final ordered-transport correctness; use the corrected native record and final Linux CI."
 }

@@ -2,6 +2,12 @@
 
 **Next multiplayer task — review [Pass 3A.1 PR #20](https://github.com/capstere/Cartridge-strike2/pull/20), its final required CI and [validation report](docs/multiplayer/pass3a-floor5.md). Do not automatically merge it or start a later multiplayer pass.**
 
+The Pass 3A.1 latency harness also fixes verified message reordering in its
+jitter proxy; [the trace and regression](docs/multiplayer/floor5/proxy-order.json)
+explain the intermittent route drift. Review final-head checks rather than
+relying on an earlier green run. The shared movement/physics and pinned SDK
+were not changed for this test-infrastructure correction.
+
 **Physical-device backlog — test mobile controls and audio.** Play on an iPhone and an Android phone in landscape, near 844×390 and 932×430 where available. Record the model, OS, browser, viewport and safe-area clearance. Move, aim and fire together, reload, jump, hold an objective and buy. Rotate, background and resume during the lobby and a match. Listen for the lobby theme stopping on Start and resuming on return. Record any failure with its screen position and steps. [Play the published build](https://capstere.github.io/Cartridge-strike2/)
 
 Floor 5 has neutral Meshy residents in Classic and Endless. The 20-cycle match lifecycle check passed. The feature was merged in [PR #7](https://github.com/capstere/Cartridge-strike2/pull/7) and verified on Pages in [PR #8](https://github.com/capstere/Cartridge-strike2/pull/8). [Living zombies, frame samples and published captures](docs/zombies/gameplay.md)

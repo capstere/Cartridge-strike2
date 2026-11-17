@@ -145,8 +145,8 @@ form; repeated cleanup joins use that form's application handler.
 
 | Check | Observed result |
 | --- | --- |
-| FPS/tools unit suite | PASS, 218 tests; the expanded shutter case also passed in the final four-test Floor 5 rerun |
-| Pinned server/API and focused network suite | PASS, 13 combined tests (four server/API, four Floor 5, three protocol, two session) |
+| FPS/tools unit suite | PASS, 220 tests; the expanded shutter case also passed in the final four-test Floor 5 rerun |
+| Pinned server/API and focused network suite | PASS, 14 combined tests (five server/API/proxy, four Floor 5, three protocol, two session) |
 | Prepared door traversal | PASS, 102 approaches; no missing routes |
 | Generated contract and runtime hashes | PASS, 516 runtime files; no hand-edited generated output |
 | Offline deterministic traces | PASS, all eight state/event hashes and shot counts unchanged over 9,600 steps against the Pass 2 baseline |
@@ -157,13 +157,13 @@ form; repeated cleanup joins use that form's application handler.
 | Native two-browser Floor 5 | PASS, loopback and 100 ms RTT with jitter, 20 + 4 leave/rejoin cycles; both players move/aim/shoot/reload, one counted kill, damage/death/respawn, D39 obstruction/opening, late world state, pause/orientation and empty-room cleanup |
 | Remote presentation | PASS, visible original operator follows interpolated body; actual `Walk_Loop` and `Death01` observed in rendered gameplay |
 | Normal Floor 5 launch without test hooks | PASS, two humans, actual keys/mouse, pointer lock on first Resume, 1.19 m movement, four shots, reload HUD and leaving without disturbing the other player |
-| Mac SwiftShader functional profile | PASS, complete loopback / latency scenarios in 237.2 / 199.4 s, including 20 + 4 actually rendered cleanup cycles; DPR 0.5 and downward route-travel look. Stable rejoining-client GPU 1,077 geometries / 98 textures, 231 listeners, zero settled/respawn errors. This is not a software FPS pass. |
+| Earlier Mac SwiftShader functional profile | Historical PASS before the proxy-order correction, complete loopback / latency scenarios in 237.2 / 199.4 s, including 20 + 4 actually rendered cleanup cycles; DPR 0.5 and downward route-travel look. Stable rejoining-client GPU 1,077 geometries / 98 textures, 231 listeners, zero settled/respawn errors. This is not a software FPS pass or final ordered-transport evidence; the corrected proxy is covered by the final native runs and required Linux CI. |
 
 The network test also asserts unchanged first/final GPU allocations, model,
 callback and listener counts. The rejoining client finishes both scenarios with **1,642 geometries /
 98 textures**, two actor models, four SDK callbacks, one remote entry, 231 DOM
 listeners and zero audio voices. Every own confirmed shot reuses its immediate
-effect (11/11 loopback, 14/14 delayed), with no duplicate confirmation playback.
+effect (11/11 loopback, 18/18 delayed), with no duplicate confirmation playback.
 Both settled position errors and respawn errors are zero in these runs.
 
 Evidence: [native browser record](floor5/browser-native.json),
@@ -215,10 +215,11 @@ travel view during stop acknowledgement. The 20-second movement deadline, collis
 assertions remain. Timeout reports
 include input, freshness, pause and draw state for further diagnosis.
 
-The committed native/software measurement records were captured at `ad57289`;
-this follow-up changes only test driving and diagnostics, not runtime code,
-assets or the measured implementation. The final-head CI result is linked on
-PR #20 rather than recording an unexecuted pass here.
+The earlier software record was captured at `ad57289`; the final native record
+was refreshed after the reliable-proxy correction below. Runtime code/assets
+remain unchanged from `ad57289`; subsequent changes affect test driving and
+transport only. The final-head CI result is linked on PR #20 rather than
+recording an unexecuted pass here.
 
 The subsequent [Linux run 44143135047](https://github.com/capstere/Cartridge-strike2/actions/runs/44143135047)
 reached the corridor waypoint with retained downward aim and 34 draws. It then
@@ -256,6 +257,35 @@ The existing offline browser scripts use a root HTTP server on port 8765:
 rig paths via its documented environment variables. Raw network arrays and
 screenshots are regenerated under ignored `test-results/network/`.
 
+[Run 44144491015](https://github.com/capstere/Cartridge-strike2/actions/runs/44144491015)
+subsequently passed both required jobs and every offline/browser stage on
+`c4915aa`. The proxy issue below was then reproduced independently, so that
+earlier green run does not substitute for final-head validation.
+
+### Reliable latency-proxy correction
+
+An instrumented native route stress run reproduced drift on cycle 30. Client
+inputs 17953/17954 were movement `0.3646700419` then stop `0`; the authority
+received those values in reverse order. Subsequent unchanged delta frames kept
+the older movement value. This was a test-proxy transport defect, not a reason
+to alter shared physics, movement or the pinned SDK.
+
+A separate 600-message nominal-60-Hz echo probe caught swapped messages in both
+proxy directions. Increasing requested timer deadlines did not guarantee
+callback execution order. The proxy now drains a per-direction FIFO only while
+its oldest message is ready. Closing a stream cancels its timers and releases
+both ready and waiting messages. The same live probe then delivered all 600
+messages in order in both directions. Two deterministic unit tests deliberately
+reverse timer callbacks and exercise cleanup; a pinned-server regression runs
+the complete 600-message echo probe. [Observed input trace and before/after probe](floor5/proxy-order.json).
+
+The browser harness can retain bounded input traces with `FPS_NETWORK_TRACE=1`;
+this observation is disabled for performance measurements. Requested and actual
+delivery-delay samples are now recorded separately. Earlier delayed artifacts
+predating this correction are historical measurements, not final evidence of
+ordered transport. The final native record uses the corrected proxy; final
+Linux CI reruns both complete gameplay scenarios and all existing offline gates.
+
 ### Measured native performance
 
 Apple M1 / macOS ARM64, Chromium 153.0.8010.12 / ANGLE Metal, low graphics,
@@ -266,28 +296,30 @@ these are measured views, not a universal map or physical-phone FPS guarantee.
 
 | View | Loopback FPS / frame p95 | Delayed FPS / frame p95 | Draw calls | Mean render submission, loopback / delayed |
 | --- | --- | --- | --- | --- |
-| Cargo Lift, desktop | 60.0 / 16.7 ms | 60.0 / 16.7 ms | 1,081 | 9.34 / 8.77 ms |
-| Service Lift, mobile emulation | 60.0 / 16.7 ms | 60.0 / 16.7 ms | 79 | 1.39 / 1.43 ms |
-| C08, desktop facing the other human | 59.0 / 16.7 ms | 59.0 / 16.8 ms | 1,196 | 9.81 / 9.27 ms |
-| C08, mobile emulation facing back | 60.0 / 16.7 ms | 60.0 / 16.8 ms | 198 | 2.09 / 2.00 ms |
+| Cargo Lift, desktop | 60.0 / 16.8 ms | 60.0 / 16.7 ms | 1,081 | 10.07 / 9.63 ms |
+| Service Lift, mobile emulation | 60.0 / 16.7 ms | 60.0 / 16.7 ms | 79 | 1.79 / 1.28 ms |
+| C08, desktop facing the other human | 58.8 / 16.8 ms | 59.2 / 16.7 ms | 1,196 | 9.02 / 9.79 ms |
+| C08, mobile emulation facing back | 60.0 / 16.8 ms | 60.0 / 16.7 ms | 198 | 2.34 / 1.74 ms |
 
 Across the whole scripted matches, including travel, combat, menus and cleanup,
-server fixed-step elapsed p95 is **0.61 / 0.49 ms**, and client prediction/frame
+server fixed-step elapsed p95 is **0.56 / 0.54 ms**, and client prediction/frame
 submission p95 is **0.30–0.40 ms**. These elapsed timings include scheduling and
 GC; they are not GPU timer queries or isolated process CPU measurements. The
-largest server samples were 142.5 / 55.4 ms, and the C08 desktop windows had
-100 ms frames in both scenarios despite their low p95. Those isolated stalls remain a
+largest server samples were 83.5 / 140.6 ms, and the C08 desktop windows had
+116.7 / 83.3 ms maximum frames despite their low p95. Those isolated stalls remain a
 profiling target before longer soak or capacity claims. Apart from unused resident loading and redundant empty-lobby redraws above,
 no renderer/AI rewrite was justified by this two-human sample.
 
-Sampled JavaScript heaps across the four windows were 80.7–125.1 MiB loopback
-and 90.8–143.9 MiB delayed (not forced-GC retained-size measurements). Cleanup
+Sampled JavaScript heaps across the four windows were 84.5–136.6 MiB loopback
+and 87.9–146.6 MiB delayed (not forced-GC retained-size measurements). Cleanup
 checks use forced GC and explicit resource/listener counts. The delayed proxy
-carried 62,205 bytes upstream and 381,634 downstream across the match and four
-rejoins, 13,584 messages in total. Its first 4,096 ordered one-way delays had a
-51.9 ms median, 68.3 ms p95 and 70.6 ms maximum; ordered jitter can queue beyond
-the nominal 30–70 ms range. This is reliable WebSocket latency/jitter testing,
-not a packet-loss or external-internet test.
+carried 58,745 bytes upstream and 385,338 downstream across the match and four
+rejoins, 14,164 messages in total. The first 4,096 **actual delivered** one-way
+delays measured median 52.1 ms, p95 68.9 ms and maximum 225.9 ms, including host
+scheduling stalls. Requested delays measured median 52.1 ms, p95 68.4 ms and
+maximum 73.9 ms. Ordered jitter can queue beyond the nominal 30–70 ms range.
+This is reliable WebSocket latency/jitter testing, not a packet-loss or
+external-internet test. The full native scenarios completed in 92.8 / 97.8 s.
 
 The exact map replaces a much smaller synthetic scene, so previous synthetic
 draw counts are not an equivalent rendering baseline. No visual, collision,

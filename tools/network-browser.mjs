@@ -5,7 +5,7 @@ import {createLocalServer} from '../server/local-server.mjs';
 import {latencyProxy} from './network-proxy.mjs';
 import {CONTRACT} from '../shared/multiplayer/build.mjs';
 import {ROOM_TYPE} from '../shared/multiplayer/rules.mjs';
-const results=[],errors=[];
+const results=[],errors=[],traceInputs=process.env.FPS_NETWORK_TRACE==='1';
 const testDpr=Number(process.env.FPS_NETWORK_DPR||1),angle=process.env.FPS_NETWORK_ANGLE||(process.platform==='darwin'?'metal':'');
 const transitPitch=Number(process.env.FPS_NETWORK_TRANSIT_PITCH||0);
 assert(testDpr>=.25&&testDpr<=2,'test DPR must stay between .25 and 2');
@@ -196,6 +196,11 @@ try{
   await a.waitForFunction(()=>__fps.game.actors.length===2);assert.equal(local.rooms.size,1);
   console.log('joined',scenario,id);
   const authority=[...local.rooms].find(r=>r.roomId===id),tickCosts=[],fixed=authority.fixedTick;authority.fixedTick=function(...args){const t=performance.now();try{return fixed.apply(this,args);}finally{tickCosts.push(performance.now()-t);}};
+  if(traceInputs){
+  authority.inputDiagnostic=[];
+  for(const [sid,seat] of authority.seats){const buffer=authority.inputs.get(sid),next=buffer.next;buffer.next=function(){const f=next.call(this);authority.inputDiagnostic.push({tick:authority.sim.tickNumber,id:seat.id,seq:buffer.consumedCount,forward:f?.forward,strafe:f?.strafe,yaw:f?.yaw,sampleTick:f?.sampleTick,x:seat.actor.x,z:seat.actor.z});if(authority.inputDiagnostic.length>512)authority.inputDiagnostic.shift();return f;};}
+  for(const page of [a,b])await page.evaluate(()=>{const n=__fps.network,h=n.input,send=h.send;window.__inputTrace=[];h.send=function(...args){const f={at:performance.now(),tick:n.room.state.tick,forward:this.data.forward,strafe:this.data.strafe,yaw:this.data.yaw,ack:this.lastProcessed,x:n.prediction.world.actor.x,z:n.prediction.world.actor.z};const seq=send.apply(this,args);__inputTrace.push({...f,seq});if(__inputTrace.length>256)__inputTrace.shift();return seq;};});
+  }
   for(const page of [a,b])await page.evaluate(()=>{const n=__fps.network,advance=n.advanceFrame;let last=0;window.__networkPerformance={frames:[],cpu:[],draws:[]};n.advanceFrame=function(now,...args){const t=performance.now();const v=advance.call(this,now,...args);const m=__networkPerformance;if(last)m.frames.push(now-last);last=now;m.cpu.push(performance.now()-t);m.draws.push(__fps.renderer.stats.drawCalls);return v;};});
   const windows=await Promise.all([measureWindow(a,'Cargo Lift'),measureWindow(b,'Service Lift')]);
   console.log('starting view measurements',scenario,JSON.stringify(windows));
@@ -357,7 +362,14 @@ try{
   await a.context().close();await b.context().close();assert.equal(local.rooms.size,0,'empty server has no retained room');
  }
  assert.deepEqual(errors,[]);
-}catch(e){console.error('network browser failure',e);console.error('authority at failure',JSON.stringify([...local.rooms].map(r=>({room:r.roomId,tick:r.sim.tickNumber,actors:r.sim.game.actors.map(a=>({id:a.id,alive:a.alive,life:a.lifeId,hp:a.hp,x:a.x,z:a.z,ammo:a.inventory?.primary?.ammo,kills:a.kills,deaths:a.deaths}))}))));throw e;}finally{
+}catch(e){
+ console.error('network browser failure',e);
+ const server=[...local.rooms].map(r=>({room:r.roomId,tick:r.sim.tickNumber,inputs:r.inputDiagnostic?.slice(),actors:r.sim.game.actors.map(a=>({id:a.id,alive:a.alive,life:a.lifeId,hp:a.hp,x:a.x,z:a.z,ammo:a.inventory?.primary?.ammo,kills:a.kills,deaths:a.deaths,doors:r.sim.game.world.doors.doors.filter(d=>Math.hypot(d.x-a.x,d.z-a.z)<4).map(d=>({id:d.id,x:d.x,z:d.z,angle:d.angle}))}))}));
+ const clients=await Promise.allSettled([browser,peerBrowser].flatMap(b=>b.contexts().flatMap(c=>c.pages())).map(p=>p.evaluate(()=>({trace:window.__inputTrace,routes:window.__routeConfirmations,controls:window.__fps?.liveControls}))));
+ fs.writeFileSync('test-results/network/failure.json',JSON.stringify({server,clients},null,2));
+ console.error('authority at failure',JSON.stringify(server.map(({inputs,...s})=>({...s,inputs:inputs?.slice(-64)}))));
+ console.error('clients at failure',JSON.stringify(clients.map(r=>r.status==='fulfilled'?{...r.value,trace:r.value.trace?.slice(-64),routes:r.value.routes?.slice(-5)}:String(r.reason))));throw e;
+}finally{
  await Promise.all([browser.close(),peerBrowser.close()]);await proxy.close();await local.close();
  fs.writeFileSync('test-results/network/browser.json',JSON.stringify({contract:CONTRACT,environment:{node:process.version,platform:process.platform,arch:process.arch,browserProcesses:2,deviceScaleFactor:testDpr,transitPitch,angle:angle||'default'},results,proxy:proxy.metrics,errors},null,2));
 }

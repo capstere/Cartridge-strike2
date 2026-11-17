@@ -22,11 +22,11 @@
   "results": [
     {
       "scenario": "loopback",
-      "room": "lCcH2YBTo",
+      "room": "GoTOqrfOn",
       "interpolation": {
-        "max": 0.37269955027143453,
-        "samples": 44,
-        "firstMovementMs": 101
+        "max": 0.4720261576044109,
+        "samples": 45,
+        "firstMovementMs": 117.79999995231628
       },
       "prediction": {
         "localMoved": 0.07000000000000028,
@@ -40,6 +40,7 @@
       "reloads": [
         {
           "ammo": [
+            24,
             24,
             24,
             24,
@@ -77,7 +78,7 @@
             24
           ],
           "attempts": 114,
-          "activeAttempts": 105,
+          "activeAttempts": 109,
           "full": 30,
           "serverAttempts": 107,
           "heldFirePitch": 1.3,
@@ -122,1661 +123,8 @@
             29,
             29
           ],
-          "attempts": 114,
-          "activeAttempts": 108,
-          "full": 30,
-          "serverAttempts": 107,
-          "heldFirePitch": 1.3,
-          "otherHumanAlive": true
-        }
-      ],
-      "resumeAttempts": 2,
-      "admission": {
-        "full": {
-          "accepted": false,
-          "message": "room \"lCcH2YBTo\" is locked",
-          "code": 522
-        },
-        "mismatch": {
-          "accepted": false,
-          "message": "Incompatible buildHash. Reload the matching local client/server build.",
-          "code": 409
-        }
-      },
-      "measured": {
-        "metrics": {
-          "sent": 5054,
-          "replays": 10789,
-          "adopts": 1662,
-          "resets": 1,
-          "cosmeticShots": 13,
-          "confirmedShots": 11,
-          "suppressedShots": 11,
-          "maxPending": 26,
-          "preAdoptionOffset": {
-            "samples": 512,
-            "median": 0,
-            "p95": 0,
-            "max": 0
-          }
-        },
-        "pending": 4,
-        "settledError": 0,
-        "draws": 1197,
-        "actors": [
-          {
-            "id": "analysts-0",
-            "controller": "human",
-            "bot": false
-          },
-          {
-            "id": "counterAnalysts-0",
-            "controller": "human",
-            "bot": false
-          }
-        ],
-        "fatal": false
-      },
-      "cleanup": [
-        {
-          "cycle": 1,
-          "ms": 446.35554199999024,
-          "dom": {
-            "documents": 1,
-            "nodes": 1339,
-            "jsEventListeners": 231
-          },
-          "owned": {
-            "actors": 2,
-            "models": 2,
-            "callbacks": 4,
-            "remotes": 1,
-            "gpu": {
-              "geometries": 1642,
-              "textures": 98
-            },
-            "voices": 0
-          }
-        },
-        {
-          "cycle": 2,
-          "ms": 343.31333299999824,
-          "dom": {
-            "documents": 1,
-            "nodes": 1340,
-            "jsEventListeners": 231
-          },
-          "owned": {
-            "actors": 2,
-            "models": 2,
-            "callbacks": 4,
-            "remotes": 1,
-            "gpu": {
-              "geometries": 1642,
-              "textures": 98
-            },
-            "voices": 0
-          }
-        },
-        {
-          "cycle": 3,
-          "ms": 315.0941249999887,
-          "dom": {
-            "documents": 1,
-            "nodes": 1340,
-            "jsEventListeners": 231
-          },
-          "owned": {
-            "actors": 2,
-            "models": 2,
-            "callbacks": 4,
-            "remotes": 1,
-            "gpu": {
-              "geometries": 1642,
-              "textures": 98
-            },
-            "voices": 0
-          }
-        },
-        {
-          "cycle": 4,
-          "ms": 348.3497500000085,
-          "dom": {
-            "documents": 1,
-            "nodes": 1340,
-            "jsEventListeners": 231
-          },
-          "owned": {
-            "actors": 2,
-            "models": 2,
-            "callbacks": 4,
-            "remotes": 1,
-            "gpu": {
-              "geometries": 1642,
-              "textures": 98
-            },
-            "voices": 0
-          }
-        },
-        {
-          "cycle": 5,
-          "ms": 298.2705419999984,
-          "dom": {
-            "documents": 1,
-            "nodes": 1340,
-            "jsEventListeners": 231
-          },
-          "owned": {
-            "actors": 2,
-            "models": 2,
-            "callbacks": 4,
-            "remotes": 1,
-            "gpu": {
-              "geometries": 1642,
-              "textures": 98
-            },
-            "voices": 0
-          }
-        },
-        {
-          "cycle": 6,
-          "ms": 363.97162499999104,
-          "dom": {
-            "documents": 1,
-            "nodes": 1357,
-            "jsEventListeners": 231
-          },
-          "owned": {
-            "actors": 2,
-            "models": 2,
-            "callbacks": 4,
-            "remotes": 1,
-            "gpu": {
-              "geometries": 1642,
-              "textures": 98
-            },
-            "voices": 0
-          }
-        },
-        {
-          "cycle": 7,
-          "ms": 314.921583000003,
-          "dom": {
-            "documents": 1,
-            "nodes": 1340,
-            "jsEventListeners": 231
-          },
-          "owned": {
-            "actors": 2,
-            "models": 2,
-            "callbacks": 4,
-            "remotes": 1,
-            "gpu": {
-              "geometries": 1642,
-              "textures": 98
-            },
-            "voices": 0
-          }
-        },
-        {
-          "cycle": 8,
-          "ms": 373.9479580000043,
-          "dom": {
-            "documents": 1,
-            "nodes": 1340,
-            "jsEventListeners": 231
-          },
-          "owned": {
-            "actors": 2,
-            "models": 2,
-            "callbacks": 4,
-            "remotes": 1,
-            "gpu": {
-              "geometries": 1642,
-              "textures": 98
-            },
-            "voices": 0
-          }
-        },
-        {
-          "cycle": 9,
-          "ms": 298.71179099999426,
-          "dom": {
-            "documents": 1,
-            "nodes": 1340,
-            "jsEventListeners": 231
-          },
-          "owned": {
-            "actors": 2,
-            "models": 2,
-            "callbacks": 4,
-            "remotes": 1,
-            "gpu": {
-              "geometries": 1642,
-              "textures": 98
-            },
-            "voices": 0
-          }
-        },
-        {
-          "cycle": 10,
-          "ms": 315.35199999999895,
-          "dom": {
-            "documents": 1,
-            "nodes": 1340,
-            "jsEventListeners": 231
-          },
-          "owned": {
-            "actors": 2,
-            "models": 2,
-            "callbacks": 4,
-            "remotes": 1,
-            "gpu": {
-              "geometries": 1642,
-              "textures": 98
-            },
-            "voices": 0
-          }
-        },
-        {
-          "cycle": 11,
-          "ms": 291.27391600000556,
-          "dom": {
-            "documents": 1,
-            "nodes": 1340,
-            "jsEventListeners": 231
-          },
-          "owned": {
-            "actors": 2,
-            "models": 2,
-            "callbacks": 4,
-            "remotes": 1,
-            "gpu": {
-              "geometries": 1642,
-              "textures": 98
-            },
-            "voices": 0
-          }
-        },
-        {
-          "cycle": 12,
-          "ms": 308.26204100000905,
-          "dom": {
-            "documents": 1,
-            "nodes": 1340,
-            "jsEventListeners": 231
-          },
-          "owned": {
-            "actors": 2,
-            "models": 2,
-            "callbacks": 4,
-            "remotes": 1,
-            "gpu": {
-              "geometries": 1642,
-              "textures": 98
-            },
-            "voices": 0
-          }
-        },
-        {
-          "cycle": 13,
-          "ms": 376.8942079999979,
-          "dom": {
-            "documents": 1,
-            "nodes": 1341,
-            "jsEventListeners": 231
-          },
-          "owned": {
-            "actors": 2,
-            "models": 2,
-            "callbacks": 4,
-            "remotes": 1,
-            "gpu": {
-              "geometries": 1642,
-              "textures": 98
-            },
-            "voices": 0
-          }
-        },
-        {
-          "cycle": 14,
-          "ms": 316.9814170000027,
-          "dom": {
-            "documents": 1,
-            "nodes": 1340,
-            "jsEventListeners": 231
-          },
-          "owned": {
-            "actors": 2,
-            "models": 2,
-            "callbacks": 4,
-            "remotes": 1,
-            "gpu": {
-              "geometries": 1642,
-              "textures": 98
-            },
-            "voices": 0
-          }
-        },
-        {
-          "cycle": 15,
-          "ms": 492.4010419999977,
-          "dom": {
-            "documents": 1,
-            "nodes": 1358,
-            "jsEventListeners": 231
-          },
-          "owned": {
-            "actors": 2,
-            "models": 2,
-            "callbacks": 4,
-            "remotes": 1,
-            "gpu": {
-              "geometries": 1642,
-              "textures": 98
-            },
-            "voices": 0
-          }
-        },
-        {
-          "cycle": 16,
-          "ms": 442.16437500000757,
-          "dom": {
-            "documents": 1,
-            "nodes": 1356,
-            "jsEventListeners": 231
-          },
-          "owned": {
-            "actors": 2,
-            "models": 2,
-            "callbacks": 4,
-            "remotes": 1,
-            "gpu": {
-              "geometries": 1642,
-              "textures": 98
-            },
-            "voices": 0
-          }
-        },
-        {
-          "cycle": 17,
-          "ms": 369.6002499999886,
-          "dom": {
-            "documents": 1,
-            "nodes": 1359,
-            "jsEventListeners": 231
-          },
-          "owned": {
-            "actors": 2,
-            "models": 2,
-            "callbacks": 4,
-            "remotes": 1,
-            "gpu": {
-              "geometries": 1642,
-              "textures": 98
-            },
-            "voices": 0
-          }
-        },
-        {
-          "cycle": 18,
-          "ms": 347.86037500000384,
-          "dom": {
-            "documents": 1,
-            "nodes": 1357,
-            "jsEventListeners": 231
-          },
-          "owned": {
-            "actors": 2,
-            "models": 2,
-            "callbacks": 4,
-            "remotes": 1,
-            "gpu": {
-              "geometries": 1642,
-              "textures": 98
-            },
-            "voices": 0
-          }
-        },
-        {
-          "cycle": 19,
-          "ms": 423.09604099999706,
-          "dom": {
-            "documents": 1,
-            "nodes": 1356,
-            "jsEventListeners": 231
-          },
-          "owned": {
-            "actors": 2,
-            "models": 2,
-            "callbacks": 4,
-            "remotes": 1,
-            "gpu": {
-              "geometries": 1642,
-              "textures": 98
-            },
-            "voices": 0
-          }
-        },
-        {
-          "cycle": 20,
-          "ms": 411.72266699999454,
-          "dom": {
-            "documents": 1,
-            "nodes": 1356,
-            "jsEventListeners": 231
-          },
-          "owned": {
-            "actors": 2,
-            "models": 2,
-            "callbacks": 4,
-            "remotes": 1,
-            "gpu": {
-              "geometries": 1642,
-              "textures": 98
-            },
-            "voices": 0
-          }
-        }
-      ],
-      "timings": {
-        "beforeCleanupMs": 91718.858167,
-        "cleanupMs": 7814.251250000001,
-        "totalMs": 99533.110833
-      },
-      "perf": {
-        "serverTickMs": {
-          "samples": 5358,
-          "median": 0.23845900000014808,
-          "p95": 0.6051670000015292,
-          "max": 142.54879100000107
-        },
-        "clients": [
-          {
-            "frameMs": {
-              "samples": 5071,
-              "median": 16.69999999999709,
-              "p95": 16.799999999995634,
-              "max": 116.69999999999709
-            },
-            "predictionCpuMs": {
-              "samples": 5072,
-              "median": 0.19999992847442627,
-              "p95": 0.30000007152557373,
-              "max": 0.8999999761581421
-            },
-            "draws": {
-              "samples": 5072,
-              "median": 1114,
-              "p95": 1198,
-              "max": 1409
-            },
-            "heap": 179242653,
-            "gpu": {
-              "geometries": 1563,
-              "textures": 100
-            }
-          },
-          {
-            "frameMs": {
-              "samples": 4784,
-              "median": 16.69999999999709,
-              "p95": 16.799999999999272,
-              "max": 116.60000000000582
-            },
-            "predictionCpuMs": {
-              "samples": 4785,
-              "median": 0.19999992847442627,
-              "p95": 0.30000007152557373,
-              "max": 0.8999999761581421
-            },
-            "draws": {
-              "samples": 4785,
-              "median": 210,
-              "p95": 2082,
-              "max": 3412
-            },
-            "heap": 141620312,
-            "gpu": {
-              "geometries": 1642,
-              "textures": 98
-            }
-          }
-        ]
-      },
-      "doors": [
-        {
-          "doors": [
-            [
-              "D09",
-              0,
-              1
-            ],
-            [
-              "D12",
-              0,
-              1
-            ],
-            [
-              "D18",
-              0,
-              1
-            ],
-            [
-              "D20",
-              0,
-              1
-            ],
-            [
-              "D29",
-              0,
-              1
-            ],
-            [
-              "D32",
-              0,
-              1
-            ],
-            [
-              "D35",
-              0,
-              1
-            ],
-            [
-              "D36",
-              0,
-              1
-            ],
-            [
-              "D37",
-              0,
-              1
-            ],
-            [
-              "D38",
-              0,
-              1
-            ],
-            [
-              "D39",
-              1.5707963267948966,
-              1
-            ],
-            [
-              "D40",
-              0,
-              1
-            ],
-            [
-              "D44",
-              0,
-              1
-            ],
-            [
-              "D45",
-              0,
-              -1
-            ],
-            [
-              "D46",
-              0,
-              1
-            ],
-            [
-              "D47",
-              0,
-              1
-            ],
-            [
-              "D56",
-              0,
-              1
-            ],
-            [
-              "D59",
-              0,
-              1
-            ],
-            [
-              "D63",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0001",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0002",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0003",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0004",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0005",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0006",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0007",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0008",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0009",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0010",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0011",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0012",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0013",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0014",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0015",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0016",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0017",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0018",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0019",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0020",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0021",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0022",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0023",
-              0,
-              -1
-            ],
-            [
-              "BYGG-D-0024",
-              0,
-              -1
-            ],
-            [
-              "BYGG-D-0025",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0026",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0027",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0028",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0029",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0030",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0031",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0034",
-              0,
-              1
-            ]
-          ],
-          "elevator": 1,
-          "visualMatches": true,
-          "broken": 0
-        },
-        {
-          "doors": [
-            [
-              "D09",
-              0,
-              1
-            ],
-            [
-              "D12",
-              0,
-              1
-            ],
-            [
-              "D18",
-              0,
-              1
-            ],
-            [
-              "D20",
-              0,
-              1
-            ],
-            [
-              "D29",
-              0,
-              1
-            ],
-            [
-              "D32",
-              0,
-              1
-            ],
-            [
-              "D35",
-              0,
-              1
-            ],
-            [
-              "D36",
-              0,
-              1
-            ],
-            [
-              "D37",
-              0,
-              1
-            ],
-            [
-              "D38",
-              0,
-              1
-            ],
-            [
-              "D39",
-              1.5707963267948966,
-              1
-            ],
-            [
-              "D40",
-              0,
-              1
-            ],
-            [
-              "D44",
-              0,
-              1
-            ],
-            [
-              "D45",
-              0,
-              -1
-            ],
-            [
-              "D46",
-              0,
-              1
-            ],
-            [
-              "D47",
-              0,
-              1
-            ],
-            [
-              "D56",
-              0,
-              1
-            ],
-            [
-              "D59",
-              0,
-              1
-            ],
-            [
-              "D63",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0001",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0002",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0003",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0004",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0005",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0006",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0007",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0008",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0009",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0010",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0011",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0012",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0013",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0014",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0015",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0016",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0017",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0018",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0019",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0020",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0021",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0022",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0023",
-              0,
-              -1
-            ],
-            [
-              "BYGG-D-0024",
-              0,
-              -1
-            ],
-            [
-              "BYGG-D-0025",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0026",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0027",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0028",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0029",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0030",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0031",
-              0,
-              1
-            ],
-            [
-              "BYGG-D-0034",
-              0,
-              1
-            ]
-          ],
-          "elevator": 1,
-          "visualMatches": true,
-          "broken": 0
-        }
-      ],
-      "doorHit": {
-        "hp": 82,
-        "alive": true,
-        "sentShots": 1
-      },
-      "windows": [
-        {
-          "label": "Cargo Lift",
-          "frames": 300,
-          "fps": 60.00120002400048,
-          "frameMs": {
-            "median": 16.69999999999891,
-            "p95": 16.700000000000728,
-            "max": 16.80000000000109
-          },
-          "draws": {
-            "median": 1081,
-            "p95": 1081,
-            "max": 1081
-          },
-          "renderCpuMs": 9.341999994119009,
-          "gpu": {
-            "geometries": 405,
-            "textures": 89
-          },
-          "position": {
-            "x": -20.541,
-            "y": 0,
-            "z": -30.03999,
-            "yaw": 3.141592653589793
-          },
-          "room": "BYGG-G-41001",
-          "heapBytes": 116827120,
-          "taskCpuMs": 3052.985,
-          "scriptCpuMs": 2949.9249999999997
-        },
-        {
-          "label": "Service Lift",
-          "frames": 300,
-          "fps": 60.00240009600384,
-          "frameMs": {
-            "median": 16.699999999999818,
-            "p95": 16.700000000000728,
-            "max": 16.80000000000109
-          },
-          "draws": {
-            "median": 79,
-            "p95": 79,
-            "max": 79
-          },
-          "renderCpuMs": 1.3923333271344502,
-          "gpu": {
-            "geometries": 243,
-            "textures": 80
-          },
-          "position": {
-            "x": 28.00054,
-            "y": 0,
-            "z": 30.43484,
-            "yaw": 3.141592653589793
-          },
-          "room": "BYGG-G-41002",
-          "heapBytes": 84607992,
-          "taskCpuMs": 662.705,
-          "scriptCpuMs": 556.732
-        },
-        {
-          "label": "C08 desktop",
-          "frames": 295,
-          "fps": 59.00236009440383,
-          "frameMs": {
-            "median": 16.69999999999709,
-            "p95": 16.700000000004366,
-            "max": 100
-          },
-          "draws": {
-            "median": 1196,
-            "p95": 1196,
-            "max": 1196
-          },
-          "renderCpuMs": 9.805084742125818,
-          "gpu": {
-            "geometries": 1495,
-            "textures": 99
-          },
-          "position": {
-            "x": 22.78311836505753,
-            "y": 0,
-            "z": -17.90529617410003,
-            "yaw": 3.141592653589793
-          },
-          "room": "C08",
-          "heapBytes": 131169172,
-          "taskCpuMs": 3093.536,
-          "scriptCpuMs": 2989.969
-        },
-        {
-          "label": "C08 mobile emulation",
-          "frames": 300,
-          "fps": 60.00120002400046,
-          "frameMs": {
-            "median": 16.69999999999709,
-            "p95": 16.700000000004366,
-            "max": 16.80000000000291
-          },
-          "draws": {
-            "median": 198,
-            "p95": 198,
-            "max": 198
-          },
-          "renderCpuMs": 2.0906666680177053,
-          "gpu": {
-            "geometries": 1464,
-            "textures": 95
-          },
-          "position": {
-            "x": 22.802491096223854,
-            "y": 0,
-            "z": -12.920596382705074,
-            "yaw": 0
-          },
-          "room": "C08",
-          "heapBytes": 113375232,
-          "taskCpuMs": 847.614,
-          "scriptCpuMs": 746.319
-        }
-      ],
-      "presented": {
-        "visible": true,
-        "model": [
-          22.802491096223854,
-          0,
-          -12.920596382705074
-        ],
-        "remote": [
-          22.802491096223854,
-          0,
-          -12.920596382705074
-        ],
-        "camera": [
-          22.78311836505753,
-          1.58,
-          -17.90529617410003
-        ],
-        "player": [
-          22.78311836505753,
-          1.58,
-          -17.90529617410003
-        ]
-      },
-      "animation": {
-        "walkingClip": "Walk_Loop",
-        "deathClip": "Death01"
-      },
-      "routeConfirmations": [
-        [
-          {
-            "sent": 460,
-            "ack": 465,
-            "ackTick": 473,
-            "snapshotTick": 476,
-            "error": 0.09116575590990728
-          },
-          {
-            "sent": 502,
-            "ack": 507,
-            "ackTick": 515,
-            "snapshotTick": 518,
-            "error": 0.0957381353249708
-          },
-          {
-            "sent": 649,
-            "ack": 653,
-            "ackTick": 657,
-            "snapshotTick": 660,
-            "error": 0.07900631547871842
-          },
-          {
-            "sent": 726,
-            "ack": 731,
-            "ackTick": 735,
-            "snapshotTick": 738,
-            "error": 0.09503503950937293
-          },
-          {
-            "sent": 1064,
-            "ack": 1067,
-            "ackTick": 1071,
-            "snapshotTick": 1074,
-            "error": 0.09346401797497295
-          },
-          {
-            "sent": 1170,
-            "ack": 1175,
-            "ackTick": 1179,
-            "snapshotTick": 1182,
-            "error": 0.09337758298846857
-          },
-          {
-            "sent": 1274,
-            "ack": 1278,
-            "ackTick": 1282,
-            "snapshotTick": 1285,
-            "error": 0.08857403781575114
-          },
-          {
-            "sent": 1328,
-            "ack": 1332,
-            "ackTick": 1336,
-            "snapshotTick": 1339,
-            "error": 0.09619669556914445
-          },
-          {
-            "sent": 2038,
-            "ack": 2043,
-            "ackTick": 2047,
-            "snapshotTick": 2050,
-            "error": 0.0857809609047135
-          },
-          {
-            "sent": 2425,
-            "ack": 2428,
-            "ackTick": 2432,
-            "snapshotTick": 2435,
-            "error": 0.08697246512970451
-          },
-          {
-            "sent": 2553,
-            "ack": 2557,
-            "ackTick": 2561,
-            "snapshotTick": 2564,
-            "error": 0.09935471104533884
-          },
-          {
-            "sent": 2661,
-            "ack": 2667,
-            "ackTick": 2670,
-            "snapshotTick": 2674,
-            "error": 0.0844448387914711
-          }
-        ],
-        [
-          {
-            "sent": 440,
-            "ack": 445,
-            "ackTick": 473,
-            "snapshotTick": 476,
-            "error": 0.08890359480399923
-          },
-          {
-            "sent": 494,
-            "ack": 499,
-            "ackTick": 527,
-            "snapshotTick": 530,
-            "error": 0.087016754303752
-          },
-          {
-            "sent": 633,
-            "ack": 637,
-            "ackTick": 660,
-            "snapshotTick": 663,
-            "error": 0.08444114648932995
-          },
-          {
-            "sent": 676,
-            "ack": 679,
-            "ackTick": 702,
-            "snapshotTick": 705,
-            "error": 0.08669457456934611
-          },
-          {
-            "sent": 748,
-            "ack": 751,
-            "ackTick": 774,
-            "snapshotTick": 777,
-            "error": 0.09222835010150955
-          },
-          {
-            "sent": 810,
-            "ack": 814,
-            "ackTick": 837,
-            "snapshotTick": 840,
-            "error": 0.08449977897007202
-          },
-          {
-            "sent": 842,
-            "ack": 847,
-            "ackTick": 870,
-            "snapshotTick": 873,
-            "error": 0.08727719066080028
-          },
-          {
-            "sent": 933,
-            "ack": 937,
-            "ackTick": 960,
-            "snapshotTick": 963,
-            "error": 0.09633567892961276
-          },
-          {
-            "sent": 972,
-            "ack": 976,
-            "ackTick": 999,
-            "snapshotTick": 1002,
-            "error": 0.09661572790875614
-          },
-          {
-            "sent": 1183,
-            "ack": 1187,
-            "ackTick": 1210,
-            "snapshotTick": 1213,
-            "error": 0.08234102253870217
-          },
-          {
-            "sent": 1212,
-            "ack": 1217,
-            "ackTick": 1240,
-            "snapshotTick": 1243,
-            "error": 0.08326532928304137
-          },
-          {
-            "sent": 1418,
-            "ack": 1422,
-            "ackTick": 1445,
-            "snapshotTick": 1448,
-            "error": 0.08154972391800196
-          },
-          {
-            "sent": 1448,
-            "ack": 1452,
-            "ackTick": 1475,
-            "snapshotTick": 1478,
-            "error": 0.08980054378145982
-          },
-          {
-            "sent": 1630,
-            "ack": 1633,
-            "ackTick": 1656,
-            "snapshotTick": 1659,
-            "error": 0.07944268374064088
-          },
-          {
-            "sent": 1982,
-            "ack": 1985,
-            "ackTick": 2008,
-            "snapshotTick": 2011,
-            "error": 0.06064756513938176
-          },
-          {
-            "sent": 2181,
-            "ack": 2184,
-            "ackTick": 2207,
-            "snapshotTick": 2210,
-            "error": 0.08875851511798045
-          },
-          {
-            "sent": 2227,
-            "ack": 2231,
-            "ackTick": 2254,
-            "snapshotTick": 2257,
-            "error": 0.0869018698723367
-          },
-          {
-            "sent": 2277,
-            "ack": 2280,
-            "ackTick": 2303,
-            "snapshotTick": 2306,
-            "error": 0.08723009461406465
-          },
-          {
-            "sent": 2630,
-            "ack": 2635,
-            "ackTick": 2658,
-            "snapshotTick": 2661,
-            "error": 0.09953132512970465
-          },
-          {
-            "sent": 2718,
-            "ack": 2723,
-            "ackTick": 2746,
-            "snapshotTick": 2749,
-            "error": 0.09156032718040782
-          },
-          {
-            "sent": 2799,
-            "ack": 2804,
-            "ackTick": 2827,
-            "snapshotTick": 2830,
-            "error": 0.08279499032448204
-          },
-          {
-            "sent": 3002,
-            "ack": 3007,
-            "ackTick": 3204,
-            "snapshotTick": 3207,
-            "error": 0.09082243879188753
-          },
-          {
-            "sent": 3026,
-            "ack": 3032,
-            "ackTick": 3228,
-            "snapshotTick": 3232,
-            "error": 0.08805168084937404
-          },
-          {
-            "sent": 3076,
-            "ack": 3080,
-            "ackTick": 3277,
-            "snapshotTick": 3280,
-            "error": 0.08281069906614615
-          },
-          {
-            "sent": 3128,
-            "ack": 3130,
-            "ackTick": 3328,
-            "snapshotTick": 3330,
-            "error": 0.09237680006423271
-          },
-          {
-            "sent": 3267,
-            "ack": 3272,
-            "ackTick": 3469,
-            "snapshotTick": 3472,
-            "error": 0.08389013068575688
-          },
-          {
-            "sent": 3302,
-            "ack": 3308,
-            "ackTick": 3506,
-            "snapshotTick": 3510,
-            "error": 0.08654799545506142
-          },
-          {
-            "sent": 3371,
-            "ack": 3376,
-            "ackTick": 3577,
-            "snapshotTick": 3580,
-            "error": 0.09219938329053044
-          },
-          {
-            "sent": 3431,
-            "ack": 3436,
-            "ackTick": 3637,
-            "snapshotTick": 3640,
-            "error": 0.08449097821714839
-          },
-          {
-            "sent": 3460,
-            "ack": 3463,
-            "ackTick": 3664,
-            "snapshotTick": 3667,
-            "error": 0.08727512990219953
-          },
-          {
-            "sent": 3545,
-            "ack": 3548,
-            "ackTick": 3749,
-            "snapshotTick": 3752,
-            "error": 0.0963352115336892
-          },
-          {
-            "sent": 3578,
-            "ack": 3581,
-            "ackTick": 3782,
-            "snapshotTick": 3785,
-            "error": 0.0966156476651379
-          },
-          {
-            "sent": 3784,
-            "ack": 3788,
-            "ackTick": 3989,
-            "snapshotTick": 3992,
-            "error": 0.0823410025160195
-          },
-          {
-            "sent": 3809,
-            "ack": 3812,
-            "ackTick": 4013,
-            "snapshotTick": 4016,
-            "error": 0.08326532457172683
-          },
-          {
-            "sent": 4009,
-            "ack": 4011,
-            "ackTick": 4213,
-            "snapshotTick": 4215,
-            "error": 0.08154972296297708
-          },
-          {
-            "sent": 4035,
-            "ack": 4038,
-            "ackTick": 4239,
-            "snapshotTick": 4242,
-            "error": 0.08980054351660068
-          },
-          {
-            "sent": 4214,
-            "ack": 4218,
-            "ackTick": 4419,
-            "snapshotTick": 4422,
-            "error": 0.0794426837014785
-          }
-        ]
-      ]
-    },
-    {
-      "scenario": "100ms-rtt-jitter",
-      "room": "zgJHoxRw2",
-      "interpolation": {
-        "max": 0.41434780888713973,
-        "samples": 47,
-        "firstMovementMs": 166.79999995231628
-      },
-      "prediction": {
-        "localMoved": 0.07000000000000028,
-        "serverMoved": 0
-      },
-      "respawn": {
-        "life": 2,
-        "delta": 0,
-        "ammo": 30
-      },
-      "reloads": [
-        {
-          "ammo": [
-            22,
-            22,
-            22,
-            22,
-            22,
-            22,
-            22,
-            22,
-            22,
-            22,
-            22,
-            22,
-            22,
-            22,
-            22,
-            22,
-            22,
-            22,
-            22,
-            22,
-            22,
-            22,
-            22,
-            22,
-            22,
-            22,
-            22,
-            22,
-            22,
-            22,
-            22,
-            22,
-            22,
-            22,
-            22
-          ],
-          "attempts": 119,
-          "activeAttempts": 107,
-          "full": 30,
-          "serverAttempts": 107,
-          "heldFirePitch": 1.3,
-          "otherHumanAlive": true
-        },
-        {
-          "ammo": [
-            29,
-            29,
-            29,
-            29,
-            29,
-            29,
-            29,
-            29,
-            29,
-            29,
-            29,
-            29,
-            29,
-            29,
-            29,
-            29,
-            29,
-            29,
-            29,
-            29,
-            29,
-            29,
-            29,
-            29,
-            29,
-            29,
-            29,
-            29,
-            29,
-            29,
-            29,
-            29,
-            29,
-            29,
-            29
-          ],
-          "attempts": 122,
-          "activeAttempts": 105,
+          "attempts": 112,
+          "activeAttempts": 109,
           "full": 30,
           "serverAttempts": 107,
           "heldFirePitch": 1.3,
@@ -1787,7 +135,7 @@
       "admission": {
         "full": {
           "accepted": false,
-          "message": "room \"zgJHoxRw2\" is locked",
+          "message": "room \"GoTOqrfOn\" is locked",
           "code": 522
         },
         "mismatch": {
@@ -1798,14 +146,14 @@
       },
       "measured": {
         "metrics": {
-          "sent": 5039,
-          "replays": 17976,
-          "adopts": 1655,
+          "sent": 4950,
+          "replays": 6929,
+          "adopts": 1623,
           "resets": 1,
-          "cosmeticShots": 18,
-          "confirmedShots": 14,
-          "suppressedShots": 14,
-          "maxPending": 22,
+          "cosmeticShots": 12,
+          "confirmedShots": 11,
+          "suppressedShots": 11,
+          "maxPending": 15,
           "preAdoptionOffset": {
             "samples": 512,
             "median": 0,
@@ -1813,7 +161,7 @@
             "max": 0
           }
         },
-        "pending": 14,
+        "pending": 8,
         "settledError": 0,
         "draws": 1198,
         "actors": [
@@ -1833,7 +181,7 @@
       "cleanup": [
         {
           "cycle": 1,
-          "ms": 667.6774999999907,
+          "ms": 429.0533749999886,
           "dom": {
             "documents": 1,
             "nodes": 1356,
@@ -1853,7 +201,7 @@
         },
         {
           "cycle": 2,
-          "ms": 711.2660420000029,
+          "ms": 378.15750000000116,
           "dom": {
             "documents": 1,
             "nodes": 1341,
@@ -1873,7 +221,127 @@
         },
         {
           "cycle": 3,
-          "ms": 747.2237500000047,
+          "ms": 309.1229170000006,
+          "dom": {
+            "documents": 1,
+            "nodes": 1340,
+            "jsEventListeners": 231
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 4,
+          "ms": 377.51770800001395,
+          "dom": {
+            "documents": 1,
+            "nodes": 1357,
+            "jsEventListeners": 231
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 5,
+          "ms": 866.3053749999963,
+          "dom": {
+            "documents": 1,
+            "nodes": 1362,
+            "jsEventListeners": 231
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 6,
+          "ms": 631.9373750000086,
+          "dom": {
+            "documents": 1,
+            "nodes": 1340,
+            "jsEventListeners": 231
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 7,
+          "ms": 303.8477920000005,
+          "dom": {
+            "documents": 1,
+            "nodes": 1340,
+            "jsEventListeners": 231
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 8,
+          "ms": 396.2928749999992,
+          "dom": {
+            "documents": 1,
+            "nodes": 1341,
+            "jsEventListeners": 231
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 9,
+          "ms": 307.1329160000023,
           "dom": {
             "documents": 1,
             "nodes": 1356,
@@ -1892,8 +360,8 @@
           }
         },
         {
-          "cycle": 4,
-          "ms": 716.0870419999992,
+          "cycle": 10,
+          "ms": 314.34387500000594,
           "dom": {
             "documents": 1,
             "nodes": 1340,
@@ -1910,41 +378,241 @@
             },
             "voices": 0
           }
+        },
+        {
+          "cycle": 11,
+          "ms": 354.13904199999524,
+          "dom": {
+            "documents": 1,
+            "nodes": 1340,
+            "jsEventListeners": 231
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 12,
+          "ms": 325.2999579999887,
+          "dom": {
+            "documents": 1,
+            "nodes": 1340,
+            "jsEventListeners": 231
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 13,
+          "ms": 349.46833399999014,
+          "dom": {
+            "documents": 1,
+            "nodes": 1340,
+            "jsEventListeners": 231
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 14,
+          "ms": 369.15558299999975,
+          "dom": {
+            "documents": 1,
+            "nodes": 1340,
+            "jsEventListeners": 231
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 15,
+          "ms": 313.0127499999944,
+          "dom": {
+            "documents": 1,
+            "nodes": 1341,
+            "jsEventListeners": 231
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 16,
+          "ms": 350.75066700000025,
+          "dom": {
+            "documents": 1,
+            "nodes": 1340,
+            "jsEventListeners": 231
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 17,
+          "ms": 332.1342500000028,
+          "dom": {
+            "documents": 1,
+            "nodes": 1341,
+            "jsEventListeners": 231
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 18,
+          "ms": 350.89512499999546,
+          "dom": {
+            "documents": 1,
+            "nodes": 1340,
+            "jsEventListeners": 231
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 19,
+          "ms": 355.53841699998884,
+          "dom": {
+            "documents": 1,
+            "nodes": 1357,
+            "jsEventListeners": 231
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 20,
+          "ms": 361.8784159999923,
+          "dom": {
+            "documents": 1,
+            "nodes": 1341,
+            "jsEventListeners": 231
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
         }
       ],
       "timings": {
-        "beforeCleanupMs": 90350.21462500001,
-        "cleanupMs": 3449.538042,
-        "totalMs": 93799.753167
+        "beforeCleanupMs": 84465.515958,
+        "cleanupMs": 8334.26512499999,
+        "totalMs": 92799.78283299999
       },
       "perf": {
         "serverTickMs": {
-          "samples": 5041,
-          "median": 0.23000000001047738,
-          "p95": 0.4925829999992857,
-          "max": 55.38295800000196
+          "samples": 4959,
+          "median": 0.22187500000291038,
+          "p95": 0.5631659999999101,
+          "max": 83.50883400000748
         },
         "clients": [
           {
             "frameMs": {
-              "samples": 4997,
+              "samples": 4924,
               "median": 16.69999999999709,
               "p95": 16.79999999998836,
-              "max": 100
+              "max": 116.69999999999709
             },
             "predictionCpuMs": {
-              "samples": 4998,
+              "samples": 4925,
               "median": 0.19999992847442627,
-              "p95": 0.3999999761581421,
-              "max": 0.8000000715255737
+              "p95": 0.30000007152557373,
+              "max": 1.399999976158142
             },
             "draws": {
-              "samples": 4998,
+              "samples": 4925,
               "median": 1114,
               "p95": 1198,
               "max": 1409
             },
-            "heap": 181671326,
+            "heap": 185651568,
             "gpu": {
               "geometries": 1566,
               "textures": 100
@@ -1952,24 +620,1456 @@
           },
           {
             "frameMs": {
-              "samples": 4715,
+              "samples": 4358,
               "median": 16.69999999999709,
               "p95": 16.799999999999272,
               "max": 100
             },
             "predictionCpuMs": {
-              "samples": 4716,
+              "samples": 4359,
               "median": 0.19999992847442627,
               "p95": 0.3999999761581421,
-              "max": 2.200000047683716
+              "max": 1.600000023841858
             },
             "draws": {
-              "samples": 4716,
-              "median": 229,
-              "p95": 2082,
-              "max": 3410
+              "samples": 4359,
+              "median": 231,
+              "p95": 2083,
+              "max": 3408
             },
-            "heap": 140992516,
+            "heap": 140950023,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            }
+          }
+        ]
+      },
+      "doors": [
+        {
+          "doors": [
+            [
+              "D09",
+              0,
+              1
+            ],
+            [
+              "D12",
+              0,
+              1
+            ],
+            [
+              "D18",
+              0,
+              1
+            ],
+            [
+              "D20",
+              0,
+              1
+            ],
+            [
+              "D29",
+              0,
+              1
+            ],
+            [
+              "D32",
+              0,
+              1
+            ],
+            [
+              "D35",
+              0,
+              1
+            ],
+            [
+              "D36",
+              0,
+              1
+            ],
+            [
+              "D37",
+              0,
+              1
+            ],
+            [
+              "D38",
+              0,
+              1
+            ],
+            [
+              "D39",
+              1.5707963267948966,
+              1
+            ],
+            [
+              "D40",
+              0,
+              1
+            ],
+            [
+              "D44",
+              0,
+              1
+            ],
+            [
+              "D45",
+              0,
+              -1
+            ],
+            [
+              "D46",
+              0,
+              1
+            ],
+            [
+              "D47",
+              0,
+              1
+            ],
+            [
+              "D56",
+              0,
+              1
+            ],
+            [
+              "D59",
+              0,
+              1
+            ],
+            [
+              "D63",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0001",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0002",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0003",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0004",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0005",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0006",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0007",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0008",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0009",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0010",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0011",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0012",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0013",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0014",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0015",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0016",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0017",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0018",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0019",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0020",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0021",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0022",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0023",
+              0,
+              -1
+            ],
+            [
+              "BYGG-D-0024",
+              0,
+              -1
+            ],
+            [
+              "BYGG-D-0025",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0026",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0027",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0028",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0029",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0030",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0031",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0034",
+              0,
+              1
+            ]
+          ],
+          "elevator": 1,
+          "visualMatches": true,
+          "broken": 0
+        },
+        {
+          "doors": [
+            [
+              "D09",
+              0,
+              1
+            ],
+            [
+              "D12",
+              0,
+              1
+            ],
+            [
+              "D18",
+              0,
+              1
+            ],
+            [
+              "D20",
+              0,
+              1
+            ],
+            [
+              "D29",
+              0,
+              1
+            ],
+            [
+              "D32",
+              0,
+              1
+            ],
+            [
+              "D35",
+              0,
+              1
+            ],
+            [
+              "D36",
+              0,
+              1
+            ],
+            [
+              "D37",
+              0,
+              1
+            ],
+            [
+              "D38",
+              0,
+              1
+            ],
+            [
+              "D39",
+              1.5707963267948966,
+              1
+            ],
+            [
+              "D40",
+              0,
+              1
+            ],
+            [
+              "D44",
+              0,
+              1
+            ],
+            [
+              "D45",
+              0,
+              -1
+            ],
+            [
+              "D46",
+              0,
+              1
+            ],
+            [
+              "D47",
+              0,
+              1
+            ],
+            [
+              "D56",
+              0,
+              1
+            ],
+            [
+              "D59",
+              0,
+              1
+            ],
+            [
+              "D63",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0001",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0002",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0003",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0004",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0005",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0006",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0007",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0008",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0009",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0010",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0011",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0012",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0013",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0014",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0015",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0016",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0017",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0018",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0019",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0020",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0021",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0022",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0023",
+              0,
+              -1
+            ],
+            [
+              "BYGG-D-0024",
+              0,
+              -1
+            ],
+            [
+              "BYGG-D-0025",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0026",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0027",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0028",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0029",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0030",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0031",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0034",
+              0,
+              1
+            ]
+          ],
+          "elevator": 1,
+          "visualMatches": true,
+          "broken": 0
+        }
+      ],
+      "doorHit": {
+        "hp": 82,
+        "alive": true,
+        "sentShots": 1
+      },
+      "windows": [
+        {
+          "label": "Cargo Lift",
+          "frames": 299,
+          "fps": 60.00401364639775,
+          "frameMs": {
+            "median": 16.69999999999891,
+            "p95": 16.799999999999272,
+            "max": 16.80000000000109
+          },
+          "draws": {
+            "median": 1081,
+            "p95": 1081,
+            "max": 1081
+          },
+          "renderCpuMs": 10.066555183069363,
+          "gpu": {
+            "geometries": 405,
+            "textures": 89
+          },
+          "position": {
+            "x": -20.541,
+            "y": 0,
+            "z": -30.03999,
+            "yaw": 3.141592653589793
+          },
+          "room": "BYGG-G-41001",
+          "heapBytes": 107813532,
+          "taskCpuMs": 3265.488,
+          "scriptCpuMs": 3150.802
+        },
+        {
+          "label": "Service Lift",
+          "frames": 300,
+          "fps": 60.00240009600384,
+          "frameMs": {
+            "median": 16.699999999999818,
+            "p95": 16.700000000000728,
+            "max": 16.80000000000109
+          },
+          "draws": {
+            "median": 79,
+            "p95": 79,
+            "max": 79
+          },
+          "renderCpuMs": 1.7893333347638447,
+          "gpu": {
+            "geometries": 243,
+            "textures": 80
+          },
+          "position": {
+            "x": 28.00054,
+            "y": 0,
+            "z": 30.43484,
+            "yaw": 3.141592653589793
+          },
+          "room": "BYGG-G-41002",
+          "heapBytes": 88633600,
+          "taskCpuMs": 850.611,
+          "scriptCpuMs": 724.509
+        },
+        {
+          "label": "C08 desktop",
+          "frames": 293,
+          "fps": 58.798739740322304,
+          "frameMs": {
+            "median": 16.69999999999709,
+            "p95": 16.799999999995634,
+            "max": 116.69999999999709
+          },
+          "draws": {
+            "median": 1196,
+            "p95": 1196,
+            "max": 1196
+          },
+          "renderCpuMs": 9.023890789051512,
+          "gpu": {
+            "geometries": 1498,
+            "textures": 99
+          },
+          "position": {
+            "x": 22.783118318568484,
+            "y": 0,
+            "z": -17.905296023414415,
+            "yaw": 3.141592653589793
+          },
+          "room": "C08",
+          "heapBytes": 143213948,
+          "taskCpuMs": 2830.4440000000004,
+          "scriptCpuMs": 2734.057
+        },
+        {
+          "label": "C08 mobile emulation",
+          "frames": 300,
+          "fps": 60.002400096003804,
+          "frameMs": {
+            "median": 16.69999999999709,
+            "p95": 16.799999999995634,
+            "max": 16.80000000000291
+          },
+          "draws": {
+            "median": 198,
+            "p95": 198,
+            "max": 198
+          },
+          "renderCpuMs": 2.3356666628519696,
+          "gpu": {
+            "geometries": 1464,
+            "textures": 95
+          },
+          "position": {
+            "x": 22.802491096227254,
+            "y": 0,
+            "z": -12.920596382655397,
+            "yaw": 0
+          },
+          "room": "C08",
+          "heapBytes": 100137528,
+          "taskCpuMs": 951.6850000000001,
+          "scriptCpuMs": 843.0490000000001
+        }
+      ],
+      "presented": {
+        "visible": true,
+        "model": [
+          22.802491096227254,
+          0,
+          -12.920596382655397
+        ],
+        "remote": [
+          22.802491096227254,
+          0,
+          -12.920596382655397
+        ],
+        "camera": [
+          22.783118318568484,
+          1.58,
+          -17.905296023414415
+        ],
+        "player": [
+          22.783118318568484,
+          1.58,
+          -17.905296023414415
+        ]
+      },
+      "animation": {
+        "walkingClip": "Walk_Loop",
+        "deathClip": "Death01"
+      },
+      "routeConfirmations": [
+        [
+          {
+            "sent": 463,
+            "ack": 467,
+            "ackTick": 476,
+            "snapshotTick": 479,
+            "error": 0.0924562421473644,
+            "pitch": 0,
+            "draws": 509
+          },
+          {
+            "sent": 506,
+            "ack": 510,
+            "ackTick": 519,
+            "snapshotTick": 522,
+            "error": 0.0961013719124807,
+            "pitch": 0,
+            "draws": 473
+          },
+          {
+            "sent": 649,
+            "ack": 652,
+            "ackTick": 661,
+            "snapshotTick": 664,
+            "error": 0.0791203142048583,
+            "pitch": 0,
+            "draws": 1351
+          },
+          {
+            "sent": 720,
+            "ack": 723,
+            "ackTick": 732,
+            "snapshotTick": 735,
+            "error": 0.09506656585092083,
+            "pitch": 0,
+            "draws": 839
+          },
+          {
+            "sent": 1052,
+            "ack": 1056,
+            "ackTick": 1065,
+            "snapshotTick": 1068,
+            "error": 0.09347358979171266,
+            "pitch": 0,
+            "draws": 267
+          },
+          {
+            "sent": 1153,
+            "ack": 1158,
+            "ackTick": 1167,
+            "snapshotTick": 1170,
+            "error": 0.09338052828525444,
+            "pitch": 0,
+            "draws": 579
+          },
+          {
+            "sent": 1252,
+            "ack": 1255,
+            "ackTick": 1264,
+            "snapshotTick": 1267,
+            "error": 0.08857477987208166,
+            "pitch": 0,
+            "draws": 81
+          },
+          {
+            "sent": 1300,
+            "ack": 1303,
+            "ackTick": 1312,
+            "snapshotTick": 1315,
+            "error": 0.0961968520746819,
+            "pitch": 0,
+            "draws": 93
+          },
+          {
+            "sent": 1979,
+            "ack": 1982,
+            "ackTick": 1994,
+            "snapshotTick": 1997,
+            "error": 0.08578104676362103,
+            "pitch": 0,
+            "draws": 136
+          },
+          {
+            "sent": 2351,
+            "ack": 2354,
+            "ackTick": 2366,
+            "snapshotTick": 2369,
+            "error": 0.08697249574077301,
+            "pitch": 0,
+            "draws": 79
+          },
+          {
+            "sent": 2477,
+            "ack": 2482,
+            "ackTick": 2493,
+            "snapshotTick": 2497,
+            "error": 0.09935470877680762,
+            "pitch": 0,
+            "draws": 153
+          },
+          {
+            "sent": 2579,
+            "ack": 2584,
+            "ackTick": 2596,
+            "snapshotTick": 2599,
+            "error": 0.08444483812413812,
+            "pitch": 0,
+            "draws": 1110
+          }
+        ],
+        [
+          {
+            "sent": 441,
+            "ack": 445,
+            "ackTick": 476,
+            "snapshotTick": 479,
+            "error": 0.09808662025180066,
+            "pitch": 0,
+            "draws": 643
+          },
+          {
+            "sent": 496,
+            "ack": 499,
+            "ackTick": 531,
+            "snapshotTick": 533,
+            "error": 0.08915600041221286,
+            "pitch": 0,
+            "draws": 220
+          },
+          {
+            "sent": 630,
+            "ack": 633,
+            "ackTick": 664,
+            "snapshotTick": 667,
+            "error": 0.08507125737552385,
+            "pitch": 0,
+            "draws": 180
+          },
+          {
+            "sent": 667,
+            "ack": 671,
+            "ackTick": 702,
+            "snapshotTick": 705,
+            "error": 0.08688089345373848,
+            "pitch": 0,
+            "draws": 143
+          },
+          {
+            "sent": 736,
+            "ack": 740,
+            "ackTick": 771,
+            "snapshotTick": 774,
+            "error": 0.09226513784412196,
+            "pitch": 0,
+            "draws": 174
+          },
+          {
+            "sent": 795,
+            "ack": 798,
+            "ackTick": 829,
+            "snapshotTick": 832,
+            "error": 0.08451095565351661,
+            "pitch": 0,
+            "draws": 232
+          },
+          {
+            "sent": 822,
+            "ack": 825,
+            "ackTick": 856,
+            "snapshotTick": 859,
+            "error": 0.08727980772769728,
+            "pitch": 0,
+            "draws": 90
+          },
+          {
+            "sent": 907,
+            "ack": 911,
+            "ackTick": 941,
+            "snapshotTick": 945,
+            "error": 0.09633627251185659,
+            "pitch": 0,
+            "draws": 200
+          },
+          {
+            "sent": 941,
+            "ack": 944,
+            "ackTick": 975,
+            "snapshotTick": 978,
+            "error": 0.09661582981655316,
+            "pitch": 0,
+            "draws": 345
+          },
+          {
+            "sent": 1146,
+            "ack": 1151,
+            "ackTick": 1182,
+            "snapshotTick": 1185,
+            "error": 0.08234104796707879,
+            "pitch": 0,
+            "draws": 491
+          },
+          {
+            "sent": 1171,
+            "ack": 1175,
+            "ackTick": 1206,
+            "snapshotTick": 1209,
+            "error": 0.08326533526631462,
+            "pitch": 0,
+            "draws": 1670
+          },
+          {
+            "sent": 1371,
+            "ack": 1374,
+            "ackTick": 1406,
+            "snapshotTick": 1409,
+            "error": 0.08154972513076914,
+            "pitch": 0,
+            "draws": 640
+          },
+          {
+            "sent": 1396,
+            "ack": 1401,
+            "ackTick": 1433,
+            "snapshotTick": 1436,
+            "error": 0.08980054411779324,
+            "pitch": 0,
+            "draws": 314
+          },
+          {
+            "sent": 1575,
+            "ack": 1579,
+            "ackTick": 1611,
+            "snapshotTick": 1614,
+            "error": 0.07944268379040066,
+            "pitch": 0,
+            "draws": 197
+          },
+          {
+            "sent": 1923,
+            "ack": 1928,
+            "ackTick": 1960,
+            "snapshotTick": 1963,
+            "error": 0.046662923579444286,
+            "pitch": 0,
+            "draws": 193
+          },
+          {
+            "sent": 2115,
+            "ack": 2119,
+            "ackTick": 2152,
+            "snapshotTick": 2154,
+            "error": 0.09280392746712787,
+            "pitch": 0,
+            "draws": 80
+          },
+          {
+            "sent": 2159,
+            "ack": 2165,
+            "ackTick": 2197,
+            "snapshotTick": 2200,
+            "error": 0.08732839431825234,
+            "pitch": 0,
+            "draws": 88
+          },
+          {
+            "sent": 2206,
+            "ack": 2210,
+            "ackTick": 2241,
+            "snapshotTick": 2245,
+            "error": 0.08734056848809044,
+            "pitch": 0,
+            "draws": 54
+          },
+          {
+            "sent": 2546,
+            "ack": 2549,
+            "ackTick": 2582,
+            "snapshotTick": 2584,
+            "error": 0.09949741529690985,
+            "pitch": 0,
+            "draws": 447
+          },
+          {
+            "sent": 2629,
+            "ack": 2634,
+            "ackTick": 2666,
+            "snapshotTick": 2669,
+            "error": 0.09155643032286216,
+            "pitch": 0,
+            "draws": 1254
+          },
+          {
+            "sent": 2708,
+            "ack": 2713,
+            "ackTick": 2744,
+            "snapshotTick": 2748,
+            "error": 0.08279379179563047,
+            "pitch": 0,
+            "draws": 2082
+          },
+          {
+            "sent": 2902,
+            "ack": 2906,
+            "ackTick": 3118,
+            "snapshotTick": 3121,
+            "error": 0.09082243879188753,
+            "pitch": 0,
+            "draws": 81
+          },
+          {
+            "sent": 2926,
+            "ack": 2930,
+            "ackTick": 3142,
+            "snapshotTick": 3145,
+            "error": 0.08805168084937404,
+            "pitch": 0,
+            "draws": 124
+          },
+          {
+            "sent": 2976,
+            "ack": 2981,
+            "ackTick": 3193,
+            "snapshotTick": 3196,
+            "error": 0.08281069906614615,
+            "pitch": 0,
+            "draws": 331
+          },
+          {
+            "sent": 3031,
+            "ack": 3035,
+            "ackTick": 3247,
+            "snapshotTick": 3250,
+            "error": 0.09237680006423271,
+            "pitch": 0,
+            "draws": 877
+          },
+          {
+            "sent": 3172,
+            "ack": 3177,
+            "ackTick": 3389,
+            "snapshotTick": 3392,
+            "error": 0.08389013068575688,
+            "pitch": 0,
+            "draws": 224
+          },
+          {
+            "sent": 3208,
+            "ack": 3213,
+            "ackTick": 3425,
+            "snapshotTick": 3428,
+            "error": 0.08654799545506142,
+            "pitch": 0,
+            "draws": 146
+          },
+          {
+            "sent": 3274,
+            "ack": 3277,
+            "ackTick": 3489,
+            "snapshotTick": 3492,
+            "error": 0.09219938329053044,
+            "pitch": 0,
+            "draws": 177
+          },
+          {
+            "sent": 3327,
+            "ack": 3331,
+            "ackTick": 3543,
+            "snapshotTick": 3546,
+            "error": 0.08449097821714839,
+            "pitch": 0,
+            "draws": 235
+          },
+          {
+            "sent": 3351,
+            "ack": 3355,
+            "ackTick": 3567,
+            "snapshotTick": 3570,
+            "error": 0.08727512990219953,
+            "pitch": 0,
+            "draws": 94
+          },
+          {
+            "sent": 3433,
+            "ack": 3437,
+            "ackTick": 3648,
+            "snapshotTick": 3652,
+            "error": 0.0963352115336892,
+            "pitch": 0,
+            "draws": 203
+          },
+          {
+            "sent": 3463,
+            "ack": 3467,
+            "ackTick": 3679,
+            "snapshotTick": 3682,
+            "error": 0.0966156476651379,
+            "pitch": 0,
+            "draws": 348
+          },
+          {
+            "sent": 3666,
+            "ack": 3669,
+            "ackTick": 3881,
+            "snapshotTick": 3884,
+            "error": 0.0823410025160195,
+            "pitch": 0,
+            "draws": 451
+          },
+          {
+            "sent": 3686,
+            "ack": 3690,
+            "ackTick": 3902,
+            "snapshotTick": 3905,
+            "error": 0.08326532457172683,
+            "pitch": 0,
+            "draws": 1630
+          },
+          {
+            "sent": 3883,
+            "ack": 3887,
+            "ackTick": 4100,
+            "snapshotTick": 4103,
+            "error": 0.08154972296297708,
+            "pitch": 0,
+            "draws": 644
+          },
+          {
+            "sent": 3907,
+            "ack": 3910,
+            "ackTick": 4124,
+            "snapshotTick": 4126,
+            "error": 0.08980054351660068,
+            "pitch": 0,
+            "draws": 317
+          },
+          {
+            "sent": 4083,
+            "ack": 4086,
+            "ackTick": 4299,
+            "snapshotTick": 4302,
+            "error": 0.0794426837014785,
+            "pitch": 0,
+            "draws": 200
+          }
+        ]
+      ]
+    },
+    {
+      "scenario": "100ms-rtt-jitter",
+      "room": "q3EVGNCQH",
+      "interpolation": {
+        "max": 0.4138077515207783,
+        "samples": 57,
+        "firstMovementMs": 321.60000002384186
+      },
+      "prediction": {
+        "localMoved": 0.07000000000000028,
+        "serverMoved": 0
+      },
+      "respawn": {
+        "life": 2,
+        "delta": 0,
+        "ammo": 30
+      },
+      "reloads": [
+        {
+          "ammo": [
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20,
+            20
+          ],
+          "attempts": 125,
+          "activeAttempts": 108,
+          "full": 30,
+          "serverAttempts": 107,
+          "heldFirePitch": 1.3,
+          "otherHumanAlive": true
+        },
+        {
+          "ammo": [
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29
+          ],
+          "attempts": 120,
+          "activeAttempts": 106,
+          "full": 30,
+          "serverAttempts": 107,
+          "heldFirePitch": 1.3,
+          "otherHumanAlive": true
+        }
+      ],
+      "resumeAttempts": 1,
+      "admission": {
+        "full": {
+          "accepted": false,
+          "message": "room \"q3EVGNCQH\" is locked",
+          "code": 522
+        },
+        "mismatch": {
+          "accepted": false,
+          "message": "Incompatible buildHash. Reload the matching local client/server build.",
+          "code": 409
+        }
+      },
+      "measured": {
+        "metrics": {
+          "sent": 5295,
+          "replays": 26850,
+          "adopts": 1708,
+          "resets": 1,
+          "cosmeticShots": 22,
+          "confirmedShots": 18,
+          "suppressedShots": 18,
+          "maxPending": 50,
+          "preAdoptionOffset": {
+            "samples": 512,
+            "median": 0,
+            "p95": 0,
+            "max": 0
+          }
+        },
+        "pending": 21,
+        "settledError": 0,
+        "draws": 1198,
+        "actors": [
+          {
+            "id": "analysts-0",
+            "controller": "human",
+            "bot": false
+          },
+          {
+            "id": "counterAnalysts-0",
+            "controller": "human",
+            "bot": false
+          }
+        ],
+        "fatal": false
+      },
+      "cleanup": [
+        {
+          "cycle": 1,
+          "ms": 869.4467080000031,
+          "dom": {
+            "documents": 1,
+            "nodes": 1356,
+            "jsEventListeners": 231
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 2,
+          "ms": 709.1857080000045,
+          "dom": {
+            "documents": 1,
+            "nodes": 1357,
+            "jsEventListeners": 231
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 3,
+          "ms": 674.4460000000254,
+          "dom": {
+            "documents": 1,
+            "nodes": 1340,
+            "jsEventListeners": 231
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 4,
+          "ms": 1076.683875000017,
+          "dom": {
+            "documents": 1,
+            "nodes": 1402,
+            "jsEventListeners": 231
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        }
+      ],
+      "timings": {
+        "beforeCleanupMs": 93829.83733300002,
+        "cleanupMs": 3997.7635840000003,
+        "totalMs": 97827.60129199999
+      },
+      "perf": {
+        "serverTickMs": {
+          "samples": 5208,
+          "median": 0.2171669999952428,
+          "p95": 0.5448750000068685,
+          "max": 140.61691599999904
+        },
+        "clients": [
+          {
+            "frameMs": {
+              "samples": 5162,
+              "median": 16.69999999999709,
+              "p95": 16.799999999995634,
+              "max": 116.59999999999127
+            },
+            "predictionCpuMs": {
+              "samples": 5163,
+              "median": 0.19999992847442627,
+              "p95": 0.3999999761581421,
+              "max": 2.100000023841858
+            },
+            "draws": {
+              "samples": 5163,
+              "median": 1114,
+              "p95": 1198,
+              "max": 1409
+            },
+            "heap": 168184869,
+            "gpu": {
+              "geometries": 1568,
+              "textures": 100
+            }
+          },
+          {
+            "frameMs": {
+              "samples": 4829,
+              "median": 16.69999999999709,
+              "p95": 16.80000000000291,
+              "max": 100
+            },
+            "predictionCpuMs": {
+              "samples": 4830,
+              "median": 0.19999992847442627,
+              "p95": 0.3999999761581421,
+              "max": 6.399999976158142
+            },
+            "draws": {
+              "samples": 4830,
+              "median": 233,
+              "p95": 2083,
+              "max": 3437
+            },
+            "heap": 141735058,
             "gpu": {
               "geometries": 1642,
               "textures": 98
@@ -2512,7 +2612,7 @@
         {
           "label": "Cargo Lift",
           "frames": 300,
-          "fps": 60.002400096003825,
+          "fps": 60.002400096003846,
           "frameMs": {
             "median": 16.69999999999891,
             "p95": 16.700000000000728,
@@ -2523,7 +2623,7 @@
             "p95": 1081,
             "max": 1081
           },
-          "renderCpuMs": 8.772000002861024,
+          "renderCpuMs": 9.633333334128062,
           "gpu": {
             "geometries": 405,
             "textures": 89
@@ -2535,16 +2635,16 @@
             "yaw": 3.141592653589793
           },
           "room": "BYGG-G-41001",
-          "heapBytes": 99094528,
-          "taskCpuMs": 2893.2610000000004,
-          "scriptCpuMs": 2779.056
+          "heapBytes": 107412316,
+          "taskCpuMs": 3118.7529999999997,
+          "scriptCpuMs": 3014.019
         },
         {
           "label": "Service Lift",
           "frames": 300,
-          "fps": 60.003600216012956,
+          "fps": 60.00240009600384,
           "frameMs": {
-            "median": 16.699999999999818,
+            "median": 16.69999999999891,
             "p95": 16.700000000000728,
             "max": 16.80000000000109
           },
@@ -2553,7 +2653,7 @@
             "p95": 79,
             "max": 79
           },
-          "renderCpuMs": 1.434666666984558,
+          "renderCpuMs": 1.2756666707992554,
           "gpu": {
             "geometries": 243,
             "textures": 80
@@ -2565,47 +2665,47 @@
             "yaw": 3.141592653589793
           },
           "room": "BYGG-G-41002",
-          "heapBytes": 95212952,
-          "taskCpuMs": 694.9889999999999,
-          "scriptCpuMs": 581.511
+          "heapBytes": 92145348,
+          "taskCpuMs": 621.436,
+          "scriptCpuMs": 523.404
         },
         {
           "label": "C08 desktop",
-          "frames": 294,
-          "fps": 58.998234066463354,
+          "frames": 296,
+          "fps": 59.20236809472375,
           "frameMs": {
             "median": 16.69999999999709,
-            "p95": 16.799999999995634,
-            "max": 100
+            "p95": 16.700000000004366,
+            "max": 83.30000000000291
           },
           "draws": {
             "median": 1196,
             "p95": 1196,
             "max": 1196
           },
-          "renderCpuMs": 9.268367338342731,
+          "renderCpuMs": 9.785810811696825,
           "gpu": {
-            "geometries": 1498,
+            "geometries": 1500,
             "textures": 99
           },
           "position": {
-            "x": 22.78311762872294,
+            "x": 22.783118211173417,
             "y": 0,
-            "z": -17.90529378743646,
+            "z": -17.905295675314132,
             "yaw": 3.141592653589793
           },
           "room": "C08",
-          "heapBytes": 150846848,
-          "taskCpuMs": 2936.575,
-          "scriptCpuMs": 2830.025
+          "heapBytes": 153672104,
+          "taskCpuMs": 3089.053,
+          "scriptCpuMs": 2993.952
         },
         {
           "label": "C08 mobile emulation",
           "frames": 300,
-          "fps": 60.002400096003804,
+          "fps": 60.00240009600389,
           "frameMs": {
             "median": 16.69999999999709,
-            "p95": 16.799999999995634,
+            "p95": 16.700000000004366,
             "max": 16.80000000000291
           },
           "draws": {
@@ -2613,44 +2713,44 @@
             "p95": 198,
             "max": 198
           },
-          "renderCpuMs": 2.0040000009536745,
+          "renderCpuMs": 1.7386666750907898,
           "gpu": {
             "geometries": 1464,
             "textures": 95
           },
           "position": {
-            "x": 22.802491096227467,
+            "x": 22.802509887166792,
             "y": 0,
-            "z": -12.920596382652343,
+            "z": -12.92060249589105,
             "yaw": 0
           },
           "room": "C08",
-          "heapBytes": 136158788,
-          "taskCpuMs": 824.4889999999999,
-          "scriptCpuMs": 725.028
+          "heapBytes": 120282500,
+          "taskCpuMs": 715.656,
+          "scriptCpuMs": 623.269
         }
       ],
       "presented": {
         "visible": true,
         "model": [
-          22.802491096227467,
+          22.802509887166792,
           0,
-          -12.920596382652343
+          -12.92060249589105
         ],
         "remote": [
-          22.802491096227467,
+          22.802509887166792,
           0,
-          -12.920596382652343
+          -12.92060249589105
         ],
         "camera": [
-          22.78311762872294,
+          22.783118211173417,
           1.58,
-          -17.90529378743646
+          -17.905295675314132
         ],
         "player": [
-          22.78311762872294,
+          22.783118211173417,
           1.58,
-          -17.90529378743646
+          -17.905295675314132
         ]
       },
       "animation": {
@@ -2660,367 +2760,475 @@
       "routeConfirmations": [
         [
           {
-            "sent": 477,
-            "ack": 482,
-            "ackTick": 507,
-            "snapshotTick": 510,
-            "error": 0.09515030626364622
+            "sent": 532,
+            "ack": 535,
+            "ackTick": 557,
+            "snapshotTick": 560,
+            "error": 0.08982328955176724,
+            "pitch": 0,
+            "draws": 496
           },
           {
-            "sent": 526,
-            "ack": 530,
-            "ackTick": 555,
-            "snapshotTick": 558,
-            "error": 0.09686775824269622
+            "sent": 587,
+            "ack": 593,
+            "ackTick": 614,
+            "snapshotTick": 618,
+            "error": 0.09705125011674684,
+            "pitch": 0,
+            "draws": 471
           },
           {
-            "sent": 674,
-            "ack": 678,
-            "ackTick": 703,
-            "snapshotTick": 706,
-            "error": 0.08080218031671187
+            "sent": 745,
+            "ack": 750,
+            "ackTick": 772,
+            "snapshotTick": 775,
+            "error": 0.07938324183217661,
+            "pitch": 0,
+            "draws": 1351
           },
           {
-            "sent": 752,
-            "ack": 756,
-            "ackTick": 781,
-            "snapshotTick": 784,
-            "error": 0.09553440326881805
+            "sent": 830,
+            "ack": 834,
+            "ackTick": 856,
+            "snapshotTick": 859,
+            "error": 0.09513939605081696,
+            "pitch": 0,
+            "draws": 839
           },
           {
-            "sent": 1089,
-            "ack": 1094,
-            "ackTick": 1120,
-            "snapshotTick": 1122,
-            "error": 0.09361562339453366
+            "sent": 1173,
+            "ack": 1178,
+            "ackTick": 1200,
+            "snapshotTick": 1203,
+            "error": 0.09349570174809438,
+            "pitch": 0,
+            "draws": 267
           },
           {
-            "sent": 1198,
-            "ack": 1203,
-            "ackTick": 1228,
-            "snapshotTick": 1231,
-            "error": 0.0934242327485953
+            "sent": 1288,
+            "ack": 1293,
+            "ackTick": 1315,
+            "snapshotTick": 1318,
+            "error": 0.09338733224696417,
+            "pitch": 0,
+            "draws": 579
           },
           {
-            "sent": 1302,
-            "ack": 1306,
-            "ackTick": 1331,
-            "snapshotTick": 1334,
-            "error": 0.08858579105864012
+            "sent": 1398,
+            "ack": 1402,
+            "ackTick": 1424,
+            "snapshotTick": 1427,
+            "error": 0.08857649410476036,
+            "pitch": 0,
+            "draws": 81
           },
           {
-            "sent": 1356,
-            "ack": 1360,
-            "ackTick": 1385,
-            "snapshotTick": 1388,
-            "error": 0.09619917441468509
+            "sent": 1459,
+            "ack": 1462,
+            "ackTick": 1484,
+            "snapshotTick": 1487,
+            "error": 0.09619721361968663,
+            "pitch": 0,
+            "draws": 93
           },
           {
-            "sent": 2072,
-            "ack": 2075,
-            "ackTick": 2103,
-            "snapshotTick": 2106,
-            "error": 0.08578232080555973
+            "sent": 2247,
+            "ack": 2252,
+            "ackTick": 2274,
+            "snapshotTick": 2277,
+            "error": 0.08578124510735781,
+            "pitch": 0,
+            "draws": 136
           },
           {
-            "sent": 2475,
-            "ack": 2480,
-            "ackTick": 2508,
-            "snapshotTick": 2511,
-            "error": 0.08697294996806963
+            "sent": 2679,
+            "ack": 2682,
+            "ackTick": 2704,
+            "snapshotTick": 2707,
+            "error": 0.08697256645559148,
+            "pitch": 0,
+            "draws": 79
           },
           {
-            "sent": 2603,
-            "ack": 2607,
-            "ackTick": 2635,
-            "snapshotTick": 2638,
-            "error": 0.09935467511491707
+            "sent": 2807,
+            "ack": 2811,
+            "ackTick": 2833,
+            "snapshotTick": 2836,
+            "error": 0.0993547035362526,
+            "pitch": 0,
+            "draws": 153
           },
           {
-            "sent": 2716,
-            "ack": 2721,
-            "ackTick": 2749,
-            "snapshotTick": 2752,
-            "error": 0.08444482822155569
+            "sent": 2932,
+            "ack": 2935,
+            "ackTick": 2957,
+            "snapshotTick": 2960,
+            "error": 0.08444483658250347,
+            "pitch": 0,
+            "draws": 1110
           }
         ],
         [
           {
-            "sent": 445,
-            "ack": 450,
-            "ackTick": 510,
-            "snapshotTick": 513,
-            "error": 0.09569745505234985
+            "sent": 505,
+            "ack": 510,
+            "ackTick": 575,
+            "snapshotTick": 578,
+            "error": 0.08877857976931154,
+            "pitch": 0,
+            "draws": 639
           },
           {
-            "sent": 504,
-            "ack": 507,
-            "ackTick": 567,
-            "snapshotTick": 570,
-            "error": 0.08925922364898654
+            "sent": 571,
+            "ack": 574,
+            "ackTick": 639,
+            "snapshotTick": 642,
+            "error": 0.09035366677216448,
+            "pitch": 0,
+            "draws": 218
           },
           {
-            "sent": 641,
-            "ack": 646,
-            "ackTick": 706,
-            "snapshotTick": 709,
-            "error": 0.0851093845043719
+            "sent": 714,
+            "ack": 719,
+            "ackTick": 784,
+            "snapshotTick": 787,
+            "error": 0.08546591494446536,
+            "pitch": 0,
+            "draws": 180
           },
           {
-            "sent": 685,
-            "ack": 688,
-            "ackTick": 748,
-            "snapshotTick": 751,
-            "error": 0.0868923182517504
+            "sent": 765,
+            "ack": 769,
+            "ackTick": 834,
+            "snapshotTick": 837,
+            "error": 0.08699847718035741,
+            "pitch": 0,
+            "draws": 143
           },
           {
-            "sent": 758,
-            "ack": 761,
-            "ackTick": 821,
-            "snapshotTick": 824,
-            "error": 0.0922673924300007
+            "sent": 844,
+            "ack": 848,
+            "ackTick": 913,
+            "snapshotTick": 916,
+            "error": 0.09228833542263462,
+            "pitch": 0,
+            "draws": 174
           },
           {
-            "sent": 820,
-            "ack": 824,
-            "ackTick": 884,
-            "snapshotTick": 887,
-            "error": 0.08451164062267624
+            "sent": 913,
+            "ack": 917,
+            "ackTick": 982,
+            "snapshotTick": 985,
+            "error": 0.08451800329667873,
+            "pitch": 0,
+            "draws": 232
           },
           {
-            "sent": 851,
-            "ack": 854,
-            "ackTick": 914,
-            "snapshotTick": 917,
-            "error": 0.08727996811488188
+            "sent": 950,
+            "ack": 953,
+            "ackTick": 1018,
+            "snapshotTick": 1021,
+            "error": 0.0872814579437316,
+            "pitch": 0,
+            "draws": 90
           },
           {
-            "sent": 940,
-            "ack": 945,
-            "ackTick": 1005,
-            "snapshotTick": 1008,
-            "error": 0.09633630889007878
+            "sent": 1045,
+            "ack": 1048,
+            "ackTick": 1113,
+            "snapshotTick": 1116,
+            "error": 0.09633664680744207,
+            "pitch": 0,
+            "draws": 200
           },
           {
-            "sent": 979,
-            "ack": 984,
-            "ackTick": 1044,
-            "snapshotTick": 1047,
-            "error": 0.09661583606207462
+            "sent": 1088,
+            "ack": 1093,
+            "ackTick": 1158,
+            "snapshotTick": 1161,
+            "error": 0.09661589407678359,
+            "pitch": 0,
+            "draws": 345
           },
           {
-            "sent": 1191,
-            "ack": 1195,
-            "ackTick": 1255,
-            "snapshotTick": 1258,
-            "error": 0.08234104952545335
+            "sent": 1306,
+            "ack": 1310,
+            "ackTick": 1375,
+            "snapshotTick": 1378,
+            "error": 0.08234106400149471,
+            "pitch": 0,
+            "draws": 491
           },
           {
-            "sent": 1221,
-            "ack": 1225,
-            "ackTick": 1286,
-            "snapshotTick": 1288,
-            "error": 0.08326533563299862
+            "sent": 1420,
+            "ack": 1425,
+            "ackTick": 1490,
+            "snapshotTick": 1493,
+            "error": 0.09006987990844792,
+            "pitch": 0,
+            "draws": 2913
           },
           {
-            "sent": 1426,
-            "ack": 1430,
-            "ackTick": 1491,
-            "snapshotTick": 1494,
-            "error": 0.08154972520501078
+            "sent": 1554,
+            "ack": 1558,
+            "ackTick": 1623,
+            "snapshotTick": 1626,
+            "error": 0.09913264415274313,
+            "pitch": 0,
+            "draws": 560
           },
           {
-            "sent": 1460,
-            "ack": 1464,
-            "ackTick": 1525,
-            "snapshotTick": 1528,
-            "error": 0.089800544138378
+            "sent": 1591,
+            "ack": 1594,
+            "ackTick": 1659,
+            "snapshotTick": 1662,
+            "error": 0.09178817270247625,
+            "pitch": 0,
+            "draws": 314
           },
           {
-            "sent": 1644,
-            "ack": 1648,
-            "ackTick": 1709,
-            "snapshotTick": 1712,
-            "error": 0.07944268379345941
+            "sent": 1780,
+            "ack": 1787,
+            "ackTick": 1852,
+            "snapshotTick": 1855,
+            "error": 0.07943716505717462,
+            "pitch": 0,
+            "draws": 197
           },
           {
-            "sent": 2000,
-            "ack": 2003,
-            "ackTick": 2064,
-            "snapshotTick": 2067,
-            "error": 0.08863139725567656
+            "sent": 2156,
+            "ack": 2160,
+            "ackTick": 2225,
+            "snapshotTick": 2228,
+            "error": 0.06755210800830393,
+            "pitch": 0,
+            "draws": 2011
           },
           {
-            "sent": 2202,
-            "ack": 2205,
-            "ackTick": 2266,
-            "snapshotTick": 2269,
-            "error": 0.08036015409717813
+            "sent": 2373,
+            "ack": 2377,
+            "ackTick": 2442,
+            "snapshotTick": 2445,
+            "error": 0.08643853607175139,
+            "pitch": 0,
+            "draws": 80
           },
           {
-            "sent": 2251,
-            "ack": 2256,
-            "ackTick": 2317,
-            "snapshotTick": 2320,
-            "error": 0.08600746555323555
+            "sent": 2429,
+            "ack": 2434,
+            "ackTick": 2499,
+            "snapshotTick": 2502,
+            "error": 0.08665619777138811,
+            "pitch": 0,
+            "draws": 88
           },
           {
-            "sent": 2305,
-            "ack": 2308,
-            "ackTick": 2369,
-            "snapshotTick": 2372,
-            "error": 0.08699748011421868
+            "sent": 2488,
+            "ack": 2492,
+            "ackTick": 2557,
+            "snapshotTick": 2560,
+            "error": 0.08716633558642971,
+            "pitch": 0,
+            "draws": 54
           },
           {
-            "sent": 2672,
-            "ack": 2676,
-            "ackTick": 2737,
-            "snapshotTick": 2740,
-            "error": 0.09960273017457405
+            "sent": 2877,
+            "ack": 2882,
+            "ackTick": 2948,
+            "snapshotTick": 2950,
+            "error": 0.09955089647230128,
+            "pitch": 0,
+            "draws": 447
           },
           {
-            "sent": 2762,
-            "ack": 2767,
-            "ackTick": 2828,
-            "snapshotTick": 2831,
-            "error": 0.09156852877633505
+            "sent": 2974,
+            "ack": 2979,
+            "ackTick": 3044,
+            "snapshotTick": 3047,
+            "error": 0.09156257563295521,
+            "pitch": 0,
+            "draws": 1254
           },
           {
-            "sent": 2848,
-            "ack": 2851,
-            "ackTick": 2912,
-            "snapshotTick": 2915,
-            "error": 0.08279751281952774
+            "sent": 3065,
+            "ack": 3068,
+            "ackTick": 3133,
+            "snapshotTick": 3136,
+            "error": 0.08279568186327034,
+            "pitch": 0,
+            "draws": 2082
           },
           {
-            "sent": 3069,
-            "ack": 3072,
-            "ackTick": 3313,
-            "snapshotTick": 3316,
-            "error": 0.09082243879188753
+            "sent": 3316,
+            "ack": 3319,
+            "ackTick": 3547,
+            "snapshotTick": 3550,
+            "error": 0.09082243879188753,
+            "pitch": 0,
+            "draws": 81
           },
           {
-            "sent": 3098,
-            "ack": 3102,
-            "ackTick": 3343,
-            "snapshotTick": 3346,
-            "error": 0.08805168084937404
+            "sent": 3345,
+            "ack": 3350,
+            "ackTick": 3578,
+            "snapshotTick": 3581,
+            "error": 0.08805168084937404,
+            "pitch": 0,
+            "draws": 124
           },
           {
-            "sent": 3154,
-            "ack": 3159,
-            "ackTick": 3400,
-            "snapshotTick": 3403,
-            "error": 0.08281069906614615
+            "sent": 3403,
+            "ack": 3407,
+            "ackTick": 3635,
+            "snapshotTick": 3638,
+            "error": 0.08281069906614615,
+            "pitch": 0,
+            "draws": 331
           },
           {
-            "sent": 3215,
-            "ack": 3220,
-            "ackTick": 3461,
-            "snapshotTick": 3464,
-            "error": 0.09237680006423271
+            "sent": 3463,
+            "ack": 3468,
+            "ackTick": 3696,
+            "snapshotTick": 3699,
+            "error": 0.09237680006423271,
+            "pitch": 0,
+            "draws": 877
           },
           {
-            "sent": 3364,
-            "ack": 3369,
-            "ackTick": 3615,
-            "snapshotTick": 3618,
-            "error": 0.08389013068575688
+            "sent": 3611,
+            "ack": 3616,
+            "ackTick": 3844,
+            "snapshotTick": 3847,
+            "error": 0.08389013068575688,
+            "pitch": 0,
+            "draws": 224
           },
           {
-            "sent": 3414,
-            "ack": 3418,
-            "ackTick": 3664,
-            "snapshotTick": 3667,
-            "error": 0.08654799545506142
+            "sent": 3653,
+            "ack": 3655,
+            "ackTick": 3884,
+            "snapshotTick": 3886,
+            "error": 0.08654799545506142,
+            "pitch": 0,
+            "draws": 146
           },
           {
-            "sent": 3492,
-            "ack": 3496,
-            "ackTick": 3743,
-            "snapshotTick": 3745,
-            "error": 0.09219938329053044
+            "sent": 3723,
+            "ack": 3727,
+            "ackTick": 3955,
+            "snapshotTick": 3958,
+            "error": 0.09219938329053044,
+            "pitch": 0,
+            "draws": 177
           },
           {
-            "sent": 3561,
-            "ack": 3566,
-            "ackTick": 3812,
-            "snapshotTick": 3815,
-            "error": 0.08449097821714839
+            "sent": 3784,
+            "ack": 3788,
+            "ackTick": 4020,
+            "snapshotTick": 4023,
+            "error": 0.08449097821714839,
+            "pitch": 0,
+            "draws": 235
           },
           {
-            "sent": 3598,
-            "ack": 3602,
-            "ackTick": 3848,
-            "snapshotTick": 3851,
-            "error": 0.08727512990219953
+            "sent": 3818,
+            "ack": 3821,
+            "ackTick": 4053,
+            "snapshotTick": 4056,
+            "error": 0.08727512990219953,
+            "pitch": 0,
+            "draws": 94
           },
           {
-            "sent": 3692,
-            "ack": 3696,
-            "ackTick": 3942,
-            "snapshotTick": 3945,
-            "error": 0.0963352115336892
+            "sent": 3909,
+            "ack": 3915,
+            "ackTick": 4147,
+            "snapshotTick": 4150,
+            "error": 0.0963352115336892,
+            "pitch": 0,
+            "draws": 203
           },
           {
-            "sent": 3735,
-            "ack": 3738,
-            "ackTick": 3984,
-            "snapshotTick": 3987,
-            "error": 0.0966156476651379
-          },
-          {
-            "sent": 3950,
+            "sent": 3951,
             "ack": 3956,
-            "ackTick": 4201,
-            "snapshotTick": 4205,
-            "error": 0.0823410025160195
+            "ackTick": 4188,
+            "snapshotTick": 4191,
+            "error": 0.0966156476651379,
+            "pitch": 0,
+            "draws": 348
           },
           {
-            "sent": 3985,
-            "ack": 3989,
-            "ackTick": 4235,
-            "snapshotTick": 4238,
-            "error": 0.08326532457172683
+            "sent": 4165,
+            "ack": 4168,
+            "ackTick": 4400,
+            "snapshotTick": 4403,
+            "error": 0.0823410025160195,
+            "pitch": 0,
+            "draws": 451
           },
           {
             "sent": 4196,
-            "ack": 4201,
-            "ackTick": 4447,
-            "snapshotTick": 4450,
-            "error": 0.08154972296297708
+            "ack": 4200,
+            "ackTick": 4432,
+            "snapshotTick": 4435,
+            "error": 0.08326532457172683,
+            "pitch": 0,
+            "draws": 1630
           },
           {
-            "sent": 4234,
-            "ack": 4238,
-            "ackTick": 4483,
-            "snapshotTick": 4487,
-            "error": 0.08980054351660068
+            "sent": 4405,
+            "ack": 4409,
+            "ackTick": 4641,
+            "snapshotTick": 4644,
+            "error": 0.08154972296297708,
+            "pitch": 0,
+            "draws": 644
           },
           {
-            "sent": 4423,
-            "ack": 4428,
-            "ackTick": 4674,
-            "snapshotTick": 4677,
-            "error": 0.0794426837014785
+            "sent": 4440,
+            "ack": 4443,
+            "ackTick": 4675,
+            "snapshotTick": 4678,
+            "error": 0.08980054351660068,
+            "pitch": 0,
+            "draws": 317
+          },
+          {
+            "sent": 4624,
+            "ack": 4629,
+            "ackTick": 4861,
+            "snapshotTick": 4864,
+            "error": 0.0794426837014785,
+            "pitch": 0,
+            "draws": 199
           }
         ]
       ]
     }
   ],
   "proxy": {
-    "upBytes": 62205,
-    "downBytes": 381634,
-    "messages": 13584,
-    "delayMs": {
+    "upBytes": 58745,
+    "downBytes": 385338,
+    "messages": 14164,
+    "scheduledDelayMs": {
       "samples": 4096,
-      "median": 51.89407268312061,
-      "p95": 68.25833920389414,
-      "max": 70.64338099116867
+      "median": 52.07809710189758,
+      "p95": 68.43995030969381,
+      "max": 73.85252373086405
+    },
+    "deliveredDelayMs": {
+      "samples": 4096,
+      "median": 52.089042000006884,
+      "p95": 68.91420800000196,
+      "max": 225.9230419999949
     }
   },
   "errors": [],
   "runtimeManifestSha256": "8a8070110037c1787b23443445489c75d178d23e85aeb326cf8b24f2f90be63f",
-  "harnessSha256": "0769accb0b6021248482a269028f229a1909002c83d3617d678ea09d59fdb9c9",
-  "evidenceNote": "Compact observed results. The harness writes full arrays to ignored test-results/network/browser.json."
+  "harnessSha256": "c6bd51496cfb6d31fe4744c2890dabb63619ffcd5adfa42665b026d4b0c1a96e",
+  "proxySources": {
+    "tools/network-proxy.mjs": "6b401be5587861dab071eb7e0adfde13871e2942a3c4f1ca7d3d12e0b32082fe",
+    "tools/network-delay.mjs": "c0d764ee894e1a0612a9f42b9de4f889ff7e80e25272af725c9c0bce4edd90f3"
+  },
+  "evidenceNote": "Compact observed results with corrected reliable FIFO proxy. The harness writes full arrays to ignored test-results/network/browser.json."
 }
