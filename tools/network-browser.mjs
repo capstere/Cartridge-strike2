@@ -61,6 +61,13 @@ async function controls(page,value={}){await page.evaluate(value=>{__fps.liveCon
 async function walk(page,goals){
  const points=await page.evaluate(goals=>{const w=__fps.world;let from=__fps.network.prediction.world.actor,result=[];for(const [x,z] of goals){const goal={x,z},path=w.findPath(from,goal);if(!path.length)throw Error(`No real Floor 5 route to ${x},${z}`);result.push(...path.map(p=>[p.x,p.z]));from=goal;}return result;},goals);
  await page.evaluate(async({points,transitPitch})=>{
+  const network=__fps.network;
+  // Real input retains free look when movement keys are released. An empty
+  // test input fell back to an older server aim and could redraw the full
+  // corridor while the software profile was waiting for its stop ack.
+  const stop=()=>{__fps.liveControls={yaw:__fps.liveControls?.yaw??network.prediction.world.actor.yaw,pitch:transitPitch};};
+  const failure=reason=>Error(reason+': '+JSON.stringify({enabled:network.enabled,modal:__fps.modal,staleMs:performance.now()-network.lastPatch,sent:network.input.sentCount,ack:network.input.lastProcessed,pending:network.input.pendingCount,controls:__fps.liveControls,pitch:network.view.player?.pitch,draws:__fps.renderer.stats.drawCalls}));
+  stop();
   for(const [x,z] of points){
    const end=performance.now()+20000;
    while(true){
@@ -69,24 +76,24 @@ async function walk(page,goals){
      // Stop through ordinary input and wait for its ack. The SDK ack and
      // schema patch are separate messages: only a later world snapshot proves
      // the body has actually settled, rather than just passed the waypoint.
-     __fps.liveControls={};const movingSent=n.input.sentCount;
-     while(n.input.sentCount<=movingSent){if(performance.now()>end)throw Error('Route stop was not submitted');await new Promise(requestAnimationFrame);}
+     stop();const movingSent=n.input.sentCount;
+     while(n.input.sentCount<=movingSent){if(performance.now()>end)throw failure('Route stop was not submitted');await new Promise(requestAnimationFrame);}
      const sent=n.input.sentCount;
-     while(n.input.lastProcessed<sent){if(performance.now()>end)throw Error('Route input was not acknowledged');await new Promise(requestAnimationFrame);}
+     while(n.input.lastProcessed<sent){if(performance.now()>end)throw failure('Route input was not acknowledged');await new Promise(requestAnimationFrame);}
      const ackTick=n.room.state.tick;
-     while(n.room.state.tick<=ackTick){if(performance.now()>end)throw Error('Route stop snapshot was not received');await new Promise(requestAnimationFrame);}
+     while(n.room.state.tick<=ackTick){if(performance.now()>end)throw failure('Route stop snapshot was not received');await new Promise(requestAnimationFrame);}
      const authority=n.room.state.actors.get(n.localPlayerId),error=Math.hypot(authority.x-x,authority.z-z);
-     (window.__routeConfirmations??=[]).push({sent,ack:n.input.lastProcessed,ackTick,snapshotTick:n.room.state.tick,error});
+     (window.__routeConfirmations??=[]).push({sent,ack:n.input.lastProcessed,ackTick,snapshotTick:n.room.state.tick,error,pitch:n.input.data.pitch,draws:__fps.renderer.stats.drawCalls});
      if(error<.16)break;
-     if(performance.now()>end)throw Error('Authority did not reach the waypoint');
+     if(performance.now()>end)throw failure('Authority did not reach the waypoint');
      await new Promise(requestAnimationFrame);continue;
     }
-    if(performance.now()>end)throw Error(`Route stalled at ${a.x},${a.z} toward ${x},${z}`);
+    if(performance.now()>end)throw failure(`Route stalled at ${a.x},${a.z} toward ${x},${z}`);
     __fps.liveControls={forward:Math.min(1,d*3),yaw:Math.atan2(-dx,-dz),pitch:transitPitch};
     await new Promise(requestAnimationFrame);
    }
   }
-  __fps.liveControls={};
+  stop();
  },{points,transitPitch});
  await page.waitForTimeout(350);
  const actual=await state(page),[x,z]=goals.at(-1);assert(Math.hypot(actual.x-x,actual.z-z)<.3,'authoritative route arrival '+JSON.stringify({actual,goal:[x,z]}));

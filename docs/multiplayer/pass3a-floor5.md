@@ -205,6 +205,21 @@ WebGL backend and uses the movement-based observer described above. Default
 native tests retain full DPR 1 and ordinary forward look during travel. Final
 required CI remains tracked on the PR; those earlier failures are not passes.
 
+[Run 44141234816](https://github.com/capstere/Cartridge-strike2/actions/runs/44141234816)
+passed Foundation, all 218 core tests, hashes and door traversal. Linux's actual
+backend was SwiftShader Subzero; the Cargo view sampled 7,049.7 ms/frame and the
+route driver then timed out submitting a stop. The driver now retains yaw and
+pitch when releasing movement, as the real controls do, instead of falling back
+to an older authoritative aim. This also keeps the requested downward software
+travel view during stop acknowledgement. Its 20-second waypoint deadline,
+collision/arrival requirements and all combat assertions remain. Timeout reports
+include input, freshness, pause and draw state for further diagnosis.
+
+The committed native/software measurement records were captured at `ad57289`;
+this follow-up changes only test driving and diagnostics, not runtime code,
+assets or the measured implementation. The final-head CI result is linked on
+PR #20 rather than recording an unexecuted pass here.
+
 ### Reproduce
 
 Run from the repository root with dependencies installed as above. The core

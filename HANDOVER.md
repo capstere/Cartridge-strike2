@@ -222,7 +222,10 @@ GPU processes. A documented reduced-resolution software functional profile
 passes both complete network scenarios and 24 actually rendered cleanup cycles
 locally (237.2 / 199.4 seconds); native performance
 is measured separately at full resolution and normal forward view. Required
-Linux checks must pass on the final PR head.
+Linux checks must pass on the final PR head. A later Linux stop-submission
+timeout led to matching real controls more closely: the route driver retains
+look direction when movement stops. Runtime code and measured native/software
+records remain from `ad57289`; this follow-up changes the harness only.
 
 **Next genuine task: review [Pass 3A.1 PR #20](https://github.com/capstere/Cartridge-strike2/pull/20) and its final required CI.
 Do not automatically merge it.** Full online 5v5/objectives, bounded hitscan
