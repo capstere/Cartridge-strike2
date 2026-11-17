@@ -3,9 +3,11 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {chromium} from '../frontline/source/tools/dev/node_modules/playwright-core/index.mjs';
 import {createTestServer} from './network-test-server.mjs';
+import {createTestPeer} from './network-test-peer.mjs';
 import {testLanHost} from './network-lan-host.mjs';
 import {CONTRACT} from '../shared/multiplayer/build.mjs';
 const headed=process.env.FPS_NETWORK_HEADED==='1';
+const protocolPeer=process.env.FPS_LAN_PROTOCOL_PEER==='1';let peer;
 const angle=process.env.FPS_NETWORK_ANGLE||(process.platform==='darwin'?'metal':'swiftshader');
 const local=await createTestServer({port:0,...(process.env.FPS_NETWORK_LAN==='1'?{lan:true,host:testLanHost()}:{})}),browsers=[],pages=[],errors=[];
 async function until(predicate,label,timeout=10000){const end=performance.now()+timeout;while(!predicate()){assert(performance.now()<end,label);await new Promise(r=>setTimeout(r,25));}}
@@ -27,11 +29,15 @@ async function form(p,room=''){
  await p.locator('#network-room').fill(room);await p.locator(`[data-create=${!room}]`).click();
 }
 try{
- const a=await open(false),setup=await a.context().newCDPSession(a);let b;
+ const a=await open(false);let b;
+ if(!protocolPeer){const setup=await a.context().newCDPSession(a);
  await setup.send('Page.setWebLifecycleState',{state:'frozen'});
  try{b=await open(true);}finally{await setup.send('Page.setWebLifecycleState',{state:'active'});await setup.detach();}
+ }
  await form(a);await a.locator('#resume').waitFor({state:'visible'});
- const id=await a.locator('#network-room').inputValue();assert(id);await form(b,id);await b.locator('#resume').click();await b.locator('#hud').waitFor({state:'visible'});
+ const id=await a.locator('#network-room').inputValue();assert(id);
+ if(protocolPeer)peer=await createTestPeer(local.url,id);
+ else{await form(b,id);await b.locator('#resume').click();await b.locator('#hud').waitFor({state:'visible'});}
  await until(()=>[...local.rooms][0]?.sim.game.actors.length===2,'two humans on the independent authority');
  const authority=[...local.rooms][0];assert.equal(authority.sim.game.actors.length,2);
  let resumeAttempts=0,resumePoint;
@@ -48,6 +54,7 @@ try{
  await a.mouse.down();await until(()=>player.inventory.primary.ammo<ammo,'real mouse fire reaches authority');await a.mouse.up();
  assert(Math.abs(player.z-z)>.1);assert(player.inventory.primary.ammo<ammo);
  const shots=ammo-player.inventory.primary.ammo;
+ if(peer)await until(()=>peer.room.state.actors.get(player.id)?.ammo<ammo,'protocol peer receives the browser shots');
  // Exercise real mouse look too. A downward view keeps this transient HUD
  // check observable on software GPUs; the full-map job uses the normal camera.
  await a.mouse.move(resumePoint.x,resumePoint.y+360);
@@ -67,7 +74,8 @@ try{
  await a.keyboard.press('Escape');await a.locator('#restart').click();await a.locator('#network-code').waitFor();
  await until(()=>authority.sim.game.actors.length===1,'leaving cleans up only the departing player');
  assert(await a.locator('#fatal').isHidden(),'returning to the empty network lobby must keep the render loop alive');assert.deepEqual(errors,[]);
- const result={status:'PASS',contract:CONTRACT,headed,testHooks:false,humans:2,browserProcesses:2,angle,resumeAttempts,desktopPointerLock:true,manualFullscreen:true,actualKeysAndMouse:true,mouseLook:true,movement:Math.abs(fullscreenZ-z),shots,reloadHud:true,leaveKeepsOther:true,errors};
+ if(peer)assert.deepEqual(peer.errors,[]);
+ const result={hostPlatform:process.platform,physicalDevices:false,status:'PASS',contract:CONTRACT,headed,testHooks:false,humans:2,browserProcesses:browsers.length,peer:protocolPeer?'Colyseus SDK (no renderer)':'second rendered browser',angle,resumeAttempts,desktopPointerLock:true,manualFullscreen:true,actualKeysAndMouse:true,mouseLook:true,movement:Math.abs(fullscreenZ-z),shots,reloadHud:true,leaveKeepsOther:true,errors};
  fs.mkdirSync('test-results/network',{recursive:true});fs.writeFileSync('test-results/network/normal-launch.json',JSON.stringify(result,null,2));console.log(JSON.stringify(result));
 }catch(error){
  fs.mkdirSync('test-results/network',{recursive:true});
@@ -75,4 +83,4 @@ try{
  const clients=await Promise.all(pages.map(p=>bounded(p.evaluate(()=>({events:__launchEvents,focused:document.hasFocus(),pointer:document.pointerLockElement?.id,fullscreen:!!document.fullscreenElement,paused:!document.querySelector('#pause').hidden,pause:document.querySelector('#pause').textContent,fatal:document.querySelector('#fatal pre').textContent})).catch(e=>String(e)))));
  const seats=[...local.rooms].flatMap(r=>[...r.seats.values()].map(s=>({id:s.id,ready:s.ready,enabled:s.enabled,x:s.actor?.x,z:s.actor?.z})));
  fs.writeFileSync('test-results/network/normal-launch-failure.json',JSON.stringify({error:String(error),errors,clients,seats},null,2));console.error('Normal launch failure',JSON.stringify({error:String(error),errors,clients,seats}));throw error;
-}finally{await Promise.all(browsers.map(b=>b.close()));await local.close();}
+}finally{await Promise.all(browsers.map(b=>b.close()));await peer?.close();await local.close();}

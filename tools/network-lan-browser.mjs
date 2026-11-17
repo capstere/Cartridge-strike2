@@ -3,11 +3,13 @@ import fs from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {chromium,webkit,firefox} from '../frontline/source/tools/dev/node_modules/playwright-core/index.mjs';
 import {createTestServer} from './network-test-server.mjs';
+import {createTestPeer} from './network-test-peer.mjs';
 import {testLanHost} from './network-lan-host.mjs';
 import {CONTRACT} from '../shared/multiplayer/build.mjs';
 process.chdir(fileURLToPath(new URL('../',import.meta.url)));
 const mobileEngine=process.env.FPS_LAN_MOBILE_BROWSER||'chromium',desktopEngine=process.env.FPS_LAN_DESKTOP_BROWSER||'chromium';
 const engines={chromium,webkit,firefox},errors=[],rows=[];
+const protocolPeer=process.env.FPS_LAN_PROTOCOL_PEER==='1';
 const angle=process.env.FPS_NETWORK_ANGLE||(process.platform==='darwin'?'metal':'swiftshader');
 const launch=engine=>engines[engine].launch(engine==='chromium'?{channel:'chromium',args:['--use-angle='+angle,'--disable-background-timer-throttling','--disable-renderer-backgrounding','--disable-backgrounding-occluded-windows']}:{});
 let local=await createTestServer({lan:true,host:testLanHost(),port:0});
@@ -67,16 +69,23 @@ async function touchGesture(page,engine){
 }
 let a,b;
 try{
-  a=await open(desktopEngine,false);
-  // Each physical device has its own GPU. Suspend only the empty first lobby
-  // while the peer loads, so two animated previews cannot starve one CI CPU.
-  // Both pages are active before creating a room or asserting gameplay.
-  const setup=desktopEngine==='chromium'?await a.context().newCDPSession(a):null;
-  await setup?.send('Page.setWebLifecycleState',{state:'frozen'});
-  try{b=await open(mobileEngine,true);}finally{await setup?.send('Page.setWebLifecycleState',{state:'active'});await setup?.detach();}
-  console.log('LAN both pages active before room creation');
+  if(protocolPeer){
+    b=await open(mobileEngine,true);a=await createTestPeer(url);
+    console.log('LAN one rendered mobile client and a real Colyseus SDK peer');
+  }else{
+    a=await open(desktopEngine,false);
+    // Each physical device has its own GPU. Suspend only the empty first lobby
+    // while the peer loads, so two animated previews cannot starve one CI CPU.
+    // Both pages are active before creating a room or asserting gameplay.
+    const setup=desktopEngine==='chromium'?await a.context().newCDPSession(a):null;
+    await setup?.send('Page.setWebLifecycleState',{state:'frozen'});
+    try{b=await open(mobileEngine,true);}finally{await setup?.send('Page.setWebLifecycleState',{state:'active'});await setup?.detach();}
+    console.log('LAN both pages active before room creation');
+  }
   await b.screenshot({path:`test-results/lan/${mobileEngine}-lobby.png`});
-  await form(a);await joined(a);const id=await a.locator('#network-room').inputValue();
+  let id;
+  if(protocolPeer)id=a.room.roomId;
+  else{await form(a);await joined(a);id=await a.locator('#network-room').inputValue();}
   await form(b,{id,code:'wrong-123'});await b.locator('#network-status').filter({hasText:'Fel privat'}).waitFor();
   assert.equal([...local.rooms][0].clients.length,1,'wrong code cannot allocate the second player');
   await form(b,{id});await joined(b);const room=[...local.rooms][0];await until(()=>room.sim.game.actors.length===2,'two humans');
@@ -94,6 +103,7 @@ try{
   const release=await touchGesture(b,mobileEngine);
   await b.waitForFunction(()=>{const c=__fps.input();return c.forward>.2&&c.fire&&__fps.mobile.stickId!==null&&__fps.mobile.lookId!==null;});
   await until(()=>Math.hypot(player.x-before.x,player.z-before.z)>.15&&player.inventory.primary.ammo<before.ammo&&Math.abs(player.yaw-before.yaw)>.01,'simultaneous move/look/fire reach authority');
+  if(protocolPeer)await until(()=>{const p=a.room.state.actors.get(player.id);return p&&Math.hypot(p.x-before.x,p.z-before.z)>.15&&p.ammo<before.ammo;},'protocol peer receives the browser movement and shots');
   await release();await b.waitForFunction(()=>!__fps.mobile.state.fire&&__fps.mobile.stickId===null&&__fps.mobile.lookId===null);
   const shots=before.ammo-player.inventory.primary.ammo;console.log('LAN move/look/fire reached authority');
   await b.locator('[data-mobile-action=reload]').tap();await until(()=>player.inventory.primary.ammo===30,'mobile reload');
@@ -129,14 +139,20 @@ try{
     assert(await b.locator('#fatal').isHidden());await until(()=>room.clients.length===1,'leave cleanup');
   }
   await form(b,{id});await joined(b);
-  await local.close();await Promise.all([a,b].map(p=>p.locator('#network-status').filter({hasText:'Anslutningen bröts'}).waitFor()));
+  await local.close();await Promise.all((protocolPeer?[b]:[a,b]).map(p=>p.locator('#network-status').filter({hasText:'Anslutningen bröts'}).waitFor()));
+  if(protocolPeer){await until(()=>a.closed,'protocol peer observes server shutdown');assert.deepEqual(a.errors,[]);}
   await until(()=>!local.httpServer.listening,'server stopped');
   local=await createTestServer({lan:true,host,port});
   await form(b,{id});await b.locator('#network-status').filter({hasText:'finns inte'}).waitFor();
-  await form(a);await joined(a);const fresh=await a.locator('#network-room').inputValue();assert.notEqual(fresh,id);
-  await form(b,{id:fresh});await joined(b);await leave(b);await leave(a);await until(()=>local.rooms.size===0,'last player disposes room');
+  let fresh;
+  if(protocolPeer){a=await createTestPeer(url);fresh=a.room.roomId;}
+  else{await form(a);await joined(a);fresh=await a.locator('#network-room').inputValue();}
+  assert.notEqual(fresh,id);
+  await form(b,{id:fresh});await joined(b);await leave(b);
+  if(protocolPeer){assert.deepEqual(a.errors,[]);await a.close();}else await leave(a);
+  await until(()=>local.rooms.size===0,'last player disposes room');
   assert.deepEqual(errors,[]);
-  const result={status:'PASS',hostPlatform:process.platform,physicalDevices:false,privateIPv4:true,secureContext:false,contract:CONTRACT,browsers:rows,shots,
+  const result={status:'PASS',hostPlatform:process.platform,physicalDevices:false,privateIPv4:true,secureContext:false,contract:CONTRACT,browsers:rows,renderedClients:pages.length,peer:protocolPeer?'Colyseus SDK (no renderer)':'second rendered browser',shots,
     safeAreaEmulation:safeArea,touchInput:mobileEngine==='chromium'?'Chromium multi-contact protocol':'WebKit synthetic PointerEvents',audioResume:true,rotation:true,backgroundSignal:'synthetic blur',wrongCode:true,disconnectCleanup:cleanup,renderedRejoins:4,serverRestart:true,emptyRooms:local.rooms.size,errors};
   fs.writeFileSync(`test-results/lan/${desktopEngine}-${mobileEngine}.json`,JSON.stringify(result,null,2));console.log(JSON.stringify(result));
 }catch(error){
@@ -144,8 +160,8 @@ try{
   const probes=await Promise.all([...new Set([url+'/health',...pending.flat()])].slice(0,8).map(async url=>{try{const r=await fetch(url,{signal:AbortSignal.timeout(3000)});return {url,status:r.status,bytes:(await r.arrayBuffer()).byteLength};}catch(e){return {url,error:String(e)};}}));
   const bounded=promise=>Promise.race([promise,new Promise(resolve=>setTimeout(()=>resolve({error:'Diagnostic timed out'}),5000))]);
   const {connections,trace:httpTrace=[]}=await bounded(local.diagnostics());
-  const clients=await Promise.all(pages.map(page=>bounded(page.evaluate(()=>{const gl=window.__fps?.renderer.renderer.getContext(),ext=gl?.getExtension('WEBGL_debug_renderer_info');return {ready:document.readyState,loading:document.querySelector('#loading')?.textContent,renderer:gl?.getParameter(ext?.UNMASKED_RENDERER_WEBGL||gl.RENDERER),resources:performance.getEntriesByType('resource').slice(-8).map(r=>({name:r.name,duration:r.duration,bytes:r.transferSize}))};}).catch(e=>({error:String(e)})))));
+  const clients=await Promise.all(pages.map(page=>bounded(page.evaluate(()=>{const gl=window.__fps?.renderer.renderer.getContext(),ext=gl?.getExtension('WEBGL_debug_renderer_info');return {ready:document.readyState,loading:document.querySelector('#loading')?.textContent,connection:document.querySelector('#network-status')?.textContent,modal:window.__fps?.modal,renderer:gl?.getParameter(ext?.UNMASKED_RENDERER_WEBGL||gl.RENDERER),resources:performance.getEntriesByType('resource').slice(-8).map(r=>({name:r.name,duration:r.duration,bytes:r.transferSize}))};}).catch(e=>({error:String(e)})))));
   const pendingPaths=new Set(pending.flat().map(u=>new URL(u).pathname)),httpPending=httpTrace.filter(row=>!row.finishedMs||pendingPaths.has(new URL(row.path,url).pathname));
   for(const [i,page] of pages.entries())if(!page.isClosed())await page.screenshot({path:`test-results/lan/failure-${mobileEngine}-${i}.png`,timeout:5000}).catch(()=>{});
   fs.writeFileSync(`test-results/lan/failure-${mobileEngine}.json`,JSON.stringify({error:String(error),errors,browsers:rows,pending,probes,connections,clients,browserWarnings,httpPending},null,2));console.error('LAN pending requests',JSON.stringify({pending,probes,connections,clients,browserWarnings,httpPending}));throw error;
-}finally{await Promise.all(browsers.map(b=>b.close()));await local.close();}
+}finally{await Promise.all(browsers.map(b=>b.close()));if(protocolPeer)await a?.close();await local.close();}

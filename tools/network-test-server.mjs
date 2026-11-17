@@ -4,10 +4,10 @@
 import {fork} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 import {setPriority,getPriority,constants,availableParallelism,totalmem,freemem} from 'node:os';
-// Two software GPUs share one Windows runner. Keep only our test driver/server
-// schedulable, as the Pi's CPU would be on a separate machine. Never real-time.
-if(process.platform==='win32'&&process.env.FPS_NETWORK_TEST_PRIORITY==='1'){
-  setPriority(0,constants.priority.PRIORITY_HIGH);
+// The Windows software fixture shares a CPU with the GPU emulator. Keep our
+// owned test driver/server schedulable, like a server on a separate Pi CPU.
+if(process.platform==='win32'&&process.env.FPS_LAN_PROTOCOL_PEER==='1'){
+  setPriority(0,constants.priority.PRIORITY_HIGH); // never real-time
   console.log('Windows test process scheduling',JSON.stringify({pid:process.pid,priority:getPriority(),cpus:availableParallelism(),memoryMiB:Math.round(totalmem()/1048576),freeMiB:Math.round(freemem()/1048576)}));
 }
 const entry=fileURLToPath(import.meta.url);

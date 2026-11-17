@@ -124,8 +124,8 @@ session's callback/event/remote collections, prediction, watchdog, room referenc
 and audio voices. Server restart invalidates the old room; creating/joining a new
 one succeeds and the last departure removes the room. The full Floor 5 harness
 paces rapid lifecycle admissions to respect the real admission budget; the first
-unpaced attempt correctly hit that budget after 15+ cycles. No limit or gameplay
-assertion was removed to obtain a pass.
+unpaced attempt correctly hit that budget after 15+ cycles. No admission limit changed. Full two-rendered-client gameplay assertions remain
+on Linux/macOS; the Windows fixture differs as documented below.
 
 Chromium uses its native multi-contact injection protocol. WebKit uses synthetic
 PointerEvents through the real handlers because Playwright's WebKit interface
@@ -173,13 +173,34 @@ normalizes asset paths on Windows; CI checks out committed LF bytes there so
 compatibility hashes do not change with Git line-ending conversion. Source
 maps/assets remain unchanged.
 
-While loading the second client, the harness freezes only the first empty lobby
+Windows CI runs each real rendered client against a Colyseus SDK protocol peer:
+the LAN suite renders the mobile client and the normal-launch suite renders the
+desktop client. The peer authenticates over the same HTTP/WS, sends ready, receives
+and asserts the browser's authoritative movement/shots, and observes shutdown.
+It never sets server/player state. The JSON records one rendered client and the
+non-rendered peer explicitly. All mobile input, rotation/audio, loss, four rendered
+rejoins, restart and empty-room assertions remain; the desktop still checks actual
+keys/mouse, pointer lock, reload HUD, fullscreen and independent leave.
+
+Two simultaneous SwiftShader scenes on the four-CPU Windows runner delayed
+admission past the real client's deadline. Raising the test server's priority
+restored its health response but did not make that two-renderer fixture reliable;
+the single-renderer fixture keeps that priority only for its owned test Node
+processes (never real-time). The earlier two-renderer run remains an unresolved
+Windows CI limitation, not a successful two-browser Windows session. Linux Chromium and macOS
+Chromium/WebKit still require two concurrently rendered clients, and the separate
+Metal job retains full-map two-client combat and latency coverage. Interactive
+Windows hardware and physical cross-device acceptance remain unverified.
+Use `FPS_LAN_PROTOCOL_PEER=1` to reproduce the single-renderer fixture locally.
+
+In the two-rendered-client runs, while loading the second client the harness
+freezes only the first empty lobby
 using Chromium's lifecycle API. Both pages are active before room creation and
 every gameplay assertion. This bounds overlapping animated-preview work on one
 software CI host; two physical devices normally have separate GPUs. It does not
 freeze a game, skip a client, or change production rendering.
 
-The normal-launch regression also isolates each human's browser/GPU process,
+The two-rendered-client normal-launch regression isolates each human's browser/GPU process,
 as the existing full-map harness does. Real keys/fire stay held until the
 authority observes them within a bounded deadline: a fixed 250 ms press can
 fall entirely between software-rendered frames. It still requires pointer lock,
@@ -205,12 +226,7 @@ Pi performance acceptance. The LAN/normal-launch server runs in a separate Node 
 I/O cannot hold up its HTTP/WS loop. Test-only IPC observes real server state and
 terminates sockets for loss checks; it exposes no HTTP test endpoints and never
 changes player state. Pending HTTP requests, server response completion and the
-actual WebGL renderer are retained on LAN loading failures. On Windows CI only,
-the owned test driver/server processes request the OS high scheduling class
-(not real-time), recording that class, CPU count and memory. With two active
-software GPUs the normal-priority fixture stopped answering HTTP/IPC within its
-deadlines; the real Pi server has a separate CPU. This changes no browser
-security setting, simulation timing, production service or gameplay assertion.
+actual WebGL renderer are retained on LAN loading failures.
 
 No running Pi service, router, tunnel or public listener was changed. The new PR
 is for review and must not be automatically merged. After its review/merge, the
