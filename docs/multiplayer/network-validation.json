@@ -33,7 +33,7 @@
       "command": "node --import ./server/register-shared.mjs --test server/test/*.test.mjs tools/network-protocol.test.mjs",
       "status": "PASS",
       "exitCode": 0,
-      "logSha256": "879260451efbf3b3c3fcad722531bf13810920752f2bf6ca694b5431415adb2d",
+      "logSha256": "70462b5786433e2afb28163fb08a6ba36ad2f57affb33438fae02e1e267198cb",
       "count": 7
     },
     "doors": {
@@ -99,7 +99,7 @@
       "command": "node --import ./server/register-shared.mjs tools/network-browser.mjs",
       "status": "PASS",
       "exitCode": 0,
-      "logSha256": "6dbe5287ba629fc7f7931c954d3b8513dd2f13534378e13e4dca0c8ac5e61812",
+      "logSha256": "21a1003c1183e60d1021f6f95e1fd3749b5ce1291aae594aafe8db80d42d2be7",
       "evidence": "network/browser.json"
     },
     "offlineLifecycle": {
@@ -148,12 +148,23 @@
     "Single-point interpolation assertion sampled a settled wall pose; replaced with bounded samples over actual movement."
   ],
   "initialImplementationCommit": "02714bd529e8205114d514d594323c75f71f07d5",
-  "browserHarnessSha256": "cca7faf2c4659d4cb28f16cc5c196d8e76891655f00ff2804a67ef2763ef0b92",
+  "browserHarnessSha256": "75da49368002e78e3ab6691bc93b1d9e25a7817691fd147ec19cc4a297381686",
   "ciFollowup": {
     "failedRun": 44082904519,
     "head": "dc7f4bc28fc641b0df26479639825ff4d5f233d2",
     "failure": "Browser reload wall-clock sample observed completed reload: 30 rather than 27 ammo. All preceding checks passed.",
     "fix": "Observe active reload state and inputs on authoritative patches; sample immediate prediction in the normal SDK send; remove SDK state/leave signal callbacks explicitly.",
-    "required": "All jobs on follow-up head must pass; never bypass failed checks."
+    "required": "All jobs on follow-up head must pass; never bypass failed checks.",
+    "secondFailedRun": 44086476045,
+    "secondFailure": "Burst test incorrectly treated the 12-frame pending limit as the total consumed frame limit across interleaved ticks.",
+    "secondFix": "Interleave two bursts; assert queue cap and overflow plus movement/cadence bounded per actual fixed tick."
+  },
+  "softwareRendererAttempt": {
+    "renderer": "SwiftShader on macOS ARM64",
+    "deviceScaleFactor": 0.5,
+    "status": "FAIL",
+    "phase": "reload held-fire coverage",
+    "note": "Frame-bound interpolation observation passed. No held fire was submitted during the reload window on this heavily stalled renderer. Native Metal DPR1 suite passes; software rendering performance is not accepted by this result.",
+    "logSha256": "f85e199c136212a541e3b53b3358f7a67e7a4390519210b1cf4547f652d14f71"
   }
 }

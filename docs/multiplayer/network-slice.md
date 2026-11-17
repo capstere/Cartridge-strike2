@@ -122,16 +122,16 @@ It does not simulate packet loss by dropping snapshots.
 | Authoritative movement received during that sample | 0 m | 0 m |
 | Settled prediction error | 0 m | 0 m |
 | Respawn pose error / ammo | 0 m / 30 | 0 m / 30 |
-| Maximum sampled remote interpolation offset | 0.492 m | 0.518 m |
-| Confirmed own shots / suppressed duplicate effects | 6 / 6 | 8 / 8 |
-| Maximum pending SDK inputs | 9 | 15 |
+| Maximum sampled remote interpolation offset | 0.432 m | 0.589 m |
+| Confirmed own shots / suppressed duplicate effects | 7 / 7 | 8 / 8 |
+| Maximum pending SDK inputs | 8 | 16 |
 | Join/leave cycles | 20 | 4 |
 | First → last DOM listeners | 230 → 230 | 230 → 230 |
 | First → last actor models / SDK callbacks | 2 / 4 → 2 / 4 | 2 / 4 → 2 / 4 |
-| First → last game geometries / textures | 100 / 38 → 100 / 38 | 101 / 39 → 101 / 39 |
+| First → last game geometries / textures | 101 / 39 → 101 / 39 | 101 / 39 → 101 / 39 |
 | Active audio voices after each rejoin | 0 | 0 |
 
-The proxy recorded 2,634 messages, 8,788 upstream and 84,920 downstream payload
+The proxy recorded 2,657 messages, 9,167 upstream and 85,742 downstream payload
 bytes across its scenario. Ordered one-way delay averaged 51.7 ms, p95 68.4 ms.
 These totals include setup/control traffic; they are not a sustained 10-player
 bandwidth benchmark. Both scenarios ended with zero live rooms and zero browser
@@ -157,7 +157,9 @@ The generated compatible fixture then passed the existing browser check. The
 network test also exposed two harness issues: desktop Resume needs real foreground
 focus for pointer lock, and a one-frame interpolation sample can land after both
 poses stop at a wall. The test now foregrounds Resume and samples the movement
-interval; all gameplay assertions remain enabled.
+interval immediately after the normal frame updates its display pose, before a
+later state patch can replace it. The probe is installed before keyboard input,
+so slow driver calls cannot miss the movement. All gameplay assertions remain enabled.
 
 The first GitHub run, [44082904519](https://github.com/capstere/Cartridge-strike2/actions/runs/44082904519),
 passed all existing checks but failed the new test's wall-clock reload comparison
@@ -175,6 +177,23 @@ callbacks before leaving. All 24 browser cleanup cycles assert zero state-signal
 callbacks immediately, before waiting for connection closure. The updated native
 loopback/latency suite and seven server/protocol tests pass locally. GitHub checks
 must pass on the follow-up head before any later merge.
+
+The next CI run, [44086476045](https://github.com/capstere/Cartridge-strike2/actions/runs/44086476045),
+exposed a separate burst-test assumption: a queue cap of 12 does not limit total
+consumed frames to 12 when incoming messages and server ticks interleave. The
+revised test deliberately interleaves two 40-input bursts, verifies the 12-frame
+pending cap and discarded overflow, and bounds movement and firing by actual
+fixed ticks. It passes locally with 15 consumed inputs over 18 ticks (1.05 m).
+The authoritative simulation and queue limits did not change.
+
+An additional forced SwiftShader run on this Mac was **not accepted**: at DPR
+0.5 the corrected interpolation observation passed, but no held-fire input was
+submitted during the reload window under heavy rendering stalls. Earlier
+out-of-frame probes sampled only two or three frames and missed interpolation.
+The native Metal DPR 1 suite passes both complete scenarios. Optional
+`FPS_NETWORK_ANGLE` and `FPS_NETWORK_DPR` settings reproduce this stress condition;
+CI retains its default renderer and DPR 1. This is not evidence of acceptable
+software-renderer performance or a physical-phone result.
 
 The adoption-distance diagnostics in the raw test include legitimate pending
 movement and are **not** a measured prediction-error percentile. The settled

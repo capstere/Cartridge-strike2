@@ -5,12 +5,14 @@ import {createLocalServer} from '../server/local-server.mjs';
 import {latencyProxy} from './network-proxy.mjs';
 import {CONTRACT} from '../shared/multiplayer/build.mjs';
 const results=[],errors=[];
+const testDpr=Number(process.env.FPS_NETWORK_DPR||1),angle=process.env.FPS_NETWORK_ANGLE||(process.platform==='darwin'?'metal':'');
+assert(testDpr>=.25&&testDpr<=2,'test DPR must stay between .25 and 2');
 const local=await createLocalServer({port:0});
 const proxy=await latencyProxy(local.url);
-const browser=await chromium.launch({channel:'chromium',args:[...(process.platform==='darwin'?['--use-angle=metal']:[]),'--disable-background-timer-throttling','--disable-renderer-backgrounding','--disable-backgrounding-occluded-windows']});
+const browser=await chromium.launch({channel:'chromium',args:[...(angle?['--use-angle='+angle]:[]),'--disable-background-timer-throttling','--disable-renderer-backgrounding','--disable-backgrounding-occluded-windows']});
 fs.mkdirSync('test-results/network',{recursive:true});
 async function open(viewport={width:1280,height:720},mobile=false){
- const context=await browser.newContext({viewport,hasTouch:mobile,isMobile:mobile,deviceScaleFactor:1}),page=await context.newPage();
+ const context=await browser.newContext({viewport,hasTouch:mobile,isMobile:mobile,deviceScaleFactor:testDpr}),page=await context.newPage();
  page.setDefaultTimeout(60000);page.on('pageerror',e=>errors.push(e.stack));
  await page.addInitScript(()=>localStorage.setItem('cartridge-settings',JSON.stringify({graphics:'low',volume:0,autoReload:false,mobileAutoFire:false})));
  await page.goto(local.url+'/fps/?network=local&test&realtime');
@@ -65,7 +67,7 @@ async function reloadCheck(page){
  });
  await page.keyboard.press('KeyR');
  const result=await page.evaluate(()=>window.__reloadCheck);
- assert(result.ammo.length>0&&result.attempts>0,'held fire was submitted during reload');
+ assert(result.ammo.length>0&&result.attempts>0,'held fire was submitted during reload: '+JSON.stringify(result));
  assert(result.ammo.every(v=>v===result.ammo[0]),'authoritative ammo cannot fall during reload');
  assert.equal(result.full,30,'reload restores magazine before further firing');
  return result;
@@ -78,11 +80,25 @@ try{
   await a.waitForFunction(()=>__fps.game.actors.length===2);assert.equal(local.rooms.size,1);
   console.log('joined',scenario,id);
   const before=await Promise.all([state(a),state(b)]);
-  // Real keyboard events enter the ordinary app input path on two independent pages.
+  // Install before sending keys: slow CDP calls can otherwise miss the entire
+  // movement. Observe immediately after the normal frame updates its render
+  // pose; a later state patch may replace the presentation before our own rAF.
+  await b.evaluate(()=>{
+   const n=__fps.network,advance=n.advanceFrame,started=performance.now(),samples=[];
+   window.__interpolationCheck=new Promise(resolve=>{
+    let timer;const finish=()=>{clearTimeout(timer);n.advanceFrame=advance;resolve({max:Math.max(0,...samples.map(s=>s.offset)),samples: samples.length,frames:samples});};
+    n.advanceFrame=function(...args){
+     const result=advance.apply(this,args),raw=[...n.room.state.actors.values()].find(a=>a.id!==n.localPlayerId),shown=n.view.actors.find(a=>a.id===raw?.id);
+     if(raw&&shown){samples.push({at:performance.now()-started,offset:Math.hypot(raw.x-shown.x,raw.z-shown.z),raw:[raw.x,raw.z],shown:[shown.x,shown.z]});
+      if(performance.now()-started>600&&samples.some(s=>s.offset>.02))finish();}
+     return result;
+    };
+    timer=setTimeout(finish,8000);
+   });
+  });
+  // Real keyboard events enter the ordinary app input path on both pages.
   await Promise.all([a.keyboard.down('KeyW'),b.keyboard.down('KeyW')]);
-  // Sample the movement interval: at its end both poses may already rest against
-  // a wall, where a zero difference is correct even with buffered interpolation.
-  const interpolation=await b.evaluate(async()=>{const samples=[],end=performance.now()+600;do{const n=__fps.network,raw=[...n.room.state.actors.values()].find(a=>a.id!==n.localPlayerId),shown=__fps.game.actors.find(a=>a.id===raw.id);samples.push(Math.hypot(raw.x-shown.x,raw.z-shown.z));await new Promise(requestAnimationFrame);}while(performance.now()<end);return {max:Math.max(...samples),mean:samples.reduce((a,b)=>a+b,0)/samples.length,samples:samples.length};});
+  const interpolation=await b.evaluate(()=>window.__interpolationCheck);
   assert(interpolation.max>.02&&interpolation.max<1.5,'remote render uses buffered states during movement: '+JSON.stringify(interpolation));
   await Promise.all([a.keyboard.up('KeyW'),b.keyboard.up('KeyW')]);await a.waitForTimeout(250);
   const moved=await Promise.all([state(a),state(b)]);
@@ -160,6 +176,6 @@ try{
  assert.deepEqual(errors,[]);
 }catch(e){console.error('network browser failure',e);throw e;}finally{
  await browser.close();await proxy.close();await local.close();
- fs.writeFileSync('test-results/network/browser.json',JSON.stringify({contract:CONTRACT,environment:{node:process.version,platform:process.platform,arch:process.arch},results,proxy:proxy.metrics,errors},null,2));
+ fs.writeFileSync('test-results/network/browser.json',JSON.stringify({contract:CONTRACT,environment:{node:process.version,platform:process.platform,arch:process.arch,deviceScaleFactor:testDpr,angle:angle||'default'},results,proxy:proxy.metrics,errors},null,2));
 }
 console.log('PASS: two-browser gameplay, prediction, latency, combat, lifecycle and cleanup');

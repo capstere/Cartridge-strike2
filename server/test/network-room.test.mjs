@@ -4,7 +4,8 @@ import {setTimeout as delay} from 'node:timers/promises';
 import {Client} from '@colyseus/sdk';
 import {createLocalServer} from '../local-server.mjs';
 import {CONTRACT} from '../../shared/multiplayer/build.mjs';
-import {ROOM_TYPE} from '../../shared/multiplayer/rules.mjs';
+import {ROOM_TYPE,NETWORK_CONFIG} from '../../shared/multiplayer/rules.mjs';
+import {WEAPONS} from '../../src/fps/config.mjs';
 const options={code:'test-room-123',name:'Player',contract:CONTRACT};
 async function until(fn,label){const end=performance.now()+5000;while(!fn()){assert(performance.now()<end,label);await delay(10);}}
 async function ready(room){room.reconnection.enabled=false;room.onMessage('events',()=>{});room.onMessage('problem',()=>{});room.send('ready',CONTRACT);await until(()=>[...(room.state.actors?.values()||[])].some(a=>a.sessionId===room.sessionId&&a.ready),'ready');return room;}
@@ -79,11 +80,20 @@ test('two live rooms have independent worlds, cap, static geometry and no leaked
 test('wire bursts cannot accelerate simulation; overflow is bounded and oversized messages disconnect',{timeout:10000},async t=>{
  const local=await createLocalServer({port:0});t.after(()=>local.close());
  const room=await ready(await new Client(local.url).create(ROOM_TYPE,options));
- const authority=[...local.rooms][0],actor=authority.sim.game.actors[0],x=actor.x;
- for(let i=1;i<=80;i++)send(room,{strafe:1,fire:true,fireId:i});
+ const authority=[...local.rooms][0],actor=authority.sim.game.actors[0],x=actor.x,startTick=authority.sim.tickNumber,ammo=actor.inventory.primary.ammo;
+ const tick=authority.sim.tick.bind(authority.sim),steps=[];let consumed=0;
+ authority.sim.tick=frames=>{const x=actor.x,n=authority.sim.tickNumber;consumed+=Number(frames.has(room.sessionId));const result=tick(frames);steps.push({distance:Math.abs(actor.x-x),ticks:authority.sim.tickNumber-n});return result;};
+ // Arrival and timer callbacks can interleave. Twelve is the pending queue cap,
+ // not a lifetime limit on valid frames consumed across several clock ticks.
+ for(let i=1;i<=40;i++)send(room,{strafe:1,fire:true,fireId:i});
+ await until(()=>consumed>=2,'fixed ticks consume frames while the burst arrives');
+ for(let i=41;i<=80;i++)send(room,{strafe:1,fire:true,fireId:i});
  await until(()=>room.input().lastProcessed>=80,'overflow frames are acknowledged as discarded');
- assert(authority.metrics.maxQueue<=12);assert(actor.x-x<=12*4.2/60+.00001,'one shared movement step per tick');
- assert(actor.inventory.primary.ammo>=27,'server cadence rejects excess shot actions');
+ assert.equal(authority.metrics.maxQueue,12);assert(consumed>12&&consumed<80,'interleaved burst still discards overflow');
+ assert(steps.every(s=>s.ticks===1&&s.distance<=NETWORK_CONFIG.runSpeed*NETWORK_CONFIG.fixedStep+.00001),'one shared movement step per tick');
+ const ticks=authority.sim.tickNumber-startTick;
+ assert(ammo-actor.inventory.primary.ammo<=1+Math.floor(ticks*NETWORK_CONFIG.fixedStep/WEAPONS.smg.interval),'server cadence rejects excess shot actions');
+ console.log(JSON.stringify({burst:'PASS',consumed,ticks,meters:actor.x-x,maxQueue:authority.metrics.maxQueue}));
  room.send('controls',{enabled:false,lifeId:actor.lifeId,padding:'x'.repeat(8192)});
  await until(()=>local.rooms.size===0,'transport payload cap releases the room');
 });
