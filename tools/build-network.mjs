@@ -2,7 +2,7 @@
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
-import {relative} from 'node:path';
+import {relative,sep} from 'node:path';
 import '../server/register-shared.mjs';
 import {collisionContract} from '../shared/multiplayer/collision-contract.mjs';
 import {CONFIG} from '../src/fps/config.mjs';
@@ -11,7 +11,7 @@ const check=process.argv.includes('--check'),root=new URL('../',import.meta.url)
 const read=path=>readFile(new URL(path,root));
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
 const graph=JSON.parse(await read('docs/multiplayer/imports.json'));
-const paths=[...Object.keys(graph),'shared/multiplayer/rules.mjs','shared/multiplayer/protocol.mjs','server/network-schema.mjs','server/network-room.mjs','server/headless.mjs','shared/multiplayer/input.mjs','src/fps/network/session.mjs','shared/multiplayer/world.mjs','shared/multiplayer/collision-contract.mjs'].sort();
+const paths=[...Object.keys(graph),'shared/multiplayer/rules.mjs','shared/multiplayer/protocol.mjs','server/network-schema.mjs','server/network-room.mjs','server/headless.mjs','shared/multiplayer/input.mjs','src/fps/network/session.mjs','shared/multiplayer/world.mjs','shared/multiplayer/collision-contract.mjs','shared/sha256.mjs','src/fps/network/connection.mjs','server/access.mjs','server/local-server.mjs'].sort();
 const sources=await Promise.all(paths.map(async path=>[path,hash(await read(path))]));
 const {loadHeadlessWorld}=await import('../server/headless.mjs');
 const {world}=await loadHeadlessWorld(NETWORK_MAP);
@@ -29,10 +29,10 @@ const files={
 const {LIBRARY_MAP}=await import('../furniture-editor/library/catalog.mjs');
 const info=JSON.parse(await read('build-info.json'));
 const runtime=new Set([...info.files.map(f=>f.path),...Object.keys(files),
-  'shared/multiplayer/world.mjs','shared/multiplayer/collision-contract.mjs']);
+  'shared/multiplayer/world.mjs','shared/multiplayer/collision-contract.mjs','shared/sha256.mjs','src/fps/network/connection.mjs']);
 for(const item of world.projectScene.items){
   const url=LIBRARY_MAP.get(item.assetId)?.url;
-  if(url){const path=relative(fileURLToPath(root),fileURLToPath(new URL(url,new URL('furniture-editor/',root))));
+  if(url){const path=relative(fileURLToPath(root),fileURLToPath(new URL(url,new URL('furniture-editor/',root)))).split(sep).join('/');
     if(path.startsWith('../'))throw Error('Asset outside runtime');runtime.add(path);
   }
 }

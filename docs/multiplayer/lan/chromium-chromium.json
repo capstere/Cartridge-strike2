@@ -1,0 +1,70 @@
+{
+  "status": "PASS",
+  "hostPlatform": "darwin",
+  "physicalDevices": false,
+  "privateIPv4": true,
+  "secureContext": false,
+  "contract": {
+    "protocolVersion": 3,
+    "protocolHash": "55171d430a4d3221e15f85780a873516fb55e55254a37acdf3e9680f8cd8cda2",
+    "mapId": "floor5-prepared",
+    "collisionHash": "a5351e073a01ac95466acf4346acf9812f4265224e56712ce3e889085a42b6d9",
+    "mapHash": "89283f437623457a10da37be29a282a41591f202270051ba940549ba01b4b050",
+    "configHash": "d2527986115955118fc0c4206c9884a0687ef8e85eb2dea4806dab401a0a01b5",
+    "buildHash": "bf6d7b77814b1b78d9e8da4f6a40dbcdcac10942de3790c30819b575f15f8da5",
+    "tickRate": 60,
+    "patchMs": 50
+  },
+  "browsers": [
+    {
+      "engine": "chromium",
+      "mobile": false,
+      "version": "153.0.8010.12",
+      "features": {
+        "secure": false,
+        "subtle": false,
+        "touch": false,
+        "map": "Unit 05",
+        "fullscreen": true
+      }
+    },
+    {
+      "engine": "chromium",
+      "mobile": true,
+      "version": "153.0.8010.12",
+      "features": {
+        "secure": false,
+        "subtle": false,
+        "touch": true,
+        "map": "Unit 05",
+        "fullscreen": true
+      }
+    }
+  ],
+  "shots": 2,
+  "safeAreaEmulation": {
+    "left": 44,
+    "right": 34,
+    "bottom": 21,
+    "method": "Chromium CSS environment override"
+  },
+  "touchInput": "Chromium multi-contact protocol",
+  "audioResume": true,
+  "rotation": true,
+  "backgroundSignal": "synthetic blur",
+  "wrongCode": true,
+  "disconnectCleanup": {
+    "closed": true,
+    "room": null,
+    "predict": null,
+    "watchdog": null,
+    "callbacks": 0,
+    "events": 0,
+    "remotes": 0,
+    "voices": 0
+  },
+  "renderedRejoins": 4,
+  "serverRestart": true,
+  "emptyRooms": 0,
+  "errors": []
+}

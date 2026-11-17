@@ -1,3 +1,4 @@
+import {networkEndpoint} from './connection.mjs';
 import '../../../vendor/colyseus/colyseus.js';
 import {Game,WEAPONS} from '../game.mjs';
 import {seededRandom} from '../config.mjs';
@@ -8,6 +9,10 @@ import {CONTRACT} from '../../../shared/multiplayer/build.mjs';
 import {applyNetworkWorld,createPredictedWorld} from '../../../shared/multiplayer/world.mjs';
 
 const {Client,Predict}=globalThis.Colyseus;
+// Capture the SDK-owned pending room so a timeout/cancel also closes its socket.
+class SessionClient extends Client {
+  createRoom(...args){const room=super.createRoom(...args);room.reconnection.enabled=false;this.owner.joiningRoom=room;return room;}
+}
 const wait=async(predicate,timeout=15000)=>{
   const end=performance.now()+timeout;
   while(!predicate()){if(performance.now()>end)throw Error('The local server did not become ready.');await new Promise(r=>setTimeout(r,20));}
@@ -41,16 +46,21 @@ export class NetworkSession {
     this.view.update=()=>{throw Error('NetworkSession owns input; the client cannot step Game.');};
   }
   async connect({endpoint,roomId,code,name,create=false,contract=CONTRACT}){
-    const url=new URL(endpoint);
-    if(!['localhost','127.0.0.1','[::1]'].includes(url.hostname)||!['http:','https:'].includes(url.protocol))throw Error('This slice supports a local loopback server only.');
-    const client=new Client(url.href),options={code,name,contract};
-    const room=create?await client.create(ROOM_TYPE,options):await client.joinById(roomId,options);
+    const url=networkEndpoint(endpoint),client=new SessionClient(url),options={code,name,contract};
+    client.owner=this;
+    this.joinAbort=new AbortController();client.http.options.signal=this.joinAbort.signal;
+    const pending=create?client.create(ROOM_TYPE,options):client.joinById(roomId,options);
+    let expired=false;
+    const timeout=new Promise((_,reject)=>{this.joinTimer=setTimeout(()=>{expired=true;this.joinAbort.abort();this.joiningRoom?.leave(false).catch(()=>{});reject(Error('Connection timeout.'));},10000);});
+    let room;
+    try{room=await Promise.race([pending.then(room=>{if(expired||this.closed){room.leave();throw Error('Join cancelled.');}return room;}),timeout]);}
+    finally{clearTimeout(this.joinTimer);this.joinTimer=null;}
     if(this.closed){await room.leave();throw Error('Join cancelled.');}
-    this.room=room;room.reconnection.enabled=false; // explicit rejoin; bounded grace is Pass 3
+    this.joiningRoom=null;this.room=room;room.reconnection.enabled=false; // explicit rejoin; bounded grace is Pass 3
     this.unsub.push(room.onMessage('problem',message=>{this.problem=String(message);}));
     this.unsub.push(room.onMessage('events',events=>this.receiveEvents(events)));
     const left=code=>{
-      if(this.closed)return;const problem=this.problem||`Disconnected (${code}). Rejoin the private room explicitly.`;
+      if(this.closed)return;const problem=this.problem||`Anslutningen bröts (${code}). Anslut till rummet igen, eller skapa ett nytt om servern startades om.`;
       this.problem=problem;this.dispose(false);this.onDisconnect(problem);
     };
     const changed=()=>this.snapshot();
@@ -68,7 +78,9 @@ export class NetworkSession {
     room.send('ready',contract);
     await wait(()=>this.closed||room.state.actors.get(this.localPlayerId)?.ready);
     if(this.closed)throw Error(this.problem||'Room closed before spawn.');
-    this.snapshot();this.view.state.phase='active';return this;
+    this.snapshot();this.view.state.phase='active';
+    this.watchdog=setInterval(()=>{if(!this.closed&&performance.now()-this.lastPatch>10000)this.disconnect('Servern svarar inte. Kontrollera nätverket och anslut till rummet igen.');},1000);
+    return this;
   }
   snapshot(){
     if(this.closed||!this.localPlayerId||!this.predict)return;
@@ -172,7 +184,7 @@ export class NetworkSession {
         if(this.enabled){a.yaw=wrapYaw(controls.yaw??a.yaw);a.pitch=controls.pitch??a.pitch;}
       }else if(a.alive)for(const key of ['x','y','z','yaw','pitch'])a[key]=this.predict.value(s,key);
     }
-    this.status=stale?'Connection stalled — controls stopped':`${this.room.roomId} · ${this.view.actors.length}/2 · ${Math.round(this.room.clock?.smoothedRtt?.()||0)} ms`;
+    this.status=stale?'Anslutningen väntar — kontroller stoppade':`${this.room.roomId} · ${this.view.actors.length}/2 · ${Math.round(this.room.clock?.smoothedRtt?.()||0)} ms`;
   }
   setInputEnabled(enabled){
     if(this.closed)return;
@@ -180,12 +192,16 @@ export class NetworkSession {
     if(this.room&&this.lifeId)this.room.send('controls',{enabled,lifeId:this.lifeId});
     if(enabled&&this.prediction)this.prediction.reset();
   }
+  disconnect(message){
+    if(this.closed)return;this.problem=message;this.dispose();this.onDisconnect(message);
+  }
   dispose(leave=true){
     if(this.closed)return;this.closed=true;
+    clearInterval(this.watchdog);this.watchdog=null;clearTimeout(this.joinTimer);this.joinTimer=null;this.joinAbort?.abort();
     for(const off of this.unsub)if(typeof off==='function')off();this.unsub=[];
     this.predict?.dispose();this.prediction=null;this.predict=null;this.remote.clear();
     this.events=[];this.predictedShots.clear();this.view.state.actors=[];this.view.state.phase='menu';
-    const room=this.room;this.room=null;this.input=null;
-    if(leave&&room)return room.leave().catch(()=>{});
+    const room=this.room||this.joiningRoom;this.room=null;this.joiningRoom=null;this.input=null;
+    if(leave&&room){room.reconnection.enabled=false;room.leave(false).catch(()=>{});}
   }
 }

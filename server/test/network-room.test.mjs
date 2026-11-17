@@ -14,7 +14,7 @@ function frame(room,overrides={}){return {lifeId:own(room).lifeId,sampleTick:roo
 function send(room,values){const input=room.input({mode:'reliable'});Object.assign(input.data,frame(room,values));input.send();return input;}
 
 test('real private room: admission, two independent humans, authority, life resets and cleanup',{timeout:20000},async t=>{
- const local=await createLocalServer({port:0});t.after(()=>local.close());const client=new Client(local.url);
+ const local=await createLocalServer({port:0});t.after(()=>local.close());const client=new Client(local.url,{headers:{Origin:local.url}});
  await assert.rejects(client.create(ROOM_TYPE,{...options,contract:{...CONTRACT,mapHash:'old'}}),/mapHash/);
  await assert.rejects(client.create(ROOM_TYPE,{...options,code:''}),/private code/);
  const a=await client.create(ROOM_TYPE,options);t.after(()=>a.leave());
@@ -66,7 +66,7 @@ test('real private room: admission, two independent humans, authority, life rese
 });
 
 test('two live rooms have independent worlds, cap, dynamic geometry and no leaked HTTP files',{timeout:10000},async t=>{
- const local=await createLocalServer({port:0});t.after(()=>local.close());const c=new Client(local.url);
+ const local=await createLocalServer({port:0});t.after(()=>local.close());const c=new Client(local.url,{headers:{Origin:local.url}});
  const a=await ready(await c.create(ROOM_TYPE,options)),b=await ready(await c.create(ROOM_TYPE,options));
  const [r1,r2]=[...local.rooms];assert.notEqual(r1.sim.game.world,r2.sim.game.world);
  for(const r of [r1,r2])assert.equal(r.state.doors.size,51);
@@ -81,7 +81,7 @@ test('two live rooms have independent worlds, cap, dynamic geometry and no leake
 });
 test('wire bursts cannot accelerate simulation; overflow is bounded and oversized messages disconnect',{timeout:10000},async t=>{
  const local=await createLocalServer({port:0});t.after(()=>local.close());
- const room=await ready(await new Client(local.url).create(ROOM_TYPE,options));
+ const room=await ready(await new Client(local.url,{headers:{Origin:local.url}}).create(ROOM_TYPE,options));
  const authority=[...local.rooms][0],actor=authority.sim.game.actors[0],x=actor.x,startTick=authority.sim.tickNumber,ammo=actor.inventory.primary.ammo;
  const tick=authority.sim.tick.bind(authority.sim),steps=[];let consumed=0;
  authority.sim.tick=frames=>{const x=actor.x,n=authority.sim.tickNumber;consumed+=Number(frames.has(room.sessionId));const result=tick(frames);steps.push({distance:Math.abs(actor.x-x),ticks:authority.sim.tickNumber-n});return result;};

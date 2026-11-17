@@ -1,8 +1,9 @@
-.network-form{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:580px;font:13px monospace}
+.network-form{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;max-width:580px;font:13px monospace}
 .network-form label{display:grid;gap:4px;color:#c6cfdb}
-.network-form input{min-width:0;padding:9px;background:#0c1119;border:1px solid #435168;color:#fff}
+.network-form input{font:16px system-ui;min-height:42px;box-sizing:border-box;min-width:0;padding:9px;background:#0c1119;border:1px solid #435168;color:#fff}
 .network-form>div,.network-form>p,.network-form>a{grid-column:1/-1}
-.network-form button{padding:10px 20px;margin-right:8px;background:#377cbe;color:white;border:1px solid #7da8d9;cursor:pointer}
+.network-form>div{display:flex;flex-wrap:wrap;gap:8px}.network-form>p{overflow-wrap:anywhere;line-height:1.4}.network-form input[readonly]{color:#b7c8d8;font-size:13px}
+.network-form button{min-height:44px;padding:10px 20px;margin-right:8px;background:#377cbe;color:white;border:1px solid #7da8d9;cursor:pointer}
 .network-form button:disabled{opacity:.5}.network-form a,.local-network-link{color:#abcff5}
 .network-menu .lb-left{overflow-y:auto}.network-menu .lb-title{font-size:clamp(24px,5vw,52px)}
 .network-menu [hidden]{display:none!important}

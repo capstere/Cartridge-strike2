@@ -1,0 +1,28 @@
+{
+  "status": "PASS",
+  "contract": {
+    "protocolVersion": 3,
+    "protocolHash": "55171d430a4d3221e15f85780a873516fb55e55254a37acdf3e9680f8cd8cda2",
+    "mapId": "floor5-prepared",
+    "collisionHash": "a5351e073a01ac95466acf4346acf9812f4265224e56712ce3e889085a42b6d9",
+    "mapHash": "89283f437623457a10da37be29a282a41591f202270051ba940549ba01b4b050",
+    "configHash": "d2527986115955118fc0c4206c9884a0687ef8e85eb2dea4806dab401a0a01b5",
+    "buildHash": "bf6d7b77814b1b78d9e8da4f6a40dbcdcac10942de3790c30819b575f15f8da5",
+    "tickRate": 60,
+    "patchMs": 50
+  },
+  "headed": false,
+  "testHooks": false,
+  "humans": 2,
+  "browserProcesses": 2,
+  "angle": "metal",
+  "resumeAttempts": 1,
+  "desktopPointerLock": true,
+  "manualFullscreen": true,
+  "actualKeysAndMouse": true,
+  "movement": 0.21000000000000085,
+  "shots": 1,
+  "reloadHud": true,
+  "leaveKeepsOther": true,
+  "errors": []
+}

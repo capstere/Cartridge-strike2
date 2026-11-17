@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {chromium} from '../frontline/source/tools/dev/node_modules/playwright-core/index.mjs';
 import {createLocalServer} from '../server/local-server.mjs';
+import {testLanHost} from './network-lan-host.mjs';
 import {latencyProxy} from './network-proxy.mjs';
 import {CONTRACT} from '../shared/multiplayer/build.mjs';
 import {ROOM_TYPE} from '../shared/multiplayer/rules.mjs';
@@ -10,20 +11,21 @@ const testDpr=Number(process.env.FPS_NETWORK_DPR||1),angle=process.env.FPS_NETWO
 const transitPitch=Number(process.env.FPS_NETWORK_TRANSIT_PITCH||0);
 assert(testDpr>=.25&&testDpr<=2,'test DPR must stay between .25 and 2');
 assert(Number.isFinite(transitPitch)&&Math.abs(transitPitch)<=1.49,'transit pitch must be a valid ordinary look input');
-const local=await createLocalServer({port:0});
+const lan=process.env.FPS_NETWORK_LAN==='1';
+const local=await createLocalServer({port:0,...(lan?{lan:true,host:testLanHost()}:{})});
 const proxy=await latencyProxy(local.url);
 // Isolate the two clients' GPU processes. One shared software GPU process stalls
 // the second Floor 5 client's shader initialization on both Mac and Linux CI.
 const launch={channel:'chromium',args:[...(angle?['--use-angle='+angle]:[]),'--disable-background-timer-throttling','--disable-renderer-backgrounding','--disable-backgrounding-occluded-windows']};
 const [browser,peerBrowser]=await Promise.all([chromium.launch(launch),chromium.launch(launch)]);
 fs.mkdirSync('test-results/network',{recursive:true});
-async function open(viewport={width:1280,height:720},mobile=false){
+async function open(viewport={width:1280,height:720},mobile=false,endpoint=local.url){
  const context=await (mobile?peerBrowser:browser).newContext({viewport,hasTouch:mobile,isMobile:mobile,deviceScaleFactor:testDpr}),page=await context.newPage();
  page.setDefaultTimeout(60000);page.on('pageerror',e=>errors.push(e.stack));
  page.on('request',r=>{if(/assets\/fps\/(zombies\/|Danceman\/)/.test(r.url()))errors.push('Online slice requested an unused resident model: '+r.url());});
  page.on('response',r=>{if(r.status()>=400&&r.request().method()==='GET'&&/\.(glb|mjs|mp3|ogg|webp)(\?|$)/.test(r.url()))errors.push(`Asset HTTP ${r.status()}: ${r.url()}`);});
  await page.addInitScript(()=>localStorage.setItem('cartridge-settings',JSON.stringify({graphics:'low',volume:0,autoReload:false,mobileAutoFire:false})));
- await page.goto(local.url+'/fps/?network=local&test&realtime');
+ await page.goto(endpoint+'/fps/?network=local&test&realtime');
  await page.waitForFunction(()=>window.__fps||!document.querySelector('#fatal').hidden);
  assert(await page.locator('#fatal').evaluate(e=>e.hidden),await page.locator('#fatal').textContent());
  await page.waitForFunction(()=>document.querySelector('#lb-objective').textContent.includes('inga uppdrag'));
@@ -34,7 +36,7 @@ async function open(viewport={width:1280,height:720},mobile=false){
  return page;
 }
 async function join(page,endpoint,roomId='',name='Player'){
- await page.locator('#network-endpoint').fill(endpoint);await page.locator('#network-code').fill('testing-123');
+ assert.equal(await page.locator('#network-endpoint').inputValue(),endpoint);await page.locator('#network-code').fill('testing-123');
  await page.locator('#network-name').fill(name);await page.locator('#network-room').fill(roomId);
  await page.locator(`[data-create="${roomId?'false':'true'}"]`).click();
  try{
@@ -190,7 +192,7 @@ async function reloadCheck(page,roomId,actorId){
 try{
  for(const [scenario,endpoint,cycles] of [['loopback',local.url,20],['100ms-rtt-jitter',proxy.url,4]].filter(s=>!process.env.FPS_NETWORK_SCENARIO||s[0]===process.env.FPS_NETWORK_SCENARIO)){
   const scenarioAt=performance.now();
-  const a=await open(),b=await open({width:844,height:390},true);
+  const a=await open({width:1280,height:720},false,endpoint),b=await open({width:844,height:390},true,endpoint);
   await b.screenshot({path:`test-results/network/${scenario}-mobile-lobby.png`});
   const id=await join(a,endpoint,'','Alice'),same=await join(b,endpoint,id,'<img src=x onerror=x>');assert.equal(same,id);
   await a.waitForFunction(()=>__fps.game.actors.length===2);assert.equal(local.rooms.size,1);
@@ -320,7 +322,7 @@ try{
   },{endpoint,roomId:id,contract:CONTRACT,type:ROOM_TYPE});
   assert.equal(admission.full.accepted,false);assert.match(admission.full.message,/full|locked/i);
   assert.equal(admission.mismatch.accepted,false);assert.match(admission.mismatch.message,/buildHash/);assert.equal(local.rooms.size,1);
-  const cd=await b.context().newCDPSession(b),cleanup=[],cleanupAt=performance.now();
+  const cd=await b.context().newCDPSession(b),cleanup=[],cleanupAt=performance.now();let lastRejoinAt=0;
   for(let i=0;i<cycles;i++){
    const cycleAt=performance.now();
    const old=await b.evaluate(async()=>{const n=__fps.network,probe=()=>{},emitter=n.room.onStateChange(probe);n.room.onStateChange.remove(probe);__fps.liveControls={};const rendered=__fps.renderBudget.stats.rendered;__fps.newMatch();const immediateStateCallbacks=emitter.handlers.length;
@@ -334,6 +336,10 @@ try{
    // invokes that form's exact application handler in one driver call instead
    // of retyping four unchanged fields through many software-rendered frames.
    // The normal server, session, presentation, RAF and disposal still execute.
+   // Each admission spends one HTTP and one WS token. Respect the real
+   // one-token/second peer budget during automated rapid lifecycle stress.
+   if(lastRejoinAt)await new Promise(r=>setTimeout(r,Math.max(0,2100-(performance.now()-lastRejoinAt))));
+   lastRejoinAt=performance.now();
    await b.evaluate(async({endpoint,roomId})=>{
     await __fps.joinNetwork({endpoint,roomId,create:false,code:'testing-123',name:'Bob'});
     const rendered=__fps.renderBudget.stats.active,end=performance.now()+20000;
@@ -371,6 +377,6 @@ try{
  console.error('clients at failure',JSON.stringify(clients.map(r=>r.status==='fulfilled'?{...r.value,trace:r.value.trace?.slice(-64),routes:r.value.routes?.slice(-5)}:String(r.reason))));throw e;
 }finally{
  await Promise.all([browser.close(),peerBrowser.close()]);await proxy.close();await local.close();
- fs.writeFileSync('test-results/network/browser.json',JSON.stringify({contract:CONTRACT,environment:{node:process.version,platform:process.platform,arch:process.arch,browserProcesses:2,deviceScaleFactor:testDpr,transitPitch,angle:angle||'default'},results,proxy:proxy.metrics,errors},null,2));
+ fs.writeFileSync('test-results/network/browser.json',JSON.stringify({contract:CONTRACT,environment:{directTransport:lan?'private-ip-http':'loopback-http',node:process.version,platform:process.platform,arch:process.arch,browserProcesses:2,deviceScaleFactor:testDpr,transitPitch,angle:angle||'default'},results,proxy:proxy.metrics,errors},null,2));
 }
 console.log('PASS: two-browser gameplay, prediction, latency, combat, lifecycle and cleanup');

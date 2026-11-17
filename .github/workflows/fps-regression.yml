@@ -36,9 +36,9 @@ jobs:
           npm test --prefix server
   node-tests:
     runs-on: ubuntu-latest
-    # Run 44120393983 spent 16m30s on unchanged offline/setup checks. Leave the
-    # full bounded Floor 5 network step and cleanup in addition to those checks.
-    timeout-minutes: 28
+    # Preserve the existing offline/visual/mobile gates. Full two-scene gameplay
+    # has its own GPU-backed job below; software-runner FPS is not a game gate.
+    timeout-minutes: 32
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -57,31 +57,6 @@ jobs:
         run: |
           npm ci --prefix frontline/source/tools/dev
           node frontline/source/tools/dev/node_modules/playwright-core/cli.js install --with-deps chromium
-      # Exercise the new network boundary before slower offline browser suites.
-      # Reuse Chromium and keep all suites; a failure stops avoidable runner work.
-      - uses: actions/setup-node@v4
-        if: github.event_name != 'push'
-        with:
-          node-version-file: server/.node-version
-      - name: Two-browser authoritative gameplay with latency and cleanup
-        if: github.event_name != 'push'
-        # Two real Floor 5 scenes need shader startup plus full gameplay/cleanup.
-        # Native full-DPR/forward-camera performance is measured separately.
-        timeout-minutes: 10
-        env:
-          FPS_NETWORK_ANGLE: swiftshader
-          FPS_NETWORK_DPR: '0.5'
-          # Use ordinary downward look during route-only travel to reduce
-          # unasserted software draw work. Encounters/combat restore normal aim.
-          FPS_NETWORK_TRANSIT_PITCH: '-1.3'
-        run: |
-          npm ci --prefix server --ignore-scripts
-          npm run test:browser --prefix server
-      - name: Restore the offline browser harness Node version
-        if: github.event_name != 'push'
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
       - name: Test live mobile, match flow and Floor 5 visibility
         if: github.event_name != 'push'
         timeout-minutes: 12
@@ -109,3 +84,86 @@ jobs:
           server=$!
           trap 'kill $server || true' EXIT
           node tools/mobile-reliability-browser.mjs
+
+  multiplayer-gameplay:
+    if: github.event_name != 'push'
+    runs-on: macos-15
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: server/.node-version
+          cache: npm
+          cache-dependency-path: |
+            server/package-lock.json
+            frontline/source/tools/dev/package-lock.json
+      - run: npm ci --prefix server --ignore-scripts
+      - run: npm ci --prefix frontline/source/tools/dev
+      - run: node frontline/source/tools/dev/node_modules/playwright-core/cli.js install chromium
+      - name: Full Floor 5 gameplay, jitter and 24 rendered lifecycle cycles
+        timeout-minutes: 10
+        env:
+          FPS_NETWORK_LAN: '1'
+          FPS_NETWORK_ANGLE: metal
+          FPS_NETWORK_DPR: '1'
+        run: npm run test:browser --prefix server
+
+  lan-browsers:
+    if: github.event_name != 'push'
+    name: lan-${{ matrix.os }}-${{ matrix.mobile }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            mobile: chromium
+          - os: windows-latest
+            mobile: chromium
+          - os: macos-15
+            mobile: webkit
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 12
+    steps:
+      - name: Keep committed bytes for compatibility hashes on Windows
+        if: runner.os == 'Windows'
+        run: git config --global core.autocrlf false
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: server/.node-version
+          cache: npm
+          cache-dependency-path: |
+            server/package-lock.json
+            frontline/source/tools/dev/package-lock.json
+      - run: npm ci --prefix server --ignore-scripts
+      - run: npm ci --prefix frontline/source/tools/dev
+      - run: node frontline/source/tools/dev/node_modules/playwright-core/cli.js install --with-deps chromium ${{ matrix.mobile }}
+      - name: Verify matching build on this operating system
+        run: npm run build --prefix server -- --check
+      - name: Private-IP HTTP, mobile input, interruption and cleanup
+        timeout-minutes: 7
+        env:
+          FPS_LAN_MOBILE_BROWSER: ${{ matrix.mobile }}
+          FPS_NETWORK_ANGLE: ${{ runner.os == 'macOS' && 'metal' || 'swiftshader' }}
+          FPS_NETWORK_DPR: ${{ runner.os == 'Windows' && '0.25' || '0.5' }}
+          FPS_LAN_PROTOCOL_PEER: ${{ runner.os == 'Windows' && '1' || '0' }}
+        run: npm run test:lan --prefix server
+      - name: Normal desktop launch with real keys and pointer lock
+        timeout-minutes: 3
+        env:
+          FPS_NETWORK_LAN: '1'
+          FPS_NETWORK_ANGLE: ${{ runner.os == 'macOS' && 'metal' || 'swiftshader' }}
+          FPS_NETWORK_DPR: ${{ runner.os == 'Windows' && '0.25' || '0.5' }}
+          FPS_LAN_PROTOCOL_PEER: ${{ runner.os == 'Windows' && '1' || '0' }}
+        run: node --import ./server/register-shared.mjs tools/network-launch-browser.mjs
+      - name: Keep compact LAN browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lan-${{ matrix.os }}-${{ matrix.mobile }}
+          path: |
+            test-results/lan/
+            test-results/network/normal-launch*.json
+          if-no-files-found: ignore
+          retention-days: 7
