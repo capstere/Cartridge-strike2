@@ -1,3 +1,4 @@
+import {sha256} from '../../shared/sha256.mjs';
 /** Self-contained binary glTF inspection. Never follows remote or relative URLs. */
 export const GLB_MAX_BYTES=8*1024*1024;
 const utf8=new TextDecoder('utf-8',{fatal:true});
@@ -19,7 +20,7 @@ export function inspectGLB(input,{maxBytes=GLB_MAX_BYTES}={}){
  while(offset<bytes.byteLength){if(offset+8>bytes.byteLength)throw Error('Avbruten GLB.');const len=v.getUint32(offset,true),typ=v.getUint32(offset+4,true);if(typ!==0x004e4942||offset+8+len>bytes.byteLength||++parts>2)throw Error('Ogiltiga GLB-block.');offset+=8+len;}
  return {meshCount:doc.meshes.length,nodeCount:doc.nodes?.length||0,byteCount:bytes.byteLength};
 }
-export async function assetHash(buffer){const bytes=buffer instanceof Uint8Array?buffer:new Uint8Array(buffer);const b=await crypto.subtle.digest('SHA-256',bytes);return [...new Uint8Array(b)].map(v=>v.toString(16).padStart(2,'0')).join('');}
+export async function assetHash(bytes){return sha256(bytes);}
 export function safeFilename(name){const t=String(name||'Min modell').replace(/[^\wÀ-ž åäöÅÄÖ.-]+/g,'_').slice(0,75);return t||'Min modell';}
 const DB_NAME='cartridge-strike-furniture-assets-v2';
 export function openAssetDB(){return new Promise((resolve,reject)=>{

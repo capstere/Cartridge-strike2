@@ -8,12 +8,12 @@ export async function latencyProxy(target,{oneWayMs=50,jitterMs=20}={}){
  const metrics={upBytes:0,downBytes:0,messages:0,delays:[],deliveredDelays:[]};
  const random=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
  const server=http.createServer((req,res)=>{
-  const upstream=http.request({hostname:origin.hostname,port:origin.port,path:req.url,method:req.method,headers:{...req.headers,host:origin.host}},r=>{res.writeHead(r.statusCode,r.headers);r.pipe(res);});
+  const upstream=http.request({hostname:origin.hostname,port:origin.port,path:req.url,method:req.method,headers:{...req.headers,host:origin.host,...(req.headers.origin?{origin:origin.origin}:{})}},r=>{res.writeHead(r.statusCode,r.headers);r.pipe(res);});
   upstream.on('error',()=>{res.statusCode=502;res.end();});req.pipe(upstream);
  });
  const wss=new WebSocketServer({noServer:true});
  server.on('upgrade',(req,socket,head)=>wss.handleUpgrade(req,socket,head,down=>{
-  const up=new WebSocket(`ws://${origin.host}${req.url}`);sockets.add(up);sockets.add(down);
+  const up=new WebSocket(`ws://${origin.host}${req.url}`,{headers:{Origin:origin.origin}});sockets.add(up);sockets.add(down);
   let buffered=[];
   const relay=(src,dst,key)=>{
    let last=0;

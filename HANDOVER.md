@@ -1,12 +1,14 @@
 # Cartridge-Strike 2 handover
 
-**Next multiplayer task — review [Pass 3A.1 PR #20](https://github.com/capstere/Cartridge-strike2/pull/20), its final required CI and [validation report](docs/multiplayer/pass3a-floor5.md). Do not automatically merge it or start a later multiplayer pass.**
+**Next multiplayer task — review PASS 3A.2 on `feat/multiplayer-lan`, its final-head CI and [LAN report](docs/multiplayer/pass3a2-lan.md). Do not automatically merge the new PR.**
 
-The Pass 3A.1 latency harness also fixes verified message reordering in its
-jitter proxy; [the trace and regression](docs/multiplayer/floor5/proxy-order.json)
-explain the intermittent route drift. Review final-head checks rather than
-relying on an earlier green run. The shared movement/physics and pinned SDK
-were not changed for this test-infrastructure correction.
+PR #20 was reviewed at `11b585f`, with both final required jobs successful and
+fresh local core/server/normal-launch checks passing, then merged as **bac0756**.
+PASS 3A.2 starts from that main. Localhost remains the default; LAN needs an
+explicit private IPv4. [Swedish Pi update/restart/rollback guide](docs/multiplayer/raspberry-pi-lan-sv.md).
+The running Pi service was not accessed or modified. After review and merge,
+carry out the documented Pi update and record a physical Mac–iPhone 1v1.
+Browser/mobile emulation does not close the physical-device task below.
 
 **Physical-device backlog — test mobile controls and audio.** Play on an iPhone and an Android phone in landscape, near 844×390 and 932×430 where available. Record the model, OS, browser, viewport and safe-area clearance. Move, aim and fire together, reload, jump, hold an objective and buy. Rotate, background and resume during the lobby and a match. Listen for the lobby theme stopping on Start and resuming on return. Record any failure with its screen position and steps. [Play the published build](https://capstere.github.io/Cartridge-strike2/)
 
@@ -242,3 +244,17 @@ rewind, reconnect grace, LAN/internet hosting, capacity soak and Raspberry Pi
 deployment remain outside this delivery and need their own authorization.
 No public multiplayer server or Pass 3A.1 Pages release was deployed.
 The first open physical iPhone/Android task above remains open.
+
+
+## November 17 — PASS 3A.2 trusted LAN
+
+See [the LAN implementation and validation](docs/multiplayer/pass3a2-lan.md).
+The authoritative two-human Floor 5 slice now has explicit private-address
+hosting, exact HTTP/WS origins, admission budgets and bounded payloads; the
+same-origin form handles connection failures. Shared asset/map hash checks work
+on ordinary LAN HTTP. Gesture-based Resume, Safari audio interruption recovery,
+connection-loss cleanup and server-restart/rejoin regressions are included.
+Offline deterministic traces retain all eight hashes across 9,600 steps.
+No PASS 3B/4, public hosting, physical-phone/Pi acceptance or automatic merge
+is included. The new PR and all required final-head checks must be reviewed
+before following the Pi guide. Preserve the physical-mobile backlog above.

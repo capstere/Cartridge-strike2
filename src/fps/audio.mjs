@@ -68,7 +68,9 @@ export class AudioSystem {
   /** Call directly from a start/resume click, before awaiting other work. */
   async unlock() {
     if (!this.initializeContext()) return false;
-    if (this.context.state === 'suspended') await this.context.resume();
+    if (['suspended','interrupted'].includes(this.context.state)) {
+      try { await this.context.resume(); } catch { return false; }
+    }
     await this.loadPromise;
     return this.context.state === 'running';
   }

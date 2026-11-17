@@ -69,6 +69,7 @@ jobs:
         # Native full-DPR/forward-camera performance is measured separately.
         timeout-minutes: 10
         env:
+          FPS_NETWORK_LAN: '1'
           FPS_NETWORK_ANGLE: swiftshader
           FPS_NETWORK_DPR: '0.5'
           # Use ordinary downward look during route-only travel to reduce
@@ -109,3 +110,59 @@ jobs:
           server=$!
           trap 'kill $server || true' EXIT
           node tools/mobile-reliability-browser.mjs
+
+  lan-browsers:
+    if: github.event_name != 'push'
+    name: lan-${{ matrix.os }}-${{ matrix.mobile }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            mobile: chromium
+          - os: windows-latest
+            mobile: chromium
+          - os: macos-14
+            mobile: webkit
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 12
+    steps:
+      - name: Keep committed bytes for compatibility hashes on Windows
+        if: runner.os == 'Windows'
+        run: git config --global core.autocrlf false
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: server/.node-version
+          cache: npm
+          cache-dependency-path: |
+            server/package-lock.json
+            frontline/source/tools/dev/package-lock.json
+      - run: npm ci --prefix server --ignore-scripts
+      - run: npm ci --prefix frontline/source/tools/dev
+      - run: node frontline/source/tools/dev/node_modules/playwright-core/cli.js install --with-deps chromium ${{ matrix.mobile }}
+      - name: Verify matching build on this operating system
+        run: npm run build --prefix server -- --check
+      - name: Private-IP HTTP, mobile input, interruption and cleanup
+        timeout-minutes: 7
+        env:
+          FPS_LAN_MOBILE_BROWSER: ${{ matrix.mobile }}
+          FPS_NETWORK_ANGLE: ${{ matrix.os == 'macos-14' && 'metal' || 'swiftshader' }}
+          FPS_NETWORK_DPR: '0.5'
+        run: npm run test:lan --prefix server
+      - name: Normal desktop launch with real keys and pointer lock
+        timeout-minutes: 3
+        env:
+          FPS_NETWORK_LAN: '1'
+          FPS_NETWORK_DPR: '0.5'
+        run: node --import ./server/register-shared.mjs tools/network-launch-browser.mjs
+      - name: Keep compact LAN browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lan-${{ matrix.os }}-${{ matrix.mobile }}
+          path: |
+            test-results/lan/
+            test-results/network/normal-launch.json
+          if-no-files-found: ignore
+          retention-days: 7
