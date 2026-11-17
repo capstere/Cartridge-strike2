@@ -25,7 +25,7 @@ test('late own shot confirmations stay deduplicated through render stalls and pa
   const self={id:'a',lifeId:2,alive:true,ready:true},old=performance.now()-5000;
   const session={closed:false,enabled:true,seenEvent:0,events:[],localPlayerId:'a',lifeId:2,alive:true,lastPatch:old,remote:new Map(),
     room:{state:{actors:new Map([['a',self]]),time:0},send(){}},
-    view:{state:{},actors:[]},predict:{tick:()=>0},prediction:{reset(){}},input:{pendingCount:0},
+    world:{doors:{doors:[],elevators:{setProgress(){}}}},view:{state:{},actors:[]},predict:{tick:()=>0},prediction:{reset(){}},input:{pendingCount:0},
     predictedShots:new Map([['a:2:1',old],['a:2:2',old],['a:2:3',old]]),
     metrics:{confirmedShots:0,suppressedShots:0,maxPending:0,resets:0}};
   NetworkSession.prototype.advanceFrame.call(session,performance.now(),{});

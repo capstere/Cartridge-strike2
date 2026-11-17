@@ -38,16 +38,16 @@ test('real private room: admission, two independent humans, authority, life rese
  a.send('controls',{enabled:true,lifeId:own(a).lifeId});await delay(50);
  const shooter=g.actors.find(p=>p.id===own(a).id),target=g.actors.find(p=>p.id===own(b).id);
  // Controlled combat fixture, using actual map geometry and Game hitboxes.
- Object.assign(shooter,{x:2,z:3,yaw:0,spawnProtectedUntil:0});Object.assign(target,{x:4,z:3,spawnProtectedUntil:0});
+ Object.assign(shooter,{x:20,z:-18,yaw:0,spawnProtectedUntil:0});Object.assign(target,{x:20,z:-16,spawnProtectedUntil:0});
  const shots=[];a.onMessage('events',events=>shots.push(...events.filter(e=>e.type==='shot')));
- const hp=target.hp;send(a,{yaw:-Math.PI/2,fire:true,fireId:20});await until(()=>target.hp<hp,'new input orientation hits on its own tick');
+ const hp=target.hp;send(a,{yaw:Math.PI,fire:true,fireId:20});await until(()=>target.hp<hp,'new input orientation hits on its own tick');
  const ammo=shooter.inventory.primary.ammo;
- for(let i=0;i<10;i++){send(a,{yaw:-Math.PI/2,fire:true,fireId:20});await delay(17);}
+ for(let i=0;i<10;i++){send(a,{yaw:Math.PI,fire:true,fireId:20});await delay(17);}
  assert.equal(shooter.inventory.primary.ammo,ammo,'duplicate fire action is idempotent');
  send(a,{reloadId:1});await until(()=>shooter.reloadUntil>0,'reload');
- send(a,{fire:true,fireId:21,yaw:-Math.PI/2,reloadId:1});await delay(80);assert.equal(shooter.inventory.primary.ammo,ammo,'no shooting during reload');
+ send(a,{fire:true,fireId:21,yaw:Math.PI,reloadId:1});await delay(80);assert.equal(shooter.inventory.primary.ammo,ammo,'no shooting during reload');
  await until(()=>!shooter.reloadUntil,'reload completed');assert.equal(shooter.inventory.primary.ammo,30);
- for(let i=22;i<34&&target.alive;i++){send(a,{yaw:-Math.PI/2,fire:true,fireId:i,reloadId:1});await delay(95);}
+ for(let i=22;i<34&&target.alive;i++){send(a,{yaw:Math.PI,fire:true,fireId:i,reloadId:1});await delay(95);}
  assert.equal(target.alive,false);assert.equal(shooter.kills,1);assert.equal(target.deaths,1);assert.equal(g.state.score.analysts,1);
  const oldLife=target.lifeId;send(b,{lifeId:oldLife,strafe:1,fire:true,fireId:500});
  await until(()=>target.alive&&target.lifeId>oldLife,'respawn');
@@ -65,11 +65,13 @@ test('real private room: admission, two independent humans, authority, life rese
  a.send('damage',{amount:999,actorId:target.id});await until(()=>local.rooms.size===0,'unsupported client damage command disconnects and disposes empty room');assert.equal(target.hp,100);assert.equal(g.state.score.analysts,1);
 });
 
-test('two live rooms have independent worlds, cap, static geometry and no leaked HTTP files',{timeout:10000},async t=>{
+test('two live rooms have independent worlds, cap, dynamic geometry and no leaked HTTP files',{timeout:10000},async t=>{
  const local=await createLocalServer({port:0});t.after(()=>local.close());const c=new Client(local.url);
  const a=await ready(await c.create(ROOM_TYPE,options)),b=await ready(await c.create(ROOM_TYPE,options));
  const [r1,r2]=[...local.rooms];assert.notEqual(r1.sim.game.world,r2.sim.game.world);
- for(const r of [r1,r2])for(const d of r.sim.game.world.doors.doors)assert.equal(d.angle,Math.PI/2);
+ for(const r of [r1,r2])assert.equal(r.state.doors.size,51);
+ const d=r1.sim.game.world.doors.doors[0];r1.sim.game.world.doors.request(d,r1.sim.game.state.time);await delay(100);
+ assert(d.angle>0);assert.equal(r2.sim.game.world.doors.doors[0].angle,0,'room door state is isolated');
  send(a,{strafe:1});await delay(100);assert.notEqual(own(a).x,own(b).x);
  await assert.rejects(c.create(ROOM_TYPE,options),/limit/);assert.equal(local.rooms.size,2);
  assert.equal((await fetch(local.url+'/server/package.json')).status,404);

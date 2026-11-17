@@ -5,6 +5,8 @@ import {moveActor} from '../movement.mjs';
 import {NETWORK_CONFIG,ROOM_TYPE,copyPose,wrapYaw} from '../../../shared/multiplayer/rules.mjs';
 import {CONTRACT} from '../../../shared/multiplayer/build.mjs';
 
+import {applyNetworkWorld,createPredictedWorld} from '../../../shared/multiplayer/world.mjs';
+
 const {Client,Predict}=globalThis.Colyseus;
 const wait=async(predicate,timeout=15000)=>{
   const end=performance.now()+timeout;
@@ -40,7 +42,7 @@ export class NetworkSession {
   }
   async connect({endpoint,roomId,code,name,create=false,contract=CONTRACT}){
     const url=new URL(endpoint);
-    if(!['localhost','127.0.0.1','[::1]'].includes(url.hostname)||!['http:','https:'].includes(url.protocol))throw Error('Pass 2 supports a local loopback server only.');
+    if(!['localhost','127.0.0.1','[::1]'].includes(url.hostname)||!['http:','https:'].includes(url.protocol))throw Error('This slice supports a local loopback server only.');
     const client=new Client(url.href),options={code,name,contract};
     const room=create?await client.create(ROOM_TYPE,options):await client.joinById(roomId,options);
     if(this.closed){await room.leave();throw Error('Join cancelled.');}
@@ -72,6 +74,7 @@ export class NetworkSession {
     if(this.closed||!this.localPlayerId||!this.predict)return;
     this.lastPatch=performance.now();
     const state=this.room.state,ready=[...state.actors.values()].filter(a=>a.ready);
+    applyNetworkWorld(this.world.doors,state);
     this.view.state.actors=ready.map(s=>actorView(s,this.localPlayerId));
     this.view.state.score={analysts:state.analysts,counterAnalysts:state.counterAnalysts};
     this.view.state.time=state.time;
@@ -87,18 +90,21 @@ export class NetworkSession {
     if(!this.prediction){
       const actor=actorView(self,this.localPlayerId);
       const game={world:this.world,config:NETWORK_CONFIG,actors:[actor],hostages:[],state:{time:state.time,zombies:[]}};
-      this.prediction=this.predict.sim({input:this.input,world:{game,actor},smoothMs:45,
+      const dynamics=createPredictedWorld(this.world);
+      this.prediction=this.predict.sim({input:this.input,world:{game,actor,dynamics},smoothMs:45,
         adopt:w=>{
           const s=this.room.state.actors.get(this.localPlayerId);if(!s)return;
           this.metrics.adopts++;const d=Math.hypot(w.actor.x-s.x,w.actor.y-s.y,w.actor.z-s.z);
           this.metrics.corrections.push(d);if(this.metrics.corrections.length>512)this.metrics.corrections.shift();
+          w.dynamics.adopt(this.room.state);
           copyPose(w.actor,s);w.actor.alive=s.alive;w.actor.lifeId=s.lifeId;w.game.state.time=this.room.state.time;
           w.game.actors=[w.actor,...[...this.room.state.actors.values()].filter(a=>a.ready&&a.id!==s.id).map(a=>actorView(a,null))];
         },
         step:(ctx,w,f)=>{
           if(ctx.isReplay)this.metrics.replays++;
           if(!w.actor.alive||f.lifeId!==w.actor.lifeId)return;
-          w.game.state.time+=ctx.dt;moveActor(w.game,w.actor,f,ctx.dt,false);
+          w.game.state.time+=ctx.dt;
+          w.dynamics.step(w.game.state.time,ctx.dt,w.game.actors,()=>moveActor(w.game,w.actor,f,ctx.dt,false));
         },
         pose:w=>({x:w.actor.x,y:w.actor.y,z:w.actor.z}),
       });

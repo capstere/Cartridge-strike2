@@ -1,0 +1,82 @@
+[
+  {
+    "map": "synthetic-demo",
+    "mode": "classic",
+    "autoplay": false,
+    "ticks": 1200,
+    "hash": "9e5e6d7f27dbd9d77001f9e5b5988000557a95705df269ade700cd3e6009060e",
+    "shots": 14,
+    "constructionMs": 48.748166,
+    "simulationMs": 359.832542
+  },
+  {
+    "map": "synthetic-demo",
+    "mode": "classic",
+    "autoplay": true,
+    "ticks": 1200,
+    "hash": "538bd80379c5d19f10b4bfc51dce2ae7e09b598d2ea725ce4f04cb7dc0ed99f8",
+    "shots": 0,
+    "constructionMs": 48.748166,
+    "simulationMs": 314.71775
+  },
+  {
+    "map": "synthetic-demo",
+    "mode": "endless",
+    "autoplay": false,
+    "ticks": 1200,
+    "hash": "746db8cace08ff7be9fe4296796c5163f7054a92850f69cee3aa7e152459c503",
+    "shots": 42,
+    "constructionMs": 48.748166,
+    "simulationMs": 337.390625
+  },
+  {
+    "map": "synthetic-demo",
+    "mode": "endless",
+    "autoplay": true,
+    "ticks": 1200,
+    "hash": "62bed23fc1152f77d2ca00ba72079de195d3c835535e9fc98ad1a9a2268dbe2d",
+    "shots": 0,
+    "constructionMs": 48.748166,
+    "simulationMs": 327.6143339999999
+  },
+  {
+    "map": "floor5-prepared",
+    "mode": "classic",
+    "autoplay": false,
+    "ticks": 1200,
+    "hash": "31c44385d7d77b0c8552c56084163927ca8486f7a55d5ad63bc19b4d24c53a97",
+    "shots": 14,
+    "constructionMs": 1249.525291,
+    "simulationMs": 704.9589580000002
+  },
+  {
+    "map": "floor5-prepared",
+    "mode": "classic",
+    "autoplay": true,
+    "ticks": 1200,
+    "hash": "809fbbfb2a74bbd26eb34498a6c78b731e58d049ceb9e9eae02f5f98caa0a5f0",
+    "shots": 1,
+    "constructionMs": 1249.525291,
+    "simulationMs": 664.8829579999997
+  },
+  {
+    "map": "floor5-prepared",
+    "mode": "endless",
+    "autoplay": false,
+    "ticks": 1200,
+    "hash": "df5995a97ab476b711e07a65ffadec0f310f5bbee84f163c39c2c9c227844735",
+    "shots": 30,
+    "constructionMs": 1249.525291,
+    "simulationMs": 940.954334
+  },
+  {
+    "map": "floor5-prepared",
+    "mode": "endless",
+    "autoplay": true,
+    "ticks": 1200,
+    "hash": "41db2d9e643045bf8aad698c2194fcb99a28c26b4fafec85695f2a98d93bc948",
+    "shots": 0,
+    "constructionMs": 1249.525291,
+    "simulationMs": 1036.815458
+  }
+]

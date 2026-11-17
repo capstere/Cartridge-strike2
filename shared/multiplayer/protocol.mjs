@@ -11,6 +11,6 @@ export function validateNetworkInput(frame, actor, tick) {
   return validateInput(Object.fromEntries(['forward','strafe','yaw','pitch','jump','crouch','sneak','fire'].map(k=>[k,frame[k]])));
 }
 export function checkContract(actual, expected) {
-  for(const key of ['protocolVersion','buildHash','mapId','mapHash','configHash'])
+  for(const key of ['protocolVersion','protocolHash','buildHash','mapId','mapHash','collisionHash','configHash'])
     if(actual?.[key]!==expected[key])throw Error(`Incompatible ${key}. Reload the matching local client/server build.`);
 }

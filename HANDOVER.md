@@ -1,6 +1,14 @@
 # Cartridge-Strike 2 handover
 
-**First open task — test physical mobile controls and audio.** Play on an iPhone and an Android phone in landscape, near 844×390 and 932×430 where available. Record the model, OS, browser, viewport and safe-area clearance. Move, aim and fire together, reload, jump, hold an objective and buy. Rotate, background and resume during the lobby and a match. Listen for the lobby theme stopping on Start and resuming on return. Record any failure with its screen position and steps. [Play the published build](https://capstere.github.io/Cartridge-strike2/)
+**Next multiplayer task — review [Pass 3A.1 PR #20](https://github.com/capstere/Cartridge-strike2/pull/20), its final required CI and [validation report](docs/multiplayer/pass3a-floor5.md). Do not automatically merge it or start a later multiplayer pass.**
+
+The Pass 3A.1 latency harness also fixes verified message reordering in its
+jitter proxy; [the trace and regression](docs/multiplayer/floor5/proxy-order.json)
+explain the intermittent route drift. Review final-head checks rather than
+relying on an earlier green run. The shared movement/physics and pinned SDK
+were not changed for this test-infrastructure correction.
+
+**Physical-device backlog — test mobile controls and audio.** Play on an iPhone and an Android phone in landscape, near 844×390 and 932×430 where available. Record the model, OS, browser, viewport and safe-area clearance. Move, aim and fire together, reload, jump, hold an objective and buy. Rotate, background and resume during the lobby and a match. Listen for the lobby theme stopping on Start and resuming on return. Record any failure with its screen position and steps. [Play the published build](https://capstere.github.io/Cartridge-strike2/)
 
 Floor 5 has neutral Meshy residents in Classic and Endless. The 20-cycle match lifecycle check passed. The feature was merged in [PR #7](https://github.com/capstere/Cartridge-strike2/pull/7) and verified on Pages in [PR #8](https://github.com/capstere/Cartridge-strike2/pull/8). [Living zombies, frame samples and published captures](docs/zombies/gameplay.md)
 
@@ -178,3 +186,59 @@ to avoid retyping identical form fields; all 24 rendered cleanup cycles remain.
 Pass 3, dynamic Floor 5 networking, bounded combat rewind, reconnect grace and
 public deployment require separate authorization. No public server/tunnel was
 started. **The first open physical iPhone/Android task at the top is unchanged.**
+
+## November 17 — Pass 2 merged; real Floor 5 multiplayer for review
+
+Reviewed PR #19 at `014b316e`, its implementation, validation, review threads
+and successful required CI. A fresh unchanged 20-cycle lifecycle run and normal
+two-browser launch passed. The headed Mac pointer-lock error also reproduced on
+a plain canvas without game code; physical-window capture remains unverified.
+Merged the expected head as **ad6742ce**, then created `feat/multiplayer-floor5`
+from that main. No failed check was bypassed.
+
+Pass 3A.1 uses the exact published prepared Floor 5 on both client and authority,
+including the original furniture, materials, collision and FPS presentation.
+All 51 hinged doors and both existing spawn-cabin shutters are server owned,
+replicated on late join and simulated with the same controller during prediction.
+Generated map, resolved collision, configuration, protocol and build hashes gate
+admission. Online glass stays intact and solid. The two-human cap and existing
+Pulse SMG combat, scoring, respawn and SDK prediction/interpolation remain.
+Measured online-only loading of three unused resident models was removed
+(7,982,418 compressed bytes per fresh client); offline residents and all assets
+remain intact. The network browser test rejects those unnecessary requests.
+
+[Implementation, reproducible tests, measurements and limitations](docs/multiplayer/pass3a-floor5.md).
+Offline Classic/Endless state and event traces still match over 9,600 steps;
+the existing mobile, objective-route, visibility, shared-animation, compatible
+character and 20-cycle lifecycle regressions pass. No original level or asset
+was changed. Physical handset testing is still uncompleted.
+
+A later admission-error probe caught an empty-lobby render crash after leaving a
+network round. The reset now synchronizes its round/phase markers. Every network
+cleanup cycle must actually render in the lobby and again after rejoining; the
+normal-launch test also checks for a fatal error after returning. The report
+records the original coverage gap and before/after recovery evidence. The empty
+network lobby retains its unchanged pixels, invalidating on new lobby, viewport,
+quality or WebGL restoration. Native pixel/resize/context-recovery
+checks pass; ordinary offline and paused-game cadence stays unchanged.
+
+The first Linux run passed the server and all offline checks but reproduced a
+second-scene software GPU startup timeout. The browser harness now uses separate
+GPU processes. A documented reduced-resolution software functional profile
+passes both complete network scenarios and 24 actually rendered cleanup cycles
+locally (237.2 / 199.4 seconds); native performance
+is measured separately at full resolution and normal forward view. Required
+Linux checks must pass on the final PR head. A later Linux stop-submission
+timeout led to matching real controls more closely: the route driver retains
+look direction when movement stops. Runtime code and measured native/software
+records remain from `ad57289`; these follow-ups change the harness only.
+Stop confirmation has a separate five-second bound so a completed long corridor
+traversal cannot spend its remaining movement budget awaiting a fresh snapshot.
+The movement limit and arrival/collision assertions remain unchanged.
+
+**Next genuine task: review [Pass 3A.1 PR #20](https://github.com/capstere/Cartridge-strike2/pull/20) and its final required CI.
+Do not automatically merge it.** Full online 5v5/objectives, bounded hitscan
+rewind, reconnect grace, LAN/internet hosting, capacity soak and Raspberry Pi
+deployment remain outside this delivery and need their own authorization.
+No public multiplayer server or Pass 3A.1 Pages release was deployed.
+The first open physical iPhone/Android task above remains open.

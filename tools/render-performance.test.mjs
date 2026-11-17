@@ -45,6 +45,24 @@ test('hidden page draws nothing and returns/resumes immediately',()=>{
  assert.ok(b.shouldRender(20,false,true));assert.ok(b.shouldRender(21,false,false));assert.ok(b.shouldRender(22,false,true));
  assert.equal(b.shouldRender(NaN),false);
 });
+test('static lobby retains pixels until viewport, setting, owner or visibility changes',()=>{
+ const b=new RenderBudget(),lobby={};
+ assert.ok(b.shouldRender(0,false,true,lobby,'1280:720:1:low'));
+ for(let n=1;n<120;n++)assert.equal(b.shouldRender(n*16.7,false,true,lobby,'1280:720:1:low'),false);
+ assert.ok(b.shouldRender(2100,false,true,lobby,'720:1280:1:low'));
+ assert.ok(b.shouldRender(2200,false,true,lobby,'720:1280:1:standard'));
+ assert.ok(b.shouldRender(2300,false,true,{},'720:1280:1:standard'));
+ assert.equal(b.shouldRender(2301,true,true,lobby,'720:1280:1:standard'),false);
+ assert.equal(b.stillOwner,null,'hidden scene does not retain its old Game');
+ assert.ok(b.shouldRender(2302,false,true,lobby,'720:1280:1:standard'));
+ b.invalidate();assert.ok(b.shouldRender(2302.5,false,true,lobby,'720:1280:1:standard'),'restored graphics context redraws immediately');
+ assert.ok(b.shouldRender(2303,false,false));
+ assert.equal(b.stillOwner,null,'active scene does not retain its old Game');
+ assert.ok(b.shouldRender(2304,false,false));
+ assert.ok(b.shouldRender(2305,false,true));
+ assert.equal(b.shouldRender(2306,false,true),false);
+ assert.ok(b.shouldRender(2405,false,true),'ordinary paused scenes keep ten redraws per second');
+});
 test('tracers preserve endpoints and fade independently by simulation time',()=>{
  const s=new T.Scene(),b=new TracerBatch(s,4),a={x:1,y:2,z:3},z={x:4,y:5,z:6};
  b.add(a,z,1);b.add(z,a,1.02);b.update(1.025);

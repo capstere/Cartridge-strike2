@@ -33,7 +33,8 @@ try{
  assert(Math.abs(player.z-z)>.1);assert(player.inventory.primary.ammo<ammo);
  await a.keyboard.press('r');await a.locator('#reload-text').filter({hasText:'Laddar om'}).waitFor();
  await a.keyboard.press('Escape');await a.locator('#restart').click();await a.locator('#network-code').waitFor();
- await a.waitForTimeout(150);assert.equal(authority.sim.game.actors.length,1);assert.deepEqual(errors,[]);
+ await a.waitForTimeout(350);assert.equal(authority.sim.game.actors.length,1);
+ assert(await a.locator('#fatal').isHidden(),'returning to the empty network lobby must keep the render loop alive');assert.deepEqual(errors,[]);
  const result={status:'PASS',contract:CONTRACT,headed,testHooks:false,humans:2,resumeAttempts,desktopPointerLock:true,actualKeysAndMouse:true,movement:Math.abs(player.z-z),shots:ammo-player.inventory.primary.ammo,reloadHud:true,leaveKeepsOther:true,errors};
  fs.mkdirSync('test-results/network',{recursive:true});fs.writeFileSync('test-results/network/normal-launch.json',JSON.stringify(result,null,2));console.log(JSON.stringify(result));
 }finally{await browser.close();await local.close();}

@@ -1,0 +1,218 @@
+{
+  "date": "2026-11-17",
+  "beforeSource": "c4915aa plus read-only input tracing",
+  "runtimeChange": false,
+  "reproduction": "Two rendered Floor 5 clients, Metal DPR 1, 50 ms one-way jittered proxy; repeated ordinary C08/D39 route inputs. Failed on cycle 30 after 29 successful cycles.",
+  "stopInputTrace": [
+    {
+      "sequence": 17949,
+      "clientForward": 0.9362497652905719,
+      "serverForward": 0.9362497652905719
+    },
+    {
+      "sequence": 17950,
+      "clientForward": 0.7396373145795564,
+      "serverForward": 0.7396373145795564
+    },
+    {
+      "sequence": 17951,
+      "clientForward": 0.584313478517849,
+      "serverForward": 0.584313478517849
+    },
+    {
+      "sequence": 17952,
+      "clientForward": 0.4616076480290983,
+      "serverForward": 0.4616076480290983
+    },
+    {
+      "sequence": 17953,
+      "clientForward": 0.36467004194299224,
+      "serverForward": 0
+    },
+    {
+      "sequence": 17954,
+      "clientForward": 0,
+      "serverForward": 0.36467004194299224
+    },
+    {
+      "sequence": 17955,
+      "clientForward": 0,
+      "serverForward": 0.36467004194299224
+    },
+    {
+      "sequence": 17956,
+      "clientForward": 0,
+      "serverForward": 0.36467004194299224
+    },
+    {
+      "sequence": 17957,
+      "clientForward": 0,
+      "serverForward": 0.36467004194299224
+    },
+    {
+      "sequence": 17958,
+      "clientForward": 0,
+      "serverForward": 0.36467004194299224
+    },
+    {
+      "sequence": 17959,
+      "clientForward": 0,
+      "serverForward": 0.36467004194299224
+    },
+    {
+      "sequence": 17960,
+      "clientForward": 0,
+      "serverForward": 0.36467004194299224
+    }
+  ],
+  "goal": [
+    21.2,
+    -22.4703402
+  ],
+  "failedArrival": [
+    21.025910402756253,
+    -22.956740028100324
+  ],
+  "cause": "Independent delayed callbacks swapped adjacent reliable frames. Colyseus deltas then retained the older nonzero forward value after the stop.",
+  "liveWebSocketProbe": {
+    "description": "600 numbered 32-byte messages at nominal 60 Hz, echoed through both proxy directions with the same seeded jitter.",
+    "before": {
+      "incoming": 600,
+      "outgoing": 600,
+      "errors": [
+        {
+          "where": "client",
+          "n": 85,
+          "expected": 84
+        },
+        {
+          "where": "client",
+          "n": 84,
+          "expected": 85
+        },
+        {
+          "where": "client",
+          "n": 174,
+          "expected": 173
+        },
+        {
+          "where": "client",
+          "n": 173,
+          "expected": 174
+        },
+        {
+          "where": "client",
+          "n": 306,
+          "expected": 305
+        },
+        {
+          "where": "client",
+          "n": 305,
+          "expected": 306
+        },
+        {
+          "where": "server",
+          "n": 434,
+          "expected": 433
+        },
+        {
+          "where": "server",
+          "n": 433,
+          "expected": 434
+        },
+        {
+          "where": "client",
+          "n": 434,
+          "expected": 433
+        },
+        {
+          "where": "client",
+          "n": 433,
+          "expected": 434
+        },
+        {
+          "where": "server",
+          "n": 581,
+          "expected": 580
+        },
+        {
+          "where": "server",
+          "n": 580,
+          "expected": 581
+        },
+        {
+          "where": "client",
+          "n": 581,
+          "expected": 580
+        },
+        {
+          "where": "client",
+          "n": 580,
+          "expected": 581
+        }
+      ],
+      "proxyErrors": [
+        {
+          "key": "downBytes",
+          "ordinal": 85,
+          "delivered": 84
+        },
+        {
+          "key": "downBytes",
+          "ordinal": 84,
+          "delivered": 85
+        },
+        {
+          "key": "downBytes",
+          "ordinal": 174,
+          "delivered": 173
+        },
+        {
+          "key": "downBytes",
+          "ordinal": 173,
+          "delivered": 174
+        },
+        {
+          "key": "downBytes",
+          "ordinal": 306,
+          "delivered": 305
+        },
+        {
+          "key": "downBytes",
+          "ordinal": 305,
+          "delivered": 306
+        },
+        {
+          "key": "upBytes",
+          "ordinal": 434,
+          "delivered": 433
+        },
+        {
+          "key": "upBytes",
+          "ordinal": 433,
+          "delivered": 434
+        },
+        {
+          "key": "upBytes",
+          "ordinal": 581,
+          "delivered": 580
+        },
+        {
+          "key": "upBytes",
+          "ordinal": 580,
+          "delivered": 581
+        }
+      ]
+    },
+    "after": {
+      "incoming": 600,
+      "outgoing": 600,
+      "errors": []
+    }
+  },
+  "regression": [
+    "tools/network-delay.test.mjs deliberately dispatches the stop timer before the movement timer and checks final neutral state",
+    "server/test/network-proxy.test.mjs asserts exact wire order for all 600 messages upstream and downstream"
+  ],
+  "fix": "A per-direction FIFO holds ready messages until all preceding messages are ready; close cancels timers and releases buffered payloads."
+}

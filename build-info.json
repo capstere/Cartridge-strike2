@@ -845,9 +845,124 @@
       "sha256": "9357a27c35b8762dd2a5c9cc0c9b094614f9ae4cf4356e1d228f6b80f39eccae"
     },
     {
+      "path": "furniture-editor/library/models/food-kit/apple.glb",
+      "bytes": 25120,
+      "sha256": "80617eb699d267f4bc377415aff8e5397de4184b88d43974501b11bc3b5f33a1"
+    },
+    {
+      "path": "furniture-editor/library/models/food-kit/cup-coffee.glb",
+      "bytes": 18616,
+      "sha256": "ec4e98349868f1eb2d4237490d53ccc87f16315f7431004ed018214a35023d5d"
+    },
+    {
+      "path": "furniture-editor/library/models/food-kit/donut.glb",
+      "bytes": 22104,
+      "sha256": "424e11523abb1fbaf90d02230b049ded10e925ef09f8f70889def1a7df782d60"
+    },
+    {
+      "path": "furniture-editor/library/models/food-kit/plate.glb",
+      "bytes": 19216,
+      "sha256": "3181b14d2ee0fd67e3320097d56f8aad75caa94dab0fba828187445b1945245a"
+    },
+    {
+      "path": "furniture-editor/library/models/food-kit/soda-can.glb",
+      "bytes": 27124,
+      "sha256": "95336d766ad68d4757cebe2d6cd25ec6ccefbc0eb2e436b0c39535dd1f1962fc"
+    },
+    {
       "path": "furniture-editor/library/models/fps/laboratory-drying-oven.glb",
       "bytes": 1301856,
       "sha256": "0e45d530895e94d5e8d132d12ddc89e7d762eb270c2dc5d0ad7e098999db918e"
+    },
+    {
+      "path": "furniture-editor/library/models/furniture-kit/bathroomsink.glb",
+      "bytes": 22536,
+      "sha256": "39d4f19608cab7e0fed52303b2c689f5f51fae1bad9b6913cb53d838875e797e"
+    },
+    {
+      "path": "furniture-editor/library/models/furniture-kit/bathroomsinksquare.glb",
+      "bytes": 15108,
+      "sha256": "360853c822f268e7267c62ef20cf646f170a13d76254cc0804a1d397a4a3ea67"
+    },
+    {
+      "path": "furniture-editor/library/models/furniture-kit/bench.glb",
+      "bytes": 10756,
+      "sha256": "ba05a6d23a5a5a44da016757632070e47ff7587ce10e2f6d6d52328b4cf5489b"
+    },
+    {
+      "path": "furniture-editor/library/models/furniture-kit/cardboardboxclosed.glb",
+      "bytes": 5400,
+      "sha256": "4af079dca52960912764574950f0549ff2ae1224b3db1528718629473a2d5d81"
+    },
+    {
+      "path": "furniture-editor/library/models/furniture-kit/chairdesk.glb",
+      "bytes": 39016,
+      "sha256": "46406619186034cbe92b19b79a5f1a8e3f442a17a70a7524ef2c0ad0f35095c6"
+    },
+    {
+      "path": "furniture-editor/library/models/furniture-kit/computerscreen.glb",
+      "bytes": 6404,
+      "sha256": "5942cbad29a2d2b956619569926e81d50a4174403d592fece6556e57632dc643"
+    },
+    {
+      "path": "furniture-editor/library/models/furniture-kit/kitchencoffeemachine.glb",
+      "bytes": 13332,
+      "sha256": "063f582c6fa0f00a9f24e3393dac2295491c4becdaf5513c893ab1a2826b6ec3"
+    },
+    {
+      "path": "furniture-editor/library/models/furniture-kit/kitchenfridgesmall.glb",
+      "bytes": 12988,
+      "sha256": "35dab7f63711623be321bfd82072f4ab29fe8006aac9371c6e6b78df2e02f5ed"
+    },
+    {
+      "path": "furniture-editor/library/models/furniture-kit/kitchensink.glb",
+      "bytes": 23480,
+      "sha256": "7b9610277d71f00dcf1bba49cf4d98d77ce5177e84bf76c7da2f8893e542f743"
+    },
+    {
+      "path": "furniture-editor/library/models/furniture-kit/lamproundfloor.glb",
+      "bytes": 6600,
+      "sha256": "50fe1b5b588edf15bfa9cc880f71a02a4fda6036350b24733d0ef4de5cc5e908"
+    },
+    {
+      "path": "furniture-editor/library/models/furniture-kit/loungechair.glb",
+      "bytes": 9648,
+      "sha256": "ddfe6bc4b3451bca61666d7b614552d6ed2a03d82fc76244b72ae3155874dc6c"
+    },
+    {
+      "path": "furniture-editor/library/models/furniture-kit/loungechairrelax.glb",
+      "bytes": 13904,
+      "sha256": "def698179e44de6cd17f4cfc2730273da54dd25458a29b079fbf4468abe5d98e"
+    },
+    {
+      "path": "furniture-editor/library/models/furniture-kit/loungesofa.glb",
+      "bytes": 9644,
+      "sha256": "1886b811c0d3ad0d8525a4fd43adf4112c497c8e0ed906f06877ca3517f4c7dd"
+    },
+    {
+      "path": "furniture-editor/library/models/furniture-kit/pottedplant.glb",
+      "bytes": 7576,
+      "sha256": "5b760eda2766f75fda36b2c5df652a1662f82981ef64cd8fa7fe7bcd386b3a15"
+    },
+    {
+      "path": "furniture-editor/library/models/furniture-kit/shower.glb",
+      "bytes": 52020,
+      "sha256": "25c1cebad681fe369dc04839a8f08f5da2ccbd99b3a70aa83fe2e4d1590c6951"
+    },
+    {
+      "path": "furniture-editor/library/models/furniture-kit/toilet.glb",
+      "bytes": 18112,
+      "sha256": "16165cfd03c56c2cb443b800570810a22ef770f65e7a468f6761d9dc14eaaeae"
+    },
+    {
+      "path": "furniture-editor/library/models/furniture-kit/toiletsquare.glb",
+      "bytes": 17548,
+      "sha256": "f241e26a22b0d9512d8455f3e868124f8032710c83c5265a546c19c67ecdd4b9"
+    },
+    {
+      "path": "furniture-editor/library/models/furniture-kit/trashcan.glb",
+      "bytes": 6452,
+      "sha256": "e0ccc1fe50cbd05386477fdff527171d1cf7c0de2ba7ff3233f8d9561feb2561"
     },
     {
       "path": "furniture-editor/library/models/genexpert/genexpert-16.glb",
@@ -858,6 +973,116 @@
       "path": "furniture-editor/library/models/genexpert/genexpert-infinity-80.glb",
       "bytes": 984184,
       "sha256": "6dfd5e859edc05b06d529f914db0666a24d7d2f3e39328131cff8574c7eabfe1"
+    },
+    {
+      "path": "furniture-editor/library/models/hissrum12/cageCart.glb",
+      "bytes": 107240,
+      "sha256": "7f32f6c10f71a73cb7eb19ce474568c3932b040802c67f80b1b637aed8aa831c"
+    },
+    {
+      "path": "furniture-editor/library/models/hissrum12/cart.glb",
+      "bytes": 74828,
+      "sha256": "9e624c4f096ad5aa5d3c189c314162a41a08c233c9a45a31d75d0a598e7b80be"
+    },
+    {
+      "path": "furniture-editor/library/models/hissrum12/carton.glb",
+      "bytes": 20764,
+      "sha256": "ae7bcb2f76013e6ff9ebbb8fc02a36b779f5687e6cd95817f38c1149bc12c5aa"
+    },
+    {
+      "path": "furniture-editor/library/models/hissrum12/creformIptCart.glb",
+      "bytes": 174744,
+      "sha256": "d1383a9adc3319286a364cc263b903cb0d1382f524ab51b4c6c2cceddb81e2ad"
+    },
+    {
+      "path": "furniture-editor/library/models/hissrum12/creformLowRack.glb",
+      "bytes": 151808,
+      "sha256": "44c5ded453d005fd9b947b118886a352fc43e78228c1505350e0ff89bc58901d"
+    },
+    {
+      "path": "furniture-editor/library/models/hissrum12/creformTallRack.glb",
+      "bytes": 149928,
+      "sha256": "dcd3399e0822a21e58a1a9d81666f2904621c8b7faa707fb7434dbed90ed3fff"
+    },
+    {
+      "path": "furniture-editor/library/models/hissrum12/dryIceDrum.glb",
+      "bytes": 71744,
+      "sha256": "5d721698c334034f2ee1fcb7dcfd099e61780d86ec5e3735f23d87c5df6a81c4"
+    },
+    {
+      "path": "furniture-editor/library/models/hissrum12/extinguisher.glb",
+      "bytes": 32164,
+      "sha256": "49de683befea21835160ac76c900f0d180a831af2be0df13ceb61405eed9fb1d"
+    },
+    {
+      "path": "furniture-editor/library/models/hissrum12/extinguisherBracket.glb",
+      "bytes": 9156,
+      "sha256": "51b841a7020feeb2a8977ec00aa0d09f65f7fa1e17ea63d17dfa0359b483975f"
+    },
+    {
+      "path": "furniture-editor/library/models/hissrum12/fridge.glb",
+      "bytes": 14412,
+      "sha256": "093774feba0c3d76d5c100fcf385325e802aefcbe6760e2db78ddd5300df2fea"
+    },
+    {
+      "path": "furniture-editor/library/models/hissrum12/gloveHolder.glb",
+      "bytes": 22960,
+      "sha256": "ed17ea037080c1ca0d9ae62b889cb0d96ba508d87959167f1c0b1f630df7f716"
+    },
+    {
+      "path": "furniture-editor/library/models/hissrum12/knife.glb",
+      "bytes": 11960,
+      "sha256": "2e5afd33833e8c66f2a8b5413357c2ad4e63d823790a162349919dff96b99ac5"
+    },
+    {
+      "path": "furniture-editor/library/models/hissrum12/largeWheelBin.glb",
+      "bytes": 62452,
+      "sha256": "65c6d97f911c2043eb6cbf1f869dc0f1553287582db81683d26efbc8bde97c3b"
+    },
+    {
+      "path": "furniture-editor/library/models/hissrum12/mallet.glb",
+      "bytes": 24740,
+      "sha256": "2f43e58b82934049207be017794621406182cfea1ded0408c7abed48ec0ddb7a"
+    },
+    {
+      "path": "furniture-editor/library/models/hissrum12/material.glb",
+      "bytes": 62796,
+      "sha256": "2209b22bc31c71863a87ddaf2334ff95785d2998fbc1a61e0e4dcef72b9d35a3"
+    },
+    {
+      "path": "furniture-editor/library/models/hissrum12/pallet.glb",
+      "bytes": 39056,
+      "sha256": "cf41c639445438370dae89b7ee330a93fff3734d58c0b2b8cc344054cefa5852"
+    },
+    {
+      "path": "furniture-editor/library/models/hissrum12/palletTruck.glb",
+      "bytes": 37564,
+      "sha256": "e77870193f9fda9091f4d7f8447ebdbe0e008e68d3859e51e6b1d25967d84aa5"
+    },
+    {
+      "path": "furniture-editor/library/models/hissrum12/plasticBoxLarge.glb",
+      "bytes": 13032,
+      "sha256": "3423153146bbf41d905657476bcab0cb8d994185bd0a241fa5321368abbbb793"
+    },
+    {
+      "path": "furniture-editor/library/models/hissrum12/plasticBoxSmall.glb",
+      "bytes": 13040,
+      "sha256": "83817e0d69af2e5bc85097c1ac906eb372c5936d8addbc39d326164313f1be77"
+    },
+    {
+      "path": "furniture-editor/library/models/hissrum12/shelf.glb",
+      "bytes": 60064,
+      "sha256": "7cadb447bc378a6b3d2ad5a28d51e7156fce119133d3591ab8e43d4d69533965"
+    },
+    {
+      "path": "furniture-editor/library/models/hissrum12/wheelBin.glb",
+      "bytes": 18480,
+      "sha256": "24e35be66f79c8309c3784f67b01db738f52c31337c50c82069c531aa2a2c3b0"
+    },
+    {
+      "path": "furniture-editor/library/models/hissrum12/yellowBin.glb",
+      "bytes": 15268,
+      "sha256": "7cf574413d26f49b73c7a74d216aff6dc396575131ea53e06d51730190211dea"
     },
     {
       "path": "furniture-editor/library/models/house-interior/Bathroom_Bathtub.glb",
@@ -1701,8 +1926,13 @@
     },
     {
       "path": "shared/multiplayer/build.mjs",
-      "bytes": 438,
-      "sha256": "4343725aff9836f43ce92f58101d3b413b9549c8bcaa36f9f3f1f3216fd6fe89"
+      "bytes": 612,
+      "sha256": "619018a1c135719df80bec13fa57f42a01f39e5b410d4c11be565b9df3eaaea5"
+    },
+    {
+      "path": "shared/multiplayer/collision-contract.mjs",
+      "bytes": 1013,
+      "sha256": "b9a55fd487f965a8db2731412793e450e191b0332d4091e1341b83d656b016df"
     },
     {
       "path": "shared/multiplayer/input.mjs",
@@ -1711,13 +1941,18 @@
     },
     {
       "path": "shared/multiplayer/protocol.mjs",
-      "bytes": 1293,
-      "sha256": "2234296c13976582f89cf9aed8eb8897cab662451c9e6375022fe713a71924d1"
+      "bytes": 1324,
+      "sha256": "a3cd82a019de3ba3a994c90829c465a32136a208171d3d331ec7104969480f75"
     },
     {
       "path": "shared/multiplayer/rules.mjs",
-      "bytes": 1513,
-      "sha256": "d8b0c173e3dcff1c12169805dfeca12095794ed67fa94176be8037106ecf12eb"
+      "bytes": 1230,
+      "sha256": "dedcfb3d91b351baeead82b1f8e94a3d58ef827b2c47ed8e88a15f9cf6bce191"
+    },
+    {
+      "path": "shared/multiplayer/world.mjs",
+      "bytes": 1664,
+      "sha256": "ca908f88343b5b37721fe379d5f8462b67190ecab5deb4942f5733aa2dd97496"
     },
     {
       "path": "src/floor5-data.js",
@@ -1756,8 +1991,8 @@
     },
     {
       "path": "src/fps/app.mjs",
-      "bytes": 39432,
-      "sha256": "567b3e76d0b8be2998b361dbfbb28614bffc00e032c2a9b9cfedb1814c764d7c"
+      "bytes": 40434,
+      "sha256": "b5588c6045d5e57f6ebcbcf6249e56e97c8aa053e0485505b1a2bf582880b661"
     },
     {
       "path": "src/fps/audio.mjs",
@@ -1951,8 +2186,8 @@
     },
     {
       "path": "src/fps/game.mjs",
-      "bytes": 37724,
-      "sha256": "49fc056aaa4ab0840bf85027b244ab8b188de755e408604049a652e5a8926ca2"
+      "bytes": 37789,
+      "sha256": "f64b0be08b97824dbb5bd3998bf7d902b8e3c6259cdf07502c280bdd7d9921be"
     },
     {
       "path": "src/fps/glass-visuals.mjs",
@@ -2046,18 +2281,18 @@
     },
     {
       "path": "src/fps/network/menu.mjs",
-      "bytes": 2983,
-      "sha256": "934f315c38c962d38e73d720e4fda95875c1bdc6303a90d813a950fbe40a4124"
+      "bytes": 3012,
+      "sha256": "998194a6df5a7099682472c126875ca787eacb36c0bc5073c321f6b3641b956b"
     },
     {
       "path": "src/fps/network/session.mjs",
-      "bytes": 11719,
-      "sha256": "148dc4a8d631d5aa3420c832540745d11ae722246967da4685a0b8a5bca6f815"
+      "bytes": 12045,
+      "sha256": "843284b682fb6a2706d4644b43d6712714a8f6c1766573789eb736f34aafdf14"
     },
     {
       "path": "src/fps/physics.mjs",
-      "bytes": 22250,
-      "sha256": "ad8e1c469c7578d40b786680c5e381e9f917374d6c7ae50dcfc9dfae4bc4d887"
+      "bytes": 22776,
+      "sha256": "26e80ab4282227f87aa4c347fedc475378cf908ee63c5c704b3ee46583f440e7"
     },
     {
       "path": "src/fps/player-names.mjs",
@@ -2101,8 +2336,8 @@
     },
     {
       "path": "src/fps/render-budget.mjs",
-      "bytes": 1064,
-      "sha256": "81bbbdd55d26b2b152f71dba77aa898ac4d2682290983d360da2df7041a0c383"
+      "bytes": 1804,
+      "sha256": "d58b2e484bd85a51260c8861877c3c5f58c3eac5f34331e48abaa1e193d23bb8"
     },
     {
       "path": "src/fps/render-engine.mjs",
@@ -2111,8 +2346,8 @@
     },
     {
       "path": "src/fps/render.mjs",
-      "bytes": 19524,
-      "sha256": "51f41138f76549d9f15750db89be1201a612b06bc0ca2b7a64332c5729d3d935"
+      "bytes": 19545,
+      "sha256": "3732dd4b76f55fbf71c0b1488f194de077aed0a765001f74cfd18f727ad42bcb"
     },
     {
       "path": "src/fps/riposte-audio.mjs",
@@ -2355,7 +2590,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 57094816,
+  "bytes": 58691028,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

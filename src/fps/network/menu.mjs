@@ -6,8 +6,8 @@ export function networkMenu(join){
   document.querySelector('.key-hints').textContent='WASD rörelse · mus sikte · SHIFT smyg · CTRL huka · SPACE hopp · R ladda om · ESC meny';
   for(const el of menu.querySelectorAll('.lb-left > .lb-block,.lb-launch,#character-picker,.mission-strip'))el.hidden=true;
   menu.querySelector('.eyebrow').textContent='LOCAL MULTIPLAYER · 2 PLAYERS';
-  menu.querySelector('.lead').textContent='Privat rum · Pulse SMG · automatisk respawn. Dörrar öppna, glas fast. Matchen fortsätter i menyer.';
-  const brief=menu.querySelectorAll('.lb-brief dd');brief[0].textContent='Synthetic Demo';brief[1].textContent='1 mot 1 · privat rum';brief[2].textContent='Pulse SMG · automatisk respawn · inga uppdrag';
+  menu.querySelector('.lead').textContent='Privat rum · Pulse SMG · automatisk respawn. Dörrar öppnas när du närmar dig. Glas är fast. Matchen fortsätter i menyer.';
+  const brief=menu.querySelectorAll('.lb-brief dd');brief[0].textContent='Floor 5 Laboratory';brief[1].textContent='1 mot 1 · privat rum';brief[2].textContent='Pulse SMG · automatisk respawn · inga uppdrag';
   menu.querySelector('.local-network-link').hidden=true;
   const form=document.createElement('form');form.className='network-form';
   form.innerHTML='<label>Namn<input id="network-name" maxlength="24" value="Player" required></label><label>Lokal server<input id="network-endpoint" type="url" required></label><label>Privat kod<input id="network-code" minlength="6" maxlength="64" autocomplete="off" required></label><label>Rums-ID (anslut)<input id="network-room" maxlength="32" autocomplete="off"></label><div><button type="submit" data-create="true">Skapa rum</button><button type="submit" data-create="false">Anslut</button></div><p id="network-status" role="status">Starta servern lokalt. Dela rums-ID och kod med den andra spelaren.</p><a href="./">Till singleplayer</a>';
