@@ -163,18 +163,27 @@ CI preserves all prior Linux offline/visual/mobile gates and adds bounded LAN jo
 Linux Chromium, Windows Chromium and macOS WebKit. Linux uses SwiftShader;
 Windows selects Chromium's D3D11 WARP software backend and records/asserts the
 actual WebGL renderer. Every LAN/server job uses the pinned Node 26.13.0.
-Software jobs use DPR 0.5 for
+Software jobs use DPR 0.5 on Linux and 0.25 on Windows for
 functional coverage; no software-renderer FPS or Pi capacity claim follows.
 Only small JSON/screenshots are retained for seven days. The build generator
 normalizes asset paths on Windows; CI checks out committed LF bytes there so
 compatibility hashes do not change with Git line-ending conversion. Source
 maps/assets remain unchanged.
 
+While loading the second client, the harness freezes only the first empty lobby
+using Chromium's lifecycle API. Both pages are active before room creation and
+every gameplay assertion. This bounds overlapping animated-preview work on one
+software CI host; two physical devices normally have separate GPUs. It does not
+freeze a game, skip a client, or change production rendering.
+
 The normal-launch regression also isolates each human's browser/GPU process,
 as the existing full-map harness does. Real keys/fire stay held until the
 authority observes them within a bounded deadline: a fixed 250 ms press can
 fall entirely between software-rendered frames. It still requires pointer lock,
-reload HUD and independent leave behavior without `?test` or game hooks. The
+reload HUD and independent leave behavior without `?test` or game hooks. It
+observes the transient reload label before pressing R and uses real mouse look
+toward the floor during that check; authority must confirm the pitch and full
+magazine. The full-map job retains the normal forward camera. The
 cross-platform harness waits for application readiness after DOMContentLoaded,
 rather than a window load event that can wait on unrelated media. Failed launch
 checks preserve focus/pointer-lock events and pending asset requests for diagnosis.

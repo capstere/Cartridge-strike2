@@ -27,13 +27,16 @@ async function form(p,room=''){
  await p.locator('#network-room').fill(room);await p.locator(`[data-create=${!room}]`).click();
 }
 try{
- const a=await open(false),b=await open(true);await form(a);await a.locator('#resume').waitFor({state:'visible'});
+ const a=await open(false),setup=await a.context().newCDPSession(a);let b;
+ await setup.send('Page.setWebLifecycleState',{state:'frozen'});
+ try{b=await open(true);}finally{await setup.send('Page.setWebLifecycleState',{state:'active'});await setup.detach();}
+ await form(a);await a.locator('#resume').waitFor({state:'visible'});
  const id=await a.locator('#network-room').inputValue();assert(id);await form(b,id);await b.locator('#resume').click();await b.locator('#hud').waitFor({state:'visible'});
  await until(()=>[...local.rooms][0]?.sim.game.actors.length===2,'two humans on the independent authority');
  const authority=[...local.rooms][0];assert.equal(authority.sim.game.actors.length,2);
- let resumeAttempts=0;
+ let resumeAttempts=0,resumePoint;
  for(;resumeAttempts<2;){
-  resumeAttempts++;await a.bringToFront();await a.locator('#resume').click();
+  resumeAttempts++;await a.bringToFront();const box=await a.locator('#resume').boundingBox();resumePoint={x:box.x+box.width/2,y:box.y+box.height/2};await a.locator('#resume').click();
   try{await a.waitForFunction(()=>document.pointerLockElement?.id==='game'&&document.querySelector('#pause').hidden,null,{timeout:5000});break;}
   catch(e){if(resumeAttempts===2||!(await a.locator('#pause').textContent()).includes('Muslås'))throw e;}
  }
@@ -45,18 +48,31 @@ try{
  await a.mouse.down();await until(()=>player.inventory.primary.ammo<ammo,'real mouse fire reaches authority');await a.mouse.up();
  assert(Math.abs(player.z-z)>.1);assert(player.inventory.primary.ammo<ammo);
  const shots=ammo-player.inventory.primary.ammo;
- await a.keyboard.press('r');await a.locator('#reload-text').filter({hasText:'Laddar om'}).waitFor();
+ // Exercise real mouse look too. A downward view keeps this transient HUD
+ // check observable on software GPUs; the full-map job uses the normal camera.
+ await a.mouse.move(resumePoint.x,resumePoint.y+360);
+ await until(()=>player.pitch<-.3,'real mouse look reaches authority');
+ // Observe before the key: a driver round trip can miss a short reload label.
+ await a.evaluate(()=>{window.__reloadHudSeen=new Promise(resolve=>{
+  const element=document.querySelector('#reload-text');let timer;
+  const finish=value=>{clearTimeout(timer);observer.disconnect();resolve(value);};
+  const observer=new MutationObserver(()=>{if(element.textContent.includes('Laddar om')&&!element.closest('[hidden]')&&element.getBoundingClientRect().height>0)finish(true);});
+  observer.observe(element,{childList:true,characterData:true,subtree:true});timer=setTimeout(()=>finish(false),15000);
+ });});
+ await a.keyboard.press('r');assert(await a.evaluate(()=>__reloadHudSeen),'real reload displays its HUD state');
+ await until(()=>player.inventory.primary.ammo===30,'real reload finishes on authority');
  await a.keyboard.press('Escape');await a.locator('#fullscreen-toggle').click();await a.waitForFunction(()=>!!document.fullscreenElement);
  await a.locator('#resume').click();await a.waitForFunction(()=>document.pointerLockElement?.id==='game'&&document.querySelector('#pause').hidden);
  const fullscreenZ=player.z;await a.keyboard.down('s');await until(()=>Math.abs(player.z-fullscreenZ)>.1,'keyboard input also works after explicit fullscreen');await a.keyboard.up('s');
  await a.keyboard.press('Escape');await a.locator('#restart').click();await a.locator('#network-code').waitFor();
  await until(()=>authority.sim.game.actors.length===1,'leaving cleans up only the departing player');
  assert(await a.locator('#fatal').isHidden(),'returning to the empty network lobby must keep the render loop alive');assert.deepEqual(errors,[]);
- const result={status:'PASS',contract:CONTRACT,headed,testHooks:false,humans:2,browserProcesses:2,angle,resumeAttempts,desktopPointerLock:true,manualFullscreen:true,actualKeysAndMouse:true,movement:Math.abs(fullscreenZ-z),shots,reloadHud:true,leaveKeepsOther:true,errors};
+ const result={status:'PASS',contract:CONTRACT,headed,testHooks:false,humans:2,browserProcesses:2,angle,resumeAttempts,desktopPointerLock:true,manualFullscreen:true,actualKeysAndMouse:true,mouseLook:true,movement:Math.abs(fullscreenZ-z),shots,reloadHud:true,leaveKeepsOther:true,errors};
  fs.mkdirSync('test-results/network',{recursive:true});fs.writeFileSync('test-results/network/normal-launch.json',JSON.stringify(result,null,2));console.log(JSON.stringify(result));
 }catch(error){
  fs.mkdirSync('test-results/network',{recursive:true});
- const clients=await Promise.all(pages.map(p=>p.evaluate(()=>({events:__launchEvents,focused:document.hasFocus(),pointer:document.pointerLockElement?.id,fullscreen:!!document.fullscreenElement,paused:!document.querySelector('#pause').hidden,pause:document.querySelector('#pause').textContent,fatal:document.querySelector('#fatal pre').textContent})).catch(e=>String(e))));
+ const bounded=promise=>Promise.race([promise,new Promise(resolve=>setTimeout(()=>resolve('Diagnostic timed out'),5000))]);
+ const clients=await Promise.all(pages.map(p=>bounded(p.evaluate(()=>({events:__launchEvents,focused:document.hasFocus(),pointer:document.pointerLockElement?.id,fullscreen:!!document.fullscreenElement,paused:!document.querySelector('#pause').hidden,pause:document.querySelector('#pause').textContent,fatal:document.querySelector('#fatal pre').textContent})).catch(e=>String(e)))));
  const seats=[...local.rooms].flatMap(r=>[...r.seats.values()].map(s=>({id:s.id,ready:s.ready,enabled:s.enabled,x:s.actor?.x,z:s.actor?.z})));
  fs.writeFileSync('test-results/network/normal-launch-failure.json',JSON.stringify({error:String(error),errors,clients,seats},null,2));console.error('Normal launch failure',JSON.stringify({error:String(error),errors,clients,seats}));throw error;
 }finally{await Promise.all(browsers.map(b=>b.close()));await local.close();}

@@ -11,7 +11,7 @@ if(process.argv[1]===entry&&process.argv[2]==='--serve'){
   const snapshot=()=>({listening:!!local?.httpServer.listening,rooms:[...(local?.rooms||[])].map(r=>({
     id:r.roomId,sourceHash:r.sim?.sourceHash,tick:r.sim?.tickNumber,doors:r.state?.doors?.size||0,
     clients:r.clients.map(c=>c.sessionId),seats:[...(r.seats?.entries()||[])].map(([sid,s])=>({sid,id:s.id,ready:s.ready,enabled:s.enabled})),
-    actors:(r.sim?.game.actors||[]).map(a=>({id:a.id,x:a.x,y:a.y,z:a.z,yaw:a.yaw,alive:a.alive,lifeId:a.lifeId,
+    actors:(r.sim?.game.actors||[]).map(a=>({id:a.id,x:a.x,y:a.y,z:a.z,yaw:a.yaw,pitch:a.pitch,alive:a.alive,lifeId:a.lifeId,
       inventory:{primary:{ammo:a.inventory.primary.ammo,reserve:a.inventory.primary.reserve}},sessionId:r.state.actors.get(a.id)?.sessionId})),
   }))});
   process.on('message',async message=>{
