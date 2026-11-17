@@ -160,7 +160,9 @@ the entire client through its test proxy on one origin, preserving reliable orde
 It is jitter/delay coverage, not a claim of packet-loss simulation.
 
 CI preserves all prior offline/visual/mobile gates and adds bounded LAN jobs on
-Linux Chromium, Windows Chromium and macOS WebKit. Software jobs use DPR 0.5 for
+Linux Chromium, Windows Chromium and macOS WebKit. Linux uses SwiftShader;
+Windows selects Chromium's D3D11 WARP software backend and records/asserts the
+actual WebGL renderer. Software jobs use DPR 0.5 for
 functional coverage; no software-renderer FPS or Pi capacity claim follows.
 Only small JSON/screenshots are retained for seven days. The build generator
 normalizes asset paths on Windows; CI checks out committed LF bytes there so

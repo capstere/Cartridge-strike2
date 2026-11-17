@@ -8,7 +8,7 @@ import {CONTRACT} from '../shared/multiplayer/build.mjs';
 process.chdir(fileURLToPath(new URL('../',import.meta.url)));
 const mobileEngine=process.env.FPS_LAN_MOBILE_BROWSER||'chromium',desktopEngine=process.env.FPS_LAN_DESKTOP_BROWSER||'chromium';
 const engines={chromium,webkit,firefox},errors=[],rows=[];
-const angle=process.env.FPS_NETWORK_ANGLE||(process.platform==='darwin'?'metal':'swiftshader');
+const angle=process.env.FPS_NETWORK_ANGLE||(process.platform==='darwin'?'metal':process.platform==='win32'?'d3d11-warp':'swiftshader');
 const launch=engine=>engines[engine].launch(engine==='chromium'?{channel:'chromium',args:['--use-angle='+angle,'--disable-background-timer-throttling','--disable-renderer-backgrounding','--disable-backgrounding-occluded-windows']}:{});
 let local=await createLocalServer({lan:true,host:testLanHost(),port:0});
 const url=local.url,port=local.httpServer.address().port,host=local.config.host;
@@ -28,9 +28,10 @@ async function open(engine,mobile){
   try{await page.waitForFunction(()=>window.__fps||document.querySelector('#fatal pre').textContent);}catch(e){console.error(await page.locator('body').innerText(),errors);throw e;}
   assert(await page.locator('#fatal').evaluate(e=>e.hidden),await page.locator('#fatal').textContent());
   assert.equal(await page.locator('#network-endpoint').inputValue(),url);
-  const features=await page.evaluate(()=>({secure:isSecureContext,subtle:!!crypto.subtle,touch:__fps.mobile.enabled,map:__fps.world.project?.name,fullscreen:!!document.documentElement.requestFullscreen}));
+  const features=await page.evaluate(()=>{const gl=__fps.renderer.renderer.getContext(),ext=gl.getExtension('WEBGL_debug_renderer_info');return {secure:isSecureContext,subtle:!!crypto.subtle,touch:__fps.mobile.enabled,map:__fps.world.project?.name,fullscreen:!!document.documentElement.requestFullscreen,renderer:gl.getParameter(ext?.UNMASKED_RENDERER_WEBGL||gl.RENDERER)};});
   assert.equal(features.secure,false,'actual private-IP HTTP must exercise the insecure-context path');assert.equal(features.subtle,false);assert.equal(features.touch,mobile);
-  rows.push({engine,mobile,version:browser.version(),features});console.log('LAN scene ready',engine,mobile);
+  if(engine==='chromium'&&angle==='d3d11-warp')assert.match(features.renderer,/Direct3D11|D3D11/,'Windows must exercise the selected real WebGL renderer');
+  rows.push({engine,mobile,version:browser.version(),features});console.log('LAN scene ready',engine,mobile,features.renderer);
   return page;
 }
 async function form(page,{id='',code='private-123'}={}){
@@ -128,7 +129,9 @@ try{
     safeAreaEmulation:safeArea,touchInput:mobileEngine==='chromium'?'Chromium multi-contact protocol':'WebKit synthetic PointerEvents',audioResume:true,rotation:true,backgroundSignal:'synthetic blur',wrongCode:true,disconnectCleanup:cleanup,renderedRejoins:4,serverRestart:true,emptyRooms:local.rooms.size,errors};
   fs.writeFileSync(`test-results/lan/${desktopEngine}-${mobileEngine}.json`,JSON.stringify(result,null,2));console.log(JSON.stringify(result));
 }catch(error){
-  for(const [i,page] of pages.entries())if(!page.isClosed())await page.screenshot({path:`test-results/lan/failure-${mobileEngine}-${i}.png`,timeout:5000}).catch(()=>{});
   const pending=pages.map(page=>[...pendingRequests.get(page)]);
-  fs.writeFileSync(`test-results/lan/failure-${mobileEngine}.json`,JSON.stringify({error:String(error),errors,browsers:rows,pending},null,2));console.error('LAN pending requests',JSON.stringify(pending));throw error;
+  const probes=await Promise.all([...new Set([url+'/health',...pending.flat()])].slice(0,8).map(async url=>{try{const r=await fetch(url,{signal:AbortSignal.timeout(3000)});return {url,status:r.status,bytes:(await r.arrayBuffer()).byteLength};}catch(e){return {url,error:String(e)};}}));
+  const connections=await new Promise(resolve=>local.httpServer.getConnections((_error,count)=>resolve(count)));
+  for(const [i,page] of pages.entries())if(!page.isClosed())await page.screenshot({path:`test-results/lan/failure-${mobileEngine}-${i}.png`,timeout:5000}).catch(()=>{});
+  fs.writeFileSync(`test-results/lan/failure-${mobileEngine}.json`,JSON.stringify({error:String(error),errors,browsers:rows,pending,probes,connections},null,2));console.error('LAN pending requests',JSON.stringify({pending,probes,connections}));throw error;
 }finally{await Promise.all(browsers.map(b=>b.close()));await local.close();}
