@@ -16,6 +16,22 @@ permissions:
   contents: read
 
 jobs:
+  multiplayer-foundation:
+    # Full dependency/API verification belongs to PR/manual runs, not duplicate
+    # post-merge browser/dependency jobs. The headless core tests also run below.
+    if: github.event_name != 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: server/.node-version
+          cache: npm
+          cache-dependency-path: server/package-lock.json
+      - run: npm ci --prefix server --ignore-scripts
+      - name: Verify the pinned Colyseus API against the shared headless engine
+        run: npm test --prefix server
   node-tests:
     runs-on: ubuntu-latest
     timeout-minutes: 20
