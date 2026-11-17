@@ -99,6 +99,7 @@ async function reloadCheck(page,roomId,actorId){
 }
 try{
  for(const [scenario,endpoint,cycles] of [['loopback',local.url,20],['100ms-rtt-jitter',proxy.url,4]]){
+  const scenarioAt=performance.now();
   const a=await open(),b=await open({width:844,height:390},true);
   await b.screenshot({path:`test-results/network/${scenario}-mobile-lobby.png`});
   const id=await join(a,endpoint,'','Alice'),same=await join(b,endpoint,id,'<img src=x onerror=x>');assert.equal(same,id);
@@ -191,22 +192,33 @@ try{
   },{endpoint,roomId:id,contract:CONTRACT,type:ROOM_TYPE});
   assert.equal(admission.full.accepted,false);assert.match(admission.full.message,/full|locked/i);
   assert.equal(admission.mismatch.accepted,false);assert.match(admission.mismatch.message,/buildHash/);assert.equal(local.rooms.size,1);
-  const cd=await b.context().newCDPSession(b),cleanup=[];
+  const cd=await b.context().newCDPSession(b),cleanup=[],cleanupAt=performance.now();
   for(let i=0;i<cycles;i++){
-   const old=await b.evaluate(async()=>{const n=__fps.network,probe=()=>{},emitter=n.room.onStateChange(probe);n.room.onStateChange.remove(probe);__fps.newMatch();const immediateStateCallbacks=emitter.handlers.length;await new Promise(r=>setTimeout(r,30));return {closed:n.closed,predict:!!n.predict,callbacks:n.unsub.length,immediateStateCallbacks,remotes:n.remote.size,events:n.events.length,room:!!n.room};});
+   const cycleAt=performance.now();
+   const old=await b.evaluate(async()=>{const n=__fps.network,probe=()=>{},emitter=n.room.onStateChange(probe);n.room.onStateChange.remove(probe);__fps.liveControls={};__fps.newMatch();const immediateStateCallbacks=emitter.handlers.length;await new Promise(r=>setTimeout(r,30));return {closed:n.closed,predict:!!n.predict,callbacks:n.unsub.length,immediateStateCallbacks,remotes:n.remote.size,events:n.events.length,room:!!n.room};});
    assert.deepEqual(old,{closed:true,predict:false,callbacks:0,immediateStateCallbacks:0,remotes:0,events:0,room:false});
    await a.waitForFunction(()=>__fps.network.room.state.actors.size===1);
-   await b.evaluate(()=>{__fps.liveControls={};});await join(b,endpoint,id,'Bob');
+   // Initial admission above uses the real form. Repeated lifecycle coverage
+   // invokes that form's exact application handler in one driver call instead
+   // of retyping four unchanged fields through many software-rendered frames.
+   // The normal server, session, presentation, RAF and disposal still execute.
+   await b.evaluate(async({endpoint,roomId})=>{
+    await __fps.joinNetwork({endpoint,roomId,create:false,code:'testing-123',name:'Bob'});
+    await new Promise(requestAnimationFrame);await new Promise(requestAnimationFrame);
+    if(!__fps.network?.view.player?.alive||!__fps.game.network||__fps.modal!==null)throw Error('Rejoin did not enter the game');
+   },{endpoint,roomId:id});
    await cd.send('HeapProfiler.collectGarbage');await b.waitForTimeout(50);await cd.send('HeapProfiler.collectGarbage');
    const dom=await cd.send('Memory.getDOMCounters'),owned=await b.evaluate(()=>({actors:__fps.game.actors.length,models:__fps.renderer.actors.size,callbacks:__fps.network.unsub.length,remotes:__fps.network.remote.size,gpu:__fps.renderer.renderer.info.memory,voices:__fps.audio.active.size}));
-   cleanup.push({cycle:i+1,dom,owned});
+   cleanup.push({cycle:i+1,ms:performance.now()-cycleAt,dom,owned});
+   if((i+1)%5===0||i+1===cycles)console.log('cleanup',scenario,i+1+'/'+cycles,Math.round(performance.now()-cleanupAt)+'ms');
   }
   assert.equal(cleanup.at(-1).dom.jsEventListeners,cleanup[0].dom.jsEventListeners,'join/leave listeners stay bounded');
   assert.equal(cleanup.at(-1).owned.models,cleanup[0].owned.models);assert.equal(cleanup.at(-1).owned.callbacks,cleanup[0].owned.callbacks);
   await controls(a);await a.waitForTimeout(400);
   const measured=await a.evaluate(()=>{const n=__fps.network,s=n.room.state.actors.get(n.localPlayerId),p=n.prediction.world.actor;return {metrics:n.metrics,pending:n.input.pendingCount,settledError:Math.hypot(p.x-s.x,p.y-s.y,p.z-s.z),draws:__fps.renderer.stats.drawCalls,actors:__fps.game.actors.map(a=>({id:a.id,controller:a.controllerType,bot:!!a.bot})),fatal:!document.querySelector('#fatal').hidden};});
   assert(measured.settledError<.02);assert(!measured.fatal);assert(measured.metrics.suppressedShots>0);assert.equal(measured.metrics.confirmedShots,measured.metrics.suppressedShots,'each own confirmed shot reuses its immediate cosmetic action');
-  results.push({scenario,room:id,interpolation,prediction,respawn,reloads,resumeAttempts,admission,measured,cleanup});console.log('PASS',scenario,JSON.stringify({prediction,respawn,reloads,metrics:{...measured.metrics,corrections:undefined},cleanup:[cleanup[0],cleanup.at(-1)]}));
+  const timings={beforeCleanupMs:cleanupAt-scenarioAt,cleanupMs:performance.now()-cleanupAt,totalMs:performance.now()-scenarioAt};
+  results.push({scenario,room:id,interpolation,prediction,respawn,reloads,resumeAttempts,admission,measured,cleanup,timings});console.log('PASS',scenario,JSON.stringify({prediction,respawn,reloads,timings,metrics:{...measured.metrics,corrections:undefined},cleanup:[cleanup[0],cleanup.at(-1)]}));
   await a.evaluate(()=>__fps.newMatch());await b.evaluate(()=>__fps.newMatch());await a.waitForTimeout(250);
   await a.context().close();await b.context().close();assert.equal(local.rooms.size,0,'empty server has no retained room');
  }

@@ -123,7 +123,7 @@ It does not simulate packet loss by dropping snapshots.
 | Authoritative movement received during that sample | 0 m | 0 m |
 | Settled prediction error | 0 m | 0 m |
 | Respawn pose error / ammo | 0 m / 30 | 0 m / 30 |
-| Maximum sampled remote interpolation offset | 0.460 m | 0.577 m |
+| Maximum sampled remote interpolation offset | 0.427 m | 0.525 m |
 | Confirmed own shots / suppressed duplicate effects | 6 / 6 | 8 / 8 |
 | Maximum pending SDK inputs | 8 | 15 |
 | Join/leave cycles | 20 | 4 |
@@ -132,8 +132,8 @@ It does not simulate packet loss by dropping snapshots.
 | First → last game geometries / textures | 100 / 38 → 100 / 38 | 101 / 39 → 101 / 39 |
 | Active audio voices after each rejoin | 0 | 0 |
 
-The proxy recorded 2,115 messages, 7,529 upstream and 78,395 downstream payload
-bytes across its scenario. Ordered one-way delay averaged 51.8 ms, p95 68.5 ms.
+The proxy recorded 2,100 messages, 7,735 upstream and 78,767 downstream payload
+bytes across its scenario. Ordered one-way delay averaged 51.7 ms, p95 68.4 ms.
 These totals include setup/control traffic; they are not a sustained 10-player
 bandwidth benchmark. Both scenarios ended with zero live rooms and zero browser
 page errors.
@@ -187,8 +187,8 @@ passed the server job and preceding offline checks, but Chromium rejected the
 new browser test's Resume pointer-lock request with `WrongDocumentError`.
 The harness now permits one extra real Resume click only after that visible
 failure and requires actual canvas pointer lock. It never bypasses capture or
-uses a test method to resume. The final native run used two clicks in loopback
-and one with latency. Final required CI must pass on the reviewed branch head.
+uses a test method to resume. The final native run used 1 Resume gesture(s) in loopback
+and 1 with latency. Final required CI must pass on the reviewed branch head.
 
 A complete [SwiftShader DPR 0.5 run](network/browser-software.json) also passes
 both gameplay scenarios and 24 cleanup cycles after replacing wall-clock
@@ -196,10 +196,27 @@ sampling. Its contract is `20fbd7d6…`, before the final same-life death-histor
 guard, and it still initialized a third GPU scene for admission tests. The final
 harness uses a fresh official SDK client within an existing browser for admission
 rejections, avoiding unnecessary model/shader startup. The CI step allows eight
-minutes for two software-rendered scenarios; the job budget and all gameplay
-assertions remain intact. This is functional coverage, not evidence of smooth
+minutes for two software-rendered scenarios; all gameplay assertions remain intact. This is functional coverage, not evidence of smooth
 software rendering or phone performance. `FPS_NETWORK_ANGLE=swiftshader` and
 `FPS_NETWORK_DPR=0.5` reproduce that environment; CI retains default renderer/DPR 1.
+
+Run [44096991642](https://github.com/capstere/Cartridge-strike2/actions/runs/44096991642)
+passed all offline and server checks, then reached the **overall 20-minute job
+limit** during loopback cleanup. The network step had only 7m43s available after
+12m30s of existing checks/setup. Both humans had passed shooting/reload,
+death/respawn, prediction, Resume and admission checks; the scenario had not
+completed, so this was **not a network-suite pass**.
+
+The repeated-cycle harness now calls the real form's application join handler
+in one browser evaluation, instead of retyping four unchanged fields on every
+cycle. Initial create/join still uses the actual form. Each rejoin waits for two
+normal rendered frames; the peer must observe departure; both garbage collections,
+all 24 cycles, immediate callback disposal and resource assertions remain.
+The native rerun passes, with cleanup sections taking 4.51 s (20 cycles) and
+2.68 s (four cycles). These are harness timings, not a gameplay FPS improvement.
+Per-cycle/scenario timings are now logged. The overall job limit is 24 minutes
+so the existing checks plus the bounded eight-minute network step can complete;
+PR-only browser execution and main's fast-check policy remain unchanged.
 
 The additional [normal launch smoke](network/normal-launch.json) uses
 `/fps/?network=local` without `?test` or `__fps` hooks. It passes actual desktop

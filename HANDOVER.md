@@ -172,7 +172,9 @@ seven server/protocol tests, full two-browser loopback/100 ms jitter gameplay,
 fixes explicitly remove SDK signal callbacks and prevent late shot confirmations
 from duplicating effects after stalls, pause or death. Software-renderer coverage
 passes; visible native-window mouse capture on this Mac remains unverified.
-The report records initial CI failures and the required final-head checks.
+The report records initial CI failures, a measured whole-job timeout and the
+required final-head checks. Repeated join tests now batch the application call
+to avoid retyping identical form fields; all 24 rendered cleanup cycles remain.
 Pass 3, dynamic Floor 5 networking, bounded combat rewind, reconnect grace and
 public deployment require separate authorization. No public server/tunnel was
 started. **The first open physical iPhone/Android task at the top is unchanged.**

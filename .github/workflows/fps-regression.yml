@@ -36,7 +36,9 @@ jobs:
           npm test --prefix server
   node-tests:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # Measured offline/browser setup takes ~12m30s on software runners; leave
+    # the full bounded 8-minute network step and final cleanup time available.
+    timeout-minutes: 24
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

@@ -98,7 +98,7 @@
       "command": "node --import ./server/register-shared.mjs tools/network-browser.mjs",
       "status": "PASS",
       "exitCode": 0,
-      "logSha256": "1f291e9bdc79aded53a25afb74e31630ef0c6a4f057fa9730b84a75d74d15513",
+      "logSha256": "44615f3eea294dc65a9e009474a98b66dda86d7c9415a447e33a4addbaf4d605",
       "evidence": "network/browser.json"
     },
     "offlineLifecycle": {
@@ -156,7 +156,7 @@
     "Single-point interpolation assertion sampled a settled wall pose; replaced with bounded samples over actual movement."
   ],
   "initialImplementationCommit": "02714bd529e8205114d514d594323c75f71f07d5",
-  "browserHarnessSha256": "1ecd77828ad4e9dbe133b2df5cfbf7e192ee8d33e41ba6c6c8c67adc950d4798",
+  "browserHarnessSha256": "084c7536ce73d884fae6da49e7405de94397e0510dc1d6f64af7c2e6fc078acf",
   "ciFollowup": {
     "failedRun": 44082904519,
     "head": "dc7f4bc28fc641b0df26479639825ff4d5f233d2",
@@ -169,7 +169,10 @@
     "thirdFailedRun": 44088823211,
     "thirdFailure": "All preceding offline checks and server job passed; Chromium rejected Resume pointer lock with WrongDocumentError.",
     "thirdFix": "One bounded additional visible Resume gesture, with actual canvas lock required; no forced resume or product fullscreen changes.",
-    "additionalVerifiedFix": "Bounded own-action history survives render stalls, pause and same-life death, clearing on new life/dispose; failing-before/passing-after regressions."
+    "additionalVerifiedFix": "Bounded own-action history survives render stalls, pause and same-life death, clearing on new life/dispose; failing-before/passing-after regressions.",
+    "fourthCancelledRun": 44096991642,
+    "fourthFailure": "Overall 20-minute job timeout after all offline checks passed; loopback combat passed but repeated cleanup and latency scenario were incomplete.",
+    "fourthFix": "Batch repeated joins through the same application handler while retaining real initial UI admission, two rendered frames, remote leave observation, 24 cycles and all cleanup assertions. Log per-cycle/scenario timing. Allow 24-minute job for measured ~12m30s preceding checks plus the bounded 8-minute network step."
   },
   "softwareRendererAttempt": {
     "renderer": "SwiftShader on macOS ARM64",
