@@ -1,8 +1,8 @@
 import {Room,ServerError} from '@colyseus/core';
-import {createHash,timingSafeEqual} from 'node:crypto';
+import {createHash,timingSafeEqual,randomBytes} from 'node:crypto';
 import {createHeadlessSimulation} from './headless.mjs';
 import {respawnActor} from '../src/fps/action-rules.mjs';
-import {NETWORK_CONFIG,NETWORK_MAP,copyPose,safeName} from '../shared/multiplayer/rules.mjs';
+import {NETWORK_CONFIG,NETWORK_MAP,ROOM_CAPACITY,TEAM_CAPACITY,RECONNECT_SECONDS,copyPose,safeName} from '../shared/multiplayer/rules.mjs';
 import {checkContract,validateNetworkInput,wireInput} from '../shared/multiplayer/protocol.mjs';
 import {CONTRACT} from '../shared/multiplayer/build.mjs';
 import {NetworkInput,ActorState,RoomState,DoorState} from './network-schema.mjs';
@@ -12,24 +12,30 @@ import {collisionContract} from '../shared/multiplayer/collision-contract.mjs';
 
 const hashCode=code=>createHash('sha256').update(code).digest();
 const validCode=code=>typeof code==='string'&&/^[A-Za-z0-9-]{6,64}$/.test(code);
-const seats=['analysts-0','counterAnalysts-0'];
+const teams=['analysts','counterAnalysts'];
+const seats=teams.flatMap(team=>Array.from({length:TEAM_CAPACITY},(_,i)=>`${team}-${i}`));
+import {LagCompensation} from './lag-compensation.mjs';
 export class NetworkRoom extends Room {
   async onCreate(options) {
     if(!validCode(options.code))throw new ServerError(400,'Use a private code of 6–64 letters, digits or hyphens.');
     try {checkContract(options.contract,CONTRACT);}catch(e){throw new ServerError(409,e.message);}
     this.codeHash=hashCode(options.code);
-    this.maxClients=2;this.maxMessagesPerSecond=120;this.patchRate=50;
+    this.maxClients=ROOM_CAPACITY;this.maxMessagesPerSecond=120;this.patchRate=50;
     await this.setPrivate(true);
-    this.seats=new Map();this.lives=new Map();this.metrics={invalid:0,maxQueue:0,ticks:0,events:0};
+    this.seats=new Map();this.lives=new Map();this.metrics={invalid:0,maxQueue:0,ticks:0,events:0,reconnects:0,drops:0};
     this.sim=await createHeadlessSimulation({mapId:NETWORK_MAP,controllers:Object.fromEntries(seats.map(id=>[id,'human'])),config:NETWORK_CONFIG});
     if(this.sim.sourceHash!==CONTRACT.mapHash)throw Error('Server map differs from built contract. Run npm run build --prefix server.');
     if(createHash('sha256').update(collisionContract(this.sim.game.world)).digest('hex')!==CONTRACT.collisionHash)throw Error('Server collision differs from built contract.');
     prepareNetworkWorld(this.sim.game.world);
+    // Map construction is synchronous and can take >1 s. Seed the handshake
+    // clock after loading, or the first SDK offset starts one load-time behind.
+    this.clock.tick();
     this.templates=new Map(this.sim.game.actors.map(a=>[a.id,a]));
     this.sim.game.state.actors=[];this.sim.game.drainEvents();
     this.state=new RoomState({worldRevision:1,elevatorOpenAt:-1});
     for(const d of this.sim.game.world.doors.doors)this.state.doors.set(d.id,new DoorState());
     this.project();
+    this.lag=new LagCompensation(this);this.lag.recordTick();
     // Reliable WS input has its own monotonic wire sequence. Do not introduce a
     // second sequence/ack counter; dropping a queued frame still advances its ack.
     this.inputs=this.defineInput(NetworkInput,{bufferMaxSize:12});
@@ -37,59 +43,85 @@ export class NetworkRoom extends Room {
       const seat=this.seats.get(client.sessionId);if(!seat||seat.ready)return;
       try{checkContract(message,CONTRACT);}catch(e){client.send('problem',e.message);client.leave(4009);return;}
       const actor=structuredClone(this.templates.get(seat.id));
-      Object.assign(actor,{name:seat.name,alive:false,lifeId:this.lives.get(seat.id)||0,respawnAt:null});
+      Object.assign(actor,{name:seat.name,alive:false,lifeId:this.lives.get(seat.id)||0,controlEpoch:seat.epoch,respawnAt:null});
       this.sim.game.actors.push(actor);
       if(!respawnActor(this.sim.game,actor)){this.sim.game.state.actors.pop();client.send('problem','No safe spawn is available.');client.leave(4008);return;}
       if(this.sim.game.world.networkDynamics.elevatorOpenAt<0)this.sim.game.world.networkDynamics.elevatorOpenAt=this.sim.game.state.time;
       seat.ready=true;seat.enabled=true;seat.actor=actor;seat.deadline=Infinity;
+      seat.lifeStartedAt=this.clock.elapsedTime;seat.diedAtMs=0;
       this.sim.controllers.bind(client.sessionId,actor.id);
       this.project();
     });
     this.onMessage('controls',(client,message)=>{
       const seat=this.seats.get(client.sessionId);
-      if(!seat?.ready||message?.lifeId!==seat.actor.lifeId||typeof message.enabled!=='boolean')return;
+      if(!seat?.ready||!seat.connected||seat.client!==client||message?.lifeId!==seat.actor.lifeId||
+        (message.controlEpoch??0)!==seat.epoch||typeof message.enabled!=='boolean')return;
       seat.enabled=message.enabled;this.inputs.get(client.sessionId).clear();
     });
+    this.onMessage('clock-echo',(client,message)=>{
+      const seat=this.seats.get(client.sessionId);
+      if(!seat?.probe||seat.client!==client||message!==seat.probe.token)return;
+      const rtt=this.clock.elapsedTime-seat.probe.at;seat.probe=null;
+      if(rtt>=0&&rtt<=1000){seat.rtts.push(rtt);if(seat.rtts.length>8)seat.rtts.shift();seat.rtt=Math.min(...seat.rtts);}
+    });
+    this.clock.setInterval(()=>{
+      for(const c of this.clients){const seat=this.seats.get(c.sessionId);if(!seat?.ready)continue;
+        seat.probe={token:randomBytes(12).toString('hex'),at:this.clock.elapsedTime};c.send('clock-probe',seat.probe.token);}
+    },1000);
     this.setFixedTimestep(()=>this.fixedTick(),60);
   }
   onAuth(client,options) {
     try{checkContract(options.contract,CONTRACT);}catch(e){throw new ServerError(409,e.message);}
     if(!validCode(options.code)||!timingSafeEqual(hashCode(options.code),this.codeHash))throw new ServerError(403,'Incorrect private room code.');
+    this.chooseSeat(options.team);
     return true;
   }
+  chooseSeat(team='auto'){
+    if(!['auto',...teams].includes(team))throw new ServerError(400,'Invalid team.');
+    const used=new Set([...this.seats.values()].map(s=>s.id));
+    const order=team==='auto'?[...teams].sort((a,b)=>[...used].filter(id=>id.startsWith(a+'-')).length-[...used].filter(id=>id.startsWith(b+'-')).length):[team];
+    const id=order.flatMap(t=>seats.filter(id=>id.startsWith(t+'-'))).find(id=>!used.has(id));
+    if(!id)throw new ServerError(409,team==='auto'?'This private room is full.':'This team is full (5 players).');
+    return id;
+  }
   onJoin(client,options) {
-    const id=seats.find(id=>![...this.seats.values()].some(s=>s.id===id));
-    if(!id)throw new ServerError(409,'This private room is full.');
-    const seat={id,name:safeName(options.name),ready:false,enabled:false,lastFire:0,lastReload:0,deadline:this.clock.elapsedTime+20000};
+    const id=this.chooseSeat(options.team);
+    const seat={id,name:safeName(options.name),ready:false,enabled:false,lastFire:0,lastReload:0,lastSampleTick:0,lastShotStamp:0,epoch:0,connected:true,client,rtts:[],deadline:this.clock.elapsedTime+20000};
+    client.ref.once('error',()=>{if(seat.client===client)seat.revoked=true;});
     this.seats.set(client.sessionId,seat);
-    this.state.actors.set(id,new ActorState({id,sessionId:client.sessionId,name:seat.name,team:id.split('-')[0]}));
+    this.state.actors.set(id,new ActorState({id,sessionId:client.sessionId,name:seat.name,team:id.split('-')[0],controlEpoch:seat.epoch,connected:true}));
   }
   fixedTick() {
-    const frames=new Map(),actions=new Map();
+    const frames=new Map(),actions=new Map();this.lag.shots.clear();
     for(const client of this.clients){
       const seat=this.seats.get(client.sessionId),buffer=this.inputs.get(client.sessionId);
       this.metrics.maxQueue=Math.max(this.metrics.maxQueue,buffer.size);
-      if(!seat?.ready||!seat.enabled){buffer.clear();if(seat&&this.clock.elapsedTime>seat.deadline)client.leave(4008);continue;}
+      if(!seat?.ready||!seat.enabled||!seat.connected||seat.client!==client){buffer.clear();if(seat&&this.clock.elapsedTime>seat.deadline)client.leave(4008);continue;}
       const f=buffer.next();if(!f||!seat.actor.alive)continue; // no cached held movement/fire on silence
       try{
         const input=validateNetworkInput(wireInput(f),seat.actor,this.sim.tickNumber);
+        if(f.sampleTick<seat.lastSampleTick)throw Error('Regressed input tick');
+        seat.lastSampleTick=f.sampleTick;
         const fire=f.fire&&f.fireId>seat.lastFire;
-        input.fire=fire;input.reload=f.reloadId>seat.lastReload;
+        input.fire=fire&&this.lag.accept(seat,f,buffer.renderTime);input.reload=f.reloadId>seat.lastReload;
         seat.lastFire=Math.max(seat.lastFire,f.fireId);seat.lastReload=Math.max(seat.lastReload,f.reloadId);
         frames.set(client.sessionId,input);
-        actions.set(seat.id,`${seat.id}:${seat.actor.lifeId}:${f.fireId}`);
+        actions.set(seat.id,`${seat.id}:${seat.actor.lifeId}:${seat.epoch}:${f.fireId}`);
       }catch{this.metrics.invalid++;}
     }
     const oldLives=new Map(this.sim.game.actors.map(a=>[a.id,a.lifeId]));
     const events=this.sim.tick(frames);
     for(const [sid,seat] of this.seats)if(seat.ready&&oldLives.get(seat.id)!==seat.actor.lifeId){
       this.inputs.get(sid).clear();seat.lastFire=seat.lastReload=0;
+      seat.lifeStartedAt=this.clock.elapsedTime;seat.diedAtMs=0;
+      // New schema identity drops old-life interpolation and rewind histories.
+      this.state.actors.set(seat.id,new ActorState({id:seat.id,sessionId:sid,name:seat.name,team:seat.actor.team}));
     }
-    this.project();
+    this.project();this.lag.recordTick();
     if(events.length){
       const wire=events.slice(-64).map(e=>{
         const actor=this.sim.game.actors.find(a=>a.id===e.actorId),source=this.sim.game.actors.find(a=>a.id===e.sourceId);
-        return {...e,eventId:e.serial,tick:this.sim.tickNumber,lifeId:actor?.lifeId||0,sourceLifeId:source?.lifeId||0,
+        return {...e,eventId:e.serial,tick:this.sim.tickNumber,lifeId:actor?.lifeId||0,sourceLifeId:source?.lifeId||0,controlEpoch:actor?.controlEpoch||0,sourceControlEpoch:source?.controlEpoch||0,
           actionId:actions.get(e.sourceId||e.actorId)||''};
       });
       this.metrics.events+=wire.length;this.broadcast('events',wire,{afterNextPatch:true});
@@ -98,11 +130,13 @@ export class NetworkRoom extends Room {
   }
   project() {
     const g=this.sim.game;
-    for(const d of g.world.doors.doors){const s=this.state.doors.get(d.id);for(const key of DOOR_FIELDS)s[key]=d[key];}
+    for(const d of g.world.doors.doors){const s=this.state.doors.get(d.id);for(const key of DOOR_FIELDS)s[key]=d[key];s.poseAngle=d.angle*d.sign;}
     this.state.elevatorProgress=g.world.doors.elevators.progress;
     this.state.elevatorOpenAt=g.world.networkDynamics.elevatorOpenAt;
     for(const seat of this.seats.values())if(seat.ready){
       const a=seat.actor,s=this.state.actors.get(a.id);copyPose(s,a);
+      if(!a.alive&&!seat.diedAtMs)seat.diedAtMs=this.clock.elapsedTime;
+      s.connected=seat.connected;s.controlEpoch=seat.epoch;s.lifeStartedAt=seat.lifeStartedAt;s.diedAtMs=seat.diedAtMs;
       for(const k of ['lifeId','alive','hp','armor','kills','deaths','reloadUntil','nextShot','spawnProtectedUntil','recoil'])s[k]=a[k]??0;
       s.ready=true;s.ammo=a.inventory.primary.ammo;s.reserve=a.inventory.primary.reserve;
       s.respawnAt=a.respawnAt??0;s.deathAt=a.deathAt??0;s.hurtTime=Number.isFinite(a.hurtTime)?a.hurtTime:-100;
@@ -111,12 +145,26 @@ export class NetworkRoom extends Room {
     this.state.tick=this.sim.tickNumber;this.state.time=g.state.time;
     this.state.analysts=g.state.score.analysts;this.state.counterAnalysts=g.state.score.counterAnalysts;
   }
+  onDrop(client,code){
+    const seat=this.seats.get(client.sessionId);if(!seat||seat.client!==client)return;
+    seat.enabled=false;seat.connected=false;this.inputs.get(client.sessionId).clear();
+    this.sim.controllers.unbind(client.sessionId);this.metrics.drops++;this.project();
+    // Protocol violations, payload limits and server shutdown never reserve a seat.
+    if(seat.ready&&!seat.revoked&&[1000,1001,1005,1006].includes(code))this.allowReconnection(client,RECONNECT_SECONDS).catch(()=>{});
+  }
+  onReconnect(client){
+    const seat=this.seats.get(client.sessionId);if(!seat?.ready||seat.connected)throw new ServerError(409,'Expired player session.');
+    seat.client=client;seat.revoked=false;client.ref.once('error',()=>{if(seat.client===client)seat.revoked=true;});seat.connected=true;seat.enabled=false;seat.epoch++;seat.actor.controlEpoch=seat.epoch;
+    seat.lastFire=seat.lastReload=seat.lastSampleTick=seat.lastShotStamp=0;seat.probe=null;seat.rtts=[];delete seat.rtt;
+    this.inputs.get(client.sessionId).clear();this.sim.controllers.bind(client.sessionId,seat.id);
+    this.metrics.reconnects++;this.project();
+  }
   onLeave(client) {
-    const seat=this.seats.get(client.sessionId);if(!seat)return;
+    const seat=this.seats.get(client.sessionId);if(!seat||seat.client!==client)return;
     if(seat.actor)this.lives.set(seat.id,seat.actor.lifeId);
     this.sim.controllers.unbind(client.sessionId);this.inputs.get(client.sessionId).clear();
     this.sim.game.state.actors=this.sim.game.actors.filter(a=>a.id!==seat.id);
     this.state.actors.delete(seat.id);this.seats.delete(client.sessionId);
   }
-  onDispose(){this.sim?.controllers.clear();this.seats?.clear();this.templates?.clear();this.lives?.clear();}
+  onDispose(){this.lag?.dispose();this.sim?.controllers.clear();this.seats?.clear();this.templates?.clear();this.lives?.clear();}
 }

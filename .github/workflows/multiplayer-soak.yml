@@ -1,0 +1,35 @@
+name: Multiplayer 30-minute soak
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  authoritative-soak:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: server/.node-version
+          cache: npm
+          cache-dependency-path: server/package-lock.json
+      - run: npm ci --prefix server --ignore-scripts
+      - run: npm run build --prefix server -- --check
+      - name: Ten real SDK clients, sustained combat, reconnect and 20 seat replacements
+        env:
+          CS2_SOAK: '1'
+          CS2_LOAD_COUNTS: '10'
+          CS2_LOAD_SECONDS: '1800'
+          CS2_LOAD_OUTPUT: test-results/pass3b/soak-30m.json
+        run: node --import ./server/register-shared.mjs tools/network-load.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: multiplayer-soak
+          path: test-results/pass3b/
+          if-no-files-found: ignore
+          retention-days: 14

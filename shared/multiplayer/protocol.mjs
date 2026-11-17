@@ -1,13 +1,14 @@
 import {validateInput} from './input.mjs';
-export const INPUT_FIELDS=['lifeId','sampleTick','fireId','reloadId','forward','strafe','yaw','pitch','jump','crouch','sneak','fire'];
+import {REWIND_MS} from './rules.mjs';
+export const INPUT_FIELDS=['lifeId','controlEpoch','sampleTick','fireId','reloadId','forward','strafe','yaw','pitch','jump','crouch','sneak','fire'];
 export function wireInput(frame) {return Object.fromEntries(INPUT_FIELDS.map(key=>[key,frame[key]]));}
 export function validateNetworkInput(frame, actor, tick) {
   if(!frame||Object.getPrototypeOf(frame)!==Object.prototype||Reflect.ownKeys(frame).some(k=>!INPUT_FIELDS.includes(k)))throw Error('Unknown input field');
-  for(const key of ['lifeId','sampleTick','fireId','reloadId'])
+  for(const key of ['lifeId','controlEpoch','sampleTick','fireId','reloadId'])
     if(!Number.isSafeInteger(frame[key])||frame[key]<0||frame[key]>0xffffffff)throw Error('Invalid input counter');
   if(frame.lifeId!==actor.lifeId)throw Error('Old life input');
-  // This is freshness validation, not a client-selected rewind timestamp.
-  if(frame.sampleTick>tick+6||frame.sampleTick<tick-60)throw Error('Stale input tick');
+  if(frame.controlEpoch!==(actor.controlEpoch||0))throw Error('Old connection input');
+  if(frame.sampleTick>tick||frame.sampleTick<tick-Math.ceil(REWIND_MS*60/1000))throw Error('Stale input tick');
   return validateInput(Object.fromEntries(['forward','strafe','yaw','pitch','jump','crouch','sneak','fire'].map(k=>[k,frame[k]])));
 }
 export function checkContract(actual, expected) {

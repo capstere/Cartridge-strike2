@@ -167,3 +167,37 @@ jobs:
             test-results/network/normal-launch*.json
           if-no-files-found: ignore
           retention-days: 7
+
+  multiplayer-pass3b:
+    if: github.event_name != 'push'
+    runs-on: macos-15
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: server/.node-version
+          cache: npm
+          cache-dependency-path: |
+            server/package-lock.json
+            frontline/source/tools/dev/package-lock.json
+      - run: npm ci --prefix server --ignore-scripts
+      - run: npm ci --prefix frontline/source/tools/dev
+      - run: node frontline/source/tools/dev/node_modules/playwright-core/cli.js install chromium
+      - name: Two rendered clients at 2/4/10 humans and 0/50/100/150/250 ms RTT
+        timeout-minutes: 9
+        env:
+          FPS_NETWORK_ANGLE: metal
+          FPS_NETWORK_DPR: '1'
+        run: node --import ./server/register-shared.mjs tools/network-5v5-browser.mjs
+      - name: Separate-process authority measurements at 2/4/10 clients
+        timeout-minutes: 3
+        run: node --import ./server/register-shared.mjs tools/network-load.mjs
+      - name: Keep PASS 3B measurements and rendered evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: multiplayer-pass3b
+          path: test-results/pass3b/
+          if-no-files-found: ignore
+          retention-days: 14

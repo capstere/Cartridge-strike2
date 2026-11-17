@@ -30,7 +30,7 @@ async function open(viewport={width:1280,height:720},mobile=false,endpoint=local
  assert(await page.locator('#fatal').evaluate(e=>e.hidden),await page.locator('#fatal').textContent());
  await page.waitForFunction(()=>document.querySelector('#lb-objective').textContent.includes('inga uppdrag'));
  assert.match(await page.locator('.lb-brief').textContent(),/Floor 5 Laboratory/);
- assert.match(await page.locator('.lb-brief').textContent(),/1 mot 1/);
+ assert.match(await page.locator('.lb-brief').textContent(),/5 mot 5/);
  assert(await page.evaluate(()=>!__fps.renderer.zombieVisuals),'online renderer has no unused resident asset initialization');
  console.log('scene ready',mobile?'mobile':'desktop',await page.evaluate(()=>{const gl=__fps.renderer.renderer.getContext(),ext=gl.getExtension('WEBGL_debug_renderer_info');return {draws:__fps.renderer.stats.drawCalls,focused:document.hasFocus(),hidden:document.hidden,renderer:gl.getParameter(ext?.UNMASKED_RENDERER_WEBGL||gl.RENDERER),antialias:gl.getContextAttributes().antialias,samples:gl.getParameter(gl.SAMPLES)};}));
  return page;
@@ -269,10 +269,12 @@ try{
   const protectedHp=(await state(b)).hp;
   await blockedShot(a,await state(b));assert.equal((await state(b)).hp,protectedHp,'Floor 5 wall blocks damage');
   await walk(a,[[21.2,-22.4703402]]);
-  await a.waitForFunction(()=>__fps.network.room.state.doors.get('D39').angle===0);
+  await a.waitForFunction(()=>__fps.network.room.state.doors.get('D39').angle===0&&__fps.world.doors.doors.find(d=>d.id==='D39').angle===0);
   await blockedShot(a,await state(b));assert.equal((await state(b)).hp,protectedHp,'closed D39 blocks damage');
   await walk(a,[[22.6,-22.4703402]]);
-  await Promise.all([a,b].map(p=>p.waitForFunction(()=>__fps.network.room.state.doors.get('D39').angle>1.5)));
+  // Rewind must use the door the player actually sees. The latest authority
+  // patch can be open while its 100 ms interpolated display is still closing.
+  await Promise.all([a,b].map(p=>p.waitForFunction(()=>__fps.network.room.state.doors.get('D39').angle===Math.PI/2&&__fps.world.doors.doors.find(d=>d.id==='D39').angle===Math.PI/2)));
   const doorHit=await fireUntil(a,await state(b));assert(doorHit.hp<protectedHp&&doorHit.alive,'open D39 allows a body hit');
   const doors=await Promise.all([worldState(a),worldState(b)]);
   for(const state of doors){assert(state.visualMatches);assert.equal(state.elevator,1);assert.equal(state.broken,0);assert.equal(state.doors.length,51);}
@@ -317,8 +319,9 @@ try{
   // full GPU scene solely to receive these two protocol errors.
   const admission=await b.evaluate(async({endpoint,roomId,contract,type})=>{
    const client=new Colyseus.Client(endpoint),attempt=async fn=>{try{const room=await fn();await room.leave();return {accepted:true};}catch(e){return {accepted:false,message:e.message,code:e.code};}};
-   return {full:await attempt(()=>client.joinById(roomId,{code:'testing-123',name:'Third',contract})),
-    mismatch:await attempt(()=>client.create(type,{code:'testing-123',name:'Mismatch',contract:{...contract,buildHash:'stale'}}))};
+   const peers=[];try{for(let i=0;i<8;i++){const p=await client.joinById(roomId,{code:'testing-123',name:'Capacity '+i,contract});p.reconnection.enabled=false;p.onMessage('events',()=>{});peers.push(p);}
+   return {full:await attempt(()=>client.joinById(roomId,{code:'testing-123',name:'Eleventh',contract})),
+    mismatch:await attempt(()=>client.create(type,{code:'testing-123',name:'Mismatch',contract:{...contract,buildHash:'stale'}}))};}finally{await Promise.all(peers.map(p=>p.leave()));}
   },{endpoint,roomId:id,contract:CONTRACT,type:ROOM_TYPE});
   assert.equal(admission.full.accepted,false);assert.match(admission.full.message,/full|locked/i);
   assert.equal(admission.mismatch.accepted,false);assert.match(admission.mismatch.message,/buildHash/);assert.equal(local.rooms.size,1);

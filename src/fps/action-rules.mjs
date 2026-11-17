@@ -57,7 +57,8 @@ export function respawnPoint(g,a){
   const control=activeControl(g);
   let score=-dist(p,home)*.08-(control?dist(p,control)*.22:0);
   for(const e of living.filter(o=>o.team&&o.team!==a.team)){
-   const d=dist(e,p),visible=g.world.segmentClear({...p,y:1.4},eye(e),{vision:true});
+   // Visibility cannot affect this score at 18 m or farther.
+   const d=dist(e,p),visible=d<18&&g.world.segmentClear({...p,y:1.4},eye(e),{vision:true});
    score+=Math.min(d,22)*.025-(visible?Math.max(0,18-d)*1.1:0);
   }
   if(score>bestScore){best=p;bestScore=score;}

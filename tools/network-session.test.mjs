@@ -2,6 +2,24 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {NetworkSession} from '../src/fps/network/session.mjs';
 
+test('reconnect rejects old-epoch effects and disposed sessions ignore late callbacks',()=>{
+  const session={closed:false,enabled:true,connectionState:'connected',seenEvent:0,events:[],localPlayerId:'a',
+    room:{state:{actors:new Map([['b',{lifeId:3,controlEpoch:2}]])}}};
+  const old={eventId:1,type:'shot',actorId:'b',lifeId:3,controlEpoch:1};
+  const fresh={...old,eventId:2,controlEpoch:2};
+  NetworkSession.prototype.receiveEvents.call(session,[old,fresh]);
+  assert.deepEqual(session.events,[fresh]);
+  session.connectionState='reconnecting';
+  NetworkSession.prototype.receiveEvents.call(session,[{...fresh,eventId:3}]);
+  assert.equal(session.seenEvent,2);
+  session.closed=true;session.room=null;
+  NetworkSession.prototype.receiveEvents.call(session,[{...fresh,eventId:4}]);
+  NetworkSession.prototype.snapshot.call(session);
+  NetworkSession.prototype.advanceFrame.call(session,performance.now(),{fire:true});
+  NetworkSession.prototype.beginReconnect.call(session);
+  assert.equal(session.seenEvent,2,'late callbacks cannot mutate the old session');
+});
+
 test('delayed combat events cannot leak across lives or departed seats; own effects deduplicate',()=>{
   const session={closed:false,enabled:true,seenEvent:0,events:[],localPlayerId:'a',
     room:{state:{actors:new Map([['a',{lifeId:2}],['b',{lifeId:3}]])}},

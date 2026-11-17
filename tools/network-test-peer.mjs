@@ -11,7 +11,7 @@ export async function createTestPeer(url,roomId){
   let closed=false;const errors=[];
   room.reconnection.enabled=false;
   room.onLeave(()=>{closed=true;});room.onError((code,message)=>errors.push({code,message}));
-  room.onMessage('events',()=>{});room.onMessage('problem',message=>errors.push({message}));
+  room.onMessage('clock-probe',token=>room.send('clock-echo',token));room.onMessage('events',()=>{});room.onMessage('problem',message=>errors.push({message}));
   room.send('ready',CONTRACT);
   try{
     const end=performance.now()+10000;

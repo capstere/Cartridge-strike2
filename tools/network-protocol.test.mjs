@@ -6,7 +6,7 @@ import {prepareNetworkWorld,createPredictedWorld} from '../shared/multiplayer/wo
 import {CONTRACT} from '../shared/multiplayer/build.mjs';
 import {createHeadlessSimulation} from '../server/headless.mjs';
 import {moveActor} from '../src/fps/movement.mjs';
-const frame={lifeId:2,sampleTick:120,fireId:1,reloadId:1,forward:0,strafe:1,yaw:0,pitch:0,jump:false,crouch:false,sneak:false,fire:true};
+const frame={lifeId:2,controlEpoch:0,sampleTick:120,fireId:1,reloadId:1,forward:0,strafe:1,yaw:0,pitch:0,jump:false,crouch:false,sneak:false,fire:true};
 test('network boundary rejects spoofing, invalid numbers, old lives and future/stale ticks',()=>{
  assert.equal(validateNetworkInput(frame,{lifeId:2},120).strafe,1);
  for(const extra of [{actorId:'counterAnalysts-0'},{position:{x:100}},{damage:1000},{dt:1},{moveWorld:{x:20}},{forward:NaN},{yaw:Infinity},{pitch:4},{strafe:2},{lifeId:1},{sampleTick:10},{sampleTick:999},{fireId:-1},{reloadId:.5}])assert.throws(()=>validateNetworkInput({...frame,...extra},{lifeId:2},120));
