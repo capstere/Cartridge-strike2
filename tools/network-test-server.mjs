@@ -40,7 +40,7 @@ if(process.argv[1]===entry&&process.argv[2]==='--serve'){
 }
 
 export async function createTestServer(options){
-  const child=fork(entry,['--serve'],{stdio:['ignore','inherit','inherit','ipc'],execArgv:['--import',fileURLToPath(new URL('../server/register-shared.mjs',import.meta.url))]});
+  const child=fork(entry,['--serve'],{stdio:['ignore','inherit','inherit','ipc'],execArgv:['--import',new URL('../server/register-shared.mjs',import.meta.url).href]});
   const pending=new Map(),rooms=new Set(),byId=new Map();let serial=0,closed=false,listening=false;
   const exited=new Promise(resolve=>{
     child.once('exit',(code,signal)=>{for(const p of pending.values())p.reject(Error(`Test server exited (${code??signal}).`));pending.clear();resolve();});
