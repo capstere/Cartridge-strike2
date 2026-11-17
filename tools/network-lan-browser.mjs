@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {chromium,webkit,firefox} from '../frontline/source/tools/dev/node_modules/playwright-core/index.mjs';
-import {createLocalServer} from '../server/local-server.mjs';
+import {createTestServer} from './network-test-server.mjs';
 import {testLanHost} from './network-lan-host.mjs';
 import {CONTRACT} from '../shared/multiplayer/build.mjs';
 process.chdir(fileURLToPath(new URL('../',import.meta.url)));
@@ -10,15 +10,9 @@ const mobileEngine=process.env.FPS_LAN_MOBILE_BROWSER||'chromium',desktopEngine=
 const engines={chromium,webkit,firefox},errors=[],rows=[];
 const angle=process.env.FPS_NETWORK_ANGLE||(process.platform==='darwin'?'metal':process.platform==='win32'?'d3d11-warp':'swiftshader');
 const launch=engine=>engines[engine].launch(engine==='chromium'?{channel:'chromium',args:['--use-angle='+angle,'--disable-background-timer-throttling','--disable-renderer-backgrounding','--disable-backgrounding-occluded-windows']}:{});
-let local=await createLocalServer({lan:true,host:testLanHost(),port:0});
+let local=await createTestServer({lan:true,host:testLanHost(),port:0});
 const url=local.url,port=local.httpServer.address().port,host=local.config.host;
-const browsers=[],pages=[],pendingRequests=new Map(),joinFrames=new WeakMap(),httpTrace=[],browserWarnings=[];let safeArea=null;
-const traceServer=server=>server.on('request',(req,res)=>{
-  const row={path:req.url,at:performance.now()};httpTrace.push(row);if(httpTrace.length>1500)httpTrace.shift();
-  res.once('finish',()=>{row.status=res.statusCode;row.finishedMs=performance.now()-row.at;});
-  res.once('close',()=>{row.closedMs=performance.now()-row.at;});
-});
-traceServer(local.httpServer);
+const browsers=[],pages=[],pendingRequests=new Map(),joinFrames=new WeakMap(),browserWarnings=[];let safeArea=null;
 fs.mkdirSync('test-results/lan',{recursive:true});
 async function until(fn,label,timeout=10000){const end=performance.now()+timeout;while(!fn()){assert(performance.now()<end,label);await new Promise(r=>setTimeout(r,25));}}
 async function open(engine,mobile){
@@ -111,7 +105,7 @@ try{
   // Network loss on the real transport; retain the former session to verify its
   // timers, callbacks, prediction and buffers have all been released.
   await b.evaluate(()=>{window.__oldLanSession=__fps.network;});
-  room.clients.find(c=>c.sessionId===room.state.actors.get(player.id).sessionId).ref.terminate();
+  await room.clients.find(c=>c.sessionId===room.state.actors.get(player.id).sessionId).ref.terminate();
   await b.locator('#network-status').filter({hasText:'Anslutningen bröts'}).waitFor();
   await until(()=>room.clients.length===1&&room.sim.game.actors.length===1,'departed seat cleanup');
   const cleanup=await b.evaluate(()=>{const n=__oldLanSession;return {closed:n.closed,room:n.room,predict:n.predict,watchdog:n.watchdog,callbacks:n.unsub.length,events:n.events.length,remotes:n.remote.size,voices:__fps.audio.active.size+__fps.audio.ambient.length};});
@@ -127,7 +121,7 @@ try{
   await form(b,{id});await joined(b);
   await local.close();await Promise.all([a,b].map(p=>p.locator('#network-status').filter({hasText:'Anslutningen bröts'}).waitFor()));
   await until(()=>!local.httpServer.listening,'server stopped');
-  local=await createLocalServer({lan:true,host,port});
+  local=await createTestServer({lan:true,host,port});
   await form(b,{id});await b.locator('#network-status').filter({hasText:'finns inte'}).waitFor();
   await form(a);await joined(a);const fresh=await a.locator('#network-room').inputValue();assert.notEqual(fresh,id);
   await form(b,{id:fresh});await joined(b);await leave(b);await leave(a);await until(()=>local.rooms.size===0,'last player disposes room');
@@ -138,7 +132,7 @@ try{
 }catch(error){
   const pending=pages.map(page=>[...pendingRequests.get(page)]);
   const probes=await Promise.all([...new Set([url+'/health',...pending.flat()])].slice(0,8).map(async url=>{try{const r=await fetch(url,{signal:AbortSignal.timeout(3000)});return {url,status:r.status,bytes:(await r.arrayBuffer()).byteLength};}catch(e){return {url,error:String(e)};}}));
-  const connections=await new Promise(resolve=>local.httpServer.getConnections((_error,count)=>resolve(count)));
+  const {connections,trace:httpTrace}=await local.diagnostics();
   const clients=await Promise.all(pages.map(page=>page.evaluate(()=>{const gl=document.querySelector('#game')?.getContext('webgl2'),ext=gl?.getExtension('WEBGL_debug_renderer_info');return {ready:document.readyState,loading:document.querySelector('#loading')?.textContent,renderer:gl?.getParameter(ext?.UNMASKED_RENDERER_WEBGL||gl.RENDERER),resources:performance.getEntriesByType('resource').slice(-8).map(r=>({name:r.name,duration:r.duration,bytes:r.transferSize}))};}).catch(e=>({error:String(e)}))));
   const pendingPaths=new Set(pending.flat().map(u=>new URL(u).pathname)),httpPending=httpTrace.filter(row=>!row.finishedMs||pendingPaths.has(new URL(row.path,url).pathname));
   for(const [i,page] of pages.entries())if(!page.isClosed())await page.screenshot({path:`test-results/lan/failure-${mobileEngine}-${i}.png`,timeout:5000}).catch(()=>{});

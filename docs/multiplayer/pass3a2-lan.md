@@ -162,9 +162,7 @@ It is jitter/delay coverage, not a claim of packet-loss simulation.
 CI preserves all prior Linux offline/visual/mobile gates and adds bounded LAN jobs on
 Linux Chromium, Windows Chromium and macOS WebKit. Linux uses SwiftShader;
 Windows selects Chromium's D3D11 WARP software backend and records/asserts the
-actual WebGL renderer. The Windows browser harness uses Node 22; the target
-Pi/server Node 26.13.0 remains covered by the Linux foundation/LAN and macOS
-gameplay jobs. Windows-server Node 26.13 is not a deployment claim.
+actual WebGL renderer. Every LAN/server job uses the pinned Node 26.13.0.
 Software jobs use DPR 0.5 for
 functional coverage; no software-renderer FPS or Pi capacity claim follows.
 Only small JSON/screenshots are retained for seven days. The build generator
@@ -191,8 +189,11 @@ spawn observation and a later route deadline while input was still progressing;
 that environment cannot reliably sample gameplay or interpolation timing. The
 Linux/Windows LAN jobs retain real WebGL and input/lifecycle checks; the original
 Linux offline gates are unchanged. This is functional CI, not physical-device or
-Pi performance acceptance. Pending HTTP requests, server response completion and
-the actual WebGL renderer are retained on LAN loading failures.
+Pi performance acceptance. The LAN/normal-launch server runs in a separate Node process so browser-driver
+I/O cannot hold up its HTTP/WS loop. Test-only IPC observes real server state and
+terminates sockets for loss checks; it exposes no HTTP test endpoints and never
+changes player state. Pending HTTP requests, server response completion and the
+actual WebGL renderer are retained on LAN loading failures.
 
 No running Pi service, router, tunnel or public listener was changed. The new PR
 is for review and must not be automatically merged. After its review/merge, the

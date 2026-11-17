@@ -2,12 +2,12 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {chromium} from '../frontline/source/tools/dev/node_modules/playwright-core/index.mjs';
-import {createLocalServer} from '../server/local-server.mjs';
+import {createTestServer} from './network-test-server.mjs';
 import {testLanHost} from './network-lan-host.mjs';
 import {CONTRACT} from '../shared/multiplayer/build.mjs';
 const headed=process.env.FPS_NETWORK_HEADED==='1';
 const angle=process.env.FPS_NETWORK_ANGLE||(process.platform==='darwin'?'metal':process.platform==='win32'?'d3d11-warp':'swiftshader');
-const local=await createLocalServer({port:0,...(process.env.FPS_NETWORK_LAN==='1'?{lan:true,host:testLanHost()}:{})}),browsers=[],pages=[],errors=[];
+const local=await createTestServer({port:0,...(process.env.FPS_NETWORK_LAN==='1'?{lan:true,host:testLanHost()}:{})}),browsers=[],pages=[],errors=[];
 async function until(predicate,label,timeout=10000){const end=performance.now()+timeout;while(!predicate()){assert(performance.now()<end,label);await new Promise(r=>setTimeout(r,25));}}
 async function open(mobile){
  // Each human has its own browser/GPU process, as in the full Floor 5 harness.
@@ -29,6 +29,7 @@ async function form(p,room=''){
 try{
  const a=await open(false),b=await open(true);await form(a);await a.locator('#resume').waitFor({state:'visible'});
  const id=await a.locator('#network-room').inputValue();assert(id);await form(b,id);await b.locator('#resume').click();await b.locator('#hud').waitFor({state:'visible'});
+ await until(()=>[...local.rooms][0]?.sim.game.actors.length===2,'two humans on the independent authority');
  const authority=[...local.rooms][0];assert.equal(authority.sim.game.actors.length,2);
  let resumeAttempts=0;
  for(;resumeAttempts<2;){

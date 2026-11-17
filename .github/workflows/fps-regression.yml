@@ -131,9 +131,6 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          # This lane tests the Windows browser; Pi/server Node 26.13 stays
-          # covered by Linux foundation, Linux LAN and macOS gameplay jobs.
-          node-version: ${{ runner.os == 'Windows' && '22' || '' }}
           node-version-file: server/.node-version
           cache: npm
           cache-dependency-path: |
