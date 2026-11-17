@@ -211,14 +211,23 @@ backend was SwiftShader Subzero; the Cargo view sampled 7,049.7 ms/frame and the
 route driver then timed out submitting a stop. The driver now retains yaw and
 pitch when releasing movement, as the real controls do, instead of falling back
 to an older authoritative aim. This also keeps the requested downward software
-travel view during stop acknowledgement. Its 20-second waypoint deadline,
-collision/arrival requirements and all combat assertions remain. Timeout reports
+travel view during stop acknowledgement. The 20-second movement deadline, collision/arrival requirements and all combat
+assertions remain. Timeout reports
 include input, freshness, pause and draw state for further diagnosis.
 
 The committed native/software measurement records were captured at `ad57289`;
 this follow-up changes only test driving and diagnostics, not runtime code,
 assets or the measured implementation. The final-head CI result is linked on
 PR #20 rather than recording an unexecuted pass here.
+
+The subsequent [Linux run 44143135047](https://github.com/capstere/Cartridge-strike2/actions/runs/44143135047)
+reached the corridor waypoint with retained downward aim and 34 draws. It then
+exhausted the movement deadline while awaiting a new stop-confirmation snapshot,
+with the last server patch only 47.1 ms old. Stop submission, acknowledgement
+and the subsequent world patch now have their own combined five-second budget;
+travel still has its original 20-second bound. Both final arrival thresholds
+remain unchanged. The retained-aim harness also passed both complete Mac
+SwiftShader scenarios and 24 rendered cleanup cycles before this deadline fix.
 
 ### Reproduce
 

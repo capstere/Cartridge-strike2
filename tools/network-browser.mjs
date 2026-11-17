@@ -76,12 +76,14 @@ async function walk(page,goals){
      // Stop through ordinary input and wait for its ack. The SDK ack and
      // schema patch are separate messages: only a later world snapshot proves
      // the body has actually settled, rather than just passed the waypoint.
-     stop();const movingSent=n.input.sentCount;
-     while(n.input.sentCount<=movingSent){if(performance.now()>end)throw failure('Route stop was not submitted');await new Promise(requestAnimationFrame);}
+     stop();const movingSent=n.input.sentCount,stopEnd=performance.now()+5000;
+     // A long but successful traversal must not consume the separate stop
+     // handshake's budget just before its final state patch arrives.
+     while(n.input.sentCount<=movingSent){if(performance.now()>stopEnd)throw failure('Route stop was not submitted');await new Promise(requestAnimationFrame);}
      const sent=n.input.sentCount;
-     while(n.input.lastProcessed<sent){if(performance.now()>end)throw failure('Route input was not acknowledged');await new Promise(requestAnimationFrame);}
+     while(n.input.lastProcessed<sent){if(performance.now()>stopEnd)throw failure('Route input was not acknowledged');await new Promise(requestAnimationFrame);}
      const ackTick=n.room.state.tick;
-     while(n.room.state.tick<=ackTick){if(performance.now()>end)throw failure('Route stop snapshot was not received');await new Promise(requestAnimationFrame);}
+     while(n.room.state.tick<=ackTick){if(performance.now()>stopEnd)throw failure('Route stop snapshot was not received');await new Promise(requestAnimationFrame);}
      const authority=n.room.state.actors.get(n.localPlayerId),error=Math.hypot(authority.x-x,authority.z-z);
      (window.__routeConfirmations??=[]).push({sent,ack:n.input.lastProcessed,ackTick,snapshotTick:n.room.state.tick,error,pitch:n.input.data.pitch,draws:__fps.renderer.stats.drawCalls});
      if(error<.16)break;

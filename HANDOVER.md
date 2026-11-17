@@ -225,7 +225,10 @@ is measured separately at full resolution and normal forward view. Required
 Linux checks must pass on the final PR head. A later Linux stop-submission
 timeout led to matching real controls more closely: the route driver retains
 look direction when movement stops. Runtime code and measured native/software
-records remain from `ad57289`; this follow-up changes the harness only.
+records remain from `ad57289`; these follow-ups change the harness only.
+Stop confirmation has a separate five-second bound so a completed long corridor
+traversal cannot spend its remaining movement budget awaiting a fresh snapshot.
+The movement limit and arrival/collision assertions remain unchanged.
 
 **Next genuine task: review [Pass 3A.1 PR #20](https://github.com/capstere/Cartridge-strike2/pull/20) and its final required CI.
 Do not automatically merge it.** Full online 5v5/objectives, bounded hitscan
