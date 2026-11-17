@@ -165,7 +165,10 @@ loopback/latency tests from physical devices and internet play, and records
 initial validation failures as well as final results. The unchanged offline
 state/event traces still match over 9,600 steps.
 
-**Next multiplayer task: review the Pass 2 PR and its CI. Do not auto-merge it.**
+**Next multiplayer task: review [Pass 2 PR #19](https://github.com/capstere/Cartridge-strike2/pull/19)
+and its CI. Do not auto-merge it.** The first CI run exposed a browser test that
+sampled ammo after reload completion. The follow-up observes authoritative reload
+states and fixes explicit removal of SDK signal callbacks; see the report.
 Pass 3, dynamic Floor 5 networking, bounded combat rewind, reconnect grace and
 public deployment require separate authorization. No public server/tunnel was
 started. **The first open physical iPhone/Android task at the top is unchanged.**

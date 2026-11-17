@@ -47,11 +47,14 @@ export class NetworkSession {
     this.room=room;room.reconnection.enabled=false; // explicit rejoin; bounded grace is Pass 3
     this.unsub.push(room.onMessage('problem',message=>{this.problem=String(message);}));
     this.unsub.push(room.onMessage('events',events=>this.receiveEvents(events)));
-    this.unsub.push(room.onLeave(code=>{
+    const left=code=>{
       if(this.closed)return;const problem=this.problem||`Disconnected (${code}). Rejoin the private room explicitly.`;
       this.problem=problem;this.dispose(false);this.onDisconnect(problem);
-    }));
-    this.unsub.push(room.onStateChange(()=>this.snapshot()));
+    };
+    const changed=()=>this.snapshot();
+    // SDK signals return their emitter, whereas onMessage returns a disposer.
+    room.onLeave(left);this.unsub.push(()=>room.onLeave.remove(left));
+    room.onStateChange(changed);this.unsub.push(()=>room.onStateChange.remove(changed));
     await wait(()=>this.closed||[...(room.state.actors?.values()||[])].some(a=>a.sessionId===room.sessionId));
     if(this.closed)throw Error(this.problem||'Room closed during loading.');
     this.localPlayerId=[...room.state.actors.values()].find(a=>a.sessionId===room.sessionId).id;

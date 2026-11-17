@@ -47,6 +47,29 @@ async function walk(page,points){
  await page.waitForTimeout(350);
 }
 async function aimAt(page,target,fire){const a=await state(page);await controls(page,{yaw:Math.atan2(-(target.x-a.x),-(target.z-a.z)),pitch:Math.atan2(1.15-(a.y+1.58),Math.hypot(target.x-a.x,target.z-a.z)),fire});}
+async function reloadCheck(page){
+ // Observe the reload on state patches, not after slow driver round trips. A
+ // software renderer can finish the entire reload while a CDP read is pending.
+ await page.evaluate(()=>{
+  const n=__fps.network,handle=n.input,send=handle.send;let off,timer,started=false,attempts=0;const ammo=[];
+  window.__reloadCheck=new Promise((resolve,reject)=>{
+   const finish=(result,error)=>{clearTimeout(timer);off?.();handle.send=send;__fps.liveControls={};error?reject(error):resolve(result);};
+   handle.send=function(...args){if(started&&this.data.fire)attempts++;return send.apply(this,args);};
+   const changed=()=>{const a=n.room.state.actors.get(n.localPlayerId);
+    if(a.reloadUntil){started=true;ammo.push(a.ammo);__fps.liveControls={fire:true,yaw:a.yaw,pitch:a.pitch};}
+    else if(started)finish({ammo,attempts,full:a.ammo});
+   };
+   n.room.onStateChange(changed);off=()=>n.room.onStateChange.remove(changed);
+   timer=setTimeout(()=>finish(null,Error('Reload state did not complete')),15000);
+  });
+ });
+ await page.keyboard.press('KeyR');
+ const result=await page.evaluate(()=>window.__reloadCheck);
+ assert(result.ammo.length>0&&result.attempts>0,'held fire was submitted during reload');
+ assert(result.ammo.every(v=>v===result.ammo[0]),'authoritative ammo cannot fall during reload');
+ assert.equal(result.full,30,'reload restores magazine before further firing');
+ return result;
+}
 try{
  for(const [scenario,endpoint,cycles] of [['loopback',local.url,20],['100ms-rtt-jitter',proxy.url,4]]){
   const a=await open(),b=await open({width:844,height:390},true);
@@ -68,22 +91,24 @@ try{
   await a.keyboard.down('Tab');await a.waitForFunction(()=>!document.querySelector('#scoreboard').hidden);
   assert((await a.locator('#score-tables').textContent()).includes('<img src=x onerror=x>'));
   assert.equal(await a.locator('#score-tables img').count(),0);await a.keyboard.up('Tab');
-  const prediction=await a.evaluate(async()=>{
-   const n=__fps.network,old=n.prediction.world.actor.z,auth=n.room.state.actors.get(n.localPlayerId).z;
+  const prediction=await a.evaluate(()=>new Promise((resolve,reject)=>{
+   const n=__fps.network,handle=n.input,send=handle.send;
+   const timer=setTimeout(()=>{handle.send=send;__fps.liveControls={};reject(Error('No normal input step'));},10000);
+   handle.send=function(...args){
+    const old=n.prediction.world.actor.z,auth=n.room.state.actors.get(n.localPlayerId).z;
+    const result=send.apply(this,args);handle.send=send;clearTimeout(timer);__fps.liveControls={};
+    resolve({localMoved:Math.abs(n.prediction.world.actor.z-old),serverMoved:Math.abs(n.room.state.actors.get(n.localPlayerId).z-auth)});return result;
+   };
    __fps.liveControls={strafe:1,yaw:-Math.PI/2,pitch:0};
-   await new Promise(requestAnimationFrame);await new Promise(requestAnimationFrame);
-   const result={localMoved:Math.abs(n.prediction.world.actor.z-old),serverMoved:Math.abs(n.room.state.actors.get(n.localPlayerId).z-auth)};
-   __fps.liveControls={};return result;
-  });
+  }));
+  console.log('prediction',scenario,prediction);
   assert(prediction.localMoved>0,'own motion responds before network round trip');
   if(scenario!=='loopback')assert.equal(prediction.serverMoved,0,'latency does not delay local response');
   await walk(a,[[4.5,3]]);
   // Actual weapon events, damage and reload in both rendered clients.
   const victimBefore=await state(b);await aimAt(a,victimBefore,true);
   await b.waitForFunction(()=>__fps.game.player.hp<100);await controls(a);
-  await a.keyboard.press('KeyR');await a.waitForFunction(()=>__fps.game.player.reloadUntil>__fps.game.state.time);
-  const reloading=await state(a);await aimAt(a,await state(b),true);await a.waitForTimeout(200);assert.equal((await state(a)).ammo,reloading.ammo,'reload blocks firing');await controls(a);
-  await a.waitForFunction(()=>__fps.game.player.reloadUntil===0&&__fps.game.item().ammo===30);
+  const reloads=[await reloadCheck(a)];console.log('reload a',scenario,reloads[0]);
   await aimAt(a,await state(b),true);await b.waitForFunction(()=>!__fps.game.player.alive);await controls(a);
   await a.waitForFunction(()=>__fps.game.player.kills===1&&__fps.game.state.score.analysts===1);
   const dead=await state(b);assert.equal(dead.deaths,1);
@@ -94,8 +119,7 @@ try{
   // Reverse roles: the second human's input also owns real aim, damage and reload.
   await walk(b,[[12,3],[11.4,3]]);await aimAt(b,await state(a),true);
   await a.waitForFunction(()=>__fps.game.player.hp<100);await controls(b);
-  await b.keyboard.press('KeyR');await b.waitForFunction(()=>__fps.game.player.reloadUntil>__fps.game.state.time);
-  await b.waitForFunction(()=>__fps.game.player.reloadUntil===0&&__fps.game.item().ammo===30);
+  reloads.push(await reloadCheck(b));console.log('reload b',scenario,reloads[1]);
   // Menus neutralize just one controller. The authoritative room never pauses.
   await a.keyboard.press('Escape');await a.waitForFunction(()=>__fps.modal==='pause');
   const paused=await state(a);await controls(b,{forward:1,yaw:0});await a.waitForTimeout(450);await controls(b);
@@ -116,8 +140,8 @@ try{
   assert.match(mismatch,/buildHash/);assert.equal(local.rooms.size,1);await c.context().close();
   const cd=await b.context().newCDPSession(b),cleanup=[];
   for(let i=0;i<cycles;i++){
-   const old=await b.evaluate(async()=>{const n=__fps.network;__fps.newMatch();await new Promise(r=>setTimeout(r,30));return {closed:n.closed,predict:!!n.predict,callbacks:n.unsub.length,remotes:n.remote.size,events:n.events.length,room:!!n.room};});
-   assert.deepEqual(old,{closed:true,predict:false,callbacks:0,remotes:0,events:0,room:false});
+   const old=await b.evaluate(async()=>{const n=__fps.network,probe=()=>{},emitter=n.room.onStateChange(probe);n.room.onStateChange.remove(probe);__fps.newMatch();const immediateStateCallbacks=emitter.handlers.length;await new Promise(r=>setTimeout(r,30));return {closed:n.closed,predict:!!n.predict,callbacks:n.unsub.length,immediateStateCallbacks,remotes:n.remote.size,events:n.events.length,room:!!n.room};});
+   assert.deepEqual(old,{closed:true,predict:false,callbacks:0,immediateStateCallbacks:0,remotes:0,events:0,room:false});
    await a.waitForFunction(()=>__fps.network.room.state.actors.size===1);
    await b.evaluate(()=>{__fps.liveControls={};});await join(b,endpoint,id,'Bob');
    await cd.send('HeapProfiler.collectGarbage');await b.waitForTimeout(50);await cd.send('HeapProfiler.collectGarbage');
@@ -129,12 +153,12 @@ try{
   await controls(a);await a.waitForTimeout(400);
   const measured=await a.evaluate(()=>{const n=__fps.network,s=n.room.state.actors.get(n.localPlayerId),p=n.prediction.world.actor;return {metrics:n.metrics,pending:n.input.pendingCount,settledError:Math.hypot(p.x-s.x,p.y-s.y,p.z-s.z),draws:__fps.renderer.stats.drawCalls,actors:__fps.game.actors.map(a=>({id:a.id,controller:a.controllerType,bot:!!a.bot})),fatal:!document.querySelector('#fatal').hidden};});
   assert(measured.settledError<.02);assert(!measured.fatal);assert(measured.metrics.suppressedShots>0);assert.equal(measured.metrics.confirmedShots,measured.metrics.suppressedShots,'each own confirmed shot reuses its immediate cosmetic action');
-  results.push({scenario,room:id,interpolation,prediction,respawn,measured,cleanup});console.log('PASS',scenario,JSON.stringify({prediction,respawn,metrics:{...measured.metrics,corrections:undefined},cleanup:[cleanup[0],cleanup.at(-1)]}));
+  results.push({scenario,room:id,interpolation,prediction,respawn,reloads,measured,cleanup});console.log('PASS',scenario,JSON.stringify({prediction,respawn,reloads,metrics:{...measured.metrics,corrections:undefined},cleanup:[cleanup[0],cleanup.at(-1)]}));
   await a.evaluate(()=>__fps.newMatch());await b.evaluate(()=>__fps.newMatch());await a.waitForTimeout(250);
   await a.context().close();await b.context().close();assert.equal(local.rooms.size,0,'empty server has no retained room');
  }
  assert.deepEqual(errors,[]);
-}finally{
+}catch(e){console.error('network browser failure',e);throw e;}finally{
  await browser.close();await proxy.close();await local.close();
  fs.writeFileSync('test-results/network/browser.json',JSON.stringify({contract:CONTRACT,environment:{node:process.version,platform:process.platform,arch:process.arch},results,proxy:proxy.metrics,errors},null,2));
 }

@@ -118,20 +118,20 @@ It does not simulate packet loss by dropping snapshots.
 
 | Measured final run | Loopback | 100 ms RTT with jitter |
 | --- | ---: | ---: |
-| Immediate own movement over two frames | 0.14 m | 0.14 m |
+| Immediate own movement in the first normal input step | 0.07 m | 0.07 m |
 | Authoritative movement received during that sample | 0 m | 0 m |
 | Settled prediction error | 0 m | 0 m |
 | Respawn pose error / ammo | 0 m / 30 | 0 m / 30 |
-| Maximum sampled remote interpolation offset | 0.470 m | 0.483 m |
-| Confirmed own shots / suppressed duplicate effects | 7 / 7 | 8 / 8 |
+| Maximum sampled remote interpolation offset | 0.492 m | 0.518 m |
+| Confirmed own shots / suppressed duplicate effects | 6 / 6 | 8 / 8 |
 | Maximum pending SDK inputs | 9 | 15 |
 | Join/leave cycles | 20 | 4 |
 | First → last DOM listeners | 230 → 230 | 230 → 230 |
 | First → last actor models / SDK callbacks | 2 / 4 → 2 / 4 | 2 / 4 → 2 / 4 |
-| First → last game geometries / textures | 101 / 39 → 101 / 39 | 101 / 39 → 101 / 39 |
+| First → last game geometries / textures | 100 / 38 → 100 / 38 | 101 / 39 → 101 / 39 |
 | Active audio voices after each rejoin | 0 | 0 |
 
-The proxy recorded 2,653 messages, 8,642 upstream and 87,680 downstream payload
+The proxy recorded 2,634 messages, 8,788 upstream and 84,920 downstream payload
 bytes across its scenario. Ordered one-way delay averaged 51.7 ms, p95 68.4 ms.
 These totals include setup/control traffic; they are not a sustained 10-player
 bandwidth benchmark. Both scenarios ended with zero live rooms and zero browser
@@ -158,6 +158,23 @@ network test also exposed two harness issues: desktop Resume needs real foregrou
 focus for pointer lock, and a one-frame interpolation sample can land after both
 poses stop at a wall. The test now foregrounds Resume and samples the movement
 interval; all gameplay assertions remain enabled.
+
+The first GitHub run, [44082904519](https://github.com/capstere/Cartridge-strike2/actions/runs/44082904519),
+passed all existing checks but failed the new test's wall-clock reload comparison
+(27 → 30 ammo). Slow software-renderer/CDP round trips had allowed the reload to
+finish before the sample. The follow-up observes authoritative state patches:
+both players submit held-fire inputs during reload, every active-reload ammo
+sample stays constant, and completion restores 30 rounds. Immediate prediction
+is now sampled synchronously around a normal SDK input submission, rather than
+assuming two rendered frames fit inside a network round trip. No reload duration
+or gameplay mechanic changed.
+
+This exposed a real disposal mistake too: SDK signal registration returns an
+emitter, not a disposer. NetworkSession now explicitly removes its state/leave
+callbacks before leaving. All 24 browser cleanup cycles assert zero state-signal
+callbacks immediately, before waiting for connection closure. The updated native
+loopback/latency suite and seven server/protocol tests pass locally. GitHub checks
+must pass on the follow-up head before any later merge.
 
 The adoption-distance diagnostics in the raw test include legitimate pending
 movement and are **not** a measured prediction-error percentile. The settled

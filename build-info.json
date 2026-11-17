@@ -1702,7 +1702,7 @@
     {
       "path": "shared/multiplayer/build.mjs",
       "bytes": 438,
-      "sha256": "8601c11ec239a707cbfacf8dba0c226ef4aa3c1acba09dab16cf61c9e7404fa8"
+      "sha256": "9a86766f90993beef0d696283014e1c4dac7dfa6ddbeb882e7ee3415fbf68b47"
     },
     {
       "path": "shared/multiplayer/input.mjs",
@@ -2051,8 +2051,8 @@
     },
     {
       "path": "src/fps/network/session.mjs",
-      "bytes": 11279,
-      "sha256": "6d0d648b9701fe5b623c0bbf1ef5cddf73c6e9a62c041c5b438dd4d08cd39f5b"
+      "bytes": 11475,
+      "sha256": "8d2da32e7eacdd522e1960750eb959997ed8f0a6d3231fc482a7176b3e5b6f3b"
     },
     {
       "path": "src/fps/physics.mjs",
@@ -2355,7 +2355,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 57094376,
+  "bytes": 57094572,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

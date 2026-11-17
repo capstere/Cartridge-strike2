@@ -3,7 +3,8 @@
 **Current: [Pass 2 — playable local two-player slice](network-slice.md).**
 Foundation [PR #18](https://github.com/capstere/Cartridge-strike2/pull/18) was
 reviewed with both CI jobs successful and merged as `20289c50`. Pass 2 starts
-there and remains a separate, unmerged review PR. No public server is deployed.
+there and remains [unmerged review PR #19](https://github.com/capstere/Cartridge-strike2/pull/19).
+No public server is deployed.
 
 The remainder records the original Foundation delivery and its historical
 validation. Its next-pass instructions have been superseded by the explicit
