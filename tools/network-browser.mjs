@@ -7,13 +7,18 @@ import {CONTRACT} from '../shared/multiplayer/build.mjs';
 import {ROOM_TYPE} from '../shared/multiplayer/rules.mjs';
 const results=[],errors=[];
 const testDpr=Number(process.env.FPS_NETWORK_DPR||1),angle=process.env.FPS_NETWORK_ANGLE||(process.platform==='darwin'?'metal':'');
+const transitPitch=Number(process.env.FPS_NETWORK_TRANSIT_PITCH||0);
 assert(testDpr>=.25&&testDpr<=2,'test DPR must stay between .25 and 2');
+assert(Number.isFinite(transitPitch)&&Math.abs(transitPitch)<=1.49,'transit pitch must be a valid ordinary look input');
 const local=await createLocalServer({port:0});
 const proxy=await latencyProxy(local.url);
-const browser=await chromium.launch({channel:'chromium',args:[...(angle?['--use-angle='+angle]:[]),'--disable-background-timer-throttling','--disable-renderer-backgrounding','--disable-backgrounding-occluded-windows']});
+// Isolate the two clients' GPU processes. One shared software GPU process stalls
+// the second Floor 5 client's shader initialization on both Mac and Linux CI.
+const launch={channel:'chromium',args:[...(angle?['--use-angle='+angle]:[]),'--disable-background-timer-throttling','--disable-renderer-backgrounding','--disable-backgrounding-occluded-windows']};
+const [browser,peerBrowser]=await Promise.all([chromium.launch(launch),chromium.launch(launch)]);
 fs.mkdirSync('test-results/network',{recursive:true});
 async function open(viewport={width:1280,height:720},mobile=false){
- const context=await browser.newContext({viewport,hasTouch:mobile,isMobile:mobile,deviceScaleFactor:testDpr}),page=await context.newPage();
+ const context=await (mobile?peerBrowser:browser).newContext({viewport,hasTouch:mobile,isMobile:mobile,deviceScaleFactor:testDpr}),page=await context.newPage();
  page.setDefaultTimeout(60000);page.on('pageerror',e=>errors.push(e.stack));
  page.on('request',r=>{if(/assets\/fps\/(zombies\/|Danceman\/)/.test(r.url()))errors.push('Online slice requested an unused resident model: '+r.url());});
  page.on('response',r=>{if(r.status()>=400&&r.request().method()==='GET'&&/\.(glb|mjs|mp3|ogg|webp)(\?|$)/.test(r.url()))errors.push(`Asset HTTP ${r.status()}: ${r.url()}`);});
@@ -38,7 +43,7 @@ const state=page=>page.evaluate(()=>{const n=__fps.network,s=n.room.state,a=[...
 async function controls(page,value={}){await page.evaluate(value=>{__fps.liveControls=value;},value);}
 async function walk(page,goals){
  const points=await page.evaluate(goals=>{const w=__fps.world;let from=__fps.network.prediction.world.actor,result=[];for(const [x,z] of goals){const goal={x,z},path=w.findPath(from,goal);if(!path.length)throw Error(`No real Floor 5 route to ${x},${z}`);result.push(...path.map(p=>[p.x,p.z]));from=goal;}return result;},goals);
- await page.evaluate(async points=>{
+ await page.evaluate(async({points,transitPitch})=>{
   for(const [x,z] of points){
    const end=performance.now()+20000;
    while(true){
@@ -56,12 +61,12 @@ async function walk(page,goals){
      await new Promise(requestAnimationFrame);continue;
     }
     if(performance.now()>end)throw Error(`Route stalled at ${a.x},${a.z} toward ${x},${z}`);
-    __fps.liveControls={forward:Math.min(1,d*3),yaw:Math.atan2(-dx,-dz),pitch:0};
+    __fps.liveControls={forward:Math.min(1,d*3),yaw:Math.atan2(-dx,-dz),pitch:transitPitch};
     await new Promise(requestAnimationFrame);
    }
   }
   __fps.liveControls={};
- },points);
+ },{points,transitPitch});
  await page.waitForTimeout(350);
  const actual=await state(page),[x,z]=goals.at(-1);assert(Math.hypot(actual.x-x,actual.z-z)<.3,'authoritative route arrival '+JSON.stringify({actual,goal:[x,z]}));
 }
@@ -155,6 +160,7 @@ try{
   const authority=[...local.rooms].find(r=>r.roomId===id),tickCosts=[],fixed=authority.fixedTick;authority.fixedTick=function(...args){const t=performance.now();try{return fixed.apply(this,args);}finally{tickCosts.push(performance.now()-t);}};
   for(const page of [a,b])await page.evaluate(()=>{const n=__fps.network,advance=n.advanceFrame;let last=0;window.__networkPerformance={frames:[],cpu:[],draws:[]};n.advanceFrame=function(now,...args){const t=performance.now();const v=advance.call(this,now,...args);const m=__networkPerformance;if(last)m.frames.push(now-last);last=now;m.cpu.push(performance.now()-t);m.draws.push(__fps.renderer.stats.drawCalls);return v;};});
   const windows=await Promise.all([measureWindow(a,'Cargo Lift'),measureWindow(b,'Service Lift')]);
+  console.log('starting view measurements',scenario,JSON.stringify(windows));
   const before=await Promise.all([state(a),state(b)]);
   // Install before sending keys: slow CDP calls can otherwise miss the entire
   // movement. Observe immediately after the normal frame updates its render
@@ -182,7 +188,7 @@ try{
   for(let i=0;i<2;i++)assert(Math.hypot(moved[i].x-before[i].x,moved[i].z-before[i].z)>.5,'simultaneous human movement '+i);
   await Promise.all([walk(a,[[22.8,-18]]),walk(b,[[22.8,-13]])]);
   console.log('Floor 5 routes completed',scenario,await state(a),await state(b));
-  await controls(a,{yaw:Math.PI});await controls(b,{yaw:0});
+  await controls(a,{yaw:Math.PI,pitch:0});await controls(b,{yaw:0,pitch:0});
   windows.push(...await Promise.all([measureWindow(a,'C08 desktop'),measureWindow(b,'C08 mobile emulation')]));
   const presented=await a.evaluate(()=>{const n=__fps.network,remote=n.view.actors.find(a=>a.id!==n.localPlayerId),model=__fps.renderer.actors.get(remote.id),camera=__fps.renderer.camera;return {visible:model.visible,model:model.position.toArray(),remote:[remote.x,remote.y,remote.z],camera:camera.position.toArray(),player:[n.view.player.x,n.view.player.y+n.view.player.height-.12,n.view.player.z]};});
   assert(presented.visible,'remote operator visible in C08');assert(Math.hypot(...presented.model.map((v,i)=>v-presented.remote[i]))<.3,'rendered remote operator follows authoritative/interpolated body');
@@ -305,7 +311,7 @@ try{
  }
  assert.deepEqual(errors,[]);
 }catch(e){console.error('network browser failure',e);throw e;}finally{
- await browser.close();await proxy.close();await local.close();
- fs.writeFileSync('test-results/network/browser.json',JSON.stringify({contract:CONTRACT,environment:{node:process.version,platform:process.platform,arch:process.arch,deviceScaleFactor:testDpr,angle:angle||'default'},results,proxy:proxy.metrics,errors},null,2));
+ await Promise.all([browser.close(),peerBrowser.close()]);await proxy.close();await local.close();
+ fs.writeFileSync('test-results/network/browser.json',JSON.stringify({contract:CONTRACT,environment:{node:process.version,platform:process.platform,arch:process.arch,browserProcesses:2,deviceScaleFactor:testDpr,transitPitch,angle:angle||'default'},results,proxy:proxy.metrics,errors},null,2));
 }
 console.log('PASS: two-browser gameplay, prediction, latency, combat, lifecycle and cleanup');

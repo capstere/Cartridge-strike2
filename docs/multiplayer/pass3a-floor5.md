@@ -126,16 +126,17 @@ form; repeated cleanup joins use that form's application handler.
 | Native two-browser Floor 5 | PASS, loopback and 100 ms RTT with jitter, 20 + 4 leave/rejoin cycles; both players move/aim/shoot/reload, one counted kill, damage/death/respawn, D39 obstruction/opening, late world state, pause/orientation and empty-room cleanup |
 | Remote presentation | PASS, visible original operator follows interpolated body; actual `Walk_Loop` and `Death01` observed in rendered gameplay |
 | Normal Floor 5 launch without test hooks | PASS, two humans, actual keys/mouse, pointer lock on first Resume, 1.05 m movement, four shots, reload HUD and leaving without disturbing the other player |
-| Mac SwiftShader | Initial validation FAIL at startup, second Floor 5 browser exceeds the 60 s readiness deadline; also reproduced at DPR 0.5 and with the first lobby frozen during second-page loading. No room/gameplay result is claimed for these runs. |
+| Mac SwiftShader functional profile | PASS with independent browser/GPU processes, DPR 0.5 and downward route-travel look: full loopback and latency/jitter gameplay, 20 + 4 cleanup cycles in 232.1 / 242.9 s. Initial shared-process startup failures remain recorded below; this is not a software FPS pass. |
 
 The network test also asserts unchanged first/final GPU allocations, model,
 callback and listener counts. Both scenarios finish with **1,642 geometries /
 98 textures**, two actor models, four SDK callbacks, one remote entry, 230 DOM
 listeners and zero audio voices. Every own confirmed shot reuses its immediate
-effect (10/10 loopback, 13/13 delayed), with no duplicate confirmation playback.
+effect (14/14 loopback, 15/15 delayed), with no duplicate confirmation playback.
 Both settled position errors and respawn errors are zero in these runs.
 
 Evidence: [native browser record](floor5/browser-native.json),
+[software functional record](floor5/browser-software.json),
 [offline lifecycle](floor5/offline-lifecycle.json),
 [offline replay](floor5/offline-replay.json),
 [normal launch](floor5/normal-launch.json),
@@ -143,9 +144,23 @@ Evidence: [native browser record](floor5/browser-native.json),
 [authoritative kill/death](floor5/c08-combat.png).
 
 The required Linux CI checks must pass on the PR's final head; their status is
-tracked on that PR rather than asserted ahead of execution here. Existing CI
-deadlines and gameplay assertions have not been relaxed for the Mac software
-renderer failure. Native Metal is the validated local rendering backend.
+tracked on that PR rather than asserted ahead of execution here.
+[Run 44120393983](https://github.com/capstere/Cartridge-strike2/actions/runs/44120393983)
+passed the server and every offline stage, then reproduced the second-scene
+readiness timeout seen on Mac SwiftShader. Two independent browser/GPU processes
+resolve that startup contention. The software functional profile uses browser
+DPR 0.5 and ordinary downward look (`pitch=-1.3`) only during route travel;
+C08 measurements and combat restore normal aim. Both real scenes, collision,
+network inputs, 20 + 4 lifecycle cycles and all assertions still execute. No
+actor teleportation, hidden map, simulation override or longer per-waypoint
+movement deadline is used. This profile is functional coverage, not acceptable
+software-renderer FPS evidence.
+
+The Linux job spent 16m30s on the unchanged offline checks and setup before the
+network step. Its overall bound is now 28 minutes, with 10 minutes for the two
+complete software network scenarios and cleanup. The preceding checks, PR-only
+browser policy and cancellation of superseded PR runs remain unchanged. Default
+native tests retain full DPR 1 and ordinary forward look during travel.
 
 ### Reproduce
 
@@ -160,7 +175,7 @@ node tools/verify-owner-runtime.mjs
 node --experimental-loader ./tools/vendor-three-test-loader.mjs tools/owner-door-traversal.mjs --prepared
 node --experimental-loader ./tools/vendor-three-test-loader.mjs tools/foundation-replay.mjs
 node --import ./server/register-shared.mjs tools/network-browser.mjs
-FPS_NETWORK_ANGLE=swiftshader node --import ./server/register-shared.mjs tools/network-browser.mjs
+FPS_NETWORK_ANGLE=swiftshader FPS_NETWORK_DPR=0.5 FPS_NETWORK_TRANSIT_PITCH=-1.3 node --import ./server/register-shared.mjs tools/network-browser.mjs
 node --import ./server/register-shared.mjs tools/network-launch-browser.mjs
 ```
 
@@ -177,33 +192,35 @@ screenshots are regenerated under ignored `test-results/network/`.
 
 Apple M1 / macOS ARM64, Chromium 153.0.8010.12 / ANGLE Metal, low graphics,
 browser DPR 1, desktop 1280×720 and touch emulation 844×390. The game's existing
-mobile rendering budget remains active. Both clients and the authority share
+mobile rendering budget remains active. Two independent browser/GPU processes and the authority share
 this host. Five-second fixed-camera windows run together in the two clients;
 these are measured views, not a universal map or physical-phone FPS guarantee.
 
 | View | Loopback FPS / frame p95 | Delayed FPS / frame p95 | Draw calls | Mean render submission, loopback / delayed |
 | --- | --- | --- | --- | --- |
-| Cargo Lift, desktop | 60.0 / 16.8 ms | 60.0 / 16.8 ms | 1,081 | 8.86 / 9.70 ms |
-| Service Lift, mobile emulation | 60.0 / 16.8 ms | 60.0 / 16.8 ms | 79 | 1.27 / 1.41 ms |
-| C08, desktop facing the other human | 58.8 / 16.8 ms | 58.8 / 16.8 ms | 1,196 | 9.68 / 11.26 ms |
-| C08, mobile emulation facing back | 60.0 / 16.8 ms | 60.0 / 16.8 ms | 198 | 2.03 / 2.27 ms |
+| Cargo Lift, desktop | 56.0 / 33.3 ms | 59.2 / 16.8 ms | 1,081 | 11.66 / 11.38 ms |
+| Service Lift, mobile emulation | 60.0 / 16.7 ms | 60.0 / 16.7 ms | 79 | 1.76 / 1.69 ms |
+| C08, desktop facing the other human | 56.8 / 16.8 ms | 58.6 / 16.7 ms | 1,196 | 14.74 / 12.01 ms |
+| C08, mobile emulation facing back | 60.0 / 16.8 ms | 60.0 / 16.7 ms | 198 | 3.12 / 2.66 ms |
 
 Across the whole scripted matches, including travel, combat, menus and cleanup,
-server fixed-step elapsed p95 is **0.55 / 0.63 ms**, and client prediction/frame
-submission p95 is **0.30–0.40 ms**. These elapsed timings include scheduling and
-GC; they are not GPU timer queries or isolated process CPU measurements. The
-largest server samples were 20.9 / 39.9 ms, and the C08 desktop windows had
-116.6 / 116.7 ms frames despite their low p95. Those isolated stalls remain a
+server fixed-step elapsed p95 is **1.89 / 1.06 ms**, and client prediction/frame
+submission p95 is **0.40–0.50 ms**. These elapsed timings include scheduling and
+GC; they are not GPU timer queries or isolated process CPU measurements. A
+contract/integrity check also ran on this host near the end of the delayed
+scenario, after its camera windows, so whole-match timings are not isolated
+server CPU benchmarks. The largest server samples were 182.1 / 142.9 ms, and
+the C08 desktop windows had 183.3 / 116.6 ms frames despite their low p95. Those isolated stalls remain a
 profiling target before longer soak or capacity claims. Apart from the measured
 unused resident loading above, no renderer/AI rewrite was justified by this
 two-human sample.
 
-Sampled JavaScript heaps across the four windows were 86.8–137.6 MiB loopback
-and 84.7–141.3 MiB delayed (not forced-GC retained-size measurements). Cleanup
+Sampled JavaScript heaps across the four windows were 84.9–129.3 MiB loopback
+and 73.6–138.3 MiB delayed (not forced-GC retained-size measurements). Cleanup
 checks use forced GC and explicit resource/listener counts. The delayed proxy
-carried 62,303 bytes upstream and 385,567 downstream across the match and four
-rejoins, 13,122 messages in total. Its first 4,096 ordered one-way delays had a
-52.2 ms median, 68.3 ms p95 and 70.8 ms maximum; ordered jitter can queue beyond
+carried 63,856 bytes upstream and 396,951 downstream across the match and four
+rejoins, 13,641 messages in total. Its first 4,096 ordered one-way delays had a
+52.0 ms median, 68.4 ms p95 and 71.7 ms maximum; ordered jitter can queue beyond
 the nominal 30–70 ms range. This is reliable WebSocket latency/jitter testing,
 not a packet-loss or external-internet test.
 
@@ -229,9 +246,11 @@ animation-sharing or mobile-budget changes were made to manufacture a gain.
 - No historical hitscan rewind, reconnect grace, 5v5, public listener, internet
   hosting, Raspberry Pi deployment or physical handset testing is claimed.
   Broader Pass 3 soak/capacity gates remain unfinished and require that scope.
-- Mac SwiftShader startup remains uncompleted as described above. Required Linux
-  CI is a separate environment; its outcome does not establish Mac software or
-  physical-handset performance. Headed native-window capture remains unverified.
+- Full-view software-renderer performance remains inadequate on this host; the
+  reduced-resolution CI profile establishes functional coverage only. Required
+  Linux CI is a separate environment; neither emulation nor native Mac results
+  establish physical-handset performance. Headed native-window capture remains
+  unverified.
 - The next task is review of this PR and its final CI, followed by any explicitly
   authorized next multiplayer milestone. Do not auto-merge this PR. The existing
   physical iPhone/Android validation backlog remains open.

@@ -36,9 +36,9 @@ jobs:
           npm test --prefix server
   node-tests:
     runs-on: ubuntu-latest
-    # Measured offline/browser setup takes ~12m30s on software runners; leave
-    # the full bounded 8-minute network step and final cleanup time available.
-    timeout-minutes: 24
+    # Run 44120393983 spent 16m30s on unchanged offline/setup checks. Leave the
+    # full bounded Floor 5 network step and cleanup available after those checks.
+    timeout-minutes: 28
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -92,8 +92,14 @@ jobs:
           node-version-file: server/.node-version
       - name: Two-browser authoritative gameplay with latency and cleanup
         if: github.event_name != 'push'
-        # Both complete software-rendered scenarios need shader startup time.
-        timeout-minutes: 8
+        # Two real Floor 5 scenes need shader startup plus full gameplay/cleanup.
+        # Native full-DPR/forward-camera performance is measured separately.
+        timeout-minutes: 10
+        env:
+          FPS_NETWORK_DPR: '0.5'
+          # Use ordinary downward look during route-only travel to reduce
+          # unasserted software draw work. Encounters/combat restore normal aim.
+          FPS_NETWORK_TRANSIT_PITCH: '-1.3'
         run: |
           npm ci --prefix server --ignore-scripts
           npm run test:browser --prefix server

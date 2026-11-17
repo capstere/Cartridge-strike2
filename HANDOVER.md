@@ -205,7 +205,14 @@ the existing mobile, objective-route, visibility, shared-animation, compatible
 character and 20-cycle lifecycle regressions pass. No original level or asset
 was changed. Physical handset testing is still uncompleted.
 
-**Next genuine task: review the Pass 3A.1 feature PR and its final required CI.
+The first Linux run passed the server and all offline checks but reproduced a
+second-scene software GPU startup timeout. The browser harness now uses separate
+GPU processes. A documented reduced-resolution software functional profile
+passes both network scenarios and 24 cleanup cycles locally; native performance
+is measured separately at full resolution and normal forward view. Required
+Linux checks must pass on the final PR head.
+
+**Next genuine task: review [Pass 3A.1 PR #20](https://github.com/capstere/Cartridge-strike2/pull/20) and its final required CI.
 Do not automatically merge it.** Full online 5v5/objectives, bounded hitscan
 rewind, reconnect grace, LAN/internet hosting, capacity soak and Raspberry Pi
 deployment remain outside this delivery and need their own authorization.
