@@ -30,13 +30,30 @@ async function open(viewport={width:1280,height:720},mobile=false){
  assert.match(await page.locator('.lb-brief').textContent(),/Floor 5 Laboratory/);
  assert.match(await page.locator('.lb-brief').textContent(),/1 mot 1/);
  assert(await page.evaluate(()=>!__fps.renderer.zombieVisuals),'online renderer has no unused resident asset initialization');
+ console.log('scene ready',mobile?'mobile':'desktop',await page.evaluate(()=>({draws:__fps.renderer.stats.drawCalls,focused:document.hasFocus(),hidden:document.hidden})));
  return page;
 }
 async function join(page,endpoint,roomId='',name='Player'){
  await page.locator('#network-endpoint').fill(endpoint);await page.locator('#network-code').fill('testing-123');
  await page.locator('#network-name').fill(name);await page.locator('#network-room').fill(roomId);
  await page.locator(`[data-create="${roomId?'false':'true'}"]`).click();
- await page.waitForFunction(()=>__fps.network?.view.player?.alive&&__fps.game.network&&__fps.modal===null);
+ try{
+  // Distinguish a connection failure or normal pause from a missing room. A
+  // single opaque timeout hid the actual failure on the Linux software runner.
+  await page.waitForFunction(()=>__fps.network?.view.player?.alive&&__fps.game.network&&(__fps.modal===null||__fps.modal==='pause')||
+   !document.querySelector('#fatal').hidden||
+   !document.querySelector('.network-form button').disabled&&
+   !document.querySelector('#network-status').textContent.startsWith('Ansluter'));
+  assert(await page.evaluate(()=>__fps.network?.view.player?.alive&&__fps.game.network&&__fps.modal===null),'joined player must enter playable state');
+ }catch(error){
+  const client=await page.evaluate(()=>({modal:__fps.modal,focused:document.hasFocus(),hidden:document.hidden,
+   status:document.querySelector('#network-status').textContent,fatal:document.querySelector('#fatal').hidden?'':document.querySelector('#fatal pre').textContent,
+   room:__fps.network?.room?.roomId,problem:__fps.network?.problem,closed:__fps.network?.closed,
+   alive:__fps.network?.view.player?.alive,draws:__fps.renderer.stats.drawCalls}));
+  console.error('admission diagnostic',JSON.stringify({client,rooms:[...local.rooms].map(r=>({id:r.roomId,tick:r.sim.tickNumber,
+   clients:r.clients.length,seats:[...r.seats.values()].map(s=>({id:s.id,ready:s.ready}))})),errors}));throw error;
+ }
+ console.log('player joined',name);
  return page.evaluate(()=>__fps.network.room.roomId);
 }
 const state=page=>page.evaluate(()=>{const n=__fps.network,s=n.room.state,a=[...s.actors.values()].find(a=>a.sessionId===n.room.sessionId);return {id:a.id,x:a.x,y:a.y,z:a.z,hp:a.hp,ammo:a.ammo,reserve:a.reserve,life:a.lifeId,alive:a.alive,kills:a.kills,deaths:a.deaths,tick:s.tick,actors:s.actors.size};});
@@ -277,7 +294,11 @@ try{
   const cd=await b.context().newCDPSession(b),cleanup=[],cleanupAt=performance.now();
   for(let i=0;i<cycles;i++){
    const cycleAt=performance.now();
-   const old=await b.evaluate(async()=>{const n=__fps.network,probe=()=>{},emitter=n.room.onStateChange(probe);n.room.onStateChange.remove(probe);__fps.liveControls={};__fps.newMatch();const immediateStateCallbacks=emitter.handlers.length;await new Promise(r=>setTimeout(r,30));return {closed:n.closed,predict:!!n.predict,callbacks:n.unsub.length,immediateStateCallbacks,remotes:n.remote.size,events:n.events.length,room:!!n.room};});
+   const old=await b.evaluate(async()=>{const n=__fps.network,probe=()=>{},emitter=n.room.onStateChange(probe);n.room.onStateChange.remove(probe);__fps.liveControls={};const rendered=__fps.renderBudget.stats.rendered;__fps.newMatch();const immediateStateCallbacks=emitter.handlers.length;
+    const end=performance.now()+20000;while(__fps.renderBudget.stats.rendered<=rendered&&document.querySelector('#fatal').hidden){if(performance.now()>end)throw Error('Lobby did not render after leaving');await new Promise(requestAnimationFrame);}
+    if(!document.querySelector('#fatal').hidden)throw Error('Leaving crashed the lobby: '+document.querySelector('#fatal pre').textContent);
+    if(__fps.modal!=='menu'||__fps.network)throw Error('Leaving did not restore the lobby');
+    return {closed:n.closed,predict:!!n.predict,callbacks:n.unsub.length,immediateStateCallbacks,remotes:n.remote.size,events:n.events.length,room:!!n.room};});
    assert.deepEqual(old,{closed:true,predict:false,callbacks:0,immediateStateCallbacks:0,remotes:0,events:0,room:false});
    await a.waitForFunction(()=>__fps.network.room.state.actors.size===1);
    // Initial admission above uses the real form. Repeated lifecycle coverage
@@ -286,7 +307,9 @@ try{
    // The normal server, session, presentation, RAF and disposal still execute.
    await b.evaluate(async({endpoint,roomId})=>{
     await __fps.joinNetwork({endpoint,roomId,create:false,code:'testing-123',name:'Bob'});
-    await new Promise(requestAnimationFrame);await new Promise(requestAnimationFrame);
+    const rendered=__fps.renderBudget.stats.active,end=performance.now()+20000;
+    while(__fps.renderBudget.stats.active<=rendered&&document.querySelector('#fatal').hidden){if(performance.now()>end)throw Error('Rejoin did not render a live frame');await new Promise(requestAnimationFrame);}
+    if(!document.querySelector('#fatal').hidden)throw Error('Rejoin crashed: '+document.querySelector('#fatal pre').textContent);
     if(!__fps.network?.view.player?.alive||!__fps.game.network||__fps.modal!==null)throw Error('Rejoin did not enter the game');
    },{endpoint,roomId:id});
    const joinedWorld=await worldState(b);assert(joinedWorld.visualMatches);assert.equal(joinedWorld.elevator,1,'late join receives open shutters');assert.equal(joinedWorld.doors.length,51);

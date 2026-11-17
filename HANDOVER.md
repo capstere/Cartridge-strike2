@@ -205,6 +205,12 @@ the existing mobile, objective-route, visibility, shared-animation, compatible
 character and 20-cycle lifecycle regressions pass. No original level or asset
 was changed. Physical handset testing is still uncompleted.
 
+A later admission-error probe caught an empty-lobby render crash after leaving a
+network round. The reset now synchronizes its round/phase markers. Every network
+cleanup cycle must actually render in the lobby and again after rejoining; the
+normal-launch test also checks for a fatal error after returning. The report
+records the original coverage gap and before/after recovery evidence.
+
 The first Linux run passed the server and all offline checks but reproduced a
 second-scene software GPU startup timeout. The browser harness now uses separate
 GPU processes. A documented reduced-resolution software functional profile

@@ -101,6 +101,16 @@ latency run exposed the server still behind it. It now waits for the exact SDK
 input acknowledgement and checks authoritative arrival before advancing. The
 final arrival threshold remains 0.3 m; no teleport or collision bypass is used.
 
+A later failed-admission probe reproduced a real lobby cleanup defect: returning
+from a network match constructed an empty lobby Game but retained the previous
+round marker. Its next render frame read `game.player.yaw` with no player and
+stopped the loop. The network lobby reset now synchronizes the round/phase
+markers. The same probe now displays the ordinary missing-room error, keeps
+the lobby rendering and leaves the other human connected. Earlier repeated-join
+checks did not require a Game render between transitions and missed this defect;
+every cycle now requires a real lobby frame and a real active frame after joining.
+[Before/after recovery evidence](floor5/lobby-recovery.json).
+
 The new focused tests cover collision identity/drift, hash normalization without
 geometry mutation, 102 real door approaches with matching prediction/authority,
 closed-shutter blocking and both humans crossing during the same predicted and
@@ -126,13 +136,13 @@ form; repeated cleanup joins use that form's application handler.
 | Native two-browser Floor 5 | PASS, loopback and 100 ms RTT with jitter, 20 + 4 leave/rejoin cycles; both players move/aim/shoot/reload, one counted kill, damage/death/respawn, D39 obstruction/opening, late world state, pause/orientation and empty-room cleanup |
 | Remote presentation | PASS, visible original operator follows interpolated body; actual `Walk_Loop` and `Death01` observed in rendered gameplay |
 | Normal Floor 5 launch without test hooks | PASS, two humans, actual keys/mouse, pointer lock on first Resume, 1.05 m movement, four shots, reload HUD and leaving without disturbing the other player |
-| Mac SwiftShader functional profile | PASS with independent browser/GPU processes, DPR 0.5 and downward route-travel look: full loopback and latency/jitter gameplay, 20 + 4 cleanup cycles in 232.1 / 242.9 s. Initial shared-process startup failures remain recorded below; this is not a software FPS pass. |
+| Mac SwiftShader functional profile | Initial gameplay run passed at DPR 0.5 with downward route-travel look in 232.1 / 242.9 s. Its cleanup checks had the render-frame coverage gap described above; a stricter post-fix run is pending. This is not a software FPS pass. |
 
 The network test also asserts unchanged first/final GPU allocations, model,
 callback and listener counts. Both scenarios finish with **1,642 geometries /
 98 textures**, two actor models, four SDK callbacks, one remote entry, 230 DOM
 listeners and zero audio voices. Every own confirmed shot reuses its immediate
-effect (14/14 loopback, 15/15 delayed), with no duplicate confirmation playback.
+effect (11/11 loopback, 17/17 delayed), with no duplicate confirmation playback.
 Both settled position errors and respawn errors are zero in these runs.
 
 Evidence: [native browser record](floor5/browser-native.json),
@@ -158,8 +168,15 @@ software-renderer FPS evidence.
 
 The Linux job spent 16m30s on the unchanged offline checks and setup before the
 network step. Its overall bound is now 28 minutes, with 10 minutes for the two
-complete software network scenarios and cleanup. The preceding checks, PR-only
-browser policy and cancellation of superseded PR runs remain unchanged. Default
+complete software network scenarios and cleanup. The complete offline checks, PR-only
+browser policy and cancellation of superseded PR runs remain. The network step
+now runs before the slower offline browser suites to fail sooner during
+diagnosis; Node 22 is restored for those existing suites. Admission failures
+print the actual lobby/fatal/focus state instead of only an opaque timeout.
+[Run 44127848429](https://github.com/capstere/Cartridge-strike2/actions/runs/44127848429)
+passed every offline stage and initialized both scenes, then timed out waiting
+for the first playable human. That Linux admission failure is still under
+diagnosis; local normal and CPU-throttled admission both passed. Default
 native tests retain full DPR 1 and ordinary forward look during travel.
 
 ### Reproduce
@@ -198,29 +215,27 @@ these are measured views, not a universal map or physical-phone FPS guarantee.
 
 | View | Loopback FPS / frame p95 | Delayed FPS / frame p95 | Draw calls | Mean render submission, loopback / delayed |
 | --- | --- | --- | --- | --- |
-| Cargo Lift, desktop | 56.0 / 33.3 ms | 59.2 / 16.8 ms | 1,081 | 11.66 / 11.38 ms |
-| Service Lift, mobile emulation | 60.0 / 16.7 ms | 60.0 / 16.7 ms | 79 | 1.76 / 1.69 ms |
-| C08, desktop facing the other human | 56.8 / 16.8 ms | 58.6 / 16.7 ms | 1,196 | 14.74 / 12.01 ms |
-| C08, mobile emulation facing back | 60.0 / 16.8 ms | 60.0 / 16.7 ms | 198 | 3.12 / 2.66 ms |
+| Cargo Lift, desktop | 60.0 / 16.7 ms | 60.0 / 16.8 ms | 1,081 | 9.50 / 9.74 ms |
+| Service Lift, mobile emulation | 60.0 / 16.8 ms | 60.0 / 16.8 ms | 79 | 1.46 / 1.44 ms |
+| C08, desktop facing the other human | 58.4 / 16.7 ms | 59.8 / 16.8 ms | 1,196 | 10.90 / 10.61 ms |
+| C08, mobile emulation facing back | 60.0 / 16.7 ms | 60.0 / 16.8 ms | 198 | 2.35 / 2.19 ms |
 
 Across the whole scripted matches, including travel, combat, menus and cleanup,
-server fixed-step elapsed p95 is **1.89 / 1.06 ms**, and client prediction/frame
-submission p95 is **0.40–0.50 ms**. These elapsed timings include scheduling and
-GC; they are not GPU timer queries or isolated process CPU measurements. A
-contract/integrity check also ran on this host near the end of the delayed
-scenario, after its camera windows, so whole-match timings are not isolated
-server CPU benchmarks. The largest server samples were 182.1 / 142.9 ms, and
-the C08 desktop windows had 183.3 / 116.6 ms frames despite their low p95. Those isolated stalls remain a
+server fixed-step elapsed p95 is **0.95 / 1.07 ms**, and client prediction/frame
+submission p95 is **0.30–0.50 ms**. These elapsed timings include scheduling and
+GC; they are not GPU timer queries or isolated process CPU measurements. The
+largest server samples were 49.3 / 152.1 ms, and the C08 desktop windows had
+149.9 / 33.3 ms frames despite their low p95. Those isolated stalls remain a
 profiling target before longer soak or capacity claims. Apart from the measured
 unused resident loading above, no renderer/AI rewrite was justified by this
 two-human sample.
 
-Sampled JavaScript heaps across the four windows were 84.9–129.3 MiB loopback
-and 73.6–138.3 MiB delayed (not forced-GC retained-size measurements). Cleanup
+Sampled JavaScript heaps across the four windows were 97.5–126.7 MiB loopback
+and 94.4–148.7 MiB delayed (not forced-GC retained-size measurements). Cleanup
 checks use forced GC and explicit resource/listener counts. The delayed proxy
-carried 63,856 bytes upstream and 396,951 downstream across the match and four
-rejoins, 13,641 messages in total. Its first 4,096 ordered one-way delays had a
-52.0 ms median, 68.4 ms p95 and 71.7 ms maximum; ordered jitter can queue beyond
+carried 64,138 bytes upstream and 401,956 downstream across the match and four
+rejoins, 13,967 messages in total. Its first 4,096 ordered one-way delays had a
+52.1 ms median, 68.4 ms p95 and 77.4 ms maximum; ordered jitter can queue beyond
 the nominal 30–70 ms range. This is reliable WebSocket latency/jitter testing,
 not a packet-loss or external-internet test.
 

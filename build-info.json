@@ -1991,8 +1991,8 @@
     },
     {
       "path": "src/fps/app.mjs",
-      "bytes": 39920,
-      "sha256": "247db3a7e5ce76d20d4f324a977f507a2abfe64c3cbea3817f1969c1743f1644"
+      "bytes": 39968,
+      "sha256": "49b8b851abb55bb68027f0b9003184e21279acc893f9aa32838445ec268c790d"
     },
     {
       "path": "src/fps/audio.mjs",
@@ -2590,7 +2590,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 58689774,
+  "bytes": 58689822,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

@@ -1,0 +1,22 @@
+{
+  "regression": "Network lobby has no player; a previous round marker made the next frame read missing player yaw.",
+  "beforeCommit": "4602522a13b9ab47c335c4775da257df6071fa71",
+  "probeSteps": [
+    "Open two real Floor 5 browser clients and join both through the network form.",
+    "Return the second player to the lobby through the application handler.",
+    "Attempt an invalid room ID while normal lobby frames continue."
+  ],
+  "before": {
+    "fatal": "TypeError: Cannot read properties of undefined (reading 'yaw')",
+    "source": "consumeEvents in src/fps/app.mjs",
+    "renderLoopStopped": true
+  },
+  "after": {
+    "fatal": "",
+    "status": "room \"missing-room\" not found",
+    "otherHumanStillInRoom": true,
+    "pageErrors": []
+  },
+  "afterAppSha256": "49b8b851abb55bb68027f0b9003184e21279acc893f9aa32838445ec268c790d",
+  "coverage": "network-browser.mjs now requires a real lobby frame and a real active frame for every leave/rejoin cycle; failure diagnostics include visible UI state."
+}
