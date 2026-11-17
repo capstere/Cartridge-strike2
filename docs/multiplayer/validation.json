@@ -1,0 +1,339 @@
+{
+  "baseline": "7e917312831bb783c77c6425cc1c6174c9bc5f76",
+  "host": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "coreNode": "v26.0.0",
+  "frameworkNode": "v26.13.0",
+  "checks": {
+    "core": {
+      "command": "node --experimental-loader ./tools/vendor-three-test-loader.mjs --test src/fps/*.test.mjs tools/*.test.mjs",
+      "status": "PASS",
+      "exitCode": 0,
+      "logSha256": "e9eb7217da15c6aabe809573c8fa7f373a9a7c87ac6bb58bc5f6f4c539c7da56",
+      "tests": 208
+    },
+    "doors": {
+      "command": "node --experimental-loader ./tools/vendor-three-test-loader.mjs tools/owner-door-traversal.mjs --prepared",
+      "status": "PASS",
+      "exitCode": 0,
+      "logSha256": "5c9e6720771afbfcbe787f0faf0e0e86f1e3b680394d2bec5ebcf9404f71f6aa",
+      "traversals": 102
+    },
+    "framework": {
+      "command": "Node 26.13.0: node --import ./server/register-shared.mjs --test server/test/*.test.mjs",
+      "status": "PASS",
+      "exitCode": 0,
+      "logSha256": "fc2eb809bc10ce0438964ed8ea1b7e8377351c1b191fd15d245521dadaab97fd",
+      "result": {
+        "spike": "PASS",
+        "node": "v26.13.0",
+        "platform": "darwin",
+        "arch": "arm64",
+        "core": "0.18.28",
+        "sdk": "0.18.10",
+        "schema": "5.0.49",
+        "fixedStep": 0.016666666666666666,
+        "patchMs": 50,
+        "consumed": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "adopts": 4,
+        "replays": 2,
+        "ticks": 28
+      }
+    },
+    "dependencyInstall": {
+      "command": "npm ci --prefix server --ignore-scripts",
+      "status": "PASS",
+      "exitCode": 0,
+      "logSha256": "feb4acb1b6aeb5ec39a0b07311899c1508c270aab136a01c7d59959a266423be"
+    },
+    "mobileSmoke": {
+      "command": "node tools/mobile-smoke.cjs",
+      "status": "PASS",
+      "exitCode": 0,
+      "logSha256": "891bd4b8d85e1bc415b33db3fbee9082508bc78e24879f226602dac9072f94a7"
+    },
+    "matchFlow": {
+      "command": "node tools/match-flow-browser.mjs",
+      "status": "PASS",
+      "exitCode": 0,
+      "logSha256": "897c3668e30c3d41c1ecc0b5706e671c505637101973ae4fa850b878b100e51e"
+    },
+    "mobileReliability": {
+      "command": "node tools/mobile-reliability-browser.mjs",
+      "status": "PASS",
+      "exitCode": 0,
+      "logSha256": "f10ef7c0f7ab7341b6facb8a687ccf2406a99eb13062f87e2005356a25c6878a",
+      "viewports": [
+        {
+          "width": 844,
+          "combined": {
+            "meters": 0.051130434782608064,
+            "shots": 1
+          },
+          "pacing": {
+            "measured": false
+          },
+          "before": {
+            "input": {
+              "forward": 0.7304347826086957,
+              "strafe": 0,
+              "jump": false,
+              "crouch": false,
+              "sneak": false,
+              "fire": true,
+              "autoFire": false,
+              "interact": false,
+              "yaw": 3.0091526535897932,
+              "pitch": -0.03784
+            },
+            "ids": [
+              2,
+              3
+            ]
+          },
+          "switched": {
+            "input": {
+              "forward": 0.7304347826086957,
+              "strafe": 0,
+              "jump": false,
+              "crouch": false,
+              "sneak": false,
+              "fire": false,
+              "autoFire": false,
+              "interact": false,
+              "yaw": 3.0048445404727286,
+              "pitch": -0.02772626104753169
+            },
+            "ids": [
+              2,
+              3
+            ]
+          },
+          "after": {
+            "forward": 0.7652173913043478,
+            "strafe": 0,
+            "jump": false,
+            "crouch": false,
+            "sneak": false,
+            "fire": false,
+            "autoFire": false,
+            "interact": false,
+            "yaw": 2.9480845404727285,
+            "pitch": -0.02772626104753169
+          },
+          "settledReadMs": 45.82916599999953,
+          "held": true,
+          "rotation": {
+            "paused": true,
+            "modal": "pause",
+            "time": 0.13333333333333333,
+            "voices": 0,
+            "ambient": 0,
+            "music": false
+          },
+          "advanced": 0,
+          "remainsPaused": true,
+          "renderer": {
+            "buffer": [
+              658,
+              304
+            ],
+            "lost": false,
+            "programs": 98
+          },
+          "cleanup": {
+            "voices": 0,
+            "ambient": 0,
+            "music": false
+          },
+          "errors": []
+        },
+        {
+          "width": 932,
+          "combined": {
+            "meters": 0.048999999999998406,
+            "shots": 1
+          },
+          "pacing": {
+            "measured": false
+          },
+          "before": {
+            "input": {
+              "forward": 0.7,
+              "strafe": 0,
+              "jump": false,
+              "crouch": false,
+              "sneak": false,
+              "fire": true,
+              "autoFire": false,
+              "interact": false,
+              "yaw": 3.0091526535897932,
+              "pitch": -0.03784
+            },
+            "ids": [
+              2,
+              3
+            ]
+          },
+          "switched": {
+            "input": {
+              "forward": 0.7,
+              "strafe": 0,
+              "jump": false,
+              "crouch": false,
+              "sneak": false,
+              "fire": false,
+              "autoFire": false,
+              "interact": false,
+              "yaw": 3.0048445404727286,
+              "pitch": -0.02772626104753169
+            },
+            "ids": [
+              2,
+              3
+            ]
+          },
+          "after": {
+            "forward": 0.7333333333333333,
+            "strafe": 0,
+            "jump": false,
+            "crouch": false,
+            "sneak": false,
+            "fire": false,
+            "autoFire": false,
+            "interact": false,
+            "yaw": 2.9480845404727285,
+            "pitch": -0.02772626104753169
+          },
+          "settledReadMs": 51.848291999998764,
+          "held": true,
+          "rotation": {
+            "paused": true,
+            "modal": "pause",
+            "time": 0.11666666666666665,
+            "voices": 0,
+            "ambient": 0,
+            "music": false
+          },
+          "advanced": 0,
+          "remainsPaused": true,
+          "renderer": {
+            "buffer": [
+              726,
+              335
+            ],
+            "lost": false,
+            "programs": 98
+          },
+          "cleanup": {
+            "voices": 0,
+            "ambient": 0,
+            "music": false
+          },
+          "errors": []
+        }
+      ]
+    },
+    "lifecycle": {
+      "command": "node tools/match-lifecycle-browser.mjs",
+      "status": "PASS",
+      "exitCode": 0,
+      "logSha256": "6e372527a2dd3a3d141e92922d8fb0293f807b061a849f597cae33980bb257fe",
+      "measuredCycles": 20,
+      "tail": [
+        {
+          "i": 19,
+          "mode": "classic",
+          "gpu": {
+            "game": [
+              1328,
+              162,
+              109
+            ],
+            "lobby-stage": [
+              29,
+              7,
+              10
+            ]
+          },
+          "instances": 4,
+          "retained": 1,
+          "music": false,
+          "ambient": 0,
+          "voices": 0,
+          "pending": [
+            "game",
+            "lobby"
+          ],
+          "dom": {
+            "documents": 1,
+            "nodes": 1479,
+            "jsEventListeners": 267
+          },
+          "contexts": 1,
+          "audioNodes": 3
+        },
+        {
+          "i": 20,
+          "mode": "endless",
+          "gpu": {
+            "game": [
+              1328,
+              162,
+              109
+            ],
+            "lobby-stage": [
+              29,
+              7,
+              10
+            ]
+          },
+          "instances": 4,
+          "retained": 1,
+          "music": false,
+          "ambient": 0,
+          "voices": 0,
+          "pending": [
+            "game",
+            "lobby"
+          ],
+          "dom": {
+            "documents": 1,
+            "nodes": 1481,
+            "jsEventListeners": 267
+          },
+          "contexts": 1,
+          "audioNodes": 3
+        }
+      ]
+    },
+    "objectives": {
+      "command": "node tools/player-routes-browser.mjs",
+      "status": "PASS",
+      "exitCode": 0,
+      "logSha256": "8961afaa603be3ba5dfef2c8ab7c7169bc03e065c23c285f7fee8da93e9b55e6"
+    },
+    "offlineReplay": {
+      "status": "PASS",
+      "ticks": 9600,
+      "identicalHashes": 8
+    }
+  },
+  "notRun": [
+    "public deployment",
+    "physical iPhone/Android",
+    "Linux ARM64/Pi",
+    "external network",
+    "two browser network game",
+    "network load/latency matrix"
+  ]
+}

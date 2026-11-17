@@ -1,0 +1,12 @@
+[
+  {
+    "label": "before",
+    "map": "floor5-prepared",
+    "sharedNestedObjects": 11930
+  },
+  {
+    "label": "after",
+    "map": "floor5-prepared",
+    "sharedNestedObjects": 0
+  }
+]

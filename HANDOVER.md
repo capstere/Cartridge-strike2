@@ -121,3 +121,26 @@ software renderer (about 2.3 s/frame). The follow-up makes that profiling opt-in
 with `MOBILE_PROFILE=1`, preserving all regression assertions and the bounded
 step deadline. Main fast CI passed in 1m31s; Pages byte checks and both native
 emulated viewport checks passed. Physical-device validation remains open.
+
+## November 17 — multiplayer foundation (pass 1 only)
+
+Implemented from **7e91731**, preserving PRs #14–#17. The shared Game now supports
+independent human controllers separately from client-local presentation, preserves
+PvP damage, and exposes a single externally clocked fixed step. Capsule movement
+is shared with a headless/prediction boundary. Fresh prepared worlds no longer
+share nested mutable source data; door, glass, elevator and navigation isolation
+is tested. Both manifest maps construct in actual Node without DOM shims.
+
+[Implementation, cache/import audit, framework decision, exact commands and
+limitations](docs/multiplayer/README.md). The pinned Colyseus/SDK loopback spike
+proves fixed input, acknowledgements, authoritative correction and framework-owned
+replay using the existing movement code. It is test-only, bound to localhost.
+Eight offline traces (9,600 steps) retain identical recorded state/event hashes.
+The existing desktop/touch, match-flow, 20-cycle lifecycle and objective-route
+checks pass; physical-device validation remains uncompleted.
+
+**Next multiplayer step:** review this feature PR; authorize pass 2 separately
+before implementing `prompts/02_NETWORK_SLICE.txt`. No network game UI, public
+server, tunnel, deployment or auto-merge was added. Full online roster/rules,
+handshake, life IDs, prediction through dynamic state, combat rewind and reconnect
+remain for later passes. **The first open physical-mobile task above is unchanged.**

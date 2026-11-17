@@ -10,4 +10,5 @@ The [handover](../HANDOVER.md) contains the current work queue. The [November 9 
 | Floor 5 residents | [Living zombies, animation mapping and validation](zombies/gameplay.md) · [Danceman and round-start audio](danceman.md) |
 | Floor 5 appearance | [Visual direction](floor5-visual-direction.md) · [Materials](floor5-material-pass.md) · [Curtains and finishes](floor5-curtains-finishes.md) · [Office finishes](office-finishes.md) · [Player-facing fiction](player-facing-fiction.md) |
 | Assets and provenance | [FPS furniture](fps-furniture-library.md) · [GeneXpert models](genexpert-models.md) · [Onboard library](onboard-library.md) · [Model attribution](onboard-model-attribution.md) · [Restoration record](restore-onboard-13.md) · [Validation](restore-onboard-13-validation.md) · [Credits](../credits.html) |
+| Multiplayer foundation | [Pass 1 implementation, headless tests and framework decision](multiplayer/README.md) |
 | Project history | [FPS-only release notes](../LOVABLE_CHANGES.md) · [October roadmap for the original project](roadmap.md) |

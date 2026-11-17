@@ -1,3 +1,4 @@
+import {moveActor,moveBody} from './movement.mjs';
 import {rejoinNavigation} from './body-recovery.mjs';
 import {populateZombies,tickZombies,tickDance,reactZombie} from './zombies.mjs';
 import {zombieRay,zombiePosition} from './zombie-poses.mjs';
@@ -59,7 +60,12 @@ function rayBox(origin, dir, actor, limit, depth=actor.radius) {
 }
 
 export class Game {
-  constructor(world, { seed = 1, team = 'analysts', config = {}, autoplay = false, difficulty = config.difficulty ?? DEFAULT_DIFFICULTY } = {}) {
+  constructor(world, { seed = 1, team = 'analysts', config = {}, autoplay = false, difficulty = config.difficulty ?? DEFAULT_DIFFICULTY, controllers = null, localPlayerId } = {}) {
+    // Controller assignment is server/local-session configuration, never wire input.
+    this.controllers = controllers === null ? null : new Map(Object.entries(controllers));
+    for (const [id, type] of this.controllers || []) if (!/^(analysts|counterAnalysts)-[0-4]$/.test(id) || !['human','bot','unoccupied'].includes(type)) throw new Error('Invalid controller assignment');
+    if (localPlayerId !== undefined && localPlayerId !== null && !/^(analysts|counterAnalysts)-[0-4]$/.test(localPlayerId)) throw new Error('Invalid local player');
+    this.localPlayerId = localPlayerId;
     this.world = world; this.config = { ...CONFIG, ...config }; this.seed = seed;
     this.random = seededRandom(seed); this.team = team; this.autoplay = autoplay;
     this.events = []; this.soundEvents = []; this.eventSerial = 0; this.accumulator = 0;
@@ -85,8 +91,9 @@ export class Game {
     this.team = team; this.tacticalContacts = []; this.random = seededRandom(this.seed); this.events = []; this.soundEvents = []; this.accumulator = 0; this.eventSerial = 0;
     Object.assign(this.state, { phase: 'buy', time: 0, round: 0, score: { analysts: 0, counterAnalysts: 0 }, lossStreak: { analysts: 0, counterAnalysts: 0 }, actors: [], history: [], paused: false });
     for (const side of Object.keys(TEAMS)) for (let i = 0; i < 5; i++) {
-      const isPlayer = side === team && i === 0;
-      this.actors.push({ id: `${side}-${i}`, name: isPlayer ? 'Du' : `${side === 'analysts' ? 'A' : 'C'}-${String(i + 1).padStart(2, '0')}`, team: side, index: i, isPlayer,
+      const id = `${side}-${i}`, isPlayer = this.localPlayerId === undefined ? side === team && i === 0 : id === this.localPlayerId;
+      const controllerType = this.controllers ? this.controllers.get(id) ?? 'unoccupied' : isPlayer && !this.autoplay ? 'human' : 'bot';
+      this.actors.push({ id: `${side}-${i}`, name: isPlayer ? 'Du' : `${side === 'analysts' ? 'A' : 'C'}-${String(i + 1).padStart(2, '0')}`, team: side, index: i, isPlayer, controllerType,
         money: this.config.startMoney, kills: 0, deaths: 0, alive: false, x: 0, y: 0, z: 0, radius: this.config.radius, height: this.config.standingHeight });
     }
     this.beginRound(); return this;
@@ -108,7 +115,7 @@ export class Game {
         lastStep: s.time, fireHeld: false, interactHeld: false, jumpHeld: false, lastWeapon: 'knife', hurtTime: -Infinity, hurtDirection: null, deathAt: null, deathCause: null,
         weapon: actor.inventory.primary?.id ?? actor.inventory.pistol?.id ?? 'knife',
       });
-      actor.bot = (!actor.isPlayer || this.autoplay) ? new BotController(this, actor) : null;
+      actor.bot = actor.controllerType === 'bot' ? new BotController(this, actor) : null;
     }
     s.hostages = this.world.anchors.hostages.map((p, i) => ({ ...point(p), id: `hostage-${i}`, name: `Gisslan ${i + 1}`, height: 1.6, radius: this.config.radius, vy: 0, onGround: true, rescued: false, escortId: null, path: [], pathAt: 0, distanceWalked: 0 }));
     const carrier = this.actors.find(a => a.team === 'counterAnalysts');
@@ -134,7 +141,9 @@ export class Game {
     this.accumulator += Math.min(Math.max(0, dt), this.config.maxCatchUp);
     while (this.accumulator + EPS >= this.config.fixedStep) { this.step(this.config.fixedStep, input); this.accumulator -= this.config.fixedStep; }
   }
-  step(dt, input = {}) {
+  /** One externally clocked authoritative tick; never enters update's accumulator. */
+  stepActors(inputsByActor = new Map()) { this.step(this.config.fixedStep, {}, inputsByActor); }
+  step(dt, input = {}, inputsByActor = null) {
     const s = this.state;
     if (s.paused || ['menu', 'match'].includes(s.phase)) return;
     s.time += dt;
@@ -143,8 +152,11 @@ export class Game {
     if (s.phase === 'buy') {
       const remaining=s.buyDeadline-s.time;
       this.world.setElevatorProgress?.(remaining<=EPS?1:1-remaining/1.5);
-      if (Number.isFinite(input.yaw)) this.player.yaw = input.yaw;
-      if (Number.isFinite(input.pitch)) this.player.pitch = clamp(input.pitch, -1.49, 1.49);
+      for (const actor of this.actors) {
+        const controls = inputsByActor ? (actor.controllerType === 'human' ? inputsByActor.get(actor.id) : null) : actor.isPlayer ? input : null;
+        if (Number.isFinite(controls?.yaw)) actor.yaw = controls.yaw;
+        if (Number.isFinite(controls?.pitch)) actor.pitch = clamp(controls.pitch, -1.49, 1.49);
+      }
       if (s.time + EPS < s.buyDeadline) return;
       s.phase = 'active'; this.emit('start', null);
     }
@@ -160,7 +172,7 @@ export class Game {
         if (item && typeof item === 'object') { const amount = Math.min(w.magazine - item.ammo, item.reserve); item.ammo += amount; item.reserve -= amount; }
         actor.reloadUntil = 0;
       }
-      const controls = actor.bot ? actor.bot.update(dt) : actor.isPlayer ? input : {};
+      const controls = actor.bot ? actor.bot.update(dt) : actor.controllerType === 'human' ? (inputsByActor?.get(actor.id) ?? (actor.isPlayer && !inputsByActor ? input : {})) : {};
       this.moveActor(actor, controls, dt);
       if (controls.fire) this.fire(actor, !!controls.autoFire || !actor.fireHeld);
       actor.fireHeld = !!controls.fire;
@@ -179,91 +191,8 @@ export class Game {
     const result = resolveRound(s, this.roundCandidates);
     if (result) this.finishRound(result);
   }
-  moveActor(actor, input, dt) {
-    if (Number.isFinite(input.yaw)) actor.yaw = input.yaw;
-    if (Number.isFinite(input.pitch)) actor.pitch = clamp(input.pitch, -1.49, 1.49);
-    const crouching = !!input.crouch;
-    if (crouching) actor.height = this.config.crouchingHeight;
-    else if (!this.world.canStand || this.world.canStand(actor, this.config.standingHeight)) actor.height = this.config.standingHeight;
-    actor.crouching = actor.height < this.config.standingHeight;
-    let forward = clamp(input.forward || 0, -1, 1), strafe = clamp(input.strafe || 0, -1, 1);
-    const magnitude = Math.hypot(forward, strafe);
-    if (magnitude > 1) { forward /= magnitude; strafe /= magnitude; }
-    const mode = actor.crouching ? 'crouch' : input.sneak ? 'sneak' : 'run';
-    const speed = actor.crouching ? this.config.crouchSpeed : input.sneak ? this.config.sneakSpeed : actor.bot ? this.config.botSpeed : this.config.runSpeed;
-    let dx = (-Math.sin(actor.yaw) * forward + Math.cos(actor.yaw) * strafe) * speed * dt;
-    let dz = (-Math.cos(actor.yaw) * forward - Math.sin(actor.yaw) * strafe) * speed * dt;
-    if (input.moveWorld) { dx = input.moveWorld.x; dz = input.moveWorld.z; }
-    if (input.jump && !actor.jumpHeld && actor.onGround && !actor.crouching) { actor.vy = this.config.jumpSpeed; actor.onGround = false; this.emit('jump', actor); }
-    actor.jumpHeld = !!input.jump;
-    actor.vy -= this.config.gravity * dt;
-    const before = point(actor), wasGrounded = actor.onGround;
-    const result = this.moveBody(actor, dx, actor.vy * dt, dz);
-    if (result.onGround !== undefined) actor.onGround = result.onGround;
-    if (actor.y <= .001) { actor.y = Math.max(0, actor.y); actor.onGround = true; }
-    if (actor.onGround && actor.vy < 0) actor.vy = 0;
-    if (result.ceiling && actor.vy > 0) actor.vy = 0;
-    if (!wasGrounded && actor.onGround) this.emit('land', actor, { surface: this.world.materialAt(actor.x, actor.z) });
-    const moved = distance(actor, before); actor.moving = moved / dt; actor.distanceWalked += moved;
-    if (moved > .001 && actor.onGround && this.state.time - actor.lastStep > (mode === 'run' ? .36 : mode === 'sneak' ? .66 : .75)) {
-      actor.lastStep = this.state.time;
-      this.emit('step', actor, { mode, surface: this.world.materialAt(actor.x, actor.z) });
-      if (!actor.isPlayer && this.random() < .33) this.emit('rustle', actor, { mode });
-    }
-  }
-  moveBody(actor, dx, dy, dz) {
-    const before = point(actor), projectedY = Math.max(0, actor.y + dy);
-    const bodies = [...this.actors.filter(a => a.alive), ...this.hostages.filter(h => h.alive!==false && !h.rescued), ...this.state.zombies.filter(z=>z.alive)].filter(other => other !== actor &&
-      projectedY < other.y + other.height - .02 && projectedY + actor.height > other.y + .02);
-    let x = actor.x, z = actor.z, remainingX = dx, remainingZ = dz;
-    actor.blockedBy = null;
-    // Sweep the horizontal capsules to their first contact, then retain only
-    // tangential motion. The same radius and rule apply to the human, bots and
-    // hostages. Static collision still owns every resulting displacement.
-    for (let pass = 0; pass < 3; pass++) {
-      const length2 = remainingX * remainingX + remainingZ * remainingZ;
-      if (length2 < 1e-12) break;
-      let first = 1, blocker = null;
-      for (const other of bodies) {
-        const radius = actor.radius + other.radius + .002;
-        const mx = x - other.x, mz = z - other.z, c = mx * mx + mz * mz - radius * radius;
-        const dot = mx * remainingX + mz * remainingZ;
-        if (c < -1e-7) {
-          // Existing overlap can arise from a test fixture or a vertical landing;
-          // permit separating movement, never deeper penetration.
-          if (dot < 0) { first = 0; blocker = other; }
-          continue;
-        }
-        if (dot >= 0) continue;
-        const discriminant = dot * dot - length2 * c;
-        if (discriminant < 0) continue;
-        const t = (-dot - Math.sqrt(discriminant)) / length2;
-        if (t >= -1e-7 && t < first) { first = Math.max(0, t); blocker = other; }
-      }
-      x += remainingX * first; z += remainingZ * first;
-      if (!blocker) break;
-      actor.blockedBy = blocker.id;
-      const normalLength = Math.hypot(x - blocker.x, z - blocker.z) || 1;
-      const nx = (x - blocker.x) / normalLength, nz = (z - blocker.z) / normalLength;
-      remainingX *= 1 - first; remainingZ *= 1 - first;
-      const inward = remainingX * nx + remainingZ * nz;
-      if (inward < 0) { remainingX -= inward * nx; remainingZ -= inward * nz; }
-      // Keep a tiny contact margin; it prevents floating point error from making
-      // a body appear inside its neighbour on the next fixed step.
-      x += nx * .00001; z += nz * .00001;
-    }
-    const result = this.world.move(actor, x - before.x, dy, z - before.z) ?? {};
-    // A static wall correction may push sideways into a neighbour. Reject that
-    // tentative horizontal displacement instead of pushing either body through
-    // geometry; this is collision rollback, never a navigation escape.
-    for (const other of bodies) {
-      const radius = actor.radius + other.radius;
-      if (distance(actor, other) < radius - .0001 && distance(actor, other) < distance(before, other) - .0001) {
-        actor.x = before.x; actor.z = before.z; actor.blockedBy = other.id; result.collision = true; break;
-      }
-    }
-    return result;
-  }
+  moveActor(actor, input, dt) { return moveActor(this, actor, input, dt); }
+  moveBody(actor, dx, dy, dz) { return moveBody(this, actor, dx, dy, dz); }
   inBuyZone(actor = this.player) { return this.world.anchors[actor.team].some(p => distance(actor, p) <= this.config.buyRadius); }
   buy(id, actor = this.player) {
     const reject = reason => ({ ok: false, reason });
@@ -396,7 +325,7 @@ export class Game {
     if(kind==='stomp' && (!source?.alive || source.behavior!=='attack'))return false;
     if(target.kind==='hostage'&&!this.config.hostageDamage)return false;
     if(target.kind==='dwarf'&&!this.config.wanderers)return false;
-    if (target.isPlayer && source && !source.isPlayer && source.team !== target.team) amount *= DIFFICULTIES[this.state.difficulty].humanDamage;
+    if ((target.isPlayer || target.controllerType === 'human') && source && !source.isPlayer && source.controllerType !== 'human' && source.team !== target.team) amount *= DIFFICULTIES[this.state.difficulty].humanDamage;
     const absorbed = Math.min(target.armor || 0, amount * .32); target.armor = Math.max(0, (target.armor || 0) - absorbed);
     const dealt = Math.min(target.hp, amount - absorbed); target.hp = Math.max(0, target.hp - dealt);
     const hitPoint = context.point ?? { x: target.x, y: target.y + target.height * .6, z: target.z };

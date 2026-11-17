@@ -1,0 +1,228 @@
+{
+  "src/fps/movement.mjs": [],
+  "src/fps/body-recovery.mjs": [],
+  "src/fps/config.mjs": [],
+  "src/fps/zombie-poses.mjs": [],
+  "src/fps/zombie-sites.mjs": [],
+  "src/fps/zombies.mjs": [
+    "src/fps/body-recovery.mjs",
+    "src/fps/config.mjs",
+    "src/fps/zombie-poses.mjs",
+    "src/fps/zombie-sites.mjs"
+  ],
+  "src/fps/player-names.mjs": [],
+  "src/fps/grenade-physics.mjs": [],
+  "src/fps/tactical-rules.mjs": [
+    "src/fps/config.mjs"
+  ],
+  "src/fps/control-deployment.mjs": [
+    "src/fps/player-names.mjs"
+  ],
+  "src/fps/combat-flow.mjs": [
+    "src/fps/control-deployment.mjs",
+    "src/fps/player-names.mjs"
+  ],
+  "vendor/yuka/yuka.module.js": [],
+  "src/fps/action-rules.mjs": [
+    "src/fps/bots.mjs",
+    "src/fps/combat-flow.mjs",
+    "src/fps/config.mjs",
+    "src/fps/zombie-poses.mjs"
+  ],
+  "src/fps/riposte-fps-math.mjs": [],
+  "vendor/three/three.core.js": [],
+  "vendor/three/three.module.js": [
+    "vendor/three/three.core.js"
+  ],
+  "vendor/three/addons/math/Capsule.js": [
+    "vendor/three/three.module.js"
+  ],
+  "vendor/three/addons/math/Octree.js": [
+    "vendor/three/addons/math/Capsule.js",
+    "vendor/three/three.module.js"
+  ],
+  "src/fps/physics.mjs": [
+    "vendor/three/addons/math/Capsule.js",
+    "vendor/three/addons/math/Octree.js",
+    "vendor/three/three.module.js"
+  ],
+  "src/fps/tactical-map.mjs": [
+    "src/fps/physics.mjs"
+  ],
+  "src/fps/bot-tactics.mjs": [
+    "src/fps/physics.mjs",
+    "src/fps/tactical-map.mjs"
+  ],
+  "src/fps/bots.mjs": [
+    "src/fps/action-rules.mjs",
+    "src/fps/body-recovery.mjs",
+    "src/fps/bot-tactics.mjs",
+    "src/fps/config.mjs",
+    "src/fps/physics.mjs",
+    "src/fps/riposte-fps-math.mjs",
+    "vendor/yuka/yuka.module.js"
+  ],
+  "src/fps/game.mjs": [
+    "src/fps/action-rules.mjs",
+    "src/fps/body-recovery.mjs",
+    "src/fps/bot-tactics.mjs",
+    "src/fps/bots.mjs",
+    "src/fps/combat-flow.mjs",
+    "src/fps/config.mjs",
+    "src/fps/grenade-physics.mjs",
+    "src/fps/movement.mjs",
+    "src/fps/player-names.mjs",
+    "src/fps/tactical-rules.mjs",
+    "src/fps/zombie-poses.mjs",
+    "src/fps/zombies.mjs"
+  ],
+  "furniture-editor/project-limits.mjs": [],
+  "furniture-editor/build/wall-joints.mjs": [],
+  "furniture-editor/appearance.mjs": [],
+  "furniture-editor/build/pattern-presets.mjs": [],
+  "furniture-editor/build/surface-style.mjs": [
+    "furniture-editor/appearance.mjs",
+    "furniture-editor/build/pattern-presets.mjs",
+    "furniture-editor/build/wall-joints.mjs",
+    "furniture-editor/project-limits.mjs"
+  ],
+  "src/floor5-data.js": [],
+  "src/world.js": [],
+  "src/fps/start-elevators.mjs": [],
+  "src/fps/doors.mjs": [
+    "src/fps/physics.mjs",
+    "src/fps/start-elevators.mjs"
+  ],
+  "src/fps/navigation.mjs": [
+    "src/fps/physics.mjs",
+    "vendor/yuka/yuka.module.js"
+  ],
+  "src/fps/furnishings.mjs": [],
+  "src/fps/living-floor-plan.mjs": [
+    "src/fps/physics.mjs"
+  ],
+  "src/fps/facility-details.mjs": [],
+  "src/fps/destructible-glass.mjs": [],
+  "furniture-editor/build/floor-edge.mjs": [
+    "furniture-editor/project-limits.mjs"
+  ],
+  "furniture-editor/library/genexpert-catalog.mjs": [],
+  "furniture-editor/library/house-catalog.mjs": [],
+  "furniture-editor/library/onboard-catalog.mjs": [],
+  "furniture-editor/library/lab-furniture.mjs": [],
+  "furniture-editor/library/fps-catalog.mjs": [],
+  "furniture-editor/library/procedural.mjs": [
+    "furniture-editor/library/fps-catalog.mjs",
+    "furniture-editor/library/lab-furniture.mjs"
+  ],
+  "furniture-editor/library/office-catalog.mjs": [],
+  "furniture-editor/library/catalog.mjs": [
+    "furniture-editor/library/fps-catalog.mjs",
+    "furniture-editor/library/genexpert-catalog.mjs",
+    "furniture-editor/library/house-catalog.mjs",
+    "furniture-editor/library/office-catalog.mjs",
+    "furniture-editor/library/onboard-catalog.mjs",
+    "furniture-editor/library/procedural.mjs"
+  ],
+  "furniture-editor/model-alignment.mjs": [
+    "furniture-editor/appearance.mjs",
+    "furniture-editor/library/catalog.mjs"
+  ],
+  "furniture-editor/wall-mounts.mjs": [
+    "furniture-editor/model-alignment.mjs"
+  ],
+  "furniture-editor/core.mjs": [
+    "furniture-editor/appearance.mjs",
+    "furniture-editor/library/catalog.mjs",
+    "furniture-editor/model-alignment.mjs",
+    "furniture-editor/project-limits.mjs",
+    "furniture-editor/wall-mounts.mjs"
+  ],
+  "furniture-editor/build/floor-tape.mjs": [
+    "furniture-editor/build/floor-edge.mjs",
+    "furniture-editor/core.mjs"
+  ],
+  "furniture-editor/build/walkable-spaces.mjs": [
+    "furniture-editor/core.mjs"
+  ],
+  "furniture-editor/build/environment-layout.mjs": [],
+  "furniture-editor/build/architecture.mjs": [
+    "furniture-editor/appearance.mjs",
+    "furniture-editor/project-limits.mjs"
+  ],
+  "furniture-editor/library/glb-utils.mjs": [],
+  "furniture-editor/library/zip.mjs": [],
+  "furniture-editor/build/project-scene.mjs": [
+    "furniture-editor/build/architecture.mjs",
+    "furniture-editor/build/floor-edge.mjs",
+    "furniture-editor/build/walkable-spaces.mjs",
+    "furniture-editor/core.mjs",
+    "src/floor5-data.js",
+    "src/fps/furnishings.mjs",
+    "src/world.js"
+  ],
+  "furniture-editor/build/posters.mjs": [
+    "furniture-editor/project-limits.mjs"
+  ],
+  "furniture-editor/build/paint-over-wall.mjs": [
+    "furniture-editor/appearance.mjs",
+    "furniture-editor/build/architecture.mjs",
+    "furniture-editor/build/posters.mjs",
+    "furniture-editor/project-limits.mjs"
+  ],
+  "furniture-editor/build/treatments.mjs": [
+    "furniture-editor/build/architecture.mjs",
+    "furniture-editor/build/paint-over-wall.mjs",
+    "furniture-editor/project-limits.mjs"
+  ],
+  "furniture-editor/build/ai-export.mjs": [
+    "furniture-editor/build/architecture.mjs",
+    "furniture-editor/build/floor-edge.mjs",
+    "furniture-editor/build/project-scene.mjs"
+  ],
+  "furniture-editor/build/level-project.mjs": [
+    "furniture-editor/appearance.mjs",
+    "furniture-editor/build/ai-export.mjs",
+    "furniture-editor/build/architecture.mjs",
+    "furniture-editor/build/environment-layout.mjs",
+    "furniture-editor/build/floor-edge.mjs",
+    "furniture-editor/build/floor-tape.mjs",
+    "furniture-editor/build/pattern-presets.mjs",
+    "furniture-editor/build/posters.mjs",
+    "furniture-editor/build/project-scene.mjs",
+    "furniture-editor/build/surface-style.mjs",
+    "furniture-editor/build/treatments.mjs",
+    "furniture-editor/build/walkable-spaces.mjs",
+    "furniture-editor/core.mjs",
+    "furniture-editor/library/catalog.mjs",
+    "furniture-editor/library/glb-utils.mjs",
+    "furniture-editor/library/zip.mjs",
+    "furniture-editor/model-alignment.mjs",
+    "furniture-editor/project-limits.mjs",
+    "furniture-editor/wall-mounts.mjs"
+  ],
+  "src/fps/level-adapter.mjs": [
+    "furniture-editor/build/architecture.mjs",
+    "furniture-editor/build/floor-edge.mjs",
+    "furniture-editor/build/level-project.mjs",
+    "furniture-editor/build/project-scene.mjs",
+    "furniture-editor/build/walkable-spaces.mjs",
+    "furniture-editor/core.mjs"
+  ],
+  "src/fps/world.mjs": [
+    "furniture-editor/build/surface-style.mjs",
+    "src/floor5-data.js",
+    "src/fps/bot-tactics.mjs",
+    "src/fps/destructible-glass.mjs",
+    "src/fps/doors.mjs",
+    "src/fps/facility-details.mjs",
+    "src/fps/furnishings.mjs",
+    "src/fps/level-adapter.mjs",
+    "src/fps/living-floor-plan.mjs",
+    "src/fps/navigation.mjs",
+    "src/fps/physics.mjs",
+    "src/fps/start-elevators.mjs",
+    "src/fps/tactical-map.mjs",
+    "src/world.js"
+  ]
+}

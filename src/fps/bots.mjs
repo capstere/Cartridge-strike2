@@ -166,7 +166,7 @@ export class BotController {
     if (now < this.nextBurstAt) return false;
     // This only budgets independently perceived firing opportunities. It never
     // communicates the human's coordinates or grants sight to another bot.
-    if (target.entity.isPlayer) {
+    if (target.entity.isPlayer || target.entity.controllerType === 'human') {
       const others = game.actors.filter(a => a !== actor && a.alive && a.team === actor.team && a.bot?.target?.entity === target.entity && a.bot.burstRemaining > 0 && a.bot.burstUntil > now);
       if (others.length >= profile.humanAttackers) return false;
     }
