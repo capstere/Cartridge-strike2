@@ -93,6 +93,7 @@ export class Game {
     for (const side of Object.keys(TEAMS)) for (let i = 0; i < 5; i++) {
       const id = `${side}-${i}`, isPlayer = this.localPlayerId === undefined ? side === team && i === 0 : id === this.localPlayerId;
       const controllerType = this.controllers ? this.controllers.get(id) ?? 'unoccupied' : isPlayer && !this.autoplay ? 'human' : 'bot';
+      if (this.config.networkSlice && controllerType !== 'human') continue;
       this.actors.push({ id: `${side}-${i}`, name: isPlayer ? 'Du' : `${side === 'analysts' ? 'A' : 'C'}-${String(i + 1).padStart(2, '0')}`, team: side, index: i, isPlayer, controllerType,
         money: this.config.startMoney, kills: 0, deaths: 0, alive: false, x: 0, y: 0, z: 0, radius: this.config.radius, height: this.config.standingHeight });
     }
@@ -117,18 +118,18 @@ export class Game {
       });
       actor.bot = actor.controllerType === 'bot' ? new BotController(this, actor) : null;
     }
-    s.hostages = this.world.anchors.hostages.map((p, i) => ({ ...point(p), id: `hostage-${i}`, name: `Gisslan ${i + 1}`, height: 1.6, radius: this.config.radius, vy: 0, onGround: true, rescued: false, escortId: null, path: [], pathAt: 0, distanceWalked: 0 }));
+    s.hostages = (this.config.networkSlice ? [] : this.world.anchors.hostages).map((p, i) => ({ ...point(p), id: `hostage-${i}`, name: `Gisslan ${i + 1}`, height: 1.6, radius: this.config.radius, vy: 0, onGround: true, rescued: false, escortId: null, path: [], pathAt: 0, distanceWalked: 0 }));
     const carrier = this.actors.find(a => a.team === 'counterAnalysts');
     s.bomb = { status: 'carried', carrierId: carrier.id, x: carrier.x, y: 0, z: carrier.z, deadline: Infinity, nextBeep: Infinity };
     for (const actor of this.actors) if (actor.bot) actor.bot.shop();
     prepareActionRound(this);
     this.world.setElevatorProgress?.(s.phase==='buy'?0:1);
     initializeCombat(this);
-    populateZombies(this);
+    if (!this.config.networkSlice) populateZombies(this);
     this.squadTactics=new SquadTactics(this);
     this.emit('round', null, { round: s.round });
   }
-  radio(id, actor=this.player) { return sendRadio(this,id,actor); }
+  radio(id, actor=this.player) { if(this.config.networkSlice)return false; return sendRadio(this,id,actor); }
   startInventory(team) {
     const id = team === 'analysts' ? 'p9' : 'p12';
     return { primary: null, pistol: this.weaponItem(id), knife: { id: 'knife', ammo: Infinity, reserve: 0 }, smoke: 0, flash: 0, he: 0 };
@@ -161,7 +162,7 @@ export class Game {
       s.phase = 'active'; this.emit('start', null);
     }
     this.roundCandidates = []; this.pendingDamage = [];
-    this.world.doors?.update(s.time,dt,[...this.actors,...this.hostages,...s.zombies,...(this.config.wanderers?s.wanderers||[]:[])]);
+    if (!this.config.networkSlice) this.world.doors?.update(s.time,dt,[...this.actors,...this.hostages,...s.zombies,...(this.config.wanderers?s.wanderers||[]:[])]);
     tickActionState(this,dt);
     for (const actor of this.actors) {
       if (!actor.alive) continue;
@@ -196,6 +197,7 @@ export class Game {
   inBuyZone(actor = this.player) { return this.world.anchors[actor.team].some(p => distance(actor, p) <= this.config.buyRadius); }
   buy(id, actor = this.player) {
     const reject = reason => ({ ok: false, reason });
+    if (this.config.networkSlice) return reject('One-weapon local slice.');
     const w = WEAPONS[id];
     if (!w || !w.cost) return reject('Utrustningen kan inte köpas.');
     if (!actor?.alive || (this.phase !== 'buy' && !(isEndless(this)&&this.phase==='active'))) return reject('Köp är endast öppet under köptiden.');
@@ -212,6 +214,7 @@ export class Game {
     this.emit('buy', actor, { item: id }); return { ok: true };
   }
   select(slot, actor = this.player) {
+    if(this.config.networkSlice)return false;
     if (!actor?.alive) return false;
     const inventory = actor.inventory; let id = slot;
     if (slot === 1 || slot === '1' || slot === 'primary') id = inventory.primary?.id;
@@ -237,8 +240,9 @@ export class Game {
     if (!item || !w.reload || item.ammo >= w.magazine || !item.reserve) return false;
     actor.reloadUntil = this.state.time + w.reload; this.emit('reload', actor, { weapon: actor.weapon, duration: w.reload }); return true;
   }
-  dropItem(actor, item) { this.state.drops.push({ ...point(actor), id: `drop-${++this.eventSerial}`, type: 'weapon', createdAt:this.state.time, item: { ...item } }); }
+  dropItem(actor, item) { if(this.config.networkSlice)return; this.state.drops.push({ ...point(actor), id: `drop-${++this.eventSerial}`, type: 'weapon', createdAt:this.state.time, item: { ...item } }); }
   drop(actor = this.player) {
+    if(this.config.networkSlice)return false;
     if (!actor?.alive || !['buy', 'active'].includes(this.phase)) return false;
     if (actor.weapon === 'bomb' && this.bomb.carrierId === actor.id) {
       Object.assign(this.bomb, { status: 'dropped', carrierId: null, ...point(actor) }); this.select(actor.inventory.primary?.id ?? actor.inventory.pistol?.id ?? 'knife', actor); actor.action = null; this.emit('drop', actor, { item: 'bomb' }); return true;
@@ -313,7 +317,7 @@ export class Game {
         }
       } else if (wall) {
         this.emit('impact', null, { ...hitPoint, sourceId: actor.id, surface: wall.material ?? 'wall', surfaceId: wall.id, normal: wall.normal, direction: dir });
-        const shattered=this.world.glass?.breakAt(wall);if(shattered)this.emit('glass-break',null,{...shattered,sourceId:actor.id});
+        const shattered=!this.config.networkSlice&&this.world.glass?.breakAt(wall);if(shattered)this.emit('glass-break',null,{...shattered,sourceId:actor.id});
       }
       this.emit('tracer', actor, { from: origin, to: hitPoint, weapon: actor.weapon });
     }
@@ -414,6 +418,7 @@ export class Game {
     return drop ? { type: 'pickupWeapon', target: drop } : null;
   }
   prompt(actor = this.player) {
+    if(this.config.networkSlice)return '';
     if (!actor?.alive) return 'Utslagen · följ en levande lagkamrat';
     if (this.phase === 'buy') return 'B · köp utrustning';
     const action = this.interaction(actor);
@@ -421,6 +426,7 @@ export class Game {
     return { plant: 'Håll E · plantera i '+missionRoomName(this.world), defuse: 'Håll E · desarmera', pickupBomb: 'E · ta upp uppdragsbomb', escort: action.target.escortId ? 'E · stoppa eskort' : 'E · starta eskort', pickupWeapon: `E · ta upp ${WEAPONS[action.target.item?.id]?.name ?? 'vapen'}` }[action.type];
   }
   interact(actor, input) {
+    if(this.config.networkSlice)return;
     const interaction = input.interact ? this.interaction(actor, input.interactTarget) : null;
     if (!interaction) { actor.action = null;if(input.interact){const door=this.world.doors?.nearest(actor);if(door)this.world.doors.request(door,this.state.time,actor);} return; }
     if (interaction.duration) {

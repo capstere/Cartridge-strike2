@@ -31,7 +31,9 @@ jobs:
           cache-dependency-path: server/package-lock.json
       - run: npm ci --prefix server --ignore-scripts
       - name: Verify the pinned Colyseus API against the shared headless engine
-        run: npm test --prefix server
+        run: |
+          npm run build --prefix server -- --check
+          npm test --prefix server
   node-tests:
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -80,3 +82,15 @@ jobs:
           server=$!
           trap 'kill $server || true' EXIT
           node tools/mobile-reliability-browser.mjs
+      # Reuse this job's Chromium install. Main keeps the existing fast checks;
+      # full network gameplay runs once per PR/manual run on the pinned server LTS.
+      - uses: actions/setup-node@v4
+        if: github.event_name != 'push'
+        with:
+          node-version-file: server/.node-version
+      - name: Two-browser authoritative gameplay with latency and cleanup
+        if: github.event_name != 'push'
+        timeout-minutes: 6
+        run: |
+          npm ci --prefix server --ignore-scripts
+          npm run test:browser --prefix server

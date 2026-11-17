@@ -117,7 +117,7 @@ export class Renderer extends EngineRenderer {
        freezeStaticTransforms(this.projectFurniture);
       }
       this.actionVisuals=new ActionVisuals(this.scene,world);
-      await Promise.all([loadCharacterLibrary(),loadDefaultHostages()]);
+      await Promise.all([loadCharacterLibrary(),world.networkSlice?null:loadDefaultHostages()]);
       if(this.presentationDisposed)return;
       this.facilityScene=world.newLevel?null:await buildFacilityScene(world,settings);
       if(this.presentationDisposed){this.facilityScene?.dispose();return;}
@@ -152,10 +152,10 @@ export class Renderer extends EngineRenderer {
       // Prepare the actual rigged models and all first-use world weapon materials.
       // Previously these only existed after Start and compiled during combat.
       const startupActors=[];
-      for(const side of ['analysts','counterAnalysts'])for(let i=0;i<5;i++)startupActors.push(this.actorModel({id:`${side}-${i}`,team:side}));
-      for(let i=0;i<2;i++)startupActors.push(this.actorModel({id:`hostage-${i}`}));
+      for(const side of ['analysts','counterAnalysts'])for(let i=0;i<(world.networkSlice?1:5);i++)startupActors.push(this.actorModel({id:`${side}-${i}`,team:side}));
+      if(!world.networkSlice)for(let i=0;i<2;i++)startupActors.push(this.actorModel({id:`hostage-${i}`}));
       this.worldWeaponWarmup=new THREE.Group();this.worldWeaponWarmup.name='world-weapon-preload';
-      if(!this.settings.mobile)for(const w of Object.values(WEAPONS))if(!['armor'].includes(w.slot))this.worldWeaponWarmup.add(makeWeapon(w.id,{viewmodel:false}));
+      if(!this.settings.mobile)for(const w of Object.values(WEAPONS))if(!['armor'].includes(w.slot)&&(!world.networkSlice||w.id==='smg'))this.worldWeaponWarmup.add(makeWeapon(w.id,{viewmodel:false}));
       this.scene.add(this.worldWeaponWarmup);
       if(this.neutralLighting){
        const maps=new Set();

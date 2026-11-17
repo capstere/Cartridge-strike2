@@ -3,9 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "engines": {"node": ">=22 <27"},
+  "engines": {
+    "node": ">=22 <27"
+  },
   "scripts": {
-    "test": "node --import ./register-shared.mjs --test test/*.test.mjs"
+    "test": "node --import ./register-shared.mjs --test test/*.test.mjs",
+    "build": "node ../tools/build-network.mjs",
+    "start": "node --import ./register-shared.mjs local-server.mjs",
+    "test:browser": "node --import ./register-shared.mjs ../tools/network-browser.mjs"
   },
   "dependencies": {
     "@colyseus/core": "0.18.28",
