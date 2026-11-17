@@ -121,7 +121,11 @@ export function createPhysics(description,data){
   let dynamicBoxes=[],dynamicIndex=new SpatialIndex();
   const dynamicScratch=[],motionScratch=[];
   const scopeScratch=[],obstacleScratch=[],boxScratch=[];
-  const setDynamicBoxes=boxes=>{dynamicBoxes=[...boxes,...staticBoxes.filter(b=>b.glassId||glassRails.has(b))];dynamicIndex=new SpatialIndex();for(const b of dynamicBoxes)dynamicIndex.insert(b,b.broadphaseBounds||boxBounds(b));};
+  // Prediction owns only movable leaves, sharing the immutable Floor 5 tree.
+  // Contexts are built once; conservative leaf bounds remain valid while posing.
+  const createDynamicContext=boxes=>{const all=[...boxes,...staticBoxes.filter(b=>b.glassId||glassRails.has(b))],index=new SpatialIndex();for(const b of all)index.insert(b,b.broadphaseBounds||boxBounds(b));return {boxes:all,index};};
+  const setDynamicBoxes=boxes=>{const c=createDynamicContext(boxes);dynamicBoxes=c.boxes;dynamicIndex=c.index;};
+  const withDynamicContext=(context,run)=>{const boxes=dynamicBoxes,index=dynamicIndex;dynamicBoxes=context.boxes;dynamicIndex=context.index;try{return run();}finally{dynamicBoxes=boxes;dynamicIndex=index;}};
   let lastFloor=null;
   function onFloor(x,z){
     // Consecutive capsule-ring and path samples usually stay in one polygon.
@@ -321,5 +325,5 @@ export function createPhysics(description,data){
     return hit;
   }
   function segmentClear(from,to,options={}){const dx=to.x-from.x,dy=(to.y??1.5)-(from.y??1.5),dz=to.z-from.z,d=Math.hypot(dx,dy,dz);return d<EPS||!raycast({...from,y:from.y??1.5},{x:dx,y:dy,z:dz},Math.max(0,d-.015),options);}
-  return {canOccupy,updateGlassPassages,staticCanOccupy:(x,z,r,h,y)=>canOccupy(x,z,r,h,y,true),setDynamicBoxes,scopeAllowed,onFloor,canStand,move,raycast,segmentClear,octree,staticBoxes,statistics:{staticBoxes:staticBoxes.length,collisionSurfaces:surfaces.length,source:'Three.js Capsule + Octree; source boxes and polygons'}};
+  return {canOccupy,updateGlassPassages,staticCanOccupy:(x,z,r,h,y)=>canOccupy(x,z,r,h,y,true),setDynamicBoxes,createDynamicContext,withDynamicContext,scopeAllowed,onFloor,canStand,move,raycast,segmentClear,octree,staticBoxes,statistics:{staticBoxes:staticBoxes.length,collisionSurfaces:surfaces.length,source:'Three.js Capsule + Octree; source boxes and polygons'}};
 }

@@ -1,0 +1,2830 @@
+{
+  "contract": {
+    "protocolVersion": 3,
+    "protocolHash": "55171d430a4d3221e15f85780a873516fb55e55254a37acdf3e9680f8cd8cda2",
+    "mapId": "floor5-prepared",
+    "collisionHash": "a5351e073a01ac95466acf4346acf9812f4265224e56712ce3e889085a42b6d9",
+    "mapHash": "89283f437623457a10da37be29a282a41591f202270051ba940549ba01b4b050",
+    "configHash": "d2527986115955118fc0c4206c9884a0687ef8e85eb2dea4806dab401a0a01b5",
+    "buildHash": "27bf7acbe769bc53b7c54c9c6ac6692efb2c4ff0acb91b409734c69c53c62e2d",
+    "tickRate": 60,
+    "patchMs": 50
+  },
+  "environment": {
+    "node": "v26.13.0",
+    "platform": "darwin",
+    "arch": "arm64",
+    "deviceScaleFactor": 1,
+    "angle": "metal"
+  },
+  "results": [
+    {
+      "scenario": "loopback",
+      "room": "PsyWPBzzV",
+      "interpolation": {
+        "max": 0.3846036712655767,
+        "samples": 37
+      },
+      "prediction": {
+        "localMoved": 0.07000000000000028,
+        "serverMoved": 0
+      },
+      "respawn": {
+        "life": 2,
+        "delta": 0,
+        "ammo": 30
+      },
+      "reloads": [
+        {
+          "ammo": [
+            18,
+            18,
+            18,
+            18,
+            18,
+            18,
+            18,
+            18,
+            18,
+            18,
+            18,
+            18,
+            18,
+            18,
+            18,
+            18,
+            18,
+            18,
+            18,
+            18,
+            18,
+            18,
+            18,
+            18,
+            18,
+            18,
+            18,
+            18,
+            18,
+            18,
+            18,
+            18,
+            18,
+            18,
+            18
+          ],
+          "attempts": 117,
+          "activeAttempts": 107,
+          "full": 30,
+          "serverAttempts": 107
+        },
+        {
+          "ammo": [
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29,
+            29
+          ],
+          "attempts": 111,
+          "activeAttempts": 105,
+          "full": 30,
+          "serverAttempts": 107
+        }
+      ],
+      "resumeAttempts": 1,
+      "admission": {
+        "full": {
+          "accepted": false,
+          "message": "room \"PsyWPBzzV\" is locked",
+          "code": 522
+        },
+        "mismatch": {
+          "accepted": false,
+          "message": "Incompatible buildHash. Reload the matching local client/server build.",
+          "code": 409
+        }
+      },
+      "measured": {
+        "metrics": {
+          "sent": 4982,
+          "replays": 10645,
+          "adopts": 1545,
+          "resets": 1,
+          "cosmeticShots": 15,
+          "confirmedShots": 13,
+          "suppressedShots": 13,
+          "maxPending": 37,
+          "preAdoptionOffset": {
+            "samples": 512,
+            "median": 0,
+            "p95": 0,
+            "max": 0
+          }
+        },
+        "pending": 4,
+        "settledError": 0,
+        "draws": 1198,
+        "actors": [
+          {
+            "id": "analysts-0",
+            "controller": "human",
+            "bot": false
+          },
+          {
+            "id": "counterAnalysts-0",
+            "controller": "human",
+            "bot": false
+          }
+        ],
+        "fatal": false
+      },
+      "cleanup": [
+        {
+          "cycle": 1,
+          "ms": 416.46329200000037,
+          "dom": {
+            "documents": 1,
+            "nodes": 1338,
+            "jsEventListeners": 230
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 2,
+          "ms": 387.66795800000546,
+          "dom": {
+            "documents": 1,
+            "nodes": 1338,
+            "jsEventListeners": 230
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 3,
+          "ms": 334.97308299998986,
+          "dom": {
+            "documents": 1,
+            "nodes": 1338,
+            "jsEventListeners": 230
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 4,
+          "ms": 285.98937500000466,
+          "dom": {
+            "documents": 1,
+            "nodes": 1338,
+            "jsEventListeners": 230
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 5,
+          "ms": 377.5122080000001,
+          "dom": {
+            "documents": 1,
+            "nodes": 1338,
+            "jsEventListeners": 230
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 6,
+          "ms": 297.7371659999917,
+          "dom": {
+            "documents": 1,
+            "nodes": 1338,
+            "jsEventListeners": 230
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 7,
+          "ms": 384.50929099999485,
+          "dom": {
+            "documents": 1,
+            "nodes": 1338,
+            "jsEventListeners": 230
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 8,
+          "ms": 328.494749999998,
+          "dom": {
+            "documents": 1,
+            "nodes": 1338,
+            "jsEventListeners": 230
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 9,
+          "ms": 321.39137499999197,
+          "dom": {
+            "documents": 1,
+            "nodes": 1338,
+            "jsEventListeners": 230
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 10,
+          "ms": 353.13808399999107,
+          "dom": {
+            "documents": 1,
+            "nodes": 1338,
+            "jsEventListeners": 230
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 11,
+          "ms": 359.55795899999794,
+          "dom": {
+            "documents": 1,
+            "nodes": 1338,
+            "jsEventListeners": 230
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 12,
+          "ms": 326.743083999987,
+          "dom": {
+            "documents": 1,
+            "nodes": 1338,
+            "jsEventListeners": 230
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 13,
+          "ms": 310.0747090000077,
+          "dom": {
+            "documents": 1,
+            "nodes": 1338,
+            "jsEventListeners": 230
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 14,
+          "ms": 326.9178329999995,
+          "dom": {
+            "documents": 1,
+            "nodes": 1338,
+            "jsEventListeners": 230
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 15,
+          "ms": 305.1555420000077,
+          "dom": {
+            "documents": 1,
+            "nodes": 1338,
+            "jsEventListeners": 230
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 16,
+          "ms": 378.89179100000183,
+          "dom": {
+            "documents": 1,
+            "nodes": 1338,
+            "jsEventListeners": 230
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 17,
+          "ms": 393.11820799999987,
+          "dom": {
+            "documents": 1,
+            "nodes": 1338,
+            "jsEventListeners": 230
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 18,
+          "ms": 304.8512919999921,
+          "dom": {
+            "documents": 1,
+            "nodes": 1338,
+            "jsEventListeners": 230
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 19,
+          "ms": 363.7075409999961,
+          "dom": {
+            "documents": 1,
+            "nodes": 1338,
+            "jsEventListeners": 230
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 20,
+          "ms": 305.3596249999973,
+          "dom": {
+            "documents": 1,
+            "nodes": 1338,
+            "jsEventListeners": 230
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        }
+      ],
+      "timings": {
+        "beforeCleanupMs": 85852.024208,
+        "cleanupMs": 7505.938792000001,
+        "totalMs": 93357.964292
+      },
+      "perf": {
+        "serverTickMs": {
+          "samples": 4860,
+          "median": 0.27016599999842583,
+          "p95": 1.6152080000028946,
+          "max": 239.5
+        },
+        "clients": [
+          {
+            "frameMs": {
+              "samples": 4925,
+              "median": 16.69999999999709,
+              "p95": 16.799999999995634,
+              "max": 216.6999999999971
+            },
+            "predictionCpuMs": {
+              "samples": 4926,
+              "median": 0.19999992847442627,
+              "p95": 0.30000007152557373,
+              "max": 1.2000000476837158
+            },
+            "draws": {
+              "samples": 4926,
+              "median": 1116,
+              "p95": 1198,
+              "max": 1409
+            },
+            "heap": 344254650,
+            "gpu": {
+              "geometries": 1565,
+              "textures": 100
+            }
+          },
+          {
+            "frameMs": {
+              "samples": 4356,
+              "median": 16.69999999999709,
+              "p95": 16.80000000000291,
+              "max": 166.59999999999854
+            },
+            "predictionCpuMs": {
+              "samples": 4357,
+              "median": 0.19999992847442627,
+              "p95": 0.3999999761581421,
+              "max": 1.5
+            },
+            "draws": {
+              "samples": 4357,
+              "median": 221,
+              "p95": 2064,
+              "max": 3412
+            },
+            "heap": 157948420,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            }
+          }
+        ]
+      },
+      "doors": [
+        {
+          "doors": [
+            [
+              "D09",
+              0,
+              1
+            ],
+            [
+              "D12",
+              0,
+              1
+            ],
+            [
+              "D18",
+              0,
+              1
+            ],
+            [
+              "D20",
+              0,
+              1
+            ],
+            [
+              "D29",
+              0,
+              1
+            ],
+            [
+              "D32",
+              0,
+              1
+            ],
+            [
+              "D35",
+              0,
+              1
+            ],
+            [
+              "D36",
+              0,
+              1
+            ],
+            [
+              "D37",
+              0,
+              1
+            ],
+            [
+              "D38",
+              0,
+              1
+            ],
+            [
+              "D39",
+              1.5707963267948966,
+              1
+            ],
+            [
+              "D40",
+              0,
+              1
+            ],
+            [
+              "D44",
+              0,
+              1
+            ],
+            [
+              "D45",
+              0,
+              -1
+            ],
+            [
+              "D46",
+              0,
+              1
+            ],
+            [
+              "D47",
+              0,
+              1
+            ],
+            [
+              "D56",
+              0,
+              1
+            ],
+            [
+              "D59",
+              0,
+              1
+            ],
+            [
+              "D63",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0001",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0002",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0003",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0004",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0005",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0006",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0007",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0008",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0009",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0010",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0011",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0012",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0013",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0014",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0015",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0016",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0017",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0018",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0019",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0020",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0021",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0022",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0023",
+              0,
+              -1
+            ],
+            [
+              "BYGG-D-0024",
+              0,
+              -1
+            ],
+            [
+              "BYGG-D-0025",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0026",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0027",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0028",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0029",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0030",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0031",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0034",
+              0,
+              1
+            ]
+          ],
+          "elevator": 1,
+          "visualMatches": true,
+          "broken": 0
+        },
+        {
+          "doors": [
+            [
+              "D09",
+              0,
+              1
+            ],
+            [
+              "D12",
+              0,
+              1
+            ],
+            [
+              "D18",
+              0,
+              1
+            ],
+            [
+              "D20",
+              0,
+              1
+            ],
+            [
+              "D29",
+              0,
+              1
+            ],
+            [
+              "D32",
+              0,
+              1
+            ],
+            [
+              "D35",
+              0,
+              1
+            ],
+            [
+              "D36",
+              0,
+              1
+            ],
+            [
+              "D37",
+              0,
+              1
+            ],
+            [
+              "D38",
+              0,
+              1
+            ],
+            [
+              "D39",
+              1.5707963267948966,
+              1
+            ],
+            [
+              "D40",
+              0,
+              1
+            ],
+            [
+              "D44",
+              0,
+              1
+            ],
+            [
+              "D45",
+              0,
+              -1
+            ],
+            [
+              "D46",
+              0,
+              1
+            ],
+            [
+              "D47",
+              0,
+              1
+            ],
+            [
+              "D56",
+              0,
+              1
+            ],
+            [
+              "D59",
+              0,
+              1
+            ],
+            [
+              "D63",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0001",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0002",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0003",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0004",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0005",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0006",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0007",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0008",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0009",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0010",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0011",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0012",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0013",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0014",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0015",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0016",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0017",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0018",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0019",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0020",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0021",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0022",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0023",
+              0,
+              -1
+            ],
+            [
+              "BYGG-D-0024",
+              0,
+              -1
+            ],
+            [
+              "BYGG-D-0025",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0026",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0027",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0028",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0029",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0030",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0031",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0034",
+              0,
+              1
+            ]
+          ],
+          "elevator": 1,
+          "visualMatches": true,
+          "broken": 0
+        }
+      ],
+      "doorHit": {
+        "hp": 82,
+        "alive": true
+      },
+      "windows": [
+        {
+          "label": "Cargo Lift",
+          "frames": 300,
+          "fps": 60.002400096003825,
+          "frameMs": {
+            "median": 16.69999999999891,
+            "p95": 16.799999999999272,
+            "max": 16.80000000000109
+          },
+          "draws": {
+            "median": 1081,
+            "p95": 1081,
+            "max": 1081
+          },
+          "renderCpuMs": 8.277000003655752,
+          "gpu": {
+            "geometries": 405,
+            "textures": 89
+          },
+          "position": {
+            "x": -20.541,
+            "y": 0,
+            "z": -30.03999,
+            "yaw": 3.141592653589793
+          },
+          "room": "BYGG-G-41001",
+          "heapBytes": 92595284,
+          "taskCpuMs": 2683.7210000000005,
+          "scriptCpuMs": 2588.999
+        },
+        {
+          "label": "Service Lift",
+          "frames": 300,
+          "fps": 60.002400096003825,
+          "frameMs": {
+            "median": 16.69999999999891,
+            "p95": 16.700000000000728,
+            "max": 16.80000000000109
+          },
+          "draws": {
+            "median": 79,
+            "p95": 79,
+            "max": 79
+          },
+          "renderCpuMs": 1.5583333341280619,
+          "gpu": {
+            "geometries": 243,
+            "textures": 80
+          },
+          "position": {
+            "x": 28.00054,
+            "y": 0,
+            "z": 30.43484,
+            "yaw": 3.141592653589793
+          },
+          "room": "BYGG-G-41002",
+          "heapBytes": 80681460,
+          "taskCpuMs": 744.009,
+          "scriptCpuMs": 635.484
+        },
+        {
+          "label": "C08 desktop",
+          "frames": 297,
+          "fps": 59.40237609504377,
+          "frameMs": {
+            "median": 16.69999999999709,
+            "p95": 16.799999999995634,
+            "max": 33.400000000001455
+          },
+          "draws": {
+            "median": 1196,
+            "p95": 1196,
+            "max": 1196
+          },
+          "renderCpuMs": 14.654882154079399,
+          "gpu": {
+            "geometries": 1497,
+            "textures": 99
+          },
+          "position": {
+            "x": 22.78311498471657,
+            "y": 0,
+            "z": -17.905285217985433,
+            "yaw": 3.141592653589793
+          },
+          "room": "C08",
+          "heapBytes": 138067512,
+          "taskCpuMs": 4782.704000000001,
+          "scriptCpuMs": 4629.295
+        },
+        {
+          "label": "C08 mobile emulation",
+          "frames": 300,
+          "fps": 60.002400096003846,
+          "frameMs": {
+            "median": 16.69999999999709,
+            "p95": 16.799999999995634,
+            "max": 16.80000000000291
+          },
+          "draws": {
+            "median": 198,
+            "p95": 198,
+            "max": 198
+          },
+          "renderCpuMs": 3.0969999961058297,
+          "gpu": {
+            "geometries": 1467,
+            "textures": 95
+          },
+          "position": {
+            "x": 22.802491096217068,
+            "y": 0,
+            "z": -12.920596382804144,
+            "yaw": 0
+          },
+          "room": "C08",
+          "heapBytes": 106635412,
+          "taskCpuMs": 1298.1229999999998,
+          "scriptCpuMs": 1138.8339999999998
+        }
+      ],
+      "presented": {
+        "visible": true,
+        "model": [
+          22.802491096217068,
+          0,
+          -12.920596382804144
+        ],
+        "remote": [
+          22.802491096217068,
+          0,
+          -12.920596382804144
+        ],
+        "camera": [
+          22.78311498471657,
+          1.58,
+          -17.905285217985433
+        ],
+        "player": [
+          22.78311498471657,
+          1.58,
+          -17.905285217985433
+        ]
+      },
+      "animation": {
+        "walkingClip": "Walk_Loop",
+        "deathClip": "Death01"
+      },
+      "routeConfirmations": [
+        [
+          {
+            "sent": 462,
+            "ack": 464,
+            "error": 0.08305676378730147
+          },
+          {
+            "sent": 501,
+            "ack": 502,
+            "error": 0.09351507209587437
+          },
+          {
+            "sent": 640,
+            "ack": 641,
+            "error": 0.09913143909367492
+          },
+          {
+            "sent": 709,
+            "ack": 711,
+            "error": 0.09732789400365555
+          },
+          {
+            "sent": 1037,
+            "ack": 1038,
+            "error": 0.09415997709119266
+          },
+          {
+            "sent": 1135,
+            "ack": 1137,
+            "error": 0.0935917331474127
+          },
+          {
+            "sent": 1230,
+            "ack": 1230,
+            "error": 0.08862799242918187
+          },
+          {
+            "sent": 1279,
+            "ack": 1284,
+            "error": 1.2926626958051293
+          },
+          {
+            "sent": 1313,
+            "ack": 1313,
+            "error": 0.09620807488557598
+          },
+          {
+            "sent": 2147,
+            "ack": 2147,
+            "error": 0.08578720374311437
+          },
+          {
+            "sent": 2605,
+            "ack": 2606,
+            "error": 0.08697469079553267
+          },
+          {
+            "sent": 2735,
+            "ack": 2735,
+            "error": 0.09935454610731884
+          },
+          {
+            "sent": 2843,
+            "ack": 2844,
+            "error": 0.08444479026977113
+          }
+        ],
+        [
+          {
+            "sent": 418,
+            "ack": 418,
+            "error": 0.09428307676866823
+          },
+          {
+            "sent": 448,
+            "ack": 448,
+            "error": 0.09147061926116604
+          },
+          {
+            "sent": 489,
+            "ack": 490,
+            "error": 0.08419209313690199
+          },
+          {
+            "sent": 620,
+            "ack": 620,
+            "error": 0.08320714306920127
+          },
+          {
+            "sent": 653,
+            "ack": 653,
+            "error": 0.08632351599809594
+          },
+          {
+            "sent": 716,
+            "ack": 717,
+            "error": 0.09215497861644772
+          },
+          {
+            "sent": 770,
+            "ack": 771,
+            "error": 0.08447748678118974
+          },
+          {
+            "sent": 793,
+            "ack": 795,
+            "error": 0.08727197074333373
+          },
+          {
+            "sent": 875,
+            "ack": 876,
+            "error": 0.09633449502761832
+          },
+          {
+            "sent": 905,
+            "ack": 906,
+            "error": 0.09661552465407046
+          },
+          {
+            "sent": 1107,
+            "ack": 1107,
+            "error": 0.08234097182189243
+          },
+          {
+            "sent": 1126,
+            "ack": 1128,
+            "error": 0.0832653173494259
+          },
+          {
+            "sent": 1347,
+            "ack": 1347,
+            "error": 0.08154972149899221
+          },
+          {
+            "sent": 1374,
+            "ack": 1374,
+            "error": 0.08980054311059886
+          },
+          {
+            "sent": 1553,
+            "ack": 1555,
+            "error": 0.07944268364140762
+          },
+          {
+            "sent": 2068,
+            "ack": 2070,
+            "error": 0.09795162387653619
+          },
+          {
+            "sent": 2362,
+            "ack": 2364,
+            "error": 0.08606638938422694
+          },
+          {
+            "sent": 2407,
+            "ack": 2409,
+            "error": 0.08661680405276999
+          },
+          {
+            "sent": 2454,
+            "ack": 2454,
+            "error": 0.0871561063942547
+          },
+          {
+            "sent": 2811,
+            "ack": 2813,
+            "error": 0.09955403643279606
+          },
+          {
+            "sent": 2896,
+            "ack": 2898,
+            "error": 0.09156293156368117
+          },
+          {
+            "sent": 2973,
+            "ack": 2973,
+            "error": 0.09739910832193331
+          },
+          {
+            "sent": 3045,
+            "ack": 3047,
+            "error": 0.09082243879188753
+          },
+          {
+            "sent": 3066,
+            "ack": 3068,
+            "error": 0.08805168084937404
+          },
+          {
+            "sent": 3113,
+            "ack": 3113,
+            "error": 0.08281069906614615
+          },
+          {
+            "sent": 3162,
+            "ack": 3164,
+            "error": 0.09237680006423271
+          },
+          {
+            "sent": 3300,
+            "ack": 3301,
+            "error": 0.08389013068575688
+          },
+          {
+            "sent": 3331,
+            "ack": 3331,
+            "error": 0.08654799545506142
+          },
+          {
+            "sent": 3391,
+            "ack": 3393,
+            "error": 0.09219938329053044
+          },
+          {
+            "sent": 3442,
+            "ack": 3444,
+            "error": 0.08449097821714839
+          },
+          {
+            "sent": 3463,
+            "ack": 3465,
+            "error": 0.08727512990219953
+          },
+          {
+            "sent": 3542,
+            "ack": 3544,
+            "error": 0.0963352115336892
+          },
+          {
+            "sent": 3570,
+            "ack": 3571,
+            "error": 0.0966156476651379
+          },
+          {
+            "sent": 3769,
+            "ack": 3770,
+            "error": 0.0823410025160195
+          },
+          {
+            "sent": 3786,
+            "ack": 3788,
+            "error": 0.08326532457172683
+          },
+          {
+            "sent": 3980,
+            "ack": 3981,
+            "error": 0.08154972296297708
+          },
+          {
+            "sent": 4001,
+            "ack": 4002,
+            "error": 0.08980054351660068
+          },
+          {
+            "sent": 4174,
+            "ack": 4174,
+            "error": 0.0794426837014785
+          }
+        ]
+      ]
+    },
+    {
+      "scenario": "100ms-rtt-jitter",
+      "room": "ZwsgcGmxf",
+      "interpolation": {
+        "max": 0.4954876805857893,
+        "samples": 37
+      },
+      "prediction": {
+        "localMoved": 0.07000000000000028,
+        "serverMoved": 0
+      },
+      "respawn": {
+        "life": 2,
+        "delta": 0,
+        "ammo": 30
+      },
+      "reloads": [
+        {
+          "ammo": [
+            14,
+            14,
+            14,
+            14,
+            14,
+            14,
+            14,
+            14,
+            14,
+            14,
+            14,
+            14,
+            14,
+            14,
+            14,
+            14,
+            14,
+            14,
+            14,
+            14,
+            14,
+            14,
+            14,
+            14,
+            14,
+            14,
+            14,
+            14,
+            14,
+            14,
+            14,
+            14,
+            14,
+            14,
+            14
+          ],
+          "attempts": 124,
+          "activeAttempts": 105,
+          "full": 30,
+          "serverAttempts": 107
+        },
+        {
+          "ammo": [
+            27,
+            27,
+            27,
+            27,
+            27,
+            27,
+            27,
+            27,
+            27,
+            27,
+            27,
+            27,
+            27,
+            27,
+            27,
+            27,
+            27,
+            27,
+            27,
+            27,
+            27,
+            27,
+            27,
+            27,
+            27,
+            27,
+            27,
+            27,
+            27,
+            27,
+            27,
+            27,
+            27,
+            27,
+            27,
+            27
+          ],
+          "attempts": 119,
+          "activeAttempts": 109,
+          "full": 30,
+          "serverAttempts": 107
+        }
+      ],
+      "resumeAttempts": 1,
+      "admission": {
+        "full": {
+          "accepted": false,
+          "message": "room \"ZwsgcGmxf\" is locked",
+          "code": 522
+        },
+        "mismatch": {
+          "accepted": false,
+          "message": "Incompatible buildHash. Reload the matching local client/server build.",
+          "code": 409
+        }
+      },
+      "measured": {
+        "metrics": {
+          "sent": 4764,
+          "replays": 21797,
+          "adopts": 1564,
+          "resets": 1,
+          "cosmeticShots": 21,
+          "confirmedShots": 17,
+          "suppressedShots": 17,
+          "maxPending": 26,
+          "preAdoptionOffset": {
+            "samples": 512,
+            "median": 0,
+            "p95": 0,
+            "max": 0
+          }
+        },
+        "pending": 12,
+        "settledError": 0,
+        "draws": 1198,
+        "actors": [
+          {
+            "id": "analysts-0",
+            "controller": "human",
+            "bot": false
+          },
+          {
+            "id": "counterAnalysts-0",
+            "controller": "human",
+            "bot": false
+          }
+        ],
+        "fatal": false
+      },
+      "cleanup": [
+        {
+          "cycle": 1,
+          "ms": 711.6242079999938,
+          "dom": {
+            "documents": 1,
+            "nodes": 1338,
+            "jsEventListeners": 230
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 2,
+          "ms": 575.2666670000181,
+          "dom": {
+            "documents": 1,
+            "nodes": 1338,
+            "jsEventListeners": 230
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 3,
+          "ms": 633.9044169999834,
+          "dom": {
+            "documents": 1,
+            "nodes": 1338,
+            "jsEventListeners": 230
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        },
+        {
+          "cycle": 4,
+          "ms": 612.5572919999831,
+          "dom": {
+            "documents": 1,
+            "nodes": 1338,
+            "jsEventListeners": 230
+          },
+          "owned": {
+            "actors": 2,
+            "models": 2,
+            "callbacks": 4,
+            "remotes": 1,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            },
+            "voices": 0
+          }
+        }
+      ],
+      "timings": {
+        "beforeCleanupMs": 86722.50208300001,
+        "cleanupMs": 3079.734582999983,
+        "totalMs": 89802.237041
+      },
+      "perf": {
+        "serverTickMs": {
+          "samples": 4749,
+          "median": 0.2151249999878928,
+          "p95": 0.4969170000113081,
+          "max": 44.237249999976484
+        },
+        "clients": [
+          {
+            "frameMs": {
+              "samples": 4708,
+              "median": 16.69999999999709,
+              "p95": 16.70000000001164,
+              "max": 116.60000000000582
+            },
+            "predictionCpuMs": {
+              "samples": 4709,
+              "median": 0.19999992847442627,
+              "p95": 0.3999999761581421,
+              "max": 0.8999999761581421
+            },
+            "draws": {
+              "samples": 4709,
+              "median": 1114,
+              "p95": 1198,
+              "max": 1409
+            },
+            "heap": 181501517,
+            "gpu": {
+              "geometries": 1565,
+              "textures": 100
+            }
+          },
+          {
+            "frameMs": {
+              "samples": 4435,
+              "median": 16.69999999999709,
+              "p95": 16.799999999999272,
+              "max": 116.60000000000582
+            },
+            "predictionCpuMs": {
+              "samples": 4436,
+              "median": 0.19999992847442627,
+              "p95": 0.3999999761581421,
+              "max": 1.1999999284744263
+            },
+            "draws": {
+              "samples": 4436,
+              "median": 223,
+              "p95": 2067,
+              "max": 3422
+            },
+            "heap": 157622329,
+            "gpu": {
+              "geometries": 1642,
+              "textures": 98
+            }
+          }
+        ]
+      },
+      "doors": [
+        {
+          "doors": [
+            [
+              "D09",
+              0,
+              1
+            ],
+            [
+              "D12",
+              0,
+              1
+            ],
+            [
+              "D18",
+              0,
+              1
+            ],
+            [
+              "D20",
+              0,
+              1
+            ],
+            [
+              "D29",
+              0,
+              1
+            ],
+            [
+              "D32",
+              0,
+              1
+            ],
+            [
+              "D35",
+              0,
+              1
+            ],
+            [
+              "D36",
+              0,
+              1
+            ],
+            [
+              "D37",
+              0,
+              1
+            ],
+            [
+              "D38",
+              0,
+              1
+            ],
+            [
+              "D39",
+              1.5707963267948966,
+              1
+            ],
+            [
+              "D40",
+              0,
+              1
+            ],
+            [
+              "D44",
+              0,
+              1
+            ],
+            [
+              "D45",
+              0,
+              -1
+            ],
+            [
+              "D46",
+              0,
+              1
+            ],
+            [
+              "D47",
+              0,
+              1
+            ],
+            [
+              "D56",
+              0,
+              1
+            ],
+            [
+              "D59",
+              0,
+              1
+            ],
+            [
+              "D63",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0001",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0002",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0003",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0004",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0005",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0006",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0007",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0008",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0009",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0010",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0011",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0012",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0013",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0014",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0015",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0016",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0017",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0018",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0019",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0020",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0021",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0022",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0023",
+              0,
+              -1
+            ],
+            [
+              "BYGG-D-0024",
+              0,
+              -1
+            ],
+            [
+              "BYGG-D-0025",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0026",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0027",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0028",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0029",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0030",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0031",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0034",
+              0,
+              1
+            ]
+          ],
+          "elevator": 1,
+          "visualMatches": true,
+          "broken": 0
+        },
+        {
+          "doors": [
+            [
+              "D09",
+              0,
+              1
+            ],
+            [
+              "D12",
+              0,
+              1
+            ],
+            [
+              "D18",
+              0,
+              1
+            ],
+            [
+              "D20",
+              0,
+              1
+            ],
+            [
+              "D29",
+              0,
+              1
+            ],
+            [
+              "D32",
+              0,
+              1
+            ],
+            [
+              "D35",
+              0,
+              1
+            ],
+            [
+              "D36",
+              0,
+              1
+            ],
+            [
+              "D37",
+              0,
+              1
+            ],
+            [
+              "D38",
+              0,
+              1
+            ],
+            [
+              "D39",
+              1.5707963267948966,
+              1
+            ],
+            [
+              "D40",
+              0,
+              1
+            ],
+            [
+              "D44",
+              0,
+              1
+            ],
+            [
+              "D45",
+              0,
+              -1
+            ],
+            [
+              "D46",
+              0,
+              1
+            ],
+            [
+              "D47",
+              0,
+              1
+            ],
+            [
+              "D56",
+              0,
+              1
+            ],
+            [
+              "D59",
+              0,
+              1
+            ],
+            [
+              "D63",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0001",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0002",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0003",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0004",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0005",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0006",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0007",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0008",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0009",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0010",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0011",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0012",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0013",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0014",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0015",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0016",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0017",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0018",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0019",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0020",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0021",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0022",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0023",
+              0,
+              -1
+            ],
+            [
+              "BYGG-D-0024",
+              0,
+              -1
+            ],
+            [
+              "BYGG-D-0025",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0026",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0027",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0028",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0029",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0030",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0031",
+              0,
+              1
+            ],
+            [
+              "BYGG-D-0034",
+              0,
+              1
+            ]
+          ],
+          "elevator": 1,
+          "visualMatches": true,
+          "broken": 0
+        }
+      ],
+      "doorHit": {
+        "hp": 82,
+        "alive": true
+      },
+      "windows": [
+        {
+          "label": "Cargo Lift",
+          "frames": 300,
+          "fps": 60.002400096003846,
+          "frameMs": {
+            "median": 16.69999999999891,
+            "p95": 16.799999999999272,
+            "max": 16.80000000000109
+          },
+          "draws": {
+            "median": 1081,
+            "p95": 1081,
+            "max": 1081
+          },
+          "renderCpuMs": 8.551999993721644,
+          "gpu": {
+            "geometries": 405,
+            "textures": 89
+          },
+          "position": {
+            "x": -20.541,
+            "y": 0,
+            "z": -30.03999,
+            "yaw": 3.141592653589793
+          },
+          "room": "BYGG-G-41001",
+          "heapBytes": 118939484,
+          "taskCpuMs": 2809.875,
+          "scriptCpuMs": 2707.271
+        },
+        {
+          "label": "Service Lift",
+          "frames": 300,
+          "fps": 60.002400096003846,
+          "frameMs": {
+            "median": 16.69999999999891,
+            "p95": 16.799999999999272,
+            "max": 16.80000000000109
+          },
+          "draws": {
+            "median": 79,
+            "p95": 79,
+            "max": 79
+          },
+          "renderCpuMs": 1.341666667064031,
+          "gpu": {
+            "geometries": 401,
+            "textures": 81
+          },
+          "position": {
+            "x": 28.00054,
+            "y": 0,
+            "z": 30.43484,
+            "yaw": 3.141592653589793
+          },
+          "room": "BYGG-G-41002",
+          "heapBytes": 100177824,
+          "taskCpuMs": 648.6410000000001,
+          "scriptCpuMs": 547.4290000000001
+        },
+        {
+          "label": "C08 desktop",
+          "frames": 293,
+          "fps": 58.798739740322304,
+          "frameMs": {
+            "median": 16.69999999999709,
+            "p95": 16.700000000004366,
+            "max": 99.90000000000146
+          },
+          "draws": {
+            "median": 1196,
+            "p95": 1196,
+            "max": 1196
+          },
+          "renderCpuMs": 9.531740613358012,
+          "gpu": {
+            "geometries": 1497,
+            "textures": 99
+          },
+          "position": {
+            "x": 22.78311498471657,
+            "y": 0,
+            "z": -17.905285217985433,
+            "yaw": 3.141592653589793
+          },
+          "room": "C08",
+          "heapBytes": 157982860,
+          "taskCpuMs": 3003.32,
+          "scriptCpuMs": 2899.441
+        },
+        {
+          "label": "C08 mobile emulation",
+          "frames": 300,
+          "fps": 60.00240009600389,
+          "frameMs": {
+            "median": 16.69999999999709,
+            "p95": 16.700000000004366,
+            "max": 16.80000000000291
+          },
+          "draws": {
+            "median": 198,
+            "p95": 198,
+            "max": 198
+          },
+          "renderCpuMs": 1.9789999953905741,
+          "gpu": {
+            "geometries": 1468,
+            "textures": 95
+          },
+          "position": {
+            "x": 22.802491096217068,
+            "y": 0,
+            "z": -12.920596382804144,
+            "yaw": 0
+          },
+          "room": "C08",
+          "heapBytes": 121292740,
+          "taskCpuMs": 810.063,
+          "scriptCpuMs": 711.924
+        }
+      ],
+      "presented": {
+        "visible": true,
+        "model": [
+          22.802491096217068,
+          0,
+          -12.920596382804144
+        ],
+        "remote": [
+          22.802491096217068,
+          0,
+          -12.920596382804144
+        ],
+        "camera": [
+          22.78311498471657,
+          1.58,
+          -17.905285217985433
+        ],
+        "player": [
+          22.78311498471657,
+          1.58,
+          -17.905285217985433
+        ]
+      },
+      "animation": {
+        "walkingClip": "Walk_Loop",
+        "deathClip": "Death01"
+      },
+      "routeConfirmations": [
+        [
+          {
+            "sent": 484,
+            "ack": 484,
+            "error": 0.08305676378730147
+          },
+          {
+            "sent": 526,
+            "ack": 526,
+            "error": 0.09351507209587437
+          },
+          {
+            "sent": 670,
+            "ack": 671,
+            "error": 0.09913143909367492
+          },
+          {
+            "sent": 746,
+            "ack": 746,
+            "error": 0.09732789400365555
+          },
+          {
+            "sent": 1080,
+            "ack": 1082,
+            "error": 0.09415997709119266
+          },
+          {
+            "sent": 1191,
+            "ack": 1193,
+            "error": 0.0935917331474127
+          },
+          {
+            "sent": 1298,
+            "ack": 1298,
+            "error": 0.08862799242918187
+          },
+          {
+            "sent": 1353,
+            "ack": 1353,
+            "error": 0.09620807488557598
+          },
+          {
+            "sent": 2091,
+            "ack": 2093,
+            "error": 0.08578720374311437
+          },
+          {
+            "sent": 2500,
+            "ack": 2502,
+            "error": 0.08697469079553267
+          },
+          {
+            "sent": 2633,
+            "ack": 2634,
+            "error": 0.09935454610731884
+          },
+          {
+            "sent": 2752,
+            "ack": 2752,
+            "error": 0.08444479026977113
+          }
+        ],
+        [
+          {
+            "sent": 416,
+            "ack": 417,
+            "error": 0.09428307676866823
+          },
+          {
+            "sent": 453,
+            "ack": 454,
+            "error": 0.09147061926116604
+          },
+          {
+            "sent": 499,
+            "ack": 501,
+            "error": 0.08419209313690199
+          },
+          {
+            "sent": 637,
+            "ack": 637,
+            "error": 0.08320714306920127
+          },
+          {
+            "sent": 677,
+            "ack": 679,
+            "error": 0.08632351599809594
+          },
+          {
+            "sent": 748,
+            "ack": 749,
+            "error": 0.09215497861644772
+          },
+          {
+            "sent": 808,
+            "ack": 810,
+            "error": 0.08447748678118974
+          },
+          {
+            "sent": 843,
+            "ack": 843,
+            "error": 0.08727197074333373
+          },
+          {
+            "sent": 934,
+            "ack": 936,
+            "error": 0.09633449502761832
+          },
+          {
+            "sent": 976,
+            "ack": 978,
+            "error": 0.09661552465407046
+          },
+          {
+            "sent": 1190,
+            "ack": 1191,
+            "error": 0.08234097182189243
+          },
+          {
+            "sent": 1220,
+            "ack": 1221,
+            "error": 0.0832653173494259
+          },
+          {
+            "sent": 1428,
+            "ack": 1430,
+            "error": 0.08154972149899221
+          },
+          {
+            "sent": 1460,
+            "ack": 1461,
+            "error": 0.08980054311059886
+          },
+          {
+            "sent": 1642,
+            "ack": 1644,
+            "error": 0.07944268364140762
+          },
+          {
+            "sent": 2007,
+            "ack": 2007,
+            "error": 0.07909189927316604
+          },
+          {
+            "sent": 2212,
+            "ack": 2214,
+            "error": 0.08283897039162116
+          },
+          {
+            "sent": 2262,
+            "ack": 2264,
+            "error": 0.08627266776127517
+          },
+          {
+            "sent": 2315,
+            "ack": 2316,
+            "error": 0.08706658459797408
+          },
+          {
+            "sent": 2694,
+            "ack": 2696,
+            "error": 0.09958151676892234
+          },
+          {
+            "sent": 2783,
+            "ack": 2783,
+            "error": 0.091566088313613
+          },
+          {
+            "sent": 2864,
+            "ack": 2864,
+            "error": 0.08279676221956839
+          },
+          {
+            "sent": 2940,
+            "ack": 2941,
+            "error": 0.09082243879188753
+          },
+          {
+            "sent": 2966,
+            "ack": 2967,
+            "error": 0.08805168084937404
+          },
+          {
+            "sent": 3019,
+            "ack": 3022,
+            "error": 0.08281069906614615
+          },
+          {
+            "sent": 3076,
+            "ack": 3076,
+            "error": 0.09237680006423271
+          },
+          {
+            "sent": 3219,
+            "ack": 3220,
+            "error": 0.08389013068575688
+          },
+          {
+            "sent": 3255,
+            "ack": 3260,
+            "error": 0.08654799545506142
+          },
+          {
+            "sent": 3324,
+            "ack": 3325,
+            "error": 0.09219938329053044
+          },
+          {
+            "sent": 3383,
+            "ack": 3385,
+            "error": 0.08449097821714839
+          },
+          {
+            "sent": 3410,
+            "ack": 3410,
+            "error": 0.08727512990219953
+          },
+          {
+            "sent": 3492,
+            "ack": 3494,
+            "error": 0.0963352115336892
+          },
+          {
+            "sent": 3526,
+            "ack": 3526,
+            "error": 0.0966156476651379
+          },
+          {
+            "sent": 3732,
+            "ack": 3733,
+            "error": 0.0823410025160195
+          },
+          {
+            "sent": 3757,
+            "ack": 3757,
+            "error": 0.08326532457172683
+          },
+          {
+            "sent": 3956,
+            "ack": 3956,
+            "error": 0.09752621173140612
+          },
+          {
+            "sent": 3983,
+            "ack": 3984,
+            "error": 0.09417049821490682
+          },
+          {
+            "sent": 4163,
+            "ack": 4164,
+            "error": 0.0800774045048917
+          }
+        ]
+      ]
+    }
+  ],
+  "proxy": {
+    "upBytes": 61065,
+    "downBytes": 387070,
+    "messages": 12760,
+    "delayMs": {
+      "samples": 4096,
+      "median": 52.02033479698002,
+      "p95": 68.42140092514455,
+      "max": 73.84346304224164
+    }
+  },
+  "errors": [],
+  "harnessSha256": "5b52e4091e91ab9992c19093c17e4ad177c053f26d0cd1fcbac4d60ee7c676fc",
+  "evidenceNote": "Compact observed results. The harness writes full arrays to ignored test-results/network/browser.json."
+}

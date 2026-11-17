@@ -2,10 +2,13 @@ import {Room,ServerError} from '@colyseus/core';
 import {createHash,timingSafeEqual} from 'node:crypto';
 import {createHeadlessSimulation} from './headless.mjs';
 import {respawnActor} from '../src/fps/action-rules.mjs';
-import {NETWORK_CONFIG,NETWORK_MAP,copyPose,fixedNetworkWorld,safeName} from '../shared/multiplayer/rules.mjs';
+import {NETWORK_CONFIG,NETWORK_MAP,copyPose,safeName} from '../shared/multiplayer/rules.mjs';
 import {checkContract,validateNetworkInput,wireInput} from '../shared/multiplayer/protocol.mjs';
 import {CONTRACT} from '../shared/multiplayer/build.mjs';
-import {NetworkInput,ActorState,RoomState} from './network-schema.mjs';
+import {NetworkInput,ActorState,RoomState,DoorState} from './network-schema.mjs';
+
+import {prepareNetworkWorld,DOOR_FIELDS} from '../shared/multiplayer/world.mjs';
+import {collisionContract} from '../shared/multiplayer/collision-contract.mjs';
 
 const hashCode=code=>createHash('sha256').update(code).digest();
 const validCode=code=>typeof code==='string'&&/^[A-Za-z0-9-]{6,64}$/.test(code);
@@ -20,10 +23,13 @@ export class NetworkRoom extends Room {
     this.seats=new Map();this.lives=new Map();this.metrics={invalid:0,maxQueue:0,ticks:0,events:0};
     this.sim=await createHeadlessSimulation({mapId:NETWORK_MAP,controllers:Object.fromEntries(seats.map(id=>[id,'human'])),config:NETWORK_CONFIG});
     if(this.sim.sourceHash!==CONTRACT.mapHash)throw Error('Server map differs from built contract. Run npm run build --prefix server.');
-    fixedNetworkWorld(this.sim.game.world);
+    if(createHash('sha256').update(collisionContract(this.sim.game.world)).digest('hex')!==CONTRACT.collisionHash)throw Error('Server collision differs from built contract.');
+    prepareNetworkWorld(this.sim.game.world);
     this.templates=new Map(this.sim.game.actors.map(a=>[a.id,a]));
     this.sim.game.state.actors=[];this.sim.game.drainEvents();
-    this.state=new RoomState({worldRevision:1});
+    this.state=new RoomState({worldRevision:1,elevatorOpenAt:-1});
+    for(const d of this.sim.game.world.doors.doors)this.state.doors.set(d.id,new DoorState());
+    this.project();
     // Reliable WS input has its own monotonic wire sequence. Do not introduce a
     // second sequence/ack counter; dropping a queued frame still advances its ack.
     this.inputs=this.defineInput(NetworkInput,{bufferMaxSize:12});
@@ -34,6 +40,7 @@ export class NetworkRoom extends Room {
       Object.assign(actor,{name:seat.name,alive:false,lifeId:this.lives.get(seat.id)||0,respawnAt:null});
       this.sim.game.actors.push(actor);
       if(!respawnActor(this.sim.game,actor)){this.sim.game.state.actors.pop();client.send('problem','No safe spawn is available.');client.leave(4008);return;}
+      if(this.sim.game.world.networkDynamics.elevatorOpenAt<0)this.sim.game.world.networkDynamics.elevatorOpenAt=this.sim.game.state.time;
       seat.ready=true;seat.enabled=true;seat.actor=actor;seat.deadline=Infinity;
       this.sim.controllers.bind(client.sessionId,actor.id);
       this.project();
@@ -91,6 +98,9 @@ export class NetworkRoom extends Room {
   }
   project() {
     const g=this.sim.game;
+    for(const d of g.world.doors.doors){const s=this.state.doors.get(d.id);for(const key of DOOR_FIELDS)s[key]=d[key];}
+    this.state.elevatorProgress=g.world.doors.elevators.progress;
+    this.state.elevatorOpenAt=g.world.networkDynamics.elevatorOpenAt;
     for(const seat of this.seats.values())if(seat.ready){
       const a=seat.actor,s=this.state.actors.get(a.id);copyPose(s,a);
       for(const k of ['lifeId','alive','hp','armor','kills','deaths','reloadUntil','nextShot','spawnProtectedUntil','recoil'])s[k]=a[k]??0;

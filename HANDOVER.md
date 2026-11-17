@@ -178,3 +178,33 @@ to avoid retyping identical form fields; all 24 rendered cleanup cycles remain.
 Pass 3, dynamic Floor 5 networking, bounded combat rewind, reconnect grace and
 public deployment require separate authorization. No public server/tunnel was
 started. **The first open physical iPhone/Android task at the top is unchanged.**
+
+## November 17 — Pass 2 merged; real Floor 5 multiplayer for review
+
+Reviewed PR #19 at `014b316e`, its implementation, validation, review threads
+and successful required CI. A fresh unchanged 20-cycle lifecycle run and normal
+two-browser launch passed. The headed Mac pointer-lock error also reproduced on
+a plain canvas without game code; physical-window capture remains unverified.
+Merged the expected head as **ad6742ce**, then created `feat/multiplayer-floor5`
+from that main. No failed check was bypassed.
+
+Pass 3A.1 uses the exact published prepared Floor 5 on both client and authority,
+including the original furniture, materials, collision and FPS presentation.
+All 51 hinged doors and both existing spawn-cabin shutters are server owned,
+replicated on late join and simulated with the same controller during prediction.
+Generated map, resolved collision, configuration, protocol and build hashes gate
+admission. Online glass stays intact and solid. The two-human cap and existing
+Pulse SMG combat, scoring, respawn and SDK prediction/interpolation remain.
+
+[Implementation, reproducible tests, measurements and limitations](docs/multiplayer/pass3a-floor5.md).
+Offline Classic/Endless state and event traces still match over 9,600 steps;
+the existing mobile, objective-route, visibility, shared-animation, compatible
+character and 20-cycle lifecycle regressions pass. No original level or asset
+was changed. Physical handset testing is still uncompleted.
+
+**Next genuine task: review the Pass 3A.1 feature PR and its final required CI.
+Do not automatically merge it.** Full online 5v5/objectives, bounded hitscan
+rewind, reconnect grace, LAN/internet hosting, capacity soak and Raspberry Pi
+deployment remain outside this delivery and need their own authorization.
+No public multiplayer server or Pass 3A.1 Pages release was deployed.
+The first open physical iPhone/Android task above remains open.

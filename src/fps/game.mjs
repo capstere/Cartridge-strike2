@@ -162,7 +162,8 @@ export class Game {
       s.phase = 'active'; this.emit('start', null);
     }
     this.roundCandidates = []; this.pendingDamage = [];
-    if (!this.config.networkSlice) this.world.doors?.update(s.time,dt,[...this.actors,...this.hostages,...s.zombies,...(this.config.wanderers?s.wanderers||[]:[])]);
+    if (this.config.networkSlice) this.world.advanceNetworkWorld?.(s.time,dt,this.actors);
+    else this.world.doors?.update(s.time,dt,[...this.actors,...this.hostages,...s.zombies,...(this.config.wanderers?s.wanderers||[]:[])]);
     tickActionState(this,dt);
     for (const actor of this.actors) {
       if (!actor.alive) continue;
