@@ -95,16 +95,17 @@ konflikterande namnen där innan du startar, och spara filen för rollback förs
    inte. GitHub Pages-länken ska inte användas mot Pi:n.
 2. På Mac: fyll i namn och en privat kod (6–64 bokstäver/siffror/bindestreck),
    välj **Skapa rum**. På iPhone: skriv samma kod och det exakta rums-ID som
-   visas på Macens HUD/meny, välj **Anslut**. Tryck **Återuppta** på båda.
+   visas på Macens HUD/meny, välj **Anslut**. Tryck **Fortsätt** på båda.
 3. Mac/Windows: WASD, mus, vänsterklick, R, Space, Ctrl och Shift. Escape öppnar
-   menyn och släpper musen. Återuppta kräver ett nytt klick för muslås/ljud.
-   Helskärm är frivilligt. iPhone/Android: liggande skärm, vänstertumme för
+   menyn och släpper musen. Fortsätt kräver ett nytt klick för muslås/ljud.
+   Helskärm är frivilligt: välj **Aktivera helskärm** i menyn och sedan Fortsätt.
+   iPhone/Android: liggande skärm, vänstertumme för
    rörelse, högertumme för sikte, ELD/LADDA/HOPP/HUKA. Safari kan sakna vanlig
    helskärm; spelet fungerar i fliken med säkra skärmkanter.
 4. Möt varandra på Floor 5. Prova samtidiga rörelser, sikte, skott, omladdning,
    dörrar, träffar, död/respawn och poäng. När en spelare öppnar menyn fortsätter
    den andra och servern; den pausade spelaren är fortfarande sårbar.
-5. Rotera, byt app och återvänd. Tryck Återuppta och kontrollera ljudet. Bryt
+5. Rotera, byt app och återvänd. Tryck Fortsätt och kontrollera ljudet. Bryt
    Wi-Fi kort och anslut igen. Efter ett avbrott krävs **explicit återanslutning**;
    ingen poäng-/platsgaranti ges. Efter serveromstart skapas ett nytt rum.
 

@@ -1996,8 +1996,8 @@
     },
     {
       "path": "src/fps/app.mjs",
-      "bytes": 40688,
-      "sha256": "cbe7f07c8a080b3aaa01268c024aee287e9775e1ff08dc48f017239682517817"
+      "bytes": 40858,
+      "sha256": "29d1a47667815a44e63e0176974a07dca9fdd250accd79df59c1156b5a9f82ed"
     },
     {
       "path": "src/fps/audio.mjs",
@@ -2291,8 +2291,8 @@
     },
     {
       "path": "src/fps/network/menu.mjs",
-      "bytes": 3271,
-      "sha256": "bfa885b3a8743267b6633e73dbe3344d4f11f5917e1152e3b3ca486a0d9d767b"
+      "bytes": 3270,
+      "sha256": "edf9afd3ee92f7d93833b93886b95eacab8f510d4d36b22c08775ff8a416f841"
     },
     {
       "path": "src/fps/network/session.mjs",
@@ -2600,7 +2600,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 58697412,
+  "bytes": 58697581,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

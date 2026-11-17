@@ -6,13 +6,21 @@ import {createLocalServer} from '../server/local-server.mjs';
 import {testLanHost} from './network-lan-host.mjs';
 import {CONTRACT} from '../shared/multiplayer/build.mjs';
 const headed=process.env.FPS_NETWORK_HEADED==='1';
-const local=await createLocalServer({port:0,...(process.env.FPS_NETWORK_LAN==='1'?{lan:true,host:testLanHost()}:{})}),browser=await chromium.launch({channel:'chromium',headless:!headed,args:process.platform==='darwin'?['--use-angle=metal']:[]}),errors=[];
+const angle=process.env.FPS_NETWORK_ANGLE||(process.platform==='darwin'?'metal':'swiftshader');
+const local=await createLocalServer({port:0,...(process.env.FPS_NETWORK_LAN==='1'?{lan:true,host:testLanHost()}:{})}),browsers=[],pages=[],errors=[];
+async function until(predicate,label,timeout=10000){const end=performance.now()+timeout;while(!predicate()){assert(performance.now()<end,label);await new Promise(r=>setTimeout(r,25));}}
 async function open(mobile){
+ // Each human has its own browser/GPU process, as in the full Floor 5 harness.
+ // Two software scenes in one GPU process can stall focus/gesture delivery.
+ const browser=await chromium.launch({channel:'chromium',headless:!headed,args:['--use-angle='+angle,'--disable-background-timer-throttling','--disable-renderer-backgrounding','--disable-backgrounding-occluded-windows']});browsers.push(browser);
  const c=await browser.newContext({viewport:mobile?{width:844,height:390}:{width:1280,height:720},isMobile:mobile,hasTouch:mobile,deviceScaleFactor:Number(process.env.FPS_NETWORK_DPR||1)}),p=await c.newPage();
+ pages.push(p);
  p.setDefaultTimeout(60000);p.on('pageerror',e=>errors.push(e.message));
- await p.addInitScript(()=>localStorage.setItem('cartridge-settings',JSON.stringify({graphics:'low',volume:0})));
- await p.goto(local.url+'/fps/?network=local');await p.locator('#network-code').waitFor();
- assert.equal(await p.evaluate(()=>typeof window.__fps),'undefined');return p;
+ await p.addInitScript(()=>{localStorage.setItem('cartridge-settings',JSON.stringify({graphics:'low',volume:0}));window.__launchEvents=[];
+  for(const type of ['pointerlockchange','pointerlockerror','fullscreenchange','focus','blur'])window.addEventListener(type,e=>__launchEvents.push({type,target:e.target===window?'window':e.target.nodeName,at:performance.now(),focused:document.hasFocus(),pointer:document.pointerLockElement?.id,fullscreen:!!document.fullscreenElement}),true);
+ });
+ await p.goto(local.url+'/fps/?network=local',{waitUntil:'domcontentloaded'});await p.locator('#network-code').waitFor();
+ assert.equal(await p.evaluate(()=>typeof window.__fps),'undefined');console.log('Normal launch ready',mobile?'mobile':'desktop');return p;
 }
 async function form(p,room=''){
  assert.equal(await p.locator('#network-endpoint').inputValue(),local.url);await p.locator('#network-code').fill('private-123');
@@ -25,17 +33,29 @@ try{
  let resumeAttempts=0;
  for(;resumeAttempts<2;){
   resumeAttempts++;await a.bringToFront();await a.locator('#resume').click();
-  try{await a.waitForFunction(()=>document.pointerLockElement?.id==='game',null,{timeout:5000});break;}
+  try{await a.waitForFunction(()=>document.pointerLockElement?.id==='game'&&document.querySelector('#pause').hidden,null,{timeout:5000});break;}
   catch(e){if(resumeAttempts===2||!(await a.locator('#pause').textContent()).includes('Muslås'))throw e;}
  }
+ assert.equal(await a.evaluate(()=>!!document.fullscreenElement),false,'LAN Resume leaves fullscreen to its explicit menu action');
  const player=authority.sim.game.actors.find(x=>x.id==='analysts-0'),z=player.z,ammo=player.inventory.primary.ammo;
- await a.keyboard.down('w');await a.waitForTimeout(250);await a.keyboard.up('w');
- await a.mouse.down();await a.waitForTimeout(300);await a.mouse.up();await a.waitForTimeout(100);
+ // Hold real input until authority observes it; a fixed 250 ms press can fit
+ // entirely between two frames on a software runner. Keep bounded deadlines.
+ await a.keyboard.down('w');await until(()=>Math.abs(player.z-z)>.1,'real keyboard input reaches authority');await a.keyboard.up('w');
+ await a.mouse.down();await until(()=>player.inventory.primary.ammo<ammo,'real mouse fire reaches authority');await a.mouse.up();
  assert(Math.abs(player.z-z)>.1);assert(player.inventory.primary.ammo<ammo);
+ const shots=ammo-player.inventory.primary.ammo;
  await a.keyboard.press('r');await a.locator('#reload-text').filter({hasText:'Laddar om'}).waitFor();
+ await a.keyboard.press('Escape');await a.locator('#fullscreen-toggle').click();await a.waitForFunction(()=>!!document.fullscreenElement);
+ await a.locator('#resume').click();await a.waitForFunction(()=>document.pointerLockElement?.id==='game'&&document.querySelector('#pause').hidden);
+ const fullscreenZ=player.z;await a.keyboard.down('s');await until(()=>Math.abs(player.z-fullscreenZ)>.1,'keyboard input also works after explicit fullscreen');await a.keyboard.up('s');
  await a.keyboard.press('Escape');await a.locator('#restart').click();await a.locator('#network-code').waitFor();
- await a.waitForTimeout(350);assert.equal(authority.sim.game.actors.length,1);
+ await until(()=>authority.sim.game.actors.length===1,'leaving cleans up only the departing player');
  assert(await a.locator('#fatal').isHidden(),'returning to the empty network lobby must keep the render loop alive');assert.deepEqual(errors,[]);
- const result={status:'PASS',contract:CONTRACT,headed,testHooks:false,humans:2,resumeAttempts,desktopPointerLock:true,actualKeysAndMouse:true,movement:Math.abs(player.z-z),shots:ammo-player.inventory.primary.ammo,reloadHud:true,leaveKeepsOther:true,errors};
+ const result={status:'PASS',contract:CONTRACT,headed,testHooks:false,humans:2,browserProcesses:2,angle,resumeAttempts,desktopPointerLock:true,manualFullscreen:true,actualKeysAndMouse:true,movement:Math.abs(fullscreenZ-z),shots,reloadHud:true,leaveKeepsOther:true,errors};
  fs.mkdirSync('test-results/network',{recursive:true});fs.writeFileSync('test-results/network/normal-launch.json',JSON.stringify(result,null,2));console.log(JSON.stringify(result));
-}finally{await browser.close();await local.close();}
+}catch(error){
+ fs.mkdirSync('test-results/network',{recursive:true});
+ const clients=await Promise.all(pages.map(p=>p.evaluate(()=>({events:__launchEvents,focused:document.hasFocus(),pointer:document.pointerLockElement?.id,fullscreen:!!document.fullscreenElement,paused:!document.querySelector('#pause').hidden,pause:document.querySelector('#pause').textContent,fatal:document.querySelector('#fatal pre').textContent})).catch(e=>String(e))));
+ const seats=[...local.rooms].flatMap(r=>[...r.seats.values()].map(s=>({id:s.id,ready:s.ready,enabled:s.enabled,x:s.actor?.x,z:s.actor?.z})));
+ fs.writeFileSync('test-results/network/normal-launch-failure.json',JSON.stringify({error:String(error),errors,clients,seats},null,2));console.error('Normal launch failure',JSON.stringify({error:String(error),errors,clients,seats}));throw error;
+}finally{await Promise.all(browsers.map(b=>b.close()));await local.close();}

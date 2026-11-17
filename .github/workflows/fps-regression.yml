@@ -36,9 +36,10 @@ jobs:
           npm test --prefix server
   node-tests:
     runs-on: ubuntu-latest
-    # Run 44120393983 spent 16m30s on unchanged offline/setup checks. Leave the
-    # full bounded Floor 5 network step and cleanup in addition to those checks.
-    timeout-minutes: 28
+    # Offline/setup checks previously took 16m30s. The full LAN run needs just
+    # over 10 minutes on software runners (44163961251 reached its final reload).
+    # Keep every check with separate bounded steps and room for both suites.
+    timeout-minutes: 32
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -67,7 +68,7 @@ jobs:
         if: github.event_name != 'push'
         # Two real Floor 5 scenes need shader startup plus full gameplay/cleanup.
         # Native full-DPR/forward-camera performance is measured separately.
-        timeout-minutes: 10
+        timeout-minutes: 12
         env:
           FPS_NETWORK_LAN: '1'
           FPS_NETWORK_ANGLE: swiftshader
@@ -154,6 +155,7 @@ jobs:
         timeout-minutes: 3
         env:
           FPS_NETWORK_LAN: '1'
+          FPS_NETWORK_ANGLE: ${{ runner.os == 'macOS' && 'metal' || 'swiftshader' }}
           FPS_NETWORK_DPR: '0.5'
         run: node --import ./server/register-shared.mjs tools/network-launch-browser.mjs
       - name: Keep compact LAN browser evidence
@@ -163,6 +165,6 @@ jobs:
           name: lan-${{ matrix.os }}-${{ matrix.mobile }}
           path: |
             test-results/lan/
-            test-results/network/normal-launch.json
+            test-results/network/normal-launch*.json
           if-no-files-found: ignore
           retention-days: 7

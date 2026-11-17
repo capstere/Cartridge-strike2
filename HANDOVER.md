@@ -1,6 +1,6 @@
 # Cartridge-Strike 2 handover
 
-**Next multiplayer task — review PASS 3A.2 on `feat/multiplayer-lan`, its final-head CI and [LAN report](docs/multiplayer/pass3a2-lan.md). Do not automatically merge the new PR.**
+**Next multiplayer task — review [PASS 3A.2 PR #21](https://github.com/capstere/Cartridge-strike2/pull/21) on `feat/multiplayer-lan`, its final-head CI and [LAN report](docs/multiplayer/pass3a2-lan.md). Do not automatically merge the new PR.**
 
 PR #20 was reviewed at `11b585f`, with both final required jobs successful and
 fresh local core/server/normal-launch checks passing, then merged as **bac0756**.

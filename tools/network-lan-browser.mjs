@@ -9,18 +9,22 @@ process.chdir(fileURLToPath(new URL('../',import.meta.url)));
 const mobileEngine=process.env.FPS_LAN_MOBILE_BROWSER||'chromium',desktopEngine=process.env.FPS_LAN_DESKTOP_BROWSER||'chromium';
 const engines={chromium,webkit,firefox},errors=[],rows=[];
 const angle=process.env.FPS_NETWORK_ANGLE||(process.platform==='darwin'?'metal':'swiftshader');
-const launch=engine=>engines[engine].launch(engine==='chromium'?{channel:'chromium',args:['--use-angle='+angle]}:{});
+const launch=engine=>engines[engine].launch(engine==='chromium'?{channel:'chromium',args:['--use-angle='+angle,'--disable-background-timer-throttling','--disable-renderer-backgrounding','--disable-backgrounding-occluded-windows']}:{});
 let local=await createLocalServer({lan:true,host:testLanHost(),port:0});
 const url=local.url,port=local.httpServer.address().port,host=local.config.host;
-const browsers=[],joinFrames=new WeakMap();let safeArea=null;
+const browsers=[],pages=[],pendingRequests=new Map(),joinFrames=new WeakMap();let safeArea=null;
 fs.mkdirSync('test-results/lan',{recursive:true});
 async function until(fn,label,timeout=10000){const end=performance.now()+timeout;while(!fn()){assert(performance.now()<end,label);await new Promise(r=>setTimeout(r,25));}}
 async function open(engine,mobile){
   const browser=await launch(engine);browsers.push(browser);
   const context=await browser.newContext({viewport:mobile?{width:844,height:390}:{width:1280,height:720},hasTouch:mobile,isMobile:mobile,deviceScaleFactor:Number(process.env.FPS_NETWORK_DPR||1)}),page=await context.newPage();
+  pages.push(page);const pending=new Set();pendingRequests.set(page,pending);
+  page.on('request',r=>pending.add(r.url()));page.on('requestfinished',r=>pending.delete(r.url()));page.on('requestfailed',r=>pending.delete(r.url()));
   page.setDefaultTimeout(90000);page.on('pageerror',e=>{errors.push(e.message);console.error('LAN page error',e.message);});page.on('requestfailed',r=>console.error('LAN request failed',r.url(),r.failure()));
   await page.addInitScript(()=>localStorage.setItem('cartridge-settings',JSON.stringify({graphics:'low',volume:.2,mobileAutoFire:false,autoReload:false})));
-  await page.goto(url+'/fps/?network=lan&test&realtime');
+  // Readiness is the fully loaded game below, not the window load event (which
+  // can still be waiting on unrelated media in a Windows software browser).
+  await page.goto(url+'/fps/?network=lan&test&realtime',{waitUntil:'domcontentloaded'});
   try{await page.waitForFunction(()=>window.__fps||document.querySelector('#fatal pre').textContent);}catch(e){console.error(await page.locator('body').innerText(),errors);throw e;}
   assert(await page.locator('#fatal').evaluate(e=>e.hidden),await page.locator('#fatal').textContent());
   assert.equal(await page.locator('#network-endpoint').inputValue(),url);
@@ -124,6 +128,7 @@ try{
     safeAreaEmulation:safeArea,touchInput:mobileEngine==='chromium'?'Chromium multi-contact protocol':'WebKit synthetic PointerEvents',audioResume:true,rotation:true,backgroundSignal:'synthetic blur',wrongCode:true,disconnectCleanup:cleanup,renderedRejoins:4,serverRestart:true,emptyRooms:local.rooms.size,errors};
   fs.writeFileSync(`test-results/lan/${desktopEngine}-${mobileEngine}.json`,JSON.stringify(result,null,2));console.log(JSON.stringify(result));
 }catch(error){
-  for(const [i,page] of [a,b].entries())if(page&&!page.isClosed())await page.screenshot({path:`test-results/lan/failure-${mobileEngine}-${i}.png`}).catch(()=>{});
-  fs.writeFileSync(`test-results/lan/failure-${mobileEngine}.json`,JSON.stringify({error:String(error),errors,browsers:rows},null,2));throw error;
+  for(const [i,page] of pages.entries())if(!page.isClosed())await page.screenshot({path:`test-results/lan/failure-${mobileEngine}-${i}.png`,timeout:5000}).catch(()=>{});
+  const pending=pages.map(page=>[...pendingRequests.get(page)]);
+  fs.writeFileSync(`test-results/lan/failure-${mobileEngine}.json`,JSON.stringify({error:String(error),errors,browsers:rows,pending},null,2));console.error('LAN pending requests',JSON.stringify(pending));throw error;
 }finally{await Promise.all(browsers.map(b=>b.close()));await local.close();}

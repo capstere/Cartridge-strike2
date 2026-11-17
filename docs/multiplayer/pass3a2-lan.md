@@ -65,10 +65,13 @@ Padding boundaries, random bytes, Unicode, a million-byte vector and exact Floor
 bytes match Node's SHA-256. No crypto/browser global is replaced or weakened.
 
 The existing desktop input and mobile controls remain. Production joins enter
-the menu on both desktop and mobile; **Återuppta** supplies a fresh gesture for
+the menu on both desktop and mobile; **Fortsätt** supplies a fresh gesture for
 audio and mouse capture. The form also unlocks audio directly on submission.
-Resume requests pointer lock before fullscreen. Unsupported/rejected fullscreen
-does not prevent play; promise and event pointer-lock failures return to the menu.
+LAN Resume requests pointer lock without an automatic fullscreen transition;
+fullscreen is an explicit action in the existing menu. This keeps the mouse/audio
+gesture separate from fullscreen focus/orientation changes, while preserving
+offline automatic fullscreen. Unsupported/rejected fullscreen does not prevent
+play; promise and event pointer-lock failures return to the menu.
 Audio unlock handles Safari's `interrupted` state as well as `suspended`.
 
 The compact form uses 16 px editable input text, touch-sized actions, safe-area
@@ -104,12 +107,14 @@ bind an actual assigned private IPv4 and assert `isSecureContext === false` and
 | Offline state/events | PASS, eight unchanged hashes and shot counts across 9,600 steps against merged 3A.1 |
 | Chromium desktop + Chromium touch over private-IP HTTP | PASS, simultaneous move/look/fire reaching authority, reload, rotation, audio suspend/resume, wrong code, real WS termination, rejoin and restart |
 | Chromium desktop + WebKit touch over private-IP HTTP | PASS, same lifecycle and gameplay-input checks; WebKit reports no fullscreen support and remains playable |
+| Normal launch without game hooks, native + software renderer | PASS, actual keys/mouse, first Resume pointer lock, reload HUD, input after explicit fullscreen, independent leave |
 | Full Floor 5 combat, ordered jitter and 20 + 4 rendered leave/rejoins | PASS, direct private-IP HTTP and approximately 100 ms RTT/jitter; [full browser evidence](lan/full-floor5-browser.json) |
 | Linux / Windows / macOS CI | Required final-head jobs tracked on the PR, not inferred from local passes |
 | Physical Pi/Bookworm ARM64, physical iPhone/Android, Windows interactive desktop, two physical LAN devices | NOT RUN |
 
 Raw local evidence: [Chromium touch](lan/chromium-chromium.json),
 [WebKit touch](lan/chromium-webkit.json), [normal launch](lan/normal-launch.json),
+[software normal launch](lan/normal-launch-software.json),
 [offline replay](lan/offline-replay.json).
 Rendered review: [landscape lobby](lan/chromium-lobby.png),
 [WebKit gameplay without fullscreen](lan/webkit-game.png).
@@ -161,6 +166,24 @@ Only small JSON/screenshots are retained for seven days. The build generator
 normalizes asset paths on Windows; CI checks out committed LF bytes there so
 compatibility hashes do not change with Git line-ending conversion. Source
 maps/assets remain unchanged.
+
+The normal-launch regression also isolates each human's browser/GPU process,
+as the existing full-map harness does. Real keys/fire stay held until the
+authority observes them within a bounded deadline: a fixed 250 ms press can
+fall entirely between software-rendered frames. It still requires pointer lock,
+reload HUD and independent leave behavior without `?test` or game hooks. The
+cross-platform harness waits for application readiness after DOMContentLoaded,
+rather than a window load event that can wait on unrelated media. Failed launch
+checks preserve focus/pointer-lock events and pending asset requests for diagnosis.
+Normal launch checks windowed input first, then explicitly enables fullscreen and
+proves mouse capture and keyboard movement again. This caught an intermittent
+input interruption during simultaneous automatic fullscreen/Resume; LAN now
+keeps those gestures separate. No game state or input handler is substituted.
+Run 44163961251 completed the direct combat/20-cycle scenario, then reached the
+delayed scenario's final reload before its ten-minute step deadline. The step
+budget is now twelve minutes and the combined job thirty-two; no assertions or
+offline suites were removed. Software-renderer frame rate remains outside the
+performance acceptance claim.
 
 No running Pi service, router, tunnel or public listener was changed. The new PR
 is for review and must not be automatically merged. After its review/merge, the
