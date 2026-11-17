@@ -144,3 +144,28 @@ before implementing `prompts/02_NETWORK_SLICE.txt`. No network game UI, public
 server, tunnel, deployment or auto-merge was added. Full online roster/rules,
 handshake, life IDs, prediction through dynamic state, combat rewind and reconnect
 remain for later passes. **The first open physical-mobile task above is unchanged.**
+
+## November 17 — Foundation merged; local network slice for review
+
+Reviewed Foundation PR #18's implementation, validation, completed review and
+both successful CI jobs, then merged the expected head as **20289c50**. No failed
+check was bypassed. The new `feat/multiplayer-network-slice` branch starts there
+and implements only `prompts/02_NETWORK_SLICE.txt`.
+
+Two human clients can create/join the same private local room in the existing FPS
+presentation. Colyseus clocks the shared authoritative Game at 60 Hz with 20 Hz
+patches; its SDK owns movement prediction, reconciliation and remote interpolation.
+Pulse SMG combat, ammunition, reload, score, death and respawn use existing rules.
+The slice uses synthetic-demo with fixed doors/glass and bundled default models;
+unsupported online systems are disabled without changing offline Classic/Endless.
+
+[Run commands, actual test results, screenshots, validation limits and remaining
+work](docs/multiplayer/network-slice.md). The report distinguishes two-browser
+loopback/latency tests from physical devices and internet play, and records
+initial validation failures as well as final results. The unchanged offline
+state/event traces still match over 9,600 steps.
+
+**Next multiplayer task: review the Pass 2 PR and its CI. Do not auto-merge it.**
+Pass 3, dynamic Floor 5 networking, bounded combat rewind, reconnect grace and
+public deployment require separate authorization. No public server/tunnel was
+started. **The first open physical iPhone/Android task at the top is unchanged.**

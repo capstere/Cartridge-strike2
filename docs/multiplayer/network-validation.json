@@ -1,0 +1,151 @@
+{
+  "baseline": "20289c50f709dea8ac04b71b8f5100dad9e4032a",
+  "implementationCommit": "02714bd529e8205114d514d594323c75f71f07d5",
+  "host": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "frameworkNode": "26.13.0",
+  "offlineNode": "26.0.0",
+  "browser": "Chromium 153.0.8010.12 / Metal",
+  "contract": {
+    "protocolVersion": 2,
+    "mapId": "synthetic-demo",
+    "mapHash": "d7d3d7f136cb9b334d371b8b7d9fc97bac4e0fd3bec1d0954efd3cc1b9637b62",
+    "configHash": "aa861224d84d0e4666c0f011e19510f7ea5b040271f90b4808d517db6cd13095",
+    "buildHash": "f44a863d6f9e8f113910eef9de87e7f84eb869111a9e8e45aa8f7b32dce3a1a5",
+    "tickRate": 60,
+    "patchMs": 50
+  },
+  "checks": {
+    "core": {
+      "command": "node --experimental-loader ./tools/vendor-three-test-loader.mjs --test src/fps/*.test.mjs tools/*.test.mjs",
+      "status": "PASS",
+      "exitCode": 0,
+      "logSha256": "04eb491f19f2ec9309acef78bc889d6d3e065be04dcbf948a8831f0a63254a39",
+      "count": 211,
+      "note": "Full 211-test wildcard run; newly added client-event test separately passes. CI runs the current 212-test wildcard suite."
+    },
+    "clientEvents": {
+      "command": "node --experimental-loader ./tools/vendor-three-test-loader.mjs --test tools/network-session.test.mjs",
+      "status": "PASS",
+      "exitCode": 0,
+      "logSha256": "41077bb08aed92bbb3fd2f5778a0e26894837cc3828c593a9d0110d9b1315ade",
+      "count": 1
+    },
+    "serverProtocol": {
+      "command": "node --import ./server/register-shared.mjs --test server/test/*.test.mjs tools/network-protocol.test.mjs",
+      "status": "PASS",
+      "exitCode": 0,
+      "logSha256": "2b13dcf380e9fb99f79e635b72bca2bab77a99762ae89ab90cd0ce2615d7b356",
+      "count": 7
+    },
+    "doors": {
+      "command": "node --experimental-loader ./tools/vendor-three-test-loader.mjs tools/owner-door-traversal.mjs --prepared",
+      "status": "PASS",
+      "exitCode": 0,
+      "logSha256": "cd4d0ba96f55563a4a769710689aa95d7217817474c9230fd8b30b836d0d10ec",
+      "count": 102
+    },
+    "mobile": {
+      "command": "node tools/mobile-smoke.cjs",
+      "status": "PASS",
+      "exitCode": 0,
+      "logSha256": "891bd4b8d85e1bc415b33db3fbee9082508bc78e24879f226602dac9072f94a7"
+    },
+    "matchFlow": {
+      "command": "node tools/match-flow-browser.mjs",
+      "status": "PASS",
+      "exitCode": 0,
+      "logSha256": "897c3668e30c3d41c1ecc0b5706e671c505637101973ae4fa850b878b100e51e"
+    },
+    "mobileReliability": {
+      "command": "node tools/mobile-reliability-browser.mjs",
+      "status": "PASS",
+      "exitCode": 0,
+      "logSha256": "615dd7f986a516f49c7356c5edeba5a41803ffe895065c7b6bbcd1a8231bd3e5"
+    },
+    "workstationVisibility": {
+      "command": "node tools/floor5-workstation-visibility.cjs",
+      "status": "PASS",
+      "exitCode": 0,
+      "logSha256": "31c28f6f44f1224bfe7a2c6c0e3ec378052ce22bbf11891063c9b4448e57102a",
+      "count": 9
+    },
+    "actorOcclusion": {
+      "command": "node tools/actor-occlusion-browser.mjs",
+      "status": "PASS",
+      "exitCode": 0,
+      "logSha256": "9fa379d5bafa2c5420447fd9b24011be365bc97a1767a7475269178a73640285",
+      "count": 25
+    },
+    "sharedAssets": {
+      "command": "node tools/asset-sharing-browser.mjs",
+      "status": "PASS",
+      "exitCode": 0,
+      "logSha256": "857e925081ddc158d855253419707d5e47fb63a3f95a6a099875dc945fd328d6",
+      "count": 208
+    },
+    "routes": {
+      "command": "node tools/player-routes-browser.mjs",
+      "status": "PASS",
+      "exitCode": 0,
+      "logSha256": "8961afaa603be3ba5dfef2c8ab7c7169bc03e065c23c285f7fee8da93e9b55e6"
+    },
+    "privateCharacter": {
+      "command": "FPS_CHARACTER_GLB=/tmp/cs2-compatible-private.glb FPS_CHARACTER_RIG=assets/fps/models/quaternius-operator-male.glb node tools/saved-character-browser.mjs",
+      "status": "PASS",
+      "exitCode": 0,
+      "logSha256": "ae579085481774c1ce74cbb8ab4c270d7b13584319cdc39fbec04e82a713e372",
+      "note": "Generated compatible 2,374,672-byte fixture using tools/export-private-character-fixture.mjs; not a fresh Studio UI export."
+    },
+    "networkBrowser": {
+      "command": "node --import ./server/register-shared.mjs tools/network-browser.mjs",
+      "status": "PASS",
+      "exitCode": 0,
+      "logSha256": "6ac5df1e78c35608c70bc1910054e5ffac33513313fc4b6ffb750c6c6b3bcfab",
+      "evidence": "network/browser.json"
+    },
+    "offlineLifecycle": {
+      "command": "FPS_LIFECYCLE_JSON=test-results/network/offline-lifecycle.json node tools/match-lifecycle-browser.mjs",
+      "status": "PASS",
+      "exitCode": 0,
+      "cycles": 20,
+      "logSha256": "098d2c2d4ecde11ee0aa680aff2a58db16ca5f6e7b66b5698445df914d657c42",
+      "evidence": "network/lifecycle-final.json",
+      "note": "Two initial GPU tail comparisons failed; no assertion was relaxed. Baseline, instrumented follow-up and final unchanged test pass. Cause of intermittent late cache initialization not isolated."
+    },
+    "install": {
+      "command": "npm ci --prefix server --ignore-scripts",
+      "status": "PASS",
+      "exitCode": 0,
+      "logSha256": "766ddc9ec6a6d2eb5993f6ceffc615126a3a0f0e791bcad6ab5cc2b8e8a1cae5"
+    },
+    "build": {
+      "command": "node tools/build-network.mjs --check",
+      "status": "PASS",
+      "exitCode": 0,
+      "logSha256": "ca905295c8c9cb023356bb5458a3ee99ae433042f77f833f39c9158c34aa26a5"
+    },
+    "runtime": {
+      "command": "node tools/verify-owner-runtime.mjs",
+      "status": "PASS",
+      "exitCode": 0,
+      "logSha256": "3f1739695904920e48cdeeb3cd42c17c5eaa4d3f668a7ea264d0f9e757abda8c"
+    }
+  },
+  "notRun": [
+    "physical iPhone/Android",
+    "Safari",
+    "Linux ARM64/Pi",
+    "two physical external-network machines",
+    "public deployment",
+    "50/150/250 ms matrix",
+    "transport packet loss",
+    "30-minute network soak",
+    "Studio UI export workflow"
+  ],
+  "knownInitialFailures": [
+    "Offline GPU tail equality failed in two initial runs; original samples retained. Final status recorded separately.",
+    "Private character test first lacked a fixture; an uncolored runtime export was incompatible. A generated compatible T-shirt fixture then passed.",
+    "Resume pointer-lock test required bringing the desktop page to the foreground after interacting with the other window.",
+    "Single-point interpolation assertion sampled a settled wall pose; replaced with bounded samples over actual movement."
+  ]
+}
