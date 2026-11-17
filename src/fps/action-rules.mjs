@@ -33,7 +33,7 @@ export function prepareActionRound(g){
 }
 function equipEndless(g,a){
  const defaultWeapon=a.team==='analysts'?'ar47':'cr4';
- const selection=a.isPlayer?(a.loadout||g.config.loadout||defaultWeapon):a.index===2?'smg':a.index===3?'shotgun':defaultWeapon;
+ const selection=(a.isPlayer||a.controllerType==='human')?(a.loadout||g.config.loadout||defaultWeapon):a.index===2?'smg':a.index===3?'shotgun':defaultWeapon;
  const id=WEAPONS[selection]?.slot==='primary'?selection:defaultWeapon;
  a.inventory=g.startInventory(a.team);a.inventory.primary=g.weaponItem(id);a.inventory.smoke=1;a.inventory.flash=1;a.inventory.he=1;
  a.weapon=id;a.lastWeapon=a.inventory.pistol.id;a.armor=60;a.money=g.config.maxMoney;a.loadout=id;
@@ -66,7 +66,7 @@ export function respawnActor(g,a){
   reloadUntil:0,nextShot:g.state.time+.15,flashUntil:0,flash:0,flashStart:0,action:null,moving:0,distanceWalked:0,recoil:0,
   lastStep:g.state.time,fireHeld:false,interactHeld:false,jumpHeld:false,hurtTime:-Infinity,hurtDirection:null,deathAt:null,deathCause:null,
   respawnAt:null,spawnProtectedUntil:g.state.time+g.config.spawnProtection,blockedBy:null});
- equipEndless(g,a);a.bot=(!a.isPlayer||g.autoplay)?new BotController(g,a):null;
+ equipEndless(g,a);a.bot=a.controllerType==='bot'?new BotController(g,a):null;
  for(const other of g.actors){const memory=other.bot?.memory;if(memory?.hasRecord(a))memory.deleteRecord(a);}
  g.emit('respawn',a,{protection:g.config.spawnProtection});return true;
 }

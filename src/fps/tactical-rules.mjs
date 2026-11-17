@@ -23,7 +23,7 @@ export function shotSpread(actor, weapon) {
   const w = typeof weapon === 'string' ? WEAPONS[weapon] : weapon;
   if (!w) return 0;
   const old = (actor.moving > .3 ? w.movingSpread : w.spread) + (actor.recoil || 0) * .18 + (actor.flash || 0) * .12;
-  if (!actor.isPlayer || actor.bot || !canAim(w.id)) return old;
+  if ((!actor.isPlayer && actor.controllerType !== 'human') || actor.bot || !canAim(w.id)) return old;
   const aim = clamp01(actor.aimAmount);
   // Same direction as Riposte: precision reduces movement/bloom, not damage.
   return old * (1 - .65 * aim * aim);

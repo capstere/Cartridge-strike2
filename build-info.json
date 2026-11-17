@@ -1711,8 +1711,8 @@
     },
     {
       "path": "src/fps/action-rules.mjs",
-      "bytes": 11722,
-      "sha256": "f36835a3fd61a7f79781bda1c034d48ba97ffb377494a045fa8cd89c5b253ff4"
+      "bytes": 11751,
+      "sha256": "8ba077cf94a8b1c18cb8d78491be2a0fbed1a1195328e666854428106cd27bac"
     },
     {
       "path": "src/fps/action-visuals.mjs",
@@ -1756,8 +1756,8 @@
     },
     {
       "path": "src/fps/bots.mjs",
-      "bytes": 31363,
-      "sha256": "d89fba7dfa08f23acdad1569959825889e283ec5426a2a83022b7099ec44f92c"
+      "bytes": 31407,
+      "sha256": "59af9ee415500d37aaaf0ee46b7281455a32d2ab8474f10d26efa9078b1bbba9"
     },
     {
       "path": "src/fps/business-hostage.mjs",
@@ -1926,8 +1926,8 @@
     },
     {
       "path": "src/fps/game.mjs",
-      "bytes": 40983,
-      "sha256": "175cbc671be2742447ac9164f8692c7776c4eb4e6138199f1187d0e8f647ca47"
+      "bytes": 37196,
+      "sha256": "256bb1cdcdd7cf92a98f6b3f3703ed87ee33f5e48785d8776af5745ca2b6ac89"
     },
     {
       "path": "src/fps/glass-visuals.mjs",
@@ -2176,8 +2176,8 @@
     },
     {
       "path": "src/fps/tactical-rules.mjs",
-      "bytes": 4471,
-      "sha256": "ab4e45008906338dc8b74c933179731d4a8891d9e1cdb8db22b23cc5e77f322d"
+      "bytes": 4509,
+      "sha256": "31d0f3aacae84719674e9351fca4002481e187d97236f0d04bc668064086dc76"
     },
     {
       "path": "src/fps/throwable-cartridge.mjs",
@@ -2216,8 +2216,8 @@
     },
     {
       "path": "src/fps/world.mjs",
-      "bytes": 9295,
-      "sha256": "0e2262dddad71641434b36c636805c6d6e646217174c439ed05a233d8322e27e"
+      "bytes": 10175,
+      "sha256": "4550886a1a804ee197506b83494a3beb2e257629011dfae3d391c427a27c3fb6"
     },
     {
       "path": "src/fps/zombie-poses.mjs",
@@ -2303,9 +2303,14 @@
       "path": "vendor/yuka/yuka.module.js",
       "bytes": 442887,
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
+    },
+    {
+      "path": "src/fps/movement.mjs",
+      "bytes": 5809,
+      "sha256": "4d1b966c1aeef13260ab9affbeb478bf9ca01978c0d62e1e354ed64c4593c84f"
     }
   ],
-  "bytes": 56840230,
+  "bytes": 56843243,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

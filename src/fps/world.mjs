@@ -18,6 +18,16 @@ let sharedWorld;
 let levelCacheKey='',levelCache;
 const flatPoint=p=>({x:p[0],y:0,z:p[1]});
 
+function freshFloor5Source(){
+ // The generated data includes two helpers closing over its original data.
+ // Copy geometry and bind those helpers to the room's own scale/origin.
+ const {pdfToWorld,worldToPdf,...geometry}=globalThis.SpelWorld.data;
+ const data=structuredClone(geometry);
+ data.pdfToWorld=p=>[(p[0]-data.originPdf[0])*data.scale,(p[1]-data.originPdf[1])*data.scale];
+ data.worldToPdf=p=>[p[0]/data.scale+data.originPdf[0],p[1]/data.scale+data.originPdf[1]];
+ return globalThis.SpelWorldForLevel(data);
+}
+
 export function inheritFloor5Gameplay(project){
  if(project.mode!=='edit-floor5'||project.gameplay.spawns.length)return project;
  const p=structuredClone(project),a=createWorld().anchors;
@@ -27,10 +37,13 @@ export function inheritFloor5Gameplay(project){
 }
 
 function createLevelWorld(project,{fresh=false}={}){
- project=inheritFloor5Gameplay(project);
+ project=inheritFloor5Gameplay(fresh?structuredClone(project):project);
  const key=JSON.stringify(project);
  if(!fresh&&levelCacheKey===key&&levelCache)return levelCache;
- const {data,anchors,scene}=levelProjectToWorldData(project);
+ // The scene resolver reads a cached Floor 5 baseline. Detach nested polygons,
+ // furniture records and source entries before exposing a room-owned world.
+ const resolved=levelProjectToWorldData(project);
+ const {data,anchors,scene}=fresh?structuredClone(resolved):resolved;
  const source=globalThis.SpelWorldForLevel(data);
  const description=source.build({doors:Object.fromEntries(data.doors.filter(d=>d.accessCardConfirmed).map(d=>[d.id,true]))});
  paintDescription(description,data);
@@ -60,7 +73,8 @@ function createLevelWorld(project,{fresh=false}={}){
 export function createWorld({fresh=false,levelProject=null}={}){
  if(levelProject)return createLevelWorld(levelProject,{fresh});
   if(sharedWorld&&!fresh)return sharedWorld;
-  const source=globalThis.SpelWorld,data=source.data;
+  // SpelWorld.build itself caches its description, even when sharedWorld is bypassed.
+  const source=fresh?freshFloor5Source():globalThis.SpelWorld,data=source.data;
   const inherited=source.build({doors:Object.fromEntries(data.doors.filter(d=>d.accessCardConfirmed).map(d=>[d.id,true]))});
   const furnishings=createFurnishings(data,inherited,{inside:insidePolygon,distanceSegment});
   const description={...inherited,boxes:[...inherited.boxes,...furnishings.boxes],surfaces:[...inherited.surfaces],labels:[...inherited.labels.map(l=>({...l,text:l.text.replace(' · PASSERKORT',' · OPEN')})),...furnishings.labels],furnishings:furnishings.instances};
