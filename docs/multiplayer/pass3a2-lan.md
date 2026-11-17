@@ -159,7 +159,7 @@ harness retains the legacy scenario label `loopback` for its direct scenario;
 the entire client through its test proxy on one origin, preserving reliable order.
 It is jitter/delay coverage, not a claim of packet-loss simulation.
 
-CI preserves all prior offline/visual/mobile gates and adds bounded LAN jobs on
+CI preserves all prior Linux offline/visual/mobile gates and adds bounded LAN jobs on
 Linux Chromium, Windows Chromium and macOS WebKit. Linux uses SwiftShader;
 Windows selects Chromium's D3D11 WARP software backend and records/asserts the
 actual WebGL renderer. Software jobs use DPR 0.5 for
@@ -181,11 +181,15 @@ Normal launch checks windowed input first, then explicitly enables fullscreen an
 proves mouse capture and keyboard movement again. This caught an intermittent
 input interruption during simultaneous automatic fullscreen/Resume; LAN now
 keeps those gestures separate. No game state or input handler is substituted.
-Run 44163961251 completed the direct combat/20-cycle scenario, then reached the
-delayed scenario's final reload before its ten-minute step deadline. The step
-budget is now twelve minutes and the combined job thirty-two; no assertions or
-offline suites were removed. Software-renderer frame rate remains outside the
-performance acceptance claim.
+Full Floor 5 gameplay runs in a separate macOS/Metal job at DPR 1 and the normal
+forward camera, with every combat/prediction/interpolation and 24 lifecycle
+assertions retained. Linux software runs showed zero frames during one five-second
+spawn observation and a later route deadline while input was still progressing;
+that environment cannot reliably sample gameplay or interpolation timing. The
+Linux/Windows LAN jobs retain real WebGL and input/lifecycle checks; the original
+Linux offline gates are unchanged. This is functional CI, not physical-device or
+Pi performance acceptance. Pending HTTP requests, server response completion and
+the actual WebGL renderer are retained on LAN loading failures.
 
 No running Pi service, router, tunnel or public listener was changed. The new PR
 is for review and must not be automatically merged. After its review/merge, the

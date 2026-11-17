@@ -12,12 +12,19 @@ const angle=process.env.FPS_NETWORK_ANGLE||(process.platform==='darwin'?'metal':
 const launch=engine=>engines[engine].launch(engine==='chromium'?{channel:'chromium',args:['--use-angle='+angle,'--disable-background-timer-throttling','--disable-renderer-backgrounding','--disable-backgrounding-occluded-windows']}:{});
 let local=await createLocalServer({lan:true,host:testLanHost(),port:0});
 const url=local.url,port=local.httpServer.address().port,host=local.config.host;
-const browsers=[],pages=[],pendingRequests=new Map(),joinFrames=new WeakMap();let safeArea=null;
+const browsers=[],pages=[],pendingRequests=new Map(),joinFrames=new WeakMap(),httpTrace=[],browserWarnings=[];let safeArea=null;
+const traceServer=server=>server.on('request',(req,res)=>{
+  const row={path:req.url,at:performance.now()};httpTrace.push(row);if(httpTrace.length>1500)httpTrace.shift();
+  res.once('finish',()=>{row.status=res.statusCode;row.finishedMs=performance.now()-row.at;});
+  res.once('close',()=>{row.closedMs=performance.now()-row.at;});
+});
+traceServer(local.httpServer);
 fs.mkdirSync('test-results/lan',{recursive:true});
 async function until(fn,label,timeout=10000){const end=performance.now()+timeout;while(!fn()){assert(performance.now()<end,label);await new Promise(r=>setTimeout(r,25));}}
 async function open(engine,mobile){
   const browser=await launch(engine);browsers.push(browser);
   const context=await browser.newContext({viewport:mobile?{width:844,height:390}:{width:1280,height:720},hasTouch:mobile,isMobile:mobile,deviceScaleFactor:Number(process.env.FPS_NETWORK_DPR||1)}),page=await context.newPage();
+  page.on('console',m=>{if(['warning','error'].includes(m.type())){browserWarnings.push(m.text());if(browserWarnings.length>30)browserWarnings.shift();}});
   pages.push(page);const pending=new Set();pendingRequests.set(page,pending);
   page.on('request',r=>pending.add(r.url()));page.on('requestfinished',r=>pending.delete(r.url()));page.on('requestfailed',r=>pending.delete(r.url()));
   page.setDefaultTimeout(90000);page.on('pageerror',e=>{errors.push(e.message);console.error('LAN page error',e.message);});page.on('requestfailed',r=>console.error('LAN request failed',r.url(),r.failure()));
@@ -132,6 +139,8 @@ try{
   const pending=pages.map(page=>[...pendingRequests.get(page)]);
   const probes=await Promise.all([...new Set([url+'/health',...pending.flat()])].slice(0,8).map(async url=>{try{const r=await fetch(url,{signal:AbortSignal.timeout(3000)});return {url,status:r.status,bytes:(await r.arrayBuffer()).byteLength};}catch(e){return {url,error:String(e)};}}));
   const connections=await new Promise(resolve=>local.httpServer.getConnections((_error,count)=>resolve(count)));
+  const clients=await Promise.all(pages.map(page=>page.evaluate(()=>{const gl=document.querySelector('#game')?.getContext('webgl2'),ext=gl?.getExtension('WEBGL_debug_renderer_info');return {ready:document.readyState,loading:document.querySelector('#loading')?.textContent,renderer:gl?.getParameter(ext?.UNMASKED_RENDERER_WEBGL||gl.RENDERER),resources:performance.getEntriesByType('resource').slice(-8).map(r=>({name:r.name,duration:r.duration,bytes:r.transferSize}))};}).catch(e=>({error:String(e)}))));
+  const pendingPaths=new Set(pending.flat().map(u=>new URL(u).pathname)),httpPending=httpTrace.filter(row=>!row.finishedMs||pendingPaths.has(new URL(row.path,url).pathname));
   for(const [i,page] of pages.entries())if(!page.isClosed())await page.screenshot({path:`test-results/lan/failure-${mobileEngine}-${i}.png`,timeout:5000}).catch(()=>{});
-  fs.writeFileSync(`test-results/lan/failure-${mobileEngine}.json`,JSON.stringify({error:String(error),errors,browsers:rows,pending,probes,connections},null,2));console.error('LAN pending requests',JSON.stringify({pending,probes,connections}));throw error;
+  fs.writeFileSync(`test-results/lan/failure-${mobileEngine}.json`,JSON.stringify({error:String(error),errors,browsers:rows,pending,probes,connections,clients,browserWarnings,httpPending},null,2));console.error('LAN pending requests',JSON.stringify({pending,probes,connections,clients,browserWarnings,httpPending}));throw error;
 }finally{await Promise.all(browsers.map(b=>b.close()));await local.close();}
