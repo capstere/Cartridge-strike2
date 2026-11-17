@@ -166,9 +166,13 @@ initial validation failures as well as final results. The unchanged offline
 state/event traces still match over 9,600 steps.
 
 **Next multiplayer task: review [Pass 2 PR #19](https://github.com/capstere/Cartridge-strike2/pull/19)
-and its CI. Do not auto-merge it.** The first CI run exposed a browser test that
-sampled ammo after reload completion. The follow-up observes authoritative reload
-states and fixes explicit removal of SDK signal callbacks; see the report.
+and its CI. Do not auto-merge it.** The final local results are 213 core tests,
+seven server/protocol tests, full two-browser loopback/100 ms jitter gameplay,
+24 join/leave cycles and a normal-launch smoke without test hooks. Follow-up
+fixes explicitly remove SDK signal callbacks and prevent late shot confirmations
+from duplicating effects after stalls, pause or death. Software-renderer coverage
+passes; visible native-window mouse capture on this Mac remains unverified.
+The report records initial CI failures and the required final-head checks.
 Pass 3, dynamic Floor 5 networking, bounded combat rewind, reconnect grace and
 public deployment require separate authorization. No public server/tunnel was
 started. **The first open physical iPhone/Android task at the top is unchanged.**

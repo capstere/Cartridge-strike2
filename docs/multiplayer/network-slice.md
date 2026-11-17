@@ -92,7 +92,7 @@ external-network play.
 
 | Check | Result |
 | --- | --- |
-| Full FPS/tools unit suite | **PASS — 211 full-suite tests + one focused client-event test** |
+| Full FPS/tools unit suite | **PASS — 213 full-suite tests, including both client-event regressions** |
 | Real server/API/protocol tests | **PASS — 7 tests**, including pinned Foundation API spike |
 | Prepared Floor 5 traversal | **PASS — 102 doors** |
 | Runtime manifest | **PASS — 469 files**, source sizes/SHA-256/total |
@@ -101,6 +101,7 @@ external-network play.
 | Existing visual/resource regressions | **PASS** nine workstation comparisons and 25 actor-occlusion comparisons pixel-identical; 208 shared-character poses |
 | Existing mobile controls | **PASS** simultaneous touch/orientation tests at 844×390 and 932×430 |
 | Two-browser network game | **PASS — loopback and 100 ms RTT/jitter, both humans shoot/reload, 20 + 4 join/leave cycles** |
+| Normal launch without test hooks | **PASS — actual keys/mouse, two clients, reload HUD and independent leave; headless Chromium** |
 | Repeated offline lifecycle | **PASS — final unchanged 20-cycle run**, after two initial GPU tail-equality failures documented below |
 | Compatible private character | **PASS — generated compatible fixture; both teams, first/third person, cancel/retry/replay and incompatible recovery. Studio UI export itself NOT RUN.** |
 
@@ -122,17 +123,17 @@ It does not simulate packet loss by dropping snapshots.
 | Authoritative movement received during that sample | 0 m | 0 m |
 | Settled prediction error | 0 m | 0 m |
 | Respawn pose error / ammo | 0 m / 30 | 0 m / 30 |
-| Maximum sampled remote interpolation offset | 0.432 m | 0.589 m |
-| Confirmed own shots / suppressed duplicate effects | 7 / 7 | 8 / 8 |
-| Maximum pending SDK inputs | 8 | 16 |
+| Maximum sampled remote interpolation offset | 0.460 m | 0.577 m |
+| Confirmed own shots / suppressed duplicate effects | 6 / 6 | 8 / 8 |
+| Maximum pending SDK inputs | 8 | 15 |
 | Join/leave cycles | 20 | 4 |
 | First → last DOM listeners | 230 → 230 | 230 → 230 |
 | First → last actor models / SDK callbacks | 2 / 4 → 2 / 4 | 2 / 4 → 2 / 4 |
-| First → last game geometries / textures | 101 / 39 → 101 / 39 | 101 / 39 → 101 / 39 |
+| First → last game geometries / textures | 100 / 38 → 100 / 38 | 101 / 39 → 101 / 39 |
 | Active audio voices after each rejoin | 0 | 0 |
 
-The proxy recorded 2,657 messages, 9,167 upstream and 85,742 downstream payload
-bytes across its scenario. Ordered one-way delay averaged 51.7 ms, p95 68.4 ms.
+The proxy recorded 2,115 messages, 7,529 upstream and 78,395 downstream payload
+bytes across its scenario. Ordered one-way delay averaged 51.8 ms, p95 68.5 ms.
 These totals include setup/control traffic; they are not a sustained 10-player
 bandwidth benchmark. Both scenarios ended with zero live rooms and zero browser
 page errors.
@@ -153,47 +154,62 @@ claiming universal cleanup stability.
 
 The first private-character attempt had no supplied Studio fixture; a raw
 runtime export lacked the required forearm color attributes and was rejected.
-The generated compatible fixture then passed the existing browser check. The
-network test also exposed two harness issues: desktop Resume needs real foreground
-focus for pointer lock, and a one-frame interpolation sample can land after both
-poses stop at a wall. The test now foregrounds Resume and samples the movement
-interval immediately after the normal frame updates its display pose, before a
-later state patch can replace it. The probe is installed before keyboard input,
-so slow driver calls cannot miss the movement. All gameplay assertions remain enabled.
+The generated compatible fixture then passed the existing browser check. The network tests exposed timing assumptions under software rendering. The final
+harness observes authoritative reload states and actual wire frames consumed
+while the server reload is active; it asserts constant ammo during reload and
+30 rounds at completion. Immediate prediction is sampled synchronously around a
+normal SDK send. Interpolation is observed immediately after normal frame updates
+while both humans move. Firing stops on the first authoritative damage patch.
+No simulation clock, reload duration or gameplay rule changed for these tests.
 
-The first GitHub run, [44082904519](https://github.com/capstere/Cartridge-strike2/actions/runs/44082904519),
-passed all existing checks but failed the new test's wall-clock reload comparison
-(27 → 30 ammo). Slow software-renderer/CDP round trips had allowed the reload to
-finish before the sample. The follow-up observes authoritative state patches:
-both players submit held-fire inputs during reload, every active-reload ammo
-sample stays constant, and completion restores 30 rounds. Immediate prediction
-is now sampled synchronously around a normal SDK input submission, rather than
-assuming two rendered frames fit inside a network round trip. No reload duration
-or gameplay mechanic changed.
+Initial CI runs [44082904519](https://github.com/capstere/Cartridge-strike2/actions/runs/44082904519)
+and [44086476045](https://github.com/capstere/Cartridge-strike2/actions/runs/44086476045)
+exposed these driver-timing assumptions and an incorrect burst-test bound. A
+12-frame pending queue does not cap the total frames consumed across interleaved
+server ticks. The corrected server test deliberately interleaves bursts and
+checks the queue cap, discarded overflow, movement and cadence per actual tick.
+All pre-existing checks passed in those runs.
 
-This exposed a real disposal mistake too: SDK signal registration returns an
-emitter, not a disposer. NetworkSession now explicitly removes its state/leave
-callbacks before leaving. All 24 browser cleanup cycles assert zero state-signal
-callbacks immediately, before waiting for connection closure. The updated native
-loopback/latency suite and seven server/protocol tests pass locally. GitHub checks
-must pass on the follow-up head before any later merge.
+Two actual lifecycle defects were fixed and regression-tested:
 
-The next CI run, [44086476045](https://github.com/capstere/Cartridge-strike2/actions/runs/44086476045),
-exposed a separate burst-test assumption: a queue cap of 12 does not limit total
-consumed frames to 12 when incoming messages and server ticks interleave. The
-revised test deliberately interleaves two 40-input bursts, verifies the 12-frame
-pending cap and discarded overflow, and bounds movement and firing by actual
-fixed ticks. It passes locally with 15 consumed inputs over 18 ticks (1.05 m).
-The authoritative simulation and queue limits did not change.
+- SDK state/leave signal registration returns an emitter, not a disposer.
+  Explicit callback removal now happens before leave. All 24 cleanup cycles
+  assert zero state callbacks immediately, before waiting for socket closure.
+- A 1.5-second expiry and pause/death clearing could forget an already shown
+  muzzle/audio action before its confirmation arrived. The bounded 128-ID
+  history now survives stalls, pause and same-life death, and clears on a new
+  life or disposal. Focused regressions failed before each correction and pass
+  afterward. Every confirmed own shot is suppressed exactly once in both final
+  browser scenarios (6/6 and 8/8).
 
-An additional forced SwiftShader run on this Mac was **not accepted**: at DPR
-0.5 the corrected interpolation observation passed, but no held-fire input was
-submitted during the reload window under heavy rendering stalls. Earlier
-out-of-frame probes sampled only two or three frames and missed interpolation.
-The native Metal DPR 1 suite passes both complete scenarios. Optional
-`FPS_NETWORK_ANGLE` and `FPS_NETWORK_DPR` settings reproduce this stress condition;
-CI retains its default renderer and DPR 1. This is not evidence of acceptable
-software-renderer performance or a physical-phone result.
+The third CI run, [44088823211](https://github.com/capstere/Cartridge-strike2/actions/runs/44088823211),
+passed the server job and preceding offline checks, but Chromium rejected the
+new browser test's Resume pointer-lock request with `WrongDocumentError`.
+The harness now permits one extra real Resume click only after that visible
+failure and requires actual canvas pointer lock. It never bypasses capture or
+uses a test method to resume. The final native run used two clicks in loopback
+and one with latency. Final required CI must pass on the reviewed branch head.
+
+A complete [SwiftShader DPR 0.5 run](network/browser-software.json) also passes
+both gameplay scenarios and 24 cleanup cycles after replacing wall-clock
+sampling. Its contract is `20fbd7d6…`, before the final same-life death-history
+guard, and it still initialized a third GPU scene for admission tests. The final
+harness uses a fresh official SDK client within an existing browser for admission
+rejections, avoiding unnecessary model/shader startup. The CI step allows eight
+minutes for two software-rendered scenarios; the job budget and all gameplay
+assertions remain intact. This is functional coverage, not evidence of smooth
+software rendering or phone performance. `FPS_NETWORK_ANGLE=swiftshader` and
+`FPS_NETWORK_DPR=0.5` reproduce that environment; CI retains default renderer/DPR 1.
+
+The additional [normal launch smoke](network/normal-launch.json) uses
+`/fps/?network=local` without `?test` or `__fps` hooks. It passes actual desktop
+mouse capture, keyboard movement (1.05 m), two shots, reload HUD and independent
+leave with two clients. This was headless Chromium and needed two Resume clicks.
+The optional headed version repeatedly received the same pointer-lock rejection;
+the native-control tool could not access its window (`cgWindowNotFound`). Thus
+visible native-window mouse capture on this host remains **unverified**, and no
+product fullscreen/input changes were made on that evidence. Repeat the headed
+smoke in a foreground desktop session before claiming that environment passed.
 
 The adoption-distance diagnostics in the raw test include legitimate pending
 movement and are **not** a measured prediction-error percentile. The settled
@@ -211,6 +227,9 @@ npm test --prefix server
 npm ci --prefix frontline/source/tools/dev
 node frontline/source/tools/dev/node_modules/playwright-core/cli.js install chromium
 npm run test:browser --prefix server
+node --import ./server/register-shared.mjs tools/network-launch-browser.mjs
+# Optional foreground native-window check:
+FPS_NETWORK_HEADED=1 node --import ./server/register-shared.mjs tools/network-launch-browser.mjs
 ```
 
 The private-character check uses a generated fixture, keeping original rig

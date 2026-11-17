@@ -103,10 +103,11 @@ export class NetworkSession {
         pose:w=>({x:w.actor.x,y:w.actor.y,z:w.actor.z}),
       });
     }
-    if(self.lifeId!==this.lifeId||self.alive!==this.alive){
+    const newLife=self.lifeId!==this.lifeId;
+    if(newLife||self.alive!==this.alive){
       this.lifeId=self.lifeId;this.alive=self.alive;this.metrics.resets++;
       // Reset the replay controller, NOT InputHandle's reliable wire counters.
-      this.prediction.reset();this.predictedShots.clear();this.nextCosmetic=0;
+      this.prediction.reset();if(newLife)this.predictedShots.clear();this.nextCosmetic=0;
       this.fireId=0;this.reloadId=0;
       this.events=[];
     }
@@ -150,7 +151,10 @@ export class NetworkSession {
       this.input.send();this.metrics.sent++;
     }
     this.metrics.maxPending=Math.max(this.metrics.maxPending,this.input.pendingCount);
-    for(const [id,time] of this.predictedShots)if(performance.now()-time>1500)this.predictedShots.delete(id);
+    // A stalled renderer can receive a confirmation long after the effect was
+    // shown. Keep a bounded action history until confirmation or a life reset;
+    // wall-clock expiry could replay the same muzzle/audio after the stall.
+    while(this.predictedShots.size>128)this.predictedShots.delete(this.predictedShots.keys().next().value);
     // Only the display clock advances here; it cannot tick combat or respawn.
     this.view.state.time=state.time+Math.min(.1,(performance.now()-this.lastPatch)/1000);
     for(const a of this.view.actors){
@@ -166,7 +170,7 @@ export class NetworkSession {
   }
   setInputEnabled(enabled){
     if(this.closed)return;
-    this.enabled=enabled;this.view.state.paused=!enabled;this.events=[];this.predictedShots.clear();
+    this.enabled=enabled;this.view.state.paused=!enabled;this.events=[];
     if(this.room&&this.lifeId)this.room.send('controls',{enabled,lifeId:this.lifeId});
     if(enabled&&this.prediction)this.prediction.reset();
   }

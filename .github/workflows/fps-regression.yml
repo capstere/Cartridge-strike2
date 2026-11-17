@@ -90,7 +90,8 @@ jobs:
           node-version-file: server/.node-version
       - name: Two-browser authoritative gameplay with latency and cleanup
         if: github.event_name != 'push'
-        timeout-minutes: 6
+        # Both complete software-rendered scenarios need shader startup time.
+        timeout-minutes: 8
         run: |
           npm ci --prefix server --ignore-scripts
           npm run test:browser --prefix server

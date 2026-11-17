@@ -9,7 +9,7 @@
     "mapId": "synthetic-demo",
     "mapHash": "d7d3d7f136cb9b334d371b8b7d9fc97bac4e0fd3bec1d0954efd3cc1b9637b62",
     "configHash": "aa861224d84d0e4666c0f011e19510f7ea5b040271f90b4808d517db6cd13095",
-    "buildHash": "44c84c21158beaf5e8ce4e77a6140cbca0407995d75422579d1d54c59e24200c",
+    "buildHash": "d9910abd8e9db6e1881a9c6e2f3e2cf3ba7364a55df5b3a362e861ec1b804637",
     "tickRate": 60,
     "patchMs": 50
   },
@@ -18,22 +18,21 @@
       "command": "node --experimental-loader ./tools/vendor-three-test-loader.mjs --test src/fps/*.test.mjs tools/*.test.mjs",
       "status": "PASS",
       "exitCode": 0,
-      "logSha256": "04eb491f19f2ec9309acef78bc889d6d3e065be04dcbf948a8831f0a63254a39",
-      "count": 211,
-      "note": "Full 211-test wildcard run; newly added client-event test separately passes. CI runs the current 212-test wildcard suite."
+      "logSha256": "7e1460a7be46e25741d10fbbed847aab4b137f4b237486d9aab870dc83a9259d",
+      "count": 213
     },
     "clientEvents": {
       "command": "node --experimental-loader ./tools/vendor-three-test-loader.mjs --test tools/network-session.test.mjs",
       "status": "PASS",
       "exitCode": 0,
-      "logSha256": "a8ff3cb145de0136f796215e0d4a3703c871bf2ecd779dd13fce4770cbcbe907",
-      "count": 1
+      "logSha256": "3d792f22b12702539cfc2149e6beb0de0c9f3a3f2c0569af8d67e932ef518357",
+      "count": 2
     },
     "serverProtocol": {
       "command": "node --import ./server/register-shared.mjs --test server/test/*.test.mjs tools/network-protocol.test.mjs",
       "status": "PASS",
       "exitCode": 0,
-      "logSha256": "70462b5786433e2afb28163fb08a6ba36ad2f57affb33438fae02e1e267198cb",
+      "logSha256": "795bb77709540a3f53b60652f83e3a7473bf47e892634568518575723f134479",
       "count": 7
     },
     "doors": {
@@ -99,7 +98,7 @@
       "command": "node --import ./server/register-shared.mjs tools/network-browser.mjs",
       "status": "PASS",
       "exitCode": 0,
-      "logSha256": "21a1003c1183e60d1021f6f95e1fd3749b5ce1291aae594aafe8db80d42d2be7",
+      "logSha256": "1f291e9bdc79aded53a25afb74e31630ef0c6a4f057fa9730b84a75d74d15513",
       "evidence": "network/browser.json"
     },
     "offlineLifecycle": {
@@ -121,13 +120,21 @@
       "command": "node tools/build-network.mjs --check",
       "status": "PASS",
       "exitCode": 0,
-      "logSha256": "a1dd21e3e89ad1462fbbcc322f10245a414cc190e58b3224ef732c7d3caa8349"
+      "logSha256": "23e63a9662b4dc0f219a08316ad67e2b42ffba9bb2f387bb68598640f3d00727"
     },
     "runtime": {
       "command": "node tools/verify-owner-runtime.mjs",
       "status": "PASS",
       "exitCode": 0,
       "logSha256": "3f1739695904920e48cdeeb3cd42c17c5eaa4d3f668a7ea264d0f9e757abda8c"
+    },
+    "normalLaunch": {
+      "command": "node --import ./server/register-shared.mjs tools/network-launch-browser.mjs",
+      "status": "PASS",
+      "exitCode": 0,
+      "logSha256": "edf776eb9baf48ea4b08057dbb0bc84889b65b3b2ed9192ea5d424b0cd3a8f98",
+      "evidence": "network/normal-launch.json",
+      "note": "Headless Chromium, no ?test or __fps hooks; real mouse lock/keys/mouse, two clients, reload HUD, independent leave. Two visible Resume attempts."
     }
   },
   "notRun": [
@@ -139,7 +146,8 @@
     "50/150/250 ms matrix",
     "transport packet loss",
     "30-minute network soak",
-    "Studio UI export workflow"
+    "Studio UI export workflow",
+    "successful native headed normal-launch mouse capture on this host"
   ],
   "knownInitialFailures": [
     "Offline GPU tail equality failed in two initial runs; original samples retained. Final status recorded separately.",
@@ -148,7 +156,7 @@
     "Single-point interpolation assertion sampled a settled wall pose; replaced with bounded samples over actual movement."
   ],
   "initialImplementationCommit": "02714bd529e8205114d514d594323c75f71f07d5",
-  "browserHarnessSha256": "75da49368002e78e3ab6691bc93b1d9e25a7817691fd147ec19cc4a297381686",
+  "browserHarnessSha256": "1ecd77828ad4e9dbe133b2df5cfbf7e192ee8d33e41ba6c6c8c67adc950d4798",
   "ciFollowup": {
     "failedRun": 44082904519,
     "head": "dc7f4bc28fc641b0df26479639825ff4d5f233d2",
@@ -157,14 +165,24 @@
     "required": "All jobs on follow-up head must pass; never bypass failed checks.",
     "secondFailedRun": 44086476045,
     "secondFailure": "Burst test incorrectly treated the 12-frame pending limit as the total consumed frame limit across interleaved ticks.",
-    "secondFix": "Interleave two bursts; assert queue cap and overflow plus movement/cadence bounded per actual fixed tick."
+    "secondFix": "Interleave two bursts; assert queue cap and overflow plus movement/cadence bounded per actual fixed tick.",
+    "thirdFailedRun": 44088823211,
+    "thirdFailure": "All preceding offline checks and server job passed; Chromium rejected Resume pointer lock with WrongDocumentError.",
+    "thirdFix": "One bounded additional visible Resume gesture, with actual canvas lock required; no forced resume or product fullscreen changes.",
+    "additionalVerifiedFix": "Bounded own-action history survives render stalls, pause and same-life death, clearing on new life/dispose; failing-before/passing-after regressions."
   },
   "softwareRendererAttempt": {
     "renderer": "SwiftShader on macOS ARM64",
     "deviceScaleFactor": 0.5,
-    "status": "FAIL",
-    "phase": "reload held-fire coverage",
-    "note": "Frame-bound interpolation observation passed. No held fire was submitted during the reload window on this heavily stalled renderer. Native Metal DPR1 suite passes; software rendering performance is not accepted by this result.",
-    "logSha256": "f85e199c136212a541e3b53b3358f7a67e7a4390519210b1cf4547f652d14f71"
+    "status": "PASS",
+    "evidence": "network/browser-software.json",
+    "logSha256": "e2a59a33d61d190f886df5eb210311ea1e33e09f35d66b0c6a2d391ef6ebb6eb",
+    "note": "Both complete scenarios and 24 cleanup cycles. Contract 20fbd7d6 before final same-life death-history guard; older harness initialized a third admission GPU scene. Functional result, not a performance acceptance."
+  },
+  "headedNormalLaunch": {
+    "status": "BLOCKED",
+    "failure": "Repeated WrongDocumentError while obtaining pointer lock through headed Playwright. Native CUA could not access Chrome for Testing window (cgWindowNotFound).",
+    "productChanges": "None; speculative fullscreen/input changes reverted.",
+    "next": "Repeat FPS_NETWORK_HEADED=1 normal-launch smoke in a foreground native desktop session."
   }
 }
