@@ -69,6 +69,7 @@ jobs:
         # Native full-DPR/forward-camera performance is measured separately.
         timeout-minutes: 10
         env:
+          FPS_NETWORK_ANGLE: swiftshader
           FPS_NETWORK_DPR: '0.5'
           # Use ordinary downward look during route-only travel to reduce
           # unasserted software draw work. Encounters/combat restore normal aim.

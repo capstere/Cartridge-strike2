@@ -97,8 +97,10 @@ Initial failures were fixed rather than waived: hash serialization differed acro
 versions, the local HTTP allowlist omitted real furniture, and synthetic-map
 fixtures assumed permanently open doors and empty combat coordinates.
 The browser route helper originally stopped on predicted waypoint arrival; a
-latency run exposed the server still behind it. It now waits for the exact SDK
-input acknowledgement and checks authoritative arrival before advancing. The
+latency runs exposed both an unconsumed stop and an older schema snapshot. It
+now waits for a neutral input to be sent/acknowledged and a subsequent world
+patch before checking authoritative arrival. Acknowledgements and schema patches
+are distinct messages. The
 final arrival threshold remains 0.3 m; no teleport or collision bypass is used.
 
 A later failed-admission probe reproduced a real lobby cleanup defect: returning
@@ -111,10 +113,29 @@ checks did not require a Game render between transitions and missed this defect;
 every cycle now requires a real lobby frame and a real active frame after joining.
 [Before/after recovery evidence](floor5/lobby-recovery.json).
 
+The empty network lobby also repeatedly redrew an unchanged Floor 5 camera at
+simulation time zero. A matched SwiftShader probe observed six redundant frames
+in two seconds, versus zero with the static-scene policy; join time was noisy
+and no loading-speed gain is claimed. The production policy retains pixels only
+for this empty network lobby. A new lobby, viewport/DPR, graphics setting,
+or restored WebGL context invalidates it. Active games,
+ordinary pauses and offline menus retain their prior cadence. A native pixel
+check confirms identical composited images over two seconds, correct resize and
+quality changes, and a real `WEBGL_lose_context` loss/restore without a fatal
+error. One canvas restoration listener belongs to the application's lifetime.
+[Measured redraws and production recovery](floor5/lobby-redraw.json).
+
 The new focused tests cover collision identity/drift, hash normalization without
 geometry mutation, 102 real door approaches with matching prediction/authority,
 closed-shutter blocking and both humans crossing during the same predicted and
 authoritative opening, late adoption, safe spawns and context restoration.
+Nonlethal damage checks release fire on one actual outgoing shot action; waiting
+for a delayed hit patch could otherwise queue a lethal automatic burst. The
+deliberate kill still uses held fire. Held-fire reload checks aim at the ceiling
+so valid post-reload shots cannot kill the target reserved for the deliberate lethal volley. The interpolation
+observer starts its movement window when motion arrives, separately from its
+bounded command-delivery wait. These changes preserve the damage, ammunition,
+arrival and interpolation assertions.
 The two-browser harness uses real paths and network inputs, never teleporting
 players or setting health/ammunition to manufacture gameplay success. It visits
 C08, shoots into a solid wall and closed D39, opens D39 through normal proximity,
@@ -124,7 +145,7 @@ form; repeated cleanup joins use that form's application handler.
 
 | Check | Observed result |
 | --- | --- |
-| FPS/tools unit suite | PASS, 217 tests; the expanded shutter case also passed in the final four-test Floor 5 rerun |
+| FPS/tools unit suite | PASS, 218 tests; the expanded shutter case also passed in the final four-test Floor 5 rerun |
 | Pinned server/API and focused network suite | PASS, 13 combined tests (four server/API, four Floor 5, three protocol, two session) |
 | Prepared door traversal | PASS, 102 approaches; no missing routes |
 | Generated contract and runtime hashes | PASS, 516 runtime files; no hand-edited generated output |
@@ -135,14 +156,14 @@ form; repeated cleanup joins use that form's application handler.
 | Offline lifecycle | PASS, 20 measured match/lobby cycles after warmup; final plateau 1,329 geometries / 162 textures / 109 programs, 267 listeners, one retained Game, one audio context / three nodes / zero voices |
 | Native two-browser Floor 5 | PASS, loopback and 100 ms RTT with jitter, 20 + 4 leave/rejoin cycles; both players move/aim/shoot/reload, one counted kill, damage/death/respawn, D39 obstruction/opening, late world state, pause/orientation and empty-room cleanup |
 | Remote presentation | PASS, visible original operator follows interpolated body; actual `Walk_Loop` and `Death01` observed in rendered gameplay |
-| Normal Floor 5 launch without test hooks | PASS, two humans, actual keys/mouse, pointer lock on first Resume, 1.05 m movement, four shots, reload HUD and leaving without disturbing the other player |
-| Mac SwiftShader functional profile | Initial gameplay run passed at DPR 0.5 with downward route-travel look in 232.1 / 242.9 s. Its cleanup checks had the render-frame coverage gap described above; a stricter post-fix run is pending. This is not a software FPS pass. |
+| Normal Floor 5 launch without test hooks | PASS, two humans, actual keys/mouse, pointer lock on first Resume, 1.19 m movement, four shots, reload HUD and leaving without disturbing the other player |
+| Mac SwiftShader functional profile | PASS, complete loopback / latency scenarios in 237.2 / 199.4 s, including 20 + 4 actually rendered cleanup cycles; DPR 0.5 and downward route-travel look. Stable rejoining-client GPU 1,077 geometries / 98 textures, 231 listeners, zero settled/respawn errors. This is not a software FPS pass. |
 
 The network test also asserts unchanged first/final GPU allocations, model,
-callback and listener counts. Both scenarios finish with **1,642 geometries /
-98 textures**, two actor models, four SDK callbacks, one remote entry, 230 DOM
+callback and listener counts. The rejoining client finishes both scenarios with **1,642 geometries /
+98 textures**, two actor models, four SDK callbacks, one remote entry, 231 DOM
 listeners and zero audio voices. Every own confirmed shot reuses its immediate
-effect (11/11 loopback, 17/17 delayed), with no duplicate confirmation playback.
+effect (11/11 loopback, 14/14 delayed), with no duplicate confirmation playback.
 Both settled position errors and respawn errors are zero in these runs.
 
 Evidence: [native browser record](floor5/browser-native.json),
@@ -175,9 +196,14 @@ diagnosis; Node 22 is restored for those existing suites. Admission failures
 print the actual lobby/fatal/focus state instead of only an opaque timeout.
 [Run 44127848429](https://github.com/capstere/Cartridge-strike2/actions/runs/44127848429)
 passed every offline stage and initialized both scenes, then timed out waiting
-for the first playable human. That Linux admission failure is still under
-diagnosis; local normal and CPU-throttled admission both passed. Default
-native tests retain full DPR 1 and ordinary forward look during travel.
+for the first playable human. The next
+[run 44133628635](https://github.com/capstere/Cartridge-strike2/actions/runs/44133628635)
+joined both humans, but its interpolation observer expired before the keyboard
+command reached the heavily loaded desktop client. Its Cargo window sampled
+only one 6,833 ms frame. CI now explicitly selects SwiftShader, logs the actual
+WebGL backend and uses the movement-based observer described above. Default
+native tests retain full DPR 1 and ordinary forward look during travel. Final
+required CI remains tracked on the PR; those earlier failures are not passes.
 
 ### Reproduce
 
@@ -194,6 +220,7 @@ node --experimental-loader ./tools/vendor-three-test-loader.mjs tools/foundation
 node --import ./server/register-shared.mjs tools/network-browser.mjs
 FPS_NETWORK_ANGLE=swiftshader FPS_NETWORK_DPR=0.5 FPS_NETWORK_TRANSIT_PITCH=-1.3 node --import ./server/register-shared.mjs tools/network-browser.mjs
 node --import ./server/register-shared.mjs tools/network-launch-browser.mjs
+node --import ./server/register-shared.mjs tools/network-lobby-browser.mjs
 ```
 
 The existing offline browser scripts use a root HTTP server on port 8765:
@@ -215,27 +242,26 @@ these are measured views, not a universal map or physical-phone FPS guarantee.
 
 | View | Loopback FPS / frame p95 | Delayed FPS / frame p95 | Draw calls | Mean render submission, loopback / delayed |
 | --- | --- | --- | --- | --- |
-| Cargo Lift, desktop | 60.0 / 16.7 ms | 60.0 / 16.8 ms | 1,081 | 9.50 / 9.74 ms |
-| Service Lift, mobile emulation | 60.0 / 16.8 ms | 60.0 / 16.8 ms | 79 | 1.46 / 1.44 ms |
-| C08, desktop facing the other human | 58.4 / 16.7 ms | 59.8 / 16.8 ms | 1,196 | 10.90 / 10.61 ms |
-| C08, mobile emulation facing back | 60.0 / 16.7 ms | 60.0 / 16.8 ms | 198 | 2.35 / 2.19 ms |
+| Cargo Lift, desktop | 60.0 / 16.7 ms | 60.0 / 16.7 ms | 1,081 | 9.34 / 8.77 ms |
+| Service Lift, mobile emulation | 60.0 / 16.7 ms | 60.0 / 16.7 ms | 79 | 1.39 / 1.43 ms |
+| C08, desktop facing the other human | 59.0 / 16.7 ms | 59.0 / 16.8 ms | 1,196 | 9.81 / 9.27 ms |
+| C08, mobile emulation facing back | 60.0 / 16.7 ms | 60.0 / 16.8 ms | 198 | 2.09 / 2.00 ms |
 
 Across the whole scripted matches, including travel, combat, menus and cleanup,
-server fixed-step elapsed p95 is **0.95 / 1.07 ms**, and client prediction/frame
-submission p95 is **0.30–0.50 ms**. These elapsed timings include scheduling and
+server fixed-step elapsed p95 is **0.61 / 0.49 ms**, and client prediction/frame
+submission p95 is **0.30–0.40 ms**. These elapsed timings include scheduling and
 GC; they are not GPU timer queries or isolated process CPU measurements. The
-largest server samples were 49.3 / 152.1 ms, and the C08 desktop windows had
-149.9 / 33.3 ms frames despite their low p95. Those isolated stalls remain a
-profiling target before longer soak or capacity claims. Apart from the measured
-unused resident loading above, no renderer/AI rewrite was justified by this
-two-human sample.
+largest server samples were 142.5 / 55.4 ms, and the C08 desktop windows had
+100 ms frames in both scenarios despite their low p95. Those isolated stalls remain a
+profiling target before longer soak or capacity claims. Apart from unused resident loading and redundant empty-lobby redraws above,
+no renderer/AI rewrite was justified by this two-human sample.
 
-Sampled JavaScript heaps across the four windows were 97.5–126.7 MiB loopback
-and 94.4–148.7 MiB delayed (not forced-GC retained-size measurements). Cleanup
+Sampled JavaScript heaps across the four windows were 80.7–125.1 MiB loopback
+and 90.8–143.9 MiB delayed (not forced-GC retained-size measurements). Cleanup
 checks use forced GC and explicit resource/listener counts. The delayed proxy
-carried 64,138 bytes upstream and 401,956 downstream across the match and four
-rejoins, 13,967 messages in total. Its first 4,096 ordered one-way delays had a
-52.1 ms median, 68.4 ms p95 and 77.4 ms maximum; ordered jitter can queue beyond
+carried 62,205 bytes upstream and 381,634 downstream across the match and four
+rejoins, 13,584 messages in total. Its first 4,096 ordered one-way delays had a
+51.9 ms median, 68.3 ms p95 and 70.6 ms maximum; ordered jitter can queue beyond
 the nominal 30–70 ms range. This is reliable WebSocket latency/jitter testing,
 not a packet-loss or external-internet test.
 

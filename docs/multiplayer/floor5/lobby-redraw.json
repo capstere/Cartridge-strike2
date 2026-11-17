@@ -1,0 +1,65 @@
+{
+  "baselineCommit": "63cdf64a26379056dc258c316c725f7b955a7ef6",
+  "softwareProbe": {
+    "environment": "Apple M1 / Chromium 153 / SwiftShader / DPR 0.5 / two browser processes",
+    "windowMs": 2000,
+    "before": {
+      "staticLobby": false,
+      "readyMs": 61228.470875,
+      "joinMs": 13620.355624999997,
+      "idleFrames": 6,
+      "identicalCanvas": true,
+      "simulationTime": [
+        0,
+        0
+      ],
+      "humans": 2,
+      "errors": []
+    },
+    "prototype": {
+      "staticLobby": true,
+      "readyMs": 77314.200125,
+      "joinMs": 11898.448000000004,
+      "idleFrames": 0,
+      "identicalCanvas": true,
+      "simulationTime": [
+        0,
+        0
+      ],
+      "humans": 2,
+      "errors": []
+    },
+    "note": "Prototype wraps presentation budget only. Readiness and join timing are noisy single samples; no loading-speed gain claimed."
+  },
+  "production": {
+    "harnessSha256": "872dd7e983f3885bc176bfef5e8d080a377774ded9f75aef6614b8a9c3b5a1d8",
+    "runtimeManifestSha256": "8a8070110037c1787b23443445489c75d178d23e85aeb326cf8b24f2f90be63f",
+    "status": "PASS",
+    "environment": {
+      "browser": "153.0.8010.12",
+      "platform": "darwin",
+      "arch": "arm64",
+      "angle": "metal",
+      "deviceScaleFactor": 1
+    },
+    "windowMs": 2000,
+    "idleFrames": 0,
+    "pixelEqual": true,
+    "canvasPngSha256": "0dfd15de6622a443c7a18ada162763079fb870aedc544885d6177001ec883855",
+    "resized": {
+      "width": 850,
+      "height": 510,
+      "frames": 2
+    },
+    "graphics": {
+      "quality": "standard",
+      "frames": 3
+    },
+    "restored": {
+      "lost": false,
+      "draws": 488,
+      "fatal": false
+    },
+    "errors": []
+  }
+}

@@ -1,6 +1,8 @@
 # Cartridge-Strike 2 handover
 
-**First open task — test physical mobile controls and audio.** Play on an iPhone and an Android phone in landscape, near 844×390 and 932×430 where available. Record the model, OS, browser, viewport and safe-area clearance. Move, aim and fire together, reload, jump, hold an objective and buy. Rotate, background and resume during the lobby and a match. Listen for the lobby theme stopping on Start and resuming on return. Record any failure with its screen position and steps. [Play the published build](https://capstere.github.io/Cartridge-strike2/)
+**Next multiplayer task — review [Pass 3A.1 PR #20](https://github.com/capstere/Cartridge-strike2/pull/20), its final required CI and [validation report](docs/multiplayer/pass3a-floor5.md). Do not automatically merge it or start a later multiplayer pass.**
+
+**Physical-device backlog — test mobile controls and audio.** Play on an iPhone and an Android phone in landscape, near 844×390 and 932×430 where available. Record the model, OS, browser, viewport and safe-area clearance. Move, aim and fire together, reload, jump, hold an objective and buy. Rotate, background and resume during the lobby and a match. Listen for the lobby theme stopping on Start and resuming on return. Record any failure with its screen position and steps. [Play the published build](https://capstere.github.io/Cartridge-strike2/)
 
 Floor 5 has neutral Meshy residents in Classic and Endless. The 20-cycle match lifecycle check passed. The feature was merged in [PR #7](https://github.com/capstere/Cartridge-strike2/pull/7) and verified on Pages in [PR #8](https://github.com/capstere/Cartridge-strike2/pull/8). [Living zombies, frame samples and published captures](docs/zombies/gameplay.md)
 
@@ -209,12 +211,16 @@ A later admission-error probe caught an empty-lobby render crash after leaving a
 network round. The reset now synchronizes its round/phase markers. Every network
 cleanup cycle must actually render in the lobby and again after rejoining; the
 normal-launch test also checks for a fatal error after returning. The report
-records the original coverage gap and before/after recovery evidence.
+records the original coverage gap and before/after recovery evidence. The empty
+network lobby retains its unchanged pixels, invalidating on new lobby, viewport,
+quality or WebGL restoration. Native pixel/resize/context-recovery
+checks pass; ordinary offline and paused-game cadence stays unchanged.
 
 The first Linux run passed the server and all offline checks but reproduced a
 second-scene software GPU startup timeout. The browser harness now uses separate
 GPU processes. A documented reduced-resolution software functional profile
-passes both network scenarios and 24 cleanup cycles locally; native performance
+passes both complete network scenarios and 24 actually rendered cleanup cycles
+locally (237.2 / 199.4 seconds); native performance
 is measured separately at full resolution and normal forward view. Required
 Linux checks must pass on the final PR head.
 

@@ -235,7 +235,12 @@ function consumeEvents(){audio.game=game;const events=game.drainEvents();combatH
    }
  }
 if(game.phase!==lastPhase){if(['result','match'].includes(game.phase)){audio.reset();}lastPhase=game.phase;}if(game.state.round!==lastRound){lastRound=game.state.round;audio.reset();renderer.resetTransient();recoil.reset();yaw=game.player.yaw;pitch=game.player.pitch;clearInput();}for(const event of events){if(event.type==='respawn'&&event.actorId===game.player.id){clearInput();recoil.reset();yaw=game.player.yaw;pitch=0;renderer.lastWeapon='';}if(event.type==='radio'){setText('radio-caption',`RADIO · ${event.text}`);radioUntil=game.state.time+3.4;radioOpen=false;$('radio-menu').hidden=true;}if(event.type==='kill'){if(event.actorId===game.player.id){fire=false;radioOpen=false;$('radio-menu').hidden=true;if(!isEndless(game))unlockMouse();}const killer=game.actors.find(a=>a.id===event.sourceId),victim=game.actors.find(a=>a.id===event.actorId);feed.push({text:`${killer?.name||event.sourceName||'—'}  ▸  ${victim?.name||event.targetName||'—'}`,until:game.state.time+5});}if(event.type==='planted')notify('Bomben är planterad i '+missionRoomName(world)+'.',4);if(event.type==='rescued')notify('Gisslan har nått räddningszonen.',3);}const effectEvents=['result','match'].includes(game.phase)?events.filter(e=>['result','match','kill','rocket-explosion'].includes(e.type)):events;renderer.events(events,game);const view=viewActor();if(view)audio.handle(effectEvents,{...view,y:view.y+view.height-.12,ambient:['buy','active'].includes(game.phase)&&!game.state.paused,floorAudioReady:!modal&&$('cs-loading').hidden},game.state.time);return events;}
-function frame(now){try{if(!renderBudget.shouldRender(now,document.hidden,!!modal||game.state.paused)){lastFrame=now;raf=requestAnimationFrame(frame);return;}const dt=lastFrame?Math.min(.05,(now-lastFrame)/1000):1/60;lastFrame=now;
+function frame(now){try{
+ // The empty network lobby has a fixed camera and simulation time. Retain its
+ // pixels until a new lobby, viewport or graphics setting needs a redraw.
+ const stillLobby=networkMode&&modal==='menu'&&game.phase==='menu';
+ const stillRevision=stillLobby?`${innerWidth}:${innerHeight}:${devicePixelRatio}:${settings.graphics}`:null;
+ if(!renderBudget.shouldRender(now,document.hidden,!!modal||game.state.paused,stillLobby?game:null,stillRevision)){lastFrame=now;raf=requestAnimationFrame(frame);return;}const dt=lastFrame?Math.min(.05,(now-lastFrame)/1000):1/60;lastFrame=now;
  tactical.update(dt);
  if(!modal&&game.player?.alive&&game.phase==='active'&&!game.state.paused){
    if(recoil.weapon&&recoil.weapon!==game.player.weapon)recoil.reset();
@@ -256,6 +261,7 @@ function launchMatch(event){
  audio.unlock();requestMouse();
 }
 $('start').addEventListener('cs-start-match',launchMatch);
+if(networkMode)$('game').addEventListener('webglcontextrestored',()=>renderBudget.invalidate());
 $('death-restart').onclick=restartMatch;$('resume').onclick=resume;$('restart').onclick=newMatch;$('new-match').onclick=newMatch;$('close-buy').onclick=closeBuy;$('return-buy').onclick=closeBuy;
 $('fullscreen-toggle').onclick=()=>{window.__csFlow?.fullscreen?.toggle();syncFullscreenToggle();};
 document.addEventListener('fullscreenchange',()=>{syncFullscreenToggle();if(mobile.enabled&&document.fullscreenElement)mobile.attemptLandscape();window.dispatchEvent(new Event('resize'));});syncFullscreenToggle();

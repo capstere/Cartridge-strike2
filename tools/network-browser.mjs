@@ -30,7 +30,7 @@ async function open(viewport={width:1280,height:720},mobile=false){
  assert.match(await page.locator('.lb-brief').textContent(),/Floor 5 Laboratory/);
  assert.match(await page.locator('.lb-brief').textContent(),/1 mot 1/);
  assert(await page.evaluate(()=>!__fps.renderer.zombieVisuals),'online renderer has no unused resident asset initialization');
- console.log('scene ready',mobile?'mobile':'desktop',await page.evaluate(()=>({draws:__fps.renderer.stats.drawCalls,focused:document.hasFocus(),hidden:document.hidden})));
+ console.log('scene ready',mobile?'mobile':'desktop',await page.evaluate(()=>{const gl=__fps.renderer.renderer.getContext(),ext=gl.getExtension('WEBGL_debug_renderer_info');return {draws:__fps.renderer.stats.drawCalls,focused:document.hasFocus(),hidden:document.hidden,renderer:gl.getParameter(ext?.UNMASKED_RENDERER_WEBGL||gl.RENDERER),antialias:gl.getContextAttributes().antialias,samples:gl.getParameter(gl.SAMPLES)};}));
  return page;
 }
 async function join(page,endpoint,roomId='',name='Player'){
@@ -66,13 +66,17 @@ async function walk(page,goals){
    while(true){
     const n=__fps.network,a=n.prediction.world.actor,dx=x-a.x,dz=z-a.z,d=Math.hypot(dx,dz);
     if(d<.10){
-     // Prediction can reach a corner before a delayed/overflowed input is
-     // acknowledged. Stop steering, await the SDK ack for that exact frame,
-     // then require the authoritative body to have arrived too.
-     __fps.liveControls={};const sent=n.input.sentCount;
+     // Stop through ordinary input and wait for its ack. The SDK ack and
+     // schema patch are separate messages: only a later world snapshot proves
+     // the body has actually settled, rather than just passed the waypoint.
+     __fps.liveControls={};const movingSent=n.input.sentCount;
+     while(n.input.sentCount<=movingSent){if(performance.now()>end)throw Error('Route stop was not submitted');await new Promise(requestAnimationFrame);}
+     const sent=n.input.sentCount;
      while(n.input.lastProcessed<sent){if(performance.now()>end)throw Error('Route input was not acknowledged');await new Promise(requestAnimationFrame);}
+     const ackTick=n.room.state.tick;
+     while(n.room.state.tick<=ackTick){if(performance.now()>end)throw Error('Route stop snapshot was not received');await new Promise(requestAnimationFrame);}
      const authority=n.room.state.actors.get(n.localPlayerId),error=Math.hypot(authority.x-x,authority.z-z);
-     (window.__routeConfirmations??=[]).push({sent,ack:n.input.lastProcessed,error});
+     (window.__routeConfirmations??=[]).push({sent,ack:n.input.lastProcessed,ackTick,snapshotTick:n.room.state.tick,error});
      if(error<.16)break;
      if(performance.now()>end)throw Error('Authority did not reach the waypoint');
      await new Promise(requestAnimationFrame);continue;
@@ -119,18 +123,22 @@ const worldState=page=>page.evaluate(()=>{
   broken:w.glass.brokenCount};
 });
 async function fireUntil(page,target,lethal=false){
- // Stop on the authority patch in the firing client. A slow driver's return
- // trip must not turn the intended first-hit check into several seconds of fire.
+ // Nonlethal checks use one real trigger pull. Waiting for a damage patch to
+ // release automatic fire can queue an entire lethal burst during latency.
  await page.evaluate(({target,lethal})=>{
-  const n=__fps.network,a=n.room.state.actors.get(n.localPlayerId);let timer;
+  const n=__fps.network,a=n.room.state.actors.get(n.localPlayerId),handle=n.input,send=handle.send,fireId=n.fireId;let timer,sentShots=0;
   window.__fireCheck=new Promise((resolve,reject)=>{
-   const finish=(value,error)=>{clearTimeout(timer);n.room.onStateChange.remove(changed);__fps.liveControls={};error?reject(error):resolve(value);};
-   const changed=()=>{const victim=n.room.state.actors.get(target.id);if(victim&&(lethal?!victim.alive:victim.hp<target.hp))finish({hp:victim.hp,alive:victim.alive});};
-   n.room.onStateChange(changed);timer=setTimeout(()=>finish(null,Error('Authoritative shot did not damage target')),20000);
+   const finish=(value,error)=>{clearTimeout(timer);handle.send=send;n.room.onStateChange.remove(changed);__fps.liveControls={};error?reject(error):resolve(value);};
+   const changed=()=>{const victim=n.room.state.actors.get(target.id);if(victim&&(lethal?!victim.alive:victim.hp<target.hp))finish({hp:victim.hp,alive:victim.alive,sentShots});};
+   if(!lethal)handle.send=function(...args){const shot=this.data.fire&&this.data.fireId>fireId;const result=send.apply(this,args);if(shot){sentShots++;__fps.liveControls.fire=false;handle.send=send;}return result;};
+   const diagnostic=a=>a&&({id:a.id,alive:a.alive,life:a.lifeId,hp:a.hp,ammo:a.ammo,reload:a.reloadUntil,x:a.x,z:a.z,yaw:a.yaw,pitch:a.pitch});
+   n.room.onStateChange(changed);timer=setTimeout(()=>finish(null,Error('Authoritative shot did not damage target: '+JSON.stringify({intended:target,shooter:diagnostic(n.room.state.actors.get(n.localPlayerId)),victim:diagnostic(n.room.state.actors.get(target.id)),enabled:n.enabled,modal:__fps.modal}))),20000);
    __fps.liveControls={yaw:Math.atan2(-(target.x-a.x),-(target.z-a.z)),pitch:Math.atan2(1.15-(a.y+1.58),Math.hypot(target.x-a.x,target.z-a.z)),fire:true};
   });
  },{target,lethal});
- return page.evaluate(()=>window.__fireCheck);
+ const result=await page.evaluate(()=>window.__fireCheck);
+ if(!lethal)assert.equal(result.sentShots,1,'one ordinary input action proves the nonlethal hit');
+ return result;
 }
 async function reloadCheck(page,roomId,actorId){
  const authority=[...local.rooms].find(r=>r.roomId===roomId),[sid,seat]=[...authority.seats].find(([,s])=>s.id===actorId);
@@ -144,13 +152,15 @@ async function reloadCheck(page,roomId,actorId){
  // software renderer can finish the entire reload while a CDP read is pending.
  await page.evaluate(()=>{
   const n=__fps.network,handle=n.input,send=handle.send;let off,timer,started=false,attempts=0,activeAttempts=0;const ammo=[],reloadId=n.reloadId;
-  const pressed=e=>{if(e.code==='KeyR'){const a=n.room.state.actors.get(n.localPlayerId);__fps.liveControls={fire:true,yaw:a.yaw,pitch:a.pitch};}};
+  // Aim at the ceiling while testing held fire. A legitimately queued shot
+  // after reload completion must not kill the next combat fixture's target.
+  const pressed=e=>{if(e.code==='KeyR'){const a=n.room.state.actors.get(n.localPlayerId);__fps.liveControls={fire:true,yaw:a.yaw,pitch:1.3};}};
   window.addEventListener('keydown',pressed);
   window.__reloadCheck=new Promise((resolve,reject)=>{
    const finish=(result,error)=>{clearTimeout(timer);off?.();window.removeEventListener('keydown',pressed);handle.send=send;__fps.liveControls={};error?reject(error):resolve(result);};
    handle.send=function(...args){if(this.data.fire&&this.data.reloadId>reloadId){attempts++;if(started)activeAttempts++;}return send.apply(this,args);};
    const changed=()=>{const a=n.room.state.actors.get(n.localPlayerId);
-    if(a.reloadUntil){started=true;ammo.push(a.ammo);__fps.liveControls={fire:true,yaw:a.yaw,pitch:a.pitch};}
+    if(a.reloadUntil){started=true;ammo.push(a.ammo);__fps.liveControls={fire:true,yaw:a.yaw,pitch:1.3};}
     else if(started)finish({ammo,attempts,activeAttempts,full:a.ammo});
    };
    n.room.onStateChange(changed);off=()=>n.room.onStateChange.remove(changed);
@@ -158,7 +168,9 @@ async function reloadCheck(page,roomId,actorId){
   });
  });
  await page.keyboard.press('KeyR');
- const result=await page.evaluate(()=>window.__reloadCheck);result.serverAttempts=serverAttempts;
+ const result=await page.evaluate(()=>window.__reloadCheck);result.serverAttempts=serverAttempts;result.heldFirePitch=1.3;
+ result.otherHumanAlive=authority.sim.game.actors.filter(a=>a.id!==actorId).every(a=>a.alive);
+ assert(result.otherHumanAlive,'reload fixture must leave the other human alive for the deliberate lethal volley');
  assert(result.ammo.length>0&&result.attempts>0,'held fire was submitted with the reload action: '+JSON.stringify(result));
  assert(result.serverAttempts>0,'authority consumes held-fire attempts during its active reload: '+JSON.stringify(result));
  assert(result.ammo.every(v=>v===result.ammo[0]),'authoritative ammo cannot fall during reload');
@@ -183,23 +195,26 @@ try{
   // movement. Observe immediately after the normal frame updates its render
   // pose; a later state patch may replace the presentation before our own rAF.
   await b.evaluate(()=>{
-   const n=__fps.network,advance=n.advanceFrame,started=performance.now(),samples=[];
+   const n=__fps.network,advance=n.advanceFrame,started=performance.now(),samples=[];let origin,firstMovement=0;
    window.__interpolationCheck=new Promise(resolve=>{
-    let timer;const finish=()=>{clearTimeout(timer);n.advanceFrame=advance;resolve({max:Math.max(0,...samples.map(s=>s.offset)),samples: samples.length,frames:samples});};
+    let timer;const finish=()=>{clearTimeout(timer);n.advanceFrame=advance;resolve({max:Math.max(0,...samples.map(s=>s.offset)),samples:samples.length,firstMovementMs:firstMovement?firstMovement-started:null,frames:samples});};
     n.advanceFrame=function(...args){
      const result=advance.apply(this,args),raw=[...n.room.state.actors.values()].find(a=>a.id!==n.localPlayerId),shown=n.view.actors.find(a=>a.id===raw?.id);
-     if(raw&&shown){samples.push({at:performance.now()-started,offset:Math.hypot(raw.x-shown.x,raw.z-shown.z),raw:[raw.x,raw.z],shown:[shown.x,shown.z]});
-      if(performance.now()-started>600&&samples.some(s=>s.offset>.02))finish();}
+     if(raw&&shown){origin??=[raw.x,raw.z];samples.push({at:performance.now()-started,offset:Math.hypot(raw.x-shown.x,raw.z-shown.z),raw:[raw.x,raw.z],shown:[shown.x,shown.z]});
+      if(!firstMovement&&Math.hypot(raw.x-origin[0],raw.z-origin[1])>.02){firstMovement=performance.now();clearTimeout(timer);timer=setTimeout(finish,8000);}
+      if(firstMovement&&performance.now()-firstMovement>600&&samples.some(s=>s.offset>.02))finish();}
      return result;
     };
-    timer=setTimeout(finish,8000);
+    // Bound command delivery separately. Slow GPU/CDP work must not consume
+    // the interpolation observation before an actual movement has reached it.
+    timer=setTimeout(finish,60000);
    });
   });
   // Real keyboard events enter the ordinary app input path on both pages.
   await Promise.all([a.keyboard.down('KeyW'),b.keyboard.down('KeyW')]);
+  await Promise.all([a,b].map((page,i)=>page.waitForFunction(start=>{const n=__fps.network,p=n.room.state.actors.get(n.localPlayerId);return Math.hypot(p.x-start.x,p.z-start.z)>.5;},before[i])));
   const interpolation=await b.evaluate(()=>window.__interpolationCheck);
   assert(interpolation.max>.02&&interpolation.max<1.5,'remote render uses buffered states during movement: '+JSON.stringify(interpolation));
-  await Promise.all([a,b].map((page,i)=>page.waitForFunction(start=>{const n=__fps.network,p=n.room.state.actors.get(n.localPlayerId);return Math.hypot(p.x-start.x,p.z-start.z)>.5;},before[i])));
   await Promise.all([a.keyboard.up('KeyW'),b.keyboard.up('KeyW')]);await a.waitForTimeout(250);
   const moved=await Promise.all([state(a),state(b)]);
   for(let i=0;i<2;i++)assert(Math.hypot(moved[i].x-before[i].x,moved[i].z-before[i].z)>.5,'simultaneous human movement '+i);
@@ -333,7 +348,7 @@ try{
   await a.context().close();await b.context().close();assert.equal(local.rooms.size,0,'empty server has no retained room');
  }
  assert.deepEqual(errors,[]);
-}catch(e){console.error('network browser failure',e);throw e;}finally{
+}catch(e){console.error('network browser failure',e);console.error('authority at failure',JSON.stringify([...local.rooms].map(r=>({room:r.roomId,tick:r.sim.tickNumber,actors:r.sim.game.actors.map(a=>({id:a.id,alive:a.alive,life:a.lifeId,hp:a.hp,x:a.x,z:a.z,ammo:a.inventory?.primary?.ammo,kills:a.kills,deaths:a.deaths}))}))));throw e;}finally{
  await Promise.all([browser.close(),peerBrowser.close()]);await proxy.close();await local.close();
  fs.writeFileSync('test-results/network/browser.json',JSON.stringify({contract:CONTRACT,environment:{node:process.version,platform:process.platform,arch:process.arch,browserProcesses:2,deviceScaleFactor:testDpr,transitPitch,angle:angle||'default'},results,proxy:proxy.metrics,errors},null,2));
 }
