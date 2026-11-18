@@ -82,7 +82,18 @@
       "renderedClients": 2,
       "physicalDevices": false,
       "sourceSha256": "bc817c4f7777db9007a4df4f70f6d3a8a5dcfef1e503799379aaebc6e3c6bc24",
-      "evidence": "software-two-rendered-launch.json"
+      "evidence": "software-two-rendered-launch-before.json"
+    },
+    {
+      "command": "FPS_NETWORK_LAN=1 FPS_NETWORK_ANGLE=swiftshader FPS_NETWORK_DPR=0.25 FPS_LAN_PROTOCOL_PEER=0 node --import ./server/register-shared.mjs tools/network-launch-browser.mjs",
+      "node": "26.13.0",
+      "exitCode": 0,
+      "host": "darwin/arm64",
+      "renderedClients": 2,
+      "physicalDevices": false,
+      "sourceSha256": "ba65c45253a0835a4b82897753b5a614b099210f172d11ca688ec7332a04fcff",
+      "evidence": "software-two-rendered-launch.json",
+      "scope": "Both scenes active; real mobile touch and desktop pointer-lock look straight down before movement/fire/reload/fullscreen/leave."
     }
   ],
   "sourceSha256": {
@@ -95,7 +106,7 @@
     "src/fps/game.mjs": "4652f16ba0c77aefc65faee353375601884312763bf19d010397479a42efed80",
     "src/fps/action-rules.mjs": "9a0fb72f838017db3be0d93e1a2d930875f29c085533b58f6eb6857c267bfec7",
     "src/fps/network/session.mjs": "68477892bd378e84ede3118c9be0295f2dc37b5a2fe5d55446944d9f34eba260",
-    "tools/network-launch-browser.mjs": "bc817c4f7777db9007a4df4f70f6d3a8a5dcfef1e503799379aaebc6e3c6bc24"
+    "tools/network-launch-browser.mjs": "ba65c45253a0835a4b82897753b5a614b099210f172d11ca688ec7332a04fcff"
   },
   "longRun": {
     "command": "CS2_SOAK=1 CS2_LOAD_COUNTS=10 CS2_LOAD_SECONDS=1800 CS2_LOAD_OUTPUT=test-results/pass3b/soak-final-30m.json node --import ./server/register-shared.mjs tools/network-load.mjs",

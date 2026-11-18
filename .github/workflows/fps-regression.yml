@@ -154,7 +154,9 @@ jobs:
         env:
           FPS_NETWORK_LAN: '1'
           FPS_NETWORK_ANGLE: ${{ runner.os == 'macOS' && 'metal' || 'swiftshader' }}
-          FPS_NETWORK_DPR: ${{ runner.os == 'Windows' && '0.25' || '0.5' }}
+          # Keep two rendered Linux scenes; compatibility is not an FPS test.
+          # Full-map two-browser GPU gameplay above remains at DPR 1.
+          FPS_NETWORK_DPR: ${{ runner.os == 'macOS' && '0.5' || '0.25' }}
           FPS_LAN_PROTOCOL_PEER: ${{ runner.os == 'Windows' && '1' || '0' }}
         run: node --import ./server/register-shared.mjs tools/network-launch-browser.mjs
       - name: Keep compact LAN browser evidence

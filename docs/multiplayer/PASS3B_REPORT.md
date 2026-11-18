@@ -344,16 +344,18 @@ Observed validation failures were investigated rather than bypassed: queued
 inputs were coalesced without extra authority ticks; render stalls stopped
 triggering false disconnects; the SDK diagnostic was calibrated; the fixture
 now places respawns before projection so it cannot interpolate through an
-intermediate test-only teleport. The Windows software launch ran at **1 FPS**
-and produced over-age/clock-mismatched shots. Two Linux CI attempts stopped at
-the keyboard check after only one 0.07 m authority step; the first reported
-0 FPS and both had multi-second input age. The same two-process SwiftShader
-fixture passed locally, so this is not represented as a universal Linux failure.
-Its existing real mouse-look step now precedes both movement and firing, allowing
-the compatibility fixture to render timely input while the server keeps its
-strict validation. It still checks real keys,
+intermediate test-only teleport. The Linux/Windows software launch reported
+**0–2 FPS**, multi-second input age and correctly rejected over-age shots.
+A shallow downward view still included much of the laboratory. The final
+compatibility fixture looks **straight down through real mouse/touch controls**,
+uses DPR 0.25 on software runners and retains both active rendered Linux scenes.
+The pitch assertion is stronger and the mobile peer's real touch look is now
+also asserted. [Local two-software-browser evidence](pass3b/software-two-rendered-launch.json)
+records the exact reduced-resolution compatibility scope. The server's history
+limit and input validation are unchanged. The fixture still checks real keys,
 pointer lock, mouse fire/look, reload HUD, manual fullscreen and leave.
-Full normal-camera two-rendered-client combat remains in the GPU jobs.
+Full normal-camera two-rendered-client combat remains in the GPU jobs at DPR 1;
+the separate Linux LAN/touch test retains its two rendered clients at DPR 0.5.
 Windows uses one rendered client plus a protocol peer; Linux/macOS LAN retain
 two rendered clients. No physical-device FPS claim follows from these jobs.
 
