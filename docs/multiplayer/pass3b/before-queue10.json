@@ -1,0 +1,711 @@
+{
+  "results": [
+    {
+      "status": "PASS",
+      "kind": "protocol-only, server in separate process",
+      "physicalPi": "NOT RUN",
+      "count": 10,
+      "rttMs": 0,
+      "jitterMs": 0,
+      "loss": "NOT RUN: ordered WebSocket delay, no packet dropping",
+      "environment": {
+        "node": "v26.13.0",
+        "platform": "darwin",
+        "arch": "arm64",
+        "cpu": "Apple M1",
+        "cores": 8
+      },
+      "contract": {
+        "protocolVersion": 4,
+        "protocolHash": "92086c44115f2f7794f1550fd4a09d6c7c957896d93d9d0734ce92d031f396c1",
+        "mapId": "floor5-prepared",
+        "collisionHash": "a5351e073a01ac95466acf4346acf9812f4265224e56712ce3e889085a42b6d9",
+        "mapHash": "89283f437623457a10da37be29a282a41591f202270051ba940549ba01b4b050",
+        "configHash": "1f774f342cb403cbf2beeeb7401b2b6c64ffa1e4ec1c7e4ebe7858c81a26d554",
+        "buildHash": "df36dbe0569cdafc2b259c7cd39c56c2846610dc76bedb76c361f726f1d36c11",
+        "tickRate": 60,
+        "patchMs": 50
+      },
+      "measured": {
+        "elapsedSeconds": 30.07357475,
+        "serverCpuPercent": 11.724133327382372,
+        "memory": {
+          "rss": 256999424,
+          "heapTotal": 138100736,
+          "heapUsed": 67055448,
+          "external": 6342617,
+          "arrayBuffers": 438510
+        },
+        "eventLoopMs": {
+          "p50": 10.690559,
+          "p95": 12.230655,
+          "p99": 13.533183,
+          "max": 36.569087
+        },
+        "costMs": {
+          "tick": {
+            "n": 1803,
+            "p50": 0.7247500000012224,
+            "p95": 1.995915999999852,
+            "p99": 4.89104099999895,
+            "max": 10.43358299999818
+          },
+          "simulation": {
+            "n": 1803,
+            "p50": 0.36808300000120653,
+            "p95": 1.291709000000992,
+            "p99": 4.412833000002138,
+            "max": 9.579957999998442
+          },
+          "projection": {
+            "n": 1803,
+            "p50": 0.15245900000081747,
+            "p95": 0.3459999999977299,
+            "p99": 0.3924169999991136,
+            "max": 0.9567500000011933
+          },
+          "serialization": {
+            "n": 592,
+            "p50": 0.4705829999948037,
+            "p95": 1.1922500000000582,
+            "p99": 1.5333749999990687,
+            "max": 2.01337500000227
+          },
+          "interval": {
+            "n": 1803,
+            "p50": 16.61737500000163,
+            "p95": 17.98937499999738,
+            "p99": 30.60191599999962,
+            "max": 42.2901669999992
+          }
+        },
+        "shotAgeMs": {
+          "n": 4999,
+          "p50": 141,
+          "p95": 171,
+          "p99": 173,
+          "max": 188
+        },
+        "bytes": 11218620,
+        "inBytes": 208359,
+        "respawns": 49,
+        "resources": {
+          "PipeWrap": 1,
+          "TCPServerWrap": 1,
+          "TCPSocketWrap": 10,
+          "Timeout": 5
+        },
+        "rooms": [
+          {
+            "id": "bc5mtCI8o",
+            "clients": 10,
+            "seats": 10,
+            "actors": 10,
+            "tick": 2134,
+            "metrics": {
+              "invalid": 0,
+              "maxQueue": 4,
+              "ticks": 2134,
+              "events": 3722,
+              "reconnects": 0,
+              "drops": 0
+            },
+            "lag": {
+              "accepted": 6548,
+              "rejected": 190,
+              "live": 0,
+              "ages": {
+                "n": 512,
+                "p50": 149,
+                "p95": 173,
+                "p99": 175,
+                "max": 188
+              },
+              "reasons": {
+                "previous life": 190
+              }
+            },
+            "histories": 64,
+            "rewindEntities": [
+              10,
+              51,
+              1
+            ],
+            "inputMax": 1,
+            "rtts": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "listeners": [
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7
+            ],
+            "listenerDetails": [
+              {
+                "sid": "wp2YGGaKZ",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "ZESP8evKJ",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "8tJuxTssz",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "Lq9fWLU0p",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "ICRfwoOGH",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "gsQ0AGxPc",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "xz0b_zY7f",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "oC4fIWFrg",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "tNKJf1l25",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "EKnEFeCHK",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              }
+            ],
+            "score": {
+              "analysts": 26,
+              "counterAnalysts": 27
+            },
+            "actorsState": [
+              {
+                "id": "analysts-0",
+                "lifeId": 8,
+                "kills": 5,
+                "deaths": 8
+              },
+              {
+                "id": "counterAnalysts-0",
+                "lifeId": 7,
+                "kills": 5,
+                "deaths": 6
+              },
+              {
+                "id": "analysts-1",
+                "lifeId": 9,
+                "kills": 7,
+                "deaths": 8
+              },
+              {
+                "id": "counterAnalysts-1",
+                "lifeId": 7,
+                "kills": 6,
+                "deaths": 6
+              },
+              {
+                "id": "analysts-2",
+                "lifeId": 6,
+                "kills": 5,
+                "deaths": 6
+              },
+              {
+                "id": "counterAnalysts-2",
+                "lifeId": 7,
+                "kills": 6,
+                "deaths": 7
+              },
+              {
+                "id": "analysts-3",
+                "lifeId": 4,
+                "kills": 5,
+                "deaths": 3
+              },
+              {
+                "id": "counterAnalysts-3",
+                "lifeId": 5,
+                "kills": 8,
+                "deaths": 4
+              },
+              {
+                "id": "analysts-4",
+                "lifeId": 2,
+                "kills": 4,
+                "deaths": 2
+              },
+              {
+                "id": "counterAnalysts-4",
+                "lifeId": 4,
+                "kills": 2,
+                "deaths": 3
+              }
+            ]
+          }
+        ]
+      },
+      "baseline": {
+        "elapsedSeconds": 0.015153542000000016,
+        "serverCpuPercent": 416.6550632188826,
+        "memory": {
+          "rss": 269025280,
+          "heapTotal": 137838592,
+          "heapUsed": 66794240,
+          "external": 6535321,
+          "arrayBuffers": 438509
+        },
+        "eventLoopMs": {
+          "p50": 0.000511,
+          "p95": 0.000511,
+          "p99": 0.000511,
+          "max": 0
+        },
+        "costMs": {
+          "tick": {
+            "n": 0,
+            "p50": 0,
+            "p95": 0,
+            "p99": 0,
+            "max": 0
+          },
+          "simulation": {
+            "n": 0,
+            "p50": 0,
+            "p95": 0,
+            "p99": 0,
+            "max": 0
+          },
+          "projection": {
+            "n": 0,
+            "p50": 0,
+            "p95": 0,
+            "p99": 0,
+            "max": 0
+          },
+          "serialization": {
+            "n": 0,
+            "p50": 0,
+            "p95": 0,
+            "p99": 0,
+            "max": 0
+          },
+          "interval": {
+            "n": 0,
+            "p50": 0,
+            "p95": 0,
+            "p99": 0,
+            "max": 0
+          }
+        },
+        "shotAgeMs": {
+          "n": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "bytes": 0,
+        "inBytes": 0,
+        "respawns": 5,
+        "resources": {
+          "PipeWrap": 1,
+          "TCPServerWrap": 1,
+          "TCPSocketWrap": 10,
+          "Timeout": 5
+        },
+        "rooms": [
+          {
+            "id": "bc5mtCI8o",
+            "clients": 10,
+            "seats": 10,
+            "actors": 10,
+            "tick": 331,
+            "metrics": {
+              "invalid": 0,
+              "maxQueue": 3,
+              "ticks": 331,
+              "events": 797,
+              "reconnects": 0,
+              "drops": 0
+            },
+            "lag": {
+              "accepted": 1717,
+              "rejected": 22,
+              "live": 0,
+              "ages": {
+                "n": 512,
+                "p50": 142,
+                "p95": 145,
+                "p99": 145,
+                "max": 146
+              },
+              "reasons": {
+                "previous life": 22
+              }
+            },
+            "histories": 64,
+            "rewindEntities": [
+              10,
+              51,
+              1
+            ],
+            "inputMax": 2,
+            "rtts": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "listeners": [
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7
+            ],
+            "listenerDetails": [
+              {
+                "sid": "wp2YGGaKZ",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "ZESP8evKJ",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "8tJuxTssz",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "Lq9fWLU0p",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "ICRfwoOGH",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "gsQ0AGxPc",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "xz0b_zY7f",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "oC4fIWFrg",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "tNKJf1l25",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "EKnEFeCHK",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              }
+            ],
+            "score": {
+              "analysts": 4,
+              "counterAnalysts": 5
+            },
+            "actorsState": [
+              {
+                "id": "analysts-0",
+                "lifeId": 2,
+                "kills": 0,
+                "deaths": 2
+              },
+              {
+                "id": "counterAnalysts-0",
+                "lifeId": 2,
+                "kills": 2,
+                "deaths": 1
+              },
+              {
+                "id": "analysts-1",
+                "lifeId": 2,
+                "kills": 3,
+                "deaths": 2
+              },
+              {
+                "id": "counterAnalysts-1",
+                "lifeId": 2,
+                "kills": 2,
+                "deaths": 2
+              },
+              {
+                "id": "analysts-2",
+                "lifeId": 1,
+                "kills": 1,
+                "deaths": 1
+              },
+              {
+                "id": "counterAnalysts-2",
+                "lifeId": 2,
+                "kills": 0,
+                "deaths": 1
+              },
+              {
+                "id": "analysts-3",
+                "lifeId": 1,
+                "kills": 0,
+                "deaths": 0
+              },
+              {
+                "id": "counterAnalysts-3",
+                "lifeId": 1,
+                "kills": 1,
+                "deaths": 0
+              },
+              {
+                "id": "analysts-4",
+                "lifeId": 1,
+                "kills": 0,
+                "deaths": 0
+              },
+              {
+                "id": "counterAnalysts-4",
+                "lifeId": 1,
+                "kills": 0,
+                "deaths": 0
+              }
+            ]
+          }
+        ]
+      },
+      "perPlayerOutboundBytesPerSecond": 37303.91246554419,
+      "maxPending": 7,
+      "joins": 0,
+      "reconnects": 0,
+      "shots": [
+        40,
+        43,
+        72,
+        75,
+        68,
+        68,
+        132,
+        134,
+        138,
+        141
+      ],
+      "hits": [
+        36,
+        39,
+        38,
+        44,
+        37,
+        33,
+        30,
+        42,
+        27,
+        13
+      ],
+      "cleanup": {
+        "elapsedSeconds": 30.595548375,
+        "serverCpuPercent": 11.777932383602849,
+        "memory": {
+          "rss": 254803968,
+          "heapTotal": 115949568,
+          "heapUsed": 28038824,
+          "external": 6343042,
+          "arrayBuffers": 394561
+        },
+        "eventLoopMs": {
+          "p50": 10.690559,
+          "p95": 12.230655,
+          "p99": 13.598719,
+          "max": 36.569087
+        },
+        "costMs": {
+          "tick": {
+            "n": 1805,
+            "p50": 0.7247500000012224,
+            "p95": 1.9990419999994629,
+            "p99": 4.89104099999895,
+            "max": 10.43358299999818
+          },
+          "simulation": {
+            "n": 1805,
+            "p50": 0.36808300000120653,
+            "p95": 1.3057910000025004,
+            "p99": 4.412833000002138,
+            "max": 9.579957999998442
+          },
+          "projection": {
+            "n": 1805,
+            "p50": 0.15208400000119582,
+            "p95": 0.3459999999977299,
+            "p99": 0.3924169999991136,
+            "max": 0.9567500000011933
+          },
+          "serialization": {
+            "n": 593,
+            "p50": 0.4703330000047572,
+            "p95": 1.1922500000000582,
+            "p99": 1.5333749999990687,
+            "max": 2.01337500000227
+          },
+          "interval": {
+            "n": 1805,
+            "p50": 16.61737500000163,
+            "p95": 17.996209000000817,
+            "p99": 30.899083000003884,
+            "max": 42.2901669999992
+          }
+        },
+        "shotAgeMs": {
+          "n": 5007,
+          "p50": 141,
+          "p95": 171,
+          "p99": 173,
+          "max": 189
+        },
+        "bytes": 11230800,
+        "inBytes": 208571,
+        "respawns": 50,
+        "resources": {
+          "PipeWrap": 1,
+          "TCPServerWrap": 1,
+          "Timeout": 4
+        },
+        "rooms": []
+      }
+    }
+  ]
+}

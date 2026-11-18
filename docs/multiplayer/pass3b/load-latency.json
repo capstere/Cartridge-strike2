@@ -1,0 +1,2864 @@
+{
+  "results": [
+    {
+      "status": "PASS",
+      "kind": "protocol-only, server in separate process",
+      "physicalPi": "NOT RUN",
+      "count": 10,
+      "rttMs": 50,
+      "jitterMs": 20,
+      "loss": "NOT RUN: ordered WebSocket delay, no packet dropping",
+      "environment": {
+        "node": "v26.13.0",
+        "platform": "darwin",
+        "arch": "arm64",
+        "cpu": "Apple M1",
+        "cores": 8
+      },
+      "contract": {
+        "protocolVersion": 4,
+        "protocolHash": "92086c44115f2f7794f1550fd4a09d6c7c957896d93d9d0734ce92d031f396c1",
+        "mapId": "floor5-prepared",
+        "collisionHash": "a5351e073a01ac95466acf4346acf9812f4265224e56712ce3e889085a42b6d9",
+        "mapHash": "89283f437623457a10da37be29a282a41591f202270051ba940549ba01b4b050",
+        "configHash": "1f774f342cb403cbf2beeeb7401b2b6c64ffa1e4ec1c7e4ebe7858c81a26d554",
+        "buildHash": "37835667175982e5cd44c1d02028f46b6fb383d537ee1ce209dd9a5136547498",
+        "tickRate": 60,
+        "patchMs": 50
+      },
+      "measured": {
+        "elapsedSeconds": 30.068835583,
+        "serverCpuPercent": 16.41001357162531,
+        "memory": {
+          "rss": 255410176,
+          "heapTotal": 138362880,
+          "heapUsed": 67038384,
+          "external": 6338521,
+          "arrayBuffers": 434414
+        },
+        "eventLoopMs": {
+          "p50": 10.362879,
+          "p95": 11.714559,
+          "p99": 12.730367,
+          "max": 40.468479
+        },
+        "costMs": {
+          "tick": {
+            "n": 1803,
+            "p50": 0.993624999999156,
+            "p95": 2.082583000003069,
+            "p99": 4.990625000000364,
+            "max": 8.185375000000931
+          },
+          "simulation": {
+            "n": 1803,
+            "p50": 0.5069579999981215,
+            "p95": 1.3046250000006694,
+            "p99": 4.2893330000006245,
+            "max": 7.613750000000437
+          },
+          "projection": {
+            "n": 1803,
+            "p50": 0.24112500000046566,
+            "p95": 0.37254200000097626,
+            "p99": 0.45691700000315905,
+            "max": 0.8490000000019791
+          },
+          "serialization": {
+            "n": 594,
+            "p50": 0.7072920000027807,
+            "p95": 1.2693749999998545,
+            "p99": 1.580416000000696,
+            "max": 2.367500000000291
+          },
+          "interval": {
+            "n": 1803,
+            "p50": 16.461749999998574,
+            "p95": 17.921791999997367,
+            "p99": 32.51454200000444,
+            "max": 36.100500000000466
+          }
+        },
+        "shotAgeMs": {
+          "n": 3035,
+          "p50": 167,
+          "p95": 187,
+          "p99": 192,
+          "max": 212
+        },
+        "bytes": 10407210,
+        "inBytes": 202322,
+        "respawns": 50,
+        "resources": {
+          "PipeWrap": 1,
+          "TCPServerWrap": 1,
+          "TCPSocketWrap": 10,
+          "Timeout": 5
+        },
+        "rooms": [
+          {
+            "id": "L0amm6FRx",
+            "clients": 10,
+            "seats": 10,
+            "actors": 10,
+            "tick": 2181,
+            "metrics": {
+              "invalid": 0,
+              "maxQueue": 5,
+              "coalesced": 3954,
+              "ticks": 2181,
+              "events": 3443,
+              "reconnects": 0,
+              "drops": 0,
+              "backpressure": 0
+            },
+            "lag": {
+              "accepted": 4078,
+              "rejected": 134,
+              "live": 0,
+              "ages": {
+                "n": 512,
+                "p50": 167,
+                "p95": 187,
+                "p99": 191,
+                "max": 199
+              },
+              "reasons": {
+                "previous life": 125,
+                "regressed": 9
+              }
+            },
+            "histories": 64,
+            "rewindEntities": [
+              10,
+              51,
+              1
+            ],
+            "inputMax": 0,
+            "rtts": [
+              32,
+              33,
+              33,
+              17,
+              17,
+              16,
+              17,
+              0,
+              47,
+              31
+            ],
+            "listeners": [
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7
+            ],
+            "listenerDetails": [
+              {
+                "sid": "oEdfGYNbq",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "McNlaLcdf",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "z-YrEgrZG",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "-NzyPCJ4_",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "oy0UggHTP",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "sOulnptzO",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "XQyYjPTIk",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "zUV4lYtek",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "sGkHWFBif",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "Wyqf7tDRT",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              }
+            ],
+            "score": {
+              "analysts": 27,
+              "counterAnalysts": 27
+            },
+            "actorsState": [
+              {
+                "id": "analysts-0",
+                "lifeId": 8,
+                "kills": 5,
+                "deaths": 7
+              },
+              {
+                "id": "counterAnalysts-0",
+                "lifeId": 8,
+                "kills": 5,
+                "deaths": 8
+              },
+              {
+                "id": "analysts-1",
+                "lifeId": 7,
+                "kills": 4,
+                "deaths": 7
+              },
+              {
+                "id": "counterAnalysts-1",
+                "lifeId": 7,
+                "kills": 5,
+                "deaths": 6
+              },
+              {
+                "id": "analysts-2",
+                "lifeId": 7,
+                "kills": 7,
+                "deaths": 6
+              },
+              {
+                "id": "counterAnalysts-2",
+                "lifeId": 7,
+                "kills": 8,
+                "deaths": 7
+              },
+              {
+                "id": "analysts-3",
+                "lifeId": 5,
+                "kills": 6,
+                "deaths": 4
+              },
+              {
+                "id": "counterAnalysts-3",
+                "lifeId": 4,
+                "kills": 3,
+                "deaths": 3
+              },
+              {
+                "id": "analysts-4",
+                "lifeId": 3,
+                "kills": 5,
+                "deaths": 3
+              },
+              {
+                "id": "counterAnalysts-4",
+                "lifeId": 4,
+                "kills": 6,
+                "deaths": 3
+              }
+            ]
+          }
+        ]
+      },
+      "baseline": {
+        "elapsedSeconds": 0.024889666000000032,
+        "serverCpuPercent": 440.9540891388412,
+        "memory": {
+          "rss": 267190272,
+          "heapTotal": 138100736,
+          "heapUsed": 66796112,
+          "external": 6662203,
+          "arrayBuffers": 434413
+        },
+        "eventLoopMs": {
+          "p50": 0.000511,
+          "p95": 0.000511,
+          "p99": 0.000511,
+          "max": 0
+        },
+        "costMs": {
+          "tick": {
+            "n": 0,
+            "p50": 0,
+            "p95": 0,
+            "p99": 0,
+            "max": 0
+          },
+          "simulation": {
+            "n": 0,
+            "p50": 0,
+            "p95": 0,
+            "p99": 0,
+            "max": 0
+          },
+          "projection": {
+            "n": 0,
+            "p50": 0,
+            "p95": 0,
+            "p99": 0,
+            "max": 0
+          },
+          "serialization": {
+            "n": 0,
+            "p50": 0,
+            "p95": 0,
+            "p99": 0,
+            "max": 0
+          },
+          "interval": {
+            "n": 0,
+            "p50": 0,
+            "p95": 0,
+            "p99": 0,
+            "max": 0
+          }
+        },
+        "shotAgeMs": {
+          "n": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "bytes": 0,
+        "inBytes": 0,
+        "respawns": 4,
+        "resources": {
+          "PipeWrap": 1,
+          "TCPServerWrap": 1,
+          "TCPSocketWrap": 10,
+          "Timeout": 5
+        },
+        "rooms": [
+          {
+            "id": "L0amm6FRx",
+            "clients": 10,
+            "seats": 10,
+            "actors": 10,
+            "tick": 378,
+            "metrics": {
+              "invalid": 0,
+              "maxQueue": 4,
+              "coalesced": 649,
+              "ticks": 378,
+              "events": 771,
+              "reconnects": 0,
+              "drops": 0,
+              "backpressure": 0
+            },
+            "lag": {
+              "accepted": 1155,
+              "rejected": 22,
+              "live": 0,
+              "ages": {
+                "n": 512,
+                "p50": 168,
+                "p95": 186,
+                "p99": 190,
+                "max": 196
+              },
+              "reasons": {
+                "previous life": 13,
+                "regressed": 9
+              }
+            },
+            "histories": 64,
+            "rewindEntities": [
+              10,
+              51,
+              1
+            ],
+            "inputMax": 3,
+            "rtts": [
+              34,
+              16,
+              32,
+              32,
+              33,
+              17,
+              33,
+              34,
+              17,
+              48
+            ],
+            "listeners": [
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7
+            ],
+            "listenerDetails": [
+              {
+                "sid": "oEdfGYNbq",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "McNlaLcdf",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "z-YrEgrZG",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "-NzyPCJ4_",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "oy0UggHTP",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "sOulnptzO",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "XQyYjPTIk",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "zUV4lYtek",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "sGkHWFBif",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "Wyqf7tDRT",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              }
+            ],
+            "score": {
+              "analysts": 4,
+              "counterAnalysts": 3
+            },
+            "actorsState": [
+              {
+                "id": "analysts-0",
+                "lifeId": 2,
+                "kills": 2,
+                "deaths": 1
+              },
+              {
+                "id": "counterAnalysts-0",
+                "lifeId": 2,
+                "kills": 0,
+                "deaths": 2
+              },
+              {
+                "id": "analysts-1",
+                "lifeId": 2,
+                "kills": 1,
+                "deaths": 1
+              },
+              {
+                "id": "counterAnalysts-1",
+                "lifeId": 2,
+                "kills": 1,
+                "deaths": 1
+              },
+              {
+                "id": "analysts-2",
+                "lifeId": 1,
+                "kills": 1,
+                "deaths": 1
+              },
+              {
+                "id": "counterAnalysts-2",
+                "lifeId": 1,
+                "kills": 1,
+                "deaths": 1
+              },
+              {
+                "id": "analysts-3",
+                "lifeId": 1,
+                "kills": 0,
+                "deaths": 0
+              },
+              {
+                "id": "counterAnalysts-3",
+                "lifeId": 1,
+                "kills": 1,
+                "deaths": 0
+              },
+              {
+                "id": "analysts-4",
+                "lifeId": 1,
+                "kills": 0,
+                "deaths": 0
+              },
+              {
+                "id": "counterAnalysts-4",
+                "lifeId": 1,
+                "kills": 0,
+                "deaths": 0
+              }
+            ]
+          }
+        ]
+      },
+      "perPlayerOutboundBytesPerSecond": 34611.28373685318,
+      "maxPending": 10,
+      "joins": 0,
+      "reconnects": 0,
+      "shots": [
+        45,
+        43,
+        52,
+        52,
+        79,
+        78,
+        119,
+        120,
+        136,
+        142
+      ],
+      "hits": [
+        37,
+        38,
+        30,
+        34,
+        38,
+        36,
+        30,
+        22,
+        31,
+        34
+      ],
+      "cleanup": {
+        "elapsedSeconds": 30.634726125,
+        "serverCpuPercent": 16.38162515154524,
+        "memory": {
+          "rss": 253313024,
+          "heapTotal": 117522432,
+          "heapUsed": 28031312,
+          "external": 6339135,
+          "arrayBuffers": 391025
+        },
+        "eventLoopMs": {
+          "p50": 10.371071,
+          "p95": 11.796479,
+          "p99": 12.795903,
+          "max": 40.468479
+        },
+        "costMs": {
+          "tick": {
+            "n": 1806,
+            "p50": 0.9935000000004948,
+            "p95": 2.082583000003069,
+            "p99": 4.990625000000364,
+            "max": 8.185375000000931
+          },
+          "simulation": {
+            "n": 1806,
+            "p50": 0.5069169999987935,
+            "p95": 1.3046250000006694,
+            "p99": 4.2893330000006245,
+            "max": 7.613750000000437
+          },
+          "projection": {
+            "n": 1806,
+            "p50": 0.24112500000046566,
+            "p95": 0.37254200000097626,
+            "p99": 0.45691700000315905,
+            "max": 0.8490000000019791
+          },
+          "serialization": {
+            "n": 595,
+            "p50": 0.7071249999989959,
+            "p95": 1.2693749999998545,
+            "p99": 1.580416000000696,
+            "max": 2.367500000000291
+          },
+          "interval": {
+            "n": 1806,
+            "p50": 16.464334000000235,
+            "p95": 17.923624999999447,
+            "p99": 32.51454200000444,
+            "max": 36.100500000000466
+          }
+        },
+        "shotAgeMs": {
+          "n": 3038,
+          "p50": 167,
+          "p95": 187,
+          "p99": 192,
+          "max": 212
+        },
+        "bytes": 10422320,
+        "inBytes": 202687,
+        "respawns": 50,
+        "resources": {
+          "PipeWrap": 1,
+          "TCPServerWrap": 1,
+          "Timeout": 4
+        },
+        "rooms": []
+      }
+    },
+    {
+      "status": "PASS",
+      "kind": "protocol-only, server in separate process",
+      "physicalPi": "NOT RUN",
+      "count": 10,
+      "rttMs": 100,
+      "jitterMs": 20,
+      "loss": "NOT RUN: ordered WebSocket delay, no packet dropping",
+      "environment": {
+        "node": "v26.13.0",
+        "platform": "darwin",
+        "arch": "arm64",
+        "cpu": "Apple M1",
+        "cores": 8
+      },
+      "contract": {
+        "protocolVersion": 4,
+        "protocolHash": "92086c44115f2f7794f1550fd4a09d6c7c957896d93d9d0734ce92d031f396c1",
+        "mapId": "floor5-prepared",
+        "collisionHash": "a5351e073a01ac95466acf4346acf9812f4265224e56712ce3e889085a42b6d9",
+        "mapHash": "89283f437623457a10da37be29a282a41591f202270051ba940549ba01b4b050",
+        "configHash": "1f774f342cb403cbf2beeeb7401b2b6c64ffa1e4ec1c7e4ebe7858c81a26d554",
+        "buildHash": "37835667175982e5cd44c1d02028f46b6fb383d537ee1ce209dd9a5136547498",
+        "tickRate": 60,
+        "patchMs": 50
+      },
+      "measured": {
+        "elapsedSeconds": 30.056511292000003,
+        "serverCpuPercent": 8.787094331546612,
+        "memory": {
+          "rss": 258621440,
+          "heapTotal": 138362880,
+          "heapUsed": 67036616,
+          "external": 6342639,
+          "arrayBuffers": 438532
+        },
+        "eventLoopMs": {
+          "p50": 10.362879,
+          "p95": 11.493375,
+          "p99": 12.443647,
+          "max": 26.001407
+        },
+        "costMs": {
+          "tick": {
+            "n": 1803,
+            "p50": 0.4515830000018468,
+            "p95": 1.0348749999993743,
+            "p99": 2.041000000001077,
+            "max": 13.142124999998487
+          },
+          "simulation": {
+            "n": 1803,
+            "p50": 0.23279200000251876,
+            "p95": 0.6511659999996482,
+            "p99": 1.6022919999995793,
+            "max": 3.2307500000006257
+          },
+          "projection": {
+            "n": 1803,
+            "p50": 0.07666700000117999,
+            "p95": 0.1710000000002765,
+            "p99": 0.23320799999964947,
+            "max": 1.2933330000014394
+          },
+          "serialization": {
+            "n": 597,
+            "p50": 0.2624999999970896,
+            "p95": 0.580459000000701,
+            "p99": 1.1109170000017912,
+            "max": 1.738667000001442
+          },
+          "interval": {
+            "n": 1803,
+            "p50": 16.383166999999958,
+            "p95": 17.86566699999821,
+            "p99": 32.60941699999967,
+            "max": 34.10595900000044
+          }
+        },
+        "shotAgeMs": {
+          "n": 4258,
+          "p50": 215,
+          "p95": 234,
+          "p99": 239,
+          "max": 253
+        },
+        "bytes": 10782460,
+        "inBytes": 243604,
+        "respawns": 41,
+        "resources": {
+          "PipeWrap": 1,
+          "TCPServerWrap": 1,
+          "TCPSocketWrap": 10,
+          "Timeout": 5
+        },
+        "rooms": [
+          {
+            "id": "xPdZ2tR2X",
+            "clients": 10,
+            "seats": 10,
+            "actors": 10,
+            "tick": 2229,
+            "metrics": {
+              "invalid": 0,
+              "maxQueue": 4,
+              "coalesced": 4539,
+              "ticks": 2229,
+              "events": 3502,
+              "reconnects": 0,
+              "drops": 0,
+              "backpressure": 0
+            },
+            "lag": {
+              "accepted": 5347,
+              "rejected": 120,
+              "live": 0,
+              "ages": {
+                "n": 512,
+                "p50": 217,
+                "p95": 235,
+                "p99": 240,
+                "max": 242
+              },
+              "reasons": {
+                "previous life": 103,
+                "regressed": 16,
+                "clock/RTT mismatch": 1
+              }
+            },
+            "histories": 64,
+            "rewindEntities": [
+              10,
+              51,
+              1
+            ],
+            "inputMax": 0,
+            "rtts": [
+              81,
+              67,
+              83,
+              66,
+              81,
+              82,
+              81,
+              97,
+              81,
+              81
+            ],
+            "listeners": [
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7
+            ],
+            "listenerDetails": [
+              {
+                "sid": "vTYoPWZqZ",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "u9yrGIcPX",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "nvWH-c1rh",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "2eqzrT9GT",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "q4av274LX",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "rTBkfs9I0",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "UqWPTKiLx",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "kj7LLtdK_",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "Rzy2EbixF",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "n3YUU2Mt4",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              }
+            ],
+            "score": {
+              "analysts": 24,
+              "counterAnalysts": 21
+            },
+            "actorsState": [
+              {
+                "id": "analysts-0",
+                "lifeId": 7,
+                "kills": 2,
+                "deaths": 7
+              },
+              {
+                "id": "counterAnalysts-0",
+                "lifeId": 8,
+                "kills": 6,
+                "deaths": 8
+              },
+              {
+                "id": "analysts-1",
+                "lifeId": 6,
+                "kills": 6,
+                "deaths": 5
+              },
+              {
+                "id": "counterAnalysts-1",
+                "lifeId": 6,
+                "kills": 6,
+                "deaths": 6
+              },
+              {
+                "id": "analysts-2",
+                "lifeId": 6,
+                "kills": 5,
+                "deaths": 5
+              },
+              {
+                "id": "counterAnalysts-2",
+                "lifeId": 5,
+                "kills": 5,
+                "deaths": 4
+              },
+              {
+                "id": "analysts-3",
+                "lifeId": 4,
+                "kills": 5,
+                "deaths": 3
+              },
+              {
+                "id": "counterAnalysts-3",
+                "lifeId": 5,
+                "kills": 3,
+                "deaths": 4
+              },
+              {
+                "id": "analysts-4",
+                "lifeId": 1,
+                "kills": 6,
+                "deaths": 1
+              },
+              {
+                "id": "counterAnalysts-4",
+                "lifeId": 3,
+                "kills": 1,
+                "deaths": 2
+              }
+            ]
+          }
+        ]
+      },
+      "baseline": {
+        "elapsedSeconds": 0.014998749999998836,
+        "serverCpuPercent": 433.3161096758399,
+        "memory": {
+          "rss": 271122432,
+          "heapTotal": 147275776,
+          "heapUsed": 66882336,
+          "external": 8111209,
+          "arrayBuffers": 434413
+        },
+        "eventLoopMs": {
+          "p50": 0.000511,
+          "p95": 0.000511,
+          "p99": 0.000511,
+          "max": 0
+        },
+        "costMs": {
+          "tick": {
+            "n": 0,
+            "p50": 0,
+            "p95": 0,
+            "p99": 0,
+            "max": 0
+          },
+          "simulation": {
+            "n": 0,
+            "p50": 0,
+            "p95": 0,
+            "p99": 0,
+            "max": 0
+          },
+          "projection": {
+            "n": 0,
+            "p50": 0,
+            "p95": 0,
+            "p99": 0,
+            "max": 0
+          },
+          "serialization": {
+            "n": 0,
+            "p50": 0,
+            "p95": 0,
+            "p99": 0,
+            "max": 0
+          },
+          "interval": {
+            "n": 0,
+            "p50": 0,
+            "p95": 0,
+            "p99": 0,
+            "max": 0
+          }
+        },
+        "shotAgeMs": {
+          "n": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "bytes": 0,
+        "inBytes": 0,
+        "respawns": 4,
+        "resources": {
+          "PipeWrap": 1,
+          "TCPServerWrap": 1,
+          "TCPSocketWrap": 10,
+          "Timeout": 5
+        },
+        "rooms": [
+          {
+            "id": "xPdZ2tR2X",
+            "clients": 10,
+            "seats": 10,
+            "actors": 10,
+            "tick": 426,
+            "metrics": {
+              "invalid": 0,
+              "maxQueue": 4,
+              "coalesced": 699,
+              "ticks": 426,
+              "events": 750,
+              "reconnects": 0,
+              "drops": 0,
+              "backpressure": 0
+            },
+            "lag": {
+              "accepted": 1185,
+              "rejected": 24,
+              "live": 0,
+              "ages": {
+                "n": 512,
+                "p50": 216,
+                "p95": 235,
+                "p99": 241,
+                "max": 246
+              },
+              "reasons": {
+                "previous life": 7,
+                "regressed": 16,
+                "clock/RTT mismatch": 1
+              }
+            },
+            "histories": 64,
+            "rewindEntities": [
+              10,
+              51,
+              1
+            ],
+            "inputMax": 1,
+            "rtts": [
+              66,
+              65,
+              67,
+              72,
+              85,
+              66,
+              66,
+              67,
+              66,
+              104
+            ],
+            "listeners": [
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7
+            ],
+            "listenerDetails": [
+              {
+                "sid": "vTYoPWZqZ",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "u9yrGIcPX",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "nvWH-c1rh",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "2eqzrT9GT",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "q4av274LX",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "rTBkfs9I0",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "UqWPTKiLx",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "kj7LLtdK_",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "Rzy2EbixF",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "n3YUU2Mt4",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              }
+            ],
+            "score": {
+              "analysts": 3,
+              "counterAnalysts": 3
+            },
+            "actorsState": [
+              {
+                "id": "analysts-0",
+                "lifeId": 2,
+                "kills": 0,
+                "deaths": 2
+              },
+              {
+                "id": "counterAnalysts-0",
+                "lifeId": 2,
+                "kills": 2,
+                "deaths": 1
+              },
+              {
+                "id": "analysts-1",
+                "lifeId": 2,
+                "kills": 1,
+                "deaths": 1
+              },
+              {
+                "id": "counterAnalysts-1",
+                "lifeId": 2,
+                "kills": 1,
+                "deaths": 1
+              },
+              {
+                "id": "analysts-2",
+                "lifeId": 1,
+                "kills": 2,
+                "deaths": 0
+              },
+              {
+                "id": "counterAnalysts-2",
+                "lifeId": 1,
+                "kills": 0,
+                "deaths": 1
+              },
+              {
+                "id": "analysts-3",
+                "lifeId": 1,
+                "kills": 0,
+                "deaths": 0
+              },
+              {
+                "id": "counterAnalysts-3",
+                "lifeId": 1,
+                "kills": 0,
+                "deaths": 0
+              },
+              {
+                "id": "analysts-4",
+                "lifeId": 1,
+                "kills": 0,
+                "deaths": 0
+              },
+              {
+                "id": "counterAnalysts-4",
+                "lifeId": 1,
+                "kills": 0,
+                "deaths": 0
+              }
+            ]
+          }
+        ]
+      },
+      "perPlayerOutboundBytesPerSecond": 35873.95721096186,
+      "maxPending": 13,
+      "joins": 0,
+      "reconnects": 0,
+      "shots": [
+        46,
+        44,
+        86,
+        80,
+        96,
+        95,
+        99,
+        97,
+        150,
+        146
+      ],
+      "hits": [
+        33,
+        36,
+        30,
+        39,
+        30,
+        32,
+        25,
+        16,
+        28,
+        8
+      ],
+      "cleanup": {
+        "elapsedSeconds": 30.639742292,
+        "serverCpuPercent": 8.83044307035975,
+        "memory": {
+          "rss": 256491520,
+          "heapTotal": 115425280,
+          "heapUsed": 28097160,
+          "external": 6343596,
+          "arrayBuffers": 395143
+        },
+        "eventLoopMs": {
+          "p50": 10.371071,
+          "p95": 11.550719,
+          "p99": 12.484607,
+          "max": 26.001407
+        },
+        "costMs": {
+          "tick": {
+            "n": 1808,
+            "p50": 0.4522910000014235,
+            "p95": 1.0386249999992287,
+            "p99": 2.041000000001077,
+            "max": 13.142124999998487
+          },
+          "simulation": {
+            "n": 1808,
+            "p50": 0.23308300000280724,
+            "p95": 0.6513750000012806,
+            "p99": 1.6022919999995793,
+            "max": 3.2307500000006257
+          },
+          "projection": {
+            "n": 1808,
+            "p50": 0.07670799999868905,
+            "p95": 0.1710000000002765,
+            "p99": 0.23320799999964947,
+            "max": 1.2933330000014394
+          },
+          "serialization": {
+            "n": 598,
+            "p50": 0.2625830000033602,
+            "p95": 0.580459000000701,
+            "p99": 1.1109170000017912,
+            "max": 1.738667000001442
+          },
+          "interval": {
+            "n": 1808,
+            "p50": 16.384500000000116,
+            "p95": 17.87133399999948,
+            "p99": 32.60941699999967,
+            "max": 34.10595900000044
+          }
+        },
+        "shotAgeMs": {
+          "n": 4267,
+          "p50": 215,
+          "p95": 234,
+          "p99": 239,
+          "max": 253
+        },
+        "bytes": 10828040,
+        "inBytes": 244234,
+        "respawns": 41,
+        "resources": {
+          "PipeWrap": 1,
+          "TCPServerWrap": 1,
+          "Timeout": 4
+        },
+        "rooms": []
+      }
+    },
+    {
+      "status": "PASS",
+      "kind": "protocol-only, server in separate process",
+      "physicalPi": "NOT RUN",
+      "count": 10,
+      "rttMs": 150,
+      "jitterMs": 20,
+      "loss": "NOT RUN: ordered WebSocket delay, no packet dropping",
+      "environment": {
+        "node": "v26.13.0",
+        "platform": "darwin",
+        "arch": "arm64",
+        "cpu": "Apple M1",
+        "cores": 8
+      },
+      "contract": {
+        "protocolVersion": 4,
+        "protocolHash": "92086c44115f2f7794f1550fd4a09d6c7c957896d93d9d0734ce92d031f396c1",
+        "mapId": "floor5-prepared",
+        "collisionHash": "a5351e073a01ac95466acf4346acf9812f4265224e56712ce3e889085a42b6d9",
+        "mapHash": "89283f437623457a10da37be29a282a41591f202270051ba940549ba01b4b050",
+        "configHash": "1f774f342cb403cbf2beeeb7401b2b6c64ffa1e4ec1c7e4ebe7858c81a26d554",
+        "buildHash": "68e47c3472fc4210ae5005804eac98600e4a06214432e87f688810c47e37175c",
+        "tickRate": 60,
+        "patchMs": 50
+      },
+      "measured": {
+        "elapsedSeconds": 30.057256542,
+        "serverCpuPercent": 8.385256307335275,
+        "memory": {
+          "rss": 261128192,
+          "heapTotal": 139935744,
+          "heapUsed": 67083000,
+          "external": 6338521,
+          "arrayBuffers": 434414
+        },
+        "eventLoopMs": {
+          "p50": 10.403839,
+          "p95": 11.517951,
+          "p99": 12.165119,
+          "max": 27.803647
+        },
+        "costMs": {
+          "tick": {
+            "n": 1803,
+            "p50": 0.4242080000003625,
+            "p95": 0.9170000000012806,
+            "p99": 1.8890840000021853,
+            "max": 2.9935830000031274
+          },
+          "simulation": {
+            "n": 1803,
+            "p50": 0.2145410000011907,
+            "p95": 0.5925409999981639,
+            "p99": 1.5860830000001442,
+            "max": 2.4101660000014817
+          },
+          "projection": {
+            "n": 1803,
+            "p50": 0.07754199999908451,
+            "p95": 0.13045899999997346,
+            "p99": 0.2251670000005106,
+            "max": 0.3976249999996071
+          },
+          "serialization": {
+            "n": 595,
+            "p50": 0.27491599999848404,
+            "p95": 0.6220829999983835,
+            "p99": 0.9651669999984733,
+            "max": 19.16004200000134
+          },
+          "interval": {
+            "n": 1803,
+            "p50": 16.402624999998807,
+            "p95": 17.949000000000524,
+            "p99": 32.460792000001675,
+            "max": 34.65458300000137
+          }
+        },
+        "shotAgeMs": {
+          "n": 2966,
+          "p50": 265,
+          "p95": 283,
+          "p99": 289,
+          "max": 308
+        },
+        "bytes": 11204950,
+        "inBytes": 217238,
+        "respawns": 46,
+        "resources": {
+          "PipeWrap": 1,
+          "TCPServerWrap": 1,
+          "TCPSocketWrap": 10,
+          "Timeout": 5
+        },
+        "rooms": [
+          {
+            "id": "nTp3BtRuS",
+            "clients": 10,
+            "seats": 10,
+            "actors": 10,
+            "tick": 2265,
+            "metrics": {
+              "invalid": 0,
+              "maxQueue": 4,
+              "coalesced": 4067,
+              "ticks": 2265,
+              "events": 3683,
+              "reconnects": 0,
+              "drops": 0,
+              "backpressure": 0
+            },
+            "lag": {
+              "accepted": 4047,
+              "rejected": 145,
+              "live": 0,
+              "ages": {
+                "n": 512,
+                "p50": 264,
+                "p95": 282,
+                "p99": 287,
+                "max": 292
+              },
+              "reasons": {
+                "previous life": 124,
+                "regressed": 21
+              }
+            },
+            "histories": 64,
+            "rewindEntities": [
+              10,
+              51,
+              1
+            ],
+            "inputMax": 0,
+            "rtts": [
+              114,
+              134,
+              130,
+              116,
+              115,
+              132,
+              130,
+              130,
+              130,
+              114
+            ],
+            "listeners": [
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7
+            ],
+            "listenerDetails": [
+              {
+                "sid": "xnhmF9UWP",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "4wbk9Qhfl",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "vJ5iE_6RA",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "Nho4xF2CC",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "5sAV73u2G",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "I9a3pxCK8",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "nij2Nv3wK",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "s_no5lVSn",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "OICkpF16m",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "1AjxpA9eP",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              }
+            ],
+            "score": {
+              "analysts": 27,
+              "counterAnalysts": 23
+            },
+            "actorsState": [
+              {
+                "id": "analysts-0",
+                "lifeId": 7,
+                "kills": 2,
+                "deaths": 7
+              },
+              {
+                "id": "counterAnalysts-0",
+                "lifeId": 8,
+                "kills": 6,
+                "deaths": 8
+              },
+              {
+                "id": "analysts-1",
+                "lifeId": 6,
+                "kills": 6,
+                "deaths": 5
+              },
+              {
+                "id": "counterAnalysts-1",
+                "lifeId": 6,
+                "kills": 4,
+                "deaths": 6
+              },
+              {
+                "id": "analysts-2",
+                "lifeId": 7,
+                "kills": 2,
+                "deaths": 6
+              },
+              {
+                "id": "counterAnalysts-2",
+                "lifeId": 5,
+                "kills": 7,
+                "deaths": 5
+              },
+              {
+                "id": "analysts-3",
+                "lifeId": 4,
+                "kills": 8,
+                "deaths": 3
+              },
+              {
+                "id": "counterAnalysts-3",
+                "lifeId": 5,
+                "kills": 3,
+                "deaths": 4
+              },
+              {
+                "id": "analysts-4",
+                "lifeId": 3,
+                "kills": 9,
+                "deaths": 2
+              },
+              {
+                "id": "counterAnalysts-4",
+                "lifeId": 5,
+                "kills": 3,
+                "deaths": 4
+              }
+            ]
+          }
+        ]
+      },
+      "baseline": {
+        "elapsedSeconds": 0.016450917000000117,
+        "serverCpuPercent": 415.8673951123789,
+        "memory": {
+          "rss": 272138240,
+          "heapTotal": 139411456,
+          "heapUsed": 66871848,
+          "external": 6506350,
+          "arrayBuffers": 434413
+        },
+        "eventLoopMs": {
+          "p50": 0.000511,
+          "p95": 0.000511,
+          "p99": 0.000511,
+          "max": 0
+        },
+        "costMs": {
+          "tick": {
+            "n": 0,
+            "p50": 0,
+            "p95": 0,
+            "p99": 0,
+            "max": 0
+          },
+          "simulation": {
+            "n": 0,
+            "p50": 0,
+            "p95": 0,
+            "p99": 0,
+            "max": 0
+          },
+          "projection": {
+            "n": 0,
+            "p50": 0,
+            "p95": 0,
+            "p99": 0,
+            "max": 0
+          },
+          "serialization": {
+            "n": 0,
+            "p50": 0,
+            "p95": 0,
+            "p99": 0,
+            "max": 0
+          },
+          "interval": {
+            "n": 0,
+            "p50": 0,
+            "p95": 0,
+            "p99": 0,
+            "max": 0
+          }
+        },
+        "shotAgeMs": {
+          "n": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "bytes": 0,
+        "inBytes": 0,
+        "respawns": 4,
+        "resources": {
+          "PipeWrap": 1,
+          "TCPServerWrap": 1,
+          "TCPSocketWrap": 10,
+          "Timeout": 5
+        },
+        "rooms": [
+          {
+            "id": "nTp3BtRuS",
+            "clients": 10,
+            "seats": 10,
+            "actors": 10,
+            "tick": 462,
+            "metrics": {
+              "invalid": 0,
+              "maxQueue": 4,
+              "coalesced": 685,
+              "ticks": 462,
+              "events": 766,
+              "reconnects": 0,
+              "drops": 0,
+              "backpressure": 0
+            },
+            "lag": {
+              "accepted": 1198,
+              "rejected": 28,
+              "live": 0,
+              "ages": {
+                "n": 512,
+                "p50": 267,
+                "p95": 285,
+                "p99": 291,
+                "max": 298
+              },
+              "reasons": {
+                "previous life": 7,
+                "regressed": 21
+              }
+            },
+            "histories": 64,
+            "rewindEntities": [
+              10,
+              51,
+              1
+            ],
+            "inputMax": 1,
+            "rtts": [
+              114,
+              136,
+              130,
+              132,
+              145,
+              112,
+              130,
+              130,
+              132,
+              129
+            ],
+            "listeners": [
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7
+            ],
+            "listenerDetails": [
+              {
+                "sid": "xnhmF9UWP",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "4wbk9Qhfl",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "vJ5iE_6RA",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "Nho4xF2CC",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "5sAV73u2G",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "I9a3pxCK8",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "nij2Nv3wK",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "s_no5lVSn",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "OICkpF16m",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "1AjxpA9eP",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              }
+            ],
+            "score": {
+              "analysts": 3,
+              "counterAnalysts": 3
+            },
+            "actorsState": [
+              {
+                "id": "analysts-0",
+                "lifeId": 2,
+                "kills": 0,
+                "deaths": 2
+              },
+              {
+                "id": "counterAnalysts-0",
+                "lifeId": 2,
+                "kills": 2,
+                "deaths": 1
+              },
+              {
+                "id": "analysts-1",
+                "lifeId": 2,
+                "kills": 2,
+                "deaths": 1
+              },
+              {
+                "id": "counterAnalysts-1",
+                "lifeId": 2,
+                "kills": 0,
+                "deaths": 1
+              },
+              {
+                "id": "analysts-2",
+                "lifeId": 1,
+                "kills": 1,
+                "deaths": 0
+              },
+              {
+                "id": "counterAnalysts-2",
+                "lifeId": 1,
+                "kills": 1,
+                "deaths": 1
+              },
+              {
+                "id": "analysts-3",
+                "lifeId": 1,
+                "kills": 0,
+                "deaths": 0
+              },
+              {
+                "id": "counterAnalysts-3",
+                "lifeId": 1,
+                "kills": 0,
+                "deaths": 0
+              },
+              {
+                "id": "analysts-4",
+                "lifeId": 1,
+                "kills": 0,
+                "deaths": 0
+              },
+              {
+                "id": "counterAnalysts-4",
+                "lifeId": 1,
+                "kills": 0,
+                "deaths": 0
+              }
+            ]
+          }
+        ]
+      },
+      "perPlayerOutboundBytesPerSecond": 37278.68504679711,
+      "maxPending": 16,
+      "joins": 0,
+      "reconnects": 0,
+      "shots": [
+        44,
+        49,
+        87,
+        84,
+        92,
+        99,
+        138,
+        136,
+        121,
+        139
+      ],
+      "hits": [
+        34,
+        36,
+        29,
+        29,
+        23,
+        42,
+        31,
+        22,
+        45,
+        24
+      ],
+      "cleanup": {
+        "elapsedSeconds": 30.665177292,
+        "serverCpuPercent": 8.418682779549735,
+        "memory": {
+          "rss": 258949120,
+          "heapTotal": 118308864,
+          "heapUsed": 28058344,
+          "external": 6339465,
+          "arrayBuffers": 391025
+        },
+        "eventLoopMs": {
+          "p50": 10.403839,
+          "p95": 11.542527,
+          "p99": 12.230655,
+          "max": 27.803647
+        },
+        "costMs": {
+          "tick": {
+            "n": 1809,
+            "p50": 0.42450000000098953,
+            "p95": 0.9170000000012806,
+            "p99": 1.8890840000021853,
+            "max": 2.9935830000031274
+          },
+          "simulation": {
+            "n": 1809,
+            "p50": 0.21491700000115088,
+            "p95": 0.5925409999981639,
+            "p99": 1.5860830000001442,
+            "max": 2.4101660000014817
+          },
+          "projection": {
+            "n": 1809,
+            "p50": 0.07754199999908451,
+            "p95": 0.13045899999997346,
+            "p99": 0.2251670000005106,
+            "max": 0.3976249999996071
+          },
+          "serialization": {
+            "n": 597,
+            "p50": 0.274916000002122,
+            "p95": 0.6220829999983835,
+            "p99": 0.9651669999984733,
+            "max": 19.16004200000134
+          },
+          "interval": {
+            "n": 1809,
+            "p50": 16.402792000000773,
+            "p95": 17.962250000004133,
+            "p99": 32.460792000001675,
+            "max": 34.65458300000137
+          }
+        },
+        "shotAgeMs": {
+          "n": 2978,
+          "p50": 265,
+          "p95": 283,
+          "p99": 289,
+          "max": 308
+        },
+        "bytes": 11258010,
+        "inBytes": 217861,
+        "respawns": 46,
+        "resources": {
+          "PipeWrap": 1,
+          "TCPServerWrap": 1,
+          "Timeout": 4
+        },
+        "rooms": []
+      }
+    },
+    {
+      "status": "PASS",
+      "kind": "protocol-only, server in separate process",
+      "physicalPi": "NOT RUN",
+      "count": 10,
+      "rttMs": 250,
+      "jitterMs": 20,
+      "loss": "NOT RUN: ordered WebSocket delay, no packet dropping",
+      "environment": {
+        "node": "v26.13.0",
+        "platform": "darwin",
+        "arch": "arm64",
+        "cpu": "Apple M1",
+        "cores": 8
+      },
+      "contract": {
+        "protocolVersion": 4,
+        "protocolHash": "92086c44115f2f7794f1550fd4a09d6c7c957896d93d9d0734ce92d031f396c1",
+        "mapId": "floor5-prepared",
+        "collisionHash": "a5351e073a01ac95466acf4346acf9812f4265224e56712ce3e889085a42b6d9",
+        "mapHash": "89283f437623457a10da37be29a282a41591f202270051ba940549ba01b4b050",
+        "configHash": "1f774f342cb403cbf2beeeb7401b2b6c64ffa1e4ec1c7e4ebe7858c81a26d554",
+        "buildHash": "68e47c3472fc4210ae5005804eac98600e4a06214432e87f688810c47e37175c",
+        "tickRate": 60,
+        "patchMs": 50
+      },
+      "measured": {
+        "elapsedSeconds": 30.080580375,
+        "serverCpuPercent": 15.66128027208983,
+        "memory": {
+          "rss": 258015232,
+          "heapTotal": 139411456,
+          "heapUsed": 67064384,
+          "external": 6342617,
+          "arrayBuffers": 438510
+        },
+        "eventLoopMs": {
+          "p50": 10.379263,
+          "p95": 11.796479,
+          "p99": 13.066239,
+          "max": 38.633471
+        },
+        "costMs": {
+          "tick": {
+            "n": 1802,
+            "p50": 1.0010000000002037,
+            "p95": 2.0742079999981797,
+            "p99": 5.306249999997817,
+            "max": 7.384290999998484
+          },
+          "simulation": {
+            "n": 1802,
+            "p50": 0.49875000000065484,
+            "p95": 1.309291999999914,
+            "p99": 4.66979199999696,
+            "max": 6.613957999998092
+          },
+          "projection": {
+            "n": 1802,
+            "p50": 0.2365830000017013,
+            "p95": 0.3757079999995767,
+            "p99": 0.4555000000000291,
+            "max": 0.9049169999998412
+          },
+          "serialization": {
+            "n": 594,
+            "p50": 0.7082910000008269,
+            "p95": 1.2790420000019367,
+            "p99": 1.6386669999992591,
+            "max": 4.355333999999857
+          },
+          "interval": {
+            "n": 1802,
+            "p50": 16.397500000006403,
+            "p95": 18.07641700000022,
+            "p99": 32.6339169999992,
+            "max": 37.579125000000204
+          }
+        },
+        "shotAgeMs": {
+          "n": 3621,
+          "p50": 365,
+          "p95": 383,
+          "p99": 390,
+          "max": 399
+        },
+        "bytes": 11359400,
+        "inBytes": 229270,
+        "respawns": 44,
+        "resources": {
+          "PipeWrap": 1,
+          "TCPServerWrap": 1,
+          "TCPSocketWrap": 10,
+          "Timeout": 5
+        },
+        "rooms": [
+          {
+            "id": "OqojSqc3l",
+            "clients": 10,
+            "seats": 10,
+            "actors": 10,
+            "tick": 2357,
+            "metrics": {
+              "invalid": 0,
+              "maxQueue": 5,
+              "coalesced": 4140,
+              "ticks": 2357,
+              "events": 3721,
+              "reconnects": 0,
+              "drops": 0,
+              "backpressure": 0
+            },
+            "lag": {
+              "accepted": 4632,
+              "rejected": 179,
+              "live": 0,
+              "ages": {
+                "n": 512,
+                "p50": 366,
+                "p95": 383,
+                "p99": 387,
+                "max": 390
+              },
+              "reasons": {
+                "previous life": 113,
+                "regressed": 28,
+                "expired": 4,
+                "tick/stamp mismatch": 13,
+                "clock/RTT mismatch": 21
+              }
+            },
+            "histories": 64,
+            "rewindEntities": [
+              10,
+              51,
+              1
+            ],
+            "inputMax": 0,
+            "rtts": [
+              228,
+              217,
+              217,
+              228,
+              229,
+              232,
+              228,
+              232,
+              231,
+              247
+            ],
+            "listeners": [
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7
+            ],
+            "listenerDetails": [
+              {
+                "sid": "-8LKouyVr",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "cPDnzwx0X",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "4ihBHAVWQ",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "p2ZrKIgXS",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "Is6lCcMpv",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "lE0QSaRjS",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "IrgxAtQ7T",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "2IuR1m_BM",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "epyr9mpRP",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "c0wVIR-YZ",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              }
+            ],
+            "score": {
+              "analysts": 29,
+              "counterAnalysts": 20
+            },
+            "actorsState": [
+              {
+                "id": "analysts-0",
+                "lifeId": 7,
+                "kills": 5,
+                "deaths": 7
+              },
+              {
+                "id": "counterAnalysts-0",
+                "lifeId": 9,
+                "kills": 6,
+                "deaths": 9
+              },
+              {
+                "id": "analysts-1",
+                "lifeId": 6,
+                "kills": 7,
+                "deaths": 5
+              },
+              {
+                "id": "counterAnalysts-1",
+                "lifeId": 8,
+                "kills": 5,
+                "deaths": 8
+              },
+              {
+                "id": "analysts-2",
+                "lifeId": 5,
+                "kills": 5,
+                "deaths": 4
+              },
+              {
+                "id": "counterAnalysts-2",
+                "lifeId": 5,
+                "kills": 3,
+                "deaths": 4
+              },
+              {
+                "id": "analysts-3",
+                "lifeId": 3,
+                "kills": 3,
+                "deaths": 3
+              },
+              {
+                "id": "counterAnalysts-3",
+                "lifeId": 5,
+                "kills": 4,
+                "deaths": 4
+              },
+              {
+                "id": "analysts-4",
+                "lifeId": 2,
+                "kills": 9,
+                "deaths": 1
+              },
+              {
+                "id": "counterAnalysts-4",
+                "lifeId": 4,
+                "kills": 2,
+                "deaths": 4
+              }
+            ]
+          }
+        ]
+      },
+      "baseline": {
+        "elapsedSeconds": 0.014823792000001048,
+        "serverCpuPercent": 427.0027534115125,
+        "memory": {
+          "rss": 270876672,
+          "heapTotal": 148324352,
+          "heapUsed": 66931128,
+          "external": 8272540,
+          "arrayBuffers": 430317
+        },
+        "eventLoopMs": {
+          "p50": 0.000511,
+          "p95": 0.000511,
+          "p99": 0.000511,
+          "max": 0
+        },
+        "costMs": {
+          "tick": {
+            "n": 0,
+            "p50": 0,
+            "p95": 0,
+            "p99": 0,
+            "max": 0
+          },
+          "simulation": {
+            "n": 0,
+            "p50": 0,
+            "p95": 0,
+            "p99": 0,
+            "max": 0
+          },
+          "projection": {
+            "n": 0,
+            "p50": 0,
+            "p95": 0,
+            "p99": 0,
+            "max": 0
+          },
+          "serialization": {
+            "n": 0,
+            "p50": 0,
+            "p95": 0,
+            "p99": 0,
+            "max": 0
+          },
+          "interval": {
+            "n": 0,
+            "p50": 0,
+            "p95": 0,
+            "p99": 0,
+            "max": 0
+          }
+        },
+        "shotAgeMs": {
+          "n": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "bytes": 0,
+        "inBytes": 0,
+        "respawns": 4,
+        "resources": {
+          "PipeWrap": 1,
+          "TCPServerWrap": 1,
+          "TCPSocketWrap": 10,
+          "Timeout": 5
+        },
+        "rooms": [
+          {
+            "id": "OqojSqc3l",
+            "clients": 10,
+            "seats": 10,
+            "actors": 10,
+            "tick": 555,
+            "metrics": {
+              "invalid": 0,
+              "maxQueue": 5,
+              "coalesced": 700,
+              "ticks": 555,
+              "events": 748,
+              "reconnects": 0,
+              "drops": 0,
+              "backpressure": 0
+            },
+            "lag": {
+              "accepted": 1112,
+              "rejected": 78,
+              "live": 0,
+              "ages": {
+                "n": 512,
+                "p50": 366,
+                "p95": 388,
+                "p99": 393,
+                "max": 412
+              },
+              "reasons": {
+                "previous life": 12,
+                "regressed": 28,
+                "expired": 4,
+                "tick/stamp mismatch": 13,
+                "clock/RTT mismatch": 21
+              }
+            },
+            "histories": 64,
+            "rewindEntities": [
+              10,
+              51,
+              1
+            ],
+            "inputMax": 1,
+            "rtts": [
+              246,
+              216,
+              219,
+              219,
+              231,
+              215,
+              231,
+              247,
+              231,
+              244
+            ],
+            "listeners": [
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7,
+              7
+            ],
+            "listenerDetails": [
+              {
+                "sid": "-8LKouyVr",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "cPDnzwx0X",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "4ihBHAVWQ",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "p2ZrKIgXS",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "Is6lCcMpv",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "lE0QSaRjS",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "IrgxAtQ7T",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "2IuR1m_BM",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "epyr9mpRP",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "c0wVIR-YZ",
+                "events": {
+                  "close": 2,
+                  "error": 2,
+                  "pong": 1,
+                  "message": 2
+                }
+              }
+            ],
+            "score": {
+              "analysts": 4,
+              "counterAnalysts": 2
+            },
+            "actorsState": [
+              {
+                "id": "analysts-0",
+                "lifeId": 2,
+                "kills": 2,
+                "deaths": 1
+              },
+              {
+                "id": "counterAnalysts-0",
+                "lifeId": 2,
+                "kills": 1,
+                "deaths": 2
+              },
+              {
+                "id": "analysts-1",
+                "lifeId": 2,
+                "kills": 0,
+                "deaths": 1
+              },
+              {
+                "id": "counterAnalysts-1",
+                "lifeId": 2,
+                "kills": 1,
+                "deaths": 1
+              },
+              {
+                "id": "analysts-2",
+                "lifeId": 1,
+                "kills": 2,
+                "deaths": 0
+              },
+              {
+                "id": "counterAnalysts-2",
+                "lifeId": 1,
+                "kills": 0,
+                "deaths": 1
+              },
+              {
+                "id": "analysts-3",
+                "lifeId": 1,
+                "kills": 0,
+                "deaths": 0
+              },
+              {
+                "id": "counterAnalysts-3",
+                "lifeId": 1,
+                "kills": 0,
+                "deaths": 0
+              },
+              {
+                "id": "analysts-4",
+                "lifeId": 1,
+                "kills": 0,
+                "deaths": 0
+              },
+              {
+                "id": "counterAnalysts-4",
+                "lifeId": 1,
+                "kills": 0,
+                "deaths": 0
+              }
+            ]
+          }
+        ]
+      },
+      "perPlayerOutboundBytesPerSecond": 37763.2341477055,
+      "maxPending": 23,
+      "joins": 0,
+      "reconnects": 0,
+      "shots": [
+        53,
+        55,
+        76,
+        70,
+        110,
+        95,
+        100,
+        100,
+        165,
+        156
+      ],
+      "hits": [
+        40,
+        40,
+        37,
+        27,
+        28,
+        24,
+        21,
+        17,
+        51,
+        14
+      ],
+      "cleanup": {
+        "elapsedSeconds": 30.744881125000003,
+        "serverCpuPercent": 15.551554681771433,
+        "memory": {
+          "rss": 255901696,
+          "heapTotal": 116736000,
+          "heapUsed": 28016184,
+          "external": 6410235,
+          "arrayBuffers": 390641
+        },
+        "eventLoopMs": {
+          "p50": 10.387455,
+          "p95": 11.878399,
+          "p99": 13.074431,
+          "max": 50.954239
+        },
+        "costMs": {
+          "tick": {
+            "n": 1814,
+            "p50": 0.9997499999990396,
+            "p95": 2.0782079999989946,
+            "p99": 5.306249999997817,
+            "max": 7.384290999998484
+          },
+          "simulation": {
+            "n": 1814,
+            "p50": 0.49754200000097626,
+            "p95": 1.3109169999988808,
+            "p99": 4.66979199999696,
+            "max": 6.613957999998092
+          },
+          "projection": {
+            "n": 1814,
+            "p50": 0.2363340000010794,
+            "p95": 0.3760420000016893,
+            "p99": 0.4627909999981057,
+            "max": 0.9228749999965657
+          },
+          "serialization": {
+            "n": 598,
+            "p50": 0.705999999998312,
+            "p95": 1.2790420000019367,
+            "p99": 1.6386669999992591,
+            "max": 4.355333999999857
+          },
+          "interval": {
+            "n": 1814,
+            "p50": 16.397500000006403,
+            "p95": 18.12225000000035,
+            "p99": 32.80241699999897,
+            "max": 51.37924999999814
+          }
+        },
+        "shotAgeMs": {
+          "n": 3629,
+          "p50": 365,
+          "p95": 383,
+          "p99": 390,
+          "max": 399
+        },
+        "bytes": 11377927,
+        "inBytes": 230305,
+        "respawns": 45,
+        "resources": {
+          "PipeWrap": 1,
+          "TCPServerWrap": 1,
+          "Timeout": 4
+        },
+        "rooms": []
+      }
+    }
+  ]
+}

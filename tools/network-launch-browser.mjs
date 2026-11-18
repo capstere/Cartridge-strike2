@@ -48,15 +48,17 @@ try{
  }
  assert.equal(await a.evaluate(()=>!!document.fullscreenElement),false,'LAN Resume leaves fullscreen to its explicit menu action');
  const player=authority.sim.game.actors.find(x=>x.id==='analysts-0'),z=player.z,ammo=player.inventory.primary.ammo;
- // Hold real input until authority observes it; a fixed 250 ms press can fit
- // entirely between two frames on a software runner. Keep bounded deadlines.
- await a.keyboard.down('w');await until(()=>Math.abs(player.z-z)>.1,'real keyboard input reaches authority');await a.keyboard.up('w');
- // Windows SwiftShader can render the spawn view at 1 FPS: its >500 ms old
- // input/aim stamps MUST be rejected. Exercise the same real mouse-look check
- // before firing so this compatibility fixture can produce timely inputs.
+ // Software runners can stall in the spawn view: Linux delivered only one
+ // movement frame in 10 s; Windows produced >500 ms old shooting stamps.
+ // Exercise the existing real mouse-look check before movement AND firing so
+ // this compatibility fixture can produce timely inputs. Do not extend server
+ // rewind bounds or replay extra movement steps to compensate for the renderer.
  // Full normal-camera combat remains in the two-rendered-client GPU jobs.
  await a.mouse.move(resumePoint.x,resumePoint.y+360);
  await until(()=>player.pitch<-.3,'real mouse look reaches authority');
+ // Hold real input until authority observes it; a fixed 250 ms press can fit
+ // entirely between two frames on a software runner. Keep bounded deadlines.
+ await a.keyboard.down('w');await until(()=>Math.abs(player.z-z)>.1,'real keyboard input reaches authority');await a.keyboard.up('w');
  await a.mouse.down();await until(()=>player.inventory.primary.ammo<ammo,'real mouse fire reaches authority');await a.mouse.up();
  assert(Math.abs(player.z-z)>.1);assert(player.inventory.primary.ammo<ammo);
  const shots=ammo-player.inventory.primary.ammo;

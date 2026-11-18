@@ -1,0 +1,111 @@
+{
+  "recordedUTC": "2026-11-18T00:11:36.257221+00:00",
+  "serverSourceCommit": "732117d626335eba81ffb16e248f531a92de87cd",
+  "physicalPi": "NOT RUN",
+  "physicalPhones": "NOT RUN",
+  "localTests": [
+    {
+      "command": "node --experimental-loader ./tools/vendor-three-test-loader.mjs --test src/fps/*.test.mjs tools/*.test.mjs",
+      "node": "26.13.0",
+      "exitCode": 0,
+      "passed": 228
+    },
+    {
+      "command": "node --import ./server/register-shared.mjs --test server/test/*.test.mjs",
+      "node": "26.13.0",
+      "exitCode": 0,
+      "passed": 15
+    },
+    {
+      "command": "node tools/verify-owner-runtime.mjs",
+      "exitCode": 0,
+      "files": 518
+    },
+    {
+      "command": "node tools/build-network.mjs --check",
+      "exitCode": 0
+    },
+    {
+      "command": "node --experimental-loader ./tools/vendor-three-test-loader.mjs tools/owner-door-traversal.mjs --prepared",
+      "exitCode": 0,
+      "traversals": 102
+    },
+    {
+      "command": "node --experimental-loader ./tools/vendor-three-test-loader.mjs tools/foundation-replay.mjs",
+      "exitCode": 0,
+      "traces": 8,
+      "totalTicks": 9600,
+      "matchesMergedBaseline": true
+    },
+    {
+      "command": "node tools/player-routes-browser.mjs",
+      "exitCode": 0,
+      "results": "plant, defuse, player/bot hostage rescue and spectator controls"
+    },
+    {
+      "command": "node tools/saved-character-browser.mjs",
+      "exitCode": 0,
+      "fixture": "generated compatible GLB; NOT a Studio UI export",
+      "result": {
+        "status": "PASS",
+        "first": {
+          "team": "counterAnalysts",
+          "drawn": 20,
+          "hands": 2,
+          "sleeves": 2,
+          "matches": true,
+          "gloveColorMatches": true,
+          "thirdPerson": true,
+          "otherOriginal": true
+        },
+        "replay": {
+          "team": "analysts",
+          "drawn": 10,
+          "hands": 2,
+          "sleeves": 2,
+          "matches": true,
+          "gloveColorMatches": true,
+          "thirdPerson": true,
+          "otherOriginal": true
+        },
+        "cancel": true,
+        "retry": true,
+        "incompatibleRecovery": true,
+        "writeRequests": 0
+      }
+    },
+    {
+      "command": "FPS_NETWORK_LAN=1 FPS_NETWORK_ANGLE=swiftshader FPS_NETWORK_DPR=0.5 FPS_LAN_PROTOCOL_PEER=0 node --import ./server/register-shared.mjs tools/network-launch-browser.mjs",
+      "node": "26.13.0",
+      "exitCode": 0,
+      "host": "darwin/arm64",
+      "renderedClients": 2,
+      "physicalDevices": false,
+      "sourceSha256": "bc817c4f7777db9007a4df4f70f6d3a8a5dcfef1e503799379aaebc6e3c6bc24",
+      "evidence": "software-two-rendered-launch.json"
+    }
+  ],
+  "sourceSha256": {
+    "server/network-room.mjs": "3eb393a43ffdcafab0e00766f69b6c346e4e68ae9ca622538f2469d0bf062fa7",
+    "server/lag-compensation.mjs": "7192623939c63073e63e8ecb2c7ce4703a218d52bf9845b1d2ebbdbdeb97736b",
+    "server/network-schema.mjs": "cf8e51f51676b6780908b4e02906c0947f64b927b0f89f27800bb134893b3036",
+    "server/headless.mjs": "901a22a2e9996cea89d2b158ffca0521f115166058944617b2dc7e379b49cb4e",
+    "shared/multiplayer/rules.mjs": "41001bc6c22b663f6f4e7c185e5bc59b34bf7a176e0cd53680e1e61e01c89016",
+    "shared/multiplayer/protocol.mjs": "c9ba9447f635fda58a4ea8981352839ab7ad066803d8aec429c3ad8139d73598",
+    "src/fps/game.mjs": "4652f16ba0c77aefc65faee353375601884312763bf19d010397479a42efed80",
+    "src/fps/action-rules.mjs": "9a0fb72f838017db3be0d93e1a2d930875f29c085533b58f6eb6857c267bfec7",
+    "src/fps/network/session.mjs": "68477892bd378e84ede3118c9be0295f2dc37b5a2fe5d55446944d9f34eba260",
+    "tools/network-launch-browser.mjs": "bc817c4f7777db9007a4df4f70f6d3a8a5dcfef1e503799379aaebc6e3c6bc24"
+  },
+  "longRun": {
+    "command": "CS2_SOAK=1 CS2_LOAD_COUNTS=10 CS2_LOAD_SECONDS=1800 CS2_LOAD_OUTPUT=test-results/pass3b/soak-final-30m.json node --import ./server/register-shared.mjs tools/network-load.mjs",
+    "node": "26.13.0",
+    "exitCode": 0,
+    "seconds": 1800.0796424169998,
+    "serverSourceCommit": "732117d626335eba81ffb16e248f531a92de87cd",
+    "evidence": "soak.json",
+    "physicalDevices": false
+  },
+  "runtimeImplementationCommit": "c6e8a59872795370db2715c142175a8ddc08ea70",
+  "ci": "Exact final-head job results and run link are recorded in PR #22 checks and its delivery description; historical failures are documented in PASS3B_REPORT.md."
+}

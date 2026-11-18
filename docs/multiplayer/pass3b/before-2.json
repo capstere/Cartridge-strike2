@@ -1,0 +1,377 @@
+{
+  "results": [
+    {
+      "status": "PASS",
+      "kind": "protocol-only, server in separate process",
+      "physicalPi": "NOT RUN",
+      "count": 2,
+      "rttMs": 0,
+      "jitterMs": 0,
+      "loss": "NOT RUN: ordered WebSocket delay, no packet dropping",
+      "environment": {
+        "node": "v26.13.0",
+        "platform": "darwin",
+        "arch": "arm64",
+        "cpu": "Apple M1",
+        "cores": 8
+      },
+      "contract": {
+        "protocolVersion": 3,
+        "protocolHash": "55171d430a4d3221e15f85780a873516fb55e55254a37acdf3e9680f8cd8cda2",
+        "mapId": "floor5-prepared",
+        "collisionHash": "a5351e073a01ac95466acf4346acf9812f4265224e56712ce3e889085a42b6d9",
+        "mapHash": "89283f437623457a10da37be29a282a41591f202270051ba940549ba01b4b050",
+        "configHash": "d2527986115955118fc0c4206c9884a0687ef8e85eb2dea4806dab401a0a01b5",
+        "buildHash": "bf6d7b77814b1b78d9e8da4f6a40dbcdcac10942de3790c30819b575f15f8da5",
+        "tickRate": 60,
+        "patchMs": 50
+      },
+      "measured": {
+        "elapsedSeconds": 30.059589041000002,
+        "serverCpuPercent": 5.3493246291783185,
+        "memory": {
+          "rss": 252936192,
+          "heapTotal": 136003584,
+          "heapUsed": 65166216,
+          "external": 6314609,
+          "arrayBuffers": 410502
+        },
+        "eventLoopMs": {
+          "p50": 10.690559,
+          "p95": 12.156927,
+          "p99": 13.434879,
+          "max": 28.475391
+        },
+        "costMs": {
+          "tick": {
+            "n": 1803,
+            "p50": 0.20225000000209548,
+            "p95": 0.49362500000279397,
+            "p99": 0.8867079999999987,
+            "max": 5.850000000005821
+          },
+          "simulation": {
+            "n": 1803,
+            "p50": 0.08500000000094587,
+            "p95": 0.22358299999905284,
+            "p99": 0.47199999999429565,
+            "max": 5.702791999996407
+          },
+          "projection": {
+            "n": 1803,
+            "p50": 0.04420899999968242,
+            "p95": 0.13312499999665306,
+            "p99": 0.1952500000006694,
+            "max": 0.6432090000016615
+          },
+          "serialization": {
+            "n": 593,
+            "p50": 0.10870799999975134,
+            "p95": 0.27716700000019046,
+            "p99": 0.40333299999838346,
+            "max": 0.7238749999996799
+          },
+          "interval": {
+            "n": 1803,
+            "p50": 16.62012499999946,
+            "p95": 17.983875000001717,
+            "p99": 19.267917000001034,
+            "max": 34.43083400000069
+          }
+        },
+        "shotAgeMs": {
+          "n": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "bytes": 329510,
+        "inBytes": 34337,
+        "respawns": 10,
+        "resources": {
+          "PipeWrap": 1,
+          "TCPServerWrap": 1,
+          "TCPSocketWrap": 2,
+          "Timeout": 5
+        },
+        "rooms": [
+          {
+            "id": "S33ppw8Dc",
+            "clients": 2,
+            "seats": 2,
+            "actors": 2,
+            "tick": 2113,
+            "metrics": {
+              "invalid": 0,
+              "maxQueue": 3,
+              "ticks": 2113,
+              "events": 494
+            },
+            "inputMax": 0,
+            "rtts": [
+              null,
+              null
+            ],
+            "listeners": [
+              6,
+              6
+            ],
+            "listenerDetails": [
+              {
+                "sid": "DiaOlUsm_",
+                "events": {
+                  "close": 2,
+                  "error": 1,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "p4LNw5i0M",
+                "events": {
+                  "close": 2,
+                  "error": 1,
+                  "pong": 1,
+                  "message": 2
+                }
+              }
+            ],
+            "score": {
+              "analysts": 5,
+              "counterAnalysts": 6
+            },
+            "actorsState": [
+              {
+                "id": "analysts-0",
+                "lifeId": 6,
+                "kills": 5,
+                "deaths": 6
+              },
+              {
+                "id": "counterAnalysts-0",
+                "lifeId": 6,
+                "kills": 6,
+                "deaths": 5
+              }
+            ]
+          }
+        ]
+      },
+      "baseline": {
+        "elapsedSeconds": 0.02183837500000027,
+        "serverCpuPercent": 358.20430778388516,
+        "memory": {
+          "rss": 266289152,
+          "heapTotal": 145702912,
+          "heapUsed": 64670192,
+          "external": 8086375,
+          "arrayBuffers": 406405
+        },
+        "eventLoopMs": {
+          "p50": 0.000511,
+          "p95": 0.000511,
+          "p99": 0.000511,
+          "max": 0
+        },
+        "costMs": {
+          "tick": {
+            "n": 0,
+            "p50": 0,
+            "p95": 0,
+            "p99": 0,
+            "max": 0
+          },
+          "simulation": {
+            "n": 0,
+            "p50": 0,
+            "p95": 0,
+            "p99": 0,
+            "max": 0
+          },
+          "projection": {
+            "n": 0,
+            "p50": 0,
+            "p95": 0,
+            "p99": 0,
+            "max": 0
+          },
+          "serialization": {
+            "n": 0,
+            "p50": 0,
+            "p95": 0,
+            "p99": 0,
+            "max": 0
+          },
+          "interval": {
+            "n": 0,
+            "p50": 0,
+            "p95": 0,
+            "p99": 0,
+            "max": 0
+          }
+        },
+        "shotAgeMs": {
+          "n": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "bytes": 0,
+        "inBytes": 0,
+        "respawns": 1,
+        "resources": {
+          "PipeWrap": 1,
+          "TCPServerWrap": 1,
+          "TCPSocketWrap": 2,
+          "Timeout": 5
+        },
+        "rooms": [
+          {
+            "id": "S33ppw8Dc",
+            "clients": 2,
+            "seats": 2,
+            "actors": 2,
+            "tick": 310,
+            "metrics": {
+              "invalid": 0,
+              "maxQueue": 2,
+              "ticks": 310,
+              "events": 88
+            },
+            "inputMax": 1,
+            "rtts": [
+              null,
+              null
+            ],
+            "listeners": [
+              6,
+              6
+            ],
+            "listenerDetails": [
+              {
+                "sid": "DiaOlUsm_",
+                "events": {
+                  "close": 2,
+                  "error": 1,
+                  "pong": 1,
+                  "message": 2
+                }
+              },
+              {
+                "sid": "p4LNw5i0M",
+                "events": {
+                  "close": 2,
+                  "error": 1,
+                  "pong": 1,
+                  "message": 2
+                }
+              }
+            ],
+            "score": {
+              "analysts": 1,
+              "counterAnalysts": 1
+            },
+            "actorsState": [
+              {
+                "id": "analysts-0",
+                "lifeId": 2,
+                "kills": 1,
+                "deaths": 1
+              },
+              {
+                "id": "counterAnalysts-0",
+                "lifeId": 1,
+                "kills": 1,
+                "deaths": 1
+              }
+            ]
+          }
+        ]
+      },
+      "perPlayerOutboundBytesPerSecond": 5480.946521766521,
+      "maxPending": 6,
+      "joins": 0,
+      "reconnects": 0,
+      "shots": [
+        42,
+        41
+      ],
+      "hits": [
+        34,
+        36
+      ],
+      "cleanup": {
+        "elapsedSeconds": 30.576577832999998,
+        "serverCpuPercent": 5.429482687916339,
+        "memory": {
+          "rss": 250757120,
+          "heapTotal": 110968832,
+          "heapUsed": 26509256,
+          "external": 6314661,
+          "arrayBuffers": 370074
+        },
+        "eventLoopMs": {
+          "p50": 10.690559,
+          "p95": 12.156927,
+          "p99": 13.443071,
+          "max": 28.475391
+        },
+        "costMs": {
+          "tick": {
+            "n": 1804,
+            "p50": 0.20241700000042329,
+            "p95": 0.49362500000279397,
+            "p99": 0.8867079999999987,
+            "max": 5.850000000005821
+          },
+          "simulation": {
+            "n": 1804,
+            "p50": 0.08504099999845494,
+            "p95": 0.22358299999905284,
+            "p99": 0.47199999999429565,
+            "max": 5.702791999996407
+          },
+          "projection": {
+            "n": 1804,
+            "p50": 0.04424999999901047,
+            "p95": 0.13312499999665306,
+            "p99": 0.1952500000006694,
+            "max": 0.6432090000016615
+          },
+          "serialization": {
+            "n": 593,
+            "p50": 0.10870799999975134,
+            "p95": 0.27716700000019046,
+            "p99": 0.40333299999838346,
+            "max": 0.7238749999996799
+          },
+          "interval": {
+            "n": 1804,
+            "p50": 16.620750000000044,
+            "p95": 17.985375000000204,
+            "p99": 19.335125000001426,
+            "max": 34.43083400000069
+          }
+        },
+        "shotAgeMs": {
+          "n": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "bytes": 329510,
+        "inBytes": 34354,
+        "respawns": 10,
+        "resources": {
+          "PipeWrap": 1,
+          "TCPServerWrap": 1,
+          "Timeout": 4
+        },
+        "rooms": []
+      }
+    }
+  ]
+}
