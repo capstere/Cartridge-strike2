@@ -72,6 +72,10 @@ test('pilot login, protected assets, room admission and upgrades follow the acti
   const entry = await get('/fps/');
   assert.equal(entry.status,200);
   assert.match(entry.body,/name="invite"/);
+  const nonce = entry.body.match(/<script nonce="([A-Za-z0-9+/=]+)">/)?.[1];
+  assert(nonce);
+  assert(entry.headers['content-security-policy'].includes("script-src 'nonce-"+nonce+"'"));
+  assert(!entry.body.includes(invite), 'The invite must never be embedded in the login page');
   assert.equal((await get('/', {...forwarded, Host:'unknown.example.test'})).status,403);
   assert.equal((await get('/', {...forwarded, 'X-Forwarded-Proto':'http'})).status,403);
 
@@ -81,6 +85,15 @@ test('pilot login, protected assets, room admission and upgrades follow the acti
   assert.equal(await upgradeStatus(local.url,{...forwarded,Origin:origin}),401);
   assert.equal((await login(invite,{...form, Origin:'https://other.example.test'})).status,403);
   assert.equal((await login('incorrect')).status,403);
+  for (const padded of [' '+invite+' ', '\t'+invite+'\r\n', '\u00a0'+invite+'\u00a0']) {
+    assert.equal((await login(padded)).status,303,'Clipboard edge whitespace must not invalidate the code');
+  }
+  for (const invalid of [' \n ', invite.slice(0,8)+' '+invite.slice(8), invite+'x', 'Inbjudningskod: '+invite]) {
+    const denied = await login(invalid);
+    assert.equal(denied.status,403,'Only surrounding whitespace may be ignored');
+    assert.equal(denied.headers['set-cookie'],undefined);
+    assert(!denied.body.includes(invite),'Do not echo submitted credentials');
+  }
   assert.equal(local.rooms.size,0);
   const accepted = await login(invite);
   assert.equal(accepted.status,303);

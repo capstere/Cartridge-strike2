@@ -80,7 +80,9 @@ export function pilotAccess(config, limiter) {
         chunks.push(chunk);
       }
       const form = new URLSearchParams(Buffer.concat(chunks).toString('utf8'));
-      const invite = form.get('invite');
+      // Clipboard selections commonly include a trailing space or line break.
+      // Only trim the edges: the generated code remains exact and case-sensitive.
+      const invite = form.get('invite')?.trim();
       if (form.size !== 1 || !invite || !timingSafeEqual(inviteHash, digest(invite))) {
         showInvite(res, true);
         return;
@@ -105,17 +107,22 @@ export function redirectLobby(res) {
 }
 
 export function showInvite(res, wrong = false) {
+  const nonce = randomBytes(16).toString('base64');
   res.writeHead(wrong ? 403 : 200, {
     'Content-Type': 'text/html; charset=utf-8',
-    'Content-Security-Policy': "default-src 'none'; style-src 'unsafe-inline'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'",
+    'Content-Security-Policy': "default-src 'none'; script-src 'nonce-" + nonce + "'; style-src 'unsafe-inline'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'",
   });
   res.end(`<!doctype html><html lang="sv"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cartridge-Strike 2 · Internetpilot</title><style>
 *{box-sizing:border-box}body{margin:0;min-height:100svh;display:grid;place-items:center;background:#161b1b;color:#edf2e8;font:1rem system-ui}
 main{width:min(100%,26rem);padding:2rem}h1{font-size:2rem}input,button{width:100%;padding:.8rem;font:inherit;margin-top:.5rem}
 input{color:inherit;background:#232c2c;border:1px solid #94a6a0}button{background:#efbf64;color:#161b1b;border:0;font-weight:bold;cursor:pointer}
+.show-code{display:flex;align-items:center;gap:.5rem;margin-top:.75rem}.show-code input{width:auto;margin:0}small{display:block;margin-top:.75rem}
 </style><main><h1>Cartridge-Strike 2</h1><p>Öppna Floor 5 med inbjudningskoden från serverns ägare.</p>
 ${wrong ? '<p role="alert">Fel inbjudningskod. Försök igen.</p>' : ''}<form method="post" action="/pilot/session">
-<label>Inbjudningskod<input type="password" name="invite" maxlength="128" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" required></label>
-<button type="submit">Öppna lobbyn</button></form></main></html>`);
+<label>Inbjudningskod<input id="pilot-invite" type="password" name="invite" maxlength="160" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" aria-describedby="invite-help" required></label>
+<label class="show-code"><input id="show-invite" type="checkbox">Visa kod</label>
+<small id="invite-help">Klistra in enbart inbjudningskoden. Din privata rumskod väljer du i nästa steg.</small>
+<button type="submit">Öppna lobbyn</button></form></main>
+<script nonce="${nonce}">document.getElementById('show-invite').addEventListener('change',event=>{document.getElementById('pilot-invite').type=event.target.checked?'text':'password';});</script></html>`);
 }

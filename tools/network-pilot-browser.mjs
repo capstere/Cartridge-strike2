@@ -48,7 +48,14 @@ async function open(mobile){
   });
   await page.goto(origin,{waitUntil:'domcontentloaded'});
   const field=page.locator('input[name=invite]');await field.waitFor();
-  try{await field.fill(invite);}catch{throw Error('Unable to enter server invite');}
+  try{
+    // Exercise the real form with the clipboard whitespace reported by players.
+    await field.fill(' '+invite+' ');
+    await page.locator('#show-invite').check();
+    assert.equal(await field.getAttribute('type'),'text');
+    await page.locator('#show-invite').uncheck();
+    assert.equal(await field.getAttribute('type'),'password');
+  }catch{throw Error('Unable to enter or reveal server invite');}
   await page.locator('button[type=submit]').click();
   await page.waitForFunction(()=>document.querySelector('#network-code')||document.querySelector('#fatal pre')?.textContent);
   assert(await page.locator('#fatal').isHidden(),await page.locator('#fatal pre').textContent());
