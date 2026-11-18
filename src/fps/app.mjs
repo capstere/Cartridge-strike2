@@ -147,7 +147,7 @@ function showPause(){if(networkSession?.room?.state.phase!=='active'&&networkSes
 // transition can interrupt the Resume gesture that enables mouse and audio.
 function resume(){if(networkSession&&(networkSession.connectionState==='reconnecting'||networkSession.room?.state.phase!=='active'))return;if(!networkMode)window.__csFlow?.fullscreen?.resume();audio.unlock();modal=null;$('pause').hidden=true;$('buy').hidden=true;clearInput();game.pause(false);yaw=game.player.yaw;pitch=game.player.pitch;mobile.show(true,game.player?.alive);requestMouse();}
 function showBuy(){if(!game.player?.alive||(game.phase!=='buy'&&!isEndless(game))){notify('Köp öppnar under nästa köpfas.');return;}modal='buy';mobile.show(false);setText('buy-message','');clearInput();game.pause(true);audio.reset();$('buy').hidden=false;unlockMouse();refreshShop();}
-function closeBuy(){window.__csFlow?.fullscreen?.resume();modal=null;$('buy').hidden=true;clearInput();game.pause(false);audio.unlock();mobile.show(true,game.player?.alive);requestMouse();}
+function closeBuy(){if(networkSession){resume();return;}window.__csFlow?.fullscreen?.resume();modal=null;$('buy').hidden=true;clearInput();game.pause(false);audio.unlock();mobile.show(true,game.player?.alive);requestMouse();}
 function refreshShop(){
  if(networkSession){
    const p=game.player;

@@ -87,6 +87,13 @@ try{
     await desktop.waitForFunction(id=>reviewSession.view.state.grenades.some(g=>g.ownerId===id),guest.id);
   }finally{await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await cdp.detach();}
   await until(()=>!game.state.grenades.some(g=>g.owner===guest),'authority detonated HE');
+  await mobile.locator('#mobile-more').tap();await mobile.locator('[data-mobile-action=buy]').tap();
+  const note=mobile.locator('#buy-note'),shop=mobile.locator('#shop');
+  const heading=await note.boundingBox(),choices=await shop.boundingBox();
+  assert(heading.height>0&&heading.y+heading.height<=choices.y+1);
+  assert.match(await note.textContent(),/nästa respawn/);
+  await mobile.locator('[data-item=cr4]').tap();await until(()=>guest.loadout==='cr4','mobile team rifle queued');
+  await mobile.locator('#return-buy').tap();assert.equal(guest.weapon,'smg');assert.equal(guest.inventory.he,0);
   for(const p of [desktop,mobile])assert(await p.locator('#fatal').isHidden());
   assert.deepEqual(errors,[]);
   console.log('PASS two rendered clients, eight BotControllers, desktop ADS/glass/equipment and simultaneous mobile movement/ADS/fire/HE.');

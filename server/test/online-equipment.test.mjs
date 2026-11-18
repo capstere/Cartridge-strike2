@@ -27,8 +27,11 @@ test('solo start, equipment authority, pane rewind, late join, HE ownership and 
   const stamp=r.clock.elapsedTime;
   send(host,{aim:true,yaw:pose.yaw});
   await until(()=>a.aimAmount>.8,'server ADS transition');
+  const pellets=[];
+  host.onMessage('events',events=>pellets.push(...events.filter(e=>e.type==='tracer'&&e.actorId===a.id)));
   send(host,{aim:true,yaw:pose.yaw,fire:true,fireId:1});
   await until(()=>host.state.brokenGlass.has(pane.id),'shot breaks pane and replicates');
+  await until(()=>pellets.length===8,'one shell produces eight pellets');
   assert.equal(a.inventory.primary.ammo,7);
   assert.equal(g.world.raycast(from,dir,1.5),null,'current passage is clear');
   r.lag.shots.set(a.id,stamp);
@@ -60,12 +63,14 @@ test('solo start, equipment authority, pane rewind, late join, HE ownership and 
   await host.leave();await until(()=>r.bots.has(a.id),'bot replaces departing owner');
   assert.equal(r.state.ownerId,late.sessionId);
   const victim=r.seats.get(late.sessionId).actor,replacement=r.bots.get(a.id).actor;
+  late.send('match',{kind:'loadout',matchId:late.state.matchId,controlEpoch:victim.controlEpoch,primary:'cr4'});
+  await until(()=>own(late).loadout==='cr4','late player queues team rifle');assert.equal(victim.weapon,'smg');
   // Force only placement and fuse for deterministic attribution to a departed actor.
   Object.assign(grenade,{x:victim.x,y:.7,z:victim.z,vx:0,vy:0,vz:0,deadline:g.state.time+.01});
   Object.assign(victim,{hp:1,spawnProtectedUntil:0});const before=g.state.score[a.team];
   await until(()=>!victim.alive,'HE kills exposed enemy');
   assert.equal(g.state.score[a.team],before+1);assert.equal(replacement.kills,0);assert.equal(a.kills,1);
-  await until(()=>victim.alive,'respawn');
+  await until(()=>victim.alive,'respawn');assert.equal(victim.weapon,'cr4');assert.equal(victim.inventory.he,1);
   r.match.deadline=r.clock.elapsedTime;
   await until(()=>late.state.phase==='results','results include bots');
   assert.equal(JSON.parse(late.state.results).players.filter(a=>a.name.startsWith('BOT ')).length,9);

@@ -13,4 +13,12 @@
 
 .network-session-ui #buy .buy-heading{display:block}
 .network-session-ui #buy .buy-heading p{display:block}
-@media(max-height:480px){.network-session-ui #buy .buy-heading h2{display:none}.network-session-ui #buy .buy-heading p{margin:3px 0;font-size:12px}}
+@media(orientation:landscape) and (max-height:520px){
+  .network-session-ui #buy .buy-card{grid-template-rows:auto auto minmax(0,1fr) auto}
+  .network-session-ui #buy .buy-heading{grid-column:1/-1;padding:4px 12px}
+  .network-session-ui #buy .buy-heading h2{display:none}
+  .network-session-ui #buy #buy-note{font-size:12px}
+  .network-session-ui #buy #shop{grid-row:3;grid-template-columns:minmax(0,1fr)}
+  .network-session-ui #buy .cs-buy-detail{grid-row:3}
+  .network-session-ui #buy #return-buy,.network-session-ui #buy #buy-message{grid-row:4}
+}
