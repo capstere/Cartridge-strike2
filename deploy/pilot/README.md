@@ -43,7 +43,7 @@ cat /run/cartridge-strike2-tunnel/origin
 
 On startup the connector clears the old origin and publishes the exact hostname Cloudflare assigns. The game denies public access until it can validate this origin. The wrapper closes the connector at expiry. Its deadline survives a reboot. Systemd restarts failed processes. Transport interruptions can recover inside the same cloudflared process. A new Quick Tunnel process receives a new URL, which must be shared again. A stable hostname requires a named tunnel with a Cloudflare-managed hostname. [Quick Tunnel lifecycle](https://developers.cloudflare.com/tunnel/get-started/quick-tunnels/)
 
-Run the SDK probe again with the actual HTTPS origin in `CS2_PILOT_URL` and the loopback override unset. The browser runner accepts `CS2_PILOT_URL` and `CS2_PILOT_INVITE_FILE` pointing to a private one-line secret file. It verifies independently authenticated browsers in the same room, accepted player input and replicated remote state over WSS. Both runners need the development dependencies. Use the revision deployed to the Pi.
+Run the SDK probe again with the actual HTTPS origin in `CS2_PILOT_URL` and the loopback override unset. The browser runner accepts `CS2_PILOT_URL` and `CS2_PILOT_INVITE_FILE` pointing to a private one-line secret file. It verifies independently authenticated browsers in the same room, accepted player input and replicated remote state over WSS. Set `CS2_PILOT_CLIENTS=10` on the SDK probe for a single-room, full-roster check through 2, 4 and 10 seats. Both runners need the development dependencies. Use the revision deployed to the Pi.
 
 ## Monitor, stop and roll back
 

@@ -1,4 +1,4 @@
-// Two independent Colyseus clients use only the same endpoints available to a player.
+// Independent Colyseus clients use only the endpoints available to a player.
 // Credentials and ephemeral room/session identifiers are deliberately absent from output.
 import assert from 'node:assert/strict';
 import {randomBytes} from 'node:crypto';
@@ -12,11 +12,12 @@ import {CONTRACT} from '../shared/multiplayer/build.mjs';
 globalThis.WebSocket = WebSocket;
 const {Client} = await import('../server/node_modules/@colyseus/sdk/build/index.mjs');
 
+const clientCount = Number(process.env.CS2_PILOT_CLIENTS ?? 2);
 let stage = 'configuration';
 const deadline = setTimeout(() => {
   console.error(JSON.stringify({status:'FAIL', stage, reason:'deadline'}));
   process.exit(1);
-}, 75_000);
+}, clientCount===10 ? 180_000 : 75_000);
 const peers = [];
 async function until(predicate, label, timeout = 8000) {
   stage = label;
@@ -32,6 +33,7 @@ function actor(room, sessionId) {
 }
 
 try {
+  assert([2,10].includes(clientCount), 'CS2_PILOT_CLIENTS must be 2 or 10');
   const origin = new URL(process.env.CS2_PILOT_URL);
   assert(origin.protocol === 'https:' && origin.href === origin.origin+'/', 'expected an HTTPS origin');
   const invite = process.env.CS2_PILOT_INVITE;
@@ -74,13 +76,17 @@ try {
       }
     });
   }
-  stage = 'unauthenticated admission';
   const options = {contract:CONTRACT, code:randomBytes(16).toString('hex'), name:'Pilot probe'};
-  const denied = await request(endpointFor('/matchmake/create/private-fps'), {
-    method:'POST', headers:{...headers, 'Content-Type':'application/json'}, body:JSON.stringify(options)
-  });
-  assert([401,403].includes(denied.status));
-  await denied.arrayBuffer();
+  const admissionChecks = {};
+  if (clientCount===2) {
+    stage = 'unauthenticated admission';
+    const denied = await request(endpointFor('/matchmake/create/private-fps'), {
+      method:'POST', headers:{...headers, 'Content-Type':'application/json'}, body:JSON.stringify(options)
+    });
+    assert([401,403].includes(denied.status));
+    await denied.arrayBuffer();
+    admissionChecks.unauthenticatedStatus = denied.status;
+  }
   const clientA = await login();
   const clientB = await login();
   async function join(operation) {
@@ -104,15 +110,39 @@ try {
   }
   stage = 'room create';
   const a = await join(clientA.create('private-fps', options));
-  stage = 'wrong private room code';
-  await assert.rejects(clientB.joinById(a.room.roomId, {...options, code:randomBytes(16).toString('hex')}),
-    error => /incorrect private room code/i.test(error.message));
+  if (clientCount===2) {
+    stage = 'wrong private room code';
+    await assert.rejects(clientB.joinById(a.room.roomId, {...options, code:randomBytes(16).toString('hex')}),
+      error => /incorrect private room code/i.test(error.message));
+    admissionChecks.wrongRoomCodeRejected = true;
+  }
   stage = 'friend joins room ID';
   const b = await join(clientB.joinById(a.room.roomId, {...options, name:'Pilot peer'}));
   const {room:first} = a, {room:second} = b;
-  assert.equal(first.roomId, second.roomId);
-  await until(() => [first,second].every(r => [...r.state.actors.values()].filter(p=>p.ready && p.alive).length===2),
-    'both clients see both active players');
+  const checkpoints = [];
+  async function verifyRoster() {
+    const count = peers.length;
+    const sessions = new Set(peers.map(p=>p.room.sessionId));
+    assert.equal(sessions.size,count);
+    await until(() => peers.every(({room}) => {
+      const players = [...room.state.actors.values()];
+      return room.roomId===first.roomId && players.length===count &&
+        players.every(p=>p.connected && p.ready && p.alive && sessions.has(p.sessionId)) &&
+        new Set(players.map(p=>p.sessionId)).size===count &&
+        players.filter(p=>p.team==='analysts').length===count/2 &&
+        players.filter(p=>p.team==='counterAnalysts').length===count/2;
+    }), 'ready roster replicated to '+count+' peers');
+    checkpoints.push({clients:count, readyOnEachSocket:count, analysts:count/2, counterAnalysts:count/2});
+  }
+  await verifyRoster();
+  while (peers.length<clientCount) {
+    // Sequentially admit normal players, with time between independent logins.
+    await delay(1000);
+    const client = await login();
+    stage = 'friend joins for 5v5';
+    await join(client.joinById(first.roomId, {...options,name:'Pilot peer '+(peers.length+1)}));
+    if ([4,10].includes(peers.length)) await verifyRoster();
+  }
   function playerProbe(peer, observer) {
     const {room} = peer;
     const remote = () => actor(observer.room, room.sessionId);
@@ -154,13 +184,18 @@ try {
   const metrics = {tickAdvance:second.state.tick-startTick, movementMetres:players.map(p=>+p.moved().toFixed(2)),
     ammoAfterFire, reloadAmmo:players.map(p=>p.remote().ammo), sharedShots:players.map(p=>p.sharedShots())};
   stage='consented leave and remote roster update';
-  await first.leave();
-  await until(() => second.state.actors.size===1 && !actor(second,first.sessionId), stage);
-  await second.leave();
-  peers.length=0;
+  let consentedLeaves=0;
+  while (peers.length) {
+    const {room} = peers[0];
+    await room.leave();
+    assert(!room.connection.isOpen);
+    peers.shift();
+    consentedLeaves++;
+    await until(() => peers.every(p=>p.room.state.actors.size===peers.length && !actor(p.room,room.sessionId)), stage);
+  }
   console.log(JSON.stringify({status:'PASS', path:port?'loopback with tunnel headers':'HTTPS/WSS via public origin',
-    clients:2, map:CONTRACT.mapId, build:CONTRACT.buildHash, unauthenticatedStatus:denied.status,
-    wrongRoomCodeRejected:true, ...metrics}));
+    clients:clientCount, map:CONTRACT.mapId, build:CONTRACT.buildHash, ...admissionChecks, checkpoints,
+    gameplayPeers:players.length, ...metrics, consentedLeaves}));
 } catch (error) {
   // Third-party errors can include request URLs/session tokens. Print only the failed stage and status.
   const code = typeof error.code==='number' || /^[A-Z_]{2,40}$/.test(error.code || '') ? error.code : undefined;

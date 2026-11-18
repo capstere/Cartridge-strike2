@@ -1,0 +1,40 @@
+{
+  "status": "PASS",
+  "path": "public HTTPS",
+  "date": "2026-11-18T05:30:06.678Z",
+  "physicalDevices": false,
+  "chromium": "156.0.8078.79",
+  "renderers": [
+    "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+    "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)"
+  ],
+  "angle": "gl-egl",
+  "dpr": 0.5,
+  "renderedClients": 2,
+  "fixtureCertificatePinned": false,
+  "inviteLogins": 2,
+  "rejectedWrongRoomCode": true,
+  "readyActors": 2,
+  "floor5Doors": 51,
+  "webSockets": [
+    {
+      "sockets": 1,
+      "sent": 187,
+      "received": 259
+    },
+    {
+      "sockets": 1,
+      "sent": 238,
+      "received": 187
+    }
+  ],
+  "remoteGameplay": {
+    "tickBefore": 535,
+    "tickAfter": 724,
+    "distance": 0.4200000000000017,
+    "ammoBefore": 30,
+    "ammoFired": 28,
+    "ammoReloaded": 30
+  },
+  "departedHostRemoved": true
+}

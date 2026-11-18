@@ -1,0 +1,46 @@
+{
+  "status": "PASS",
+  "path": "HTTPS/WSS via public origin",
+  "clients": 10,
+  "map": "floor5-prepared",
+  "build": "2e5e53aa38730e6cf293425f4dcdfdbf92cb05f43282e968abf4124cd306977e",
+  "checkpoints": [
+    {
+      "clients": 2,
+      "readyOnEachSocket": 2,
+      "analysts": 1,
+      "counterAnalysts": 1
+    },
+    {
+      "clients": 4,
+      "readyOnEachSocket": 4,
+      "analysts": 2,
+      "counterAnalysts": 2
+    },
+    {
+      "clients": 10,
+      "readyOnEachSocket": 10,
+      "analysts": 5,
+      "counterAnalysts": 5
+    }
+  ],
+  "gameplayPeers": 2,
+  "tickAdvance": 120,
+  "movementMetres": [
+    0.28,
+    0.25
+  ],
+  "ammoAfterFire": [
+    28,
+    28
+  ],
+  "reloadAmmo": [
+    30,
+    30
+  ],
+  "sharedShots": [
+    2,
+    2
+  ],
+  "consentedLeaves": 10
+}

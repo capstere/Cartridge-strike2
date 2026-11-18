@@ -2,7 +2,7 @@
 Description=Monitor Cartridge-Strike 2 pilot readiness in the journal
 
 [Timer]
-OnBootSec=90
+OnActiveSec=90
 OnUnitActiveSec=2min
 
 [Install]
