@@ -304,13 +304,10 @@ export class Game {
     if(w.projectile){launchRocket(this,actor,direction(actor.yaw,actor.pitch));return true;}
     for (let i = 0; i < w.pellets; i++) {
       const dir = direction(actor.yaw + (this.random() - .5) * spread, actor.pitch + (this.random() - .5) * spread);
-      const wall = this.world.raycast(origin, dir, w.range, { vision: false });
-      let nearest = wall?.distance ?? w.range, victim = null;
-      for (const target of [...this.actors,...(this.state.zombies||[]),...(this.config.hostageDamage?this.hostages:[]),...(this.config.wanderers?this.state.wanderers||[]:[])]) {
-        if (!target.alive || target.rescued || target === actor) continue;
-        const hit = rayActor(origin, dir, target, nearest);
-        if (hit !== null && hit < nearest) { nearest = hit; victim = target; }
-      }
+      // The room may supply read-only historical hitboxes/collision context.
+      // Weapon cadence, RNG, ammunition and deferred damage stay in this Game.
+      const {wall,nearest,victim} = this.hitscanQuery
+        ? this.hitscanQuery(actor,origin,dir,w.range) : this.traceHitscan(actor,origin,dir,w.range);
       const hitPoint = { x: origin.x + dir.x * nearest, y: origin.y + dir.y * nearest, z: origin.z + dir.z * nearest };
       if (victim) {
         if (victim.team !== actor.team || this.config.friendlyFire) {
@@ -323,6 +320,16 @@ export class Game {
       this.emit('tracer', actor, { from: origin, to: hitPoint, weapon: actor.weapon });
     }
     return true;
+  }
+  traceHitscan(actor,origin,dir,range,targets=[...this.actors,...(this.state.zombies||[]),...(this.config.hostageDamage?this.hostages:[]),...(this.config.wanderers?this.state.wanderers||[]:[])]) {
+    const wall=this.world.raycast(origin,dir,range,{vision:false});
+    let nearest=wall?.distance??range,victim=null;
+    for(const target of targets){
+      if(!target.alive||target.rescued||target.id===actor.id)continue;
+      const hit=rayActor(origin,dir,target,nearest);
+      if(hit!==null&&hit<nearest){nearest=hit;victim=target.entity||target;}
+    }
+    return {wall,nearest,victim};
   }
   damage(target, amount, source, kind = 'shot', context = {}) {
     if (this.phase !== 'active' || !target?.alive || !Number.isFinite(amount) || amount <= 0 || (source && source.team && source.team === target.team && !this.config.friendlyFire && !(source===target&&kind==='bazooka'))) return false;

@@ -22,13 +22,13 @@ export async function createLocalServer(options={}) {
     onDispose(){super.onDispose();active.delete(this);}
   }
   const httpServer=http.createServer({requestTimeout:10000,headersTimeout:10000});
-  httpServer.maxConnections=64;
+  httpServer.maxConnections=128;
   let policy;
   const transport=new WebSocketTransport({server:httpServer,maxPayload:4096,
     beforeUpgrade:(_path,context)=>{
       const denied=policy.check({headers:context.headers,remoteAddress:context.ip},true);
       if(denied)return new Response(denied[1],{status:denied[0]});
-      if(transport.wss.clients.size>=16)return new Response('Connection limit reached.',{status:429});
+      if(transport.wss.clients.size>=32)return new Response('Connection limit reached.',{status:429});
     }});
   const server=new Server({greet:false,gracefullyShutdown:false,
     transport,
@@ -73,7 +73,7 @@ export async function createLocalServer(options={}) {
 }
 if(process.argv[1]===fileURLToPath(import.meta.url)){
   const local=await createLocalServer(configFromEnv(process.env));
-  console.log(`${local.config.lan?'Trusted LAN':'Localhost only'} · two players: ${local.url}/fps/?network=lan`);
+  console.log(`${local.config.lan?'Trusted LAN':'Localhost only'} · up to 10 players (5v5): ${local.url}/fps/?network=lan`);
   let stopping=false;
   for(const signal of ['SIGINT','SIGTERM'])process.on(signal,async()=>{if(stopping)return;stopping=true;await local.close();});
 }

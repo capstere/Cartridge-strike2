@@ -125,11 +125,16 @@ try{
   // timers, callbacks, prediction and buffers have all been released.
   await b.evaluate(()=>{window.__oldLanSession=__fps.network;});
   await room.clients.find(c=>c.sessionId===room.state.actors.get(player.id).sessionId).ref.terminate();
-  await b.locator('#network-status').filter({hasText:'Anslutningen bröts'}).waitFor();
-  await until(()=>room.clients.length===1&&room.sim.game.actors.length===1,'departed seat cleanup');
+  await b.waitForFunction(()=>__fps.network?.metrics.reconnects===1);
+  await b.waitForFunction(()=>__fps.modal==='pause');
+  assert.equal(await b.evaluate(()=>__fps.network.enabled),false,'reconnect requires fresh Resume');
+  assert.equal(await b.evaluate(()=>__fps.network.localPlayerId),player.id,'same actor restored');
+  await until(()=>room.clients.length===2&&room.sim.game.actors.length===2,'same two seats restored');
+  await b.locator('#resume').tap();await b.waitForFunction(()=>__fps.network.enabled);
+  await leave(b);await until(()=>room.clients.length===1&&room.sim.game.actors.length===1,'consented leave releases seat');
   const cleanup=await b.evaluate(()=>{const n=__oldLanSession;return {closed:n.closed,room:n.room,predict:n.predict,watchdog:n.watchdog,callbacks:n.unsub.length,events:n.events.length,remotes:n.remote.size,voices:__fps.audio.active.size+__fps.audio.ambient.length};});
   assert.deepEqual(cleanup,{closed:true,room:null,predict:null,watchdog:null,callbacks:0,events:0,remotes:0,voices:0});
-  console.log('LAN transport loss cleaned up');
+  console.log('LAN transport reconnect and explicit cleanup passed');
   // Rejoin and rendered leave cycles at both requested landscape sizes.
   for(let i=0;i<4;i++){
     await b.setViewportSize(i%2?{width:932,height:430}:{width:844,height:390});

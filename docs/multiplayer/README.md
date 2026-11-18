@@ -1,7 +1,10 @@
 # Multiplayer implementation
 
-**Current: [PASS 3A.2 — trusted LAN and cross-device browsers](pass3a2-lan.md).**
-[Swedish Raspberry Pi guide](raspberry-pi-lan-sv.md). PR #20 was reviewed at its final green head and merged as `bac0756`; PASS 3A.2 starts there and remains for separate review.
+**Current: [PASS 3B — authoritative 5v5, rewind and reconnection](PASS3B_REPORT.md).**
+PASS 3A.2 [PR #21](https://github.com/capstere/Cartridge-strike2/pull/21) was reviewed at its final green head and merged as `ac87eec`. [PASS 3B PR #22](https://github.com/capstere/Cartridge-strike2/pull/22) remains open for review.
+
+Historical [PASS 3A.2 — trusted LAN and cross-device browsers](pass3a2-lan.md).
+[Swedish Raspberry Pi guide](raspberry-pi-lan-sv.md). PR #20 was reviewed at its final green head and merged as `bac0756`; PASS 3A.2 started there.
 
 The following records [Pass 3A.1 — real Floor 5 multiplayer](pass3a-floor5.md).
 Foundation [PR #18](https://github.com/capstere/Cartridge-strike2/pull/18) was

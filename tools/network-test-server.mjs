@@ -17,7 +17,8 @@ if(process.argv[1]===entry&&process.argv[2]==='--serve'){
   let local,timer,stopping=false;const trace=[];
   const snapshot=()=>({listening:!!local?.httpServer.listening,rooms:[...(local?.rooms||[])].map(r=>({
     id:r.roomId,sourceHash:r.sim?.sourceHash,tick:r.sim?.tickNumber,doors:r.state?.doors?.size||0,
-    clients:r.clients.map(c=>c.sessionId),seats:[...(r.seats?.entries()||[])].map(([sid,s])=>({sid,id:s.id,ready:s.ready,enabled:s.enabled})),
+    metrics:r.metrics,lag:r.lag&&{accepted:r.lag.metrics.accepted,rejected:r.lag.metrics.rejected,reasons:r.lag.metrics.reasons},
+    clients:r.clients.map(c=>c.sessionId),seats:[...(r.seats?.entries()||[])].map(([sid,s])=>({sid,id:s.id,ready:s.ready,enabled:s.enabled,rtt:s.rtt,inputAge:r.clock.elapsedTime-r.inputs.get(sid).renderTime,queue:r.inputs.get(sid).size})),
     actors:(r.sim?.game.actors||[]).map(a=>({id:a.id,x:a.x,y:a.y,z:a.z,yaw:a.yaw,pitch:a.pitch,alive:a.alive,lifeId:a.lifeId,
       inventory:{primary:{ammo:a.inventory.primary.ammo,reserve:a.inventory.primary.reserve}},sessionId:r.state.actors.get(a.id)?.sessionId})),
   }))});
@@ -66,7 +67,7 @@ export async function createTestServer(options){
         room.sim.game.actors=data.actors.map(a=>Object.assign(old.get(a.id)||{},a));
         room.clients=data.clients.map(sid=>({sessionId:sid,ref:{terminate:()=>request('terminate',{room:data.id,sid})}}));
         room.state.actors=new Map(data.actors.map(a=>[a.id,a]));room.state.doors.size=data.doors;
-        room.sim.sourceHash=data.sourceHash;room.sim.tickNumber=data.tick;
+        room.sim.sourceHash=data.sourceHash;room.sim.tickNumber=data.tick;room.metrics=data.metrics;room.lag=data.lag;
         room.seats=new Map(data.seats.map(s=>[s.sid,{...s,actor:room.sim.game.actors.find(a=>a.id===s.id)}]));
       }
       for(const [id,room] of byId)if(!present.has(id)){rooms.delete(room);byId.delete(id);}

@@ -40,6 +40,21 @@ try{
  else{await form(b,id);await b.locator('#resume').click();await b.locator('#hud').waitFor({state:'visible'});}
  await until(()=>[...local.rooms][0]?.sim.game.actors.length===2,'two humans on the independent authority');
  const authority=[...local.rooms][0];assert.equal(authority.sim.game.actors.length,2);
+ if(b&&angle==='swiftshader'){
+  // Both scenes stay active and rendered. Look straight down using the mobile
+  // client's real touch surface before asking two software GPUs to keep up with
+  // the authoritative timestamp bound. A shallow angle still sees most of the
+  // laboratory and produced 1 FPS / multi-second input age on hosted Linux.
+  const look=await b.locator('[data-mobile-look]').boundingBox(),cd=await b.context().newCDPSession(b);
+  const point={id:1,x:look.x+look.width*.35,y:look.y+look.height*.06};
+  try{
+   await cd.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[point]});
+   await cd.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{...point,y:look.y+look.height*.94}]});
+   await cd.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+   await until(()=>authority.sim.game.actors.find(x=>x.id==='counterAnalysts-0').pitch<-1.3,'real mobile look reaches authority');
+  }finally{await cd.detach();}
+  console.log('Normal launch mobile touch look reaches authority');
+ }
  let resumeAttempts=0,resumePoint;
  for(;resumeAttempts<2;){
   resumeAttempts++;await a.bringToFront();const box=await a.locator('#resume').boundingBox();resumePoint={x:box.x+box.width/2,y:box.y+box.height/2};await a.locator('#resume').click();
@@ -48,17 +63,23 @@ try{
  }
  assert.equal(await a.evaluate(()=>!!document.fullscreenElement),false,'LAN Resume leaves fullscreen to its explicit menu action');
  const player=authority.sim.game.actors.find(x=>x.id==='analysts-0'),z=player.z,ammo=player.inventory.primary.ammo;
+ // Software runners can stall in the spawn view: Linux delivered only one
+ // movement frame in 10 s; Windows produced >500 ms old shooting stamps.
+ // Exercise the existing real mouse-look check before movement AND firing so
+ // this compatibility fixture can produce timely inputs. Do not extend server
+ // rewind bounds or replay extra movement steps to compensate for the renderer.
+ // Full normal-camera combat remains in the two-rendered-client GPU jobs.
+ await a.mouse.move(resumePoint.x,resumePoint.y+1000);
+ await until(()=>player.pitch<-1.3,'real mouse look reaches authority');
+ console.log('Normal launch desktop look reaches authority');
  // Hold real input until authority observes it; a fixed 250 ms press can fit
  // entirely between two frames on a software runner. Keep bounded deadlines.
  await a.keyboard.down('w');await until(()=>Math.abs(player.z-z)>.1,'real keyboard input reaches authority');await a.keyboard.up('w');
  await a.mouse.down();await until(()=>player.inventory.primary.ammo<ammo,'real mouse fire reaches authority');await a.mouse.up();
+ console.log('Normal launch real movement and fire reach authority');
  assert(Math.abs(player.z-z)>.1);assert(player.inventory.primary.ammo<ammo);
  const shots=ammo-player.inventory.primary.ammo;
  if(peer)await until(()=>peer.room.state.actors.get(player.id)?.ammo<ammo,'protocol peer receives the browser shots');
- // Exercise real mouse look too. A downward view keeps this transient HUD
- // check observable on software GPUs; the full-map job uses the normal camera.
- await a.mouse.move(resumePoint.x,resumePoint.y+360);
- await until(()=>player.pitch<-.3,'real mouse look reaches authority');
  // Observe before the key: a driver round trip can miss a short reload label.
  await a.evaluate(()=>{window.__reloadHudSeen=new Promise(resolve=>{
   const element=document.querySelector('#reload-text');let timer;
@@ -75,12 +96,12 @@ try{
  await until(()=>authority.sim.game.actors.length===1,'leaving cleans up only the departing player');
  assert(await a.locator('#fatal').isHidden(),'returning to the empty network lobby must keep the render loop alive');assert.deepEqual(errors,[]);
  if(peer)assert.deepEqual(peer.errors,[]);
- const result={hostPlatform:process.platform,physicalDevices:false,status:'PASS',contract:CONTRACT,headed,testHooks:false,humans:2,browserProcesses:browsers.length,peer:protocolPeer?'Colyseus SDK (no renderer)':'second rendered browser',angle,resumeAttempts,desktopPointerLock:true,manualFullscreen:true,actualKeysAndMouse:true,mouseLook:true,movement:Math.abs(fullscreenZ-z),shots,reloadHud:true,leaveKeepsOther:true,errors};
+ const result={hostPlatform:process.platform,physicalDevices:false,status:'PASS',contract:CONTRACT,headed,testHooks:false,humans:2,browserProcesses:browsers.length,peer:protocolPeer?'Colyseus SDK (no renderer)':'second rendered browser',angle,dpr:Number(process.env.FPS_NETWORK_DPR||1),resumeAttempts,desktopPointerLock:true,manualFullscreen:true,actualKeysAndMouse:true,mouseLook:true,mobileTouchLook:!!b&&angle==='swiftshader',fireView:'straight-down view after real look; both software scenes stay active; full-map combat tested in GPU jobs',movement:Math.abs(fullscreenZ-z),shots,reloadHud:true,leaveKeepsOther:true,errors};
  fs.mkdirSync('test-results/network',{recursive:true});fs.writeFileSync('test-results/network/normal-launch.json',JSON.stringify(result,null,2));console.log(JSON.stringify(result));
 }catch(error){
  fs.mkdirSync('test-results/network',{recursive:true});
  const bounded=promise=>Promise.race([promise,new Promise(resolve=>setTimeout(()=>resolve('Diagnostic timed out'),5000))]);
- const clients=await Promise.all(pages.map(p=>bounded(p.evaluate(()=>({events:__launchEvents,focused:document.hasFocus(),pointer:document.pointerLockElement?.id,fullscreen:!!document.fullscreenElement,paused:!document.querySelector('#pause').hidden,pause:document.querySelector('#pause').textContent,fatal:document.querySelector('#fatal pre').textContent})).catch(e=>String(e)))));
- const seats=[...local.rooms].flatMap(r=>[...r.seats.values()].map(s=>({id:s.id,ready:s.ready,enabled:s.enabled,x:s.actor?.x,z:s.actor?.z})));
- fs.writeFileSync('test-results/network/normal-launch-failure.json',JSON.stringify({error:String(error),errors,clients,seats},null,2));console.error('Normal launch failure',JSON.stringify({error:String(error),errors,clients,seats}));throw error;
+ const clients=await Promise.all(pages.map(p=>bounded(p.evaluate(()=>({events:__launchEvents,focused:document.hasFocus(),pointer:document.pointerLockElement?.id,fullscreen:!!document.fullscreenElement,paused:!document.querySelector('#pause').hidden,pause:document.querySelector('#pause').textContent,network:document.querySelector('#phase').textContent,fps:document.querySelector('#perf').textContent,fatal:document.querySelector('#fatal pre').textContent})).catch(e=>String(e)))));
+ const rooms=[...local.rooms].map(r=>({tick:r.sim.tickNumber,metrics:r.metrics,lag:r.lag,seats:[...r.seats.values()].map(({actor,...s})=>({...s,x:actor?.x,z:actor?.z}))}));
+ fs.writeFileSync('test-results/network/normal-launch-failure.json',JSON.stringify({error:String(error),errors,clients,rooms},null,2));console.error('Normal launch failure',JSON.stringify({error:String(error),errors,clients,rooms}));throw error;
 }finally{await Promise.all(browsers.map(b=>b.close()));await peer?.close();await local.close();}

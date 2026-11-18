@@ -1,0 +1,693 @@
+{
+  "status": "PASS",
+  "kind": "protocol-only, server in separate process",
+  "physicalPi": "NOT RUN",
+  "count": 10,
+  "rttMs": 250,
+  "jitterMs": 20,
+  "loss": "NOT RUN: ordered WebSocket delay, no packet dropping",
+  "environment": {
+    "node": "v26.13.0",
+    "platform": "darwin",
+    "arch": "arm64",
+    "cpu": "Apple M1",
+    "cores": 8
+  },
+  "contract": {
+    "protocolVersion": 4,
+    "protocolHash": "92086c44115f2f7794f1550fd4a09d6c7c957896d93d9d0734ce92d031f396c1",
+    "mapId": "floor5-prepared",
+    "collisionHash": "a5351e073a01ac95466acf4346acf9812f4265224e56712ce3e889085a42b6d9",
+    "mapHash": "89283f437623457a10da37be29a282a41591f202270051ba940549ba01b4b050",
+    "configHash": "1f774f342cb403cbf2beeeb7401b2b6c64ffa1e4ec1c7e4ebe7858c81a26d554",
+    "buildHash": "1ab70728dd882ac74e38adb3132c30e3e08dfde324b55b4af6c4a9f2df9a7709",
+    "tickRate": 60,
+    "patchMs": 50
+  },
+  "measured": {
+    "elapsedSeconds": 30.077100250000004,
+    "serverCpuPercent": 17.219655342273224,
+    "memory": {
+      "rss": 258375680,
+      "heapTotal": 139673600,
+      "heapUsed": 67095712,
+      "external": 6346713,
+      "arrayBuffers": 442606
+    },
+    "eventLoopMs": {
+      "p50": 10.362879,
+      "p95": 11.575295,
+      "p99": 12.574719,
+      "max": 41.713663
+    },
+    "costMs": {
+      "tick": {
+        "n": 1804,
+        "p50": 1.1262079999996786,
+        "p95": 2.13012499999968,
+        "p99": 4.924458000001323,
+        "max": 7.380583999998635
+      },
+      "simulation": {
+        "n": 1804,
+        "p50": 0.6264589999991586,
+        "p95": 1.4249579999996058,
+        "p99": 4.369582999999693,
+        "max": 6.688041000001249
+      },
+      "projection": {
+        "n": 1804,
+        "p50": 0.23541600000316976,
+        "p95": 0.37387499999749707,
+        "p99": 0.4359580000018468,
+        "max": 1.4429999999993015
+      },
+      "serialization": {
+        "n": 596,
+        "p50": 0.6743339999993623,
+        "p95": 1.3127500000009604,
+        "p99": 1.6857079999972484,
+        "max": 2.432208999998693
+      },
+      "interval": {
+        "n": 1804,
+        "p50": 16.356707999999344,
+        "p95": 17.653416000001016,
+        "p99": 32.60520800000086,
+        "max": 51.023667000001296
+      }
+    },
+    "shotAgeMs": {
+      "n": 8192,
+      "p50": 401,
+      "p95": 427,
+      "p99": 435,
+      "max": 447
+    },
+    "bytes": 12529880,
+    "inBytes": 291223,
+    "respawns": 30,
+    "resources": {
+      "PipeWrap": 1,
+      "TCPServerWrap": 1,
+      "TCPSocketWrap": 10,
+      "Timeout": 5
+    },
+    "rooms": [
+      {
+        "id": "RhfDX8aAS",
+        "clients": 10,
+        "seats": 10,
+        "actors": 10,
+        "tick": 2356,
+        "metrics": {
+          "invalid": 0,
+          "maxQueue": 6,
+          "ticks": 2356,
+          "events": 4102,
+          "reconnects": 0,
+          "drops": 0,
+          "backpressure": 0
+        },
+        "lag": {
+          "accepted": 10722,
+          "rejected": 276,
+          "live": 0,
+          "ages": {
+            "n": 512,
+            "p50": 411,
+            "p95": 423,
+            "p99": 430,
+            "max": 447
+          },
+          "reasons": {
+            "previous life": 124,
+            "expired": 44,
+            "regressed": 26,
+            "clock/RTT mismatch": 58,
+            "tick/stamp mismatch": 24
+          }
+        },
+        "histories": 64,
+        "rewindEntities": [
+          10,
+          51,
+          1
+        ],
+        "inputMax": 1,
+        "listeners": [
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7
+        ],
+        "listenerDetails": [
+          {
+            "sid": "ZT6gXgctC",
+            "events": {
+              "close": 2,
+              "error": 2,
+              "pong": 1,
+              "message": 2
+            }
+          },
+          {
+            "sid": "hG2FOlte6",
+            "events": {
+              "close": 2,
+              "error": 2,
+              "pong": 1,
+              "message": 2
+            }
+          },
+          {
+            "sid": "HE3Jvw10W",
+            "events": {
+              "close": 2,
+              "error": 2,
+              "pong": 1,
+              "message": 2
+            }
+          },
+          {
+            "sid": "o7dmaodlG",
+            "events": {
+              "close": 2,
+              "error": 2,
+              "pong": 1,
+              "message": 2
+            }
+          },
+          {
+            "sid": "wyw_VDPSH",
+            "events": {
+              "close": 2,
+              "error": 2,
+              "pong": 1,
+              "message": 2
+            }
+          },
+          {
+            "sid": "L8jCWEf-c",
+            "events": {
+              "close": 2,
+              "error": 2,
+              "pong": 1,
+              "message": 2
+            }
+          },
+          {
+            "sid": "8LLCum3TD",
+            "events": {
+              "close": 2,
+              "error": 2,
+              "pong": 1,
+              "message": 2
+            }
+          },
+          {
+            "sid": "zBpuAdH_6",
+            "events": {
+              "close": 2,
+              "error": 2,
+              "pong": 1,
+              "message": 2
+            }
+          },
+          {
+            "sid": "DD7cSaVRT",
+            "events": {
+              "close": 2,
+              "error": 2,
+              "pong": 1,
+              "message": 2
+            }
+          },
+          {
+            "sid": "HRdQx7VE4",
+            "events": {
+              "close": 2,
+              "error": 2,
+              "pong": 1,
+              "message": 2
+            }
+          }
+        ],
+        "score": {
+          "analysts": 14,
+          "counterAnalysts": 16
+        },
+        "actorsState": [
+          {
+            "id": "analysts-0",
+            "lifeId": 6,
+            "kills": 5,
+            "deaths": 5
+          },
+          {
+            "id": "counterAnalysts-0",
+            "lifeId": 7,
+            "kills": 3,
+            "deaths": 6
+          },
+          {
+            "id": "analysts-1",
+            "lifeId": 5,
+            "kills": 2,
+            "deaths": 4
+          },
+          {
+            "id": "counterAnalysts-1",
+            "lifeId": 4,
+            "kills": 4,
+            "deaths": 3
+          },
+          {
+            "id": "analysts-2",
+            "lifeId": 5,
+            "kills": 2,
+            "deaths": 4
+          },
+          {
+            "id": "counterAnalysts-2",
+            "lifeId": 2,
+            "kills": 5,
+            "deaths": 1
+          },
+          {
+            "id": "analysts-3",
+            "lifeId": 4,
+            "kills": 3,
+            "deaths": 3
+          },
+          {
+            "id": "counterAnalysts-3",
+            "lifeId": 3,
+            "kills": 3,
+            "deaths": 2
+          },
+          {
+            "id": "analysts-4",
+            "lifeId": 1,
+            "kills": 2,
+            "deaths": 0
+          },
+          {
+            "id": "counterAnalysts-4",
+            "lifeId": 3,
+            "kills": 1,
+            "deaths": 2
+          }
+        ]
+      }
+    ]
+  },
+  "baseline": {
+    "elapsedSeconds": 0.025662459000001036,
+    "serverCpuPercent": 443.7142987739226,
+    "memory": {
+      "rss": 268582912,
+      "heapTotal": 139149312,
+      "heapUsed": 66911608,
+      "external": 6515588,
+      "arrayBuffers": 430371
+    },
+    "eventLoopMs": {
+      "p50": 0.000511,
+      "p95": 0.000511,
+      "p99": 0.000511,
+      "max": 0
+    },
+    "costMs": {
+      "tick": {
+        "n": 0,
+        "p50": 0,
+        "p95": 0,
+        "p99": 0,
+        "max": 0
+      },
+      "simulation": {
+        "n": 0,
+        "p50": 0,
+        "p95": 0,
+        "p99": 0,
+        "max": 0
+      },
+      "projection": {
+        "n": 0,
+        "p50": 0,
+        "p95": 0,
+        "p99": 0,
+        "max": 0
+      },
+      "serialization": {
+        "n": 0,
+        "p50": 0,
+        "p95": 0,
+        "p99": 0,
+        "max": 0
+      },
+      "interval": {
+        "n": 0,
+        "p50": 0,
+        "p95": 0,
+        "p99": 0,
+        "max": 0
+      }
+    },
+    "shotAgeMs": {
+      "n": 0,
+      "p50": 0,
+      "p95": 0,
+      "p99": 0,
+      "max": 0
+    },
+    "bytes": 0,
+    "inBytes": 0,
+    "respawns": 3,
+    "resources": {
+      "PipeWrap": 1,
+      "TCPServerWrap": 1,
+      "TCPSocketWrap": 10,
+      "Timeout": 5
+    },
+    "rooms": [
+      {
+        "id": "RhfDX8aAS",
+        "clients": 10,
+        "seats": 10,
+        "actors": 10,
+        "tick": 552,
+        "metrics": {
+          "invalid": 0,
+          "maxQueue": 5,
+          "ticks": 552,
+          "events": 773,
+          "reconnects": 0,
+          "drops": 0,
+          "backpressure": 0
+        },
+        "lag": {
+          "accepted": 1969,
+          "rejected": 164,
+          "live": 0,
+          "ages": {
+            "n": 512,
+            "p50": 389,
+            "p95": 406,
+            "p99": 413,
+            "max": 416
+          },
+          "reasons": {
+            "previous life": 12,
+            "expired": 44,
+            "regressed": 26,
+            "clock/RTT mismatch": 58,
+            "tick/stamp mismatch": 24
+          }
+        },
+        "histories": 64,
+        "rewindEntities": [
+          10,
+          51,
+          1
+        ],
+        "inputMax": 2,
+        "listeners": [
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7,
+          7
+        ],
+        "listenerDetails": [
+          {
+            "sid": "ZT6gXgctC",
+            "events": {
+              "close": 2,
+              "error": 2,
+              "pong": 1,
+              "message": 2
+            }
+          },
+          {
+            "sid": "hG2FOlte6",
+            "events": {
+              "close": 2,
+              "error": 2,
+              "pong": 1,
+              "message": 2
+            }
+          },
+          {
+            "sid": "HE3Jvw10W",
+            "events": {
+              "close": 2,
+              "error": 2,
+              "pong": 1,
+              "message": 2
+            }
+          },
+          {
+            "sid": "o7dmaodlG",
+            "events": {
+              "close": 2,
+              "error": 2,
+              "pong": 1,
+              "message": 2
+            }
+          },
+          {
+            "sid": "wyw_VDPSH",
+            "events": {
+              "close": 2,
+              "error": 2,
+              "pong": 1,
+              "message": 2
+            }
+          },
+          {
+            "sid": "L8jCWEf-c",
+            "events": {
+              "close": 2,
+              "error": 2,
+              "pong": 1,
+              "message": 2
+            }
+          },
+          {
+            "sid": "8LLCum3TD",
+            "events": {
+              "close": 2,
+              "error": 2,
+              "pong": 1,
+              "message": 2
+            }
+          },
+          {
+            "sid": "zBpuAdH_6",
+            "events": {
+              "close": 2,
+              "error": 2,
+              "pong": 1,
+              "message": 2
+            }
+          },
+          {
+            "sid": "DD7cSaVRT",
+            "events": {
+              "close": 2,
+              "error": 2,
+              "pong": 1,
+              "message": 2
+            }
+          },
+          {
+            "sid": "HRdQx7VE4",
+            "events": {
+              "close": 2,
+              "error": 2,
+              "pong": 1,
+              "message": 2
+            }
+          }
+        ],
+        "score": {
+          "analysts": 2,
+          "counterAnalysts": 2
+        },
+        "actorsState": [
+          {
+            "id": "analysts-0",
+            "lifeId": 2,
+            "kills": 1,
+            "deaths": 1
+          },
+          {
+            "id": "counterAnalysts-0",
+            "lifeId": 2,
+            "kills": 0,
+            "deaths": 1
+          },
+          {
+            "id": "analysts-1",
+            "lifeId": 2,
+            "kills": 0,
+            "deaths": 1
+          },
+          {
+            "id": "counterAnalysts-1",
+            "lifeId": 1,
+            "kills": 2,
+            "deaths": 1
+          },
+          {
+            "id": "analysts-2",
+            "lifeId": 1,
+            "kills": 1,
+            "deaths": 0
+          },
+          {
+            "id": "counterAnalysts-2",
+            "lifeId": 1,
+            "kills": 0,
+            "deaths": 0
+          },
+          {
+            "id": "analysts-3",
+            "lifeId": 1,
+            "kills": 0,
+            "deaths": 0
+          },
+          {
+            "id": "counterAnalysts-3",
+            "lifeId": 1,
+            "kills": 0,
+            "deaths": 0
+          },
+          {
+            "id": "analysts-4",
+            "lifeId": 1,
+            "kills": 0,
+            "deaths": 0
+          },
+          {
+            "id": "counterAnalysts-4",
+            "lifeId": 1,
+            "kills": 0,
+            "deaths": 0
+          }
+        ]
+      }
+    ]
+  },
+  "perPlayerOutboundBytesPerSecond": 41659.20216992992,
+  "maxPending": 24,
+  "joins": 0,
+  "reconnects": 0,
+  "shots": [
+    49,
+    46,
+    101,
+    105,
+    130,
+    124,
+    137,
+    126,
+    150,
+    167
+  ],
+  "hits": [
+    29,
+    28,
+    12,
+    22,
+    14,
+    26,
+    22,
+    24,
+    12,
+    5
+  ],
+  "cleanup": {
+    "elapsedSeconds": 30.746290459000004,
+    "serverCpuPercent": 17.186509075123933,
+    "memory": {
+      "rss": 256229376,
+      "heapTotal": 117260288,
+      "heapUsed": 28073376,
+      "external": 6415243,
+      "arrayBuffers": 396497
+    },
+    "eventLoopMs": {
+      "p50": 10.371071,
+      "p95": 11.665407,
+      "p99": 12.632063,
+      "max": 41.713663
+    },
+    "costMs": {
+      "tick": {
+        "n": 1813,
+        "p50": 1.1205420000005688,
+        "p95": 2.13012499999968,
+        "p99": 4.924458000001323,
+        "max": 7.380583999998635
+      },
+      "simulation": {
+        "n": 1813,
+        "p50": 0.6242920000004233,
+        "p95": 1.4249579999996058,
+        "p99": 4.369582999999693,
+        "max": 6.688041000001249
+      },
+      "projection": {
+        "n": 1813,
+        "p50": 0.23504200000024866,
+        "p95": 0.37387499999749707,
+        "p99": 0.4359580000018468,
+        "max": 1.4429999999993015
+      },
+      "serialization": {
+        "n": 599,
+        "p50": 0.6730000000025029,
+        "p95": 1.3127500000009604,
+        "p99": 1.6857079999972484,
+        "max": 2.432208999998693
+      },
+      "interval": {
+        "n": 1813,
+        "p50": 16.359249999994063,
+        "p95": 17.6633329999986,
+        "p99": 32.60520800000086,
+        "max": 51.023667000001296
+      }
+    },
+    "shotAgeMs": {
+      "n": 8192,
+      "p50": 401,
+      "p95": 427,
+      "p99": 435,
+      "max": 447
+    },
+    "bytes": 12661533,
+    "inBytes": 293430,
+    "respawns": 30,
+    "resources": {
+      "PipeWrap": 1,
+      "TCPServerWrap": 1,
+      "Timeout": 4
+    },
+    "rooms": []
+  }
+}

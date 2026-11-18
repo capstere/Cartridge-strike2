@@ -1,14 +1,30 @@
 # Cartridge-Strike 2 handover
 
-**Next multiplayer task — review [PASS 3A.2 PR #21](https://github.com/capstere/Cartridge-strike2/pull/21) on `feat/multiplayer-lan`, its final-head CI and [LAN report](docs/multiplayer/pass3a2-lan.md). Do not automatically merge the new PR.**
+**Next multiplayer task — review [PASS 3B PR #22](https://github.com/capstere/Cartridge-strike2/pull/22), its final-head CI and [PASS3B_REPORT.md](docs/multiplayer/PASS3B_REPORT.md). Do not automatically merge the new PR.**
 
-PR #20 was reviewed at `11b585f`, with both final required jobs successful and
-fresh local core/server/normal-launch checks passing, then merged as **bac0756**.
-PASS 3A.2 starts from that main. Localhost remains the default; LAN needs an
-explicit private IPv4. [Swedish Pi update/restart/rollback guide](docs/multiplayer/raspberry-pi-lan-sv.md).
-The running Pi service was not accessed or modified. After review and merge,
-carry out the documented Pi update and record a physical Mac–iPhone 1v1.
-Browser/mobile emulation does not close the physical-device task below.
+PR #21 was reviewed at `e3d2884`, all six required CI jobs passed, and fresh local
+core/server/two-rendered-client launch checks passed. It was merged as **ac87eec**
+without bypassing checks. PASS 3B builds on that main with ten human slots (5v5),
+bounded authoritative hitscan rewind and a 15-second token-owned reconnection.
+Two fully rendered clients plus up to eight SDK peers passed the 2/4/10-player
+and 0–250 ms ordered-jitter matrix. A completed 30-minute ten-client SDK soak
+passed 20 player replacements, 30 reconnections and 2,658 measured respawns;
+retained heap grew 0.55 MiB over the warm comparison and all rooms disposed.
+Ten-client simulation p95 was 1.16 ms in the short benchmark and 1.62 ms in the
+final soak window; average outgoing payload was 36.30/37.78 KB/s per player.
+
+Before expanding the pilot, resolve or explicitly accept the documented framework
+boundary: another interruption during the new-token JOIN handshake loses identity
+continuity and requires a fresh authenticated join. Completed reconnects preserve
+identity and gameplay state. Strict 16.67 ms scheduling and 60 FPS in every view
+were not achieved on the shared development host. The report separates these
+limits, hosted browser CI and physical-device work.
+
+Localhost remains the default; LAN needs an explicit private IPv4.
+[Swedish Pi update/restart/rollback guide](docs/multiplayer/raspberry-pi-lan-sv.md).
+The running Pi service was not accessed or modified. After separate review and
+operator authorization, validate the exact build on the physical Pi and record
+real Mac/iPhone/Android play. Browser emulation does not close that physical task.
 
 **Physical-device backlog — test mobile controls and audio.** Play on an iPhone and an Android phone in landscape, near 844×390 and 932×430 where available. Record the model, OS, browser, viewport and safe-area clearance. Move, aim and fire together, reload, jump, hold an objective and buy. Rotate, background and resume during the lobby and a match. Listen for the lobby theme stopping on Start and resuming on return. Record any failure with its screen position and steps. [Play the published build](https://capstere.github.io/Cartridge-strike2/)
 

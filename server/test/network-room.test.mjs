@@ -8,10 +8,10 @@ import {ROOM_TYPE,NETWORK_CONFIG} from '../../shared/multiplayer/rules.mjs';
 import {WEAPONS} from '../../src/fps/config.mjs';
 const options={code:'test-room-123',name:'Player',contract:CONTRACT};
 async function until(fn,label){const end=performance.now()+5000;while(!fn()){assert(performance.now()<end,label);await delay(10);}}
-async function ready(room){room.reconnection.enabled=false;room.onMessage('events',()=>{});room.onMessage('problem',()=>{});room.send('ready',CONTRACT);await until(()=>[...(room.state.actors?.values()||[])].some(a=>a.sessionId===room.sessionId&&a.ready),'ready');return room;}
+async function ready(room){room.reconnection.enabled=false;room.onMessage('events',()=>{});room.onMessage('problem',()=>{});room.onMessage('clock-probe',token=>room.send('clock-echo',token));room.send('ready',CONTRACT);await until(()=>[...(room.state.actors?.values()||[])].some(a=>a.sessionId===room.sessionId&&a.ready),'ready');return room;}
 const own=room=>[...room.state.actors.values()].find(a=>a.sessionId===room.sessionId);
 function frame(room,overrides={}){return {lifeId:own(room).lifeId,sampleTick:room.state.tick,fireId:0,reloadId:0,forward:0,strafe:0,yaw:0,pitch:0,jump:false,crouch:false,sneak:false,fire:false,...overrides};}
-function send(room,values){const input=room.input({mode:'reliable'});Object.assign(input.data,frame(room,values));input.send();return input;}
+function send(room,values){const input=room.input({mode:'reliable',renderDelay:100});Object.assign(input.data,frame(room,values));input.send();return input;}
 
 test('real private room: admission, two independent humans, authority, life resets and cleanup',{timeout:20000},async t=>{
  const local=await createLocalServer({port:0});t.after(()=>local.close());const client=new Client(local.url,{headers:{Origin:local.url}});
@@ -23,7 +23,7 @@ test('real private room: admission, two independent humans, authority, life rese
  await assert.rejects(client.joinById(a.roomId,{...options,code:'wrong-code'}),/Incorrect/);
  await ready(a);const b=await ready(await client.joinById(a.roomId,{...options,name:'<img src=x onerror=alert(1)>'}));t.after(()=>b.leave());
  await until(()=>a.state.actors.size===2,'both seats');
- await assert.rejects(client.joinById(a.roomId,options));assert.equal(local.rooms.size,1,'full room cannot create another');
+ assert.equal(authority.maxClients,10,'capacity is now exercised by the 2/4/10-client suite');
  const g=authority.sim.game;assert.equal(g.actors.length,2);assert(g.actors.every(a=>a.controllerType==='human'&&!a.bot));
  assert.equal(g.hostages.length+g.state.zombies.length+g.state.wanderers.length,0);
  assert(g.actors.every(a=>!a.inventory.pistol&&!a.inventory.knife&&!a.inventory.he&&a.money===0));
@@ -40,7 +40,8 @@ test('real private room: admission, two independent humans, authority, life rese
  // Controlled combat fixture, using actual map geometry and Game hitboxes.
  Object.assign(shooter,{x:20,z:-18,yaw:0,spawnProtectedUntil:0});Object.assign(target,{x:20,z:-16,spawnProtectedUntil:0});
  const shots=[];a.onMessage('events',events=>shots.push(...events.filter(e=>e.type==='shot')));
- const hp=target.hp;send(a,{yaw:Math.PI,fire:true,fireId:20});await until(()=>target.hp<hp,'new input orientation hits on its own tick');
+ await delay(250);
+ const hp=target.hp;send(a,{yaw:Math.PI,fire:true,fireId:20});await until(()=>target.hp<hp,'new input orientation hits on its own tick').catch(e=>{console.error(JSON.stringify({lag:authority.lag.metrics,invalid:authority.metrics.invalid,shooter:shooter.id,stamp:authority.inputs.get(a.sessionId).renderTime,now:authority.clock.elapsedTime}));throw e;});
  const ammo=shooter.inventory.primary.ammo;
  for(let i=0;i<10;i++){send(a,{yaw:Math.PI,fire:true,fireId:20});await delay(17);}
  assert.equal(shooter.inventory.primary.ammo,ammo,'duplicate fire action is idempotent');
@@ -88,10 +89,12 @@ test('wire bursts cannot accelerate simulation; overflow is bounded and oversize
  // Arrival and timer callbacks can interleave. Twelve is the pending queue cap,
  // not a lifetime limit on valid frames consumed across several clock ticks.
  for(let i=1;i<=40;i++)send(room,{strafe:1,fire:true,fireId:i});
- await until(()=>consumed>=2,'fixed ticks consume frames while the burst arrives');
+ await until(()=>room.input().lastProcessed>=40,'first burst is coalesced and acknowledged');
  for(let i=41;i<=80;i++)send(room,{strafe:1,fire:true,fireId:i});
  await until(()=>room.input().lastProcessed>=80,'overflow frames are acknowledged as discarded');
- assert.equal(authority.metrics.maxQueue,12);assert(consumed>12&&consumed<80,'interleaved burst still discards overflow');
+ assert.equal(authority.metrics.maxQueue,12);assert(consumed>=2&&consumed<80,'bursts cannot add authority steps');
+ assert(authority.metrics.coalesced>0,'queued controls coalesce without a lasting input backlog');
+ assert.equal(authority.inputs.get(room.sessionId).size,0,'authority drains the received batch each tick');
  assert(steps.every(s=>s.ticks===1&&s.distance<=NETWORK_CONFIG.runSpeed*NETWORK_CONFIG.fixedStep+.00001),'one shared movement step per tick');
  const ticks=authority.sim.tickNumber-startTick;
  assert(ammo-actor.inventory.primary.ammo<=1+Math.floor(ticks*NETWORK_CONFIG.fixedStep/WEAPONS.smg.interval),'server cadence rejects excess shot actions');
