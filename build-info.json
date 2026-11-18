@@ -1927,7 +1927,7 @@
     {
       "path": "shared/multiplayer/build.mjs",
       "bytes": 612,
-      "sha256": "5deca5ccc352fca21113ca52df1158573ca256a5776bb768f49fec4697eee480"
+      "sha256": "dec7274aef3096cc07c1f5ad5a41ae2499e522b6d4579986b6df4de82a5fcf1e"
     },
     {
       "path": "shared/multiplayer/collision-contract.mjs",
@@ -1951,8 +1951,8 @@
     },
     {
       "path": "shared/multiplayer/world.mjs",
-      "bytes": 1664,
-      "sha256": "ca908f88343b5b37721fe379d5f8462b67190ecab5deb4942f5733aa2dd97496"
+      "bytes": 1701,
+      "sha256": "3522c75d100953e59c77910a7be817c59ba00ba46aa12efdf26dd5e2dc8b4ed8"
     },
     {
       "path": "shared/sha256.mjs",
@@ -2021,8 +2021,8 @@
     },
     {
       "path": "src/fps/bots.mjs",
-      "bytes": 31407,
-      "sha256": "59af9ee415500d37aaaf0ee46b7281455a32d2ab8474f10d26efa9078b1bbba9"
+      "bytes": 31474,
+      "sha256": "387475c54318b64fcbd06da7ea41b3bcd17c71364c4a37cd22e6f1f597577b1a"
     },
     {
       "path": "src/fps/business-hostage.mjs",
@@ -2191,8 +2191,8 @@
     },
     {
       "path": "src/fps/game.mjs",
-      "bytes": 38697,
-      "sha256": "09a00cfdec88b098b895ddc4747a2d96de26862e493fa253c1205d24693db0c1"
+      "bytes": 38777,
+      "sha256": "411849c29eb8c2d559ef986c38c960c550c620d6869aa56449c255bdfa02771a"
     },
     {
       "path": "src/fps/glass-visuals.mjs",
@@ -2281,8 +2281,8 @@
     },
     {
       "path": "src/fps/navigation.mjs",
-      "bytes": 9704,
-      "sha256": "1f122eae8cb8ddc4c3c52b7cf1338c3c9a5d40342110a9540197d3b2366c2229"
+      "bytes": 9930,
+      "sha256": "51d014d6f5ca6bf2ea9b87b36d79577369b914f6eb33e112352daf809e8c7b62"
     },
     {
       "path": "src/fps/network/connection.mjs",
@@ -2306,8 +2306,8 @@
     },
     {
       "path": "src/fps/physics.mjs",
-      "bytes": 22842,
-      "sha256": "b2fe5c308c0347657f7c20fa87fc52cbc6b7d0aac947cb8427269c4e94d67f23"
+      "bytes": 23941,
+      "sha256": "99ca6ae6fb8f080af9e55296a0095bb4c0861e0a5f989cf6ed848ae5d0ffad5b"
     },
     {
       "path": "src/fps/player-names.mjs",
@@ -2605,7 +2605,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 58720391,
+  "bytes": 58721900,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

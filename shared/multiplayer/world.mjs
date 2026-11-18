@@ -10,7 +10,7 @@ export function advanceNetworkWorld(doors,state,time,dt,actors){
   return doors.elevators.setProgress(progress);
 }
 export function prepareNetworkWorld(world){
-  world.networkSlice=true;world.glass.reset();world.doors.reset();
+  world.networkSlice=true;world.enableNetworkGlassThresholds();world.glass.reset();world.doors.reset();
   world.setElevatorProgress?.(0);
   world.networkDynamics={elevatorOpenAt:-1};
   world.advanceNetworkWorld=(time,dt,actors)=>{

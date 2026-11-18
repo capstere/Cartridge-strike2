@@ -93,7 +93,7 @@ export class BotController {
     for (const event of game.soundEvents) {
       const sourceId = event.actorId ?? event.ownerId;
       if (event.serial <= this.heardSerial || !sourceId || event.team === actor.team) continue;
-      const enemy = enemies.find(a => a.id === sourceId); if (!enemy || enemy.kind==='zombie') continue;
+      const enemy = enemies.find(a => a.id === sourceId); if (!enemy || enemy.kind==='zombie' || event.ownerLifeId!==undefined&&event.ownerLifeId!==enemy.lifeId) continue;
       const clear = game.world.segmentClear(eye(actor), { x: event.x, y: event.y + 1, z: event.z }, { vision: false });
       let radius = event.type === 'shot' ? 38 : event.type === 'step' ? (event.mode === 'run' ? 12 : event.mode === 'sneak' ? 2.5 : 2) : event.type === 'he' ? 45 : 7;
       if (!clear) radius *= .28;

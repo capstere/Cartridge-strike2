@@ -127,12 +127,38 @@ export function createPhysics(description,data){
   const setDynamicBoxes=boxes=>{const c=createDynamicContext(boxes);dynamicBoxes=c.boxes;dynamicIndex=c.index;};
   const withDynamicContext=(context,run)=>{const boxes=dynamicBoxes,index=dynamicIndex;dynamicBoxes=context.boxes;dynamicIndex=context.index;try{return run();}finally{dynamicBoxes=boxes;dynamicIndex=index;}};
   let lastFloor=null;
-  function onFloor(x,z){
+  function onSourceFloor(x,z){
     // Consecutive capsule-ring and path samples usually stay in one polygon.
     // Only an exact interior hit bypasses the index; boundary probes still use
     // its original cells and epsilon rule, including at cell borders.
     if(lastFloor&&insidePolygon(x,z,lastFloor))return true;
     for(const p of floorIndex.at(x,z))if(insidePolygon(x,z,p)||nearEdge(x,z,p,EPS)){lastFloor=p;return true;}
+    return false;
+  }
+  // Authored floor polygons can stop at opposite faces of a glass wall. Bridge
+  // only its own threshold, only while broken and with real landings on both sides.
+  let glassThresholds;
+  function enableNetworkGlassThresholds(){
+    if(glassThresholds)return;
+    glassThresholds=new SpatialIndex();
+    const walls=new Map(data.walls.map(w=>[w.id,w]));
+    for(const [id,panes] of glassWalls){
+      const half=(walls.get(id)?.thickness||0)/2+.02;
+      for(const b of panes){
+        glassThresholds.insert({b,half},boxBounds({...b,d:2*half}));
+      }
+    }
+  }
+  function onFloor(x,z){
+    if(onSourceFloor(x,z))return true;
+    if(glassThresholds)for(const {b,half} of glassThresholds.at(x,z)){
+      if(!b.disabled)continue;
+      const dx=x-b.x,dz=z-b.z;
+      const along=b.cos*dx-b.sin*dz;
+      if(Math.abs(along)>b.w/2||Math.abs(b.sin*dx+b.cos*dz)>half)continue;
+      const cx=b.x+b.cos*along,cz=b.z-b.sin*along;
+      if(onSourceFloor(cx+b.sin*half,cz+b.cos*half)&&onSourceFloor(cx-b.sin*half,cz-b.cos*half))return true;
+    }
     return false;
   }
   function scopeAllowed(x,z,r=ACTOR_RADIUS){
@@ -325,5 +351,5 @@ export function createPhysics(description,data){
     return hit;
   }
   function segmentClear(from,to,options={}){const dx=to.x-from.x,dy=(to.y??1.5)-(from.y??1.5),dz=to.z-from.z,d=Math.hypot(dx,dy,dz);return d<EPS||!raycast({...from,y:from.y??1.5},{x:dx,y:dy,z:dz},Math.max(0,d-.015),options);}
-  return {canOccupy,updateGlassPassages,staticCanOccupy:(x,z,r,h,y)=>canOccupy(x,z,r,h,y,true),setDynamicBoxes,createDynamicContext,withDynamicContext,scopeAllowed,onFloor,canStand,move,raycast,segmentClear,octree,staticBoxes,statistics:{staticBoxes:staticBoxes.length,collisionSurfaces:surfaces.length,source:'Three.js Capsule + Octree; source boxes and polygons'}};
+  return {canOccupy,enableNetworkGlassThresholds,updateGlassPassages,staticCanOccupy:(x,z,r,h,y)=>canOccupy(x,z,r,h,y,true),setDynamicBoxes,createDynamicContext,withDynamicContext,scopeAllowed,onFloor,canStand,move,raycast,segmentClear,octree,staticBoxes,statistics:{staticBoxes:staticBoxes.length,collisionSurfaces:surfaces.length,source:'Three.js Capsule + Octree; source boxes and polygons'}};
 }

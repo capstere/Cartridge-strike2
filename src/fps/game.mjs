@@ -354,7 +354,7 @@ export class Game {
     if(target.kind==='zombie')reactZombie(this,target,kind,detail,source);
     if (target.hp > 0) return true;
     target.alive = false; target.deaths++; target.action = null; target.reloadUntil = 0; target.deathAt = this.state.time;
-    target.deathCause = { sourceId: source?.id, sourceName: source?.name, weapon: kind, point: { ...hitPoint }, direction: { ...incoming } };
+    target.deathCause = { sourceId: detail.sourceId, sourceName: source?.name, weapon: kind, point: { ...hitPoint }, direction: { ...incoming } };
     if (source?.team && source!==target && target.team && source.team!==target.team) { source.kills++; source.money = Math.min(this.config.maxMoney, source.money + this.config.killMoney); }
     if (target.inventory?.primary) this.dropItem(target, target.inventory.primary);
     if(target.kind==='hostage'){target.escortId=null;target.path=[];}
@@ -395,7 +395,7 @@ export class Game {
     this.state.grenades = remaining;
   }
   detonateGrenade(grenade) {
-    const c = this.config; this.emit(grenade.type, null, { ...point(grenade), grenade: grenade.type, ownerId: grenade.ownerId });
+    const c = this.config; this.emit(grenade.type, null, { ...point(grenade), grenade: grenade.type, ownerId: grenade.ownerId, ...(grenade.owner?{team:grenade.team,ownerLifeId:grenade.ownerLifeId}:{}) });
     if (grenade.type === 'smoke') {
       this.state.smokes.push({ ...point(grenade), y: grenade.y + 1, id: grenade.id, radius: c.smokeRadius, until: this.state.time + c.smokeDuration }); return;
     }

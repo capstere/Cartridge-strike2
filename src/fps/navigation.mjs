@@ -69,6 +69,9 @@ export function createNavigation(data,physics,{spacing=.70,radius=ACTOR_RADIUS+.
   // Construction performs many one-off probes; only retain live path queries.
   cacheClearance=true;
   const bodiesClear=(a,b,blockers,allowExit=false)=>blockers.every(p=>{
+    // Almost every remote path edge misses a local blocker by many metres.
+    if(p.x<Math.min(a.x,b.x)-p.radius||p.x>Math.max(a.x,b.x)+p.radius||
+       p.z<Math.min(a.z,b.z)-p.radius||p.z>Math.max(a.z,b.z)+p.radius)return true;
     if(distanceSegment(p.x,p.z,[a.x,a.z],[b.x,b.z])>=p.radius-1e-7)return true;
     // Contact resolution may leave a sub-millimetre overlap. Only an outward
     // first connection may leave it; later edges cannot enter the body disc.
@@ -99,7 +102,7 @@ export function createNavigation(data,physics,{spacing=.70,radius=ACTOR_RADIUS+.
     };
     const custom=avoid.length||blockers.length;
     const queryGraph=custom?{getNode:id=>graph.getNode(id),getEdgesOfNode(id,out){
-      graph.getEdgesOfNode(id,out);let count=0;for(const e of out)if(bodiesClear(nodes[e.from],nodes[e.to],blockers))out[count++]=new NavEdge(e.from,e.to,avoid.length?weightedCost(nodes[e.from],nodes[e.to]):e.cost);out.length=count;return out;
+      graph.getEdgesOfNode(id,out);let count=0;for(const e of out)if(bodiesClear(nodes[e.from],nodes[e.to],blockers))out[count++]=avoid.length?new NavEdge(e.from,e.to,weightedCost(nodes[e.from],nodes[e.to])):e;out.length=count;return out;
     }}:graph;
     const key=`${start.id}:${end.id}`;let ids=custom?null:cache.get(key);
     if(!ids){const search=new AStar(queryGraph,start.id,end.id).search();if(!search.found)return [];ids=search.getPath();if(!custom){if(cache.size>512)cache.clear();cache.set(key,ids);}}
