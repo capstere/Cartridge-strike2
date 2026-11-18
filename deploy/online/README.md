@@ -66,10 +66,15 @@ ska publicera enbart detta värdnamn till `http://127.0.0.1:2568`, följt av en
 verifierat byte. Rotdomänen och andra DNS-poster ska lämnas orörda.
 
 Verifiera först mot en separat loopbackprocess med samma release och fast public
-origin. Den ordinarie Quick Tunnel kan fortsätta under förprovet. Vänta tills
-Pi:ns vanliga DNS-resolver kan slå upp det nya värdnamnet innan `configure-named`
-körs; en tidigare NXDOMAIN kan finnas kvar i resolverns negativa cache.
-Ändra inte Tailscale, router eller globala DNS-inställningar för att dölja det.
+origin. Den ordinarie Quick Tunnel kan fortsätta under förprovet. Kontrollera
+DNS innan `configure-named` körs. Om hemroutern fortfarande svarar NXDOMAIN men
+Cloudflare och Google redan returnerar rätt publika adresser kan driftkontrollen
+köras med en separat resolver i en tillfällig systemd-mountnamnrymd. Bind då en
+privat `resolv.conf` enbart till kontrollprocessen och dess SDK-barnprocesser.
+Verifiera att värdens `/etc/resolv.conf` är oförändrad före och efter. Behåll
+kontrollerna av TLS-certifikat, värdnamn, inloggning och WSS; hårdkoda inga IP-adresser.
+Kontrollera ordinarie DNS igen och redovisa kvarstående fel separat. Ändra inte
+Tailscale, router eller globala DNS-inställningar för att dölja det.
 Aktiveringsresultat, kontrakt och verifieringsdata sparas privat på Pi:n i
 `/var/lib/cartridge-strike2-online/` och redovisas i den aktuella migrations-PR:n.
 
