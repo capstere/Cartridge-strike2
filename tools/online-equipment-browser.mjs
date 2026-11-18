@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {setTimeout as delay} from 'node:timers/promises';
 import {chromium} from '../frontline/source/tools/dev/node_modules/playwright-core/index.mjs';
 import '../server/register-shared.mjs';
-import {createLocalServer} from '../server/local-server.mjs';
+const {createLocalServer}=await import('../server/local-server.mjs');
 import {glassCrossing} from './network-glass-fixture.mjs';
 import {resumeDesktop} from './network-browser-resume.mjs';
 
