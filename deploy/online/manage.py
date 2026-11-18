@@ -190,7 +190,8 @@ def configure_named(host, token_file):
         deadline = time.monotonic() + 60
         while True:
             try:
-                with urllib.request.urlopen(host, timeout=5) as response:
+                request = urllib.request.Request(host, headers={'User-Agent': 'CartridgeStrike2-Readiness/1.0', 'Accept': 'text/html'})
+                with urllib.request.urlopen(request, timeout=5) as response:
                     if response.status == 200:
                         break
             except Exception:

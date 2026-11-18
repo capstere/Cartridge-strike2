@@ -1,6 +1,8 @@
 # Första kompletta privata onlinereleasen
 
 Datum: 18 november 2026. [Release-PR #24](https://github.com/capstere/Cartridge-strike2/pull/24).
+Permanent adress och slutlig aktivering följs upp i
+[drift-PR #25](https://github.com/capstere/Cartridge-strike2/pull/25).
 
 ## Release och driftsstatus
 
@@ -304,19 +306,33 @@ systemd/PID 1 som förälder och behöver inte MacBook eller Codex. Onlineproces
 absoluta slutdatumet. Journalens egen namnrymd har 64 MB beständig/16 MB tillfällig
 gräns och sju dagars retention. En privat konfigurationsbackup och den gamla
 releasen finns kvar. `/var/lib/cartridge-strike2-online/release-receipt.json`
-registrerar commit, kontrakt, enhetsstatus och slutdatum utan hemligheter eller
-speladress. Faktisk omstart av hela Pi:n är **NOT RUN** för att bevara originalets
+registrerar commit, kontrakt, enhetsstatus och driftläge utan hemligheter.
+Faktisk omstart av hela Pi:n är **NOT RUN** för att bevara originalets
 drift. Automatisk processåterhämtning verifierades i den isolerade systemd-tjänsten.
 
 Förberedd namngiven tunnel använder Cloudflared 2026.11.1 och systemd
 LoadCredential/token-fil; inga återanvändbara hemligheter läggs i URL eller logg.
 
-Ägaren bekräftade **ingen aktiv domän i Cloudflare**. Permanent adress är därför
-**NOT RUN / EJ AKTIVERAD**. Nästa externa åtgärd: aktivera en auktoriserad egen
-domän i Cloudflare. Därefter kan den förberedda namngivna tunnelrutten till
-`http://127.0.0.1:2568` aktiveras och offentligt autentiserings-/WSS-spel verifieras.
-Ingen domän köps och ingen domänäganderätt antas. Quick Tunnel förblir tillfällig
-och upphör **19 november 2026 06:27 CET**; den förlängs inte till låtsad permanent drift.
+Vid den ursprungliga releaseaktiveringen saknades en aktiv domän. **Senare den
+18 november köpte och aktiverade ägaren `capstere.com`, auktoriserade Cloudflare
+och valde https://cs2.capstere.com.** Den tidigare förberedda `play`-adressen
+ersätts. Domänen, den proxade DNS-posten och namngivna tunneln har verifierats.
+
+Två separat autentiserade renderade Chromium-processer klarade publikt HTTPS/WSS-
+spel på `cs2.capstere.com` klockan **12:49:42 UTC**. Två officiella SDK-klienter på
+Pi:n klarade samma adress klockan **12:52:52 UTC**, inklusive nekad obehörig
+anslutning/fel rumskod, rörelse, skott, omladdning och utträde. Detta var ett
+förprov mot en isolerad process med exakt samma release och byggidentitet.
+Pi:ns hemrouter gav då NXDOMAIN trots korrekta svar från publika DNS-resolvrar;
+SDK-kontrollen använde separat DNS i en tillfällig mountnamnrymd. Värdens resolver,
+Tailscale och routern ändrades inte. Renderingen kördes på Mac, inte på en telefon.
+
+Slutlig aktivering till loopback **2568**, verifiering efter borttagning av
+testanslutningen, ordinarie DNS-status och återhämtning registreras i drift-PR #25
+och Pi:ns releasekvitto. Ingen spelkod eller runtime-identitet ändras av adressbytet.
+Den namngivna tjänsten använder fast origin och har ingen Quick Tunnel-tidsgräns.
+Den gamla Quick-konfigurationen behålls för återställning och har historiskt
+slutdatum **19 november 2026 06:27 CET**; den förlängs inte till permanent drift.
 
 ## Fysisk evidens och acceptans
 
@@ -342,7 +358,7 @@ fungerande PASS 4-stridsreleasen och ska inte tillskrivas det nya matchflödet.
 | Publik hel 600-sekundersmatch, resultat och samma-rum-rematch | PASS, två separat autentiserade renderade Chromium på Mac; vanlig levererad UI och standardregler |
 | Stoppa offentlig exponering och återöppna | PASS, HTTP 530 vid stopp, HTTP 200 och WSS-spel efteråt |
 | Systemd-start/återhämtning utan MacBook | PASS, enabled/PID 1 och isolerat SIGKILL-prov; fysisk Pi-reboot NOT RUN |
-| Stabil egen HTTPS/WSS-adress | NOT RUN, aktiv Cloudflare-domän saknas |
+| Stabil egen HTTPS/WSS-adress | PASS förprov på cs2.capstere.com, två renderade och två SDK-klienter; slutlig driftstatus i PR #25 och Pi:ns releasekvitto |
 | iPhone Safari + Chrome Incognito: grundläggande strid och ljud | USER-VERIFIED PHYSICAL PLAYTEST |
 | Fysiskt nytt match/resultat/rematch, död/respawn, bakgrund/reconnect, längre spel | NOT RUN |
 | Fysisk Android, fysisk Windows-maskin med specificerat OS | NOT RUN; jobbdatorns OS rapporterades inte |
