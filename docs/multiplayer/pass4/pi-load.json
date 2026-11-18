@@ -1,0 +1,448 @@
+{
+  "date": "2026-11-18",
+  "environment": {
+    "model": "Raspberry Pi 5 Model B Rev 1.1",
+    "node": "v26.13.0",
+    "platform": "linux",
+    "arch": "arm64",
+    "cpu": "Cortex-A76",
+    "cores": 4
+  },
+  "protocolContract": {
+    "protocolVersion": 4,
+    "protocolHash": "92086c44115f2f7794f1550fd4a09d6c7c957896d93d9d0734ce92d031f396c1",
+    "mapId": "floor5-prepared",
+    "collisionHash": "a5351e073a01ac95466acf4346acf9812f4265224e56712ce3e889085a42b6d9",
+    "mapHash": "89283f437623457a10da37be29a282a41591f202270051ba940549ba01b4b050",
+    "configHash": "1f774f342cb403cbf2beeeb7401b2b6c64ffa1e4ec1c7e4ebe7858c81a26d554",
+    "tickRate": 60,
+    "patchMs": 50
+  },
+  "method": "45 seconds per count after a 5-second warmup. Independent Colyseus SDK clients and a separate instrumented server process on the same physical Pi, ephemeral IPv4 loopback port, no added latency. Server places new lives in C08; movement, fire, hits and respawn use the game authority. Timing includes test instrumentation and periodic explicit GC. Shot and hit counts include warmup. No renderer or internet throughput measurement.",
+  "runs": [
+    {
+      "build": "PR 22 LAN baseline, lightly loaded Pi",
+      "buildHash": "68e47c3472fc4210ae5005804eac98600e4a06214432e87f688810c47e37175c",
+      "results": [
+        {
+          "clients": 2,
+          "status": "PASS",
+          "durationSeconds": 45.110985147,
+          "serverCpuPercentOneCore": 7.203744253002891,
+          "rssBytes": 246661120,
+          "eventLoopDelayMs": {
+            "p50": 10.084351,
+            "p95": 10.747903,
+            "p99": 11.010047,
+            "max": 62.128127
+          },
+          "costMs": {
+            "tick": {
+              "n": 2705,
+              "p50": 0.2531860000017332,
+              "p95": 0.5635570000013104,
+              "p99": 1.1637609999997949,
+              "max": 7.641423000000941
+            },
+            "simulation": {
+              "n": 2705,
+              "p50": 0.08100100000228849,
+              "p95": 0.238999999999578,
+              "p99": 0.6843169999992824,
+              "max": 7.102606999993441
+            },
+            "projection": {
+              "n": 2705,
+              "p50": 0.10376000000542263,
+              "p95": 0.15094399999907182,
+              "p99": 0.1807600000029197,
+              "max": 1.7655400000003283
+            },
+            "serialization": {
+              "n": 894,
+              "p50": 0.16535300000032294,
+              "p95": 0.34974099999817554,
+              "p99": 0.8068910000001779,
+              "max": 1.5035399999978836
+            },
+            "interval": {
+              "n": 2705,
+              "p50": 16.138645000000906,
+              "p95": 16.970702000002348,
+              "p99": 32.37202899999829,
+              "max": 62.86781499999779
+            }
+          },
+          "outboundPayloadBytesPerClientSecond": 6031.169550241877,
+          "peersFired": 2,
+          "shotsByPeer": [
+            58,
+            59
+          ],
+          "hitsByPeer": [
+            45,
+            48
+          ],
+          "respawns": 14,
+          "roomsAfterLeave": 0
+        },
+        {
+          "clients": 4,
+          "status": "PASS",
+          "durationSeconds": 45.10668052,
+          "serverCpuPercentOneCore": 8.289337536913479,
+          "rssBytes": 243056640,
+          "eventLoopDelayMs": {
+            "p50": 10.100735,
+            "p95": 10.723327,
+            "p99": 11.026431,
+            "max": 58.916863
+          },
+          "costMs": {
+            "tick": {
+              "n": 2705,
+              "p50": 0.318464000003587,
+              "p95": 0.9408350000012433,
+              "p99": 3.253302999997686,
+              "max": 9.476149000001897
+            },
+            "simulation": {
+              "n": 2705,
+              "p50": 0.11351899999863235,
+              "p95": 0.5732979999993404,
+              "p99": 2.8437469999989844,
+              "max": 8.91363000000274
+            },
+            "projection": {
+              "n": 2705,
+              "p50": 0.1291109999983746,
+              "p95": 0.172167000000627,
+              "p99": 0.21146399999997811,
+              "max": 0.7573350000020582
+            },
+            "serialization": {
+              "n": 894,
+              "p50": 0.25005599999713013,
+              "p95": 0.5232240000004822,
+              "p99": 0.7766130000018165,
+              "max": 2.313263999998526
+            },
+            "interval": {
+              "n": 2705,
+              "p50": 16.184606999999232,
+              "p95": 16.91977500000212,
+              "p99": 32.242825999999695,
+              "max": 75.66865500000131
+            }
+          },
+          "outboundPayloadBytesPerClientSecond": 13965.580990174802,
+          "peersFired": 4,
+          "shotsByPeer": [
+            71,
+            71,
+            112,
+            111
+          ],
+          "hitsByPeer": [
+            60,
+            61,
+            71,
+            77
+          ],
+          "respawns": 41,
+          "roomsAfterLeave": 0
+        },
+        {
+          "clients": 10,
+          "status": "PASS",
+          "durationSeconds": 45.109863962999995,
+          "serverCpuPercentOneCore": 13.85522910272227,
+          "rssBytes": 248561664,
+          "eventLoopDelayMs": {
+            "p50": 10.084351,
+            "p95": 10.878975,
+            "p99": 12.926975,
+            "max": 59.703295
+          },
+          "costMs": {
+            "tick": {
+              "n": 2705,
+              "p50": 0.7464280000003782,
+              "p95": 1.8053929999950924,
+              "p99": 6.273513000000094,
+              "max": 15.91488400000162
+            },
+            "simulation": {
+              "n": 2705,
+              "p50": 0.37849999999889405,
+              "p95": 1.1657239999985904,
+              "p99": 5.592734000001656,
+              "max": 15.203197999999247
+            },
+            "projection": {
+              "n": 2705,
+              "p50": 0.18188999999983935,
+              "p95": 0.2645009999978356,
+              "p99": 0.36785299999974086,
+              "max": 4.95360299999993
+            },
+            "serialization": {
+              "n": 894,
+              "p50": 0.6549820000000182,
+              "p95": 1.4594109999961802,
+              "p99": 3.1888030000009167,
+              "max": 7.534200000001874
+            },
+            "interval": {
+              "n": 2705,
+              "p50": 16.208106999998563,
+              "p95": 18.06296300000031,
+              "p99": 32.434769999999844,
+              "max": 64.18090900000243
+            }
+          },
+          "outboundPayloadBytesPerClientSecond": 39167.06557681445,
+          "peersFired": 10,
+          "shotsByPeer": [
+            80,
+            81,
+            104,
+            104,
+            94,
+            92,
+            172,
+            171,
+            213,
+            231
+          ],
+          "hitsByPeer": [
+            80,
+            80,
+            65,
+            61,
+            44,
+            50,
+            43,
+            30,
+            32,
+            43
+          ],
+          "respawns": 83,
+          "roomsAfterLeave": 0
+        }
+      ]
+    },
+    {
+      "build": "Internet candidate, other local Chromium and regression suites running",
+      "buildHash": "33c70dbc0a91d771b71257d84d4bd6635df1a161e2cdb355e8feff80eb067ec0",
+      "results": [
+        {
+          "clients": 2,
+          "status": "PASS",
+          "durationSeconds": 45.416931561000006,
+          "serverCpuPercentOneCore": 11.959315200994627,
+          "rssBytes": 244039680,
+          "eventLoopDelayMs": {
+            "p50": 10.313727,
+            "p95": 14.516223,
+            "p99": 19.283967,
+            "max": 310.902783
+          },
+          "costMs": {
+            "tick": {
+              "n": 2675,
+              "p50": 0.5477969999992638,
+              "p95": 1.704077000002144,
+              "p99": 6.5160499999983585,
+              "max": 30.008837999994284
+            },
+            "simulation": {
+              "n": 2675,
+              "p50": 0.2058149999975285,
+              "p95": 0.7499089999982971,
+              "p99": 4.43799100000615,
+              "max": 29.166614000001573
+            },
+            "projection": {
+              "n": 2675,
+              "p50": 0.1567600000053062,
+              "p95": 0.25551899999845773,
+              "p99": 1.836856000001717,
+              "max": 16.167366000001493
+            },
+            "serialization": {
+              "n": 869,
+              "p50": 0.46329700000205776,
+              "p95": 1.810632999993686,
+              "p99": 5.013825000001816,
+              "max": 15.51232799999707
+            },
+            "interval": {
+              "n": 2675,
+              "p50": 16.316533000001073,
+              "p95": 21.003078999994614,
+              "p99": 32.9729359999983,
+              "max": 300.36502800000017
+            }
+          },
+          "outboundPayloadBytesPerClientSecond": 5933.954380824445,
+          "peersFired": 2,
+          "shotsByPeer": [
+            57,
+            58
+          ],
+          "hitsByPeer": [
+            44,
+            48
+          ],
+          "respawns": 14,
+          "roomsAfterLeave": 0
+        },
+        {
+          "clients": 4,
+          "status": "PASS",
+          "durationSeconds": 45.39687538700001,
+          "serverCpuPercentOneCore": 15.788507334256986,
+          "rssBytes": 246284288,
+          "eventLoopDelayMs": {
+            "p50": 10.665983,
+            "p95": 15.867903,
+            "p99": 21.610495,
+            "max": 204.472319
+          },
+          "costMs": {
+            "tick": {
+              "n": 2665,
+              "p50": 0.8235759999988659,
+              "p95": 4.562249999995402,
+              "p99": 11.294115000000602,
+              "max": 33.14012200000434
+            },
+            "simulation": {
+              "n": 2665,
+              "p50": 0.34975999999733176,
+              "p95": 2.7723949999999604,
+              "p99": 9.240685999997368,
+              "max": 32.1298420000021
+            },
+            "projection": {
+              "n": 2665,
+              "p50": 0.1981859999941662,
+              "p95": 0.7620010000027833,
+              "p99": 3.3153959999981453,
+              "max": 10.753373999999894
+            },
+            "serialization": {
+              "n": 857,
+              "p50": 0.7261120000039227,
+              "p95": 4.758176999996067,
+              "p99": 8.129108000000997,
+              "max": 12.252580000000307
+            },
+            "interval": {
+              "n": 2665,
+              "p50": 16.470883999998478,
+              "p95": 22.524859999997716,
+              "p99": 33.06932500000039,
+              "max": 204.44037200000457
+            }
+          },
+          "outboundPayloadBytesPerClientSecond": 12721.932843981263,
+          "peersFired": 4,
+          "shotsByPeer": [
+            65,
+            63,
+            107,
+            105
+          ],
+          "hitsByPeer": [
+            55,
+            58,
+            50,
+            54
+          ],
+          "respawns": 34,
+          "roomsAfterLeave": 0
+        },
+        {
+          "clients": 10,
+          "status": "PASS",
+          "durationSeconds": 45.271660667999996,
+          "serverCpuPercentOneCore": 22.566121607332953,
+          "rssBytes": 250167296,
+          "eventLoopDelayMs": {
+            "p50": 10.412031,
+            "p95": 15.474687,
+            "p99": 24.215551,
+            "max": 157.548543
+          },
+          "costMs": {
+            "tick": {
+              "n": 2696,
+              "p50": 1.456095000001369,
+              "p95": 7.305422000001272,
+              "p99": 13.748305000000983,
+              "max": 36.494683999997505
+            },
+            "simulation": {
+              "n": 2696,
+              "p50": 0.7264090000026044,
+              "p95": 5.224770000000717,
+              "p99": 10.58933600000455,
+              "max": 35.37027499999749
+            },
+            "projection": {
+              "n": 2696,
+              "p50": 0.2698339999988093,
+              "p95": 1.6158550000000105,
+              "p99": 3.987267000004067,
+              "max": 9.894909000002372
+            },
+            "serialization": {
+              "n": 872,
+              "p50": 1.6087990000014543,
+              "p95": 6.360178999995696,
+              "p99": 11.663134999998874,
+              "max": 15.78755000000092
+            },
+            "interval": {
+              "n": 2696,
+              "p50": 16.371329000001424,
+              "p95": 22.40824900000007,
+              "p99": 33.225343999998586,
+              "max": 162.42185999999492
+            }
+          },
+          "outboundPayloadBytesPerClientSecond": 38426.02578150249,
+          "peersFired": 10,
+          "shotsByPeer": [
+            75,
+            74,
+            128,
+            108,
+            103,
+            98,
+            174,
+            174,
+            197,
+            204
+          ],
+          "hitsByPeer": [
+            70,
+            71,
+            44,
+            30,
+            39,
+            52,
+            34,
+            67,
+            28,
+            32
+          ],
+          "respawns": 69,
+          "roomsAfterLeave": 0
+        }
+      ]
+    }
+  ]
+}

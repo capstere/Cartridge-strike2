@@ -1,0 +1,1 @@
+{"status":"PASS","path":"HTTPS/WSS via public origin","clients":2,"map":"floor5-prepared","build":"2e5e53aa38730e6cf293425f4dcdfdbf92cb05f43282e968abf4124cd306977e","unauthenticatedStatus":401,"wrongRoomCodeRejected":true,"tickAdvance":118,"movementMetres":[0.28,0.28],"ammoAfterFire":[28,29],"reloadAmmo":[30,30],"sharedShots":[2,1]}

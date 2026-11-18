@@ -88,7 +88,7 @@ jobs:
   multiplayer-gameplay:
     if: github.event_name != 'push'
     runs-on: macos-15
-    timeout-minutes: 12
+    timeout-minutes: 17
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -101,6 +101,13 @@ jobs:
       - run: npm ci --prefix server --ignore-scripts
       - run: npm ci --prefix frontline/source/tools/dev
       - run: node frontline/source/tools/dev/node_modules/playwright-core/cli.js install chromium
+      - name: Invite login, room membership and gameplay through HTTPS and WSS
+        timeout-minutes: 5
+        env:
+          FPS_NETWORK_ANGLE: metal
+          FPS_NETWORK_DPR: '0.5'
+        run: node tools/network-pilot-browser.mjs
+
       - name: Full Floor 5 gameplay, jitter and 24 rendered lifecycle cycles
         timeout-minutes: 10
         env:

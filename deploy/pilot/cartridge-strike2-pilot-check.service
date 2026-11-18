@@ -1,0 +1,12 @@
+[Unit]
+Description=Check Cartridge-Strike 2 local process and Cloudflare edge readiness
+
+[Service]
+Type=oneshot
+DynamicUser=yes
+ExecStart=/bin/sh /opt/cartridge-strike2-pilot/current/deploy/pilot/check-pilot.sh
+ProtectSystem=strict
+ProtectHome=yes
+NoNewPrivileges=yes
+IPAddressDeny=any
+IPAddressAllow=localhost

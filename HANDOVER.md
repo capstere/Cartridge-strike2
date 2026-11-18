@@ -1,6 +1,19 @@
 # Cartridge-Strike 2 handover
 
-**Next multiplayer task — review [PASS 3B PR #22](https://github.com/capstere/Cartridge-strike2/pull/22), its final-head CI and [PASS3B_REPORT.md](docs/multiplayer/PASS3B_REPORT.md). Do not automatically merge the new PR.**
+**Next multiplayer task — play a private Floor 5 room on an iPhone using cellular data and a friend's independent connection.** Use the server owner's current pilot address and invite. Record the devices, networks, room join, movement, firing, reload, rotation and resume. [Pass 4 Pi results](docs/multiplayer/pass4/README.md) · [Pilot operation and rollback](deploy/pilot/README.md)
+
+November 18 live playtest: the user reported that both physical devices reached
+the invite page but received "Fel inbjudningskod". The delivered code matched
+the running pilot, and exact-code HTTPS login succeeded. Surrounding clipboard
+whitespace reproduced the rejection; it is now trimmed without changing code
+case or internal characters. The form adds a nonce-protected **Visa kod** control
+and distinguishes the invitation from the later private room code. Local access
+tests and two rendered Chromium clients passed, including padded-code login,
+WSS room join, movement, firing, reload and departure. This does not establish
+what was submitted on the user's devices: retry the physical playtest after
+pilot activation. Keep the original port 2567 service unchanged.
+
+Reviewed [PR #22](https://github.com/capstere/Cartridge-strike2/pull/22) at `02f7b8b`. Its [seven CI jobs](https://github.com/capstere/Cartridge-strike2/actions/runs/44209972562) passed and the merge landed at `f7218c2`. The [Pass 4 PR](https://github.com/capstere/Cartridge-strike2/pull/23) adds an invite-only internet service alongside the original Pi service. On the recovered public HTTPS URL, two rendered browsers entered the same room and replicated movement, shots, reload and departure over WSS. A [GitHub-hosted player on a second internet connection](https://github.com/capstere/Cartridge-strike2/actions/runs/44246257389) also joined a Pi player. Both observed remote movement, firing and completed reloads at 25/126 ms measured RTT. The 24-hour pilot expires November 19 at 06:27 CET.
 
 PR #21 was reviewed at `e3d2884`, all six required CI jobs passed, and fresh local
 core/server/two-rendered-client launch checks passed. It was merged as **ac87eec**

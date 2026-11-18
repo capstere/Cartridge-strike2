@@ -75,9 +75,21 @@ async function walk(page,goals){
   const failure=reason=>Error(reason+': '+JSON.stringify({enabled:network.enabled,modal:__fps.modal,staleMs:performance.now()-network.lastPatch,sent:network.input.sentCount,ack:network.input.lastProcessed,pending:network.input.pendingCount,controls:__fps.liveControls,pitch:network.view.player?.pitch,draws:__fps.renderer.stats.drawCalls}));
   stop();
   for(const [x,z] of points){
-   const end=performance.now()+20000;
+   const started=performance.now();
+   let progressAt=started,progressDistance=Infinity;
    while(true){
     const n=__fps.network,a=n.prediction.world.actor,dx=x-a.x,dz=z-a.z,d=Math.hypot(dx,dz);
+    // The 22.4 m C05 leg can exceed 20 s with both renderers on one CI GPU.
+    // Renew the stall budget only for movement toward this waypoint in a
+    // replicated server snapshot. Prediction, fresh acks and lateral jitter
+    // alone cannot extend the budget.
+    const confirmed=n.room.state.actors.get(n.localPlayerId);
+    const remaining=Math.hypot(x-confirmed.x,z-confirmed.z),now=performance.now();
+    if(remaining<=progressDistance-.10){progressDistance=remaining;progressAt=now;}
+    if(now-progressAt>20000||now-started>60000){
+     const reason=now-progressAt>20000?'No authoritative route progress':'Waypoint travel deadline';
+     throw failure(`${reason} at ${confirmed.x},${confirmed.z} toward ${x},${z} (remaining ${remaining.toFixed(2)} m, elapsed ${Math.round(now-started)} ms, last progress ${Math.round(now-progressAt)} ms ago)`);
+    }
     if(d<.10){
      // Stop through ordinary input and wait for its ack. The SDK ack and
      // schema patch are separate messages: only a later world snapshot proves
@@ -93,10 +105,8 @@ async function walk(page,goals){
      const authority=n.room.state.actors.get(n.localPlayerId),error=Math.hypot(authority.x-x,authority.z-z);
      (window.__routeConfirmations??=[]).push({sent,ack:n.input.lastProcessed,ackTick,snapshotTick:n.room.state.tick,error,pitch:n.input.data.pitch,draws:__fps.renderer.stats.drawCalls});
      if(error<.16)break;
-     if(performance.now()>end)throw failure('Authority did not reach the waypoint');
      await new Promise(requestAnimationFrame);continue;
     }
-    if(performance.now()>end)throw failure(`Route stalled at ${a.x},${a.z} toward ${x},${z}`);
     __fps.liveControls={forward:Math.min(1,d*3),yaw:Math.atan2(-dx,-dz),pitch:transitPitch};
     await new Promise(requestAnimationFrame);
    }
