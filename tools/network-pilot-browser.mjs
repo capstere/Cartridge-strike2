@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import {randomBytes} from 'node:crypto';
 import {mkdir,readFile,writeFile} from 'node:fs/promises';
 import {setTimeout as delay} from 'node:timers/promises';
+import {resumeDesktop} from './network-browser-resume.mjs';
 import {chromium} from '../frontline/source/tools/dev/node_modules/playwright-core/index.mjs';
 
 const external=process.env.CS2_PILOT_URL;
@@ -12,11 +13,12 @@ const origin=fixture?.origin||new URL(external).origin;
 assert.equal(new URL(origin).protocol,'https:');
 const invite=fixture?.invite||(await readFile(process.env.CS2_PILOT_INVITE_FILE,'utf8')).trim();
 const roomCode=randomBytes(12).toString('hex'),browsers=[],pages=[],errors=[],wsCounts=[],renderers=[];
+let roomId;
 const angle=process.env.FPS_NETWORK_ANGLE||(process.platform==='darwin'?'metal':'swiftshader');
 const dpr=Number(process.env.FPS_NETWORK_DPR||1);
 
 async function open(mobile){
-  const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||undefined,
+  const browser=await chromium.launch({channel:'chromium',executablePath:process.env.CHROMIUM_PATH||undefined,
     args:['--use-gl=angle','--use-angle='+angle,'--disable-background-timer-throttling',
       '--disable-renderer-backgrounding','--disable-backgrounding-occluded-windows',...(fixture?.args||[])]});
   browsers.push(browser);
@@ -24,13 +26,26 @@ async function open(mobile){
     isMobile:mobile,hasTouch:mobile,deviceScaleFactor:dpr});
   const page=await context.newPage(),counts={sockets:0,sent:0,received:0};wsCounts.push(counts);pages.push(page);
   page.setDefaultTimeout(90000);
-  page.on('pageerror',e=>{errors.push(e.message);console.error('Browser exception:',e.message);});
-  page.on('response',r=>{const url=new URL(r.url());if(url.origin===origin&&r.status()>=400)console.log('Game HTTP',r.status(),url.pathname);});
+  page.on('pageerror',e=>{errors.push(e.name);console.error('Browser exception:',e.name);});
+  page.on('response',r=>{
+    const url=new URL(r.url());
+    if(url.origin===origin&&r.status()>=400)console.log('Game HTTP',r.status(),url.pathname.startsWith('/matchmake/')?'matchmaking':url.pathname);
+  });
   page.on('websocket',socket=>{
     const target=new URL(socket.url());if(target.host!==new URL(origin).host||target.protocol!=='wss:')return;
     counts.sockets++;socket.on('framesent',()=>counts.sent++);socket.on('framereceived',()=>counts.received++);
   });
-  await page.addInitScript(()=>localStorage.setItem('cartridge-settings',JSON.stringify({graphics:'low',volume:0,autoReload:false,mobileAutoFire:false})));
+  await page.addInitScript(()=>{
+    localStorage.setItem('cartridge-settings',JSON.stringify({graphics:'low',volume:0,autoReload:false,mobileAutoFire:false}));
+    window.__pilotFocus=[];
+    for(const type of ['focus','blur','pointerlockchange','pointerlockerror']){
+      window.addEventListener(type,event=>{
+        if(['focus','blur'].includes(type)&&event.target!==window)return;
+        window.__pilotFocus.push({type,at:Math.round(performance.now()),focused:document.hasFocus(),locked:!!document.pointerLockElement});
+        if(window.__pilotFocus.length>12)window.__pilotFocus.shift();
+      },true);
+    }
+  });
   await page.goto(origin,{waitUntil:'domcontentloaded'});
   const field=page.locator('input[name=invite]');await field.waitFor();
   try{await field.fill(invite);}catch{throw Error('Unable to enter server invite');}
@@ -89,9 +104,9 @@ try{
   try{friend=await open(true);}finally{await setup.send('Page.setWebLifecycleState',{state:'active'});await setup.detach();}
   await submit(host,'Pilot host');
   await host.waitForFunction(()=>!document.querySelector('#pause').hidden||!document.querySelector('[data-create=true]').disabled);
-  assert(await host.locator('#resume').isVisible(),await host.locator('#network-status').textContent());
+  assert(await host.locator('#resume').isVisible(),'Host must reach Resume after creating the room');
   console.log('Host created a private room');
-  const roomId=await host.locator('#network-room').inputValue();assert(roomId);
+  roomId=await host.locator('#network-room').inputValue();assert(roomId);
   await submit(friend,'Pilot friend',roomId,'incorrect-'+roomCode);
   await friend.locator('#network-status').filter({hasText:'Fel privat'}).waitFor();
   await submit(friend,'Pilot friend',roomId);await friend.locator('#resume').tap();
@@ -99,10 +114,8 @@ try{
   const read=await inspectFriend(friend,roomId),before=await until(read,s=>s.readyCount===2,'Both ready');
   assert.equal(before.doors,51,'Replicated Floor 5 doors');
   console.log('Friend joined the same Floor 5 room and received both ready actors');
-  await host.bringToFront();
-  const resume=host.locator('#resume'),box=await resume.boundingBox();await resume.click();
-  await host.waitForFunction(()=>document.pointerLockElement?.id==='game'&&document.querySelector('#pause').hidden);
-  await host.mouse.move(box.x+box.width/2,box.y+box.height/2+1000);
+  const {attempts:resumeAttempts,point}=await resumeDesktop(host);
+  await host.mouse.move(point.x,point.y+1000);
   await until(read,s=>s.pitch<-1.3,'Friend received mouse look');
   await host.keyboard.down('w');
   const moved=await until(read,s=>Math.hypot(s.x-before.x,s.z-before.z)>.12,'Friend received movement');
@@ -116,7 +129,7 @@ try{
   await friend.locator('[data-mobile-action=pause]').tap();await friend.locator('#restart').tap();
   assert.deepEqual(errors,[]);
   const report={status:'PASS',path:external?'public HTTPS':'loopback TLS',date:new Date().toISOString(),
-    physicalDevices:false,chromium:browsers[0].version(),renderers,angle,dpr,renderedClients:2,fixtureCertificatePinned:!!fixture,
+    physicalDevices:false,chromium:browsers[0].version(),renderers,angle,dpr,renderedClients:2,resumeAttempts,fixtureCertificatePinned:!!fixture,
     inviteLogins:2,rejectedWrongRoomCode:true,readyActors:before.readyCount,floor5Doors:before.doors,webSockets:wsCounts,
     remoteGameplay:{tickBefore:before.tick,tickAfter:reloaded.tick,distance:Math.hypot(moved.x-before.x,moved.z-before.z),
       ammoBefore:before.ammo,ammoFired:fired.ammo,ammoReloaded:reloaded.ammo},departedHostRemoved:true};
@@ -126,12 +139,15 @@ try{
 }catch(error){
   for(const page of pages){
     const state=await page.evaluate(()=>({
-      path:location.pathname,status:document.querySelector('#network-status')?.textContent,
-      fatal:document.querySelector('#fatal pre')?.textContent,phase:document.querySelector('#phase')?.textContent,
-      paused:!document.querySelector('#pause')?.hidden,loading:document.querySelector('#loading')?.textContent,
-      lock:document.pointerLockElement?.id
+      path:location.pathname,roomAssigned:!!document.querySelector('#network-room')?.value,
+      fatal:document.querySelector('#fatal')?.hidden===false,loading:document.querySelector('#loading')?.hidden===false,
+      paused:document.querySelector('#pause')?.hidden===false,pointerLockDenied:document.querySelector('#pause')?.textContent.includes('Muslås'),
+      focused:document.hasFocus(),locked:!!document.pointerLockElement,focusEvents:window.__pilotFocus
     })).catch(()=>({closed:true}));
     console.error('Browser state',JSON.stringify(state));
   }
-  throw error;
+  // A Playwright action error can include a field value or a URL in its call log.
+  let message=error.stack||String(error);
+  for(const value of [invite,roomCode,roomId])if(value)message=message.replaceAll(value,'[redacted]');
+  throw Error(message.replace(/([?&](?:sessionId|reconnectionToken)=)[^&\s)]+/gi,'$1[redacted]'));
 }finally{try{await Promise.all(browsers.map(b=>b.close()));}finally{await fixture?.close();}}

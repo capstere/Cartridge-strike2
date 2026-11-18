@@ -2,6 +2,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {chromium} from '../frontline/source/tools/dev/node_modules/playwright-core/index.mjs';
+import {resumeDesktop} from './network-browser-resume.mjs';
 import {createTestServer} from './network-test-server.mjs';
 import {createTestPeer} from './network-test-peer.mjs';
 import {testLanHost} from './network-lan-host.mjs';
@@ -55,12 +56,7 @@ try{
   }finally{await cd.detach();}
   console.log('Normal launch mobile touch look reaches authority');
  }
- let resumeAttempts=0,resumePoint;
- for(;resumeAttempts<2;){
-  resumeAttempts++;await a.bringToFront();const box=await a.locator('#resume').boundingBox();resumePoint={x:box.x+box.width/2,y:box.y+box.height/2};await a.locator('#resume').click();
-  try{await a.waitForFunction(()=>document.pointerLockElement?.id==='game'&&document.querySelector('#pause').hidden,null,{timeout:5000});break;}
-  catch(e){if(resumeAttempts===2||!(await a.locator('#pause').textContent()).includes('Muslås'))throw e;}
- }
+ const {attempts:resumeAttempts,point:resumePoint}=await resumeDesktop(a);
  assert.equal(await a.evaluate(()=>!!document.fullscreenElement),false,'LAN Resume leaves fullscreen to its explicit menu action');
  const player=authority.sim.game.actors.find(x=>x.id==='analysts-0'),z=player.z,ammo=player.inventory.primary.ammo;
  // Software runners can stall in the spawn view: Linux delivered only one

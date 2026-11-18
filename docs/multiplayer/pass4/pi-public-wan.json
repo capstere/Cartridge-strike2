@@ -1,0 +1,41 @@
+{
+  "status": "PASS",
+  "date": "2026-11-18",
+  "release": "27480426a1d2c0fdb01d0498e50b2591936c0105",
+  "home": "Raspberry Pi 5, home connection via the Cloudflare public HTTPS/WSS endpoint",
+  "away": "GitHub-hosted Ubuntu Actions runner, same Cloudflare public endpoint",
+  "workflow": "https://github.com/capstere/Cartridge-strike2/actions/runs/44246257389",
+  "firstAttempt": {
+    "status": "FAIL",
+    "detail": "Remote joined and saw host gameplay. The original test sender did not complete the remote move/fire check before its deadline. The subsequent sender used the game fixed-step cadence and SDK clock with acknowledged input warmup."
+  },
+  "host": {
+    "role": "host",
+    "status": "PASS",
+    "transport": "wss",
+    "sdkRttMs": 25,
+    "ackedInputs": 375,
+    "build": "2e5e53aa38730e6cf293425f4dcdfdbf92cb05f43282e968abf4124cd306977e",
+    "map": "floor5-prepared",
+    "remoteMovedMetres": 0.69,
+    "remoteShots": 3,
+    "remoteAmmoMinimum": 27,
+    "remoteReloadedTo": 30,
+    "tickAdvance": 379
+  },
+  "awayPlayer": {
+    "role": "friend",
+    "status": "PASS",
+    "transport": "wss",
+    "sdkRttMs": 126,
+    "ackedInputs": 358,
+    "build": "2e5e53aa38730e6cf293425f4dcdfdbf92cb05f43282e968abf4124cd306977e",
+    "map": "floor5-prepared",
+    "remoteMovedMetres": 0.49,
+    "remoteShots": 2,
+    "remoteAmmoMinimum": 28,
+    "remoteReloadedTo": 30,
+    "tickAdvance": 369
+  },
+  "physicalHandsets": "NOT RUN"
+}
