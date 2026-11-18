@@ -110,13 +110,14 @@ try{
   let friend;
   try{friend=await open(true);}finally{await setup.send('Page.setWebLifecycleState',{state:'active'});await setup.detach();}
   await submit(host,'Pilot host');
-  await host.waitForFunction(()=>!document.querySelector('#pause').hidden||!document.querySelector('[data-create=true]').disabled);
-  assert(await host.locator('#resume').isVisible(),'Host must reach Resume after creating the room');
+  await host.locator('#room-ready').waitFor({state:'visible'});
   console.log('Host created a private room');
   roomId=await host.locator('#network-room').inputValue();assert(roomId);
   await submit(friend,'Pilot friend',roomId,'incorrect-'+roomCode);
   await friend.locator('#network-status').filter({hasText:'Fel privat'}).waitFor();
-  await submit(friend,'Pilot friend',roomId);await friend.locator('#resume').tap();
+  await submit(friend,'Pilot friend',roomId);await friend.locator('#room-ready').waitFor({state:'visible'});
+  await host.locator('#room-ready').click();await friend.locator('#room-ready').tap();await host.locator('#room-start').click();
+  await host.locator('#resume').waitFor({state:'visible'});await friend.locator('#resume').tap();
   await friend.waitForFunction(()=>document.querySelector('#pause').hidden);
   const read=await inspectFriend(friend,roomId),before=await until(read,s=>s.readyCount===2,'Both ready');
   assert.equal(before.doors,51,'Replicated Floor 5 doors');

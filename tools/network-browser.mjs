@@ -12,7 +12,7 @@ const transitPitch=Number(process.env.FPS_NETWORK_TRANSIT_PITCH||0);
 assert(testDpr>=.25&&testDpr<=2,'test DPR must stay between .25 and 2');
 assert(Number.isFinite(transitPitch)&&Math.abs(transitPitch)<=1.49,'transit pitch must be a valid ordinary look input');
 const lan=process.env.FPS_NETWORK_LAN==='1';
-const local=await createLocalServer({port:0,...(lan?{lan:true,host:testLanHost()}:{})});
+const local=await createLocalServer({testMatch:{continuous:true},port:0,...(lan?{lan:true,host:testLanHost()}:{})});
 const proxy=await latencyProxy(local.url);
 // Isolate the two clients' GPU processes. One shared software GPU process stalls
 // the second Floor 5 client's shader initialization on both Mac and Linux CI.

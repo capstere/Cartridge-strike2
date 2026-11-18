@@ -2,6 +2,9 @@
 Description=Cartridge-Strike 2 isolated Floor 5 authority
 
 [Service]
+LogNamespace=cartridge-strike2-online
+LogRateLimitIntervalSec=30s
+LogRateLimitBurst=60
 DynamicUser=yes
 WorkingDirectory=/opt/cartridge-strike2-pilot/current/server
 Environment=NODE_ENV=production
@@ -9,7 +12,7 @@ Environment=PORT=2568
 Environment=CS2_PUBLIC_ORIGIN_FILE=/run/cartridge-strike2-tunnel/origin
 EnvironmentFile=/etc/cartridge-strike2-pilot/invite.env
 ExecStart=/usr/bin/node --import ./register-shared.mjs local-server.mjs
-Restart=on-failure
+Restart=always
 RestartSec=3
 TimeoutStopSec=15
 MemoryMax=2G

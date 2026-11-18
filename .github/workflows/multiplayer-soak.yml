@@ -32,4 +32,4 @@ jobs:
           name: multiplayer-soak
           path: test-results/pass3b/
           if-no-files-found: ignore
-          retention-days: 14
+          retention-days: 3

@@ -6,7 +6,7 @@ import {setTimeout as delay} from 'node:timers/promises';
 import http from 'node:http';
 import {Readable} from 'node:stream';
 import {WebSocket} from '../server/node_modules/ws/wrapper.mjs';
-import {CONTRACT} from '../shared/multiplayer/build.mjs';
+const {CONTRACT}=await import(process.env.CS2_PILOT_CONTRACT_URL||new URL('../shared/multiplayer/build.mjs',import.meta.url).href);
 
 // The Node ws transport supports the Cookie/Origin headers a browser normally supplies.
 globalThis.WebSocket = WebSocket;
@@ -135,6 +135,13 @@ try {
     checkpoints.push({clients:count, readyOnEachSocket:count, analysts:count/2, counterAnalysts:count/2});
   }
   await verifyRoster();
+  const matchCommand=(peer,kind,extra={})=>peer.room.send('match',{kind,matchId:peer.room.state.matchId,controlEpoch:actor(peer.room,peer.room.sessionId).controlEpoch,...extra});
+  if(first.state.phase==='waiting'){
+  matchCommand(a,'ready',{ready:true});matchCommand(b,'ready',{ready:true});
+  await until(()=>[...first.state.actors.values()].every(p=>p.playerReady),'players explicitly ready');
+  matchCommand(a,'start');await until(()=>peers.every(p=>p.room.state.phase==='active'),'server started match');
+  for(const p of peers){const self=actor(p.room,p.room.sessionId);p.room.send('controls',{enabled:true,lifeId:self.lifeId,controlEpoch:self.controlEpoch});}
+  }
   while (peers.length<clientCount) {
     // Sequentially admit normal players, with time between independent logins.
     await delay(1000);

@@ -8,7 +8,7 @@ import {Client} from '../server/node_modules/@colyseus/sdk/build/index.mjs';
 import {latencyProxy} from './network-proxy.mjs';
 const delay=ms=>new Promise(r=>setTimeout(r,ms));
 async function until(fn,label,timeout=15000){const end=performance.now()+timeout;while(!fn()){assert(performance.now()<end,label);await delay(20);}}
-const stats=a=>{const x=a.slice().sort((a,b)=>a-b);return {n:x.length,p50:x[Math.floor(x.length*.5)]||0,p95:x[Math.floor(x.length*.95)]||0,p99:x[Math.floor(x.length*.99)]||0,max:x.at(-1)||0};};
+const stats=a=>{const x=a.slice().sort((a,b)=>a-b);if(!x.length)return {n:0,p50:null,p95:null,p99:null,max:null};return {n:x.length,p50:x[Math.floor(x.length*.5)]||0,p95:x[Math.floor(x.length*.95)]||0,p99:x[Math.floor(x.length*.99)]||0,max:x.at(-1)||0};};
 const rows=[],errors=[],angle=process.env.FPS_NETWORK_ANGLE||(process.platform==='darwin'?'metal':'swiftshader');
 const browserOptions={channel:'chromium',args:['--use-angle='+angle,'--disable-background-timer-throttling','--disable-renderer-backgrounding','--disable-backgrounding-occluded-windows']};
 const browsers=await Promise.all([chromium.launch(browserOptions),chromium.launch(browserOptions)]);

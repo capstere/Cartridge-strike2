@@ -9,7 +9,7 @@ export const ActorState=schema({
   ...Object.fromEntries(POSE_NUMBERS.map(k=>[k,t.float64()])),
   ...Object.fromEntries(POSE_BOOLEANS.map(k=>[k,t.boolean()])),
   id:t.string(),sessionId:t.string(),team:t.string(),name:t.string(),
-  lifeId:t.uint32(),controlEpoch:t.uint32(),connected:t.boolean(),lifeStartedAt:t.float64(),diedAtMs:t.float64(),ready:t.boolean(),alive:t.boolean(),hp:t.float64(),armor:t.float64(),
+  lifeId:t.uint32(),controlEpoch:t.uint32(),connected:t.boolean(),lifeStartedAt:t.float64(),diedAtMs:t.float64(),ready:t.boolean(),playerReady:t.boolean(),alive:t.boolean(),hp:t.float64(),armor:t.float64(),
   ammo:t.uint16(),reserve:t.uint16(),kills:t.uint16(),deaths:t.uint16(),
   reloadUntil:t.float64(),nextShot:t.float64(),respawnAt:t.float64(),
   spawnProtectedUntil:t.float64(),deathAt:t.float64(),hurtTime:t.float64(),
@@ -17,4 +17,6 @@ export const ActorState=schema({
 },'FPSActorV4');
 export const DoorState=schema({angle:t.float64(),poseAngle:t.float64(),target:t.float64(),sign:t.float64(),holdUntil:t.float64()},'FPSDoorV4');
 export const RoomState=schema({actors:t.map(ActorState),tick:t.uint32(),time:t.float64(),
+  phase:t.string(),matchId:t.uint32(),ownerId:t.string(),remainingSeconds:t.float64(),durationSeconds:t.uint16(),scoreTarget:t.uint16(),
+  winner:t.string(),reason:t.string(),results:t.string(),
   analysts:t.uint16(),counterAnalysts:t.uint16(),worldRevision:t.uint32(),doors:t.map(DoorState),elevatorProgress:t.float64(),elevatorOpenAt:t.float64()},'FPSRoomV4');

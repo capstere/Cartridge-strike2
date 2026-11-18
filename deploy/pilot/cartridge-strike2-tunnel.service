@@ -5,6 +5,9 @@ After=network-online.target cartridge-strike2-pilot.service
 ConditionPathExists=/etc/cartridge-strike2-pilot/until
 
 [Service]
+LogNamespace=cartridge-strike2-online
+LogRateLimitIntervalSec=30s
+LogRateLimitBurst=60
 DynamicUser=yes
 RuntimeDirectory=cartridge-strike2-tunnel
 RuntimeDirectoryMode=0755

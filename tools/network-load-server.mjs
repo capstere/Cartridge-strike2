@@ -1,3 +1,5 @@
+import {readFileSync} from 'node:fs';
+import {execFileSync} from 'node:child_process';
 // Private test IPC only. Never imported by the shipped server.
 import {readFile} from 'node:fs/promises';
 import {monitorEventLoopDelay} from 'node:perf_hooks';
@@ -9,8 +11,8 @@ const {CONTRACT}=await import(new URL('shared/multiplayer/build.mjs',root));
 const loops=monitorEventLoopDelay({resolution:10});loops.enable();
 const samples={tick:[],simulation:[],projection:[],serialization:[],interval:[],shotAge:[]};
 const push=(key,n)=>{const a=samples[key];a.push(n);if(a.length>8192)a.shift();};
-const stats=a=>{const sorted=a.slice().sort((a,b)=>a-b),n=sorted.length;return {n,p50:sorted[Math.floor(n*.5)]||0,p95:sorted[Math.floor(n*.95)]||0,p99:sorted[Math.floor(n*.99)]||0,max:sorted.at(-1)||0};};
-let local,started=performance.now(),cpu=process.cpuUsage(),bytes=0,inBytes=0,respawns=0,fixtureTimer;
+const stats=a=>{const sorted=a.slice().sort((a,b)=>a-b),n=sorted.length;if(!n)return {n:0,p50:null,p95:null,p99:null,max:null};return {n,p50:sorted[Math.floor(n*.5)]||0,p95:sorted[Math.floor(n*.95)]||0,p99:sorted[Math.floor(n*.99)]||0,max:sorted.at(-1)||0};};
+let local,started=performance.now(),cpu=process.cpuUsage(),bytes=0,inBytes=0,respawns=0,combatRespawns=0,fixtureTimer;
 const seen=new WeakSet(),connections=new WeakSet(),lives=new Map();
 function instrument(){
  for(const r of local.rooms){
@@ -18,7 +20,14 @@ function instrument(){
   if(!seen.has(r)){
    seen.add(r);let last;
    for(const [obj,key,label] of [[r,'fixedTick','tick'],[r.sim,'tick','simulation'],[r,'project','projection'],[r,'broadcastPatch','serialization']]){
-    const original=obj[key];obj[key]=function(...args){const t=performance.now();if(label==='tick'){if(last!==undefined)push('interval',t-last);last=t;}try{return original.apply(this,args);}finally{push(label,performance.now()-t);if(label==='simulation')placeActors(r);}};
+    const original=obj[key];obj[key]=function(...args){
+      const dead=label==='simulation'?r.sim.game.actors.filter(a=>!a.alive):[];
+      const t=performance.now();if(label==='tick'){if(last!==undefined)push('interval',t-last);last=t;}
+      try{return original.apply(this,args);}finally{
+        push(label,performance.now()-t);
+        if(label==='simulation'){combatRespawns+=dead.filter(a=>a.alive).length;placeActors(r);}
+      }
+    };
    }
    if(r.lag){const accept=r.lag.accept;r.lag.accept=function(seat,frame,stamp){if(stamp)push('shotAge',r.clock.elapsedTime-stamp);return accept.call(this,seat,frame,stamp);};}
   }
@@ -45,14 +54,20 @@ function placeActors(r){
    }
   }
 }
+function thermal(){
+ let temperatureC=null,throttled=null;
+ try{temperatureC=Number(readFileSync('/sys/class/thermal/thermal_zone0/temp','utf8'))/1000;}catch{}
+ try{throttled=execFileSync('vcgencmd',['get_throttled'],{encoding:'utf8',timeout:1000}).trim();}catch{}
+ return {temperatureC,throttled};
+}
 function snapshot(){
  instrument();
  const usage=process.cpuUsage(cpu),elapsed=(performance.now()-started)/1000;
- return {elapsedSeconds:elapsed,serverCpuPercent:(usage.user+usage.system)/1e4/elapsed,memory:process.memoryUsage(),
+ return {thermal:thermal(),elapsedSeconds:elapsed,serverCpuPercent:(usage.user+usage.system)/1e4/elapsed,memory:process.memoryUsage(),
   eventLoopMs:{p50:loops.percentile(50)/1e6,p95:loops.percentile(95)/1e6,p99:loops.percentile(99)/1e6,max:loops.max/1e6},
-  costMs:Object.fromEntries(Object.entries(samples).filter(([k])=>k!=='shotAge').map(([k,v])=>[k,stats(v)])),shotAgeMs:stats(samples.shotAge),bytes,inBytes,respawns,
+  costMs:Object.fromEntries(Object.entries(samples).filter(([k])=>k!=='shotAge').map(([k,v])=>[k,stats(v)])),shotAgeMs:stats(samples.shotAge),bytes,inBytes,respawns,combatRespawns,
   resources:process.getActiveResourcesInfo().reduce((o,k)=>(o[k]=(o[k]||0)+1,o),{}),
-  rooms:[...local.rooms].map(r=>({id:r.roomId,clients:r.clients.length,seats:r.seats.size,actors:r.sim.game.actors.length,tick:r.sim.tickNumber,
+  rooms:[...local.rooms].map(r=>({id:r.roomId,matchId:r.state.matchId,phase:r.state.phase,clients:r.clients.length,seats:r.seats.size,actors:r.sim.game.actors.length,tick:r.sim.tickNumber,
    metrics:r.metrics,lag:r.lag?{...r.lag.metrics,ages:stats(r.lag.metrics.ages)}:undefined,histories:r.lag?.tickTimes.size,
    rewindEntities:r.lag?.rewind.groups?.map(g=>[...g.entities()].length),
    inputMax:Math.max(0,...[...r.seats.keys()].map(sid=>r.inputs.get(sid).size)),rtts:[...r.seats.values()].map(s=>s.rtt),
@@ -64,7 +79,7 @@ process.on('message',async({id,action,options})=>{
  try{
   let result;
   if(action==='start'){
-   local=await createLocalServer({port:0});fixtureTimer=setInterval(instrument,20);
+   local=await createLocalServer({port:0,testMatch:process.env.CS2_SOAK==='1'?{durationSeconds:90,scoreTarget:30,countdownSeconds:.2}:{continuous:true}});fixtureTimer=setInterval(instrument,20);
    const model=await readFile('/proc/device-tree/model','utf8').then(value=>value.replace(/\0/g,'').trim()).catch(()=>undefined);
    result={url:local.url,contract:CONTRACT,environment:{model,node:process.version,platform:platform(),arch:arch(),cpu:cpus()[0].model,cores:cpus().length}};
   }else if(action==='reset'){
