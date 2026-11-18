@@ -31,6 +31,16 @@ class OperationTests(unittest.TestCase):
                 for call in run.call_args_list:
                     self.assertEqual(call.args, ('systemctl', 'restart', 'cartridge-strike2-pilot'))
 
+    def test_reconnecting_room_blocks_activation_before_any_mutation(self):
+        with patch.object(manage, 'health', return_value={'players': 0, 'rooms': 1}), patch.object(manage, 'revision'), patch.object(manage, 'save') as save, patch.object(manage, 'point') as point, patch.object(manage, 'run') as run:
+            with self.assertRaisesRegex(RuntimeError, 'reserved'):
+                manage.activate('b' * 40)
+            save.assert_not_called()
+            point.assert_not_called()
+            run.assert_not_called()
+        with patch.object(manage, 'health', return_value={'players': 0, 'rooms': 0}):
+            manage.idle()
+
     def test_named_route_rejects_quick_tunnel_and_userinfo(self):
         for host in ['http://game.example.org', 'https://test.trycloudflare.com', 'https://user@game.example.org', 'https://game.example.org/path']:
             with self.assertRaises(ValueError):

@@ -32,8 +32,11 @@ def health():
 
 
 def idle():
-    if health()['players']:
-        raise RuntimeError('Players are connected. Wait until the room is empty.')
+    state = health()
+    # Zero connected sockets can still mean a whole team is reconnecting.
+    # Wait for room disposal, including the bounded seat reservations.
+    if state['players'] or state['rooms']:
+        raise RuntimeError('A room is still occupied or reserved. Wait until every room has closed.')
 
 
 def origin():

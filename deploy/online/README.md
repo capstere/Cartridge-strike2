@@ -37,7 +37,8 @@ sudo cs2-online activate FULLSTÄNDIG_GIT_SHA
 sudo cs2-online rollback
 ```
 
-Aktiveringen kräver ett tomt rum, sparar tidigare release och privat konfiguration,
+Aktiveringen väntar tills alla rum har stängts, även reserverade platser under
+återanslutning. Den sparar tidigare release och privat konfiguration,
 byter release atomärt, startar enbart onlinetjänsten och verifierar klient/server-
 kontrakt samt publik multiplayer. Om kontrollen misslyckas återställs föregående
 release. Konfigurationskopiorna ligger i

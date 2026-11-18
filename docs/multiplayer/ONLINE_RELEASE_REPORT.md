@@ -123,7 +123,7 @@ extra spawnskydd. Ingen egen SDK- eller autentiseringsimplementation har infört
 
 ## Automatiserad funktionell evidens
 
-Lokalt på Mac: **228 core-tester**, **23 server-/protokolltester**, **6 tester av
+Lokalt på Mac: **228 core-tester**, **23 server-/protokolltester**, **7 tester av
 driftverktygen**, runtime-manifest och buildkontrakt godkända. De nya testerna
 bevisar lobbyauktoritet, lagbyte, dubbla Start/Spela igen, simultana slutkills,
 tidsseger/oavgjort, gammal matchinput, ägarbyte, late join, countdown-avbrott,
@@ -161,9 +161,11 @@ Alla sju GitHub-jobb på det driftsatta paketet `d886a100` är **PASS** i
 [44267713626](https://github.com/capstere/Cartridge-strike2/actions/runs/44267713626).
 Även den tidigare serverimplementationen `a3ce3460` klarade alla sju i
 [44264144000](https://github.com/capstere/Cartridge-strike2/actions/runs/44264144000).
-Slutlig dokumentations-/valideringsrevision måste också klara alla sju före merge;
+Slutlig dokumentations-/driftrevision måste också klara alla sju före merge;
 dess exakta revision och körning anges i PR #24. Den ändrar inte levererade
-runtime-filer. Offline Classic/Endless, mobil, karaktärs-/animationsdelning,
+spelfiler. Driftverktygets sista spärr väntar även ut återanslutningsreservationer
+med noll anslutna sockets; testet kräver att ingen fil eller tjänst ändras då.
+Offline Classic/Endless, mobil, karaktärs-/animationsdelning,
 resurslivscykler, Floor 5, LAN, Windows/Linux/macOS, WebKit och 24 renderade
 livscykler finns kvar. Windows använder fortfarande **en renderad klient och en
 SDK-peer**. macOS/Linux behåller sina två renderade klienter. Inget av detta är
@@ -270,7 +272,8 @@ CS2_SOAK=1 CS2_LOAD_COUNTS=10 CS2_LOAD_SECONDS=1800 \
 ## Drift och kvarstående extern förutsättning
 
 [Driftverktygen](../../deploy/online/README.md) bevarar releaser och privat
-konfiguration, vägrar rutinaktivering med anslutna spelare, byter version atomärt,
+konfiguration, vägrar rutinaktivering medan något rum finns kvar (inklusive
+återanslutningsreservationer), byter version atomärt,
 startar bara port-2568-tjänsten och verifierar två autentiserade offentliga
 HTTPS/WSS-SDK-klienters riktiga speltrafik. Verifieringsfel återställer tidigare
 release. Den slutliga staged releasen provades också i en separat systemd-tjänst på
