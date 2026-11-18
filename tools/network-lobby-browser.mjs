@@ -5,7 +5,7 @@ import {createHash} from 'node:crypto';
 import {chromium} from '../frontline/source/tools/dev/node_modules/playwright-core/index.mjs';
 import {createLocalServer} from '../server/local-server.mjs';
 const angle=process.env.FPS_NETWORK_ANGLE||(process.platform==='darwin'?'metal':'swiftshader');
-const local=await createLocalServer({port:0}),browser=await chromium.launch({channel:'chromium',args:['--use-angle='+angle]}),errors=[];
+const local=await createLocalServer({testMatch:{continuous:true},port:0}),browser=await chromium.launch({channel:'chromium',args:['--use-angle='+angle]}),errors=[];
 fs.mkdirSync('test-results/network',{recursive:true});
 try {
  const page=await browser.newPage({viewport:{width:1280,height:720}});

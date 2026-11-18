@@ -6,7 +6,7 @@ import {createLocalServer} from '../local-server.mjs';
 import {MAX_BUFFERED_BYTES} from '../network-room.mjs';
 import {options,ready,own,send,until,delay} from './helpers.mjs';
 
-async function fixture(t){const local=await createLocalServer({port:0});t.after(()=>local.close());return {local,c:new Client(local.url,{headers:{Origin:local.url}})};}
+async function fixture(t){const local=await createLocalServer({testMatch:{continuous:true},port:0});t.after(()=>local.close());return {local,c:new Client(local.url,{headers:{Origin:local.url}})};}
 test('stages 2, 4 and 10: independent humans, balanced 5v5, chosen teams, safe spawns and full admission',{timeout:20000},async t=>{
  const {local,c}=await fixture(t),peers=[];
  peers.push(await ready(await c.create('private-fps',options)));const r=[...local.rooms][0];

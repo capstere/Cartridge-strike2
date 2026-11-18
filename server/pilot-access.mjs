@@ -83,14 +83,14 @@ export function pilotAccess(config, limiter) {
       // Clipboard selections commonly include a trailing space or line break.
       // Only trim the edges: the generated code remains exact and case-sensitive.
       const invite = form.get('invite')?.trim();
-      if (form.size !== 1 || !invite || !timingSafeEqual(inviteHash, digest(invite))) {
-        showInvite(res, true);
+      if (![...form.keys()].every(k=>['invite','room'].includes(k)) || form.getAll('invite').length!==1 || form.getAll('room').length>1 || !invite || !timingSafeEqual(inviteHash, digest(invite))) {
+        showInvite(res, true,form.get('room'));
         return;
       }
       const data = Math.floor(Date.now()/1000 + SESSION_SECONDS) + '.' + randomBytes(12).toString('base64url');
       res.setHeader('Set-Cookie', COOKIE + '=' + data + '.' + sign(origin, data) +
         '; Path=/; Max-Age=' + SESSION_SECONDS + '; HttpOnly; Secure; SameSite=Strict');
-      redirectLobby(res);
+      redirectLobby(res,form.get('room'));
     },
   };
 }
@@ -101,12 +101,13 @@ export function localMonitor(req, port) {
     !Object.keys(req.headers).some(name => /^(forwarded$|x-forwarded-|cf-|x-real-ip$|x-client-ip$)/.test(name));
 }
 
-export function redirectLobby(res) {
-  res.writeHead(303, {Location: publicLobby});
+const safeRoom=value=>typeof value==='string'&&/^[A-Za-z0-9_-]{1,32}$/.test(value)?value:'';
+export function redirectLobby(res,room) {
+  res.writeHead(303, {Location: publicLobby+(safeRoom(room)?'&room='+safeRoom(room):'')});
   res.end();
 }
 
-export function showInvite(res, wrong = false) {
+export function showInvite(res, wrong = false,room) {
   const nonce = randomBytes(16).toString('base64');
   res.writeHead(wrong ? 403 : 200, {
     'Content-Type': 'text/html; charset=utf-8',
@@ -120,7 +121,7 @@ input{color:inherit;background:#232c2c;border:1px solid #94a6a0}button{backgroun
 .show-code{display:flex;align-items:center;gap:.5rem;margin-top:.75rem}.show-code input{width:auto;margin:0}small{display:block;margin-top:.75rem}
 </style><main><h1>Cartridge-Strike 2</h1><p>Öppna Floor 5 med inbjudningskoden från serverns ägare.</p>
 ${wrong ? '<p role="alert">Fel inbjudningskod. Försök igen.</p>' : ''}<form method="post" action="/pilot/session">
-<label>Inbjudningskod<input id="pilot-invite" type="password" name="invite" maxlength="160" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" aria-describedby="invite-help" required></label>
+${safeRoom(room)?'<input type="hidden" name="room" value="'+safeRoom(room)+'">':''}<label>Inbjudningskod<input id="pilot-invite" type="password" name="invite" maxlength="160" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" aria-describedby="invite-help" required></label>
 <label class="show-code"><input id="show-invite" type="checkbox">Visa kod</label>
 <small id="invite-help">Klistra in enbart inbjudningskoden. Din privata rumskod väljer du i nästa steg.</small>
 <button type="submit">Öppna lobbyn</button></form></main>

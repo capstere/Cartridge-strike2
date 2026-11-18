@@ -27,7 +27,7 @@ if(process.argv[1]===entry&&process.argv[2]==='--serve'){
     try{
       let value;
       if(action==='start'){
-        local=await createLocalServer(options);
+        local=await createLocalServer({testMatch:{continuous:true},...options});
         local.httpServer.on('request',(req,res)=>{const row={path:req.url,at:performance.now()};trace.push(row);if(trace.length>1500)trace.shift();
           res.once('finish',()=>{row.status=res.statusCode;row.finishedMs=performance.now()-row.at;});
           res.once('close',()=>{row.closedMs=performance.now()-row.at;});});

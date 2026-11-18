@@ -7,9 +7,10 @@ import {eye,direction} from '../../src/fps/game.mjs';
 import {REWIND_MS} from '../../shared/multiplayer/rules.mjs';
 
 async function setup(t){
- const local=await createLocalServer({port:0});t.after(()=>local.close());const c=new Client(local.url,{headers:{Origin:local.url}});
+ const local=await createLocalServer({testMatch:{continuous:true},port:0});t.after(()=>local.close());const c=new Client(local.url,{headers:{Origin:local.url}});
  const a=await ready(await c.create('private-fps',options)),b=await ready(await c.joinById(a.roomId,options));t.after(async()=>{await a.leave();await b.leave();});
  const r=[...local.rooms][0],g=r.sim.game,[shooter,target]=g.actors;
+ await until(()=>[...r.seats.values()].every(s=>Number.isFinite(s.rttAt)),'fresh server RTT probes');
  return {r,g,a,b,shooter,target};
 }
 function record(r){r.project();r.lag.rewind.record(r.clock.elapsedTime,50);return r.clock.elapsedTime;}

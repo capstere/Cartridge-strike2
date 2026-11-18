@@ -48,6 +48,8 @@ jobs:
           cache-dependency-path: frontline/source/tools/dev/package-lock.json
       - name: All FPS unit tests
         run: node --experimental-loader ./tools/vendor-three-test-loader.mjs --test src/fps/*.test.mjs tools/*.test.mjs
+      - name: Validate isolated deployment operations
+        run: python3 deploy/online/test_manage.py
       - name: Verify runtime file hashes
         run: node tools/verify-owner-runtime.mjs
       - name: Validate prepared Floor 5 door traversal
@@ -88,7 +90,7 @@ jobs:
   multiplayer-gameplay:
     if: github.event_name != 'push'
     runs-on: macos-15
-    timeout-minutes: 17
+    timeout-minutes: 22
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -107,6 +109,19 @@ jobs:
           FPS_NETWORK_ANGLE: metal
           FPS_NETWORK_DPR: '0.5'
         run: node tools/network-pilot-browser.mjs
+
+      - name: Complete online lobby, combat, results and same-room rematch
+        timeout-minutes: 5
+        env:
+          FPS_NETWORK_ANGLE: metal
+        run: node tools/online-match-browser.mjs
+      - name: Keep compact online evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: online-match
+          path: test-results/online/
+          retention-days: 3
 
       - name: Full Floor 5 gameplay, jitter and 24 rendered lifecycle cycles
         timeout-minutes: 10
@@ -209,4 +224,4 @@ jobs:
           name: multiplayer-pass3b
           path: test-results/pass3b/
           if-no-files-found: ignore
-          retention-days: 14
+          retention-days: 3

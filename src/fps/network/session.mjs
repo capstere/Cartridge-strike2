@@ -29,8 +29,8 @@ function actorView(s,localId){
 
 /** A Game-shaped presentation only. Never advances Game combat/rules locally. */
 export class NetworkSession {
-  constructor(world,{onDisconnect=()=>{},onConnection=()=>{}}={}){
-    this.world=world;this.onDisconnect=onDisconnect;this.onConnection=onConnection;this.connectionState='connecting';this.controlEpoch=0;this.closed=false;this.enabled=true;
+  constructor(world,{onDisconnect=()=>{},onConnection=()=>{},onMatch=()=>{}}={}){
+    this.onMatch=onMatch;this.matchId=0;this.matchPhase='';this.world=world;this.onDisconnect=onDisconnect;this.onConnection=onConnection;this.connectionState='connecting';this.controlEpoch=0;this.closed=false;this.enabled=true;
     this.events=[];this.seenEvent=0;this.predictedShots=new Map();this.actionTimes=new Map();this.remote=new Map();this.unsub=[];
     this.fireId=0;this.reloadId=0;this.nextCosmetic=0;this.lifeId=0;this.lastPatch=0;
     this.metrics={sent:0,replays:0,adopts:0,resets:0,cosmeticShots:0,confirmedShots:0,suppressedShots:0,corrections:[],adoptionDistance:[],shotLatency:[],hitLatency:[],maxPending:0,reconnects:0};
@@ -58,6 +58,7 @@ export class NetworkSession {
     if(this.closed){await room.leave();throw Error('Join cancelled.');}
     this.joiningRoom=null;this.room=room;Object.assign(room.reconnection,{enabled:true,minUptime:0,minDelay:150,maxDelay:1000,maxRetries:30,maxEnqueuedMessages:0});
     this.unsub.push(room.onMessage('problem',message=>{this.problem=String(message);}));
+    this.unsub.push(room.onMessage('notice',message=>{this.notice=String(message);}));
     this.unsub.push(room.onMessage('events',events=>this.receiveEvents(events)));
     this.unsub.push(room.onMessage('clock-probe',token=>{if(!this.closed&&this.connectionState==='connected')room.send('clock-echo',token);}));
     const dropped=()=>this.beginReconnect();
@@ -91,7 +92,20 @@ export class NetworkSession {
   snapshot(){
     if(this.closed||!this.localPlayerId||!this.predict)return;
     this.lastPatch=performance.now();
-    const state=this.room.state,ready=[...state.actors.values()].filter(a=>a.ready);
+    const state=this.room.state;
+    const mine=[...state.actors.values()].find(a=>a.sessionId===this.room.sessionId);
+    if(mine&&mine.id!==this.localPlayerId){
+      this.prediction?.dispose();this.prediction=null;this.localPlayerId=mine.id;
+      this.view.localPlayerId=mine.id;this.view.team=mine.team;
+    }
+    const newMatch=this.matchId!==state.matchId,newPhase=this.matchPhase!==state.phase;
+    if(newMatch||newPhase){
+      this.matchId=state.matchId;this.matchPhase=state.phase;
+      this.prediction?.reset();this.events=[];this.predictedShots.clear();this.actionTimes.clear();this.nextCosmetic=0;
+      if(newMatch){for(const entry of this.remote.values())this.predict.detach(entry.schema);this.remote.clear();}
+      this.view.state.round=state.matchId;
+    }
+    const ready=[...state.actors.values()].filter(a=>a.ready);
     if(this.awaitingSnapshot){
       // onReconnect precedes the full state; only this callback can adopt it.
       this.awaitingSnapshot=false;clearTimeout(this.reconnectTimer);this.reconnectTimer=null;
@@ -138,7 +152,7 @@ export class NetworkSession {
         },
         step:(ctx,w,f)=>{
           if(ctx.isReplay)this.metrics.replays++;
-          if(!w.actor.alive||f.lifeId!==w.actor.lifeId)return;
+          if(this.room.state.phase!=='active'||!w.actor.alive||f.lifeId!==w.actor.lifeId||f.controlEpoch!==this.controlEpoch)return;
           w.game.state.time+=ctx.dt;
           w.dynamics.step(w.game.state.time,ctx.dt,w.game.actors,()=>moveActor(w.game,w.actor,f,ctx.dt,false));
         },
@@ -156,10 +170,16 @@ export class NetworkSession {
       this.fireId=0;this.reloadId=0;
       this.events=[];
     }
+    if(newMatch||newPhase)queueMicrotask(()=>{if(!this.closed)this.onMatch(this.matchPhase);});
+  }
+  matchCommand(kind,extra={}){
+    const self=this.room?.state.actors.get(this.localPlayerId);if(!self||this.connectionState!=='connected')return;
+    this.notice='';this.room.send('match',{kind,matchId:this.room.state.matchId,controlEpoch:self.controlEpoch,...extra});
   }
   receiveEvents(events){
     if(this.closed||this.connectionState==='reconnecting'||!Array.isArray(events))return;
     for(const event of events.slice(-64)){
+      if(event.matchId!==undefined&&event.matchId!==this.room.state.matchId)continue;
       if(event.eventId<=this.seenEvent)continue;this.seenEvent=event.eventId;
       const actor=this.room.state.actors.get(event.actorId);
       if(event.actorId&&(!actor||event.lifeId&&actor.lifeId!==event.lifeId||event.controlEpoch!==undefined&&actor.controlEpoch!==event.controlEpoch))continue;
@@ -183,7 +203,7 @@ export class NetworkSession {
     if(!self)return;
     const stale=performance.now()-this.lastPatch>1000;
     for(let i=0;i<steps;i++){
-      if(!this.enabled||!self.alive||stale)break;
+      if(state.phase!=='active'||!this.enabled||!self.alive||stale)break;
       const data=this.input.data;
       Object.assign(data,{lifeId:self.lifeId,controlEpoch:self.controlEpoch,sampleTick:state.tick,fireId:this.fireId,reloadId:this.reloadId,
         forward:controls.forward||0,strafe:controls.strafe||0,yaw:wrapYaw(controls.yaw??self.yaw),pitch:controls.pitch??self.pitch,

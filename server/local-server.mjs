@@ -16,7 +16,7 @@ const readMethod = method => method === 'GET' || method === 'HEAD';
 
 // The pilot only listens on loopback behind an explicitly configured HTTPS origin.
 export async function createLocalServer(options={}) {
-  const config=hostingConfig(options),{host,port,lan}=config;
+  const config=hostingConfig(options),{host,port,lan}=config,testMatch=options.testMatch;
   const pilot=config.pilotInvite ? pilotAccess(config, admissionLimiter()) : null;
   const active=new Set(),root=fileURLToPath(new URL('../',import.meta.url));
   const manifest=JSON.parse(await readFile(new URL('../build-info.json',import.meta.url)));
@@ -26,6 +26,8 @@ export async function createLocalServer(options={}) {
     async onCreate(options){
       if(active.size>=2)throw new ServerError(429,'Local server room limit reached.');
       active.add(this);
+      // Trusted in-process fixtures only; never read match overrides from matchmaking.
+      this.matchOptions=testMatch;
       try{await super.onCreate(options);}catch(e){active.delete(this);throw e;}
     }
     onDispose(){super.onDispose();active.delete(this);}
@@ -37,7 +39,7 @@ export async function createLocalServer(options={}) {
   const server=new Server({greet:false,gracefullyShutdown:false,transport,
     express:async app=>{
       app.get('/health',(_req,res)=>res.set('Cache-Control','no-store').json({status:'ok',localOnly:!lan&&!pilot,lan,pilot:!!pilot,host,
-        rooms:active.size,players:[...active].reduce((n,r)=>n+r.clients.length,0),contract:CONTRACT}));
+        matches:[...active].map(r=>({phase:r.state.phase,matchId:r.state.matchId,tick:r.state.tick,players:r.clients.length})),rooms:active.size,players:[...active].reduce((n,r)=>n+r.clients.length,0),contract:CONTRACT}));
       app.use(express.static(root,{dotfiles:'deny',index:'index.html'}));
     },
   });
@@ -89,10 +91,10 @@ export async function createLocalServer(options={}) {
           }
           const entry=path==='/'||path==='/fps/'||path==='/fps/index.html';
           if(!access.authenticated){
-            if(entry&&readMethod(req.method))return showInvite(res);
+            if(entry&&readMethod(req.method))return showInvite(res,false,new URL(req.url,'http://local').searchParams.get('room'));
             return rejectHttp(res,401,'Pilot invite required.');
           }
-          if(path==='/'&&readMethod(req.method))return redirectLobby(res);
+          if(path==='/'&&readMethod(req.method))return redirectLobby(res,new URL(req.url,'http://local').searchParams.get('room'));
           if(path==='/health')return rejectHttp(res,404,'Unknown route.');
         }
       }

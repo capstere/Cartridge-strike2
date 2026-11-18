@@ -11,7 +11,7 @@ import '../server/register-shared.mjs';
 import {configFromEnv} from '../server/access.mjs';
 const {createLocalServer}=await import('../server/local-server.mjs');
 
-export async function startPilotFixture(){
+export async function startPilotFixture({testMatch}={}){
   const host='pilot.example.test';
   const dir=await mkdtemp(join(tmpdir(),'cs2-pilot-tls-'));
   const certPath=join(dir,'cert.pem'),keyPath=join(dir,'key.pem');
@@ -56,7 +56,7 @@ export async function startPilotFixture(){
     const origin='https://'+host+':'+edge.address().port;
     const invite=randomBytes(32).toString('base64url');
     const config=configFromEnv({CS2_PUBLIC_ORIGIN:origin,CS2_PILOT_INVITE:invite});
-    authority=await createLocalServer({...config,port:0});
-    return {origin,invite,close,args:['--host-resolver-rules=MAP '+host+' 127.0.0.1','--no-proxy-server','--ignore-certificate-errors-spki-list='+pin]};
+    authority=await createLocalServer({...config,port:0,testMatch});
+    return {origin,invite,close,authority,args:['--host-resolver-rules=MAP '+host+' 127.0.0.1','--no-proxy-server','--ignore-certificate-errors-spki-list='+pin]};
   }catch(error){await close();throw error;}
 }

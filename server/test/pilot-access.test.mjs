@@ -122,3 +122,20 @@ test('pilot login, protected assets, room admission and upgrades follow the acti
   await rm(file);
   assert.equal((await get('/',authorized)).status,503);
 });
+
+test('shared room survives login, and a restarted or revoked authority rejects old cookies', async t=>{
+  const config={port:0,publicOrigin:origin,pilotInvite:invite};
+  let local=await createLocalServer(config);t.after(()=>local.close());
+  const form={...forwarded,Origin:origin,'Content-Type':'application/x-www-form-urlencoded'};
+  const entry=await request(local.url+'/fps/?network=internet&room=room_123','GET',forwarded);
+  assert.match(entry.body,/name="room" value="room_123"/);
+  const login=await request(local.url+'/pilot/session','POST',form,new URLSearchParams({invite,room:'room_123'}).toString());
+  assert.equal(login.status,303);assert.equal(login.headers.location,'/fps/?network=internet&room=room_123');
+  const Cookie=login.headers['set-cookie'][0].split(';')[0];
+  const bad=await request(local.url+'/pilot/session','POST',form,new URLSearchParams({invite,room:'https://elsewhere.invalid'}).toString());
+  assert.equal(bad.headers.location,'/fps/?network=internet','no open redirect');
+  await local.close();local=await createLocalServer({...config,pilotInvite:randomBytes(32).toString('base64url')});
+  assert.equal((await request(local.url+'/src/fps/app.mjs','GET',{...forwarded,Cookie})).status,401);
+  assert.equal((await request(local.url+'/pilot/session','POST',form,new URLSearchParams({invite}).toString())).status,403,'revoked invite rejected');
+  assert.equal((await request(local.url+'/fps/?network=internet&room=room_123','GET',{...forwarded,Cookie})).status,200,'recoverable login page');
+});

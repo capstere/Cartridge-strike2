@@ -1927,7 +1927,7 @@
     {
       "path": "shared/multiplayer/build.mjs",
       "bytes": 612,
-      "sha256": "015b5a64d1ec56a6eccec84d712f33bb16d979ecb1f998c67df9c42944abf143"
+      "sha256": "53bbd0de56859bd4dca084d7718066d33e02484a0cfd50af88e18d2f1b91add4"
     },
     {
       "path": "shared/multiplayer/collision-contract.mjs",
@@ -1946,8 +1946,8 @@
     },
     {
       "path": "shared/multiplayer/rules.mjs",
-      "bytes": 1701,
-      "sha256": "41001bc6c22b663f6f4e7c185e5bc59b34bf7a176e0cd53680e1e61e01c89016"
+      "bytes": 1884,
+      "sha256": "9ae0082f7a24646d29c86961cfd6b415fbacb0c0d11ab86acd681915987246dc"
     },
     {
       "path": "shared/multiplayer/world.mjs",
@@ -1996,8 +1996,8 @@
     },
     {
       "path": "src/fps/app.mjs",
-      "bytes": 41419,
-      "sha256": "251bafea8c14b168156371b812418d4ffef5c6bccaaee9a137dc2e9bf494d7a8"
+      "bytes": 42642,
+      "sha256": "8fda467c553654848e7ef829226b7169dbd1584f2884ca58f12f8c007a02ca9f"
     },
     {
       "path": "src/fps/audio.mjs",
@@ -2291,13 +2291,18 @@
     },
     {
       "path": "src/fps/network/menu.mjs",
-      "bytes": 3776,
-      "sha256": "3013b192e7b3a830ff9f3d590422fdd80f5d6d013c0aa3ac703622774029c068"
+      "bytes": 4125,
+      "sha256": "40a820460839ed0e7e0af0b0b6a099f9d052cb90b03c9ad0c529eaec03355818"
+    },
+    {
+      "path": "src/fps/network/room-ui.mjs",
+      "bytes": 6804,
+      "sha256": "638686b18b3ad79af1443408a71ae11827cb1f389a3a894c690b26b783f86f11"
     },
     {
       "path": "src/fps/network/session.mjs",
-      "bytes": 18813,
-      "sha256": "68477892bd378e84ede3118c9be0295f2dc37b5a2fe5d55446944d9f34eba260"
+      "bytes": 20275,
+      "sha256": "9ad0bb5d1262b9454e48ebbde8bc94f7b49a347994c0c238460a7e426f2d7342"
     },
     {
       "path": "src/fps/physics.mjs",
@@ -2600,7 +2605,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 58705483,
+  "bytes": 58715504,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

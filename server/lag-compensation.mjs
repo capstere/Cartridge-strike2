@@ -1,5 +1,13 @@
 import {createDoors} from '../src/fps/doors.mjs';
-import {INTERPOLATION_MS,REWIND_MS} from '../shared/multiplayer/rules.mjs';
+import {INTERPOLATION_MS,REWIND_MS,RTT_FRESH_MS} from '../shared/multiplayer/rules.mjs';
+
+// Echoes are untrusted upper bounds, never proof of network latency. Keep a
+// connection's low-water mark: deliberately delaying replies cannot raise it.
+export function recordRtt(seat,rtt,now){
+  if(!Number.isFinite(rtt)||rtt<0||rtt>1000)return false;
+  seat.rtts.push(rtt);if(seat.rtts.length>8)seat.rtts.shift();
+  seat.rtt=Math.min(seat.rtt??Infinity,rtt);seat.rttAt=now;return true;
+}
 
 /** Read-only Colyseus histories, matching the client's snapshot interpolation.
  * The second door controller is only a ray-query context; it never ticks a world.
@@ -35,7 +43,16 @@ export class LagCompensation {
     if(anchor===undefined||stamp<anchor-INTERPOLATION_MS-75||stamp>anchor+75)return this.reject('tick/stamp mismatch');
     // Server-originated nonce RTT samples constrain forged render delays too.
     // Allow one patch and scheduler/jitter margin; the absolute cap still wins.
-    if(seat.rtt!==undefined&&Math.abs(age-(seat.rtt+INTERPOLATION_MS))>125)return this.reject('clock/RTT mismatch');
+    if(!Number.isFinite(seat.rtt)||!Number.isFinite(seat.rttAt)||now-seat.rttAt>RTT_FRESH_MS){
+      // Missing/stale echoes never silently waive the history agreement check.
+      // Keep shooting responsive against the live world without rewind credit.
+      seat.lastShotStamp=stamp;this.shots.set(seat.id,0);this.metrics.live++;return true;
+    }
+    if(Math.abs(age-(seat.rtt+INTERPOLATION_MS))>125){
+      // A changed real path still permits live fire; delayed echoes buy no history.
+      this.metrics.reasons['live RTT mismatch']=(this.metrics.reasons['live RTT mismatch']||0)+1;
+      seat.lastShotStamp=stamp;this.shots.set(seat.id,0);this.metrics.live++;return true;
+    }
     seat.lastShotStamp=stamp;this.shots.set(seat.id,stamp);this.metrics.accepted++;
     this.metrics.ages.push(age);if(this.metrics.ages.length>512)this.metrics.ages.shift();
     return true;
