@@ -78,6 +78,7 @@ try{for(const [count,rtt] of scenarios){
   await delay(2500);await rpc('reset');
   const measurements=await Promise.all(pages.map(p=>p.evaluate(async()=>{
    const n=__fps.network,times=[],remoteErrors=[];let last=0;const start=performance.now();
+   const shotBaseline={confirmed:n.metrics.confirmedShots,suppressed:n.metrics.suppressedShots};
    for(const k of ['corrections','adoptionDistance','shotLatency','hitLatency'])n.metrics[k].length=0;
    n.metrics.maxPending=n.input.pendingCount;
    while(performance.now()-start<7000){
@@ -85,17 +86,40 @@ try{for(const [count,rtt] of scenarios){
     for(const a of n.view.actors)if(!a.isPlayer&&a.alive){const s=n.room.state.actors.get(a.id);remoteErrors.push(Math.hypot(a.x-s.x,a.y-s.y,a.z-s.z));}
    }
    const gl=__fps.renderer.renderer.getContext(),ext=gl.getExtension('WEBGL_debug_renderer_info');
-   return {times,remoteDisplayOffset:remoteErrors,metrics:n.metrics,actorIds:n.view.actors.map(a=>a.id),teams:n.view.actors.map(a=>a.team),
+   return {times,remoteDisplayOffset:remoteErrors,metrics:n.metrics,shotBaseline,sampleStartMs:start,sampleMs:performance.now()-start,actorIds:n.view.actors.map(a=>a.id),teams:n.view.actors.map(a=>a.team),
     allHuman:n.view.actors.every(a=>a.controllerType==='human'&&!a.bot),rtt:n.room.clock.smoothedRtt(),pending:n.input.pendingCount,
     ownId:n.localPlayerId,draws:__fps.renderer.stats.drawCalls,renderer:gl.getParameter(ext?.UNMASKED_RENDERER_WEBGL||gl.RENDERER),
     fatal:!document.querySelector('#fatal').hidden,score:{...n.view.state.score},phase:n.view.phase,enabled:n.enabled,paused:n.view.state.paused,connection:n.connectionState};
   })));
-  if(measurements.some(m=>!m.metrics.confirmedShots)){
-   const diagnostic={measurements:measurements.map(({times,remoteDisplayOffset,metrics,...m})=>({...m,frameMs:stats(times),metrics:Object.fromEntries(Object.entries(metrics).map(([k,v])=>[k,Array.isArray(v)?stats(v):v]))})),server:await rpc('sample')};
+  // The fixed seven-second timing samples above are already copied out of the
+  // browsers. A combat death can put a rendered player in respawn for much of
+  // that sample. Keep all ten drivers active while each browser independently
+  // proves a fresh authoritative shot and cosmetic deduplication. The deadline
+  // is twenty seconds from sample start, including any wait for the other page.
+  const shotChecks=await Promise.all(pages.map(async(page,i)=>{
+   const m=measurements[i],base=m.shotBaseline;
+   const inSample={confirmed:m.metrics.confirmedShots-base.confirmed,suppressed:m.metrics.suppressedShots-base.suppressed};
+   if(inSample.confirmed>0&&inSample.suppressed>0)return {passed:true,inSample,total:inSample,extended:false,observationMs:m.sampleMs};
+   return page.evaluate(async({base,inSample,start})=>{
+    const n=__fps.network,delta=()=>({confirmed:n.metrics.confirmedShots-base.confirmed,suppressed:n.metrics.suppressedShots-base.suppressed});
+    let now=performance.now(),total=delta();
+    while(now-start<20000){
+     if(total.confirmed>0&&total.suppressed>0)return {passed:true,inSample,total,extended:true,observationMs:now-start};
+     await new Promise(r=>setTimeout(r,50));now=performance.now();total=delta();
+    }
+    const a=n.room?.state.actors.get(n.localPlayerId);
+    return {passed:false,inSample,total,extended:true,observationMs:now-start,actor:n.localPlayerId,life:a?.lifeId,
+     alive:a?.alive,deaths:a?.deaths,ammo:a?.ammo,fireId:n.fireId,sent:n.metrics.sent,cosmetics:n.metrics.cosmeticShots,
+     state:n.connectionState,enabled:n.enabled,lastPatchAgeMs:now-n.lastPatch};
+   },{base,inSample,start:m.sampleStartMs});
+  }));
+  if(shotChecks.some(check=>!check.passed)){
+   const diagnostic={shotChecks,measurements:measurements.map(({times,remoteDisplayOffset,metrics,...m})=>({...m,frameMs:stats(times),metrics:Object.fromEntries(Object.entries(metrics).map(([k,v])=>[k,Array.isArray(v)?stats(v):v]))})),server:await rpc('sample')};
    console.log('shot failure diagnostics',JSON.stringify(diagnostic));await writeFile('test-results/pass3b/failure.json',JSON.stringify(diagnostic,null,2));
   }
-  for(const m of measurements){
-   assert.equal(m.actorIds.length,count);assert.equal(new Set(m.actorIds).size,count);assert(m.allHuman);assert(!m.fatal);assert(m.metrics.confirmedShots>0);assert(m.metrics.suppressedShots>0);
+  for(const [i,m] of measurements.entries()){
+   assert.equal(m.actorIds.length,count);assert.equal(new Set(m.actorIds).size,count);assert(m.allHuman);assert(!m.fatal);
+   assert(shotChecks[i].passed,`${m.ownId} must receive and deduplicate a new authoritative shot within 20 seconds of active combat`);
    assert(m.teams.filter(t=>t==='analysts').length<=5&&m.teams.filter(t=>t==='counterAnalysts').length<=5);
   }
   // Network loss during active fire, real socket; fresh Resume and full snapshot.
@@ -120,9 +144,9 @@ try{for(const [count,rtt] of scenarios){
   }
   const server=await rpc('sample');
   rows.push({status:'PASS',count,rttMs:rtt,jitterMs:rtt?20:0,renderedClients:2,protocolPeers:count-2,placement:'test-only C08 combat fixture',background:count===2&&rtt===0?'4 s main-thread stall, 3.2 s CDP browser lifecycle freeze/resume, synthetic blur':'synthetic blur',transportLoss:'NOT RUN',reconnectionDuringCombat:true,
-   client:measurements.map(({times,remoteDisplayOffset,metrics,...m})=>({...m,frameMs:stats(times),fps:times.length*1000/times.reduce((a,b)=>a+b,0),remoteDisplayOffsetM:stats(remoteDisplayOffset),
+   shotChecks,client:measurements.map(({times,remoteDisplayOffset,metrics,sampleStartMs,shotBaseline,...m})=>({...m,frameMs:stats(times),fps:times.length*1000/times.reduce((a,b)=>a+b,0),remoteDisplayOffsetM:stats(remoteDisplayOffset),
     ...Object.fromEntries(['corrections','adoptionDistance','shotLatency','hitLatency'].map(k=>[k,stats(metrics[k]||[])])),maxPending:metrics.maxPending,confirmedShots:metrics.confirmedShots,suppressedShots:metrics.suppressedShots})),server,contract:info.contract});
-  console.log(JSON.stringify({count,rtt,status:'PASS',fps:rows.at(-1).client.map(m=>m.fps),hitP95:rows.at(-1).client.map(m=>m.hitLatency.p95)}));
+  console.log(JSON.stringify({count,rtt,status:'PASS',shotChecks,fps:rows.at(-1).client.map(m=>m.fps),hitP95:rows.at(-1).client.map(m=>m.hitLatency.p95)}));
  }finally{
   clearTimeout(timer);for(const p of pages)await p.evaluate(()=>{clearInterval(window.__combatDriver);__fps.newMatch();}).catch(()=>{});
   await Promise.allSettled(peers.map(p=>p.room.leave()));await Promise.all(contexts.map(c=>c.close()));await proxy?.close();await rpc('close').catch(()=>{});
