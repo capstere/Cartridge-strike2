@@ -88,7 +88,7 @@ jobs:
   multiplayer-gameplay:
     if: github.event_name != 'push'
     runs-on: macos-15
-    timeout-minutes: 12
+    timeout-minutes: 17
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -108,6 +108,13 @@ jobs:
           FPS_NETWORK_ANGLE: metal
           FPS_NETWORK_DPR: '1'
         run: npm run test:browser --prefix server
+
+      - name: Invite login, room membership and gameplay through HTTPS and WSS
+        timeout-minutes: 5
+        env:
+          FPS_NETWORK_ANGLE: metal
+          FPS_NETWORK_DPR: '0.5'
+        run: node tools/network-pilot-browser.mjs
 
   lan-browsers:
     if: github.event_name != 'push'

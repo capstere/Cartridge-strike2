@@ -7,12 +7,21 @@ import {WebSocketTransport} from '@colyseus/ws-transport';
 import {NetworkRoom} from './network-room.mjs';
 import {ROOM_TYPE} from '../shared/multiplayer/rules.mjs';
 import {CONTRACT} from '../shared/multiplayer/build.mjs';
-import {hostingConfig,configFromEnv,accessPolicy,readAdmission,rejectHttp} from './access.mjs';
+import {hostingConfig,configFromEnv,accessPolicy,admissionLimiter,readAdmission,rejectHttp} from './access.mjs';
+import {pilotAccess,localMonitor,redirectLobby,showInvite} from './pilot-access.mjs';
 
-// One direct HTTP/WS origin. LAN needs an explicit, concrete private address.
+const admissionRoute = /^\/matchmake\/(?:create\/private-fps|joinById\/([A-Za-z0-9_-]{1,32}))$/;
+const roomSocket = /^\/[\w-]{1,64}\/[\w-]{1,32}\?[^#\s]{1,512}$/;
+const readMethod = method => method === 'GET' || method === 'HEAD';
+
+// The pilot only listens on loopback behind an explicitly configured HTTPS origin.
 export async function createLocalServer(options={}) {
   const config=hostingConfig(options),{host,port,lan}=config;
+  const pilot=config.pilotInvite ? pilotAccess(config, admissionLimiter()) : null;
   const active=new Set(),root=fileURLToPath(new URL('../',import.meta.url));
+  const manifest=JSON.parse(await readFile(new URL('../build-info.json',import.meta.url)));
+  const publicFiles=new Set(manifest.files.map(f=>'/'+f.path));
+
   class LocalRoom extends NetworkRoom {
     async onCreate(options){
       if(active.size>=2)throw new ServerError(429,'Local server room limit reached.');
@@ -21,49 +30,93 @@ export async function createLocalServer(options={}) {
     }
     onDispose(){super.onDispose();active.delete(this);}
   }
-  const httpServer=http.createServer({requestTimeout:10000,headersTimeout:10000});
+  const httpServer=http.createServer({requestTimeout:10000,headersTimeout:10000,maxHeaderSize:16384});
   httpServer.maxConnections=128;
   let policy;
-  const transport=new WebSocketTransport({server:httpServer,maxPayload:4096,
-    beforeUpgrade:(_path,context)=>{
-      const denied=policy.check({headers:context.headers,remoteAddress:context.ip},true);
-      if(denied)return new Response(denied[1],{status:denied[0]});
-      if(transport.wss.clients.size>=32)return new Response('Connection limit reached.',{status:429});
-    }});
-  const server=new Server({greet:false,gracefullyShutdown:false,
-    transport,
+  const transport=new WebSocketTransport({server:httpServer,maxPayload:4096});
+  const server=new Server({greet:false,gracefullyShutdown:false,transport,
     express:async app=>{
-      const manifest=JSON.parse(await readFile(new URL('../build-info.json',import.meta.url)));
-      const publicFiles=new Set(manifest.files.map(f=>'/'+f.path));
-      app.get('/health',(_req,res)=>res.set('Cache-Control','no-store').json({status:'ok',localOnly:!lan,lan,host,
+      app.get('/health',(_req,res)=>res.set('Cache-Control','no-store').json({status:'ok',localOnly:!lan&&!pilot,lan,pilot:!!pilot,host,
         rooms:active.size,players:[...active].reduce((n,r)=>n+r.clients.length,0),contract:CONTRACT}));
-      app.use((req,res,next)=>{
-        const path=req.path.endsWith('/')?req.path+'index.html':req.path;
-        if(!publicFiles.has(path))return res.sendStatus(404);
-        next();
-      });
       app.use(express.static(root,{dotfiles:'deny',index:'index.html'}));
     },
   });
   server.define(ROOM_TYPE,LocalRoom);
-  // The pinned public serverless API binds routes without listening. Wrap the
-  // complete dispatcher before opening a socket (including its OPTIONS path).
   await server.serverless();
+
+  async function inspect(req, sensitive) {
+    if(pilot)return pilot.inspect(req,sensitive);
+    return {denied:policy.check({headers:req.headers,remoteAddress:req.socket.remoteAddress},sensitive)};
+  }
+
+  // Check the actual socket before handing the request to Colyseus. Its
+  // AuthContext.ip may be derived from X-Forwarded-For or X-Real-IP.
+  const upgrades=httpServer.listeners('upgrade');httpServer.removeAllListeners('upgrade');
+  httpServer.on('upgrade',async(req,socket,head)=>{
+    const onError=()=>socket.destroy();socket.once('error',onError);
+    try{
+      const access=await inspect(req,true);
+      const status=access.denied?.[0] || (pilot&&!access.authenticated?401:0) ||
+        (pilot&&(!roomSocket.test(req.url)||!new URLSearchParams(req.url.split('?')[1]).has('sessionId'))?404:0) ||
+        (transport.wss.clients.size>=32?429:0);
+      if(socket.destroyed)return;
+      if(status){
+        socket.end('HTTP/1.1 '+status+' '+http.STATUS_CODES[status]+'\r\nConnection: close\r\nCache-Control: no-store\r\nContent-Length: 0\r\n\r\n');
+        return;
+      }
+      socket.off('error',onError);
+      for(const upgrade of upgrades)upgrade.call(httpServer,req,socket,head);
+    }catch{socket.destroy();}
+  });
+
   const handlers=httpServer.listeners('request');httpServer.removeAllListeners('request');
   httpServer.on('request',async(req,res)=>{
-    const admission=req.url?.startsWith('/matchmake/'),sensitive=admission||!['GET','HEAD'].includes(req.method);
-    const denied=policy.check({headers:req.headers,remoteAddress:req.socket.remoteAddress},sensitive);
-    if(denied)return rejectHttp(res,...denied);
     res.setHeader('X-Content-Type-Options','nosniff');res.setHeader('Referrer-Policy','same-origin');
     res.setHeader('Cross-Origin-Resource-Policy','same-origin');res.setHeader('X-Frame-Options','DENY');
-    if(admission){
-      if(req.method!=='POST'||!/^\/matchmake\/(create\/private-fps|joinById\/[A-Za-z0-9_-]{1,32})$/.test(req.url))return rejectHttp(res,404,'Unknown matchmaking route.');
-      try{req.body=await readAdmission(req);}catch(e){if(!res.destroyed)rejectHttp(res,e.status||400,e.message);return;}
-    }else if(!['GET','HEAD'].includes(req.method))return rejectHttp(res,405,'Method not allowed.');
-    for(const handler of handlers)handler.call(httpServer,req,res);
+    if(pilot)res.setHeader('Cache-Control','private, no-store');
+    try{
+      const path=req.url.split('?')[0];
+      const admission=path.startsWith('/matchmake/');
+      const localHealth=pilot&&localMonitor(req,httpServer.address().port);
+      if(!localHealth){
+        const access=await inspect(req,admission||!readMethod(req.method));
+        if(access.denied)return rejectHttp(res,...access.denied);
+        if(pilot){
+          if(req.method==='POST'&&req.url==='/pilot/session'){
+            const denied=await pilot.login(req,res,access.origin);
+            if(denied)rejectHttp(res,...denied);
+            return;
+          }
+          const entry=path==='/'||path==='/fps/'||path==='/fps/index.html';
+          if(!access.authenticated){
+            if(entry&&readMethod(req.method))return showInvite(res);
+            return rejectHttp(res,401,'Pilot invite required.');
+          }
+          if(path==='/'&&readMethod(req.method))return redirectLobby(res);
+          if(path==='/health')return rejectHttp(res,404,'Unknown route.');
+        }
+      }
+      if(admission){
+        const route=admissionRoute.exec(req.url);
+        if(req.method!=='POST'||!route)return rejectHttp(res,404,'Unknown matchmaking route.');
+        req.body=await readAdmission(req);
+        // Colyseus normally checks the room code after reserving a seat, at WS
+        // JOIN. Check it here too to avoid spending seats on invalid invites.
+        if(route[1]){
+          const room=[...active].find(r=>r.roomId===route[1]);
+          if(room&&!room.acceptsCode(req.body.code))return rejectHttp(res,403,'Incorrect private room code.');
+        }
+      }else{
+        if(!readMethod(req.method))return rejectHttp(res,405,'Method not allowed.');
+        if(req.headers['transfer-encoding']||Number(req.headers['content-length'])>0)return rejectHttp(res,400,'Unexpected request body.');
+        const file=path.endsWith('/')?path+'index.html':path;
+        if(path!=='/health'&&!publicFiles.has(file))return rejectHttp(res,404,'Unknown route.');
+      }
+      for(const handler of handlers)handler.call(httpServer,req,res);
+    }catch(e){
+      if(!res.destroyed&&!res.headersSent)rejectHttp(res,e.status||400,e.status?e.message:'Invalid request.');
+    }
   });
-  // Configure the policy before connections can arrive, including ephemeral
-  // test ports, in the synchronous listening callback before resolving startup.
   await new Promise((resolve,reject)=>{
     httpServer.once('error',reject);
     httpServer.listen(port,host,()=>{policy=accessPolicy(config,httpServer.address().port);httpServer.off('error',reject);resolve();});
@@ -73,7 +126,8 @@ export async function createLocalServer(options={}) {
 }
 if(process.argv[1]===fileURLToPath(import.meta.url)){
   const local=await createLocalServer(configFromEnv(process.env));
-  console.log(`${local.config.lan?'Trusted LAN':'Localhost only'} · up to 10 players (5v5): ${local.url}/fps/?network=lan`);
+  const mode=local.config.pilotInvite?'Invite-only HTTPS pilot':local.config.lan?'Trusted LAN':'Localhost only';
+  console.log(`${mode} · up to 10 players (5v5), listening at ${local.url}`);
   let stopping=false;
   for(const signal of ['SIGINT','SIGTERM'])process.on(signal,async()=>{if(stopping)return;stopping=true;await local.close();});
 }

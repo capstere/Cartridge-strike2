@@ -1,4 +1,5 @@
 // Private test IPC only. Never imported by the shipped server.
+import {readFile} from 'node:fs/promises';
 import {monitorEventLoopDelay} from 'node:perf_hooks';
 import {pathToFileURL} from 'node:url';
 import {cpus,platform,arch} from 'node:os';
@@ -64,7 +65,8 @@ process.on('message',async({id,action,options})=>{
   let result;
   if(action==='start'){
    local=await createLocalServer({port:0});fixtureTimer=setInterval(instrument,20);
-   result={url:local.url,contract:CONTRACT,environment:{node:process.version,platform:platform(),arch:arch(),cpu:cpus()[0].model,cores:cpus().length}};
+   const model=await readFile('/proc/device-tree/model','utf8').then(value=>value.replace(/\0/g,'').trim()).catch(()=>undefined);
+   result={url:local.url,contract:CONTRACT,environment:{model,node:process.version,platform:platform(),arch:arch(),cpu:cpus()[0].model,cores:cpus().length}};
   }else if(action==='reset'){
    for(const a of Object.values(samples))a.length=0;bytes=inBytes=0;loops.reset();cpu=process.cpuUsage();started=performance.now();global.gc?.();result=snapshot();
   }else if(action==='sample'){global.gc?.();result=snapshot();}

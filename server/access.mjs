@@ -1,4 +1,5 @@
 import {isIP} from 'node:net';
+import {pilotConfig} from './pilot-access.mjs';
 
 export function privateIPv4(address) {
   if(isIP(address)!==4)return false;
@@ -6,30 +7,33 @@ export function privateIPv4(address) {
   return a===10 || a===172&&b>=16&&b<=31 || a===192&&b===168;
 }
 const loopback=ip=>ip==='::1'||ip==='127.0.0.1';
-export function hostingConfig({lan=false,host,port=2567}={}) {
+export function hostingConfig({lan=false,host,port=2567,publicOrigin,publicOriginFile,pilotInvite}={}) {
   if(typeof lan!=='boolean')throw Error('LAN must be explicitly enabled.');
   if(!Number.isInteger(port)||port<0||port>65535)throw Error('PORT must be an integer between 0 and 65535.');
   host??='127.0.0.1';
   if(lan?!privateIPv4(host):host!=='127.0.0.1')throw Error(lan?
     'CS2_LAN_HOST must be the Pi\'s private IPv4 address (10.x, 172.16–31.x or 192.168.x); wildcard/public binds are disabled.':
     'Local mode binds only 127.0.0.1. Set CS2_LAN=1 and CS2_LAN_HOST explicitly to enable LAN.');
-  return {lan,host,port};
+  return {lan,host,port,...pilotConfig({lan,publicOrigin,publicOriginFile,pilotInvite})};
 }
 export function configFromEnv(env) {
   if(env.CS2_LAN!==undefined&&!['0','1'].includes(env.CS2_LAN))throw Error('CS2_LAN must be 0 or 1.');
   if(env.PORT!==undefined&&(!/^\d+$/.test(env.PORT)||Number(env.PORT)<1))throw Error('PORT must be between 1 and 65535.');
-  return hostingConfig({lan:env.CS2_LAN==='1',host:env.CS2_LAN_HOST||undefined,port:env.PORT===undefined?2567:Number(env.PORT)});
+  return hostingConfig({publicOrigin:env.CS2_PUBLIC_ORIGIN,publicOriginFile:env.CS2_PUBLIC_ORIGIN_FILE,pilotInvite:env.CS2_PILOT_INVITE,
+    lan:env.CS2_LAN==='1',host:env.CS2_LAN_HOST||undefined,port:env.PORT===undefined?2567:Number(env.PORT)});
 }
 
 // Bounded per-peer and aggregate admission buckets. Asset loading does not spend
 // the matchmaking budget. Never trust forwarded IPs on this direct LAN server.
 export function admissionLimiter({now=()=>performance.now()}={}) {
   const peers=new Map(),global={tokens:60,at:now()};
-  const spend=(bucket,capacity,rate,t)=>{bucket.tokens=Math.min(capacity,bucket.tokens+(t-bucket.at)*rate/1000);bucket.at=t;if(bucket.tokens<1)return false;bucket.tokens--;return true;};
+  const refill=(bucket,capacity,rate,t)=>{bucket.tokens=Math.min(capacity,bucket.tokens+(t-bucket.at)*rate/1000);bucket.at=t;};
   return {peers,allow(ip){
     const t=now();for(const [key,b] of peers)if(t-b.at>60000)peers.delete(key);
     if(!peers.has(ip)){if(peers.size>=256)return false;peers.set(ip,{tokens:30,at:t});}
-    return spend(global,60,2,t)&&spend(peers.get(ip),30,1,t);
+    const peer=peers.get(ip);refill(global,60,2,t);refill(peer,30,1,t);
+    if(global.tokens<1||peer.tokens<1)return false;
+    global.tokens--;peer.tokens--;return true;
   }};
 }
 export function accessPolicy(config,port) {

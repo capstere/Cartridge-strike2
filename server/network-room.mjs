@@ -71,9 +71,12 @@ export class NetworkRoom extends Room {
     },1000);
     this.setFixedTimestep(()=>this.fixedTick(),60);
   }
+  acceptsCode(code) {
+    return validCode(code) && timingSafeEqual(hashCode(code), this.codeHash);
+  }
   onAuth(client,options) {
     try{checkContract(options.contract,CONTRACT);}catch(e){throw new ServerError(409,e.message);}
-    if(!validCode(options.code)||!timingSafeEqual(hashCode(options.code),this.codeHash))throw new ServerError(403,'Incorrect private room code.');
+    if(!this.acceptsCode(options.code))throw new ServerError(403,'Incorrect private room code.');
     this.chooseSeat(options.team);
     return true;
   }

@@ -1,0 +1,33 @@
+[Unit]
+Description=Cartridge-Strike 2 isolated Floor 5 authority
+
+[Service]
+DynamicUser=yes
+WorkingDirectory=/opt/cartridge-strike2-pilot/current/server
+Environment=NODE_ENV=production
+Environment=PORT=2568
+Environment=CS2_PUBLIC_ORIGIN_FILE=/run/cartridge-strike2-tunnel/origin
+EnvironmentFile=/etc/cartridge-strike2-pilot/invite.env
+ExecStart=/usr/bin/node --import ./register-shared.mjs local-server.mjs
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=15
+MemoryMax=2G
+TasksMax=96
+LimitNOFILE=2048
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+IPAddressDeny=any
+IPAddressAllow=localhost
+CapabilityBoundingSet=
+LockPersonality=yes
+
+[Install]
+WantedBy=multi-user.target

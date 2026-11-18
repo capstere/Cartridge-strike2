@@ -1,6 +1,8 @@
 # Cartridge-Strike 2 handover
 
-**Next multiplayer task — review [PASS 3B PR #22](https://github.com/capstere/Cartridge-strike2/pull/22), its final-head CI and [PASS3B_REPORT.md](docs/multiplayer/PASS3B_REPORT.md). Do not automatically merge the new PR.**
+**Next multiplayer task — play a private Floor 5 room on an iPhone using cellular data and a friend's independent connection.** Use the server owner's current pilot address and invite. Record the devices, networks, room join, movement, firing, reload, rotation and resume. [Pass 4 Pi results](docs/multiplayer/pass4/README.md) · [Pilot operation and rollback](deploy/pilot/README.md)
+
+Reviewed [PR #22](https://github.com/capstere/Cartridge-strike2/pull/22) at `02f7b8b`. Its [seven CI jobs](https://github.com/capstere/Cartridge-strike2/actions/runs/44209972562) passed and the merge landed at `f7218c2`. The Pass 4 candidate adds an invite-only internet service alongside the original Pi service.
 
 PR #21 was reviewed at `e3d2884`, all six required CI jobs passed, and fresh local
 core/server/two-rendered-client launch checks passed. It was merged as **ac87eec**
