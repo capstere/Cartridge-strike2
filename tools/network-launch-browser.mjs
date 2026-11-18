@@ -51,14 +51,16 @@ try{
  // Hold real input until authority observes it; a fixed 250 ms press can fit
  // entirely between two frames on a software runner. Keep bounded deadlines.
  await a.keyboard.down('w');await until(()=>Math.abs(player.z-z)>.1,'real keyboard input reaches authority');await a.keyboard.up('w');
+ // Windows SwiftShader can render the spawn view at 1 FPS: its >500 ms old
+ // input/aim stamps MUST be rejected. Exercise the same real mouse-look check
+ // before firing so this compatibility fixture can produce timely inputs.
+ // Full normal-camera combat remains in the two-rendered-client GPU jobs.
+ await a.mouse.move(resumePoint.x,resumePoint.y+360);
+ await until(()=>player.pitch<-.3,'real mouse look reaches authority');
  await a.mouse.down();await until(()=>player.inventory.primary.ammo<ammo,'real mouse fire reaches authority');await a.mouse.up();
  assert(Math.abs(player.z-z)>.1);assert(player.inventory.primary.ammo<ammo);
  const shots=ammo-player.inventory.primary.ammo;
  if(peer)await until(()=>peer.room.state.actors.get(player.id)?.ammo<ammo,'protocol peer receives the browser shots');
- // Exercise real mouse look too. A downward view keeps this transient HUD
- // check observable on software GPUs; the full-map job uses the normal camera.
- await a.mouse.move(resumePoint.x,resumePoint.y+360);
- await until(()=>player.pitch<-.3,'real mouse look reaches authority');
  // Observe before the key: a driver round trip can miss a short reload label.
  await a.evaluate(()=>{window.__reloadHudSeen=new Promise(resolve=>{
   const element=document.querySelector('#reload-text');let timer;
@@ -75,7 +77,7 @@ try{
  await until(()=>authority.sim.game.actors.length===1,'leaving cleans up only the departing player');
  assert(await a.locator('#fatal').isHidden(),'returning to the empty network lobby must keep the render loop alive');assert.deepEqual(errors,[]);
  if(peer)assert.deepEqual(peer.errors,[]);
- const result={hostPlatform:process.platform,physicalDevices:false,status:'PASS',contract:CONTRACT,headed,testHooks:false,humans:2,browserProcesses:browsers.length,peer:protocolPeer?'Colyseus SDK (no renderer)':'second rendered browser',angle,resumeAttempts,desktopPointerLock:true,manualFullscreen:true,actualKeysAndMouse:true,mouseLook:true,movement:Math.abs(fullscreenZ-z),shots,reloadHud:true,leaveKeepsOther:true,errors};
+ const result={hostPlatform:process.platform,physicalDevices:false,status:'PASS',contract:CONTRACT,headed,testHooks:false,humans:2,browserProcesses:browsers.length,peer:protocolPeer?'Colyseus SDK (no renderer)':'second rendered browser',angle,resumeAttempts,desktopPointerLock:true,manualFullscreen:true,actualKeysAndMouse:true,mouseLook:true,fireView:'downward view after real mouse look; full-map combat tested in GPU jobs',movement:Math.abs(fullscreenZ-z),shots,reloadHud:true,leaveKeepsOther:true,errors};
  fs.mkdirSync('test-results/network',{recursive:true});fs.writeFileSync('test-results/network/normal-launch.json',JSON.stringify(result,null,2));console.log(JSON.stringify(result));
 }catch(error){
  fs.mkdirSync('test-results/network',{recursive:true});
