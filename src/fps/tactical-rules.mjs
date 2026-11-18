@@ -12,6 +12,7 @@ export const canAim = weapon => {
   const w = WEAPONS[weapon];
   return !!w && !w.projectile && ['primary', 'pistol'].includes(w.slot);
 };
+export const advanceAim=(amount,wanted,dt)=>amount+((wanted?1:0)-amount)*(1-Math.exp(-14*Math.max(0,Math.min(.1,dt))));
 export const aimFov = weapon => weapon === 'sniper' ? 24 : weapon === 'shotgun' ? 60 : 52;
 export const isManualOnly = weapon => {
   const w = WEAPONS[weapon];
@@ -66,8 +67,10 @@ export class EmptyMagazineReload {
     if (!allowed) { this.reset(); return false; }
     const item = game.item(p);
     if (!item || item.ammo > 0 || !(item.reserve > 0)) { this.reset(); return false; }
-    if (item !== this.item || p !== this.actor || p.weapon !== this.weapon || this.since === null) {
-      this.item = item; this.actor = p; this.weapon = p.weapon; this.since = game.state.time;
+    const actorKey=game.network?p.id+':'+p.lifeId+':'+p.controlEpoch:p;
+    const itemKey=game.network?item.id:item;
+    if (itemKey !== this.item || actorKey !== this.actor || p.weapon !== this.weapon || this.since === null) {
+      this.item = itemKey; this.actor = actorKey; this.weapon = p.weapon; this.since = game.state.time;
       return false;
     }
     if (game.state.time - this.since < .28 - 1e-8) return false;

@@ -53,8 +53,8 @@ test('delayed combat events cannot leak across lives or departed seats; own effe
 test('late own shot confirmations stay deduplicated through render stalls and pause/resume',()=>{
   const self={id:'a',lifeId:2,alive:true,ready:true},old=performance.now()-5000;
   const session={closed:false,enabled:true,seenEvent:0,events:[],localPlayerId:'a',lifeId:2,alive:true,lastPatch:old,remote:new Map(),
-    room:{state:{actors:new Map([['a',self]]),time:0},send(){}},
-    world:{doors:{doors:[],elevators:{setProgress(){}}}},view:{state:{},actors:[]},predict:{tick:()=>0},prediction:{reset(){}},input:{pendingCount:0},
+    room:{state:{actors:new Map([['a',self]]),brokenGlass:new Map(),grenades:new Map(),time:0},send(){}},
+    world:{glass:{reset(){},panes:new Map()},doors:{doors:[],elevators:{setProgress(){}}}},view:{state:{},actors:[]},predict:{tick:()=>0},prediction:{reset(){}},input:{pendingCount:0},
     predictedShots:new Map([['a:2:1',old],['a:2:2',old],['a:2:3',old]]),
     metrics:{confirmedShots:0,suppressedShots:0,maxPending:0,resets:0}};
   NetworkSession.prototype.advanceFrame.call(session,performance.now(),{});

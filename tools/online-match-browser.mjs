@@ -35,6 +35,7 @@ async function readyAndStart(host,friend){
 try{
  const host=await open(false);
  await host.locator('#network-name').fill('Host');await host.locator('#network-team').selectOption('analysts');await host.locator('#network-code').fill('browser-match-123');
+ await host.locator('#network-fill-bots').uncheck();
  await host.locator('[data-create=true]').click();await host.locator('#room-ready').waitFor();const roomId=await host.locator('#network-room').inputValue();
  const friend=await open(true,roomId);assert.equal(await friend.locator('#network-room').inputValue(),roomId,'shared room survived authentication');
  await friend.locator('#network-name').fill('Friend');await friend.locator('#network-team').selectOption('counterAnalysts');await friend.locator('#network-code').fill('browser-match-123');

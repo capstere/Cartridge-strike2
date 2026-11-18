@@ -4,7 +4,7 @@ import {populateZombies,tickZombies,tickDance,reactZombie} from './zombies.mjs';
 import {zombieRay,zombiePosition} from './zombie-poses.mjs';
 import {missionRoomName} from './player-names.mjs';
 import { grenadeLaunch, advanceGrenade } from './grenade-physics.mjs';
-import { shotSpread } from './tactical-rules.mjs';
+import { advanceAim, canAim, shotSpread } from './tactical-rules.mjs';
 import {initializeCombat,tickCombat,combatEvent} from './combat-flow.mjs';
 import { CONFIG, TEAMS, WEAPONS, PRIORITY, seededRandom, DIFFICULTIES, DEFAULT_DIFFICULTY, TEAMMATE_DIFFICULTY } from './config.mjs';
 import { BotController } from './bots.mjs';
@@ -78,7 +78,7 @@ export class Game {
   get phase() { return this.state.phase; }
   get bomb() { return this.state.bomb; }
   get difficulty() { return this.state.difficulty; }
-  difficultyProfileFor(actor) { return actor.team === this.team ? TEAMMATE_DIFFICULTY : DIFFICULTIES[this.state.difficulty]; }
+  difficultyProfileFor(actor) { return !this.config.networkSlice && actor.team === this.team ? TEAMMATE_DIFFICULTY : DIFFICULTIES[this.state.difficulty]; }
   setDifficulty(id) {
     if (!DIFFICULTIES[id]) return false;
     if (this.phase === 'menu') { this.state.difficulty = id; this.config.difficulty = id; this.state.pendingDifficulty = null; }
@@ -175,8 +175,12 @@ export class Game {
         actor.reloadUntil = 0;
       }
       const controls = actor.bot ? actor.bot.update(dt) : actor.controllerType === 'human' ? (inputsByActor?.get(actor.id) ?? (actor.isPlayer && !inputsByActor ? input : {})) : {};
+      if(this.config.networkSlice && !actor.bot){
+        actor.aiming=!!controls.aim && canAim(actor.weapon) && !actor.reloadUntil && !actor.action;
+        actor.aimAmount=actor.aiming?advanceAim(actor.aimAmount||0,true,dt):0;
+      }
       this.moveActor(actor, controls, dt);
-      if (controls.fire) this.fire(actor, !!controls.autoFire || !actor.fireHeld);
+      if (controls.fire) this.fire(actor, this.config.networkSlice || !!controls.autoFire || !actor.fireHeld);
       actor.fireHeld = !!controls.fire;
       this.interact(actor, controls);
       actor.interactHeld = !!controls.interact;
@@ -215,7 +219,6 @@ export class Game {
     this.emit('buy', actor, { item: id }); return { ok: true };
   }
   select(slot, actor = this.player) {
-    if(this.config.networkSlice)return false;
     if (!actor?.alive) return false;
     const inventory = actor.inventory; let id = slot;
     if (slot === 1 || slot === '1' || slot === 'primary') id = inventory.primary?.id;
@@ -315,14 +318,14 @@ export class Game {
         }
       } else if (wall) {
         this.emit('impact', null, { ...hitPoint, sourceId: actor.id, surface: wall.material ?? 'wall', surfaceId: wall.id, normal: wall.normal, direction: dir });
-        const shattered=!this.config.networkSlice&&this.world.glass?.breakAt(wall);if(shattered)this.emit('glass-break',null,{...shattered,sourceId:actor.id});
+        const shattered=this.world.glass?.breakAt(wall);if(shattered){this.onGlassBreak?.(shattered.paneId);this.emit('glass-break',null,{...shattered,sourceId:actor.id});}
       }
       this.emit('tracer', actor, { from: origin, to: hitPoint, weapon: actor.weapon });
     }
     return true;
   }
-  traceHitscan(actor,origin,dir,range,targets=[...this.actors,...(this.state.zombies||[]),...(this.config.hostageDamage?this.hostages:[]),...(this.config.wanderers?this.state.wanderers||[]:[])]) {
-    const wall=this.world.raycast(origin,dir,range,{vision:false});
+  traceHitscan(actor,origin,dir,range,targets=[...this.actors,...(this.state.zombies||[]),...(this.config.hostageDamage?this.hostages:[]),...(this.config.wanderers?this.state.wanderers||[]:[])],rayOptions={vision:false}) {
+    const wall=this.world.raycast(origin,dir,range,rayOptions);
     let nearest=wall?.distance??range,victim=null;
     for(const target of targets){
       if(!target.alive||target.rescued||target.id===actor.id)continue;
@@ -345,7 +348,7 @@ export class Game {
     const length = Math.hypot(hitPoint.x - sourcePosition.x, hitPoint.y - sourcePosition.y, hitPoint.z - sourcePosition.z) || 1;
     const incoming = context.direction ?? { x: (hitPoint.x - sourcePosition.x) / length, y: (hitPoint.y - sourcePosition.y) / length, z: (hitPoint.z - sourcePosition.z) / length };
     target.hurtTime = this.state.time; target.hurtDirection = { ...incoming };
-    const detail = { sourceId: source?.id, sourceName: source?.name, targetName: target.name, weapon: kind, amount: dealt, hp: target.hp,
+    const detail = { sourceId: this.config.networkSlice && !this.actors.includes(source) ? undefined : source?.id, sourceName: source?.name, targetName: target.name, weapon: kind, amount: dealt, hp: target.hp,
       point: { ...hitPoint }, direction: { ...incoming }, sourcePosition: { ...sourcePosition }, ...hitPoint };
     this.emit('damage', target, detail); this.emit('hit', target, detail);
     if(target.kind==='zombie')reactZombie(this,target,kind,detail,source);
@@ -376,7 +379,8 @@ export class Game {
   throwGrenade(actor, type) {
     if (this.phase !== 'active' || !actor.alive || !actor.inventory[type]) return false;
     actor.inventory[type]--;
-    this.state.grenades.push({ ...grenadeLaunch(actor, this.config, this.state.time, type), id: `grenade-${++this.eventSerial}` });
+    if(this.config.networkSlice)actor.spawnProtectedUntil=0;
+    this.state.grenades.push({ ...grenadeLaunch(actor, this.config, this.state.time, type), ...(this.config.networkSlice?{owner:actor,team:actor.team,ownerLifeId:actor.lifeId}:{}), id: `grenade-${++this.eventSerial}` });
     this.emit('throw', actor, { grenade: type }); this.select(actor.inventory.primary?.id ?? actor.inventory.pistol?.id ?? 'knife', actor); return true;
   }
   updateGrenades(dt) {
@@ -395,7 +399,7 @@ export class Game {
     if (grenade.type === 'smoke') {
       this.state.smokes.push({ ...point(grenade), y: grenade.y + 1, id: grenade.id, radius: c.smokeRadius, until: this.state.time + c.smokeDuration }); return;
     }
-    const owner = this.actors.find(a => a.id === grenade.ownerId), origin = { ...point(grenade), y: grenade.y + .08 };
+    const owner = grenade.owner ?? this.actors.find(a => a.id === grenade.ownerId), origin = { ...point(grenade), y: grenade.y + .08 };
     for (const actor of [...this.actors,...(this.state.zombies||[]),...(this.config.hostageDamage?this.hostages:[]),...(this.config.wanderers?this.state.wanderers||[]:[])]) {
       if (!actor.alive||actor.rescued) continue;
       const target = eye(actor), d = Math.hypot(target.x - origin.x, target.y - origin.y, target.z - origin.z);

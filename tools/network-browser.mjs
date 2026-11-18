@@ -38,6 +38,7 @@ async function open(viewport={width:1280,height:720},mobile=false,endpoint=local
 async function join(page,endpoint,roomId='',name='Player'){
  assert.equal(await page.locator('#network-endpoint').inputValue(),endpoint);await page.locator('#network-code').fill('testing-123');
  await page.locator('#network-name').fill(name);await page.locator('#network-room').fill(roomId);
+ if(!roomId)await page.locator('#network-fill-bots').uncheck();
  await page.locator(`[data-create="${roomId?'false':'true'}"]`).click();
  try{
   // Distinguish a connection failure or normal pause from a missing room. A

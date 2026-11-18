@@ -77,7 +77,8 @@ async function submit(page,name,id='',code=roomCode){
   await page.locator('#network-name').fill(name);await page.locator('#network-code').fill(code);
   await page.locator('#network-team').selectOption(id?'counterAnalysts':'analysts');
   await page.locator('#network-room').fill(id);
-  await page.locator('[data-create="'+String(!id)+'"]').click();
+  if(!id)await page.locator('#network-fill-bots').uncheck();
+ await page.locator('[data-create="'+String(!id)+'"]').click();
 }
 
 // Look up the already-connected SDK Room on the observer. Leave all game code,

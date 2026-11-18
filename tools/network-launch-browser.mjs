@@ -27,7 +27,8 @@ async function open(mobile){
 }
 async function form(p,room=''){
  assert.equal(await p.locator('#network-endpoint').inputValue(),local.url);await p.locator('#network-code').fill('private-123');
- await p.locator('#network-room').fill(room);await p.locator(`[data-create=${!room}]`).click();
+ await p.locator('#network-room').fill(room);if(!room)await p.locator('#network-fill-bots').uncheck();
+ await p.locator(`[data-create=${!room}]`).click();
 }
 try{
  const a=await open(false);let b;

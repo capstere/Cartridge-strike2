@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {setTimeout as delay} from 'node:timers/promises';
 import {CONTRACT} from '../../shared/multiplayer/build.mjs';
 export {delay};
-export const options={code:'pass3b-123',name:'Player',contract:CONTRACT};
+export const options={fillBots:false,code:'pass3b-123',name:'Player',contract:CONTRACT};
 export async function until(fn,label,timeout=5000){const end=performance.now()+timeout;while(!fn()){assert(performance.now()<end,label);await delay(10);}}
 export const own=room=>[...(room.state.actors?.values()||[])].find(a=>a.sessionId===room.sessionId);
 export async function ready(room){

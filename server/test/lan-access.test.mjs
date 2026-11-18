@@ -6,7 +6,7 @@ import {Client} from '@colyseus/sdk';
 import {createLocalServer} from '../local-server.mjs';
 import {CONTRACT} from '../../shared/multiplayer/build.mjs';
 
-const options={code:'private-123',name:'Player',contract:CONTRACT};
+const options={fillBots:false,code:'private-123',name:'Player',contract:CONTRACT};
 function request(url,{headers={},body,method=body?'POST':'GET',chunks}={}) {
   return new Promise((resolve,reject)=>{
     const r=http.request(url,{method,headers},res=>{let text='';res.on('data',b=>text+=b);res.on('end',()=>resolve({status:res.statusCode,headers:res.headers,text}));});

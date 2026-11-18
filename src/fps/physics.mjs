@@ -286,7 +286,7 @@ export function createPhysics(description,data){
   }
 
   let rayStamp=0;
-  function raycast(origin,direction,maxDistance=100,{vision=false,staticOnly=false}={}){
+  function raycast(origin,direction,maxDistance=100,{vision=false,staticOnly=false,glassDisabled}={}){
     const len=Math.hypot(direction.x,direction.y||0,direction.z);if(len<EPS||maxDistance<=0)return null;
     const dir={x:direction.x/len,y:(direction.y||0)/len,z:direction.z/len},o={x:origin.x,y:origin.y??1.5,z:origin.z};
     let hit=null,best=maxDistance;
@@ -294,7 +294,7 @@ export function createPhysics(description,data){
     // neighbourhood Sets, and stop behind the nearest solid hit (also for AI rays).
     const stamp=++rayStamp;
     const test=b=>{
-      if(b.disabled||b._rayStamp===stamp)return;b._rayStamp=stamp;
+      if((glassDisabled&&b.glassId?glassDisabled(b.glassId):b.disabled)||b._rayStamp===stamp)return;b._rayStamp=stamp;
       if(vision&&b.material==='glass')return;
       const ox=o.x-b.x,oz=o.z-b.z,p=[b.cos*ox-b.sin*oz,o.y-b.y,b.sin*ox+b.cos*oz],d=[b.cos*dir.x-b.sin*dir.z,dir.y,b.sin*dir.x+b.cos*dir.z],half=[b.w/2,b.h/2,b.d/2];
       let enter=-Infinity,leave=Infinity,axis=-1,sign=0,ok=true;

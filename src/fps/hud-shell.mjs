@@ -40,7 +40,7 @@ function ensureDetail() {
 }
 function showDetail(w) {
   const d = ensureDetail();
-  if (!w) { d.innerHTML = '<small>VALD UTRUSTNING</small><p>Välj utrustning till vänster. Tryck på en vara för att köpa.</p>'; return; }
+  if (!w) { d.innerHTML = '<small>VALD UTRUSTNING</small><p>'+(html.classList.contains('network-session-ui')?'Välj huvudvapen för nästa respawn.':'Välj utrustning till vänster. Tryck på en vara för att köpa.')+'</p>'; return; }
   const bar = (label, v, max, txt) => `<div>${label}<i style="--v:${Math.min(100, Math.round(v / max * 100))}%"></i><b>${txt}</b></div>`;
   let stats = '';
   if (w.slot === 'grenade') stats = `<div>MAX<i style="--v:${w.limit * 50}%"></i><b>${w.limit}</b></div>`;
@@ -58,7 +58,7 @@ function group() {
   const buttons = [...shop.children].filter(el => el.tagName === 'BUTTON');
   if (!buttons.length) return;
   grouping = true;
-  const cash = money(), side = team();
+  const cash = money(), side = $('buy').dataset.team || team();
   const cols = CATS.map((c, i) => { const col = document.createElement('section'); col.className = 'cs-buy-col'; col.innerHTML = `<h3><b>${i + 1}</b>${c.label}</h3>`; return { c, col }; });
   for (const b of buttons) {
     const w = WEAPONS[b.dataset.item]; if (!w) continue;

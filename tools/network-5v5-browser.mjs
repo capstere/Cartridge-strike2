@@ -29,7 +29,7 @@ try{for(const [count,rtt] of scenarios){
    await page.goto(url+'/fps/?network=local&test&realtime');await page.waitForFunction(()=>window.__fps||!document.querySelector('#fatal').hidden);
    assert(await page.locator('#fatal').isHidden());
   }
-  const id=await pages[0].evaluate(async endpoint=>(await __fps.joinNetwork({endpoint,code:'load-123',name:'Rendered A',create:true})).room.roomId,url);
+  const id=await pages[0].evaluate(async endpoint=>(await __fps.joinNetwork({endpoint,code:'load-123',name:'Rendered A',create:true,fillBots:false})).room.roomId,url);
   await pages[1].evaluate(async({endpoint,id})=>__fps.joinNetwork({endpoint,roomId:id,code:'load-123',name:'Rendered C'}).then(()=>null),{endpoint:url,id});
   if(count===2&&rtt===0){
    await pages[0].evaluate(()=>{const end=performance.now()+4000;while(performance.now()<end){/* intentional main-thread stall */}});
