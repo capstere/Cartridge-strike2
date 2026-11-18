@@ -1,5 +1,20 @@
 # Pass 4 Raspberry Pi internet pilot
 
+The automated measurements below are historical PASS 4 evidence. For the current
+release and deployment identity, see [the online release report](../ONLINE_RELEASE_REPORT.md).
+
+## User-verified physical playtest — 18 November 2026
+
+**USER-VERIFIED PHYSICAL PLAYTEST:** Jesper reported that a physical iPhone using
+Safari over mobile data and a work computer using Chrome Incognito on another
+network joined the same Floor 5 room. Movement, shooting, damage, reload and
+audible sound worked. Physical death/respawn, background/reconnect, sustained
+performance and the new match/results/rematch flow still need separate evidence.
+Android remains **NOT RUN**. These observations are separate from all automated
+SDK and rendered-browser results below.
+
+## Historical deployment snapshot
+
 The authoritative Floor 5 server runs on a Raspberry Pi 5 Model B Rev 1.1 with four Cortex-A76 cores, 16 GB RAM, Debian 12 ARM64 and Linux 6.12.96. The existing service was on the Pass 2 checkout at ad6742c, running Node 26.13.0 on loopback port 2567. The new pilot uses the system Node 26.13.1 and a separately installed release on loopback port 2568. The pilot address and invitation are shared privately. The Pi serves release 27480426a, with build fingerprint 2e5e53aa. The connector expires on November 19, 2026 at 06:27 CET.
 
 ## Measurements
@@ -31,6 +46,6 @@ PR #22 passed all seven jobs on its final head and merged as f7218c2. The new ad
 | Isolation, restart and rollback | **PASS**. Stopped the replacement and verified the original still served on 2567. Forced exit of the pilot process and then of the connector child. Systemd recovered both. The connector assigned a new hostname and both public gameplay probes passed on it. The original service retained PID 46794. |
 | Monitoring | **PASS**. Local authority and edge readiness checks succeeded. The first timer fired during connector startup. Its initial delay now starts at timer activation. |
 | Two independent internet connections | **PASS**. A Pi client created the room over public HTTPS. A GitHub-hosted Ubuntu client joined it over WSS from another network using a separately authenticated, encrypted session. Each verified the other actor moving, firing and reloading. The runner measured 126 ms RTT and acknowledged 358 inputs. The first split-client run joined but timed out on the remote move/fire check. The passing run used the game’s fixed-step input cadence and SDK clock. [Both players’ results](pi-public-wan.json) · [External runner log](https://github.com/capstere/Cartridge-strike2/actions/runs/44246257389) |
-| Physical iPhone, Android and two human players | **NOT RUN**. Desktop and touch-emulated Chromium ran on the Pi. The independent-network run used two SDK clients. |
+| Physical iPhone, Android and two human players in the automated session below | **NOT RUN in that session**. Desktop and touch-emulated Chromium ran on the Pi. The independent-network run used two SDK clients. |
 
 [Pass 4 pull request and GitHub CI](https://github.com/capstere/Cartridge-strike2/pull/23). The temporary service, expiration, units, monitoring, verification commands and rollback are described in the [Pi deployment runbook](../../../deploy/pilot/README.md).

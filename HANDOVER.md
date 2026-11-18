@@ -1,17 +1,49 @@
 # Cartridge-Strike 2 handover
 
-**Next multiplayer task — play a private Floor 5 room on an iPhone using cellular data and a friend's independent connection.** Use the server owner's current pilot address and invite. Record the devices, networks, room join, movement, firing, reload, rotation and resume. [Pass 4 Pi results](docs/multiplayer/pass4/README.md) · [Pilot operation and rollback](deploy/pilot/README.md)
+**Next online task — verify the new complete match flow on the physical devices.**
+The first private online Team Deathmatch release adds a server-owned waiting
+lobby, Ready/Start, countdown, 10-minute/50-kill matches, results and same-room
+rematch. See [the online release report](docs/multiplayer/ONLINE_RELEASE_REPORT.md)
+and [Swedish status/update/rollback instructions](deploy/online/README.md).
+The release payload is `d886a10060b8fbf9b2d3034e8c8d0ad46a8a39d1`, protocol 5,
+runtime build `3af2145a3d18bdbd58d53ebeb6f35f3309531892085dfe376b5aaab9098a473c`.
+This payload is deployed on loopback port 2568. Its seven CI jobs passed in
+[44267713626](https://github.com/capstere/Cartridge-strike2/actions/runs/44267713626).
+The final server implementation completed a 30-minute ten-SDK-client Pi soak
+with 52 match transitions, 30 reconnects and 2,730 measured combat respawns.
+Actual public activation, rollback and reactivation passed two-client HTTPS/WSS
+gameplay checks. Ten independently authenticated SDK clients joined 5v5 after
+the stop/reopen check of public exposure. Services are enabled and owned by
+systemd; the MacBook and Codex are not needed for operation. Two separately
+authenticated rendered Chromium clients also completed the real public
+600-second match, received identical results and fired again in a same-room
+rematch. The old PASS 4 release remains available for rollback. See the report
+for exact evidence and measurement limits; these browsers were not physical
+phone/work-computer players.
 
-November 18 live playtest: the user reported that both physical devices reached
-the invite page but received "Fel inbjudningskod". The delivered code matched
-the running pilot, and exact-code HTTPS login succeeded. Surrounding clipboard
-whitespace reproduced the rejection; it is now trimmed without changing code
-case or internal characters. The form adds a nonce-protected **Visa kod** control
-and distinguishes the invitation from the later private room code. Local access
-tests and two rendered Chromium clients passed, including padded-code login,
-WSS room join, movement, firing, reload and departure. This does not establish
-what was submitted on the user's devices: retry the physical playtest after
-pilot activation. Keep the original port 2567 service unchanged.
+**USER-VERIFIED PHYSICAL PLAYTEST — 18 November 2026.** Jesper confirmed that his
+physical iPhone using Safari over mobile data and work computer using Chrome
+Incognito on a separate network entered the same Floor 5 room. Movement,
+shooting, damage, reloading and audible sound worked. This closes the earlier
+invitation-flow failure after whitespace-safe handling was activated. It does
+not verify physical respawn, background/reconnect, sustained performance or the
+new match/results/rematch flow. Android remains **NOT RUN**.
+
+The owner confirmed that no domain is currently active in Cloudflare. A named
+tunnel with a stable HTTPS/WSS address is prepared but is not activated. The
+existing Quick Tunnel remains temporary, with its absolute expiry on
+**19 November 2026 at 06:27 CET**. Do not describe it as permanent hosting.
+Activate an authorized domain in Cloudflare before connecting the prepared
+named route. Keep invitations, room codes and connector credentials private.
+The original `cartridge-strike2` service on port **2567** must remain available.
+
+PR #23 was reviewed at `1c2041fd2d2ab54b5f83d858bfe6b01f07e74935`, all seven jobs
+in run [44255639016](https://github.com/capstere/Cartridge-strike2/actions/runs/44255639016)
+passed, and it was merged as `c8aa5b5d15f8d517f0b9a0515eed269b9e68f1d5` without
+bypassing checks. The complete release is reviewed in
+[PR #24](https://github.com/capstere/Cartridge-strike2/pull/24).
+
+## Historical evidence before the complete online release
 
 Reviewed [PR #22](https://github.com/capstere/Cartridge-strike2/pull/22) at `02f7b8b`. Its [seven CI jobs](https://github.com/capstere/Cartridge-strike2/actions/runs/44209972562) passed and the merge landed at `f7218c2`. The [Pass 4 PR](https://github.com/capstere/Cartridge-strike2/pull/23) adds an invite-only internet service alongside the original Pi service. On the recovered public HTTPS URL, two rendered browsers entered the same room and replicated movement, shots, reload and departure over WSS. A [GitHub-hosted player on a second internet connection](https://github.com/capstere/Cartridge-strike2/actions/runs/44246257389) also joined a Pi player. Both observed remote movement, firing and completed reloads at 25/126 ms measured RTT. The 24-hour pilot expires November 19 at 06:27 CET.
 
@@ -35,9 +67,10 @@ limits, hosted browser CI and physical-device work.
 
 Localhost remains the default; LAN needs an explicit private IPv4.
 [Swedish Pi update/restart/rollback guide](docs/multiplayer/raspberry-pi-lan-sv.md).
-The running Pi service was not accessed or modified. After separate review and
-operator authorization, validate the exact build on the physical Pi and record
-real Mac/iPhone/Android play. Browser emulation does not close that physical task.
+During PASS 3B the running Pi service was not accessed or modified. PASS 4 later
+added the isolated port-2568 service and actual Pi measurements. Consult the
+current online report above for deployment and physical evidence; the original
+port-2567 service remains separate. Browser emulation is not physical testing.
 
 **Physical-device backlog — test mobile controls and audio.** Play on an iPhone and an Android phone in landscape, near 844×390 and 932×430 where available. Record the model, OS, browser, viewport and safe-area clearance. Move, aim and fire together, reload, jump, hold an objective and buy. Rotate, background and resume during the lobby and a match. Listen for the lobby theme stopping on Start and resuming on return. Record any failure with its screen position and steps. [Play the published build](https://capstere.github.io/Cartridge-strike2/)
 
@@ -70,7 +103,7 @@ The November 9 audit verified the earlier launch and replay fixes through gamepl
 
 ## Remaining work
 
-Physical iPhone and Android controls and audio are **pending**. No handset was available for the November 10 check. Use the device session at the top of this handover and also record how aiming, hit feedback and bot difficulty feel to the player. The recorded browser routes cover objective outcomes and spectator behavior.
+At the November 10 check, physical iPhone and Android controls and audio were **pending** because no handset was available. The dated November 18 online observations at the top of this handover supersede that status only for the explicitly reported iPhone/Chrome combat behavior. Android and the remaining physical checks still need evidence. The historical browser routes cover offline objective outcomes and spectator behavior.
 
 ## Verification
 

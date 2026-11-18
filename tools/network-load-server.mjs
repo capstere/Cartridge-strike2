@@ -63,8 +63,9 @@ function thermal(){
 function snapshot(){
  instrument();
  const usage=process.cpuUsage(cpu),elapsed=(performance.now()-started)/1000;
+ const loopSamples=Number(loops.count);
  return {thermal:thermal(),elapsedSeconds:elapsed,serverCpuPercent:(usage.user+usage.system)/1e4/elapsed,memory:process.memoryUsage(),
-  eventLoopMs:{p50:loops.percentile(50)/1e6,p95:loops.percentile(95)/1e6,p99:loops.percentile(99)/1e6,max:loops.max/1e6},
+  eventLoopMs:loopSamples?{n:loopSamples,p50:loops.percentile(50)/1e6,p95:loops.percentile(95)/1e6,p99:loops.percentile(99)/1e6,max:loops.max/1e6}:{n:0,p50:null,p95:null,p99:null,max:null},
   costMs:Object.fromEntries(Object.entries(samples).filter(([k])=>k!=='shotAge').map(([k,v])=>[k,stats(v)])),shotAgeMs:stats(samples.shotAge),bytes,inBytes,respawns,combatRespawns,
   resources:process.getActiveResourcesInfo().reduce((o,k)=>(o[k]=(o[k]||0)+1,o),{}),
   rooms:[...local.rooms].map(r=>({id:r.roomId,matchId:r.state.matchId,phase:r.state.phase,clients:r.clients.length,seats:r.seats.size,actors:r.sim.game.actors.length,tick:r.sim.tickNumber,

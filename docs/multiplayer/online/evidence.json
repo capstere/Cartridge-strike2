@@ -1,0 +1,2609 @@
+{
+  "date": "2026-11-18",
+  "serverImplementationCommit": "a3ce3460a9c0e362404c4e8a1f2b2ba659ab78e1",
+  "physicalPlaytest": {
+    "source": "USER-VERIFIED PHYSICAL PLAYTEST",
+    "date": "2026-11-18",
+    "devices": [
+      "iPhone Safari over mobile data",
+      "work computer Chrome Incognito on a separate network"
+    ],
+    "confirmed": [
+      "same Floor 5 room",
+      "movement",
+      "shooting",
+      "damage",
+      "reload",
+      "audible sound"
+    ],
+    "notVerified": [
+      "new match/results/rematch",
+      "physical death/respawn",
+      "background/reconnect",
+      "sustained performance",
+      "Android"
+    ]
+  },
+  "piCapacity": [
+    {
+      "status": "PASS",
+      "kind": "protocol-only, server in separate process",
+      "physicalPi": "PASS",
+      "count": 2,
+      "environment": {
+        "model": "Raspberry Pi 5 Model B Rev 1.1",
+        "node": "v26.13.1",
+        "platform": "linux",
+        "arch": "arm64",
+        "cpu": "Cortex-A76",
+        "cores": 4
+      },
+      "contract": {
+        "protocolVersion": 5,
+        "protocolHash": "2845ea4494764d8543d81278cbc3b72e06e87dcf580da1e767cfd4b1a7e3d979",
+        "mapId": "floor5-prepared",
+        "collisionHash": "a5351e073a01ac95466acf4346acf9812f4265224e56712ce3e889085a42b6d9",
+        "mapHash": "89283f437623457a10da37be29a282a41591f202270051ba940549ba01b4b050",
+        "configHash": "a59680b58fd96991d2fe9e339f49e09bd70352b8ec0b2744a9dced30a489c474",
+        "buildHash": "7c77e7acc38b9a8622ab503104890f8e61856b54264121cef9369802e0b17243",
+        "tickRate": 60,
+        "patchMs": 50
+      },
+      "perPlayerOutboundBytesPerSecond": 6103.290040957601,
+      "maxPending": 8,
+      "measured": {
+        "elapsedSeconds": 45.136147578000006,
+        "serverCpuPercent": 7.942529862135058,
+        "memory": {
+          "rss": 247676928,
+          "heapTotal": 138100736,
+          "heapUsed": 66027984,
+          "external": 6339008,
+          "arrayBuffers": 427899
+        },
+        "eventLoopMs": {
+          "p50": 10.084351,
+          "p95": 10.756095,
+          "p99": 10.944511,
+          "max": 71.958527
+        },
+        "costMs": {
+          "tick": {
+            "n": 2706,
+            "p50": 0.3044460000019171,
+            "p95": 0.5215750000006665,
+            "p99": 1.2307799999998679,
+            "max": 6.839328999994905
+          },
+          "simulation": {
+            "n": 2706,
+            "p50": 0.1002779999980703,
+            "p95": 0.22859299999981886,
+            "p99": 0.7683350000006612,
+            "max": 6.320809000004374
+          },
+          "projection": {
+            "n": 2706,
+            "p50": 0.12479600000369828,
+            "p95": 0.15177799999946728,
+            "p99": 0.172722999999678,
+            "max": 0.2263149999998859
+          },
+          "serialization": {
+            "n": 893,
+            "p50": 0.18261100000381703,
+            "p95": 0.32709299999987707,
+            "p99": 0.5218720000011672,
+            "max": 0.9003539999994246
+          },
+          "interval": {
+            "n": 2706,
+            "p50": 16.148051000000123,
+            "p95": 16.988812000003236,
+            "p99": 32.497325000000274,
+            "max": 69.66804799999954
+          }
+        },
+        "shotAgeMs": {
+          "n": 482,
+          "p50": 119,
+          "p95": 126,
+          "p99": 127,
+          "max": 134
+        },
+        "bytes": 550958,
+        "inBytes": 57337,
+        "respawns": 14,
+        "thermal": {
+          "temperatureC": 40.8,
+          "throttled": "throttled=0x0"
+        },
+        "resources": {
+          "PipeWrap": 1,
+          "TCPServerWrap": 1,
+          "TCPSocketWrap": 2,
+          "Timeout": 5
+        }
+      },
+      "cleanupRooms": 0
+    },
+    {
+      "status": "PASS",
+      "kind": "protocol-only, server in separate process",
+      "physicalPi": "PASS",
+      "count": 4,
+      "environment": {
+        "model": "Raspberry Pi 5 Model B Rev 1.1",
+        "node": "v26.13.1",
+        "platform": "linux",
+        "arch": "arm64",
+        "cpu": "Cortex-A76",
+        "cores": 4
+      },
+      "contract": {
+        "protocolVersion": 5,
+        "protocolHash": "2845ea4494764d8543d81278cbc3b72e06e87dcf580da1e767cfd4b1a7e3d979",
+        "mapId": "floor5-prepared",
+        "collisionHash": "a5351e073a01ac95466acf4346acf9812f4265224e56712ce3e889085a42b6d9",
+        "mapHash": "89283f437623457a10da37be29a282a41591f202270051ba940549ba01b4b050",
+        "configHash": "a59680b58fd96991d2fe9e339f49e09bd70352b8ec0b2744a9dced30a489c474",
+        "buildHash": "7c77e7acc38b9a8622ab503104890f8e61856b54264121cef9369802e0b17243",
+        "tickRate": 60,
+        "patchMs": 50
+      },
+      "perPlayerOutboundBytesPerSecond": 15059.483410605284,
+      "maxPending": 12,
+      "measured": {
+        "elapsedSeconds": 45.155599396,
+        "serverCpuPercent": 10.368638801447833,
+        "memory": {
+          "rss": 247463936,
+          "heapTotal": 137838592,
+          "heapUsed": 66239696,
+          "external": 6340717,
+          "arrayBuffers": 429608
+        },
+        "eventLoopMs": {
+          "p50": 10.084351,
+          "p95": 10.747903,
+          "p99": 11.067391,
+          "max": 144.703487
+        },
+        "costMs": {
+          "tick": {
+            "n": 2704,
+            "p50": 0.47087099999771453,
+            "p95": 1.0301130000007106,
+            "p99": 1.4899839999998221,
+            "max": 7.860349000000497
+          },
+          "simulation": {
+            "n": 2704,
+            "p50": 0.2073709999967832,
+            "p95": 0.6255380000002333,
+            "p99": 0.9710760000016307,
+            "max": 7.366626000000906
+          },
+          "projection": {
+            "n": 2704,
+            "p50": 0.15040799999405863,
+            "p95": 0.1752039999992121,
+            "p99": 0.1934450000007928,
+            "max": 3.723786000002292
+          },
+          "serialization": {
+            "n": 892,
+            "p50": 0.2980930000048829,
+            "p95": 0.5903160000016214,
+            "p99": 0.7385570000005828,
+            "max": 3.7036739999966812
+          },
+          "interval": {
+            "n": 2704,
+            "p50": 16.19123600000603,
+            "p95": 17.02238600000419,
+            "p99": 32.37556599999516,
+            "max": 138.47867099999712
+          }
+        },
+        "shotAgeMs": {
+          "n": 2686,
+          "p50": 118,
+          "p95": 125,
+          "p99": 127,
+          "max": 175
+        },
+        "bytes": 2720080,
+        "inBytes": 130744,
+        "respawns": 27,
+        "thermal": {
+          "temperatureC": 39.15,
+          "throttled": "throttled=0x0"
+        },
+        "resources": {
+          "PipeWrap": 1,
+          "TCPServerWrap": 1,
+          "TCPSocketWrap": 4,
+          "Timeout": 5
+        }
+      },
+      "cleanupRooms": 0
+    },
+    {
+      "status": "PASS",
+      "kind": "protocol-only, server in separate process",
+      "physicalPi": "PASS",
+      "count": 10,
+      "environment": {
+        "model": "Raspberry Pi 5 Model B Rev 1.1",
+        "node": "v26.13.1",
+        "platform": "linux",
+        "arch": "arm64",
+        "cpu": "Cortex-A76",
+        "cores": 4
+      },
+      "contract": {
+        "protocolVersion": 5,
+        "protocolHash": "2845ea4494764d8543d81278cbc3b72e06e87dcf580da1e767cfd4b1a7e3d979",
+        "mapId": "floor5-prepared",
+        "collisionHash": "a5351e073a01ac95466acf4346acf9812f4265224e56712ce3e889085a42b6d9",
+        "mapHash": "89283f437623457a10da37be29a282a41591f202270051ba940549ba01b4b050",
+        "configHash": "a59680b58fd96991d2fe9e339f49e09bd70352b8ec0b2744a9dced30a489c474",
+        "buildHash": "7c77e7acc38b9a8622ab503104890f8e61856b54264121cef9369802e0b17243",
+        "tickRate": 60,
+        "patchMs": 50
+      },
+      "perPlayerOutboundBytesPerSecond": 40132.46016415421,
+      "maxPending": 8,
+      "measured": {
+        "elapsedSeconds": 45.155666824,
+        "serverCpuPercent": 15.64608718444379,
+        "memory": {
+          "rss": 248250368,
+          "heapTotal": 138887168,
+          "heapUsed": 67340352,
+          "external": 6358132,
+          "arrayBuffers": 447023
+        },
+        "eventLoopMs": {
+          "p50": 10.092543,
+          "p95": 10.838015,
+          "p99": 12.017663,
+          "max": 80.084991
+        },
+        "costMs": {
+          "tick": {
+            "n": 2707,
+            "p50": 0.8310569999994186,
+            "p95": 1.853041000002122,
+            "p99": 5.8330300000015995,
+            "max": 10.76802300000054
+          },
+          "simulation": {
+            "n": 2707,
+            "p50": 0.4271859999971639,
+            "p95": 1.2579100000002654,
+            "p99": 5.155102999997325,
+            "max": 9.940946000000622
+          },
+          "projection": {
+            "n": 2707,
+            "p50": 0.22179700000015146,
+            "p95": 0.2653710000013234,
+            "p99": 0.2808149999982561,
+            "max": 0.937778999999864
+          },
+          "serialization": {
+            "n": 893,
+            "p50": 0.8377240000045276,
+            "p95": 1.4649660000031872,
+            "p99": 1.8536889999995765,
+            "max": 4.170359999996435
+          },
+          "interval": {
+            "n": 2707,
+            "p50": 16.197699999996985,
+            "p95": 18.100241000000096,
+            "p99": 32.33840000000055,
+            "max": 77.84167799999705
+          }
+        },
+        "shotAgeMs": {
+          "n": 7037,
+          "p50": 119,
+          "p95": 126,
+          "p99": 128,
+          "max": 189
+        },
+        "bytes": 18122080,
+        "inBytes": 300376,
+        "respawns": 77,
+        "thermal": {
+          "temperatureC": 39.7,
+          "throttled": "throttled=0x0"
+        },
+        "resources": {
+          "PipeWrap": 1,
+          "TCPServerWrap": 1,
+          "TCPSocketWrap": 10,
+          "Timeout": 5
+        }
+      },
+      "cleanupRooms": 0
+    }
+  ],
+  "renderedNetworkMatrix": [
+    {
+      "status": "PASS",
+      "count": 2,
+      "rttMs": 0,
+      "jitterMs": 0,
+      "renderedClients": 2,
+      "protocolPeers": 0,
+      "background": "4 s main-thread stall, 3.2 s CDP browser lifecycle freeze/resume, synthetic blur",
+      "transportLoss": "NOT RUN",
+      "reconnectionDuringCombat": true,
+      "shotChecks": [
+        {
+          "passed": true,
+          "inSample": {
+            "confirmed": 8,
+            "suppressed": 8
+          },
+          "total": {
+            "confirmed": 8,
+            "suppressed": 8
+          },
+          "extended": false,
+          "observationMs": 7013.700000047684
+        },
+        {
+          "passed": true,
+          "inSample": {
+            "confirmed": 7,
+            "suppressed": 7
+          },
+          "total": {
+            "confirmed": 7,
+            "suppressed": 7
+          },
+          "extended": false,
+          "observationMs": 7012.700000047684
+        }
+      ],
+      "client": [
+        {
+          "sampleMs": 7013.700000047684,
+          "actorIds": [
+            "analysts-0",
+            "counterAnalysts-0"
+          ],
+          "teams": [
+            "analysts",
+            "counterAnalysts"
+          ],
+          "allHuman": true,
+          "rtt": 25.485338629486826,
+          "pending": 3,
+          "ownId": "analysts-0",
+          "draws": 1122,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+          "fatal": false,
+          "score": {
+            "analysts": 2,
+            "counterAnalysts": 1
+          },
+          "phase": "active",
+          "enabled": true,
+          "paused": false,
+          "connection": "connected",
+          "frameMs": {
+            "n": 420,
+            "p50": 16.700000000000728,
+            "p95": 16.700000000000728,
+            "p99": 16.799999999999272,
+            "max": 16.80000000000291
+          },
+          "fps": 60.00257153878023,
+          "remoteDisplayOffsetM": {
+            "n": 227,
+            "p50": 0.032357837027226485,
+            "p95": 0.06346136143025105,
+            "p99": 0.07530148378949499,
+            "max": 0.0830878777275195
+          },
+          "corrections": {
+            "n": 80,
+            "p50": 0.0025558176102786125,
+            "p95": 0.024059563277613997,
+            "p99": 0.027584163943532317,
+            "max": 0.027584163943532317
+          },
+          "adoptionDistance": {
+            "n": 82,
+            "p50": 0.009567357441012368,
+            "p95": 0.024765231833232888,
+            "p99": 0.04154867393852915,
+            "max": 0.04154867393852915
+          },
+          "shotLatency": {
+            "n": 8,
+            "p50": 44,
+            "p95": 62.299999952316284,
+            "p99": 62.299999952316284,
+            "max": 62.299999952316284
+          },
+          "hitLatency": {
+            "n": 6,
+            "p50": 44,
+            "p95": 62.299999952316284,
+            "p99": 62.299999952316284,
+            "max": 62.299999952316284
+          },
+          "maxPending": 6,
+          "confirmedShots": 15,
+          "suppressedShots": 15
+        },
+        {
+          "sampleMs": 7012.700000047684,
+          "actorIds": [
+            "analysts-0",
+            "counterAnalysts-0"
+          ],
+          "teams": [
+            "analysts",
+            "counterAnalysts"
+          ],
+          "allHuman": true,
+          "rtt": 26.59737820708522,
+          "pending": 0,
+          "ownId": "counterAnalysts-0",
+          "draws": 177,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+          "fatal": false,
+          "score": {
+            "analysts": 2,
+            "counterAnalysts": 1
+          },
+          "phase": "active",
+          "enabled": true,
+          "paused": false,
+          "connection": "connected",
+          "frameMs": {
+            "n": 420,
+            "p50": 16.69999999999709,
+            "p95": 16.700000000000728,
+            "p99": 16.799999999999272,
+            "max": 16.80000000000291
+          },
+          "fps": 60.00171433469525,
+          "remoteDisplayOffsetM": {
+            "n": 242,
+            "p50": 0.029066623354497348,
+            "p95": 0.06226195398733775,
+            "p99": 0.07307102314312904,
+            "max": 0.08082949752678309
+          },
+          "corrections": {
+            "n": 75,
+            "p50": 0.004276524193490202,
+            "p95": 0.016795642162496252,
+            "p99": 0.026671769986410934,
+            "max": 0.026671769986410934
+          },
+          "adoptionDistance": {
+            "n": 77,
+            "p50": 0.00896593371392404,
+            "p95": 0.025021780160943984,
+            "p99": 0.09304957037489937,
+            "max": 0.09304957037489937
+          },
+          "shotLatency": {
+            "n": 7,
+            "p50": 39.10000014305115,
+            "p95": 62.200000047683716,
+            "p99": 62.200000047683716,
+            "max": 62.200000047683716
+          },
+          "hitLatency": {
+            "n": 5,
+            "p50": 43.200000047683716,
+            "p95": 62.200000047683716,
+            "p99": 62.200000047683716,
+            "max": 62.200000047683716
+          },
+          "maxPending": 5,
+          "confirmedShots": 12,
+          "suppressedShots": 12
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "count": 4,
+      "rttMs": 0,
+      "jitterMs": 0,
+      "renderedClients": 2,
+      "protocolPeers": 2,
+      "background": "synthetic blur",
+      "transportLoss": "NOT RUN",
+      "reconnectionDuringCombat": true,
+      "shotChecks": [
+        {
+          "passed": true,
+          "inSample": {
+            "confirmed": 5,
+            "suppressed": 5
+          },
+          "total": {
+            "confirmed": 5,
+            "suppressed": 5
+          },
+          "extended": false,
+          "observationMs": 7014.799999952316
+        },
+        {
+          "passed": true,
+          "inSample": {
+            "confirmed": 6,
+            "suppressed": 6
+          },
+          "total": {
+            "confirmed": 6,
+            "suppressed": 6
+          },
+          "extended": false,
+          "observationMs": 7005.199999809265
+        }
+      ],
+      "client": [
+        {
+          "sampleMs": 7014.799999952316,
+          "actorIds": [
+            "analysts-0",
+            "counterAnalysts-0",
+            "analysts-1",
+            "counterAnalysts-1"
+          ],
+          "teams": [
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts"
+          ],
+          "allHuman": true,
+          "rtt": 31.31636815671344,
+          "pending": 2,
+          "ownId": "analysts-0",
+          "draws": 1170,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+          "fatal": false,
+          "score": {
+            "analysts": 3,
+            "counterAnalysts": 4
+          },
+          "phase": "active",
+          "enabled": true,
+          "paused": false,
+          "connection": "connected",
+          "frameMs": {
+            "n": 411,
+            "p50": 16.69999999999891,
+            "p95": 16.799999999999272,
+            "p99": 33.29999999999927,
+            "max": 33.399999999999636
+          },
+          "fps": 58.716802148663525,
+          "remoteDisplayOffsetM": {
+            "n": 688,
+            "p50": 0.024741381154372,
+            "p95": 0.05786181533255282,
+            "p99": 0.07005792950567198,
+            "max": 0.07870743596960499
+          },
+          "corrections": {
+            "n": 58,
+            "p50": 0.00154440431128878,
+            "p95": 0.016098978948537734,
+            "p99": 0.02621681289220154,
+            "max": 0.02621681289220154
+          },
+          "adoptionDistance": {
+            "n": 61,
+            "p50": 0.01112365418745926,
+            "p95": 0.03570718350458592,
+            "p99": 0.34898519117514765,
+            "max": 0.34898519117514765
+          },
+          "shotLatency": {
+            "n": 5,
+            "p50": 45,
+            "p95": 63.200000047683716,
+            "p99": 63.200000047683716,
+            "max": 63.200000047683716
+          },
+          "hitLatency": {
+            "n": 5,
+            "p50": 45,
+            "p95": 63.200000047683716,
+            "p99": 63.200000047683716,
+            "max": 63.200000047683716
+          },
+          "maxPending": 5,
+          "confirmedShots": 10,
+          "suppressedShots": 10
+        },
+        {
+          "sampleMs": 7005.199999809265,
+          "actorIds": [
+            "analysts-0",
+            "counterAnalysts-0",
+            "analysts-1",
+            "counterAnalysts-1"
+          ],
+          "teams": [
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts"
+          ],
+          "allHuman": true,
+          "rtt": 25.160444023573167,
+          "pending": 0,
+          "ownId": "counterAnalysts-0",
+          "draws": 258,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+          "fatal": false,
+          "score": {
+            "analysts": 3,
+            "counterAnalysts": 4
+          },
+          "phase": "active",
+          "enabled": true,
+          "paused": false,
+          "connection": "connected",
+          "frameMs": {
+            "n": 420,
+            "p50": 16.69999999999891,
+            "p95": 16.700000000000728,
+            "p99": 16.80000000000109,
+            "max": 16.80000000000109
+          },
+          "fps": 60.00342876735813,
+          "remoteDisplayOffsetM": {
+            "n": 663,
+            "p50": 0.020846317512132912,
+            "p95": 0.0519075861620727,
+            "p99": 0.0657433706125396,
+            "max": 0.07765563888319732
+          },
+          "corrections": {
+            "n": 73,
+            "p50": 0.0005487722817345563,
+            "p95": 0.014034568150481742,
+            "p99": 0.018289755126495208,
+            "max": 0.018289755126495208
+          },
+          "adoptionDistance": {
+            "n": 75,
+            "p50": 0.008905910026267908,
+            "p95": 0.03424071467024459,
+            "p99": 0.33394938510937183,
+            "max": 0.33394938510937183
+          },
+          "shotLatency": {
+            "n": 6,
+            "p50": 30.899999856948853,
+            "p95": 49.10000014305115,
+            "p99": 49.10000014305115,
+            "max": 49.10000014305115
+          },
+          "hitLatency": {
+            "n": 6,
+            "p50": 30.899999856948853,
+            "p95": 49.10000014305115,
+            "p99": 49.10000014305115,
+            "max": 49.10000014305115
+          },
+          "maxPending": 5,
+          "confirmedShots": 13,
+          "suppressedShots": 13
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "count": 10,
+      "rttMs": 0,
+      "jitterMs": 0,
+      "renderedClients": 2,
+      "protocolPeers": 8,
+      "background": "synthetic blur",
+      "transportLoss": "NOT RUN",
+      "reconnectionDuringCombat": true,
+      "shotChecks": [
+        {
+          "passed": true,
+          "inSample": {
+            "confirmed": 8,
+            "suppressed": 8
+          },
+          "total": {
+            "confirmed": 8,
+            "suppressed": 8
+          },
+          "extended": false,
+          "observationMs": 7018
+        },
+        {
+          "passed": true,
+          "inSample": {
+            "confirmed": 7,
+            "suppressed": 7
+          },
+          "total": {
+            "confirmed": 7,
+            "suppressed": 7
+          },
+          "extended": false,
+          "observationMs": 7013.799999952316
+        }
+      ],
+      "client": [
+        {
+          "sampleMs": 7018,
+          "actorIds": [
+            "analysts-0",
+            "counterAnalysts-0",
+            "analysts-1",
+            "counterAnalysts-1",
+            "analysts-2",
+            "counterAnalysts-2",
+            "analysts-3",
+            "counterAnalysts-3",
+            "analysts-4",
+            "counterAnalysts-4"
+          ],
+          "teams": [
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts"
+          ],
+          "allHuman": true,
+          "rtt": 30.11688245172225,
+          "pending": 0,
+          "ownId": "analysts-0",
+          "draws": 1525,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+          "fatal": false,
+          "score": {
+            "analysts": 10,
+            "counterAnalysts": 9
+          },
+          "phase": "active",
+          "enabled": true,
+          "paused": false,
+          "connection": "connected",
+          "frameMs": {
+            "n": 370,
+            "p50": 16.69999999999891,
+            "p95": 33.30000000000291,
+            "p99": 33.400000000001455,
+            "max": 33.400000000001455
+          },
+          "fps": 52.860163437910735,
+          "remoteDisplayOffsetM": {
+            "n": 1377,
+            "p50": 0.027303483051050226,
+            "p95": 0.052767893894840615,
+            "p99": 0.06940887985340245,
+            "max": 0.0832915873006665
+          },
+          "corrections": {
+            "n": 76,
+            "p50": 0.000822359291313032,
+            "p95": 0.016854100027156923,
+            "p99": 0.027296021214895747,
+            "max": 0.027296021214895747
+          },
+          "adoptionDistance": {
+            "n": 78,
+            "p50": 0.00729072360154311,
+            "p95": 0.02510349746350765,
+            "p99": 0.16861697529834083,
+            "max": 0.16861697529834083
+          },
+          "shotLatency": {
+            "n": 8,
+            "p50": 47.5,
+            "p95": 66.30000019073486,
+            "p99": 66.30000019073486,
+            "max": 66.30000019073486
+          },
+          "hitLatency": {
+            "n": 7,
+            "p50": 47.299999952316284,
+            "p95": 65.09999990463257,
+            "p99": 65.09999990463257,
+            "max": 65.09999990463257
+          },
+          "maxPending": 5,
+          "confirmedShots": 14,
+          "suppressedShots": 14
+        },
+        {
+          "sampleMs": 7013.799999952316,
+          "actorIds": [
+            "analysts-0",
+            "counterAnalysts-0",
+            "analysts-1",
+            "counterAnalysts-1",
+            "analysts-2",
+            "counterAnalysts-2",
+            "analysts-3",
+            "counterAnalysts-3",
+            "analysts-4",
+            "counterAnalysts-4"
+          ],
+          "teams": [
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts"
+          ],
+          "allHuman": true,
+          "rtt": 21.281928507790237,
+          "pending": 0,
+          "ownId": "counterAnalysts-0",
+          "draws": 412,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+          "fatal": false,
+          "score": {
+            "analysts": 10,
+            "counterAnalysts": 9
+          },
+          "phase": "active",
+          "enabled": true,
+          "paused": false,
+          "connection": "connected",
+          "frameMs": {
+            "n": 412,
+            "p50": 16.69999999999891,
+            "p95": 16.799999999999272,
+            "p99": 33.30000000000109,
+            "max": 33.399999999999636
+          },
+          "fps": 58.85966541423205,
+          "remoteDisplayOffsetM": {
+            "n": 1660,
+            "p50": 0.024592570029927523,
+            "p95": 0.04745270680482728,
+            "p99": 0.06431834665723314,
+            "max": 0.07904437717074905
+          },
+          "corrections": {
+            "n": 33,
+            "p50": 0,
+            "p95": 0.00994345481995502,
+            "p99": 0.010722210652421136,
+            "max": 0.010722210652421136
+          },
+          "adoptionDistance": {
+            "n": 37,
+            "p50": 0.010580332184444279,
+            "p95": 0.19809439810285873,
+            "p99": 0.3709606120033969,
+            "max": 0.3709606120033969
+          },
+          "shotLatency": {
+            "n": 7,
+            "p50": 38.799999952316284,
+            "p95": 56.5,
+            "p99": 56.5,
+            "max": 56.5
+          },
+          "hitLatency": {
+            "n": 6,
+            "p50": 40.799999952316284,
+            "p95": 56.5,
+            "p99": 56.5,
+            "max": 56.5
+          },
+          "maxPending": 4,
+          "confirmedShots": 12,
+          "suppressedShots": 12
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "count": 10,
+      "rttMs": 50,
+      "jitterMs": 20,
+      "renderedClients": 2,
+      "protocolPeers": 8,
+      "background": "synthetic blur",
+      "transportLoss": "NOT RUN",
+      "reconnectionDuringCombat": true,
+      "shotChecks": [
+        {
+          "passed": true,
+          "inSample": {
+            "confirmed": 10,
+            "suppressed": 10
+          },
+          "total": {
+            "confirmed": 10,
+            "suppressed": 10
+          },
+          "extended": false,
+          "observationMs": 7015.299999952316
+        },
+        {
+          "passed": true,
+          "inSample": {
+            "confirmed": 12,
+            "suppressed": 12
+          },
+          "total": {
+            "confirmed": 12,
+            "suppressed": 12
+          },
+          "extended": false,
+          "observationMs": 7008.900000095367
+        }
+      ],
+      "client": [
+        {
+          "sampleMs": 7015.299999952316,
+          "actorIds": [
+            "analysts-0",
+            "counterAnalysts-0",
+            "analysts-1",
+            "counterAnalysts-1",
+            "analysts-2",
+            "counterAnalysts-2",
+            "analysts-3",
+            "counterAnalysts-3",
+            "analysts-4",
+            "counterAnalysts-4"
+          ],
+          "teams": [
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts"
+          ],
+          "allHuman": true,
+          "rtt": 76.71992796470164,
+          "pending": 0,
+          "ownId": "analysts-0",
+          "draws": 1551,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+          "fatal": false,
+          "score": {
+            "analysts": 8,
+            "counterAnalysts": 9
+          },
+          "phase": "active",
+          "enabled": true,
+          "paused": false,
+          "connection": "connected",
+          "frameMs": {
+            "n": 328,
+            "p50": 16.700000000000728,
+            "p95": 33.399999999999636,
+            "p99": 33.400000000001455,
+            "max": 33.5
+          },
+          "fps": 46.859151106475984,
+          "remoteDisplayOffsetM": {
+            "n": 1522,
+            "p50": 0.016393089055906116,
+            "p95": 0.03654629110914526,
+            "p99": 0.04522327398134127,
+            "max": 0.05987560580469102
+          },
+          "corrections": {
+            "n": 31,
+            "p50": 0.011985326837465875,
+            "p95": 0.03327087773185567,
+            "p99": 0.03847839018999969,
+            "max": 0.03847839018999969
+          },
+          "adoptionDistance": {
+            "n": 35,
+            "p50": 0.03260815821051335,
+            "p95": 0.1852209452646366,
+            "p99": 0.2629284650195483,
+            "max": 0.2629284650195483
+          },
+          "shotLatency": {
+            "n": 10,
+            "p50": 114.5,
+            "p95": 151.40000009536743,
+            "p99": 151.40000009536743,
+            "max": 151.40000009536743
+          },
+          "hitLatency": {
+            "n": 9,
+            "p50": 104.59999990463257,
+            "p95": 151.40000009536743,
+            "p99": 151.40000009536743,
+            "max": 151.40000009536743
+          },
+          "maxPending": 9,
+          "confirmedShots": 16,
+          "suppressedShots": 16
+        },
+        {
+          "sampleMs": 7008.900000095367,
+          "actorIds": [
+            "analysts-0",
+            "counterAnalysts-0",
+            "analysts-1",
+            "counterAnalysts-1",
+            "analysts-2",
+            "counterAnalysts-2",
+            "analysts-3",
+            "counterAnalysts-3",
+            "analysts-4",
+            "counterAnalysts-4"
+          ],
+          "teams": [
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts"
+          ],
+          "allHuman": true,
+          "rtt": 73.77503532258963,
+          "pending": 0,
+          "ownId": "counterAnalysts-0",
+          "draws": 408,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+          "fatal": false,
+          "score": {
+            "analysts": 8,
+            "counterAnalysts": 9
+          },
+          "phase": "active",
+          "enabled": true,
+          "paused": false,
+          "connection": "connected",
+          "frameMs": {
+            "n": 415,
+            "p50": 16.69999999999891,
+            "p95": 16.799999999999272,
+            "p99": 33.20000000000073,
+            "max": 33.399999999999636
+          },
+          "fps": 59.28825521093762,
+          "remoteDisplayOffsetM": {
+            "n": 1891,
+            "p50": 0.014443210164402748,
+            "p95": 0.03378021325056441,
+            "p99": 0.04415036541639592,
+            "max": 0.05775367646819767
+          },
+          "corrections": {
+            "n": 45,
+            "p50": 0.010447701070982616,
+            "p95": 0.03245724984358643,
+            "p99": 0.04032289573875897,
+            "max": 0.04032289573875897
+          },
+          "adoptionDistance": {
+            "n": 49,
+            "p50": 0.03573424373170409,
+            "p95": 0.0801304905703155,
+            "p99": 0.19994136450325942,
+            "max": 0.19994136450325942
+          },
+          "shotLatency": {
+            "n": 12,
+            "p50": 94.29999995231628,
+            "p95": 124.29999995231628,
+            "p99": 124.29999995231628,
+            "max": 124.29999995231628
+          },
+          "hitLatency": {
+            "n": 11,
+            "p50": 93.90000009536743,
+            "p95": 124.29999995231628,
+            "p99": 124.29999995231628,
+            "max": 124.29999995231628
+          },
+          "maxPending": 9,
+          "confirmedShots": 17,
+          "suppressedShots": 17
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "count": 10,
+      "rttMs": 100,
+      "jitterMs": 20,
+      "renderedClients": 2,
+      "protocolPeers": 8,
+      "background": "synthetic blur",
+      "transportLoss": "NOT RUN",
+      "reconnectionDuringCombat": true,
+      "shotChecks": [
+        {
+          "passed": true,
+          "inSample": {
+            "confirmed": 14,
+            "suppressed": 14
+          },
+          "total": {
+            "confirmed": 14,
+            "suppressed": 14
+          },
+          "extended": false,
+          "observationMs": 7006.600000143051
+        },
+        {
+          "passed": true,
+          "inSample": {
+            "confirmed": 12,
+            "suppressed": 12
+          },
+          "total": {
+            "confirmed": 12,
+            "suppressed": 12
+          },
+          "extended": false,
+          "observationMs": 7017
+        }
+      ],
+      "client": [
+        {
+          "sampleMs": 7006.600000143051,
+          "actorIds": [
+            "analysts-0",
+            "counterAnalysts-0",
+            "analysts-1",
+            "counterAnalysts-1",
+            "analysts-2",
+            "counterAnalysts-2",
+            "analysts-3",
+            "counterAnalysts-3",
+            "analysts-4",
+            "counterAnalysts-4"
+          ],
+          "teams": [
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts"
+          ],
+          "allHuman": true,
+          "rtt": 140.1376988420622,
+          "pending": 0,
+          "ownId": "analysts-0",
+          "draws": 1502,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+          "fatal": false,
+          "score": {
+            "analysts": 9,
+            "counterAnalysts": 8
+          },
+          "phase": "active",
+          "enabled": true,
+          "paused": false,
+          "connection": "connected",
+          "frameMs": {
+            "n": 300,
+            "p50": 16.700000000000728,
+            "p95": 33.400000000001455,
+            "p99": 33.400000000001455,
+            "max": 50
+          },
+          "fps": 42.960862654122096,
+          "remoteDisplayOffsetM": {
+            "n": 1370,
+            "p50": 0.015219675976828793,
+            "p95": 0.0357689845194599,
+            "p99": 0.044136885622131874,
+            "max": 0.061064328926054616
+          },
+          "corrections": {
+            "n": 43,
+            "p50": 0.00877797189443653,
+            "p95": 0.038078061170143715,
+            "p99": 0.049801491040667736,
+            "max": 0.049801491040667736
+          },
+          "adoptionDistance": {
+            "n": 47,
+            "p50": 0.0648734590910832,
+            "p95": 0.14710110362110482,
+            "p99": 0.2977297546434695,
+            "max": 0.2977297546434695
+          },
+          "shotLatency": {
+            "n": 14,
+            "p50": 178.70000004768372,
+            "p95": 263.2999999523163,
+            "p99": 263.2999999523163,
+            "max": 263.2999999523163
+          },
+          "hitLatency": {
+            "n": 12,
+            "p50": 179.60000014305115,
+            "p95": 263.2999999523163,
+            "p99": 263.2999999523163,
+            "max": 263.2999999523163
+          },
+          "maxPending": 15,
+          "confirmedShots": 21,
+          "suppressedShots": 21
+        },
+        {
+          "sampleMs": 7017,
+          "actorIds": [
+            "analysts-0",
+            "counterAnalysts-0",
+            "analysts-1",
+            "counterAnalysts-1",
+            "analysts-2",
+            "counterAnalysts-2",
+            "analysts-3",
+            "counterAnalysts-3",
+            "analysts-4",
+            "counterAnalysts-4"
+          ],
+          "teams": [
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts"
+          ],
+          "allHuman": true,
+          "rtt": 127.87266842610927,
+          "pending": 0,
+          "ownId": "counterAnalysts-0",
+          "draws": 432,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+          "fatal": false,
+          "score": {
+            "analysts": 9,
+            "counterAnalysts": 8
+          },
+          "phase": "active",
+          "enabled": true,
+          "paused": false,
+          "connection": "connected",
+          "frameMs": {
+            "n": 406,
+            "p50": 16.69999999999891,
+            "p95": 16.799999999999272,
+            "p99": 33.30000000000109,
+            "max": 33.400000000001455
+          },
+          "fps": 58.0024858208209,
+          "remoteDisplayOffsetM": {
+            "n": 1862,
+            "p50": 0.013087378409494504,
+            "p95": 0.03255278485962433,
+            "p99": 0.04075369475262011,
+            "max": 0.045817268099252136
+          },
+          "corrections": {
+            "n": 38,
+            "p50": 0.010850890041723241,
+            "p95": 0.03767937254851467,
+            "p99": 0.052932269401279694,
+            "max": 0.052932269401279694
+          },
+          "adoptionDistance": {
+            "n": 42,
+            "p50": 0.06254054956722623,
+            "p95": 0.1468673507046981,
+            "p99": 0.22991060420893292,
+            "max": 0.22991060420893292
+          },
+          "shotLatency": {
+            "n": 12,
+            "p50": 156.40000009536743,
+            "p95": 228.39999985694885,
+            "p99": 228.39999985694885,
+            "max": 228.39999985694885
+          },
+          "hitLatency": {
+            "n": 12,
+            "p50": 156.40000009536743,
+            "p95": 228.39999985694885,
+            "p99": 228.39999985694885,
+            "max": 228.39999985694885
+          },
+          "maxPending": 13,
+          "confirmedShots": 18,
+          "suppressedShots": 18
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "count": 10,
+      "rttMs": 150,
+      "jitterMs": 20,
+      "renderedClients": 2,
+      "protocolPeers": 8,
+      "background": "synthetic blur",
+      "transportLoss": "NOT RUN",
+      "reconnectionDuringCombat": true,
+      "shotChecks": [
+        {
+          "passed": true,
+          "inSample": {
+            "confirmed": 16,
+            "suppressed": 16
+          },
+          "total": {
+            "confirmed": 16,
+            "suppressed": 16
+          },
+          "extended": false,
+          "observationMs": 7002.200000047684
+        },
+        {
+          "passed": true,
+          "inSample": {
+            "confirmed": 11,
+            "suppressed": 11
+          },
+          "total": {
+            "confirmed": 11,
+            "suppressed": 11
+          },
+          "extended": false,
+          "observationMs": 7017.599999904633
+        }
+      ],
+      "client": [
+        {
+          "sampleMs": 7002.200000047684,
+          "actorIds": [
+            "analysts-0",
+            "counterAnalysts-0",
+            "analysts-1",
+            "counterAnalysts-1",
+            "analysts-2",
+            "counterAnalysts-2",
+            "analysts-3",
+            "counterAnalysts-3",
+            "analysts-4",
+            "counterAnalysts-4"
+          ],
+          "teams": [
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts"
+          ],
+          "allHuman": true,
+          "rtt": 198.98158951171484,
+          "pending": 12,
+          "ownId": "analysts-0",
+          "draws": 1489,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+          "fatal": false,
+          "score": {
+            "analysts": 7,
+            "counterAnalysts": 6
+          },
+          "phase": "active",
+          "enabled": true,
+          "paused": false,
+          "connection": "connected",
+          "frameMs": {
+            "n": 317,
+            "p50": 16.700000000000728,
+            "p95": 33.400000000001455,
+            "p99": 33.400000000001455,
+            "max": 50.099999999998545
+          },
+          "fps": 45.395311537855676,
+          "remoteDisplayOffsetM": {
+            "n": 1831,
+            "p50": 0.01637034824159196,
+            "p95": 0.03757759404326631,
+            "p99": 0.0450662557464554,
+            "max": 0.060958534518378765
+          },
+          "corrections": {
+            "n": 49,
+            "p50": 0.012691405184820663,
+            "p95": 0.033099472016670684,
+            "p99": 0.04798504496257652,
+            "max": 0.04798504496257652
+          },
+          "adoptionDistance": {
+            "n": 52,
+            "p50": 0.10657840467798675,
+            "p95": 0.1696264358397488,
+            "p99": 0.17081002991818287,
+            "max": 0.17081002991818287
+          },
+          "shotLatency": {
+            "n": 16,
+            "p50": 249.70000004768372,
+            "p95": 287.40000009536743,
+            "p99": 287.40000009536743,
+            "max": 287.40000009536743
+          },
+          "hitLatency": {
+            "n": 12,
+            "p50": 249.70000004768372,
+            "p95": 287.40000009536743,
+            "p99": 287.40000009536743,
+            "max": 287.40000009536743
+          },
+          "maxPending": 17,
+          "confirmedShots": 21,
+          "suppressedShots": 21
+        },
+        {
+          "sampleMs": 7017.599999904633,
+          "actorIds": [
+            "analysts-0",
+            "counterAnalysts-0",
+            "analysts-1",
+            "counterAnalysts-1",
+            "analysts-2",
+            "counterAnalysts-2",
+            "analysts-3",
+            "counterAnalysts-3",
+            "analysts-4",
+            "counterAnalysts-4"
+          ],
+          "teams": [
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts"
+          ],
+          "allHuman": true,
+          "rtt": 180.13944112911992,
+          "pending": 0,
+          "ownId": "counterAnalysts-0",
+          "draws": 405,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+          "fatal": false,
+          "score": {
+            "analysts": 7,
+            "counterAnalysts": 6
+          },
+          "phase": "active",
+          "enabled": true,
+          "paused": false,
+          "connection": "connected",
+          "frameMs": {
+            "n": 416,
+            "p50": 16.69999999999891,
+            "p95": 16.799999999999272,
+            "p99": 33.20000000000073,
+            "max": 33.399999999999636
+          },
+          "fps": 59.28881921185776,
+          "remoteDisplayOffsetM": {
+            "n": 2397,
+            "p50": 0.014764940403230424,
+            "p95": 0.03509706826156096,
+            "p99": 0.04353683521620586,
+            "max": 0.057868587113529844
+          },
+          "corrections": {
+            "n": 38,
+            "p50": 0.011902790699874396,
+            "p95": 0.040087932353442844,
+            "p99": 0.05243356873506117,
+            "max": 0.05243356873506117
+          },
+          "adoptionDistance": {
+            "n": 42,
+            "p50": 0.11162382564588214,
+            "p95": 0.15593286038085893,
+            "p99": 0.21215472823231984,
+            "max": 0.21215472823231984
+          },
+          "shotLatency": {
+            "n": 11,
+            "p50": 194,
+            "p95": 228.29999995231628,
+            "p99": 228.29999995231628,
+            "max": 228.29999995231628
+          },
+          "hitLatency": {
+            "n": 11,
+            "p50": 194,
+            "p95": 228.29999995231628,
+            "p99": 228.29999995231628,
+            "max": 228.29999995231628
+          },
+          "maxPending": 18,
+          "confirmedShots": 18,
+          "suppressedShots": 18
+        }
+      ]
+    },
+    {
+      "status": "PASS",
+      "count": 10,
+      "rttMs": 250,
+      "jitterMs": 20,
+      "renderedClients": 2,
+      "protocolPeers": 8,
+      "background": "synthetic blur",
+      "transportLoss": "NOT RUN",
+      "reconnectionDuringCombat": true,
+      "shotChecks": [
+        {
+          "passed": true,
+          "inSample": {
+            "confirmed": 6,
+            "suppressed": 6
+          },
+          "total": {
+            "confirmed": 6,
+            "suppressed": 6
+          },
+          "extended": false,
+          "observationMs": 7017.700000047684
+        },
+        {
+          "passed": true,
+          "inSample": {
+            "confirmed": 3,
+            "suppressed": 3
+          },
+          "total": {
+            "confirmed": 3,
+            "suppressed": 3
+          },
+          "extended": false,
+          "observationMs": 7010.5
+        }
+      ],
+      "client": [
+        {
+          "sampleMs": 7017.700000047684,
+          "actorIds": [
+            "analysts-0",
+            "counterAnalysts-0",
+            "analysts-1",
+            "counterAnalysts-1",
+            "analysts-2",
+            "counterAnalysts-2",
+            "analysts-3",
+            "counterAnalysts-3",
+            "analysts-4",
+            "counterAnalysts-4"
+          ],
+          "teams": [
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts"
+          ],
+          "allHuman": true,
+          "rtt": 277.52934544680414,
+          "pending": 0,
+          "ownId": "analysts-0",
+          "draws": 1521,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+          "fatal": false,
+          "score": {
+            "analysts": 6,
+            "counterAnalysts": 6
+          },
+          "phase": "active",
+          "enabled": true,
+          "paused": false,
+          "connection": "connected",
+          "frameMs": {
+            "n": 369,
+            "p50": 16.700000000000728,
+            "p95": 33.39999999999782,
+            "p99": 33.400000000001455,
+            "max": 33.5
+          },
+          "fps": 52.59182190043186,
+          "remoteDisplayOffsetM": {
+            "n": 2101,
+            "p50": 0.015784231050408954,
+            "p95": 0.03466899760013298,
+            "p99": 0.04230303099449273,
+            "max": 0.06396868516945986
+          },
+          "corrections": {
+            "n": 73,
+            "p50": 0.010200237037377491,
+            "p95": 0.0280964979303128,
+            "p99": 0.0420227636396722,
+            "max": 0.0420227636396722
+          },
+          "adoptionDistance": {
+            "n": 75,
+            "p50": 0.12635748500790836,
+            "p95": 0.20055471568002048,
+            "p99": 0.21315860420752367,
+            "max": 0.21315860420752367
+          },
+          "shotLatency": {
+            "n": 6,
+            "p50": 313.2000000476837,
+            "p95": 345.7000000476837,
+            "p99": 345.7000000476837,
+            "max": 345.7000000476837
+          },
+          "hitLatency": {
+            "n": 4,
+            "p50": 313.2000000476837,
+            "p95": 316,
+            "p99": 316,
+            "max": 316
+          },
+          "maxPending": 21,
+          "confirmedShots": 11,
+          "suppressedShots": 11
+        },
+        {
+          "sampleMs": 7010.5,
+          "actorIds": [
+            "analysts-0",
+            "counterAnalysts-0",
+            "analysts-1",
+            "counterAnalysts-1",
+            "analysts-2",
+            "counterAnalysts-2",
+            "analysts-3",
+            "counterAnalysts-3",
+            "analysts-4",
+            "counterAnalysts-4"
+          ],
+          "teams": [
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts",
+            "analysts",
+            "counterAnalysts"
+          ],
+          "allHuman": true,
+          "rtt": 273.65111071482215,
+          "pending": 19,
+          "ownId": "counterAnalysts-0",
+          "draws": 377,
+          "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+          "fatal": false,
+          "score": {
+            "analysts": 6,
+            "counterAnalysts": 6
+          },
+          "phase": "active",
+          "enabled": true,
+          "paused": false,
+          "connection": "connected",
+          "frameMs": {
+            "n": 419,
+            "p50": 16.69999999999891,
+            "p95": 16.700000000000728,
+            "p99": 16.80000000000109,
+            "max": 33.29999999999927
+          },
+          "fps": 59.86056346076917,
+          "remoteDisplayOffsetM": {
+            "n": 2469,
+            "p50": 0.01642126469121277,
+            "p95": 0.037085934624801795,
+            "p99": 0.048005226696993274,
+            "max": 0.06969792078545799
+          },
+          "corrections": {
+            "n": 27,
+            "p50": 0.004231810872322939,
+            "p95": 0.020974001326123926,
+            "p99": 0.026737369926944865,
+            "max": 0.026737369926944865
+          },
+          "adoptionDistance": {
+            "n": 30,
+            "p50": 0.09655672855836438,
+            "p95": 0.20392641445284454,
+            "p99": 0.2082403125627934,
+            "max": 0.2082403125627934
+          },
+          "shotLatency": {
+            "n": 3,
+            "p50": 297.90000009536743,
+            "p95": 310,
+            "p99": 310,
+            "max": 310
+          },
+          "hitLatency": {
+            "n": 3,
+            "p50": 297.7999999523163,
+            "p95": 310,
+            "p99": 310,
+            "max": 310
+          },
+          "maxPending": 20,
+          "confirmedShots": 9,
+          "suppressedShots": 9
+        }
+      ]
+    }
+  ],
+  "renderedCompleteMatch": {
+    "status": "PASS",
+    "date": "2026-11-18T08:30:36.948Z",
+    "renderedClients": 2,
+    "protocolOnlyClients": 0,
+    "physicalDevices": false,
+    "transport": "HTTPS/WSS pinned loopback fixture",
+    "scoreResult": {
+      "matchId": 1,
+      "winner": "analysts",
+      "reason": "score",
+      "score": {
+        "analysts": 2,
+        "counterAnalysts": 0
+      },
+      "players": [
+        {
+          "id": "analysts-0",
+          "name": "Host",
+          "team": "analysts",
+          "kills": 2,
+          "deaths": 0
+        },
+        {
+          "id": "counterAnalysts-0",
+          "name": "Friend",
+          "team": "counterAnalysts",
+          "kills": 0,
+          "deaths": 2
+        }
+      ]
+    },
+    "timeResult": {
+      "matchId": 2,
+      "winner": "analysts",
+      "reason": "time",
+      "score": {
+        "analysts": 1,
+        "counterAnalysts": 0
+      },
+      "players": [
+        {
+          "id": "analysts-0",
+          "name": "Host",
+          "team": "analysts",
+          "kills": 1,
+          "deaths": 0
+        },
+        {
+          "id": "counterAnalysts-0",
+          "name": "Friend",
+          "team": "counterAnalysts",
+          "kills": 0,
+          "deaths": 1
+        }
+      ]
+    },
+    "drawResult": {
+      "matchId": 3,
+      "winner": "draw",
+      "reason": "time",
+      "score": {
+        "analysts": 0,
+        "counterAnalysts": 0
+      },
+      "players": [
+        {
+          "id": "analysts-0",
+          "name": "Host",
+          "team": "analysts",
+          "kills": 0,
+          "deaths": 0
+        },
+        {
+          "id": "counterAnalysts-0",
+          "name": "Friend",
+          "team": "counterAnalysts",
+          "kills": 0,
+          "deaths": 0
+        }
+      ]
+    },
+    "sharedRoomLogin": true,
+    "expiredLoginRecovery": true,
+    "bothMovementControls": true,
+    "touchFire": true,
+    "deathRespawn": true,
+    "sameRoomRematch": true,
+    "teamChange": true,
+    "ownerTransfer": true,
+    "cleanup": true
+  },
+  "piSoak": {
+    "status": "PASS",
+    "kind": "protocol-only, server in separate process",
+    "physicalPi": "PASS",
+    "count": 10,
+    "environment": {
+      "model": "Raspberry Pi 5 Model B Rev 1.1",
+      "node": "v26.13.1",
+      "platform": "linux",
+      "arch": "arm64",
+      "cpu": "Cortex-A76",
+      "cores": 4
+    },
+    "contract": {
+      "protocolVersion": 5,
+      "protocolHash": "2845ea4494764d8543d81278cbc3b72e06e87dcf580da1e767cfd4b1a7e3d979",
+      "mapId": "floor5-prepared",
+      "collisionHash": "a5351e073a01ac95466acf4346acf9812f4265224e56712ce3e889085a42b6d9",
+      "mapHash": "89283f437623457a10da37be29a282a41591f202270051ba940549ba01b4b050",
+      "configHash": "a59680b58fd96991d2fe9e339f49e09bd70352b8ec0b2744a9dced30a489c474",
+      "buildHash": "7c77e7acc38b9a8622ab503104890f8e61856b54264121cef9369802e0b17243",
+      "tickRate": 60,
+      "patchMs": 50
+    },
+    "perPlayerOutboundBytesPerSecond": 40848.663374086274,
+    "maxPending": 14,
+    "joins": 20,
+    "reconnects": 30,
+    "shots": [
+      2475,
+      2517,
+      3652,
+      3647,
+      4466,
+      4376,
+      5007,
+      5120,
+      6677,
+      4510
+    ],
+    "hits": [
+      2343,
+      2336,
+      2083,
+      2123,
+      1773,
+      1794,
+      1737,
+      1971,
+      1260,
+      756
+    ],
+    "measured": {
+      "elapsedSeconds": 1800.2733241610001,
+      "serverCpuPercent": 12.613389308860992,
+      "memory": {
+        "rss": 254459904,
+        "heapTotal": 140460032,
+        "heapUsed": 68697120,
+        "external": 6370711,
+        "arrayBuffers": 459602
+      },
+      "eventLoopMs": {
+        "p50": 10.084351,
+        "p95": 10.813439,
+        "p99": 11.591679,
+        "max": 166.068223
+      },
+      "costMs": {
+        "tick": {
+          "n": 8192,
+          "p50": 0.6916310000233352,
+          "p95": 1.6514300000853837,
+          "p99": 4.2296019999776036,
+          "max": 9.136093999957666
+        },
+        "simulation": {
+          "n": 8192,
+          "p50": 0.3267230000346899,
+          "p95": 1.0836509999353439,
+          "p99": 3.5943410000763834,
+          "max": 8.30344400019385
+        },
+        "projection": {
+          "n": 8192,
+          "p50": 0.18109300010837615,
+          "p95": 0.24753700010478497,
+          "p99": 0.2669999999925494,
+          "max": 0.6630199998617172
+        },
+        "serialization": {
+          "n": 8192,
+          "p50": 0.7173349999357015,
+          "p95": 1.3072989999782294,
+          "p99": 1.661096999887377,
+          "max": 4.401805999921635
+        },
+        "interval": {
+          "n": 8192,
+          "p50": 16.2032210000325,
+          "p95": 17.6271490000654,
+          "p99": 32.36951499991119,
+          "max": 117.96801800001413
+        }
+      },
+      "shotAgeMs": {
+        "n": 8192,
+        "p50": 119,
+        "p95": 125,
+        "p99": 126,
+        "max": 217
+      },
+      "bytes": 735387590,
+      "inBytes": 11275357,
+      "respawns": 3802,
+      "combatRespawns": 2732,
+      "thermal": {
+        "temperatureC": 41.35,
+        "throttled": "throttled=0x0"
+      },
+      "resources": {
+        "PipeWrap": 1,
+        "TCPServerWrap": 1,
+        "TCPSocketWrap": 10,
+        "Timeout": 5
+      }
+    },
+    "baseline": {
+      "memory": {
+        "rss": 258555904,
+        "heapTotal": 147275776,
+        "heapUsed": 66862824,
+        "external": 6353995,
+        "arrayBuffers": 442926
+      },
+      "thermal": {
+        "temperatureC": 40.8,
+        "throttled": "throttled=0x0"
+      },
+      "resources": {
+        "PipeWrap": 1,
+        "TCPServerWrap": 1,
+        "TCPSocketWrap": 10,
+        "Timeout": 5
+      },
+      "combatRespawns": 2
+    },
+    "cleanup": {
+      "elapsedSeconds": 1800.8241435720001,
+      "serverCpuPercent": 12.615665378040102,
+      "memory": {
+        "rss": 252346368,
+        "heapTotal": 119095296,
+        "heapUsed": 29379576,
+        "external": 6326725,
+        "arrayBuffers": 415616
+      },
+      "eventLoopMs": {
+        "p50": 10.084351,
+        "p95": 10.813439,
+        "p99": 11.591679,
+        "max": 166.068223
+      },
+      "costMs": {
+        "tick": {
+          "n": 8192,
+          "p50": 0.6913719999138266,
+          "p95": 1.6518930001184344,
+          "p99": 4.2296019999776036,
+          "max": 9.136093999957666
+        },
+        "simulation": {
+          "n": 8192,
+          "p50": 0.3266489999368787,
+          "p95": 1.0836509999353439,
+          "p99": 3.5943410000763834,
+          "max": 8.30344400019385
+        },
+        "projection": {
+          "n": 8192,
+          "p50": 0.1810929998755455,
+          "p95": 0.24751899996772408,
+          "p99": 0.26690799999050796,
+          "max": 0.6630199998617172
+        },
+        "serialization": {
+          "n": 8192,
+          "p50": 0.7173720002174377,
+          "p95": 1.3072989999782294,
+          "p99": 1.661096999887377,
+          "max": 4.401805999921635
+        },
+        "interval": {
+          "n": 8192,
+          "p50": 16.20249899988994,
+          "p95": 17.6271490000654,
+          "p99": 32.38803400006145,
+          "max": 117.96801800001413
+        }
+      },
+      "shotAgeMs": {
+        "n": 8192,
+        "p50": 119,
+        "p95": 125,
+        "p99": 126,
+        "max": 217
+      },
+      "bytes": 735417520,
+      "inBytes": 11275632,
+      "respawns": 3802,
+      "combatRespawns": 2732,
+      "thermal": {
+        "temperatureC": 41.9,
+        "throttled": "throttled=0x0"
+      },
+      "resources": {
+        "PipeWrap": 1,
+        "TCPServerWrap": 1,
+        "Timeout": 4
+      }
+    },
+    "cleanupRooms": 0,
+    "measuredCombatRespawns": 2730,
+    "matchId": 53,
+    "finalPhase": "active",
+    "sampleCount": 353,
+    "heapWarmMaxDeltaMiB": 0.6034927368164062,
+    "maxInputQueue": 2,
+    "maxHistoricalTicks": 64,
+    "listenerCounts": [
+      7
+    ],
+    "temperatureC": {
+      "min": 39.7,
+      "max": 44.1
+    },
+    "throttled": [
+      "throttled=0x0"
+    ],
+    "sampling": "five-second snapshots with forced GC; bounded last 8192 tick-cost samples"
+  },
+  "runtimeDelta": {
+    "serverLogicUnchanged": true,
+    "soakCodeRevision": "a3ce3460a9c0e362404c4e8a1f2b2ba659ab78e1",
+    "releaseRevision": "d886a10060b8fbf9b2d3034e8c8d0ad46a8a39d1",
+    "onlyChangedFiles": [
+      "build-info.json",
+      "shared/multiplayer/build.mjs",
+      "src/fps/network/room-ui.mjs",
+      "tools/network-pilot-browser.mjs",
+      "tools/online-match-browser.mjs"
+    ],
+    "soakContract": {
+      "protocolVersion": 5,
+      "protocolHash": "2845ea4494764d8543d81278cbc3b72e06e87dcf580da1e767cfd4b1a7e3d979",
+      "mapId": "floor5-prepared",
+      "collisionHash": "a5351e073a01ac95466acf4346acf9812f4265224e56712ce3e889085a42b6d9",
+      "mapHash": "89283f437623457a10da37be29a282a41591f202270051ba940549ba01b4b050",
+      "configHash": "a59680b58fd96991d2fe9e339f49e09bd70352b8ec0b2744a9dced30a489c474",
+      "buildHash": "7c77e7acc38b9a8622ab503104890f8e61856b54264121cef9369802e0b17243",
+      "tickRate": 60,
+      "patchMs": 50
+    },
+    "releaseContract": {
+      "protocolVersion": 5,
+      "protocolHash": "2845ea4494764d8543d81278cbc3b72e06e87dcf580da1e767cfd4b1a7e3d979",
+      "mapId": "floor5-prepared",
+      "collisionHash": "a5351e073a01ac95466acf4346acf9812f4265224e56712ce3e889085a42b6d9",
+      "mapHash": "89283f437623457a10da37be29a282a41591f202270051ba940549ba01b4b050",
+      "configHash": "a59680b58fd96991d2fe9e339f49e09bd70352b8ec0b2744a9dced30a489c474",
+      "buildHash": "3af2145a3d18bdbd58d53ebeb6f35f3309531892085dfe376b5aaab9098a473c",
+      "tickRate": 60,
+      "patchMs": 50
+    }
+  },
+  "stagedPiPreflight": [
+    {
+      "status": "PASS",
+      "path": "loopback with tunnel headers",
+      "clients": 10,
+      "map": "floor5-prepared",
+      "build": "3af2145a3d18bdbd58d53ebeb6f35f3309531892085dfe376b5aaab9098a473c",
+      "checkpoints": [
+        {
+          "clients": 2,
+          "readyOnEachSocket": 2,
+          "analysts": 1,
+          "counterAnalysts": 1
+        },
+        {
+          "clients": 4,
+          "readyOnEachSocket": 4,
+          "analysts": 2,
+          "counterAnalysts": 2
+        },
+        {
+          "clients": 10,
+          "readyOnEachSocket": 10,
+          "analysts": 5,
+          "counterAnalysts": 5
+        }
+      ],
+      "gameplayPeers": 2,
+      "tickAdvance": 120,
+      "movementMetres": [
+        0.28,
+        0.25
+      ],
+      "ammoAfterFire": [
+        28,
+        28
+      ],
+      "reloadAmmo": [
+        30,
+        30
+      ],
+      "sharedShots": [
+        2,
+        2
+      ],
+      "consentedLeaves": 10
+    },
+    {
+      "status": "PASS",
+      "path": "loopback with tunnel headers",
+      "clients": 2,
+      "map": "floor5-prepared",
+      "build": "3af2145a3d18bdbd58d53ebeb6f35f3309531892085dfe376b5aaab9098a473c",
+      "unauthenticatedStatus": 401,
+      "wrongRoomCodeRejected": true,
+      "checkpoints": [
+        {
+          "clients": 2,
+          "readyOnEachSocket": 2,
+          "analysts": 1,
+          "counterAnalysts": 1
+        }
+      ],
+      "gameplayPeers": 2,
+      "tickAdvance": 117,
+      "movementMetres": [
+        0.28,
+        0.28
+      ],
+      "ammoAfterFire": [
+        29,
+        29
+      ],
+      "reloadAmmo": [
+        30,
+        30
+      ],
+      "sharedShots": [
+        1,
+        1
+      ],
+      "consentedLeaves": 2
+    },
+    {
+      "status": "PASS",
+      "kind": "isolated staged systemd service, loopback HTTP/WS with proxy headers",
+      "commit": "d886a10060b8fbf9b2d3034e8c8d0ad46a8a39d1",
+      "port": 51941,
+      "clients": 10,
+      "automaticProcessRecovery": true,
+      "oldInviteRejected": true,
+      "oldCookieRejected": true,
+      "newInviteAccepted": true,
+      "originalPID": 46794,
+      "pilotPIDUnchanged": 70884
+    }
+  ],
+  "publicActivation": [
+    {
+      "status": "PASS",
+      "path": "HTTPS/WSS via public origin",
+      "clients": 2,
+      "map": "floor5-prepared",
+      "build": "3af2145a3d18bdbd58d53ebeb6f35f3309531892085dfe376b5aaab9098a473c",
+      "unauthenticatedStatus": 401,
+      "wrongRoomCodeRejected": true,
+      "checkpoints": [
+        {
+          "clients": 2,
+          "readyOnEachSocket": 2,
+          "analysts": 1,
+          "counterAnalysts": 1
+        }
+      ],
+      "gameplayPeers": 2,
+      "tickAdvance": 121,
+      "movementMetres": [
+        0.28,
+        0.28
+      ],
+      "ammoAfterFire": [
+        29,
+        29
+      ],
+      "reloadAmmo": [
+        30,
+        30
+      ],
+      "sharedShots": [
+        1,
+        1
+      ],
+      "consentedLeaves": 2
+    }
+  ],
+  "publicRollbackAndReactivation": [
+    {
+      "status": "PASS",
+      "path": "HTTPS/WSS via public origin",
+      "clients": 2,
+      "map": "floor5-prepared",
+      "build": "c3b56739cabb50947568497b1335892f09202dc922901935364bbf50956a5ed4",
+      "unauthenticatedStatus": 401,
+      "wrongRoomCodeRejected": true,
+      "checkpoints": [
+        {
+          "clients": 2,
+          "readyOnEachSocket": 2,
+          "analysts": 1,
+          "counterAnalysts": 1
+        }
+      ],
+      "gameplayPeers": 2,
+      "tickAdvance": 121,
+      "movementMetres": [
+        0.35,
+        0.35
+      ],
+      "ammoAfterFire": [
+        28,
+        29
+      ],
+      "reloadAmmo": [
+        30,
+        30
+      ],
+      "sharedShots": [
+        2,
+        1
+      ],
+      "consentedLeaves": 2
+    },
+    {
+      "status": "PASS",
+      "path": "HTTPS/WSS via public origin",
+      "clients": 2,
+      "map": "floor5-prepared",
+      "build": "3af2145a3d18bdbd58d53ebeb6f35f3309531892085dfe376b5aaab9098a473c",
+      "unauthenticatedStatus": 401,
+      "wrongRoomCodeRejected": true,
+      "checkpoints": [
+        {
+          "clients": 2,
+          "readyOnEachSocket": 2,
+          "analysts": 1,
+          "counterAnalysts": 1
+        }
+      ],
+      "gameplayPeers": 2,
+      "tickAdvance": 120,
+      "movementMetres": [
+        0.28,
+        0.28
+      ],
+      "ammoAfterFire": [
+        29,
+        29
+      ],
+      "reloadAmmo": [
+        30,
+        30
+      ],
+      "sharedShots": [
+        1,
+        1
+      ],
+      "consentedLeaves": 2
+    }
+  ],
+  "publicStopAndReopen": [
+    {
+      "status": "PASS",
+      "path": "HTTPS/WSS via public origin",
+      "clients": 2,
+      "map": "floor5-prepared",
+      "build": "3af2145a3d18bdbd58d53ebeb6f35f3309531892085dfe376b5aaab9098a473c",
+      "unauthenticatedStatus": 401,
+      "wrongRoomCodeRejected": true,
+      "checkpoints": [
+        {
+          "clients": 2,
+          "readyOnEachSocket": 2,
+          "analysts": 1,
+          "counterAnalysts": 1
+        }
+      ],
+      "gameplayPeers": 2,
+      "tickAdvance": 120,
+      "movementMetres": [
+        0.28,
+        0.28
+      ],
+      "ammoAfterFire": [
+        29,
+        29
+      ],
+      "reloadAmmo": [
+        30,
+        30
+      ],
+      "sharedShots": [
+        1,
+        1
+      ],
+      "consentedLeaves": 2
+    },
+    {
+      "status": "PASS",
+      "stopPublicHTTP": 530,
+      "reopenedPublicHTTPS": 200,
+      "hostnameChanged": true,
+      "originalPID": 46794
+    }
+  ],
+  "publicTenSDKClients": [
+    {
+      "status": "PASS",
+      "path": "HTTPS/WSS via public origin",
+      "clients": 10,
+      "map": "floor5-prepared",
+      "build": "3af2145a3d18bdbd58d53ebeb6f35f3309531892085dfe376b5aaab9098a473c",
+      "checkpoints": [
+        {
+          "clients": 2,
+          "readyOnEachSocket": 2,
+          "analysts": 1,
+          "counterAnalysts": 1
+        },
+        {
+          "clients": 4,
+          "readyOnEachSocket": 4,
+          "analysts": 2,
+          "counterAnalysts": 2
+        },
+        {
+          "clients": 10,
+          "readyOnEachSocket": 10,
+          "analysts": 5,
+          "counterAnalysts": 5
+        }
+      ],
+      "gameplayPeers": 2,
+      "tickAdvance": 117,
+      "movementMetres": [
+        0.21,
+        0.21
+      ],
+      "ammoAfterFire": [
+        29,
+        29
+      ],
+      "reloadAmmo": [
+        30,
+        30
+      ],
+      "sharedShots": [
+        1,
+        1
+      ],
+      "consentedLeaves": 10
+    }
+  ],
+  "deploymentReceipt": {
+    "date": "2026-11-18T08:54:51.853960+00:00",
+    "releaseCommit": "d886a10060b8fbf9b2d3034e8c8d0ad46a8a39d1",
+    "rollbackCommit": "1c2041fd2d2ab54b5f83d858bfe6b01f07e74935",
+    "contract": {
+      "protocolVersion": 5,
+      "protocolHash": "2845ea4494764d8543d81278cbc3b72e06e87dcf580da1e767cfd4b1a7e3d979",
+      "mapId": "floor5-prepared",
+      "collisionHash": "a5351e073a01ac95466acf4346acf9812f4265224e56712ce3e889085a42b6d9",
+      "mapHash": "89283f437623457a10da37be29a282a41591f202270051ba940549ba01b4b050",
+      "configHash": "a59680b58fd96991d2fe9e339f49e09bd70352b8ec0b2744a9dced30a489c474",
+      "buildHash": "3af2145a3d18bdbd58d53ebeb6f35f3309531892085dfe376b5aaab9098a473c",
+      "tickRate": 60,
+      "patchMs": 50
+    },
+    "units": {
+      "cartridge-strike2": {
+        "Restart": "on-failure",
+        "MainPID": "46794",
+        "NRestarts": "0",
+        "LogNamespace": "",
+        "ActiveState": "active",
+        "UnitFileState": "enabled"
+      },
+      "cartridge-strike2-pilot": {
+        "Restart": "always",
+        "MainPID": "73974",
+        "NRestarts": "0",
+        "LogNamespace": "cartridge-strike2-online",
+        "ActiveState": "active",
+        "UnitFileState": "enabled",
+        "parentPID": 1
+      },
+      "cartridge-strike2-tunnel": {
+        "Restart": "on-failure",
+        "MainPID": "74091",
+        "NRestarts": "0",
+        "LogNamespace": "cartridge-strike2-online",
+        "ActiveState": "active",
+        "UnitFileState": "enabled",
+        "parentPID": 1
+      },
+      "cartridge-strike2-pilot-check.timer": {
+        "ActiveState": "active",
+        "UnitFileState": "enabled"
+      }
+    },
+    "quickTunnelExpiryUTC": "2026-11-19T05:27:33+00:00",
+    "namedTunnel": "NOT RUN: owner has no active Cloudflare domain",
+    "piReboot": "NOT RUN: original service preserved"
+  },
+  "ci": [
+    {
+      "revision": "a3ce3460a9c0e362404c4e8a1f2b2ba659ab78e1",
+      "runId": 44264144000,
+      "jobs": 7,
+      "status": "PASS"
+    },
+    {
+      "revision": "d886a10060b8fbf9b2d3034e8c8d0ad46a8a39d1",
+      "runId": 44267713626,
+      "jobs": 7,
+      "status": "PASS"
+    }
+  ],
+  "publicRenderedMatch": {
+    "status": "PASS",
+    "path": "public HTTPS",
+    "date": "2026-11-18T09:02:34.162Z",
+    "physicalDevices": false,
+    "chromium": "153.0.8010.12",
+    "renderers": [
+      "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+      "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)"
+    ],
+    "angle": "metal",
+    "dpr": 1,
+    "renderedClients": 2,
+    "resumeAttempts": 1,
+    "fixtureCertificatePinned": false,
+    "inviteLogins": 2,
+    "rejectedWrongRoomCode": true,
+    "readyActors": 2,
+    "floor5Doors": 51,
+    "webSockets": [
+      {
+        "sockets": 1,
+        "sent": 36505,
+        "received": 12767
+      },
+      {
+        "sockets": 1,
+        "sent": 36580,
+        "received": 12752
+      }
+    ],
+    "matchCycle": {
+      "sameRoom": true,
+      "shippingDefaults": true,
+      "durationSeconds": 600,
+      "scoreTarget": 50,
+      "firstMatch": 1,
+      "result": {
+        "matchId": 1,
+        "winner": "draw",
+        "reason": "time",
+        "score": {
+          "analysts": 0,
+          "counterAnalysts": 0
+        },
+        "players": [
+          {
+            "id": "analysts-0",
+            "name": "Pilot host",
+            "team": "analysts",
+            "kills": 0,
+            "deaths": 0
+          },
+          {
+            "id": "counterAnalysts-0",
+            "name": "Pilot friend",
+            "team": "counterAnalysts",
+            "kills": 0,
+            "deaths": 0
+          }
+        ]
+      },
+      "secondMatch": 2,
+      "rematchFire": true
+    },
+    "remoteGameplay": {
+      "tickBefore": 346,
+      "tickAfter": 492,
+      "distance": 0.3500000000000014,
+      "ammoBefore": 30,
+      "ammoFired": 29,
+      "ammoReloaded": 30
+    },
+    "departedHostRemoved": true
+  }
+}
