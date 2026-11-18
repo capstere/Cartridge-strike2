@@ -57,10 +57,29 @@ finnas kvar även vid återställning till den äldre piloten. Tjänsterna och
 
 ## Stabil adress: namngiven Cloudflare Tunnel
 
+För installationen på Jespers Pi är den auktoriserade adressen
+**https://play.capstere.com**. Domänen `capstere.com` bekräftades aktiv hos
+Cloudflare den 18 november 2026. Den namngivna tunneln `cartridge-strike2-play`
+ska publicera enbart detta värdnamn till `http://127.0.0.1:2568`, följt av en
+`http_status:404`-regel. Rotdomänen och andra DNS-poster ska lämnas orörda.
+
+Verifiera först mot en separat loopbackprocess med samma release och fast public
+origin. Den ordinarie Quick Tunnel kan fortsätta under förprovet. Vänta tills
+Pi:ns vanliga DNS-resolver kan slå upp det nya värdnamnet innan `configure-named`
+körs; en tidigare NXDOMAIN kan finnas kvar i resolverns negativa cache.
+Ändra inte Tailscale, router eller globala DNS-inställningar för att dölja det.
+Aktiveringsresultat, kontrakt och verifieringsdata sparas privat på Pi:n i
+`/var/lib/cartridge-strike2-online/` och redovisas i den aktuella migrations-PR:n.
+
+HTTPS-kontrollen identifierar sig som `CartridgeStrike2-Readiness/1.0`.
+Cloudflare kan neka Pythons standardsignatur med 1010; ändra inte brandvägg eller
+Browser Integrity Check för att få mätningen att passera. Se
+[Cloudflares rekommendation](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-1xxx-errors/error-1010/).
+
 En Quick Tunnel har en slumpmässig adress och ett absolut slutdatum. Den är
 **tillfällig**, även om systemd återstartar processen. Vi antar inte att operatören
-äger en domän. Den permanenta adressen kräver en aktiv domän i ett auktoriserat
-Cloudflare-konto; tills den finns är denna del **INTE AKTIVERAD**.
+äger en domän. En ny installation behöver en aktiv domän i ett auktoriserat
+Cloudflare-konto innan den namngivna rutten kan aktiveras.
 
 Den konkreta kontoåtgärden är att skapa en namngiven Cloudflare Tunnel med en
 Published application-route för det valda värdnamnet till

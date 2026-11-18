@@ -29,12 +29,16 @@ invitation-flow failure after whitespace-safe handling was activated. It does
 not verify physical respawn, background/reconnect, sustained performance or the
 new match/results/rematch flow. Android remains **NOT RUN**.
 
-The owner confirmed that no domain is currently active in Cloudflare. A named
-tunnel with a stable HTTPS/WSS address is prepared but is not activated. The
-existing Quick Tunnel remains temporary, with its absolute expiry on
-**19 November 2026 at 06:27 CET**. Do not describe it as permanent hosting.
-Activate an authorized domain in Cloudflare before connecting the prepared
-named route. Keep invitations, room codes and connector credentials private.
+**Domain follow-up, 18 November 2026:** the owner purchased and activated
+`capstere.com` and authorized **https://play.capstere.com**. The active zone and
+new named tunnel were verified through Cloudflare's API. Two independently
+authenticated rendered clients passed HTTPS/WSS movement, shooting and reload
+against the isolated replacement origin. Use the
+[named-host operations guide](deploy/online/README.md#stabil-adress-namngiven-cloudflare-tunnel)
+and the Pi's release receipt for the final activation state. The old Quick Tunnel
+is only a rollback option, with its absolute expiry on
+**19 November 2026 at 06:27 CET**. Named hosting uses the fixed origin and has no
+Quick Tunnel deadline. Keep invitations and connector credentials private.
 The original `cartridge-strike2` service on port **2567** must remain available.
 
 PR #23 was reviewed at `1c2041fd2d2ab54b5f83d858bfe6b01f07e74935`, all seven jobs

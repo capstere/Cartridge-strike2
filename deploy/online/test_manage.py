@@ -85,10 +85,13 @@ class OperationTests(unittest.TestCase):
             stack.enter_context(patch.object(manage, 'wait_ready'))
             response = MagicMock()
             response.__enter__.return_value.status = 200
-            stack.enter_context(patch.object(manage.urllib.request, 'urlopen', return_value=response))
+            urlopen = stack.enter_context(patch.object(manage.urllib.request, 'urlopen', return_value=response))
             stack.enter_context(patch.object(manage, 'verify', side_effect=RuntimeError('verification failed')))
             with self.assertRaisesRegex(RuntimeError, 'verification failed'):
                 manage.configure_named('https://game.example.org', str(token))
+            request = urlopen.call_args.args[0]
+            self.assertEqual(request.full_url, 'https://game.example.org')
+            self.assertEqual(request.get_header('User-agent'), 'CartridgeStrike2-Readiness/1.0')
             self.assertEqual(sorted(p.name for p in manage.CONFIG.iterdir()), ['invite.env', 'until'])
             self.assertEqual((manage.CONFIG / 'invite.env').read_text(), 'private-fixture')
             self.assertEqual((drop / 'local.conf').read_text(), 'original')
