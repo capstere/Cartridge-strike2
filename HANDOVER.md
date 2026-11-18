@@ -30,10 +30,12 @@ not verify physical respawn, background/reconnect, sustained performance or the
 new match/results/rematch flow. Android remains **NOT RUN**.
 
 **Domain follow-up, 18 November 2026:** the owner purchased and activated
-`capstere.com` and authorized **https://play.capstere.com**. The active zone and
-new named tunnel were verified through Cloudflare's API. Two independently
-authenticated rendered clients passed HTTPS/WSS movement, shooting and reload
-against the isolated replacement origin. Use the
+`capstere.com` and selected **https://cs2.capstere.com** as the permanent address,
+replacing the initially prepared `play` hostname before activation. The active
+zone and named tunnel were verified through Cloudflare's API. The initial
+isolated-origin preflight passed HTTPS/WSS movement, shooting and reload with
+two independently authenticated rendered clients. Repeat the public checks on
+`cs2.capstere.com` after activation and removal of the temporary connector. Use the
 [named-host operations guide](deploy/online/README.md#stabil-adress-namngiven-cloudflare-tunnel)
 and the Pi's release receipt for the final activation state. The old Quick Tunnel
 is only a rollback option, with its absolute expiry on

@@ -58,10 +58,12 @@ finnas kvar även vid återställning till den äldre piloten. Tjänsterna och
 ## Stabil adress: namngiven Cloudflare Tunnel
 
 För installationen på Jespers Pi är den auktoriserade adressen
-**https://play.capstere.com**. Domänen `capstere.com` bekräftades aktiv hos
-Cloudflare den 18 november 2026. Den namngivna tunneln `cartridge-strike2-play`
+**https://cs2.capstere.com**. Domänen `capstere.com` bekräftades aktiv hos
+Cloudflare den 18 november 2026. Den befintliga tunneln `cartridge-strike2-play`
 ska publicera enbart detta värdnamn till `http://127.0.0.1:2568`, följt av en
-`http_status:404`-regel. Rotdomänen och andra DNS-poster ska lämnas orörda.
+`http_status:404`-regel. Tunnelns interna namn är inte speladressen. Ägaren valde
+`cs2.capstere.com` innan aktivering; den förberedda `play`-posten tas bort efter
+verifierat byte. Rotdomänen och andra DNS-poster ska lämnas orörda.
 
 Verifiera först mot en separat loopbackprocess med samma release och fast public
 origin. Den ordinarie Quick Tunnel kan fortsätta under förprovet. Vänta tills
