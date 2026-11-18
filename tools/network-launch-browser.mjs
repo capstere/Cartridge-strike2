@@ -80,7 +80,7 @@ try{
 }catch(error){
  fs.mkdirSync('test-results/network',{recursive:true});
  const bounded=promise=>Promise.race([promise,new Promise(resolve=>setTimeout(()=>resolve('Diagnostic timed out'),5000))]);
- const clients=await Promise.all(pages.map(p=>bounded(p.evaluate(()=>({events:__launchEvents,focused:document.hasFocus(),pointer:document.pointerLockElement?.id,fullscreen:!!document.fullscreenElement,paused:!document.querySelector('#pause').hidden,pause:document.querySelector('#pause').textContent,fatal:document.querySelector('#fatal pre').textContent})).catch(e=>String(e)))));
- const seats=[...local.rooms].flatMap(r=>[...r.seats.values()].map(s=>({id:s.id,ready:s.ready,enabled:s.enabled,x:s.actor?.x,z:s.actor?.z})));
- fs.writeFileSync('test-results/network/normal-launch-failure.json',JSON.stringify({error:String(error),errors,clients,seats},null,2));console.error('Normal launch failure',JSON.stringify({error:String(error),errors,clients,seats}));throw error;
+ const clients=await Promise.all(pages.map(p=>bounded(p.evaluate(()=>({events:__launchEvents,focused:document.hasFocus(),pointer:document.pointerLockElement?.id,fullscreen:!!document.fullscreenElement,paused:!document.querySelector('#pause').hidden,pause:document.querySelector('#pause').textContent,network:document.querySelector('#phase').textContent,fps:document.querySelector('#perf').textContent,fatal:document.querySelector('#fatal pre').textContent})).catch(e=>String(e)))));
+ const rooms=[...local.rooms].map(r=>({tick:r.sim.tickNumber,metrics:r.metrics,lag:r.lag,seats:[...r.seats.values()].map(({actor,...s})=>({...s,x:actor?.x,z:actor?.z}))}));
+ fs.writeFileSync('test-results/network/normal-launch-failure.json',JSON.stringify({error:String(error),errors,clients,rooms},null,2));console.error('Normal launch failure',JSON.stringify({error:String(error),errors,clients,rooms}));throw error;
 }finally{await Promise.all(browsers.map(b=>b.close()));await peer?.close();await local.close();}

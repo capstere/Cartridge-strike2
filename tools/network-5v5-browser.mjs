@@ -36,6 +36,19 @@ try{for(const [count,rtt] of scenarios){
    await pages[0].waitForFunction(()=>performance.now()-__fps.network.lastPatch<200);
    await delay(1200);
    assert.equal(await pages[0].evaluate(()=>__fps.network.metrics.reconnects),0,'render stalls cannot disconnect a healthy socket');
+   const cdp=await contexts[0].newCDPSession(pages[0]),before=(await rpc('sample')).rooms[0].tick;
+   await cdp.send('Page.setWebLifecycleState',{state:'frozen'});
+   await delay(3200);
+   assert((await rpc('sample')).rooms[0].tick>before+100,'the remaining match advances while one browser is frozen');
+   await cdp.send('Page.setWebLifecycleState',{state:'active'});await cdp.detach();
+   await pages[0].waitForFunction(()=>performance.now()-__fps.network.lastPatch<200);
+   await delay(1200);
+   assert.equal(await pages[0].evaluate(()=>__fps.network.metrics.reconnects),0,'short browser lifecycle suspension retains the session');
+   if(await pages[0].evaluate(()=>__fps.modal==='pause'))await pages[0].locator('#resume').click();
+   await pages[0].evaluate(()=>{const n=__fps.network;n.metrics.corrections.length=0;n.prediction.world.actor.z+=.5;n.input.data.sampleTick=n.room.state.tick;n.input.send();});
+   await pages[0].waitForFunction(()=>__fps.network.metrics.corrections.some(d=>d>.2));
+   // This controlled prediction error verifies the SDK's diagnostic is active;
+   // it is excluded from the measured window after warmup below.
   }
   const client=new Client(url,{headers:{Origin:url}});
   for(let i=2;i<count;i++){
@@ -106,7 +119,7 @@ try{for(const [count,rtt] of scenarios){
    await pages[0].screenshot({path:'test-results/pass3b/5v5-combat.png'});await pages[0].keyboard.down('Tab');await pages[0].locator('#scoreboard').waitFor();assert.equal(await pages[0].locator('#score-tables tbody tr').count(),10);assert.match(await pages[0].locator('#board-round').textContent(),/5v5/);await pages[0].screenshot({path:'test-results/pass3b/5v5-scoreboard.png'});await pages[0].keyboard.up('Tab');
   }
   const server=await rpc('sample');
-  rows.push({status:'PASS',count,rttMs:rtt,jitterMs:rtt?20:0,renderedClients:2,protocolPeers:count-2,placement:'test-only C08 combat fixture',background:'synthetic blur',transportLoss:'NOT RUN',reconnectionDuringCombat:true,
+  rows.push({status:'PASS',count,rttMs:rtt,jitterMs:rtt?20:0,renderedClients:2,protocolPeers:count-2,placement:'test-only C08 combat fixture',background:count===2&&rtt===0?'4 s main-thread stall, 3.2 s CDP browser lifecycle freeze/resume, synthetic blur':'synthetic blur',transportLoss:'NOT RUN',reconnectionDuringCombat:true,
    client:measurements.map(({times,remoteDisplayOffset,metrics,...m})=>({...m,frameMs:stats(times),fps:times.length*1000/times.reduce((a,b)=>a+b,0),remoteDisplayOffsetM:stats(remoteDisplayOffset),
     ...Object.fromEntries(['corrections','adoptionDistance','shotLatency','hitLatency'].map(k=>[k,stats(metrics[k]||[])])),maxPending:metrics.maxPending,confirmedShots:metrics.confirmedShots,suppressedShots:metrics.suppressedShots})),server,contract:info.contract});
   console.log(JSON.stringify({count,rtt,status:'PASS',fps:rows.at(-1).client.map(m=>m.fps),hitP95:rows.at(-1).client.map(m=>m.hitLatency.p95)}));

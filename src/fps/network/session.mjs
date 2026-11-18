@@ -124,7 +124,10 @@ export class NetworkSession {
       const actor=actorView(self,this.localPlayerId);
       const game={world:this.world,config:NETWORK_CONFIG,actors:[actor],hostages:[],state:{time:state.time,zombies:[]}};
       const dynamics=createPredictedWorld(this.world);
-      this.prediction=this.predict.sim({input:this.input,world:{game,actor,dynamics},smoothMs:45,
+      // The pinned SDK only populates lastCorrection when diagnostics are
+      // enabled. An infinite public warning threshold enables the gauge without
+      // flooding the console; the bounded sample ring below owns retention.
+      this.prediction=this.predict.sim({input:this.input,world:{game,actor,dynamics},smoothMs:45,warnOnDivergence:Infinity,
         adopt:w=>{
           const s=this.room.state.actors.get(this.localPlayerId);if(!s)return;
           this.metrics.adopts++;const d=Math.hypot(w.actor.x-s.x,w.actor.y-s.y,w.actor.z-s.z);
