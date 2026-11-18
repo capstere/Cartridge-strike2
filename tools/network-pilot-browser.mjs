@@ -8,7 +8,8 @@ import {resumeDesktop} from './network-browser-resume.mjs';
 import {chromium} from '../frontline/source/tools/dev/node_modules/playwright-core/index.mjs';
 
 const external=process.env.CS2_PILOT_URL;
-const fixture=external?null:await (await import('./network-pilot-fixture.mjs')).startPilotFixture();
+const completeMatch=process.env.CS2_BROWSER_COMPLETE_MATCH==='1';
+const fixture=external?null:await (await import('./network-pilot-fixture.mjs')).startPilotFixture(completeMatch?{testMatch:{durationSeconds:30,countdownSeconds:.3}}:{});
 const origin=fixture?.origin||new URL(external).origin;
 assert.equal(new URL(origin).protocol,'https:');
 const invite=fixture?.invite||(await readFile(process.env.CS2_PILOT_INVITE_FILE,'utf8')).trim();
@@ -92,13 +93,13 @@ async function inspectFriend(page,roomId){
     const {result:sample,exceptionDetails}=await cdp.send('Runtime.callFunctionOn',{objectId:result.objectId,
       functionDeclaration:`function(){
         const actor=this.state.actors.get('analysts-0');
-        return {x:actor.x,z:actor.z,ammo:actor.ammo,pitch:actor.pitch,tick:this.state.tick,doors:this.state.doors.size,readyCount:[...this.state.actors.values()].filter(a=>a.ready).length};
+        return {x:actor.x,z:actor.z,ammo:actor.ammo,pitch:actor.pitch,tick:this.state.tick,doors:this.state.doors.size,readyCount:[...this.state.actors.values()].filter(a=>a.ready).length,phase:this.state.phase,matchId:this.state.matchId,remaining:this.state.remainingSeconds,duration:this.state.durationSeconds,scoreTarget:this.state.scoreTarget,results:this.state.results};
       }`,returnByValue:true});
     assert(!exceptionDetails,'Friend could not read the replicated room state');return sample.value;
   };
 }
-async function until(read,predicate,label){
-  const deadline=performance.now()+35000;
+async function until(read,predicate,label,timeout=35000){
+  const deadline=performance.now()+timeout;
   while(true){const sample=await read();if(predicate(sample))return sample;
     assert(performance.now()<deadline,label+' '+JSON.stringify(sample));await delay(100);}
 }
@@ -132,6 +133,27 @@ try{
   await host.keyboard.press('r');const reloaded=await until(read,s=>s.ammo===before.ammo,'Friend received reload');
   assert(reloaded.tick>before.tick);
   assert(wsCounts.every(s=>s.sockets>=1&&s.sent>0&&s.received>0),'Both browsers exchanged WSS frames');
+  let matchCycle;
+  if(completeMatch){
+    if(external){assert.equal(before.duration,600);assert.equal(before.scoreTarget,50);}
+    const readHost=await inspectFriend(host,roomId);let lastProgress=0,lastTick=before.tick,lastTickAt=performance.now();
+    const final=await until(read,s=>{
+      if(s.tick!==lastTick){lastTick=s.tick;lastTickAt=performance.now();}
+      assert(performance.now()-lastTickAt<15000,'public authority keeps ticking');
+      if(performance.now()-lastProgress>60000){lastProgress=performance.now();console.log(JSON.stringify({publicMatchPhase:s.phase,remaining:Math.ceil(s.remaining)}));}
+      return s.phase==='results';
+    },'shipping time-limit result',Math.max(60000,before.duration*1000+30000));
+    const hostFinal=await until(readHost,s=>s.phase==='results','host results');
+    assert.equal(final.results,hostFinal.results);const result=JSON.parse(final.results);
+    assert.equal(result.reason,'time');assert.equal(result.winner,'draw');assert.deepEqual(result.score,{analysts:0,counterAnalysts:0});
+    await host.locator('#room-rematch').click();await friend.locator('#room-ready').waitFor({state:'visible'});
+    await host.locator('#room-ready').click();await friend.locator('#room-ready').tap();await host.locator('#room-start').click();
+    await host.locator('#resume').waitFor({state:'visible'});await friend.locator('#resume').tap();const secondResume=await resumeDesktop(host);
+    const next=await until(read,s=>s.phase==='active'&&s.matchId===before.matchId+1,'same public room rematch');
+    assert.equal(next.ammo,30);await host.mouse.move(secondResume.point.x,secondResume.point.y+1000);
+    await host.mouse.down();try{await until(read,s=>s.ammo<30,'public rematch fire');}finally{await host.mouse.up();}
+    matchCycle={sameRoom:true,shippingDefaults:!!external,durationSeconds:before.duration,scoreTarget:before.scoreTarget,firstMatch:before.matchId,result,secondMatch:next.matchId,rematchFire:true};
+  }
   await host.keyboard.press('Escape');await host.locator('#restart').click();
   await friend.waitForFunction(()=>document.querySelector('#alive-a')?.textContent==='0 kvar');
   await friend.locator('[data-mobile-action=pause]').tap();await friend.locator('#restart').tap();
@@ -139,7 +161,7 @@ try{
   const report={status:'PASS',path:external?'public HTTPS':'loopback TLS',date:new Date().toISOString(),
     physicalDevices:false,chromium:browsers[0].version(),renderers,angle,dpr,renderedClients:2,resumeAttempts,fixtureCertificatePinned:!!fixture,
     inviteLogins:2,rejectedWrongRoomCode:true,readyActors:before.readyCount,floor5Doors:before.doors,webSockets:wsCounts,
-    remoteGameplay:{tickBefore:before.tick,tickAfter:reloaded.tick,distance:Math.hypot(moved.x-before.x,moved.z-before.z),
+    matchCycle,remoteGameplay:{tickBefore:before.tick,tickAfter:reloaded.tick,distance:Math.hypot(moved.x-before.x,moved.z-before.z),
       ammoBefore:before.ammo,ammoFired:fired.ammo,ammoReloaded:reloaded.ammo},departedHostRemoved:true};
   await mkdir('test-results/pilot',{recursive:true});
   await writeFile('test-results/pilot/'+(external?'public-browser':'local-browser')+'.json',JSON.stringify(report,null,2)+'\n');

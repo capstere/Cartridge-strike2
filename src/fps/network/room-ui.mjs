@@ -20,10 +20,11 @@ export function roomUi({leave,resume,activate}){
   $('room-team').onchange=()=>session.matchCommand('team',{team:$('room-team').value});
   $('room-resume').onclick=()=>{root.hidden=true;resume();};
   $('room-share').onclick=async()=>{
-    const link=new URL(location.href);link.search='';link.searchParams.set('network',new URL(location.href).searchParams.get('network')||'internet');link.searchParams.set('room',session.room.roomId);link.hash='';
+    const current=session;if(!current?.room)return;
+    const link=new URL(location.href);link.search='';link.searchParams.set('network',new URL(location.href).searchParams.get('network')||'internet');link.searchParams.set('room',current.room.roomId);link.hash='';
     try{if(navigator.share){await navigator.share({title:'Cartridge-Strike 2',url:link.href});return;}
-      await navigator.clipboard.writeText(link.href);session.notice='Rumslänken är kopierad. Dela koderna separat.';
-    }catch{$('room-link').hidden=false;$('room-link').value=link.href;$('room-link').focus();$('room-link').select();session.notice='Kopiera den markerade rumslänken.';}
+      await navigator.clipboard.writeText(link.href);if(session===current&&!current.closed)current.notice='Rumslänken är kopierad. Dela koderna separat.';
+    }catch{if(session!==current||current.closed)return;$('room-link').hidden=false;$('room-link').value=link.href;$('room-link').focus();$('room-link').select();current.notice='Kopiera den markerade rumslänken.';}
   };
   return {hide(){root.hidden=true;session=null;key='';},update(s){
     if(!s?.room)return;session=s;const state=s.room.state,self=state.actors.get(s.localPlayerId),waiting=state.phase==='waiting',result=state.phase==='results';

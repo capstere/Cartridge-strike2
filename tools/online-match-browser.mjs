@@ -57,6 +57,19 @@ try{
  await friend.locator('#room-team').selectOption('analysts');await until(async()=> (await readFriend()).players.every(a=>a.team==='analysts'),'team change');
  await friend.locator('#room-team').selectOption('counterAnalysts');await until(async()=> (await readFriend()).players.some(a=>a.team==='counterAnalysts'),'restore team');
  await readyAndStart(host,friend);
+ const positions=(await readHost()).players;
+ const movedTeam=async team=>{const a=(await readHost()).players.find(a=>a.team===team),before=positions.find(b=>b.id===a.id);return Math.hypot(a.x-before.x,a.z-before.z)>.15;};
+ await host.keyboard.down('w');try{await until(()=>movedTeam('analysts'),'desktop movement');}finally{await host.keyboard.up('w');}
+ const zone=await friend.locator('[data-mobile-stick-zone]').boundingBox();
+ const contact={id:1,x:zone.x+zone.width*.35,y:zone.y+zone.height*.7};
+ const touch=await friend.context().newCDPSession(friend);
+ await touch.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[contact]});
+ await touch.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{...contact,y:contact.y-42}]});
+ try{await until(()=>movedTeam('counterAnalysts'),'touch movement');}finally{await touch.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await touch.detach();}
+ const fireButton=await friend.locator('[data-mobile-action=fire]').boundingBox(),fireTouch=await friend.context().newCDPSession(friend);
+ await fireTouch.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{id:2,x:fireButton.x+fireButton.width/2,y:fireButton.y+fireButton.height/2}]});
+ try{await until(async()=> (await readHost()).players.find(a=>a.team==='counterAnalysts').ammo<30,'touch fire replicated to host');}
+ finally{await fireTouch.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await fireTouch.detach();}
  async function fireUntil(check,label){
   const end=performance.now()+30000;
   while(!await check()){
@@ -95,17 +108,22 @@ try{
  assert.equal(draw.matchId,score.matchId+2);assert.deepEqual(draw.score,{analysts:0,counterAnalysts:0});
  await host.locator('#room-leave').click();await until(async()=> (await readFriend()).players.length===1,'host departure');
  await friend.locator('#room-rematch').tap();await friend.locator('#room-start').waitFor({state:'visible'});assert(await friend.locator('#room-start').isDisabled());
- await friend.locator('#room-leave').tap();await until(()=>fixture.authority.rooms.size===0,'room cleanup');assert.deepEqual(errors,[]);
+ // Native sharing can finish after a disconnect/leave. Late completion is harmless.
+ await friend.evaluate(()=>Object.defineProperty(navigator,'share',{configurable:true,value:()=>new Promise((resolve,reject)=>{window.rejectPendingShare=reject;})}));
+ await friend.locator('#room-share').tap();await friend.locator('#room-leave').tap();
+ await friend.evaluate(()=>window.rejectPendingShare(Error('share cancelled after departure')));await delay(50);
+ await until(()=>fixture.authority.rooms.size===0,'room cleanup');assert.deepEqual(errors,[]);
  // A session lost on server restart must offer a working login, not trap the player.
  await friend.context().clearCookies();await friend.locator('[data-create=true]').tap();
  await friend.getByText('Logga in igen',{exact:true}).waitFor({state:'visible'});
  await friend.getByText('Logga in igen',{exact:true}).tap();await friend.locator('[name=invite]').waitFor();
  await friend.locator('[name=invite]').fill(fixture.invite);await friend.locator('button[type=submit]').tap();
  await friend.locator('#network-name').waitFor();assert.equal(await friend.locator('#network-room').inputValue(),roomId);
- const result={status:'PASS',date:new Date().toISOString(),renderedClients:2,protocolOnlyClients:0,physicalDevices:false,transport:'HTTPS/WSS pinned loopback fixture',scoreResult,timeResult:timed,drawResult:draw,sharedRoomLogin:true,expiredLoginRecovery:true,deathRespawn:true,sameRoomRematch:true,teamChange:true,ownerTransfer:true,cleanup:true};
+ const result={status:'PASS',date:new Date().toISOString(),renderedClients:2,protocolOnlyClients:0,physicalDevices:false,transport:'HTTPS/WSS pinned loopback fixture',scoreResult,timeResult:timed,drawResult:draw,sharedRoomLogin:true,expiredLoginRecovery:true,bothMovementControls:true,touchFire:true,deathRespawn:true,sameRoomRematch:true,teamChange:true,ownerTransfer:true,cleanup:true};
  await mkdir('test-results/online',{recursive:true});await writeFile('test-results/online/rendered-match.json',JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));
 }catch(e){
  // Never expose invitations/cookies in Playwright action diagnostics.
  console.error(String(e.stack||e).replaceAll(fixture.invite,'[invite]'));process.exitCode=1;
+ for(const room of fixture.authority.rooms)console.error(JSON.stringify({phase:room.state.phase,actors:room.sim.game.actors.map(a=>({id:a.id,x:a.x,z:a.z,yaw:a.yaw,blockedBy:a.blockedBy})),enabled:[...room.seats.values()].map(s=>s.enabled)}));
  for(const [i,page] of pages.entries())await page.screenshot({path:'test-results/online-failure-'+i+'.png'}).catch(()=>{});
 }finally{clearInterval(placing);await Promise.all(browsers.map(b=>b.close()));await fixture.close();}
