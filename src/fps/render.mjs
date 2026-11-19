@@ -188,6 +188,9 @@ export class Renderer extends EngineRenderer {
       }
     });
   }
+  async prepareClassic(){
+    await loadDefaultHostages();
+  }
   requestInspect(game){
     const p=game.player;if(!p?.alive||game.state.paused||game.phase!=='active'||p.reloadUntil>game.state.time)return false;
     this.inspectAt=game.state.time;this.inspectActor=p.id;this.inspectWeapon=p.weapon;return true;

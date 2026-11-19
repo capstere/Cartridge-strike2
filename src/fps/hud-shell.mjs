@@ -53,29 +53,38 @@ function showDetail(w) {
   d.innerHTML = `<small>${(CATS.find(c => c.test(w))?.label || '').toUpperCase()}${w.team ? ' · ' + TEAM_NAME[w.team].toUpperCase() : ''}</small><h4>${w.name}</h4><div class="cs-big">${svg(iconFor(w))}</div><dl>${stats}</dl><small>${free ? 'GRATIS' : w.cost + ' ¤'}</small>`;
 }
 
+function refreshPrices() {
+  const cash = money();
+  for (const button of $('shop').querySelectorAll('button[data-item]')) {
+    const weapon = WEAPONS[button.dataset.item];
+    if (weapon) button.classList.toggle('cs-cant', weapon.cost > cash);
+  }
+}
+
 function group() {
   const shop = $('shop'); if (!shop || grouping) return;
   const buttons = [...shop.children].filter(el => el.tagName === 'BUTTON');
   if (!buttons.length) return;
   grouping = true;
-  const cash = money(), side = $('buy').dataset.team || team();
+  const side = $('buy').dataset.team || team();
   const cols = CATS.map((c, i) => { const col = document.createElement('section'); col.className = 'cs-buy-col'; col.innerHTML = `<h3><b>${i + 1}</b>${c.label}</h3>`; return { c, col }; });
   for (const b of buttons) {
     const w = WEAPONS[b.dataset.item]; if (!w) continue;
     if (!b.querySelector('.cs-ico')) b.insertAdjacentHTML('afterbegin', `<span class="cs-ico">${svg(iconFor(w))}</span>`);
     b.classList.toggle('cs-other', !!w.team && w.team !== side);
-    b.classList.toggle('cs-cant', cash !== Infinity && w.cost > cash);
     b.onmouseenter = b.onfocus = () => showDetail(w);
     b.addEventListener('pointerdown', () => showDetail(w), { passive: true });
     (cols.find(x => x.c.test(w)) || cols[0]).col.append(b);
   }
   shop.replaceChildren(...cols.filter(x => x.col.children.length > 1).map(x => x.col));
+  refreshPrices();
   if (!detail) showDetail(null);
   grouping = false;
 }
 
 function initBuy() {
   const shop = $('shop'); if (!shop) return;
+  new MutationObserver(refreshPrices).observe($('buy-money'), { childList: true });
   new MutationObserver(group).observe(shop, { childList: true });
   const top = document.querySelector('#buy .card-top');
   const clock = document.createElement('span'); clock.className = 'cs-buy-clock';

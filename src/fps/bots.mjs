@@ -47,7 +47,7 @@ export class BotController {
       if (primary) game.buy(primary, a);
     }
     if (a.money >= 1000 && !a.armor) game.buy('armor', a);
-    const grenade = a.index % 3 === 0 ? 'smoke' : a.index % 3 === 1 ? 'flash' : 'he';
+    const grenade = game.config.networkSlice ? 'he' : a.index % 3 === 0 ? 'smoke' : a.index % 3 === 1 ? 'flash' : 'he';
     if (a.money >= 550 && !a.inventory[grenade]) game.buy(grenade, a);
   }
   perceive() {

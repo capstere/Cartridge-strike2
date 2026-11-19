@@ -3,7 +3,7 @@ import '../../../vendor/colyseus/colyseus.js';
 import {Game,WEAPONS} from '../game.mjs';
 import {seededRandom} from '../config.mjs';
 import {moveActor} from '../movement.mjs';
-import {NETWORK_CONFIG,ROOM_TYPE,ROOM_CAPACITY,RECONNECT_SECONDS,INTERPOLATION_MS,copyPose,wrapYaw} from '../../../shared/multiplayer/rules.mjs';
+import {CLASSIC_NETWORK_CONFIG,NETWORK_CONFIG,ROOM_TYPE,ROOM_CAPACITY,RECONNECT_SECONDS,INTERPOLATION_MS,copyPose,wrapYaw} from '../../../shared/multiplayer/rules.mjs';
 import {CONTRACT} from '../../../shared/multiplayer/build.mjs';
 
 import {applyNetworkWorld,createPredictedWorld} from '../../../shared/multiplayer/world.mjs';
@@ -19,8 +19,8 @@ const wait=async(predicate,timeout=15000)=>{
 };
 function actorView(s,localId){
   const a={id:s.id,name:s.name,team:s.team,index:Number(s.id.split('-').at(-1)),isPlayer:s.id===localId,controllerType:s.bot?'bot':'human',bot:null,
-    radius:NETWORK_CONFIG.radius,weapon:s.weapon,lastWeapon:s.lastWeapon,loadout:s.loadout,aimAmount:s.aimAmount,aiming:s.aiming,money:0,flash:0,action:null,
-    inventory:{primary:{id:s.primary,ammo:s.primaryAmmo,reserve:s.primaryReserve},pistol:{id:s.pistol,ammo:s.pistolAmmo,reserve:s.pistolReserve},knife:{id:'knife',ammo:Infinity,reserve:0},smoke:0,flash:0,he:s.he}};
+    pending:!!s.pending,radius:NETWORK_CONFIG.radius,weapon:s.weapon,lastWeapon:s.lastWeapon,loadout:s.loadout,aimAmount:s.aimAmount,aiming:s.aiming,money:s.money,flash:0,action:s.actionType?{type:s.actionType,start:s.actionStart,duration:s.actionDuration}:null,
+    inventory:{primary:s.primary?{id:s.primary,ammo:s.primaryAmmo,reserve:s.primaryReserve}:null,pistol:{id:s.pistol,ammo:s.pistolAmmo,reserve:s.pistolReserve},knife:{id:'knife',ammo:Infinity,reserve:0},smoke:0,flash:0,he:s.he}};
   copyPose(a,s);
   for(const k of ['lifeId','controlEpoch','connected','alive','hp','armor','kills','deaths','reloadUntil','nextShot','respawnAt','spawnProtectedUntil','deathAt','hurtTime','recoil'])a[k]=s[k];
   a.deathCause=s.deathWeapon?{sourceName:s.deathSource,weapon:s.deathWeapon}:null;
@@ -44,18 +44,27 @@ export class NetworkSession {
     this.view.select=value=>{
       const a=this.view.player;
       if(!this.enabled||!a?.alive||this.closed)return false;
-      const slot=({'1':'primary','2':'pistol','3':'knife','4':'he',[a.inventory.primary.id]:'primary',[a.inventory.pistol.id]:'pistol'})[value]||value;
-      if(!['primary','pistol','knife','he','last'].includes(slot))return false;
+      const slot=({'1':'primary','2':'pistol','3':'knife','4':'he','5':'bomb',[a.inventory.primary?.id]:'primary',[a.inventory.pistol.id]:'pistol'})[value]||value;
+      if(!['primary','pistol','knife','he','last','bomb'].includes(slot))return false;
       this.room.send('select',{slot,serial:++this.selectId,lifeId:a.lifeId,controlEpoch:a.controlEpoch});
       return true;
     };
-    this.view.drop=this.view.radio=this.view.setDifficulty=()=>false;
-    this.view.buy=()=>({ok:false,reason:'Välj utrustning för nästa liv.'});
+    this.view.radio=this.view.setDifficulty=()=>false;
+    this.classicSerial=0;
+    this.view.drop=()=>this.classicCommand('drop');
+    this.view.buy=id=>this.classicCommand('buy',id)?{ok:true,pending:true}:{ok:false,reason:'Välj utrustning för nästa liv.'};
     this.view.drainEvents=()=>{const e=this.events;this.events=[];return e;};
     this.view.update=()=>{throw Error('NetworkSession owns input; the client cannot step Game.');};
   }
-  async connect({endpoint,roomId,code,name,team='auto',fillBots=true,create=false,contract=CONTRACT}){
-    const url=networkEndpoint(endpoint),client=new SessionClient(url),options={code,name,team,contract,fillBots};
+  classicCommand(kind,item){
+    const a=this.view.player,s=this.room?.state;
+    if(!a||s?.mode!=='classic'||this.connectionState!=='connected')return false;
+    this.notice='';
+    this.room.send('classic',{kind,item,serial:++this.classicSerial,round:s.round,matchId:s.matchId,lifeId:a.lifeId,controlEpoch:a.controlEpoch});
+    return true;
+  }
+  async connect({endpoint,roomId,code,name,team='auto',mode='tdm',fillBots=true,create=false,contract=CONTRACT}){
+    const url=networkEndpoint(endpoint),client=new SessionClient(url),options={code,name,team,contract,fillBots,mode};
     client.owner=this;
     this.joinAbort=new AbortController();client.http.options.signal=this.joinAbort.signal;
     const pending=create?client.create(ROOM_TYPE,options):client.joinById(roomId,options);
@@ -93,7 +102,7 @@ export class NetworkSession {
     room.send('ready',contract);
     await wait(()=>this.closed||room.state.actors.get(this.localPlayerId)?.ready);
     if(this.closed)throw Error(this.problem||'Room closed before spawn.');
-    this.connectionState='connected';this.snapshot();this.view.state.phase='active';
+    this.connectionState='connected';this.snapshot();
     this.lastWatchdog=performance.now();this.silenceSince=0;
     this.watchdog=setInterval(()=>this.checkConnection(performance.now()),1000);
     return this;
@@ -107,14 +116,26 @@ export class NetworkSession {
       this.prediction?.dispose();this.prediction=null;this.localPlayerId=mine.id;
       this.view.localPlayerId=mine.id;this.view.team=mine.team;
     }
+    const classic=state.mode==='classic',newRound=classic&&this.view.state.round!==state.round;
+    this.view.config=classic?CLASSIC_NETWORK_CONFIG:NETWORK_CONFIG;
+    this.view.state.mode=classic?'classic':'endless';
     const newMatch=this.matchId!==state.matchId,newPhase=this.matchPhase!==state.phase;
     if(newMatch||newPhase){
       this.matchId=state.matchId;this.matchPhase=state.phase;
       this.prediction?.reset();this.events=[];this.predictedShots.clear();this.actionTimes.clear();this.nextCosmetic=0;
       if(newMatch){for(const entry of this.remote.values())this.predict.detach(entry.schema);this.remote.clear();}
-      this.view.state.round=state.matchId;
+      this.view.state.round=classic?state.round:state.matchId;
     }
-    const ready=[...state.actors.values()].filter(a=>a.ready);
+    this.view.state.phase=classic?state.roundPhase:'active';
+    if(classic){
+      const view=this.view.state;
+      Object.assign(view,{round:state.round,buyDeadline:state.buyDeadline,deadline:state.deadline,resultDeadline:state.resultDeadline,
+        result:state.roundReason?{reason:state.roundReason,winner:state.roundWinner}:null,
+        bomb:{status:state.bombStatus,carrierId:state.carrierId,x:state.bombX,y:state.bombY,z:state.bombZ,deadline:state.bombDeadline},
+        hostages:[...state.hostages.values()].map(h=>({id:h.id,name:h.name,kind:'hostage',height:1.6,radius:NETWORK_CONFIG.radius,
+          x:h.x,y:h.y,z:h.z,yaw:h.yaw,alive:h.alive,rescued:h.rescued,escortId:h.escortId||null,distanceWalked:h.distanceWalked}))});
+    }
+    const ready=[...state.actors.values()].filter(a=>a.ready&&(!a.pending||a.id===this.localPlayerId));
     if(this.awaitingSnapshot){
       // onReconnect precedes the full state; only this callback can adopt it.
       this.awaitingSnapshot=false;clearTimeout(this.reconnectTimer);this.reconnectTimer=null;
@@ -130,7 +151,7 @@ export class NetworkSession {
       this.predict.attach(state,{elevatorProgress:'lerp'});
       for(const d of this.doorSchemas)this.predict.attach(d,{poseAngle:'lerp'});
     }
-    if(newMatch||this.glassCount===undefined){this.world.glass.reset();this.glassCount=-1;}
+    if(newMatch||newRound||this.glassCount===undefined){this.world.glass.reset();this.glassCount=-1;}
     if(this.glassCount!==state.brokenGlass.size){
       for(const id of state.brokenGlass.keys()){
         const pane=this.world.glass.panes.get(id);
@@ -166,11 +187,12 @@ export class NetworkSession {
           this.metrics.adoptionDistance.push(d);if(this.metrics.adoptionDistance.length>512)this.metrics.adoptionDistance.shift();
           w.dynamics.adopt(this.room.state);
           copyPose(w.actor,s);w.actor.alive=s.alive;w.actor.lifeId=s.lifeId;w.game.state.time=this.room.state.time;
+          w.game.hostages=this.view.hostages;
           w.game.actors=[w.actor,...[...this.room.state.actors.values()].filter(a=>a.ready&&a.id!==s.id).map(a=>actorView(a,null))];
         },
         step:(ctx,w,f)=>{
           if(ctx.isReplay)this.metrics.replays++;
-          if(this.room.state.phase!=='active'||!w.actor.alive||f.lifeId!==w.actor.lifeId||f.controlEpoch!==this.controlEpoch)return;
+          if(this.room.state.phase!=='active'||this.room.state.mode==='classic'&&this.room.state.roundPhase!=='active'||!w.actor.alive||f.lifeId!==w.actor.lifeId||f.controlEpoch!==this.controlEpoch)return;
           w.game.state.time+=ctx.dt;
           w.dynamics.step(w.game.state.time,ctx.dt,w.game.actors,()=>moveActor(w.game,w.actor,f,ctx.dt,false));
         },
@@ -201,7 +223,8 @@ export class NetworkSession {
       if(event.matchId!==undefined&&event.matchId!==this.room.state.matchId)continue;
       if(event.eventId<=this.seenEvent)continue;this.seenEvent=event.eventId;
       const actor=this.room.state.actors.get(event.actorId);
-      if(event.actorId&&(!actor||event.lifeId&&actor.lifeId!==event.lifeId||event.controlEpoch!==undefined&&actor.controlEpoch!==event.controlEpoch))continue;
+      if(event.round!==undefined&&this.room.state.mode==='classic'&&event.round!==this.room.state.round)continue;
+      if(event.actorId&&!this.room.state.hostages?.has(event.actorId)&&(!actor||event.lifeId&&actor.lifeId!==event.lifeId||event.controlEpoch!==undefined&&actor.controlEpoch!==event.controlEpoch))continue;
       const source=this.room.state.actors.get(event.sourceId);
       if(event.sourceId&&(!source||event.sourceLifeId&&source.lifeId!==event.sourceLifeId||event.sourceControlEpoch!==undefined&&source.controlEpoch!==event.sourceControlEpoch))continue;
       if(event.type==='shot'&&event.actorId===this.localPlayerId){
@@ -226,10 +249,10 @@ export class NetworkSession {
       const data=this.input.data;
       Object.assign(data,{lifeId:self.lifeId,controlEpoch:self.controlEpoch,sampleTick:state.tick,fireId:this.fireId,reloadId:this.reloadId,
         forward:controls.forward||0,strafe:controls.strafe||0,yaw:wrapYaw(controls.yaw??self.yaw),pitch:controls.pitch??self.pitch,
-        jump:!!controls.jump,crouch:!!controls.crouch,sneak:!!controls.sneak,aim:!!controls.aim,fire:!!controls.fire});
+        jump:!!controls.jump,crouch:!!controls.crouch,sneak:!!controls.sneak,interact:!!controls.interact,aim:!!controls.aim,fire:!!controls.fire});
       const time=this.prediction.world.game.state.time;
       const weapon=WEAPONS[self.weapon],throwing=self.weapon==='he';
-      if(data.fire&&(weapon.automatic||!this.trigger)&&time+1e-8>=Math.max(this.nextCosmetic,self.nextShot)&&
+      if(data.fire&&(state.mode!=='classic'||state.roundPhase==='active')&&(weapon.automatic||!this.trigger)&&time+1e-8>=Math.max(this.nextCosmetic,self.nextShot)&&
           (self.ammo>0||self.weapon==='knife'||throwing&&self.he>0)&&!self.reloadUntil){
         data.fireId=++this.fireId;this.nextCosmetic=time+weapon.interval;
         if(!throwing){
@@ -266,7 +289,7 @@ export class NetworkSession {
       d.angle=Math.abs(angle);d.sign=Math.sign(angle)||s.sign;this.world.doors.pose(d);}
     if(this.predict.value)this.world.doors.elevators.setProgress(this.predict.value(state,'elevatorProgress'));
     const rtt=Math.round(this.room.clock?.smoothedRtt?.()||0);
-    this.status=stale?'Anslutningen väntar — kontroller stoppade':`${this.room.roomId} · ${this.view.actors.length}/${ROOM_CAPACITY} · ${rtt} ms${rtt>=200?' · Hög fördröjning':''}`;
+    this.status=stale?'Anslutningen väntar — kontroller stoppade':`${this.room.roomId} · ${this.view.actors.filter(a=>!a.pending).length}/${ROOM_CAPACITY} · ${rtt} ms${rtt>=200?' · Hög fördröjning':''}`;
   }
   setInputEnabled(enabled){
     if(this.closed)return;

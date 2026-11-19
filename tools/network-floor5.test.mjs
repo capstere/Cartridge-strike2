@@ -90,3 +90,25 @@ test('a real Floor 5 shot opens a pane for hitscan, capsules and navigation',asy
  assert(w.navigation.clear(pose,to));
  assert(w.findPath(pose,to).length);
 });
+
+test('Classic followers traverse an opening door and a broken full-height pane',async()=>{
+ const {CLASSIC_NETWORK_CONFIG}=await import('../shared/multiplayer/rules.mjs');
+ const sim=await createHeadlessSimulation({mapId:NETWORK_MAP,controllers:{'counterAnalysts-0':'human','analysts-0':'human'},config:CLASSIC_NETWORK_CONFIG});
+ const g=sim.game,w=g.world;prepareNetworkWorld(w);w.networkDynamics.elevatorOpenAt=0;
+ const a=g.actors.find(a=>a.team==='counterAnalysts'),h=g.hostages[0];
+ g.state.buyDeadline=0;g.stepActors();
+ const crossing=glassCrossing(w);w.glass.breakAt(crossing.pane.parts[0]);
+ const door=w.doors.doors.find(d=>d.id==='D39')||w.doors.doors[0];
+ for(const [center,dx,dz,label] of [[door,door.nx,door.nz,'door'],[crossing.pane,crossing.dir.x,crossing.dir.z,'pane']]){
+   const side=[1,-1].find(sign=>[.7,1,1.3,1.55].every(d=>w.staticCanOccupy(center.x+sign*dx*d,center.z+sign*dz*d,.2,1.7)));
+   assert(side,label+' walkable landing');
+   const position=t=>({x:center.x+side*dx*t,y:0,z:center.z+side*dz*t,onGround:true,vy:0});
+   Object.assign(h,position(-.65),{escortId:null,path:[],pathAt:0});Object.assign(a,position(-1.05));
+   g.stepActors(new Map([[a.id,{interact:true}]]));assert.equal(h.escortId,a.id,label+' acquired');
+   Object.assign(a,position(1.55));
+   for(let i=0;i<300;i++)g.stepActors();
+   const crossed=(h.x-center.x)*side*dx+(h.z-center.z)*side*dz;
+   assert(crossed>.22,label+' crossed by '+crossed);
+   if(label==='door')assert(door.angle>.1,'door reacts to interacting bodies');
+ }
+});

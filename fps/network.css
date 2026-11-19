@@ -9,7 +9,7 @@
 .network-menu [hidden]{display:none!important}
 @media(max-height:480px){.network-menu .lb-title{display:none}.network-form{gap:6px;font-size:11px}.network-form input,.network-form select{padding:6px}.network-menu .lb-lead{font-size:12px}}
 
-.network-session-ui [data-mobile-action="interact"],.network-session-ui [data-mobile-action="drop"],.network-session-ui [data-mobile-action="restart"],.network-session-ui #pause .controls-list{display:none!important}
+.network-session-ui:not(.online-classic) [data-mobile-action="interact"],.network-session-ui:not(.online-classic) [data-mobile-action="drop"],.network-session-ui [data-mobile-action="restart"],.network-session-ui #pause .controls-list{display:none!important}
 
 .network-session-ui #buy .buy-heading{display:block}
 .network-session-ui #buy .buy-heading p{display:block}

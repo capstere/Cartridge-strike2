@@ -66,7 +66,8 @@ export async function readAdmission(req) {
   const chunks=[];let size=0;
   for await(const chunk of req){size+=chunk.length;if(size>4096)throw Object.assign(Error('Request too large.'),{status:413});chunks.push(chunk);}
   let body;try{body=JSON.parse(Buffer.concat(chunks).toString('utf8'));}catch{throw Object.assign(Error('Malformed JSON.'),{status:400});}
-  if(!body||Array.isArray(body)||typeof body!=='object'||Object.keys(body).some(k=>!['name','code','contract','team','fillBots'].includes(k))||body.fillBots!==undefined&&typeof body.fillBots!=='boolean'||
+  if(!body||Array.isArray(body)||typeof body!=='object'||Object.keys(body).some(k=>!['name','code','contract','team','fillBots','mode'].includes(k))||body.fillBots!==undefined&&typeof body.fillBots!=='boolean'||
+    (body.mode!==undefined&&!['tdm','classic'].includes(body.mode))||
     (body.team!==undefined&&!['auto','analysts','counterAnalysts'].includes(body.team))||
     typeof body.name!=='string'||body.name.length>96||typeof body.code!=='string'||body.code.length>64||
     !body.contract||Array.isArray(body.contract)||typeof body.contract!=='object')throw Object.assign(Error('Invalid room options.'),{status:400});

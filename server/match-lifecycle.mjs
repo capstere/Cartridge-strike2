@@ -14,7 +14,7 @@ export class MatchLifecycle {
     // only a factory argument in tests, never an env var or a client option.
     this.continuous=fixture.continuous===true;this.absent=new Map();
     Object.assign(room.state,{phase:this.continuous?'active':'waiting',matchId:1,ownerId:'',
-      durationSeconds:this.settings.durationSeconds,scoreTarget:this.settings.scoreTarget,
+      durationSeconds:room.classic?room.sim.game.config.roundTime:this.settings.durationSeconds,scoreTarget:room.classic?room.sim.game.config.matchWins:this.settings.scoreTarget,
       remainingSeconds:this.settings.durationSeconds,winner:'',reason:'',results:''});
     room.sim.game.state.paused=!this.continuous;
   }
@@ -33,7 +33,7 @@ export class MatchLifecycle {
     const r=this.room,s=r.seats.get(client.sessionId),state=this.state;
     if(!s?.ready||!s.connected||s.client!==client||!m||m.matchId!==state.matchId||m.controlEpoch!==s.epoch||
       Object.keys(m).some(k=>!['kind','matchId','controlEpoch','ready','team','primary'].includes(k)))return;
-    if(m.kind==='loadout'&&['waiting','active'].includes(state.phase)&&onlinePrimaries(s.actor.team).includes(m.primary))s.actor.loadout=m.primary;
+    if(!r.classic&&m.kind==='loadout'&&['waiting','active'].includes(state.phase)&&onlinePrimaries(s.actor.team).includes(m.primary))s.actor.loadout=m.primary;
     else if(m.kind==='ready'&&state.phase==='waiting'&&typeof m.ready==='boolean')s.playerReady=m.ready;
     else if(m.kind==='team'&&state.phase==='waiting')r.changeTeam(client,m.team);
     else if(m.kind==='start'&&state.phase==='waiting'){
@@ -50,6 +50,11 @@ export class MatchLifecycle {
   }
   resetActors(){
     const r=this.room,g=r.sim.game;
+    if(r.classic){
+      g.state.paused=true;g.state.round=0;g.state.history=[];g.state.lossStreak={analysts:0,counterAnalysts:0};g.state.score={analysts:0,counterAnalysts:0};
+      for(const a of g.actors){a.alive=false;a.money=g.config.startMoney;a.kills=a.deaths=0;delete a.combat;}
+      g.beginRound();g.drainEvents();this.absent.clear();return;
+    }
     g.state.paused=true;g.state.score={analysts:0,counterAnalysts:0};
     g.events=[];g.soundEvents=[];g.pendingDamage=[];g.state.projectiles=[];g.state.smokes=[];g.state.grenades=[];g.state.drops=[];
     r.state.brokenGlass.clear();prepareNetworkWorld(g.world);g.tacticalContacts=[];g.state.combatFlow.firstKill=false;this.absent.clear();
@@ -75,11 +80,11 @@ export class MatchLifecycle {
       else if(this.now>=this.deadline){
         s.phase='active';this.deadline=this.now+this.settings.durationSeconds*1000;
         this.room.sim.game.state.paused=false;
-        this.room.sim.game.world.networkDynamics.elevatorOpenAt=this.room.sim.game.state.time;
+        if(!this.room.classic)this.room.sim.game.world.networkDynamics.elevatorOpenAt=this.room.sim.game.state.time;
       }
     }
     if(s.phase==='active'){
-      if(this.now>=this.deadline){this.finish('time');return;}
+      if(!this.room.classic&&this.now>=this.deadline){this.finish('time');return;}
       for(const team of teams){
         const present=[...this.room.participants()].some(seat=>seat.ready&&seat.connected&&seat.actor.team===team);
         if(present)this.absent.delete(team);else if(!this.absent.has(team))this.absent.set(team,this.now);
@@ -90,6 +95,11 @@ export class MatchLifecycle {
     if(['active','countdown'].includes(s.phase))s.remainingSeconds=Math.max(0,(this.deadline-this.now)/1000);
   }
   afterTick(){
+    if(this.room.classic){
+      const g=this.room.sim.game;
+      if(this.state.phase==='active'&&g.phase==='match')this.finish('rounds',g.state.result.winner);
+      return;
+    }
     if(!this.continuous&&this.state.phase==='active'&&teams.some(t=>this.room.sim.game.state.score[t]>=this.settings.scoreTarget))this.finish('score');
   }
   finish(reason,forced){
