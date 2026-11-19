@@ -47,13 +47,13 @@ const presented=page=>page.evaluate(()=>{
     presented:[...game.state.zombies].map(({id,lifeId,alive})=>({id,lifeId,alive})),
     actors:auth.actors.size,assets:r?.sources.size,roots:r?.instances.size,
     sceneRoots:renderer.scene.children.filter(o=>['Danceman','The Hollow Walker','Tattered Wanderer'].includes(o.name)).length,
-    dance:v?.current?.getClip().name,visible:v?.root.visible,uuid:v?.root.uuid,
+    dance:v?.current?.getClip().name,clip:auth.residents.get('danceman')?.clip,visible:v?.root.visible,uuid:v?.root.uuid,
     loopLife:__fps.audio.floorAudio.music?.lifeId,playing:residentMusic.live.size,peak:residentMusic.peak,starts:residentMusic.starts};
 });
 async function checkBoth(peers,{dead=false}={}){
   const ready=state=>state.lives.length===6&&state.actors===10&&state.assets===3&&state.visible&&
     state.roots===6&&state.sceneRoots===6&&state.peak===1&&state.playing===(dead?0:1)&&
-    state.lives.find(o=>o.id==='danceman').alive!==dead&&
+    state.lives.find(o=>o.id==='danceman').alive!==dead&&state.dance===state.clip&&
     (dead?state.dance==='Dead':state.loopLife===state.lives.find(o=>o.id==='danceman').lifeId&&/All_Night_Dance|Jazz_Hands|Flirty_Strut_inplace|Groovy_Walk/.test(state.dance));
   for(const page of peers)await until(async()=>ready(await presented(page)),dead?'both render Dead and stop the loop':'both render the new dance and play one loop');
   const states=await Promise.all(peers.map(presented));
@@ -105,6 +105,19 @@ async function approachFixture(desktop,mobile,room){
   }
   await mobile.locator('#resume').tap();
   await resumeDesktop(desktop);
+  // Resume can retain the Classic spawn heading across a reconcile. Use
+  // the normal keyboard look control to face C08 after the new life.
+  const heading=()=>desktop.evaluate(()=>{
+    const yaw=__fps.game.player.yaw;
+    return Math.atan2(Math.sin(yaw),Math.cos(yaw));
+  });
+  const angle=await heading();
+  if(Math.abs(angle)>.12){
+    const key=angle>0?'ArrowRight':'ArrowLeft';
+    await desktop.keyboard.down(key);
+    try{await until(async()=>Math.abs(await heading())<.16,'player turns to face C08');}
+    finally{await desktop.keyboard.up(key);}
+  }
   return dancer;
 }
 try{
