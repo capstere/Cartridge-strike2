@@ -17,7 +17,20 @@ async function launch(mobile){
   page.on('console',message=>{if(message.type()==='error')console.error(message.text());});
   page.setDefaultTimeout(85000);
   page.on('pageerror',e=>bad.push(e.message));
-  await page.addInitScript(()=>localStorage.setItem('cartridge-settings',JSON.stringify({graphics:'low',volume:.05,autoReload:false})));
+  await page.addInitScript(()=>{
+    localStorage.setItem('cartridge-settings',JSON.stringify({graphics:'low',volume:.05,autoReload:false}));
+    performance.setResourceTimingBufferSize(2048);
+    const live=new Set(),audit=window.residentMusic={live,peak:0,starts:0};
+    const {start,stop}=AudioBufferSourceNode.prototype;
+    AudioBufferSourceNode.prototype.start=function(...args){
+      start.apply(this,args);
+      if(this.loop&&this.buffer===window.__fps?.audio.floorAudio.buffers.get('danceman')){
+        live.add(this);audit.starts++;audit.peak=Math.max(audit.peak,live.size);
+        this.addEventListener('ended',()=>live.delete(this),{once:true});
+      }
+    };
+    AudioBufferSourceNode.prototype.stop=function(...args){stop.apply(this,args);live.delete(this);};
+  });
   await page.goto(local.url+'/fps/?network=local&test&realtime',{waitUntil:'domcontentloaded'});
   await page.locator('#network-code').fill('residents-five');
   assert(await page.locator('#fatal').isHidden());
@@ -27,49 +40,80 @@ async function until(check,label){
   const deadline=performance.now()+25000;
   while(!await check()){assert(performance.now()<deadline,label);await delay(50);}
 }
-try{
-  const desktop=await launch(false),mobile=await launch(true);
-  console.log('Two lobby renderers ready');
+const presented=page=>page.evaluate(()=>{
+  const {game,network,renderer}=__fps,r=renderer.zombieVisuals,auth=network.room.state;
+  const v=r?.instances.get('danceman');
+  return {lives:[...auth.residents.values()].map(({id,lifeId,alive})=>({id,lifeId,alive})),
+    presented:[...game.state.zombies].map(({id,lifeId,alive})=>({id,lifeId,alive})),
+    actors:auth.actors.size,assets:r?.sources.size,roots:r?.instances.size,
+    sceneRoots:renderer.scene.children.filter(o=>['Danceman','The Hollow Walker','Tattered Wanderer'].includes(o.name)).length,
+    dance:v?.current?.getClip().name,visible:v?.root.visible,uuid:v?.root.uuid,
+    loopLife:__fps.audio.floorAudio.music?.lifeId,playing:residentMusic.live.size,peak:residentMusic.peak,starts:residentMusic.starts};
+});
+async function checkBoth(peers,{dead=false}={}){
+  const ready=state=>state.lives.length===6&&state.actors===10&&state.assets===3&&state.visible&&
+    state.roots===6&&state.sceneRoots===6&&state.peak===1&&state.playing===(dead?0:1)&&
+    state.lives.find(o=>o.id==='danceman').alive!==dead&&
+    (dead?state.dance==='Dead':state.loopLife===state.lives.find(o=>o.id==='danceman').lifeId&&/All_Night_Dance|Jazz_Hands|Flirty_Strut_inplace|Groovy_Walk/.test(state.dance));
+  for(const page of peers)await until(async()=>ready(await presented(page)),dead?'both render Dead and stop the loop':'both render the new dance and play one loop');
+  const states=await Promise.all(peers.map(presented));
+  for(const state of states)assert.deepEqual(state.lives,state.presented);
+  assert.deepEqual(states[0].lives,states[1].lives);
+  return states;
+}
+function checkNewLife(before,after){
+  for(const [i,state] of after.entries()){
+    assert.equal(state.uuid,before[i].uuid,'the same scene instance is reused');
+    assert(state.starts>before[i].starts,'music starts for the new life');
+    assert(state.lives.every(z=>z.alive&&z.lifeId>before[i].lives.find(old=>old.id===z.id).lifeId));
+  }
+}
+async function openRoom(desktop,mobile,mode){
+  for(const [page,team] of [[desktop,'analysts'],[mobile,'counterAnalysts']]){
+    await page.locator('#network-code').fill('residents-five');
+    await page.locator('#network-team').selectOption(team);
+  }
+  await desktop.locator('#network-mode').selectOption(mode);
   await desktop.locator('[data-create=true]').click();
   await desktop.locator('#room-start').waitFor();
-  const room=[...local.rooms][0],game=room.sim.game;
-  game.config.botFire=false;
+  const room=[...local.rooms].find(r=>r.state.mode===mode);
+  room.sim.game.config.botFire=false;
   await desktop.locator('#room-zombies').selectOption('on');
   await desktop.locator('#room-danceman').selectOption('on');
-  await mobile.locator('#network-room').fill(room.roomId);await mobile.locator('[data-create=false]').tap();
-  await mobile.locator('#room-ready').tap();await desktop.locator('#room-ready').click();
-  const spawn=game.state.actors.filter(a=>a.controllerType==='human');
+  await mobile.locator('#network-room').fill(room.roomId);
+  await mobile.locator('[data-create=false]').tap();
+  await mobile.locator('#room-ready').waitFor();
+  return room;
+}
+async function start(desktop,mobile,room){
+  await mobile.locator('#room-ready').tap();
+  await desktop.locator('#room-ready').click();
   await desktop.locator('#room-start').click();
-  await until(()=>room.state.phase==='active'&&game.state.zombies.length===6,'started with six residents');
-  for(const p of [desktop,mobile]){
-    await p.waitForFunction(()=>__fps.network.room.state.phase==='active'&&__fps.modal===null);
-    await p.keyboard.press('Escape');
-    await p.locator('#resume').waitFor();
+  await until(()=>room.state.phase==='active'&&room.state.residents.size===6,'started with six residents');
+}
+async function approachFixture(desktop,mobile,room){
+  const game=room.sim.game,dancer=game.state.zombies.find(z=>z.id==='danceman');
+  for(const [page,team,dz,yaw] of [[desktop,'analysts',2.2,0],[mobile,'counterAnalysts',-1,Math.PI]]){
+    await page.waitForFunction(()=>__fps.network.room.state.phase==='active'&&__fps.modal!== 'online');
+    if(await page.locator('#pause').isHidden())await page.keyboard.press('Escape');
+    await page.locator('#resume').waitFor();
+    const spot={x:dancer.x,z:dancer.z+dz,y:0,yaw,pitch:-.22};
+    assert(game.world.canOccupy(spot.x,spot.z,.22,1.7));
+    const actor=[...room.seats.values()].find(s=>s.actor.team===team).actor;
+    Object.assign(actor,spot,{spawnProtectedUntil:0});
+    await until(()=>page.evaluate(z=>Math.abs(__fps.game.player.z-z)<.05,spot.z),'confirmed C08 position');
   }
-  const dancer=game.state.zombies.find(z=>z.id==='danceman');
-  const spot={x:dancer.x,z:dancer.z+2.2,y:0,yaw:0,pitch:-.22};
-  assert(game.world.canOccupy(spot.x,spot.z,.22,1.7));
-  Object.assign(spawn[0],spot,{spawnProtectedUntil:0});
-  // Place the touch player on the opposite side so its existing spawn yaw
-  // already faces the model, including the first input sent after Resume.
-  const mobileSpot={x:dancer.x,z:dancer.z-1,y:0,yaw:Math.PI,pitch:-.24};
-  assert(game.world.canOccupy(mobileSpot.x,mobileSpot.z,.22,1.7));
-  Object.assign(spawn[1],mobileSpot,{spawnProtectedUntil:0});
-  for(const [page,at] of [[desktop,spot],[mobile,mobileSpot]])await until(()=>page.evaluate(z=>
-    Math.abs(__fps.game.player.z-z)<.05,at.z),'placed inside C08 before taking controls');
-  await mobile.locator('#resume').tap();await resumeDesktop(desktop);
-  const presented=p=>p.evaluate(()=>{
-    const g=__fps.game,r=__fps.renderer.zombieVisuals;
-    return {lives:g.state.zombies.map(z=>[z.id,z.lifeId]),all:__fps.network.room.state.actors.size,
-      assets:r?.sources.size,dance:r?.instances.get('danceman')?.current?.getClip().name,
-      visible:r?.instances.get('danceman')?.root.visible,music:!!__fps.audio.floorAudio.music};
-  });
-  for(const p of [desktop,mobile])await until(async()=>{
-    const state=await presented(p);return state.all===10&&state.assets===3&&state.visible&&state.dance&&state.music;
-  },'both clients display the original dancer and hear one positional loop');
-  const first=await presented(desktop),other=await presented(mobile);
-  assert.deepEqual(first.lives,other.lives);
-  assert.match(first.dance,/All_Night_Dance|Jazz_Hands|Flirty_Strut_inplace|Groovy_Walk/);
+  await mobile.locator('#resume').tap();
+  await resumeDesktop(desktop);
+  return dancer;
+}
+try{
+  const desktop=await launch(false),mobile=await launch(true),peers=[desktop,mobile];
+  console.log('Two lobby renderers ready');
+  const room=await openRoom(desktop,mobile,'tdm'),game=room.sim.game;
+  await start(desktop,mobile,room);
+  const dancer=await approachFixture(desktop,mobile,room);
+  await checkBoth(peers);
   const frameCosts=await desktop.evaluate(()=>{
     const {game,renderer}=__fps, residents=game.state.zombies,time=game.state.time;
     const gl=renderer.renderer.getContext(),visible=game.player;
@@ -96,8 +140,14 @@ try{
   await until(()=>desktop.evaluate(t=>Math.abs(__fps.renderer.zombieVisuals.instances.get('danceman').current.time-t)>.05,phase),'dance mixer advances');
   await desktop.mouse.down({button:'left'});
   try{await until(()=>!dancer.alive,'real mouse fire killed resident');}finally{await desktop.mouse.up({button:'left'});}
-  for(const p of [desktop,mobile])await until(()=>p.evaluate(()=>!__fps.network.room.state.residents.get('danceman').alive&&
-    __fps.renderer.zombieVisuals.instances.get('danceman')?.current?.getClip().name==='Dead'&&!__fps.audio.floorAudio.music),'both display death and stop the loop');
+  const dead=await checkBoth(peers,{dead:true});
+  const observer=[...room.seats.values()].find(s=>s.actor.team==='counterAnalysts');
+  const beforeReconnect=observer.epoch;
+  observer.client.ref.terminate();
+  await until(()=>mobile.evaluate(epoch=>__fps.network?.connectionState==='connected'&&__fps.network.controlEpoch>epoch,beforeReconnect),'observer reconnects under the same seat');
+  await mobile.locator('#resume').tap();
+  const reconnected=await checkBoth(peers,{dead:true});
+  assert.deepEqual(reconnected.map(s=>[s.lives,s.uuid,s.starts]),dead.map(s=>[s.lives,s.uuid,s.starts]));
   const walker=game.state.zombies.find(z=>z.model==='hollow'&&z.alive);
   assert(walker,'living Hollow Walker');
   Object.assign(walker,{x:dancer.x,y:0,z:dancer.z,goal:null,path:[],nextSense:game.state.time+.7});
@@ -106,7 +156,33 @@ try{
     return v?.root.visible&&clips.includes(v.current?.getClip().name);
   },{id:walker.id,clips:Object.values(POSES.hollow)});
   assert.equal(game.state.score.analysts+game.state.score.counterAnalysts,0);
-  console.log('PASS full population, ten team slots, shared original models, dance mixer, one spatial loop and replicated mouse-driven death');
+  const firstMatch=room.state.matchId;
+  room.match.deadline=room.clock.elapsedTime;
+  await desktop.locator('#room-rematch').click();
+  await until(()=>room.state.phase==='waiting'&&room.state.matchId>firstMatch,'same-room rematch');
+  await start(desktop,mobile,room);
+  await approachFixture(desktop,mobile,room);
+  checkNewLife(dead,await checkBoth(peers));
+  console.log('PASS TDM death, reconnect and same-room rematch recreate life and reuse the scene roots');
+  for(const page of peers){
+    await page.keyboard.press('Escape');
+    await page.locator('#restart').click();
+    await page.locator('#network-code').waitFor();
+  }
+
+  const classic=await openRoom(desktop,mobile,'classic'),classicGame=classic.sim.game;
+  Object.assign(classicGame.config,{buyTime:.5,resultTime:.65});
+  await start(desktop,mobile,classic);
+  await approachFixture(desktop,mobile,classic);
+  const round1=await checkBoth(peers);
+  const round=classic.state.round;
+  classicGame.config.buyTime=2;
+  classicGame.state.deadline=classicGame.state.time;
+  await until(()=>classic.state.round>round,'Classic progresses to the next round');
+  await approachFixture(desktop,mobile,classic);
+  await until(()=>classic.state.roundPhase==='active','next Classic round plays');
+  checkNewLife(round1,await checkBoth(peers));
+  console.log('PASS Classic round change recreates six residents, restores the original dance and one loop per client');
   assert.deepEqual(bad,[]);
 }catch(error){
   for(const p of pages)console.error(await p.evaluate(()=>{
