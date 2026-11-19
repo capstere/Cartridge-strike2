@@ -50,11 +50,13 @@ try{
   const spot={x:dancer.x,z:dancer.z+2.2,y:0,yaw:0,pitch:-.22};
   assert(game.world.canOccupy(spot.x,spot.z,.22,1.7));
   Object.assign(spawn[0],spot,{spawnProtectedUntil:0});
-  Object.assign(spawn[1],spot,{x:spot.x+.65,spawnProtectedUntil:0});
-  for(const p of [desktop,mobile])await p.waitForFunction(expected=>{
-    const actor=__fps.game.player;
-    return Math.abs(actor.yaw-expected.yaw)<.01&&Math.abs(actor.pitch-expected.pitch)<.01&&Math.abs(actor.z-expected.z)<.05;
-  },spot);
+  // Place the touch player on the opposite side so its existing spawn yaw
+  // already faces the model, including the first input sent after Resume.
+  const mobileSpot={x:dancer.x,z:dancer.z-1,y:0,yaw:Math.PI,pitch:-.24};
+  assert(game.world.canOccupy(mobileSpot.x,mobileSpot.z,.22,1.7));
+  Object.assign(spawn[1],mobileSpot,{spawnProtectedUntil:0});
+  for(const [page,at] of [[desktop,spot],[mobile,mobileSpot]])await until(()=>page.evaluate(z=>
+    Math.abs(__fps.game.player.z-z)<.05,at.z),'placed inside C08 before taking controls');
   await mobile.locator('#resume').tap();await resumeDesktop(desktop);
   const presented=p=>p.evaluate(()=>{
     const g=__fps.game,r=__fps.renderer.zombieVisuals;
