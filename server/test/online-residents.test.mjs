@@ -101,15 +101,14 @@ test('real resident AI can wake, be interrupted, kill a player and take knife, b
  const {x,z}=zombie;
  position(p,{x,z:z+1.25});p.yaw=0;
  await until(()=>zombie.behavior==='rising','sleeping zombie notices a live player');
- await until(()=>zombie.behavior==='pursuing'||zombie.behavior==='attack','awake zombie pursues',6500);
+ enable(a);
  const attackSpot={x,z:z+.61};position(p,attackSpot);
  await until(()=>zombie.behavior==='attack','first windup');
- const hp=p.hp;
- enable(a);
+ const hp=p.hp,firstImpact=zombie.impactAt;
  const pYaw=Math.atan2(p.x-zombie.x,p.z-zombie.z);
  send(a,{yaw:pYaw,pitch:-.45,fire:true,fireId:1});
- await until(()=>zombie.behavior!=='attack','gunshot cancels windup');
- await delay(1100);
+ await until(()=>['hurt','knockdown'].includes(zombie.behavior),'gunshot cancels windup');
+ await until(()=>g.state.time>=firstImpact+.05,'interrupted impact time passes');
  assert.equal(p.hp,hp);
  p.hp=6;
  await until(()=>!p.alive,'next real stomp kills team player',10000);
@@ -136,12 +135,21 @@ test('real resident AI can wake, be interrupted, kill a player and take knife, b
  await until(()=>observed.some(e=>e.type==='throw'&&e.actorId===p.id),'authenticated HE cast');
  await until(()=>victim.hp<beforeHE,'real throw damages resident',6500);
 
- position(p,{x:victim.x,z:victim.z+.63});enable(a);
+ const spots=[[0,.6],[.6,0],[0,-.6],[-.6,0]];
+ const aim=spots.map(([dx,dz])=>{
+   const from={x:victim.x+dx,y:p.height-.12,z:victim.z+dz};
+   const y=victim.height*.45-from.y;
+   const length=Math.hypot(dx,y,dz);
+   return {from,dir:{x:-dx/length,y:y/length,z:-dz/length},yaw:Math.atan2(dx,dz),pitch:Math.atan2(y,Math.hypot(dx,dz))};
+ }).find(({from,dir})=>g.world.canOccupy(from.x,from.z,p.radius,p.height)&&
+   g.traceHitscan(p,from,dir,1.7).victim===victim);
+ assert(aim,'unobstructed knife reach against the knockdown hitbox');
+ position(p,{x:aim.from.x,z:aim.from.z});enable(a);
  a.send('select',{slot:'knife',serial:2,lifeId:p.lifeId,controlEpoch:p.controlEpoch});
  await until(()=>own(a).weapon==='knife','selected knife');
  const beforeKnife=victim.hp;
- send(a,{fire:false,fireId:1});await delay(100);
- send(a,{yaw:0,pitch:-1.04,fire:true,fireId:2});
+ send(a,{fire:false,fireId:1});await until(()=>g.state.time>=p.nextShot,'knife switch cooldown');
+ send(a,{yaw:aim.yaw,pitch:aim.pitch,fire:true,fireId:2});
  await until(()=>victim.hp<beforeKnife,'knife hits the resident collider');
 
  const bot=[...room.bots.values()].find(s=>s.actor.team!==p.team).actor;

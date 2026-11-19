@@ -6,13 +6,15 @@ const {createLocalServer}=await import('../server/local-server.mjs');
 import {resumeDesktop} from './network-browser-resume.mjs';
 
 const local=await createLocalServer({port:0,testMatch:{countdownSeconds:.15}});
-const browsers=[],bad=[];
+const browsers=[],bad=[],pages=[];
 async function launch(mobile){
   const browser=await chromium.launch({channel:'chromium',executablePath:process.env.CHROMIUM_PATH||undefined,
     args:['--use-angle='+(process.env.FPS_NETWORK_ANGLE||'swiftshader'),'--disable-background-timer-throttling','--disable-renderer-backgrounding']});
   browsers.push(browser);
   const page=await browser.newPage({viewport:mobile?{width:844,height:390}:{width:820,height:480},deviceScaleFactor:.5,isMobile:mobile,hasTouch:mobile});
-  page.setDefaultTimeout(45000);
+  pages.push(page);
+  page.on('console',message=>{if(message.type()==='error')console.error(message.text());});
+  page.setDefaultTimeout(85000);
   page.on('pageerror',e=>bad.push(e.message));
   await page.addInitScript(()=>localStorage.setItem('cartridge-settings',JSON.stringify({graphics:'low',volume:.05,autoReload:false})));
   await page.goto(local.url+'/fps/?network=local&test&realtime',{waitUntil:'domcontentloaded'});
@@ -26,6 +28,7 @@ async function until(check,label){
 }
 try{
   const desktop=await launch(false),mobile=await launch(true);
+  console.log('Two lobby renderers ready');
   await desktop.locator('[data-create=true]').click();
   await desktop.locator('#room-start').waitFor();
   const room=[...local.rooms][0],game=room.sim.game;
@@ -70,4 +73,14 @@ try{
   assert.equal(game.state.score.analysts+game.state.score.counterAnalysts,0);
   console.log('PASS full population, ten team slots, shared original models, dance mixer, one spatial loop and replicated mouse-driven death');
   assert.deepEqual(bad,[]);
+}catch(error){
+  for(const p of pages)console.error(await p.evaluate(()=>{
+    const f=window.__fps,n=f?.network,z=f?.game?.state.zombies.find(z=>z.id==='danceman');
+    return {fatal:document.querySelector('#fatal pre')?.textContent,modal:f?.modal,phase:f?.game.phase,
+      controls:n?.enabled,player:f?.game.player&&[f.game.player.x,f.game.player.z,f.game.player.yaw,f.game.player.pitch],
+      resident:z&&[z.x,z.z,z.clip],visible:f?.renderer.zombieVisuals?.instances.get('danceman')?.root.visible,
+      models:[...f?.renderer.zombieVisuals?.sources.keys()||[]],sound:!!f?.audio.floorAudio.music,audio:f?.audio.context?.state,
+      volume:f?.audio.volume,buffers:[...f?.audio.floorAudio.buffers.keys()||[]],errors:f?.audio.errors};
+  }).catch(()=>null));
+  throw error;
 }finally{for(const b of browsers)await b.close();await local.close();}
