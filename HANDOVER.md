@@ -25,9 +25,9 @@ huvudagenten. Samordningsreglerna finns i [AGENTS.md](AGENTS.md).
 
 En färsk skrivskyddad session i Codex CLI 0.169.0 startade de tre namngivna
 rollerna och tog emot rapporter om belastningsproven, serverns matchregler
-och begränsningen för fysisk mobilprovning. Samma prov kräver en vanlig
-session i den här versionen. Försöket med `--ephemeral` saknade sparad
-sessionshistorik vid agentstart.
+och begränsningen för fysisk mobilprovning. I provet med `--ephemeral`
+gick det att starta rollerna med nya agentkontexter. Agentstart med ärvd
+huvudhistorik misslyckades där eftersom sessionshistoriken saknades.
 
 ## Historisk internetrelease och tidigare prov
 
