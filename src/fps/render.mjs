@@ -77,6 +77,16 @@ export class Renderer extends EngineRenderer {
     this.renderer.render=(scene,camera)=>{
       if(scene===this.scene&&!this.inDepthPass)this.doorVisuals?.update(camera,this.renderer.shadowMap.enabled?this.lights:[]);
       if(scene===this.scene&&!this.inDepthPass){
+        const residents=this.presentationGame?.state.zombies;
+        if(world.networkSlice&&residents?.length){
+          this.zombieVisuals??=new ZombieVisuals(this.scene,settings.mobile,[]);
+          const models=[...new Set(residents.map(z=>z.model))];
+          const key=models.join(',');
+          if(this.residentModels!==key){
+            this.residentModels=key;
+            this.zombieVisuals.load(models).catch(error=>{console.error('Resident model could not be loaded',error);});
+          }
+        }
         this.zombieVisuals?.update(this.presentationGame,camera);
         this.projectBatches?.update(camera);
         this.actorOcclusion?.update(this.actors.values(),camera);

@@ -35,11 +35,20 @@ function releaseSource({scene}){
 }
 
 export class ZombieVisuals{
-  constructor(scene,mobile){
-    this.scene=scene;this.mobile=mobile;this.sources=new Map();this.instances=new Map();
+  constructor(scene,mobile,models){
+    this.scene=scene;this.mobile=mobile;this.sources=new Map();this.loading=new Map();this.instances=new Map();
     this.frustum=new T.Frustum();this.projection=new T.Matrix4();this.sphere=new T.Sphere(new T.Vector3(),1.65);
-    this.ready=Promise.all(Object.keys(POSES).map(async kind=>{
-      const source=await loadModel(kind);if(this.disposed)releaseSource(source);else this.sources.set(kind,source);
+    this.ready=this.load(models);
+  }
+  load(models=Object.keys(POSES)){
+    return Promise.all(models.map(kind=>{
+      if(!this.loading.has(kind)){
+        const pending=loadModel(kind).then(source=>{
+          if(this.disposed)releaseSource(source);else this.sources.set(kind,source);
+        }).catch(error=>{this.loading.delete(kind);throw error;});
+        this.loading.set(kind,pending);
+      }
+      return this.loading.get(kind);
     }));
   }
   instance(z){
@@ -58,7 +67,9 @@ export class ZombieVisuals{
     if(!game)return;
     this.frustum.setFromProjectionMatrix(this.projection.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse));
     const t=game.state.time;
-    for(const z of game.state.zombies||[]){
+    const residents=game.state.zombies||[];
+    for(const [id,v] of this.instances)if(!residents.some(z=>z.id===id))v.root.visible=false;
+    for(const z of residents){
       const v=this.instance(z);if(!v)continue;
       const p=zombiePosition(z,t);this.sphere.center.set(p.x,p.y+.74,p.z);
       const distance=camera.position.distanceToSquared(this.sphere.center);

@@ -1,6 +1,8 @@
 import {createDoors} from '../src/fps/doors.mjs';
 import {INTERPOLATION_MS,REWIND_MS,RTT_FRESH_MS} from '../shared/multiplayer/rules.mjs';
 
+const residentPose=['x','y','z','height','yaw'];
+
 // Echoes are untrusted upper bounds, never proof of network latency. Keep a
 // connection's low-water mark: deliberately delaying replies cannot raise it.
 export function recordRtt(seat,rtt,now){
@@ -17,6 +19,7 @@ export class LagCompensation {
     this.room=room;this.tickTimes=new Map();this.shots=new Map();
     this.rewind=room.allowRewindState({maxRewindMs:REWIND_MS});
     this.rewind.attachAll(room.state.actors,{fields:['x','y','z','height']});
+    this.rewind.attachAll(room.state.residents,{fields:residentPose});
     this.rewind.attachAll(room.state.doors,{fields:['poseAngle']});
     this.rewind.attach(room.state,{fields:['elevatorProgress']});
     const world=room.sim.game.world;
@@ -67,6 +70,13 @@ export class LagCompensation {
       // A body killed since the sample still blocks, but cannot be killed twice.
       if(!s?.ready||stamp<s.lifeStartedAt||s.diedAtMs>0&&stamp>=s.diedAtMs)continue;
       targets.push({...seen.read(s,['x','y','z','height']),id:a.id,radius:a.radius,alive:true,entity:a});
+    }
+    for(const z of g.state.zombies){
+      const s=this.room.state.residents.get(z.id);
+      if(s?.lifeId!==z.lifeId||stamp<s.lifeStartedAt||s.diedAtMs>0&&stamp>=s.diedAtMs)continue;
+      // The projected coordinates already include the seat offset. Rewind
+      // the physical body, then apply damage only to this same live generation.
+      targets.push({...seen.read(s,residentPose),id:z.id,kind:'zombie',radius:z.radius,alive:true,entity:z});
     }
     for(const d of this.doors.doors){
       const angle=seen.value(this.room.state.doors.get(d.id),'poseAngle');

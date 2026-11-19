@@ -1,6 +1,7 @@
 import {MATCH_DEFAULTS,RECONNECT_SECONDS} from '../shared/multiplayer/rules.mjs';
 import {prepareNetworkWorld} from '../shared/multiplayer/world.mjs';
 import {onlinePrimaries,respawnActor} from '../src/fps/action-rules.mjs';
+import {populateZombies} from '../src/fps/zombies.mjs';
 import {ActorState} from './network-schema.mjs';
 
 const teams=['analysts','counterAnalysts'];
@@ -32,11 +33,15 @@ export class MatchLifecycle {
   command(client,m){
     const r=this.room,s=r.seats.get(client.sessionId),state=this.state;
     if(!s?.ready||!s.connected||s.client!==client||!m||m.matchId!==state.matchId||m.controlEpoch!==s.epoch||
-      Object.keys(m).some(k=>!['kind','matchId','controlEpoch','ready','team','primary'].includes(k)))return;
+      Object.keys(m).some(k=>!['kind','matchId','controlEpoch','ready','team','primary','zombies','danceman'].includes(k)))return;
     if(!r.classic&&m.kind==='loadout'&&['waiting','active'].includes(state.phase)&&onlinePrimaries(s.actor.team).includes(m.primary))s.actor.loadout=m.primary;
     else if(m.kind==='ready'&&state.phase==='waiting'&&typeof m.ready==='boolean')s.playerReady=m.ready;
     else if(m.kind==='team'&&state.phase==='waiting')r.changeTeam(client,m.team);
-    else if(m.kind==='start'&&state.phase==='waiting'){
+    else if(m.kind==='residents'&&state.phase==='waiting'&&state.ownerId===client.sessionId&&
+      typeof m.zombies==='boolean'&&typeof m.danceman==='boolean'){
+      state.zombiesEnabled=m.zombies;state.dancemanEnabled=m.danceman;
+      Object.assign(r.sim.game.config,{zombies:m.zombies,danceman:m.danceman});
+    }else if(m.kind==='start'&&state.phase==='waiting'){
       if(state.ownerId!==client.sessionId)throw Error('Bara rumsägaren kan starta matchen.');
       if(!this.eligible())throw Error('Alla anslutna spelare måste vara redo, med minst en spelare i varje lag.');
       this.resetActors();state.phase='countdown';this.deadline=this.now+this.settings.countdownSeconds*1000;
@@ -70,6 +75,8 @@ export class MatchLifecycle {
       seat.lifeStartedAt=this.now;seat.diedAtMs=0;
       r.state.actors.set(seat.id,new ActorState({id:seat.id,sessionId:sid||'',name:seat.actor.name,team:seat.actor.team}));
     }
+    g.state.zombies=[];
+    if(g.config.zombies||g.config.danceman)populateZombies(g);
     g.drainEvents();r.lag?.tickTimes.clear();r.lag?.shots.clear();
   }
   beforeTick(){

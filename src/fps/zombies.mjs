@@ -27,6 +27,7 @@ function spawn(g,home,index){
   else if(home.seat) pose(z,t,'sitting','sit',{loop:true});
   else idle(g,z);
   z.height=bodyHeight(z,t);
+  g.onResidentSpawn?.(z);
   return z;
 }
 
@@ -52,15 +53,17 @@ export function populateZombies(g){
     [sites.bed,'hollow','bed'],[sites.chair,'tattered'],[site('C03'),'hollow'],[site('I26'),'tattered'],[site('C15'),'tattered'],
   ];
   const zones=g.state.combatFlow?.zones||[];
-  for(const [p,model,rest] of homes.slice(0,g.config.mobile?3:5)){
+  const residentLimit=g.config.networkSlice?(g.config.zombies?5:0):g.config.mobile?3:5;
+  for(const [index,[p,model,rest]] of homes.slice(0,residentLimit).entries()){
     if(!p||occupied(g,p)||zones.some(o=>distance(o,p)<o.radius+1))continue;
-    g.state.zombies.push(spawn(g,{...p,model,rest},g.state.zombies.length));
+    g.state.zombies.push(spawn(g,{...p,model,rest},g.config.networkSlice?index:g.state.zombies.length));
   }
-  if(sites.dancer){
+  if(sites.dancer&&(!g.config.networkSlice||g.config.danceman)){
     g.danceRandom=seededRandom((g.seed^0x4d414e)+g.state.round);
     const dancer={...sites.dancer,id:'danceman',model:'danceman',kind:'zombie',name:'Danceman',
       radius:.24,height:1.7,hp:100,armor:0,deaths:0,alive:true,dances:[]};
     nextDance(g,dancer);
+    g.onResidentSpawn?.(dancer);
     g.state.zombies.push(dancer);
   }
 }
@@ -217,7 +220,7 @@ export function tickZombies(g,dt){
       distance(a,p)<22 && g.canSee(at(a,1.4),at(p,.8))));
     if(!observed(z)&&!observed(z.home)&&!occupied(g,z.home,z)&&g.world.canOccupy(z.home.x,z.home.z,z.radius,1.7)){
       for(const a of g.actors)if(a.bot?.memory.hasRecord(z))a.bot.memory.deleteRecord(z);
-      list[i]=spawn(g,z.home,i);
+      list[i]=spawn(g,z.home,g.config.networkSlice?Number(z.id.split('-')[1]):i);
     }
   }
 }
