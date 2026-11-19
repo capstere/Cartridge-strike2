@@ -1,16 +1,16 @@
 # Cartridge-Strike 2 handover
 
-**Classic och Team Deathmatch är driftsatta på cs2.capstere.com.** Publik
-release `f685ee759eef4f6183f2c135b6b251abbb3f1cd1` använder protokoll 7.
-PR #27 är mergad. Originalservern på 2567 och återställningsreleasen finns kvar.
+**Zombies och Dansmannen finns nu på cs2.capstere.com i Classic och Team Deathmatch.**
+[PR #28](https://github.com/capstere/Cartridge-strike2/pull/28) är mergad.
+Aktiv release `c976c871d783fcfadb298a2e94dfc741d7468a89` använder protokoll 8.
+Återställningsreleasen är `f685ee759eef4f6183f2c135b6b251abbb3f1cd1` med
+driftkonfiguration sparad i `20261119T084022788559Z`.
 
-**Nästa steg är att provspela och granska NPC-kandidaten i PR #28.** Den
-separata kandidaten ger värden två reglage för zombies och Dansmannen i både
-Classic och TDM. Läs [drift, kandidat, mätningar och prov](docs/multiplayer/ONLINE_RESIDENTS_REPORT.md)
-och [Classic-regler och baslinje](docs/multiplayer/ONLINE_CLASSIC_REPORT.md).
-Fysisk iPhone/Android-provning av köp, uppdrag, ljud, åskådarläge,
-bakgrund/återanslutning och omspel återstår. Rök, flash och raketkastare
-återstår online.
+**Nästa steg är Jespers fysiska spelprov på iPhone och dator.** Värden slår på
+**Zombies** och **Dansmannen** var för sig i väntrummet. Prova särskilt ljudet,
+återanslutning, Classic-rundbyte och TDM-omspel. Fysisk iPhone och Android
+är **NOT RUN**. [Driftverifiering, spelkontroller och mätningar](docs/multiplayer/ONLINE_RESIDENTS_REPORT.md).
+Rök, flash och raketkastare återstår online.
 
 **Låg prioritet.** Jesper har hittat två lokala kollisionsproblem vid streck
 på golvet som ser ut som gamla väggar eller områdesgränser. Möbler ligger
@@ -24,7 +24,7 @@ rematch. See [the online release report](docs/multiplayer/ONLINE_RELEASE_REPORT.
 and [Swedish status/update/rollback instructions](deploy/online/README.md).
 The release payload is `d886a10060b8fbf9b2d3034e8c8d0ad46a8a39d1`, protocol 5,
 runtime build `3af2145a3d18bdbd58d53ebeb6f35f3309531892085dfe376b5aaab9098a473c`.
-This payload previously served loopback port 2568 and is the Classic rollback release. Its seven CI jobs passed in
+This payload previously served loopback port 2568 and remains the older protocol 5 release. Its seven CI jobs passed in
 [44267713626](https://github.com/capstere/Cartridge-strike2/actions/runs/44267713626).
 The final server implementation completed a 30-minute ten-SDK-client Pi soak
 with 52 match transitions, 30 reconnects and 2,730 measured combat respawns.

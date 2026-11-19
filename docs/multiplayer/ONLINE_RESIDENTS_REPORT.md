@@ -4,21 +4,47 @@
 
 ## Publik drift
 
-[Speladressen](https://cs2.capstere.com) kör Classic och Team Deathmatch från [PR #27](https://github.com/capstere/Cartridge-strike2/pull/27), release `f685ee759eef4f6183f2c135b6b251abbb3f1cd1`, protokoll 7 och byggidentitet `50b6e8d334b87862b848ecb922d3937221dbf1cd71e41a85911d8d1481e2df3e`. Bytet skedde på Pi:n med noll rum och spelare. Systemd kör den nya spelprocessen på 2568 och originalet på 2567. Inbjudan och tunneln är samma som tidigare.
+[Speladressen](https://cs2.capstere.com) kör release `c976c871d783fcfadb298a2e94dfc741d7468a89`,
+protokoll 8 och byggidentitet `7451b4c779b581befe840b0affdde991946b9492e4865bbe451146344d7624b1`.
+PR #28 mergades som `27518fa93c926b4e91a0279282bac1fff30b399e` efter
+[sju godkända jobb på releasens exakta revision](https://github.com/capstere/Cartridge-strike2/actions/runs/44485465539).
+Ordinarie [kontroll efter merge](https://github.com/capstere/Cartridge-strike2/actions/runs/44489223451) passerade.
 
-Den gamla versionsbundna proben stannade vid exakt två spelare eftersom den skapade ett rum med standardinställningen för botar. Den granskade releaseproben stänger uttryckligen av botar för protokoll 6 och senare. På separata originprocesser passerade den fullständiga tvåklientsproben för protokoll 7 och 5, inklusive inloggning, avvisad obehörig anslutning, fel rumskod, laguppställning, rörelse, skott, omladdning och avslut. Den installerade `cs2-online` pekar på den absoluta versionsbundna managerfilen i protokoll 7-releasen. `previous` pekar på `d886a10060b8fbf9b2d3034e8c8d0ad46a8a39d1`. Driftverktyget sparade konfigurationens återställningspunkt `20261119T065058241080Z`.
+Bytet skedde med noll rum och anslutningar. Systemd kör online på port 2568.
+Originalprocessen på port 2567 och tunnelprocessen behöll sina PID:ar. Den
+privata inbjudningsfilen är identisk med kopian före bytet. Driftverktyget
+`cs2-online` använder fortsatt managern i den absoluta versionsbundna
+sökvägen från protokoll 7-releasen. Den managerns tvåklientsprobe passerade
+mot den stagade protokoll 8-releasen och protokoll 7 i två isolerade
+originprocesser före aktivering.
 
-Två klienter passerade samma probe över publik HTTPS/WSS efter start. Ett separat prov köpte HE med serverbekräftat saldo, gick hela vägen från spawn till bombplatsen via spelinput, planterade och väntade på detonation och nästa runda. I ett separat publikt TDM-rum såg de båda klienterna åtta botar, ADS, utrustningsbyte, en kastad HE och samma glasruta krossad under verklig botstrid. För de uppmätta topparna på Pi:n, se [Classic-rapporten](ONLINE_CLASSIC_REPORT.md).
+Återställningsreleasen `f685ee759eef4f6183f2c135b6b251abbb3f1cd1` är länkad
+som `previous` och konfigurationen sparades i
+`/var/lib/cartridge-strike2-online/backups/20261119T084022788559Z/`.
+Använd `sudo cs2-online rollback` när rummen är tomma. Efter aktivering
+passerade driftproben mot den publika speladressen med två separata
+inloggningar, avvisad obehörig anslutning, rörelse, skott och omladdning över
+HTTPS/WSS. [Driftinstruktioner](../../deploy/online/README.md)
 
-## Prova NPC-kandidaten
+Två separat inloggade Chromium-klienter provspelade sedan protokoll 8 på den
+publika adressen. I TDM fick båda samma sex NPC:er och åtta botar. En klient
+gick via vanliga nätverksinputs till C08, såg originaldansen och fick
+positionsljud. En skjuten Dansman blev död hos båda och musiken stoppades.
+I ett publikt Classic-rum med botar och NPC:er köpte touchklienten rustning.
+I ett separat publikt TDM-rum gick matchen till resultat och **Spela igen**
+öppnade väntrummet med nytt match-ID i samma rum.
 
-Värden väljer **Zombies** och **Dansmannen** separat i väntrummet före start. Båda är av för nya rum. På hela Floor 5 ger båda valen fem vanliga zombies och en Dansman när alla originalplatser är giltiga. De har egna identiteter och liv utanför 5v5 och gisslans uppdrag. En Classic-runda eller en TDM-match återskapar platserna. TDM-zombies kan också återvända under pågående match enligt spelets vanliga regler för avstånd, synlighet och väntetid. Dansmannen använder C08, originaldanserna och en positionsbunden musikloop.
+## Spela med NPC på Floor 5
+
+Välj Classic eller Team Deathmatch och klicka på **Skapa rum**. Värden väljer **På** för **Zombies** och **Dansmannen** separat i väntrummet före **Redo** och **Starta match**. Båda står på **Av** i nya rum. På hela Floor 5 ger båda valen fem vanliga zombies och en Dansman när alla originalplatser är giltiga. De har egna identiteter och liv utanför 5v5 och gisslans uppdrag. En Classic-runda eller en TDM-match återskapar platserna. TDM-zombies kan också återvända under pågående match enligt spelets vanliga regler för avstånd, synlighet och väntetid. Dansmannen står i C08 (Sector H), direkt förbi den östra dörren från Sector E. Följ musiken. En Hollow Walker börjar sovande mellan fåtöljerna i I25, men kan ha vaknat och hunnit röra sig.
 
 Servern kör originalens perceptions-, rörelse- och skadevägar. Klienterna får position, liv, hälsa, beteende, klipp och tidsankare. Serverns träffhistorik använder kroppens fysiska position, höjd och riktning i det aktuella livet. Klienterna laddar modeller per rumspopulation och behåller de delade resurserna i renderaren vid omspel och återinträde. Mobilläget begränsar animationsarbetet i presentationen. Det närmaste ljudet tonas med avstånd och väggar och stoppas vid död, paus och återställning.
 
-Starta kandidaten separat med `npm ci --prefix server --ignore-scripts`, `npm run build --prefix server -- --check` och `PORT=2577 npm start --prefix server`. Öppna [loopbackversionen](http://127.0.0.1:2577/fps/?network=local), eller vidarebefordra port 2577 över SSH till din dator.
+Starta samma bygge separat med `npm ci --prefix server --ignore-scripts`, `npm run build --prefix server -- --check` och `PORT=2577 npm start --prefix server`. Öppna [loopbackversionen](http://127.0.0.1:2577/fps/?network=local), eller vidarebefordra port 2577 över SSH till din dator.
 
 ## Spelproven
+
+- Två renderade klienter följde samma sex resident-ID:n och levande/döda tillstånd i TDM och Classic. TDM-provet sköt Dansmannen med spelets vanliga muskontroll, återanslöt observatören och startade om i samma rum. Vid Classic-rundbytet fick samtliga sex figurer nya livsidentiteter. Provet räknade faktiska ljudkällor och scenobjekt. Dansen matchade serverns klipp, dödsanimationen syntes, musiken stoppades vid död och återkom med högst en samtidig loop per klient. Sceninstanserna återanvändes. De 24 övriga Floor 5-livscyklerna är allmänna regressioner. [Renderade prov](https://github.com/capstere/Cartridge-strike2/actions/runs/44485465539/job/135432513503)
 
 - Två SDK-klienter följde samma sex miljöfigurer medan tio lagplatser var fyllda. Endast värden kunde slå på figurerna. En ny klient och en återansluten klient fick samma livsidentiteter och döda Dansman. Omspel återställde honom med nytt liv. En tidigare träfftid kunde inte träffa det nya livet. Ett separat Classic-rum med enbart Dansmannen behöll gisslan och återställde figurens liv vid nästa runda.
 - En liggande zombie kunde träffas via lagkompensationen med ett lågt skott och gick fri från ett högt skott. Verklig AI upptäckte spelaren, reste sig och startade sitt förvarnade angrepp. Ett skott avbröt det första angreppet. Ett senare fullföljt angrepp dödade spelaren med zombieidentitet i händelsen och gav normal TDM-respawn. Skadeprovet använde ett kast, ett knivhugg och verklig BotController-eld. Serverprovet visade att Dansmannens död inte gav lagpoäng eller någon spelarkill.
@@ -62,8 +88,8 @@ Med figurer gick zombies 205 m i Classic och 115 m i TDM. Gisslan följde en bot
 
 Classic ökade från p99 3,02 till 3,60 ms och från 11,0 till 11,9 kB/s till spelaren i detta prov. TDM ökade från 24,7 till 26,8 kB/s. Enstaka uppdateringar på upp till cirka 78 ms återstår. Plantering, eskort och strider varierade mellan körningarna, vilket påverkar enskilda toppar. Kartstorlek, 5v5 och samtliga sex figurer behölls. Det finns inga tecken på termisk strypning i mätfönstren.
 
-Klientens nedladdning mäts separat från Pi-simuleringen. Full uppsättning hämtar 7 982 418 byte komprimerade originalmodeller, varav 1 810 602 byte för Dansmannen. Ett rum med figurer av hämtar inga av de tre modellfilerna. Det renderade provet loggar första modellhämtningen och två serier om nio renderade bildrutor på samma kamera med och utan figurer. Provet synkroniserar renderingsarbetet med GPU:n och mäter kostnaden per bild i scenen. Den faktiska bildfrekvensen varierar med enhet och synlig scen.
+Klientens nedladdning mäts separat från Pi-simuleringen. Full uppsättning hämtar 7 982 418 byte komprimerade originalmodeller, varav 1 810 602 byte för Dansmannen. Ett rum med figurer av hämtar inga av de tre modellfilerna. Det renderade provet loggar första modellhämtningen och två serier om nio renderade bildrutor på samma kamera med och utan figurer. Provet synkroniserar renderingsarbetet med GPU:n och mäter kostnaden per bild i scenen. Två macOS-prov med nio bilder per inställning gav olika ordning på medianerna. I det senare provet tog de tre lokala modellhämtningarna 146–461 ms. Provet gäller CI-maskinen och en C08-vy. Det finns ingen uppmätt bildfrekvens eller laddtid för fysiska telefoner.
 
 ## Återstår
 
-Fysisk iPhone och Android är **NOT RUN**. Rök, flash, raketkastare och de två lokala golvspärrarna återstår. Vid en framtida aktivering av NPC-kandidaten, upprepa den isolerade förkontrollen med den valda managern och den dåvarande återställningsreleasen.
+Fysisk iPhone och Android är **NOT RUN**. Rök, flash, raketkastare och de två lokala golvspärrarna återstår.
