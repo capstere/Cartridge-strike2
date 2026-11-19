@@ -248,14 +248,18 @@ export class NetworkSession {
   }
   receiveEvents(events){
     if(this.closed||this.connectionState==='reconnecting'||!Array.isArray(events))return;
-    for(const event of events.slice(-64)){
+    for(let event of events.slice(-64)){
+      const rocketEffect=!!event.rocketId;
       if(event.matchId!==undefined&&event.matchId!==this.room.state.matchId)continue;
       if(event.eventId<=this.seenEvent)continue;this.seenEvent=event.eventId;
       const actor=this.room.state.actors.get(event.actorId)||this.room.state.residents.get(event.actorId);
       if(event.round!==undefined&&this.room.state.mode==='classic'&&event.round!==this.room.state.round)continue;
-      if(event.actorId&&!this.room.state.hostages?.has(event.actorId)&&(!actor||event.lifeId&&actor.lifeId!==event.lifeId||event.controlEpoch!==undefined&&(actor.controlEpoch??0)!==event.controlEpoch))continue;
+      if(event.type!=='rocket-launch'&&event.actorId&&!this.room.state.hostages?.has(event.actorId)&&(!actor||event.lifeId&&actor.lifeId!==event.lifeId||event.controlEpoch!==undefined&&(actor.controlEpoch??0)!==event.controlEpoch))continue;
       const source=this.room.state.actors.get(event.sourceId)||this.room.state.residents.get(event.sourceId);
-      if(event.sourceId&&(!source||event.sourceLifeId&&source.lifeId!==event.sourceLifeId||event.sourceControlEpoch!==undefined&&(source.controlEpoch??0)!==event.sourceControlEpoch))continue;
+      if(event.sourceId&&(!source||event.sourceLifeId&&source.lifeId!==event.sourceLifeId||event.sourceControlEpoch!==undefined&&(source.controlEpoch??0)!==event.sourceControlEpoch)){
+        if(!rocketEffect)continue;
+        event={...event,sourceId:undefined};
+      }
       if(event.type==='shot'&&event.actorId===this.localPlayerId){
         this.metrics.confirmedShots++;
         const sent=this.predictedShots.get(event.actionId);
@@ -264,7 +268,7 @@ export class NetworkSession {
       }
       if(event.type==='hit'&&event.sourceId===this.localPlayerId){const sent=this.actionTimes?.get(event.actionId);
         if(sent!==undefined){this.metrics.hitLatency.push(performance.now()-sent);if(this.metrics.hitLatency.length>512)this.metrics.hitLatency.shift();}}
-      if(this.enabled)this.events.push(event);
+      if(this.enabled||rocketEffect&&['active','results'].includes(this.room.state.phase))this.events.push(event);
     }
     this.events=this.events.slice(-128);
   }
@@ -329,7 +333,8 @@ export class NetworkSession {
   setInputEnabled(enabled){
     if(this.closed)return;
     enabled=enabled&&this.connectionState!=='reconnecting';
-    this.trigger=false;this.enabled=enabled;this.view.state.paused=!enabled;this.events=[];
+    this.trigger=false;this.enabled=enabled;this.view.state.paused=!enabled;
+    this.events=this.events.filter(event=>event.rocketId);
     if(this.room&&this.lifeId&&this.connectionState!=='reconnecting')this.room.send('controls',{enabled,lifeId:this.lifeId,controlEpoch:this.controlEpoch});
     if(enabled&&this.prediction)this.prediction.reset();
   }

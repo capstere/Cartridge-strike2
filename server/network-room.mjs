@@ -14,6 +14,15 @@ import {prepareNetworkWorld,DOOR_FIELDS} from '../shared/multiplayer/world.mjs';
 import {collisionContract} from '../shared/multiplayer/collision-contract.mjs';
 
 const hashCode=code=>createHash('sha256').update(code).digest();
+const MAX_PATCH_EVENTS=64;
+function eventsForPatch(events){
+  if(events.length<=MAX_PATCH_EVENTS)return events;
+  // Damage may emit several events for each victim. Keep the projectile sound
+  // and effect even when several explosions land in the same tick.
+  const selected=new Set(events.filter(e=>e.type==='rocket-launch'||e.type==='rocket-explosion'));
+  for(let i=events.length-1;i>=0&&selected.size<MAX_PATCH_EVENTS;i--)selected.add(events[i]);
+  return events.filter(e=>selected.has(e));
+}
 const validCode=code=>typeof code==='string'&&/^[A-Za-z0-9-]{6,64}$/.test(code);
 const teams=['analysts','counterAnalysts'];
 const seats=teams.flatMap(team=>Array.from({length:TEAM_CAPACITY},(_,i)=>`${team}-${i}`));
@@ -208,7 +217,10 @@ export class NetworkRoom extends Room {
     Object.assign(actor,{name:seat.name,alive:false,lifeId:Math.max(old.lifeId,this.lives.get(id)||0),controlEpoch:seat.epoch+1,kills:0,deaths:0});
     this.sim.game.state.actors=this.sim.game.actors.filter(a=>a!==old);
     if(this.classic)this.prepareClassicActor(actor,true);
-    else if(!respawnActor(this.sim.game,actor)){this.sim.game.actors.push(old);this.fillVacancies();throw Error('No safe spawn is available.');}
+    else {
+      if(onlinePrimaries(team).includes(old.loadout))actor.loadout=old.loadout;
+      if(!respawnActor(this.sim.game,actor)){this.sim.game.actors.push(old);this.fillVacancies();throw Error('No safe spawn is available.');}
+    }
     this.state.actors.delete(seat.id);seat.id=id;seat.actor=actor;seat.epoch++;seat.playerReady=false;
     seat.lifeStartedAt=this.clock.elapsedTime;seat.diedAtMs=0;seat.lastSelect=seat.lastFire=seat.lastReload=seat.lastSampleTick=seat.lastShotStamp=0;
     this.inputs.get(client.sessionId).clear();this.sim.game.actors.push(actor);this.sim.controllers.unbind(client.sessionId);this.sim.controllers.bind(client.sessionId,id);
@@ -272,7 +284,7 @@ export class NetworkRoom extends Room {
     }
     this.project();this.lag.recordTick();
     if(events.length){
-      const wire=events.slice(-64).map(e=>{
+      const wire=eventsForPatch(events).map(e=>{
         const actor=this.state.actors.get(e.actorId)||this.state.residents.get(e.actorId);
         const source=this.state.actors.get(e.sourceId)||this.state.residents.get(e.sourceId);
         return {...e,round:this.state.round,matchId:this.state.matchId,eventId:e.serial,tick:this.sim.tickNumber,lifeId:actor?.lifeId||0,sourceLifeId:source?.lifeId||0,controlEpoch:actor?.controlEpoch||0,sourceControlEpoch:source?.controlEpoch||0,

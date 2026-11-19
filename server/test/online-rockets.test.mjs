@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {Client} from '@colyseus/sdk';
 import {launchRocket} from '../../src/fps/action-rules.mjs';
+import {NetworkSession} from '../../src/fps/network/session.mjs';
 import {glassCrossing} from '../../tools/network-glass-fixture.mjs';
 import {createLocalServer} from '../local-server.mjs';
 import {options, ready, own, send, until, delay} from './helpers.mjs';
@@ -26,6 +27,14 @@ for(const mode of ['classic','tdm'])test(mode+' keeps friendly fire private to t
   const events=[];
   c.onMessage('events',messages=>events.push(...messages));
   assert.equal(a.state.friendlyFire,false);assert.equal(other.state.friendlyFire,false);
+  if(mode==='tdm'){
+    const team=own(other).team==='analysts'?'counterAnalysts':'analysts';
+    cmd(other,'loadout',{primary:'bazooka'});
+    await until(()=>own(other).loadout==='bazooka','launcher selected');
+    cmd(other,'team',{team});
+    await until(()=>own(other)?.team===team,'changed team');
+    assert.equal(own(other).loadout,'bazooka','either team can retain the launcher');
+  }
   cmd(b,'friendlyFire',{friendlyFire:true});await delay(80);
   assert.equal(g.config.friendlyFire,false);
   cmd(a,'friendlyFire',{friendlyFire:'true'});await delay(80);
@@ -62,6 +71,7 @@ for(const mode of ['classic','tdm'])test(mode+' keeps friendly fire private to t
   assert.equal(shot.ownerId,own(a).id);
   assert.equal(shot.ownerLifeId,token);
   assert.equal(shot.team,'analysts');assert.equal(shot.vz,-22);
+  assert.equal(enemy.hp,100,'projectile is in flight without an immediate hitscan hit');
   await until(()=>c.state.projectiles.get(shot.id)?.z<startZ-.3,'rocket travels in replicated space');
   await until(()=>events.some(e=>e.type==='rocket-explosion'&&e.rocketId===shot.id),'one shared explosion');
   await until(()=>!own(c).alive,'live rocket kills enemy');
@@ -177,7 +187,7 @@ function verifyRocketObstructions(g,shooter){
     for(let tick=0;tick<6&&g.state.projectiles.length;tick++)g.stepActors();
     const hit=g.events.find(e=>e.type==='rocket-explosion'&&e.rocketId===projectile.id);
     assert(hit,'live world surface stops projectile');
-    assert(Math.hypot(hit.x-from.x,hit.z-from.z)<wall.distance+.25);
+    assert(Math.abs(Math.hypot(hit.x-from.x,hit.z-from.z)-(wall.distance-.10))<.15,'rocket travels to the actual blocking surface');
     if(id)assert.equal(w.glass.panes.get(id).broken,false,'offline rocket rule leaves the impacted glass intact');
   }
 }
@@ -217,6 +227,7 @@ test('a live rocket survives reconnect and preserves its owner after lethal dama
   assert.equal(substituted.id,ownerId);
   assert(substituted.lifeId>life);
   assert.equal(replacement.state.projectiles.get(id)?.ownerLifeId,life);
+  assert.equal(replacement.state.projectiles.get(id)?.ownerName,'Original owner');
   at(substituted,22.8,-22);g.state.paused=false;
   await until(()=>events.some(e=>e.type==='rocket-explosion'&&e.rocketId===id),'original in-flight rocket hits');
   await until(()=>!own(c).alive,'original owner’s rocket kills enemy');
@@ -228,4 +239,26 @@ test('a live rocket survives reconnect and preserves its owner after lethal dama
   assert.equal(substituted.kills,0);assert.equal(g.state.score.analysts,1);
   await until(()=>own(c).alive,'enemy resumes after TDM respawn',5000);
   await Promise.all([b.leave(),c.leave(),replacement.leave()]);
+});
+
+test('clients retain rocket presentation across control disable and reject old round events',()=>{
+  const session=Object.create(NetworkSession.prototype);
+  const state={phase:'results',mode:'classic',matchId:7,round:5,
+    actors:new Map([['target',{lifeId:9,controlEpoch:3}],['source',{lifeId:2,controlEpoch:6}]]),residents:new Map()};
+  Object.assign(session,{room:{state},connectionState:'connected',enabled:false,seenEvent:0,events:[],view:{state:{}}});
+  const rocket={matchId:7,round:5,rocketId:'rocket-15'};
+  session.receiveEvents([
+    {...rocket,eventId:1,type:'rocket-launch',actorId:'departed',lifeId:1},
+    {...rocket,eventId:2,type:'rocket-explosion'},
+    {...rocket,eventId:3,type:'kill',actorId:'target',lifeId:9,controlEpoch:3,
+      sourceId:'source',sourceLifeId:1,sourceControlEpoch:5,sourceName:'Original'},
+    {...rocket,eventId:4,round:4,type:'rocket-explosion'}
+  ]);
+  session.setInputEnabled(false);
+  assert.deepEqual(session.events.map(e=>e.type),['rocket-launch','rocket-explosion','kill']);
+  assert.equal(session.events.at(-1).sourceId,undefined,'a replacement does not inherit the old rocket hit');
+  assert.equal(session.events.at(-1).sourceName,'Original');
+  state.phase='active';session.events=[];
+  session.receiveEvents([{...rocket,eventId:5,type:'rocket-explosion'}]);
+  assert.equal(session.events.length,1,'reconnected peers can receive current rocket effects before resuming input');
 });

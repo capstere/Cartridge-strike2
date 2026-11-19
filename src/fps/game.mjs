@@ -363,7 +363,7 @@ export class Game {
     const sameGeneration = !owner || (source && source.id === owner.ownerId && (source.lifeId ?? 0) === owner.ownerLifeId && (source.controlEpoch ?? 0) === owner.ownerControlEpoch);
     const currentSource = sameGeneration && (!this.config.networkSlice || this.actors.includes(source) || this.state.zombies.includes(source));
     const sourceId = currentSource ? source?.id : undefined;
-    const detail = { sourceId, sourceName, targetName: target.name, weapon: kind, amount: dealt, hp: target.hp,
+    const detail = { ...(context.rocketId?{rocketId:context.rocketId}:{}), sourceId, sourceName, targetName: target.name, weapon: kind, amount: dealt, hp: target.hp,
       point: { ...hitPoint }, direction: { ...incoming }, sourcePosition: { ...sourcePosition }, ...hitPoint };
     this.emit('damage', target, detail); this.emit('hit', target, detail);
     if(target.kind==='zombie')reactZombie(this,target,kind,detail,owner&&!currentSource?undefined:source);

@@ -1927,7 +1927,7 @@
     {
       "path": "shared/multiplayer/build.mjs",
       "bytes": 612,
-      "sha256": "bb4693790295d4777f9714599a4305b7c338479bba9d494eb73bba70a92d521b"
+      "sha256": "dfe33284c7c982dc049df4b6e2d8e748fdc4482f370abf0de7bdbe4c1e6793a1"
     },
     {
       "path": "shared/multiplayer/collision-contract.mjs",
@@ -1976,13 +1976,13 @@
     },
     {
       "path": "src/fps/action-rules.mjs",
-      "bytes": 13209,
-      "sha256": "2f21c12a69a7c0cc9ca78db2132fa72c936f71a038ed096fcd8a6acd24eb5ef0"
+      "bytes": 13245,
+      "sha256": "7b55a53ef630578ca618b797fa8abd7c34fac926667f61a5b2ba2552a7ee3471"
     },
     {
       "path": "src/fps/action-visuals.mjs",
-      "bytes": 9350,
-      "sha256": "d244fe11d15d56f7b3db32a03f42e45477cf8e0771a89f15da57f48efb6179f7"
+      "bytes": 9990,
+      "sha256": "ce20465b81e12fcb0b333068e4ed42dd1da55a34373afb819c48bbf01811eda0"
     },
     {
       "path": "src/fps/actor-occlusion.mjs",
@@ -2191,8 +2191,8 @@
     },
     {
       "path": "src/fps/game.mjs",
-      "bytes": 40520,
-      "sha256": "02039357e1421398ac36c7a264302fdc93c46e7f6e9c5725d6035165509d6a52"
+      "bytes": 40574,
+      "sha256": "0fc555b19573cf301851cc90fa2e2d1f115cefa96818ca74ddcd6f3e9667d6ca"
     },
     {
       "path": "src/fps/glass-visuals.mjs",
@@ -2301,8 +2301,8 @@
     },
     {
       "path": "src/fps/network/session.mjs",
-      "bytes": 26140,
-      "sha256": "71878681f06591bbbdb578d4aa38e9d3506b5c95d247e045cfed95175ef2b9d4"
+      "bytes": 26403,
+      "sha256": "735bf68a53a54dbc9121e4afb2c4864502fd021d6be76fc3e218732a3b544e2a"
     },
     {
       "path": "src/fps/physics.mjs",
@@ -2605,7 +2605,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 58737245,
+  "bytes": 58738238,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

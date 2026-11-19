@@ -135,14 +135,14 @@ export function friendlyLineClear(bot){
 }
 /** Segment/AABB sweep is shared for bullets and projectiles by the core caller. */
 export function launchRocket(g,actor,dir){
- const owner={ownerId:actor.id,ownerLifeId:actor.lifeId??0,team:actor.team},ownerName=actor.name;
+ const owner={ownerId:actor.id,ownerLifeId:actor.lifeId??0,team:actor.team,ownerName:actor.name};
  const p={...eye(actor),id:`rocket-${++g.eventSerial}`,ownerId:actor.id,team:actor.team,
   ...(g.config.networkSlice?{ownerLifeId:owner.ownerLifeId,ownerName:owner.ownerName}:{}),
   vx:dir.x*22,vy:dir.y*22,vz:dir.z*22,born:g.state.time,until:g.state.time+4};
  // Keep the original actor and control generation out of projected state.
- if(g.config.networkSlice)rocketOwners.set(p,Object.freeze({...owner,ownerName,actor,ownerControlEpoch:actor.controlEpoch??0}));
+ if(g.config.networkSlice)rocketOwners.set(p,Object.freeze({...owner,actor,ownerControlEpoch:actor.controlEpoch??0}));
  g.state.projectiles.push(p);if(g.state.projectiles.length>24)g.state.projectiles.shift();
- g.emit('rocket-launch',actor,{rocketId:p.id,...(g.config.networkSlice?{...owner,ownerName,...pos(p)}:{})});return p;
+ g.emit('rocket-launch',actor,{rocketId:p.id,...(g.config.networkSlice?{...owner,...pos(p)}:{})});return p;
 }
 export function updateRockets(g,dt,rayActor){
  const remaining=[];
@@ -160,12 +160,12 @@ export function updateRockets(g,dt,rayActor){
    const origin={x:r.x-dir.x*.10,y:Math.max(.08,r.y-dir.y*.10),z:r.z-dir.z*.10};
    const owner=projectileOwner?projectileOwner.actor:g.actors.find(a=>a.id===r.ownerId),radius=4.6;
    const {ownerId,ownerLifeId,team}=projectileOwner??r,ownerName=projectileOwner?projectileOwner.ownerName:owner?.name;
-   g.emit('rocket-explosion',null,{...origin,ownerId,team,radius,...(g.config.networkSlice?{rocketId:r.id,ownerLifeId,ownerName}:{})});
+   g.emit('rocket-explosion',null,{...origin,ownerId,team,radius,...(g.config.networkSlice?{rocketId:r.id,ownerLifeId,ownerName,flightFrom:from}:{})});
    for(const a of aliveBodies(g)){
     const center={...(a.kind==='zombie'?zombiePosition(a,a.bodyTime):pos(a)),y:a.y+a.height*.55};const distance=Math.hypot(center.x-origin.x,center.y-origin.y,center.z-origin.z);
     if(distance>=radius&&a!==hit)continue;
     if(a!==hit&&!g.world.segmentClear(origin,center,{vision:false}))continue;
-    g.pendingDamage.push({target:a,amount:a===hit?WEAPONS.bazooka.damage:135*Math.max(0,1-distance/radius),source:owner,projectileOwner,kind:'bazooka',point:center,sourcePosition:origin});
+    g.pendingDamage.push({target:a,amount:a===hit?WEAPONS.bazooka.damage:135*Math.max(0,1-distance/radius),source:owner,projectileOwner,rocketId:projectileOwner?r.id:undefined,kind:'bazooka',point:center,sourcePosition:origin});
    }
   }else remaining.push(r);
  }

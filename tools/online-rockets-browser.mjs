@@ -118,6 +118,14 @@ async function cycle(desktop,mobile,mode){
   if(mode==='tdm')release=await fireTouch(mobile);
   else {await desktop.mouse.down();release=()=>desktop.mouse.up();}
   try{await until(()=>!target.alive,'authority resolves rocket hit');}finally{await release();}
+  await until(async()=>{
+    const updated=await Promise.all(peers.map(p=>p.evaluate(id=>{
+      const evidence=window.rocketEvidence,actor=__fps.network.room.state.actors.get(id);
+      return actor?.alive===false&&evidence.events.some(e=>e.type==='rocket-explosion')
+        &&evidence.sounds.includes('rocket-explosion');
+    },target.id)));
+    return updated.every(Boolean);
+  },'both renderers consume the authoritative hit and explosion');
   const evidence=peers.map(p=>p.evaluate(()=>{
     const e=window.rocketEvidence,s=__fps.network.room.state;
     return {meshes:[...e.visible],events:e.events,sound:e.sounds,life:[...s.actors.values()].map(a=>[a.id,a.hp,a.alive])};
