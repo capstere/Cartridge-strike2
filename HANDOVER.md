@@ -1,19 +1,16 @@
 # Cartridge-Strike 2 handover
 
-**Nästa utvecklingsuppdrag är Classic online.** Utgå från den granskade grunden i
-[PR #26](https://github.com/capstere/Cartridge-strike2/pull/26). Portera den
-befintliga kombinerade Classic-modellen och lagrollerna med riktig köpekonomi,
-rundor, bombplantering/desarmering och gisslan. Ge sedan serverbotarna samma
-uppdrag. Zombies och Dansmannen kommer därefter. Rök, flash och raketkastare
+**Nästa utvecklingsuppdrag är zombies och Dansmannen online.** Återanvänd de
+befintliga offlineaktörerna och deras animationer. Börja med serverägd identitet,
+livscykel och replikering av en zombie i ett isolerat rum och kontrollera att
+den inte tar en lagplats. Ta sedan in Dansmannens beteende och ljud.
+
+Classic-kandidaten och dess TDM-bas granskas på en separat loopbackport.
+[Rundregler, kontroller, prestanda och startinstruktioner](docs/multiplayer/ONLINE_CLASSIC_REPORT.md).
+Den publika Pi-tjänsten kör fortfarande den aktiva releasen nedan.
+Fysisk iPhone/Android-provning av köp, hållinteraktioner, ljud, åskådarläge,
+bakgrund/återanslutning och omspel återstår. Rök, flash och raketkastare
 återstår online.
-
-Kandidaten har gratis utrustningsval per liv, sikte, HE, botfyllning och
-serverstyrt glas på hela Floor 5. Granskning sker på separat loopbackport.
-[Prov, Pi-belastning och startkommando](docs/multiplayer/ONLINE_GAMEPLAY_FOUNDATION.md).
-
-**Fysisk provning av kandidaten är NOT RUN.** Prova tre samtidiga kontroller,
-ljud, rotation, bakgrund/återanslutning och resultat/rematch på iPhone och
-Android. Den tidigare fysiska observationen nedan gäller den aktiva releasen.
 
 **Låg prioritet.** Jesper har hittat två lokala kollisionsproblem vid streck
 på golvet som ser ut som gamla väggar eller områdesgränser. Möbler ligger
