@@ -38,9 +38,14 @@ try{
   await desktop.locator('#room-start').click();await mobile.locator('#resume').tap();await resumeDesktop(desktop);
   const carrier=game.actors.find(a=>a.team==='counterAnalysts'),defender=game.actors.find(a=>a.team==='analysts');
   assert.equal(game.bomb.carrierId,carrier.id);assert.equal(carrier.inventory.primary,null);
-  await desktop.keyboard.press('b');await desktop.locator('[data-item=he]').click();
+  await desktop.keyboard.press('b');
+  await desktop.locator('#shop .cs-buy-col').first().waitFor();
+  assert(!await desktop.locator('[data-item=cr4]').evaluate(b=>b.classList.contains('cs-other')));
+  assert(!await desktop.locator('[data-item=armor]').evaluate(b=>b.classList.contains('cs-cant')));
+  await desktop.locator('[data-item=he]').click();
   await until(()=>carrier.money===500&&carrier.inventory.he===1,'desktop bought HE');
   await desktop.waitForFunction(()=>document.querySelector('#buy-money').textContent.includes('500'));
+  await desktop.locator('[data-item=armor].cs-cant').waitFor();
   await desktop.locator('#return-buy').click();
   await mobile.locator('#mobile-more').tap();await mobile.locator('[data-mobile-action=buy]').tap();
   await mobile.locator('[data-item=armor]').tap();await until(()=>defender.armor===100&&defender.money===150,'mobile bought armor');await mobile.locator('#return-buy').tap();
@@ -77,6 +82,9 @@ try{
   try{await until(()=>carrier.action?.type==='plant','desktop hold starts');await until(()=>game.bomb.status==='planted','desktop plant finishes');}
   finally{await desktop.keyboard.up('e');}
   Object.assign(carrier,game.world.anchors.counterAnalysts[0]);Object.assign(defender,{x:game.bomb.x,z:game.bomb.z,y:0});
+  assert(game.damage(carrier,200,defender));
+  await desktop.locator('#spectate').waitFor();
+  await desktop.keyboard.press('Enter');
   const interact=mobile.locator('[data-mobile-action=interact]');
   await mobile.waitForFunction(()=>document.querySelector('#prompt-text').textContent.includes('desarmera'));
   const button=await interact.boundingBox();assert(button?.width>0);

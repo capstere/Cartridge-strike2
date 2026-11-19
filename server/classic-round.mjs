@@ -5,12 +5,21 @@ import {HostageState,ActorState} from './network-schema.mjs';
 export function prepareClassicRound(room){
   const game=room.sim.game;
   for(const [sid,seat] of room.seats){
-    if(!seat.ready||!seat.pending)continue;
+    if(!seat.pending)continue;
+    // A still-loading client keeps its bot during live rounds. At rematch
+    // the lobby can transfer even a reservation without a simulation actor.
+    if(!seat.ready&&room.state.phase!=='waiting')continue;
     room.removeBot(seat.id);
-    room.state.actors.delete(seat.actor.id);
+    room.state.actors.delete(seat.waitId);
+    seat.waitId=seat.id;
+    seat.pending=false;
+    if(!seat.ready){
+      room.state.actors.set(seat.id,new ActorState({id:seat.id,sessionId:sid,name:seat.name,
+        team:seat.id.split('-')[0],connected:seat.connected,controlEpoch:seat.epoch}));
+      continue;
+    }
     seat.actor.id=seat.id;
     seat.actor.lifeId=Math.max(seat.actor.lifeId,room.lives.get(seat.id)||0);
-    seat.pending=false;
     game.actors.push(seat.actor);
     if(seat.connected)room.sim.controllers.bind(sid,seat.id);
   }

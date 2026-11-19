@@ -130,5 +130,18 @@ test('server BotControllers pick up, plant, defuse and lead a physical hostage',
  await until(()=>h.rescued,'bot and follower reached rescue',10000);assert(h.distanceWalked>.5);
  g.state.deadline=g.state.time;await until(()=>host.state.round===3&&own(late).alive,'waiting human starts at round boundary');
  assert.equal(r.bots.size,8);assert.equal(g.actors.length,10);assert.equal(own(late).kills,0);assert.equal(own(late).money,800);
- await host.leave();await late.leave();await until(()=>!local.rooms.size,'no lingering AI room');
+ // Asset loading straddles match end and rematch. A subsequent lobby team
+ // change must leave one actor per seat and preserve every other bot.
+ const loading=await client.joinById(host.roomId,{...opts,team:'analysts'});
+ const reserved=r.seats.get(loading.sessionId);
+ assert(reserved.pending&&!reserved.ready&&r.bots.has(reserved.id));
+ r.match.finish('rounds','analysts');
+ await until(()=>host.state.phase==='results','completed match');
+ command(host,'rematch');await until(()=>host.state.phase==='waiting','back in lobby');
+ await ready(loading);assert(!reserved.pending);
+ command(loading,'team',{team:'counterAnalysts'});
+ await until(()=>own(loading)?.team==='counterAnalysts','change team after loading');
+ assert.equal(g.actors.length,10);assert.equal(r.state.actors.size,10);assert.equal(r.bots.size,7);
+ assert(g.actors.every(actor=>r.state.actors.has(actor.id)));
+ await loading.leave();await host.leave();await late.leave();await until(()=>!local.rooms.size,'no lingering AI room');
 });
