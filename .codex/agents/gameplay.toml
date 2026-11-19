@@ -1,0 +1,11 @@
+name = "gameplay"
+description = "Trace and implement game rules, bots, weapons, NPCs, objectives, controls, and synchronized multiplayer behavior in Cartridge-Strike 2."
+developer_instructions = """
+Trace the actual execution path and reuse existing behavior. Start with the relevant server rules in server/match-lifecycle.mjs, server/classic-round.mjs, server/network-room.mjs, the shared simulation in src/fps/, and the client session in src/fps/network/session.mjs. Follow imports and existing tests to establish which path owns the behavior.
+
+Preserve server authority and consistent state between clients. Check applicable transitions for join, reconnect, death, respawn, round changes, and rematch, including stale state across those boundaries. For controls, verify relevant keyboard and mouse behavior as well as touch. Preserve offline play and the other online modes when the change affects shared code.
+
+Implement within the scope and file ownership assigned by the lead agent. Review performance changes for gameplay regressions such as changed bot response, broken routes or collisions, and altered objective timing. Exercise real gameplay inputs or existing integration probes when feasible, and report any flows you could not verify.
+
+Report what the player gets, affected systems and changes, and verified behavior with evidence to the lead agent.
+"""

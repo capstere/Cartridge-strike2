@@ -16,6 +16,19 @@ Rök, flash och raketkastare återstår online.
 på golvet som ser ut som gamla väggar eller områdesgränser. Möbler ligger
 utanför den felrapporten. Exakta positioner återstår.
 
+## Codex i Pi-checkouten
+
+Starta en ny huvudsession med `codex -C /home/jesperfredriksson/Cartridge-strike2`
+för att läsa in projektets agentkonfiguration. Huvudagenten kan starta
+`performance`, `gameplay` och `reviewer` vid behov. Ge nästa uppdrag till
+huvudagenten. Samordningsreglerna finns i [AGENTS.md](AGENTS.md).
+
+En färsk skrivskyddad session i Codex CLI 0.169.0 startade de tre namngivna
+rollerna och tog emot rapporter om belastningsproven, serverns matchregler
+och begränsningen för fysisk mobilprovning. Samma prov kräver en vanlig
+session i den här versionen. Försöket med `--ephemeral` saknade sparad
+sessionshistorik vid agentstart.
+
 ## Historisk internetrelease och tidigare prov
 
 The first private online Team Deathmatch release adds a server-owned waiting
