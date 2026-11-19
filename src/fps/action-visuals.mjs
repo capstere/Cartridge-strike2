@@ -65,6 +65,18 @@ export class ActionVisuals{
  events(events,game){
   for(const e of events){
    if(e.type==='rocket-explosion'){
+    // A short authoritative flight may begin and end between two snapshots.
+    // Finish its trail from the last rendered position (or last server step).
+    const start=this.rockets.get(e.rocketId)?.position??e.flightFrom;
+    if(start){
+     const length=Math.hypot(e.x-start.x,e.y-start.y,e.z-start.z);
+     const count=Math.min(6,Math.ceil(length/.35));
+     for(let i=0;i<count;i++){
+      const offset=(i+1)/(count+1);
+      this.particle({x:start.x+(e.x-start.x)*offset,y:start.y+(e.y-start.y)*offset,z:start.z+(e.z-start.z)*offset},
+       game.state.time,{size:.09,duration:.25,velocity:[0,.12,0],colour:0xb7b8ae});
+     }
+    }
     this.light.position.set(e.x,e.y,e.z);this.lightUntil=game.state.time+.32;
     for(let i=0;i<24;i++){const a=i*2.3999;this.particle(e,game.state.time,{size:.22+i%4*.14,duration:.6+i%5*.16,velocity:[Math.cos(a)*(1+i%3),.5+Math.sin(i)*1.2,Math.sin(a)*(1+i%3)],colour:i<7?0xffa341:0x6a706e});}
    }

@@ -31,7 +31,7 @@ function actorView(s,localId){
 export class NetworkSession {
   constructor(world,{onDisconnect=()=>{},onConnection=()=>{},onMatch=()=>{}}={}){
     this.onMatch=onMatch;this.matchId=0;this.matchPhase='';this.world=world;this.onDisconnect=onDisconnect;this.onConnection=onConnection;this.connectionState='connecting';this.controlEpoch=0;this.closed=false;this.enabled=true;
-    this.events=[];this.seenEvent=0;this.predictedShots=new Map();this.actionTimes=new Map();this.remote=new Map();this.residents=new Map();this.unsub=[];
+    this.events=[];this.seenEvent=0;this.predictedShots=new Map();this.actionTimes=new Map();this.remote=new Map();this.residents=new Map();this.projectiles=new Map();this.unsub=[];
     this.fireId=0;this.reloadId=0;this.trigger=false;this.nextCosmetic=0;this.lifeId=0;this.lastPatch=0;
     this.metrics={sent:0,replays:0,adopts:0,resets:0,cosmeticShots:0,confirmedShots:0,suppressedShots:0,corrections:[],adoptionDistance:[],shotLatency:[],hitLatency:[],maxPending:0,reconnects:0};
     this.view=new Game(world,{config:NETWORK_CONFIG,localPlayerId:null,controllers:{}});
@@ -120,9 +120,11 @@ export class NetworkSession {
     this.view.config=classic?CLASSIC_NETWORK_CONFIG:NETWORK_CONFIG;
     this.view.state.mode=classic?'classic':'endless';
     const newMatch=this.matchId!==state.matchId,newPhase=this.matchPhase!==state.phase;
+    if(newMatch||newRound)this.events=[];
     if(newMatch||newPhase){
       this.matchId=state.matchId;this.matchPhase=state.phase;
-      this.prediction?.reset();this.events=[];this.predictedShots.clear();this.actionTimes.clear();this.nextCosmetic=0;
+      this.resultsAt=state.phase==='results'?this.lastPatch:undefined;
+      this.prediction?.reset();this.keepRocketEffects();this.predictedShots.clear();this.actionTimes.clear();this.nextCosmetic=0;
       if(newMatch){for(const entry of this.remote.values())this.predict.detach(entry.schema);this.remote.clear();}
       this.view.state.round=classic?state.round:state.matchId;
     }
@@ -163,7 +165,7 @@ export class NetworkSession {
     applyNetworkWorld(this.world.doors,state);
     this.view.state.actors=ready.map(s=>actorView(s,this.localPlayerId));
     this.view.state.score={analysts:state.analysts,counterAnalysts:state.counterAnalysts};
-    this.view.state.time=state.time;
+    this.view.state.time=newMatch?state.time:Math.max(this.view.state.time??0,state.time);
     const self=state.actors.get(this.localPlayerId);
     for(const [id,entry] of this.remote)if(!ready.some(s=>s.id===id&&s===entry.schema&&s.lifeId===entry.lifeId&&s.alive===entry.alive)){
       this.predict.detach(entry.schema);this.remote.delete(id);
@@ -176,7 +178,19 @@ export class NetworkSession {
       if(state.residents.get(id)===entry.schema&&entry.view.lifeId===entry.schema.lifeId&&!this.adoptedReconnect)continue;
       this.predict.detach(entry.schema);this.residents.delete(id);
     }
+    for(const [id,entry] of this.projectiles){
+      if(state.projectiles.get(id)===entry.schema&&!this.adoptedReconnect)continue;
+      this.predict.detach(entry.schema);this.projectiles.delete(id);
+    }
     this.adoptedReconnect=false;
+    for(const rocket of state.projectiles.values()){
+      if(!this.projectiles.has(rocket.id)){
+        this.predict.attach(rocket,{x:'lerp',y:'lerp',z:'lerp'});
+        this.projectiles.set(rocket.id,{schema:rocket,view:{id:rocket.id,vx:rocket.vx,vy:rocket.vy,vz:rocket.vz}});
+      }
+      Object.assign(this.projectiles.get(rocket.id).view,{x:rocket.x,y:rocket.y,z:rocket.z});
+    }
+    this.view.state.projectiles=[...this.projectiles.values()].map(entry=>entry.view);
     for(const s of state.residents.values()){
       let entry=this.residents.get(s.id);
       if(!entry){
@@ -226,7 +240,7 @@ export class NetworkSession {
       // Reset the replay controller, NOT InputHandle's reliable wire counters.
       this.prediction.reset();if(newLife||newConnection){this.predictedShots.clear();this.actionTimes?.clear();}this.nextCosmetic=0;
       this.fireId=0;this.reloadId=0;this.trigger=false;
-      this.events=[];
+      this.keepRocketEffects();
     }
     if(newMatch||newPhase)queueMicrotask(()=>{if(!this.closed)this.onMatch(this.matchPhase);});
   }
@@ -234,16 +248,21 @@ export class NetworkSession {
     const self=this.room?.state.actors.get(this.localPlayerId);if(!self||this.connectionState!=='connected')return;
     this.notice='';this.room.send('match',{kind,matchId:this.room.state.matchId,controlEpoch:self.controlEpoch,...extra});
   }
+  keepRocketEffects(){this.events=this.events.filter(event=>event.rocketId);}
   receiveEvents(events){
     if(this.closed||this.connectionState==='reconnecting'||!Array.isArray(events))return;
-    for(const event of events.slice(-64)){
+    for(let event of events.slice(-64)){
+      const rocketEffect=!!event.rocketId;
       if(event.matchId!==undefined&&event.matchId!==this.room.state.matchId)continue;
       if(event.eventId<=this.seenEvent)continue;this.seenEvent=event.eventId;
       const actor=this.room.state.actors.get(event.actorId)||this.room.state.residents.get(event.actorId);
       if(event.round!==undefined&&this.room.state.mode==='classic'&&event.round!==this.room.state.round)continue;
-      if(event.actorId&&!this.room.state.hostages?.has(event.actorId)&&(!actor||event.lifeId&&actor.lifeId!==event.lifeId||event.controlEpoch!==undefined&&(actor.controlEpoch??0)!==event.controlEpoch))continue;
+      if(event.type!=='rocket-launch'&&event.actorId&&!this.room.state.hostages?.has(event.actorId)&&(!actor||event.lifeId&&actor.lifeId!==event.lifeId||event.controlEpoch!==undefined&&(actor.controlEpoch??0)!==event.controlEpoch))continue;
       const source=this.room.state.actors.get(event.sourceId)||this.room.state.residents.get(event.sourceId);
-      if(event.sourceId&&(!source||event.sourceLifeId&&source.lifeId!==event.sourceLifeId||event.sourceControlEpoch!==undefined&&(source.controlEpoch??0)!==event.sourceControlEpoch))continue;
+      if(event.sourceId&&(!source||event.sourceLifeId&&source.lifeId!==event.sourceLifeId||event.sourceControlEpoch!==undefined&&(source.controlEpoch??0)!==event.sourceControlEpoch)){
+        if(!rocketEffect)continue;
+        event={...event,sourceId:undefined};
+      }
       if(event.type==='shot'&&event.actorId===this.localPlayerId){
         this.metrics.confirmedShots++;
         const sent=this.predictedShots.get(event.actionId);
@@ -252,7 +271,7 @@ export class NetworkSession {
       }
       if(event.type==='hit'&&event.sourceId===this.localPlayerId){const sent=this.actionTimes?.get(event.actionId);
         if(sent!==undefined){this.metrics.hitLatency.push(performance.now()-sent);if(this.metrics.hitLatency.length>512)this.metrics.hitLatency.shift();}}
-      if(this.enabled)this.events.push(event);
+      if(this.enabled||rocketEffect&&['active','results'].includes(this.room.state.phase))this.events.push(event);
     }
     this.events=this.events.slice(-128);
   }
@@ -272,7 +291,7 @@ export class NetworkSession {
       if(data.fire&&(state.mode!=='classic'||state.roundPhase==='active')&&(weapon.automatic||!this.trigger)&&time+1e-8>=Math.max(this.nextCosmetic,self.nextShot)&&
           (self.ammo>0||self.weapon==='knife'||throwing&&self.he>0)&&!self.reloadUntil){
         data.fireId=++this.fireId;this.nextCosmetic=time+weapon.interval;
-        if(!throwing){
+        if(!throwing&&!weapon.projectile){
           const actionId=`${self.id}:${self.lifeId}:${self.controlEpoch}:${this.fireId}`;
           this.predictedShots.set(actionId,performance.now());this.actionTimes.set(actionId,performance.now());this.metrics.cosmeticShots++;
           const a=this.prediction.world.actor;
@@ -289,8 +308,7 @@ export class NetworkSession {
     // wall-clock expiry could replay the same muzzle/audio after the stall.
     while(this.predictedShots.size>128)this.predictedShots.delete(this.predictedShots.keys().next().value);
     while(this.actionTimes?.size>128)this.actionTimes.delete(this.actionTimes.keys().next().value);
-    // Only the display clock advances here; it cannot tick combat or respawn.
-    this.view.state.time=state.time+Math.min(.1,(performance.now()-this.lastPatch)/1000);
+    this.updateDisplayTime(state,now);
     for(const a of this.view.actors){
       const s=state.actors.get(a.id);if(!s)continue;
       if(a.isPlayer&&a.alive){
@@ -303,6 +321,9 @@ export class NetworkSession {
     for(const {schema,view} of this.residents.values()){
       for(const key of ['x','y','z','yaw'])view[key]=this.predict.value(schema,key);
     }
+    for(const {schema,view} of this.projectiles.values()){
+      for(const key of ['x','y','z'])view[key]=this.predict.value(schema,key);
+    }
     // Display doors/shutters at the same snapshot time as remote hitboxes.
     // Local movement uses its separate, authoritative/replayed collision context.
     for(const d of this.world.doors?.doors||[]){const s=state.doors.get(d.id),angle=this.predict.value(s,'poseAngle');
@@ -311,10 +332,18 @@ export class NetworkSession {
     const rtt=Math.round(this.room.clock?.smoothedRtt?.()||0);
     this.status=stale?'Anslutningen väntar — kontroller stoppade':`${this.room.roomId} · ${this.view.actors.filter(a=>!a.pending).length}/${ROOM_CAPACITY} · ${rtt} ms${rtt>=200?' · Hög fördröjning':''}`;
   }
+  updateDisplayTime(state,now){
+    // Results freeze the simulation. Let the final effects age against a
+    // stable clock even as the server continues sending identical times.
+    const results=this.resultsAt!==undefined,elapsed=Math.max(0,(now-(this.resultsAt??this.lastPatch))/1000);
+    const time=state.time+Math.min(results?2:.1,elapsed);
+    this.view.state.time=Math.max(this.view.state.time??0,time);
+  }
   setInputEnabled(enabled){
     if(this.closed)return;
     enabled=enabled&&this.connectionState!=='reconnecting';
-    this.trigger=false;this.enabled=enabled;this.view.state.paused=!enabled;this.events=[];
+    this.trigger=false;this.enabled=enabled;this.view.state.paused=!enabled;
+    this.keepRocketEffects();
     if(this.room&&this.lifeId&&this.connectionState!=='reconnecting')this.room.send('controls',{enabled,lifeId:this.lifeId,controlEpoch:this.controlEpoch});
     if(enabled&&this.prediction)this.prediction.reset();
   }

@@ -208,7 +208,7 @@ export class Game {
   inBuyZone(actor = this.player) { return this.world.anchors[actor.team].some(p => distance(actor, p) <= this.config.buyRadius); }
   buy(id, actor = this.player) {
     const reject = reason => ({ ok: false, reason });
-    if (this.config.networkSlice && (this.config.mode!=='classic' || !['smg','ar47','cr4','shotgun','sniper','armor','he'].includes(id))) return reject('Utrustningen kan inte köpas i detta läge.');
+    if (this.config.networkSlice && (this.config.mode!=='classic' || !['smg','ar47','cr4','shotgun','sniper','bazooka','armor','he'].includes(id))) return reject('Utrustningen kan inte köpas i detta läge.');
     const w = WEAPONS[id];
     if (!w || !w.cost) return reject('Utrustningen kan inte köpas.');
     if(this.config.networkSlice&&!actor?.alive)return reject('Du kan köpa när du spelar nästa runda.');
@@ -342,12 +342,15 @@ export class Game {
     return {wall,nearest,victim};
   }
   damage(target, amount, source, kind = 'shot', context = {}) {
-    if (this.phase !== 'active' || !target?.alive || !Number.isFinite(amount) || amount <= 0 || (source && source.team && source.team === target.team && !this.config.friendlyFire && !(source===target&&kind==='bazooka'))) return false;
+    if (this.phase !== 'active' || !target?.alive || !Number.isFinite(amount) || amount <= 0) return false;
+    const owner = context.projectileOwner;
+    const sourceTeam = owner?.team ?? source?.team, sourceName = owner?.ownerName ?? source?.name;
+    if (sourceTeam && sourceTeam === target.team && !this.config.friendlyFire && !(source === target && kind === 'bazooka')) return false;
     if(target.spawnProtectedUntil>this.state.time)return false;
     if(kind==='stomp' && (!source?.alive || source.behavior!=='attack'))return false;
     if(target.kind==='hostage'&&!this.config.hostageDamage)return false;
     if(target.kind==='dwarf'&&!this.config.wanderers)return false;
-    if ((target.isPlayer || target.controllerType === 'human') && source && !source.isPlayer && source.controllerType !== 'human' && source.team !== target.team) amount *= DIFFICULTIES[this.state.difficulty].humanDamage;
+    if ((target.isPlayer || target.controllerType === 'human') && source && !source.isPlayer && source.controllerType !== 'human' && sourceTeam !== target.team) amount *= DIFFICULTIES[this.state.difficulty].humanDamage;
     const absorbed = Math.min(target.armor || 0, amount * .32); target.armor = Math.max(0, (target.armor || 0) - absorbed);
     const dealt = Math.min(target.hp, amount - absorbed); target.hp = Math.max(0, target.hp - dealt);
     const hitPoint = context.point ?? { x: target.x, y: target.y + target.height * .6, z: target.z };
@@ -355,17 +358,22 @@ export class Game {
     const length = Math.hypot(hitPoint.x - sourcePosition.x, hitPoint.y - sourcePosition.y, hitPoint.z - sourcePosition.z) || 1;
     const incoming = context.direction ?? { x: (hitPoint.x - sourcePosition.x) / length, y: (hitPoint.y - sourcePosition.y) / length, z: (hitPoint.z - sourcePosition.z) / length };
     target.hurtTime = this.state.time; target.hurtDirection = { ...incoming };
-    const detail = { sourceId: this.config.networkSlice && !this.actors.includes(source) && !this.state.zombies.includes(source) ? undefined : source?.id, sourceName: source?.name, targetName: target.name, weapon: kind, amount: dealt, hp: target.hp,
+    // The room resolves sourceId against the current roster. A projectile can
+    // still credit its original owner after that actor's generation changes.
+    const sameGeneration = !owner || (source && source.id === owner.ownerId && (source.lifeId ?? 0) === owner.ownerLifeId && (source.controlEpoch ?? 0) === owner.ownerControlEpoch);
+    const currentSource = sameGeneration && (!this.config.networkSlice || this.actors.includes(source) || this.state.zombies.includes(source));
+    const sourceId = currentSource ? source?.id : undefined;
+    const detail = { ...(context.rocketId?{rocketId:context.rocketId}:{}), sourceId, sourceName, targetName: target.name, weapon: kind, amount: dealt, hp: target.hp,
       point: { ...hitPoint }, direction: { ...incoming }, sourcePosition: { ...sourcePosition }, ...hitPoint };
     this.emit('damage', target, detail); this.emit('hit', target, detail);
-    if(target.kind==='zombie')reactZombie(this,target,kind,detail,source);
+    if(target.kind==='zombie')reactZombie(this,target,kind,detail,owner&&!currentSource?undefined:source);
     if (target.hp > 0) return true;
     target.alive = false; target.deaths++; target.action = null; target.reloadUntil = 0; target.deathAt = this.state.time;
-    target.deathCause = { sourceId: detail.sourceId, sourceName: source?.name, weapon: kind, point: { ...hitPoint }, direction: { ...incoming } };
-    if (source?.team && source!==target && target.team && source.team!==target.team) { source.kills++; source.money = Math.min(this.config.maxMoney, source.money + this.config.killMoney); }
+    target.deathCause = { sourceId, sourceName, weapon: kind, point: { ...hitPoint }, direction: { ...incoming } };
+    if (source && sourceTeam && source!==target && target.team && sourceTeam!==target.team) { source.kills++; source.money = Math.min(this.config.maxMoney, source.money + this.config.killMoney); }
     if (target.inventory?.primary) this.dropItem(target, target.inventory.primary);
     if(target.kind==='hostage'){target.escortId=null;target.path=[];}
-    if(target.kind!=='zombie')recordActionDeath(this,target,source);
+    if(target.kind!=='zombie')recordActionDeath(this,target,source,sourceTeam);
     if (this.bomb.carrierId === target.id) Object.assign(this.bomb, { status: 'dropped', carrierId: null, ...point(target) });
     for (const hostage of this.hostages) if (hostage.escortId === target.id) { hostage.escortId = null; hostage.path = []; }
     this.emit('kill', target, { ...detail, deathAt: target.deathAt }); return true;
@@ -387,7 +395,8 @@ export class Game {
     if (this.phase !== 'active' || !actor.alive || !actor.inventory[type]) return false;
     actor.inventory[type]--;
     if(this.config.networkSlice)actor.spawnProtectedUntil=0;
-    this.state.grenades.push({ ...grenadeLaunch(actor, this.config, this.state.time, type), ...(this.config.networkSlice?{owner:actor,team:actor.team,ownerLifeId:actor.lifeId}:{}), id: `grenade-${++this.eventSerial}` });
+    this.state.grenades.push({ ...grenadeLaunch(actor, this.config, this.state.time, type),
+      ...(this.config.networkSlice?{owner:actor,team:actor.team,ownerLifeId:actor.lifeId??0,ownerName:actor.name,ownerControlEpoch:actor.controlEpoch??0}:{}), id: `grenade-${++this.eventSerial}` });
     this.emit('throw', actor, { grenade: type }); this.select(actor.inventory.primary?.id ?? actor.inventory.pistol?.id ?? 'knife', actor); return true;
   }
   updateGrenades(dt) {
@@ -406,13 +415,13 @@ export class Game {
     if (grenade.type === 'smoke') {
       this.state.smokes.push({ ...point(grenade), y: grenade.y + 1, id: grenade.id, radius: c.smokeRadius, until: this.state.time + c.smokeDuration }); return;
     }
-    const owner = grenade.owner ?? this.actors.find(a => a.id === grenade.ownerId), origin = { ...point(grenade), y: grenade.y + .08 };
+    const owner = c.networkSlice ? grenade.owner : this.actors.find(a => a.id === grenade.ownerId), origin = { ...point(grenade), y: grenade.y + .08 };
     for (const actor of [...this.actors,...(this.state.zombies||[]),...(this.config.hostageDamage?this.hostages:[]),...(this.config.wanderers?this.state.wanderers||[]:[])]) {
       if (!actor.alive||actor.rescued) continue;
       const target = eye(actor), d = Math.hypot(target.x - origin.x, target.y - origin.y, target.z - origin.z);
       if (grenade.type === 'he') {
         // Solid glass is cover for blast; clear glass only permits vision/flash.
-        if (d < c.heRadius && this.world.segmentClear(origin, { ...target, y: actor.y + actor.height * .55 }, { vision: false })) this.pendingDamage.push({ target: actor, amount: 105 * (1 - d / c.heRadius), source: owner, kind: 'he', point: { ...target, y: actor.y + actor.height * .55 }, sourcePosition: origin });
+        if (d < c.heRadius && this.world.segmentClear(origin, { ...target, y: actor.y + actor.height * .55 }, { vision: false })) this.pendingDamage.push({ target: actor, amount: 105 * (1 - d / c.heRadius), source: owner, projectileOwner: c.networkSlice ? grenade : undefined, kind: 'he', point: { ...target, y: actor.y + actor.height * .55 }, sourcePosition: origin });
       } else if (d < c.flashRadius && this.world.segmentClear(origin, target, { vision: true })) {
         const view = direction(actor.yaw, actor.pitch), dot = ((origin.x - target.x) * view.x + (origin.y - target.y) * view.y + (origin.z - target.z) * view.z) / (d || 1);
         const strength = (1 - d / c.flashRadius) * (dot > .35 ? 1 : dot > -.25 ? .5 : .16);
@@ -523,6 +532,7 @@ export class Game {
     }
     for (const a of this.actors) { a.action = null; a.reloadUntil = 0; a.flash = 0; a.flashUntil = 0; }
     s.grenades = []; s.smokes = []; this.soundEvents = [];
+    if (this.config.networkSlice) s.projectiles = [];
     s.bomb.status = result.reason === 'detonation' ? 'detonated' : result.reason === 'defuse' ? 'defused' : 'inactive';
     s.bomb.carrierId = null; s.bomb.deadline = Infinity; s.bomb.nextBeep = Infinity;
     this.emit('result', null, { ...result });

@@ -15,6 +15,7 @@ export const RADIO=Object.freeze([
 const dist=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 const pos=a=>({x:a.x,y:a.y||0,z:a.z});
 const eye=a=>({...pos(a),y:(a.y||0)+(a.height||1.7)-.12});
+const rocketOwners=new WeakMap();
 export const isEndless=g=>g.state.mode==='endless';
 const aliveBodies=g=>[...g.actors,...g.hostages,...(g.state.zombies||[]),...(g.config.wanderers?g.state.wanderers||[]:[])].filter(a=>a.alive!==false&&!a.rescued);
 
@@ -31,7 +32,7 @@ export function prepareActionRound(g){
  for(const a of g.actors){equipEndless(g,a);a.spawnProtectedUntil=s.time+g.config.spawnProtection;}
  g.emit('start',null,{mode:'endless'});
 }
-export const onlinePrimaries=team=>['smg',team==='analysts'?'ar47':'cr4','shotgun','sniper'];
+export const onlinePrimaries=team=>['smg',team==='analysts'?'ar47':'cr4','shotgun','sniper','bazooka'];
 function equipEndless(g,a){
  if(g.config.networkSlice){
   const primary=onlinePrimaries(a.team).includes(a.loadout)?a.loadout:'smg';
@@ -90,12 +91,12 @@ export function tickActionState(g,dt){
  }
  if(g.config.wanderers){if(!s.wanderers?.length&&g.world.navigation?.nodes?.length)initializeWanderers(g);updateWanderers(g,dt);}
 }
-export function recordActionDeath(g,target,source){
+export function recordActionDeath(g,target,source,sourceTeam=source?.team){
  if(isEndless(g)){
   target.respawnAt=g.state.time+(['hostage','dwarf'].includes(target.kind)?10:g.config.respawnDelay);
-  if(target.team&&source?.team&&source!==target&&target.team!==source.team)g.state.score[source.team]++;
+  if(target.team&&sourceTeam&&source!==target&&target.team!==sourceTeam)g.state.score[sourceTeam]++;
  }
- if(source&&source!==target&&source.team===target.team)source.teamKills=(source.teamKills||0)+1;
+ if(source&&source!==target&&sourceTeam===target.team)source.teamKills=(source.teamKills||0)+1;
 }
 export function sendRadio(g,id,actor=g.player){
  const phrase=RADIO.find(p=>p.id===id),s=g.state;
@@ -134,30 +135,37 @@ export function friendlyLineClear(bot){
 }
 /** Segment/AABB sweep is shared for bullets and projectiles by the core caller. */
 export function launchRocket(g,actor,dir){
+ const owner={ownerId:actor.id,ownerLifeId:actor.lifeId??0,team:actor.team,ownerName:actor.name};
  const p={...eye(actor),id:`rocket-${++g.eventSerial}`,ownerId:actor.id,team:actor.team,
+  ...(g.config.networkSlice?{ownerLifeId:owner.ownerLifeId,ownerName:owner.ownerName}:{}),
   vx:dir.x*22,vy:dir.y*22,vz:dir.z*22,born:g.state.time,until:g.state.time+4};
+ // Keep the original actor and control generation out of projected state.
+ if(g.config.networkSlice)rocketOwners.set(p,Object.freeze({...owner,actor,ownerControlEpoch:actor.controlEpoch??0}));
  g.state.projectiles.push(p);if(g.state.projectiles.length>24)g.state.projectiles.shift();
- g.emit('rocket-launch',actor,{rocketId:p.id});return p;
+ g.emit('rocket-launch',actor,{rocketId:p.id,...(g.config.networkSlice?{...owner,...pos(p)}:{})});return p;
 }
 export function updateRockets(g,dt,rayActor){
  const remaining=[];
  for(const r of g.state.projectiles||[]){
+  const projectileOwner=g.config.networkSlice?(rocketOwners.get(r)??r):undefined;
   const len=Math.hypot(r.vx,r.vy,r.vz)*dt,dir={x:r.vx/22,y:r.vy/22,z:r.vz/22},from=pos(r);
   const wall=g.world.raycast(from,dir,len,{vision:false});let travel=wall?.distance??len,hit=null;
   for(const a of aliveBodies(g)){
-   if(a.id===r.ownerId&&g.state.time-r.born<.18)continue;
+   const isOwner=projectileOwner?a===projectileOwner.actor:a.id===r.ownerId;
+   if(isOwner&&g.state.time-r.born<.18)continue;
    const d=rayActor(from,dir,a,travel);if(d!==null&&d<=travel){travel=d;hit=a;}
   }
   r.x+=dir.x*travel;r.y+=dir.y*travel;r.z+=dir.z*travel;
   if(wall||hit||g.state.time>=r.until||r.y<.02){
    const origin={x:r.x-dir.x*.10,y:Math.max(.08,r.y-dir.y*.10),z:r.z-dir.z*.10};
-   const owner=g.actors.find(a=>a.id===r.ownerId),radius=4.6;
-   g.emit('rocket-explosion',null,{...origin,ownerId:r.ownerId,team:r.team,radius});
+   const owner=projectileOwner?projectileOwner.actor:g.actors.find(a=>a.id===r.ownerId),radius=4.6;
+   const {ownerId,ownerLifeId,team}=projectileOwner??r,ownerName=projectileOwner?projectileOwner.ownerName:owner?.name;
+   g.emit('rocket-explosion',null,{...origin,ownerId,team,radius,...(g.config.networkSlice?{rocketId:r.id,ownerLifeId,ownerName,flightFrom:from}:{})});
    for(const a of aliveBodies(g)){
     const center={...(a.kind==='zombie'?zombiePosition(a,a.bodyTime):pos(a)),y:a.y+a.height*.55};const distance=Math.hypot(center.x-origin.x,center.y-origin.y,center.z-origin.z);
     if(distance>=radius&&a!==hit)continue;
     if(a!==hit&&!g.world.segmentClear(origin,center,{vision:false}))continue;
-    g.pendingDamage.push({target:a,amount:a===hit?150:135*Math.max(0,1-distance/radius),source:owner,kind:'bazooka',point:center,sourcePosition:origin});
+    g.pendingDamage.push({target:a,amount:a===hit?WEAPONS.bazooka.damage:135*Math.max(0,1-distance/radius),source:owner,projectileOwner,rocketId:projectileOwner?r.id:undefined,kind:'bazooka',point:center,sourcePosition:origin});
    }
   }else remaining.push(r);
  }
