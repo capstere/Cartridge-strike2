@@ -73,7 +73,7 @@ export class LagCompensation {
       this.doors.pose(d,Math.abs(angle),Math.sign(angle)||1);
     }
     this.doors.elevators.setProgress(seen.value(this.room.state,'elevatorProgress'));
-    return g.world.withDynamicContext(this.context,()=>g.traceHitscan(actor,origin,dir,range,targets));
+    return g.world.withDynamicContext(this.context,()=>g.traceHitscan(actor,origin,dir,range,targets,{glassDisabled:id=>(this.room.state.brokenGlass.get(id)??Infinity)<=stamp}));
   }
   dispose(){this.tickTimes.clear();this.shots.clear();this.room.sim.game.hitscanQuery=null;}
 }

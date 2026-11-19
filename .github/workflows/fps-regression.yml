@@ -115,6 +115,11 @@ jobs:
         env:
           FPS_NETWORK_ANGLE: metal
         run: node tools/online-match-browser.mjs
+      - name: Online equipment, destructible glass and two rendered players with eight bots
+        timeout-minutes: 4
+        env:
+          FPS_NETWORK_ANGLE: metal
+        run: node tools/online-equipment-browser.mjs
       - name: Keep compact online evidence
         if: always()
         uses: actions/upload-artifact@v4

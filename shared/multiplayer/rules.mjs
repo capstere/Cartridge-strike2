@@ -6,7 +6,7 @@ export const NETWORK_CONFIG = Object.freeze({...CONFIG, networkSlice:true,
   wanderers:false, hostageDamage:false, friendlyFire:false,
   startMoney:0, maxMoney:0, killMoney:0});
 export const NETWORK_MAP = 'floor5-prepared';
-export const PROTOCOL_VERSION = 5;
+export const PROTOCOL_VERSION = 6;
 export const MATCH_DEFAULTS = Object.freeze({durationSeconds:600,scoreTarget:50,countdownSeconds:3});
 export const RTT_FRESH_MS = 4000;
 export const TEAM_CAPACITY = 5;
@@ -22,8 +22,8 @@ export const POSE_BOOLEANS = ['onGround','crouching','jumpHeld'];
 export function copyPose(target, source) {
   for(const key of [...POSE_NUMBERS,...POSE_BOOLEANS]) target[key]=source[key];
 }
-export const configContract = () => ({config:NETWORK_CONFIG, weapon:WEAPONS.smg,
-  world:'floor5-authoritative-doors-spawn-shutters-intact-unbreakable-glass-v1',
+export const configContract = () => ({config:NETWORK_CONFIG, weapons:Object.values(WEAPONS).filter(w=>['smg','ar47','cr4','sniper','shotgun','p9','p12','knife','he'].includes(w.id)),
+  world:'floor5-authoritative-doors-spawn-shutters-breakable-glass-v2',
   capacity:ROOM_CAPACITY, teamCapacity:TEAM_CAPACITY, reconnectSeconds:RECONNECT_SECONDS,
   rewindMs:REWIND_MS, interpolationMs:INTERPOLATION_MS, match:MATCH_DEFAULTS, rttFreshMs:RTT_FRESH_MS});
 export const wrapYaw = value => Math.atan2(Math.sin(value),Math.cos(value));

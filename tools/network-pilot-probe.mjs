@@ -76,7 +76,7 @@ try {
       }
     });
   }
-  const options = {contract:CONTRACT, code:randomBytes(16).toString('hex'), name:'Pilot probe'};
+  const options = {...(CONTRACT.protocolVersion>=6?{fillBots:false}:{}),contract:CONTRACT, code:randomBytes(16).toString('hex'), name:'Pilot probe'};
   const admissionChecks = {};
   if (clientCount===2) {
     stage = 'unauthenticated admission';

@@ -1,6 +1,6 @@
 import {MATCH_DEFAULTS,RECONNECT_SECONDS} from '../shared/multiplayer/rules.mjs';
 import {prepareNetworkWorld} from '../shared/multiplayer/world.mjs';
-import {respawnActor} from '../src/fps/action-rules.mjs';
+import {onlinePrimaries,respawnActor} from '../src/fps/action-rules.mjs';
 import {ActorState} from './network-schema.mjs';
 
 const teams=['analysts','counterAnalysts'];
@@ -22,7 +22,7 @@ export class MatchLifecycle {
   get now(){return this.room.clock.elapsedTime;}
   eligible(){
     const connected=[...this.room.seats.values()].filter(s=>s.connected);
-    return connected.every(s=>s.ready&&s.playerReady)&&teams.every(team=>connected.some(s=>s.actor?.team===team));
+    return connected.length>0&&connected.every(s=>s.ready&&s.playerReady)&&teams.every(team=>connected.some(s=>s.actor?.team===team)||[...this.room.bots.values()].some(s=>s.actor.team===team));
   }
   ownership(){
     const r=this.room;
@@ -32,8 +32,9 @@ export class MatchLifecycle {
   command(client,m){
     const r=this.room,s=r.seats.get(client.sessionId),state=this.state;
     if(!s?.ready||!s.connected||s.client!==client||!m||m.matchId!==state.matchId||m.controlEpoch!==s.epoch||
-      Object.keys(m).some(k=>!['kind','matchId','controlEpoch','ready','team'].includes(k)))return;
-    if(m.kind==='ready'&&state.phase==='waiting'&&typeof m.ready==='boolean')s.playerReady=m.ready;
+      Object.keys(m).some(k=>!['kind','matchId','controlEpoch','ready','team','primary'].includes(k)))return;
+    if(m.kind==='loadout'&&['waiting','active'].includes(state.phase)&&onlinePrimaries(s.actor.team).includes(m.primary))s.actor.loadout=m.primary;
+    else if(m.kind==='ready'&&state.phase==='waiting'&&typeof m.ready==='boolean')s.playerReady=m.ready;
     else if(m.kind==='team'&&state.phase==='waiting')r.changeTeam(client,m.team);
     else if(m.kind==='start'&&state.phase==='waiting'){
       if(state.ownerId!==client.sessionId)throw Error('Bara rumsägaren kan starta matchen.');
@@ -51,18 +52,18 @@ export class MatchLifecycle {
     const r=this.room,g=r.sim.game;
     g.state.paused=true;g.state.score={analysts:0,counterAnalysts:0};
     g.events=[];g.soundEvents=[];g.pendingDamage=[];g.state.projectiles=[];g.state.smokes=[];g.state.grenades=[];g.state.drops=[];
-    prepareNetworkWorld(g.world);this.absent.clear();
+    r.state.brokenGlass.clear();prepareNetworkWorld(g.world);g.tacticalContacts=[];g.state.combatFlow.firstKill=false;this.absent.clear();
     // Remove every old body before selecting the new safe spawn positions.
     for(const a of g.actors)a.alive=false;
-    for(const [sid,seat] of r.seats){
-      r.inputs.get(sid).clear();seat.enabled=false;
+    for(const seat of r.participants()){
+      const sid=seat.client?.sessionId;if(sid)r.inputs.get(sid).clear();seat.aim=seat.trigger=false;seat.lastSelect=0;seat.enabled=false;
       seat.lastFire=seat.lastReload=seat.lastSampleTick=seat.lastShotStamp=0;
       if(!seat.ready)continue;
       seat.epoch++;seat.actor.controlEpoch=seat.epoch;
-      seat.actor.kills=seat.actor.deaths=0;
+      seat.actor.kills=seat.actor.deaths=0;delete seat.actor.combat;
       if(!respawnActor(g,seat.actor))throw Error('No safe match spawn.');
       seat.lifeStartedAt=this.now;seat.diedAtMs=0;
-      r.state.actors.set(seat.id,new ActorState({id:seat.id,sessionId:sid,name:seat.name,team:seat.actor.team}));
+      r.state.actors.set(seat.id,new ActorState({id:seat.id,sessionId:sid||'',name:seat.actor.name,team:seat.actor.team}));
     }
     g.drainEvents();r.lag?.tickTimes.clear();r.lag?.shots.clear();
   }
@@ -80,7 +81,7 @@ export class MatchLifecycle {
     if(s.phase==='active'){
       if(this.now>=this.deadline){this.finish('time');return;}
       for(const team of teams){
-        const present=[...this.room.seats.values()].some(seat=>seat.ready&&seat.connected&&seat.actor.team===team);
+        const present=[...this.room.participants()].some(seat=>seat.ready&&seat.connected&&seat.actor.team===team);
         if(present)this.absent.delete(team);else if(!this.absent.has(team))this.absent.set(team,this.now);
       }
       const gone=teams.filter(team=>this.absent.has(team)&&this.now-this.absent.get(team)>=RECONNECT_SECONDS*1000);

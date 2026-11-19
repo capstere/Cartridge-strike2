@@ -76,8 +76,8 @@ export function grenadeThreat(game, player = game.player) {
     if (!(left > 0) || !['he','flash'].includes(g.type)) continue;
     if (g.type === 'he') {
       if (player.spawnProtectedUntil > game.state.time) continue;
-      const owner = game.actors.find(a => a.id === g.ownerId);
-      if (!game.config.friendlyFire && owner?.team === player.team) continue;
+      const owner = g.owner ?? game.actors.find(a => a.id === g.ownerId);
+      if (!game.config.friendlyFire && (g.team ?? owner?.team) === player.team) continue;
     }
     const origin = {x:g.x,y:g.y+.08,z:g.z};
     const distance = Math.hypot(origin.x-eye.x,origin.y-eye.y,origin.z-eye.z);

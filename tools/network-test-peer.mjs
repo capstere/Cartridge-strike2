@@ -6,7 +6,7 @@ import {CONTRACT} from '../shared/multiplayer/build.mjs';
 const {Client}=createRequire(new URL('../server/package.json',import.meta.url))('@colyseus/sdk');
 
 export async function createTestPeer(url,roomId){
-  const client=new Client(url,{headers:{Origin:url}}),options={name:'Protocol peer',code:'private-123',contract:CONTRACT};
+  const client=new Client(url,{headers:{Origin:url}}),options={fillBots:false,name:'Protocol peer',code:'private-123',contract:CONTRACT};
   const room=await (roomId?client.joinById(roomId,options):client.create('private-fps',options));
   let closed=false;const errors=[];
   room.reconnection.enabled=false;

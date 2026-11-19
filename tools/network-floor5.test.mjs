@@ -1,3 +1,4 @@
+import {glassCrossing} from './network-glass-fixture.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
@@ -73,21 +74,19 @@ test('late-join doors, shutters and shared collision contexts restore safely; va
  assert.throws(()=>applyNetworkWorld(w.doors,{doors:new Map()}),/Missing authoritative door/);
 });
 
-test('online Floor 5 glass stays physically solid after actual weapon impacts',async()=>{
+test('a real Floor 5 shot opens a pane for hitscan, capsules and navigation',async()=>{
  const sim=await createHeadlessSimulation({mapId:NETWORK_MAP,config:NETWORK_CONFIG,controllers:{'analysts-0':'human','counterAnalysts-0':'human'}});
  const g=sim.game,w=g.world;prepareNetworkWorld(w);const [a,b]=g.actors;b.alive=false;b.respawnAt=null;
- // Find a genuinely reachable pane face and prove the ray first hits that pane.
- let fixture;
- for(const pane of w.staticBoxes.filter(b=>b.glassId&&b.y+b.h/2>1.6))for(const side of [-1,1]){
-  const x=pane.x+pane.sin*.6*side,z=pane.z+pane.cos*.6*side;
-  if(!w.canOccupy(x,z,a.radius,a.height,0))continue;
-  const dir={x:-pane.sin*side,y:0,z:-pane.cos*side},hit=w.raycast({x,y:1.58,z},dir,1);
-  if(hit?.id===pane.id){fixture={x,z,pane,dir};break;}
- }
- assert(fixture,'reachable Floor 5 glass fixture');
- Object.assign(a,{x:fixture.x,z:fixture.z,y:0,pitch:0,yaw:Math.atan2(-fixture.dir.x,-fixture.dir.z),nextShot:0,recoil:0});
- for(let i=0;i<60;i++)g.stepActors(new Map([[a.id,{yaw:a.yaw,pitch:0,fire:true}]]));
- assert(a.inventory.primary.ammo<30,'actual weapon fired');assert(g.events.some(e=>e.type==='impact'&&e.surfaceId===fixture.pane.id),'actual hitscan impacts the chosen glass');assert.equal(w.glass.brokenCount,0);
- assert(w.staticBoxes.filter(b=>b.glassId).every(b=>!b.disabled));
- assert.equal(w.raycast({x:fixture.x,y:1.58,z:fixture.z},fixture.dir,1)?.id,fixture.pane.id,'later shots still meet the same solid pane');
+ const {pose,pane,dir,from}=glassCrossing(w),to={x:pose.x+dir.x*1.6,z:pose.z+dir.z*1.6};
+ Object.assign(a,pose,{nextShot:0,recoil:0});
+ assert.equal(w.canOccupy(pane.x,pane.z,a.radius,a.height,0),false);
+ assert.equal(w.navigation.clear(pose,to),false);
+ g.stepActors(new Map([[a.id,{yaw:a.yaw,pitch:0,fire:true}]]));
+ assert.equal(a.inventory.primary.ammo,29);
+ assert(g.events.some(e=>e.type==='glass-break'&&e.paneId===pane.id));
+ assert.equal(w.glass.brokenCount,1);
+ assert.equal(w.raycast(from,dir,1.5),null);
+ assert(w.canOccupy(pane.x,pane.z,a.radius,a.height,0));
+ assert(w.navigation.clear(pose,to));
+ assert(w.findPath(pose,to).length);
 });

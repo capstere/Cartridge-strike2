@@ -101,7 +101,14 @@ export function createPhysics(description,data){
     return false;
   }
   const touchesPolygon=(x,z,r,p)=>insidePolygon(x,z,p)||nearEdge(x,z,p,r-EPS);
-  for(const p of data.floorPolygons)addPolygon(floorIndex,p);
+  const rectangularFloors=new WeakMap();
+  for(const p of data.floorPolygons){
+    addPolygon(floorIndex,p);
+    if(p.length===4&&p.every(([x,z],i)=>i%2===0 ? z===p[(i+1)%4][1] : x===p[(i+1)%4][0]) ||
+       p.length===4&&p.every(([x,z],i)=>i%2===0 ? x===p[(i+1)%4][0] : z===p[(i+1)%4][1])){
+      rectangularFloors.set(p,polygonBounds(p));
+    }
+  }
   for(const r of [...data.excludedRooms,...data.rooms.filter(r=>r.status==='uncertain'),...data.obstacles.filter(o=>o.kind==='uncertain-area')])addPolygon(scopeIndex,r.polygon);
   for(const o of data.obstacles)if(o.collision!=='none')addPolygon(navObstacleIndex,o.polygon);
   // Decorative objects remain visible but never enter the physical broadphase.
@@ -127,7 +134,7 @@ export function createPhysics(description,data){
   const setDynamicBoxes=boxes=>{const c=createDynamicContext(boxes);dynamicBoxes=c.boxes;dynamicIndex=c.index;};
   const withDynamicContext=(context,run)=>{const boxes=dynamicBoxes,index=dynamicIndex;dynamicBoxes=context.boxes;dynamicIndex=context.index;try{return run();}finally{dynamicBoxes=boxes;dynamicIndex=index;}};
   let lastFloor=null;
-  function onFloor(x,z){
+  function onSourceFloor(x,z){
     // Consecutive capsule-ring and path samples usually stay in one polygon.
     // Only an exact interior hit bypasses the index; boundary probes still use
     // its original cells and epsilon rule, including at cell borders.
@@ -135,10 +142,40 @@ export function createPhysics(description,data){
     for(const p of floorIndex.at(x,z))if(insidePolygon(x,z,p)||nearEdge(x,z,p,EPS)){lastFloor=p;return true;}
     return false;
   }
+  // Authored floor polygons can stop at opposite faces of a glass wall. Bridge
+  // only its own threshold, only while broken and with real landings on both sides.
+  let glassThresholds;
+  function enableNetworkGlassThresholds(){
+    if(glassThresholds)return;
+    glassThresholds=new SpatialIndex();
+    const walls=new Map(data.walls.map(w=>[w.id,w]));
+    for(const [id,panes] of glassWalls){
+      const half=(walls.get(id)?.thickness||0)/2+.02;
+      for(const b of panes){
+        glassThresholds.insert({b,half},boxBounds({...b,d:2*half}));
+      }
+    }
+  }
+  function onFloor(x,z){
+    if(onSourceFloor(x,z))return true;
+    if(glassThresholds)for(const {b,half} of glassThresholds.at(x,z)){
+      if(!b.disabled)continue;
+      const dx=x-b.x,dz=z-b.z;
+      const along=b.cos*dx-b.sin*dz;
+      if(Math.abs(along)>b.w/2||Math.abs(b.sin*dx+b.cos*dz)>half)continue;
+      const cx=b.x+b.cos*along,cz=b.z-b.sin*along;
+      if(onSourceFloor(cx+b.sin*half,cz+b.cos*half)&&onSourceFloor(cx-b.sin*half,cz-b.cos*half))return true;
+    }
+    return false;
+  }
   function scopeAllowed(x,z,r=ACTOR_RADIUS){
     if(!Number.isFinite(x)||!Number.isFinite(z))return false;
     if(!onFloor(x,z))return false;
-    for(const [cx,cz] of RING)if(!onFloor(x+cx*r,z+cz*r))return false;
+    // A disc strictly inside a rectangular floor has all sixteen samples
+    // inside it. Keep the original polygon tests at edges, holes and seams.
+    const floor=rectangularFloors.get(lastFloor);
+    if(!(floor&&x-r>floor.minX&&x+r<floor.maxX&&z-r>floor.minZ&&z+r<floor.maxZ))
+      for(const [cx,cz] of RING)if(!onFloor(x+cx*r,z+cz*r))return false;
     for(const p of scopeIndex.query(x,z,r,scopeScratch))if(touchesPolygon(x,z,r,p))return false;
     return true;
   }
@@ -286,7 +323,7 @@ export function createPhysics(description,data){
   }
 
   let rayStamp=0;
-  function raycast(origin,direction,maxDistance=100,{vision=false,staticOnly=false}={}){
+  function raycast(origin,direction,maxDistance=100,{vision=false,staticOnly=false,glassDisabled}={}){
     const len=Math.hypot(direction.x,direction.y||0,direction.z);if(len<EPS||maxDistance<=0)return null;
     const dir={x:direction.x/len,y:(direction.y||0)/len,z:direction.z/len},o={x:origin.x,y:origin.y??1.5,z:origin.z};
     let hit=null,best=maxDistance;
@@ -294,7 +331,7 @@ export function createPhysics(description,data){
     // neighbourhood Sets, and stop behind the nearest solid hit (also for AI rays).
     const stamp=++rayStamp;
     const test=b=>{
-      if(b.disabled||b._rayStamp===stamp)return;b._rayStamp=stamp;
+      if((glassDisabled&&b.glassId?glassDisabled(b.glassId):b.disabled)||b._rayStamp===stamp)return;b._rayStamp=stamp;
       if(vision&&b.material==='glass')return;
       const ox=o.x-b.x,oz=o.z-b.z,p=[b.cos*ox-b.sin*oz,o.y-b.y,b.sin*ox+b.cos*oz],d=[b.cos*dir.x-b.sin*dir.z,dir.y,b.sin*dir.x+b.cos*dir.z],half=[b.w/2,b.h/2,b.d/2];
       let enter=-Infinity,leave=Infinity,axis=-1,sign=0,ok=true;
@@ -325,5 +362,5 @@ export function createPhysics(description,data){
     return hit;
   }
   function segmentClear(from,to,options={}){const dx=to.x-from.x,dy=(to.y??1.5)-(from.y??1.5),dz=to.z-from.z,d=Math.hypot(dx,dy,dz);return d<EPS||!raycast({...from,y:from.y??1.5},{x:dx,y:dy,z:dz},Math.max(0,d-.015),options);}
-  return {canOccupy,updateGlassPassages,staticCanOccupy:(x,z,r,h,y)=>canOccupy(x,z,r,h,y,true),setDynamicBoxes,createDynamicContext,withDynamicContext,scopeAllowed,onFloor,canStand,move,raycast,segmentClear,octree,staticBoxes,statistics:{staticBoxes:staticBoxes.length,collisionSurfaces:surfaces.length,source:'Three.js Capsule + Octree; source boxes and polygons'}};
+  return {canOccupy,enableNetworkGlassThresholds,updateGlassPassages,staticCanOccupy:(x,z,r,h,y)=>canOccupy(x,z,r,h,y,true),setDynamicBoxes,createDynamicContext,withDynamicContext,scopeAllowed,onFloor,canStand,move,raycast,segmentClear,octree,staticBoxes,statistics:{staticBoxes:staticBoxes.length,collisionSurfaces:surfaces.length,source:'Three.js Capsule + Octree; source boxes and polygons'}};
 }

@@ -1,5 +1,5 @@
 import { WEAPONS } from './config.mjs';
-import { canAim, aimFov, aimFriction, EmptyMagazineReload, nextWeapon, clamp01 } from './tactical-rules.mjs';
+import { advanceAim, canAim, aimFov, aimFriction, EmptyMagazineReload, nextWeapon, clamp01 } from './tactical-rules.mjs';
 
 /** Input/presentation adapter; Game still owns ammo, shots, damage and reloads. */
 export class TacticalControls {
@@ -47,7 +47,7 @@ export class TacticalControls {
 
   playing() {
     const g = this.getGame();
-    return !g?.network && !!g?.player?.alive && !this.getModal() && !g.state.paused && ['buy', 'active'].includes(g.phase);
+    return !!g?.player?.alive && !this.getModal() && !g.state.paused && ['buy', 'active'].includes(g.phase);
   }
 
   setAim(value) {
@@ -94,16 +94,16 @@ export class TacticalControls {
   update(dt) {
     const g = this.getGame(), p = g?.player;
     if (!p || !this.playing()) { this.reset(); return; }
-    if (g !== this.game || p.weapon !== this.weapon || g.state.round !== this.round) {
+    if (g !== this.game || p.weapon !== this.weapon || g.state.round !== this.round || p.lifeId !== this.lifeId || p.controlEpoch !== this.epoch) {
       const newRound = g !== this.game || g.state.round !== this.round;
-      this.reset(); this.game = g; this.weapon = p.weapon; this.round = g.state.round;
+      this.reset(); this.game = g; this.weapon = p.weapon; this.round = g.state.round;this.lifeId=p.lifeId;this.epoch=p.controlEpoch;
       if (newRound) this.mobile.clear();
       else this.mobile.clearActions();
     }
     if (!canAim(p.weapon) || p.reloadUntil || p.action) this.wanted = false;
     this.reload.tick(g, this.settings.autoReload, this.isInteracting());
     const target = this.wanted && !p.reloadUntil ? 1 : 0;
-    this.amount = this.settings.reducedMotion ? target : this.amount + (target - this.amount) * (1 - Math.exp(-14 * Math.max(0, Math.min(.1, dt))));
+    this.amount = this.settings.reducedMotion ? target : advanceAim(this.amount,target,dt);
     p.aimAmount = clamp01(this.amount); p.aiming = target === 1;
     this.updateButton();
     this.syncTrigger();
@@ -126,7 +126,7 @@ export class TacticalControls {
     if (!trigger) return;
     const manual = w?.slot === 'grenade' || !!w?.projectile;
     // Auto-fire must not make grenades/rocket launchers impossible to use.
-    trigger.hidden = !!this.settings.mobileAutoFire && !manual;
+    trigger.hidden = !this.getGame()?.network && !!this.settings.mobileAutoFire && !manual;
     const label = w?.slot === 'grenade' ? 'KASTA' : w?.projectile ? 'AVFYRA' : 'ELD';
     if (trigger.textContent !== label) trigger.textContent = label;
     trigger.setAttribute('aria-label', label === 'KASTA' ? 'Kasta vald granat' : 'Skjut');

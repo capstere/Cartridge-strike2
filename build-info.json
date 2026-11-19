@@ -661,8 +661,8 @@
     },
     {
       "path": "fps/network.css",
-      "bytes": 1571,
-      "sha256": "8efe8a7230538dfbec4398dad09fd475e755098f7f0a6296c3ac46c6c1ac5b79"
+      "bytes": 2043,
+      "sha256": "cc74c35222492d2f147d75464811fe9492d0bcb93b3b6b7250045d7eaae15950"
     },
     {
       "path": "fps/style.css",
@@ -1927,7 +1927,7 @@
     {
       "path": "shared/multiplayer/build.mjs",
       "bytes": 612,
-      "sha256": "53bbd0de56859bd4dca084d7718066d33e02484a0cfd50af88e18d2f1b91add4"
+      "sha256": "731238ef728d7819698d262a1a5a1e54ba01bb19b7f8959736cd48a6cf74cc0f"
     },
     {
       "path": "shared/multiplayer/collision-contract.mjs",
@@ -1936,23 +1936,23 @@
     },
     {
       "path": "shared/multiplayer/input.mjs",
-      "bytes": 2781,
-      "sha256": "e960fdc1eee5a087712cf1c8d2d7e0343671951f951b9db96cc6fae546cd0de0"
+      "bytes": 2788,
+      "sha256": "4808ed9a06d4dbfdf8eacba8586045f1c8a12c6114d386ec63a0a119af75c6d9"
     },
     {
       "path": "shared/multiplayer/protocol.mjs",
-      "bytes": 1429,
-      "sha256": "c9ba9447f635fda58a4ea8981352839ab7ad066803d8aec429c3ad8139d73598"
+      "bytes": 1441,
+      "sha256": "839581e0ed94fcbfa3f9ad50ec57f9464239e1ddd8b44201d881efb617f1002c"
     },
     {
       "path": "shared/multiplayer/rules.mjs",
-      "bytes": 1884,
-      "sha256": "9ae0082f7a24646d29c86961cfd6b415fbacb0c0d11ab86acd681915987246dc"
+      "bytes": 1977,
+      "sha256": "f41f61948e36ecb25a013165751c8eacb4f93bd9db338bbd77a4a2d0b46104fc"
     },
     {
       "path": "shared/multiplayer/world.mjs",
-      "bytes": 1664,
-      "sha256": "ca908f88343b5b37721fe379d5f8462b67190ecab5deb4942f5733aa2dd97496"
+      "bytes": 1701,
+      "sha256": "3522c75d100953e59c77910a7be817c59ba00ba46aa12efdf26dd5e2dc8b4ed8"
     },
     {
       "path": "shared/sha256.mjs",
@@ -1976,8 +1976,8 @@
     },
     {
       "path": "src/fps/action-rules.mjs",
-      "bytes": 12059,
-      "sha256": "9a0fb72f838017db3be0d93e1a2d930875f29c085533b58f6eb6857c267bfec7"
+      "bytes": 12298,
+      "sha256": "629800a18e6f154f38c570e98ec52484022eac98c8ba390345f63943c4ffd0e5"
     },
     {
       "path": "src/fps/action-visuals.mjs",
@@ -1996,8 +1996,8 @@
     },
     {
       "path": "src/fps/app.mjs",
-      "bytes": 42642,
-      "sha256": "8fda467c553654848e7ef829226b7169dbd1584f2884ca58f12f8c007a02ca9f"
+      "bytes": 43391,
+      "sha256": "ea11d9037537fad01e6e2de7533223338062a276574c5e03aafc7cb62865221c"
     },
     {
       "path": "src/fps/audio.mjs",
@@ -2021,8 +2021,8 @@
     },
     {
       "path": "src/fps/bots.mjs",
-      "bytes": 31407,
-      "sha256": "59af9ee415500d37aaaf0ee46b7281455a32d2ab8474f10d26efa9078b1bbba9"
+      "bytes": 31930,
+      "sha256": "22c6ef148adc8d7f0636bf27c2118f7f72a27bd016b7bb3813e8148153607af5"
     },
     {
       "path": "src/fps/business-hostage.mjs",
@@ -2191,8 +2191,8 @@
     },
     {
       "path": "src/fps/game.mjs",
-      "bytes": 38155,
-      "sha256": "4652f16ba0c77aefc65faee353375601884312763bf19d010397479a42efed80"
+      "bytes": 38777,
+      "sha256": "411849c29eb8c2d559ef986c38c960c550c620d6869aa56449c255bdfa02771a"
     },
     {
       "path": "src/fps/glass-visuals.mjs",
@@ -2206,8 +2206,8 @@
     },
     {
       "path": "src/fps/grenade-physics.mjs",
-      "bytes": 5098,
-      "sha256": "d18ff71ce6a9a6f326203377ccf17a9c6c7e35b1b5162407594097b271b89610"
+      "bytes": 5121,
+      "sha256": "d1e1b4be2e0fd6e2ec4b7223e860c565ba0c9f3ed1505c1bc7a66b3c59b8cda8"
     },
     {
       "path": "src/fps/hand-materials.mjs",
@@ -2216,8 +2216,8 @@
     },
     {
       "path": "src/fps/hud-shell.mjs",
-      "bytes": 6624,
-      "sha256": "1ef7beabf8878dd9c3d79f31de600f92d7d71b27bd12f39ad6494a931bde9ce1"
+      "bytes": 6743,
+      "sha256": "4890d13cbdb144ef3343d6d52a423504e1c17cc691266e0b1ccb23a2ac7c0ef0"
     },
     {
       "path": "src/fps/level-adapter.mjs",
@@ -2281,8 +2281,8 @@
     },
     {
       "path": "src/fps/navigation.mjs",
-      "bytes": 9704,
-      "sha256": "1f122eae8cb8ddc4c3c52b7cf1338c3c9a5d40342110a9540197d3b2366c2229"
+      "bytes": 10191,
+      "sha256": "21607173d3bc1021716919c01a283c1dbef9e41bb90809b81097009cb3f3ac21"
     },
     {
       "path": "src/fps/network/connection.mjs",
@@ -2291,23 +2291,23 @@
     },
     {
       "path": "src/fps/network/menu.mjs",
-      "bytes": 4125,
-      "sha256": "40a820460839ed0e7e0af0b0b6a099f9d052cb90b03c9ad0c529eaec03355818"
+      "bytes": 4492,
+      "sha256": "76716cdbe4108b75222b512fe578c00717cbb7b0dd3ce35c5a9bcc576bc17baa"
     },
     {
       "path": "src/fps/network/room-ui.mjs",
-      "bytes": 6804,
-      "sha256": "638686b18b3ad79af1443408a71ae11827cb1f389a3a894c690b26b783f86f11"
+      "bytes": 7550,
+      "sha256": "150b426244d09f9b1a07e9dc784c1f1e64f1abb831d1593aacbb6a3745565f07"
     },
     {
       "path": "src/fps/network/session.mjs",
-      "bytes": 20275,
-      "sha256": "9ad0bb5d1262b9454e48ebbde8bc94f7b49a347994c0c238460a7e426f2d7342"
+      "bytes": 21832,
+      "sha256": "b891c2a6bf8010b334fc1d1806695d756da379adf9bc2ebc98fb9c551affcaab"
     },
     {
       "path": "src/fps/physics.mjs",
-      "bytes": 22776,
-      "sha256": "26e80ab4282227f87aa4c347fedc475378cf908ee63c5c704b3ee46583f440e7"
+      "bytes": 24514,
+      "sha256": "4290cf6b646d373997a030a2c4b46472292d8fa147b0719cb90351388f2173c3"
     },
     {
       "path": "src/fps/player-names.mjs",
@@ -2456,8 +2456,8 @@
     },
     {
       "path": "src/fps/tactical-controls.mjs",
-      "bytes": 8263,
-      "sha256": "aa952909675e4c4eee53b1dbd373d47a357de5880f7566abed36e3fcc4e2abda"
+      "bytes": 8339,
+      "sha256": "3c6555f53fab466b30c4da3fa1b1a95f1ea717018849827822f5734652c6d1ad"
     },
     {
       "path": "src/fps/tactical-map.mjs",
@@ -2466,8 +2466,8 @@
     },
     {
       "path": "src/fps/tactical-rules.mjs",
-      "bytes": 4509,
-      "sha256": "31d0f3aacae84719674e9351fca4002481e187d97236f0d04bc668064086dc76"
+      "bytes": 4766,
+      "sha256": "daede0e5a7748f5eb845036a82d5a2ec9cc7e236cfa55723a737f683145c59ca"
     },
     {
       "path": "src/fps/throwable-cartridge.mjs",
@@ -2605,7 +2605,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 58715504,
+  "bytes": 58723628,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

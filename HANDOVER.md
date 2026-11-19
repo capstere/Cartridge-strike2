@@ -1,6 +1,26 @@
 # Cartridge-Strike 2 handover
 
-**Next online task — verify the new complete match flow on the physical devices.**
+**Nästa utvecklingsuppdrag är Classic online.** Utgå från den granskade grunden i
+[PR #26](https://github.com/capstere/Cartridge-strike2/pull/26). Portera den
+befintliga kombinerade Classic-modellen och lagrollerna med riktig köpekonomi,
+rundor, bombplantering/desarmering och gisslan. Ge sedan serverbotarna samma
+uppdrag. Zombies och Dansmannen kommer därefter. Rök, flash och raketkastare
+återstår online.
+
+Kandidaten har gratis utrustningsval per liv, sikte, HE, botfyllning och
+serverstyrt glas på hela Floor 5. Granskning sker på separat loopbackport.
+[Prov, Pi-belastning och startkommando](docs/multiplayer/ONLINE_GAMEPLAY_FOUNDATION.md).
+
+**Fysisk provning av kandidaten är NOT RUN.** Prova tre samtidiga kontroller,
+ljud, rotation, bakgrund/återanslutning och resultat/rematch på iPhone och
+Android. Den tidigare fysiska observationen nedan gäller den aktiva releasen.
+
+**Låg prioritet.** Jesper har hittat två lokala kollisionsproblem vid streck
+på golvet som ser ut som gamla väggar eller områdesgränser. Möbler ligger
+utanför den felrapporten. Exakta positioner återstår.
+
+## Aktiv internetrelease och tidigare prov
+
 The first private online Team Deathmatch release adds a server-owned waiting
 lobby, Ready/Start, countdown, 10-minute/50-kill matches, results and same-room
 rematch. See [the online release report](docs/multiplayer/ONLINE_RELEASE_REPORT.md)

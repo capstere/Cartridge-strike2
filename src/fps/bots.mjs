@@ -93,7 +93,7 @@ export class BotController {
     for (const event of game.soundEvents) {
       const sourceId = event.actorId ?? event.ownerId;
       if (event.serial <= this.heardSerial || !sourceId || event.team === actor.team) continue;
-      const enemy = enemies.find(a => a.id === sourceId); if (!enemy || enemy.kind==='zombie') continue;
+      const enemy = enemies.find(a => a.id === sourceId); if (!enemy || enemy.kind==='zombie' || event.ownerLifeId!==undefined&&event.ownerLifeId!==enemy.lifeId) continue;
       const clear = game.world.segmentClear(eye(actor), { x: event.x, y: event.y + 1, z: event.z }, { vision: false });
       let radius = event.type === 'shot' ? 38 : event.type === 'step' ? (event.mode === 'run' ? 12 : event.mode === 'sneak' ? 2.5 : 2) : event.type === 'he' ? 45 : 7;
       if (!clear) radius *= .28;
@@ -359,6 +359,13 @@ export class BotController {
     game.emit('route', actor, { lane: chosen.laneId, role: actor.aiRole, plannedLength: chosen.length });
     this.nextPath = 0;
   }
+  navigationTurn(){
+    if(!this.game.config.networkSlice)return true;
+    // Spread expensive searches over ten fixed steps. Perception, steering,
+    // combat and objective interactions still run at their original cadence.
+    const slot=this.actor.index*2+(this.actor.team==='counterAnalysts'?1:0);
+    return Math.round(this.game.state.time/this.game.config.fixedStep)%10===slot;
+  }
   chooseFloorRoute(){
     const {game:g,actor:a}=this,w=g.world,now=g.state.time,tactical=w.tactical,key=this.goal&&tactical.targetKey(this.goal);
     const escort=g.hostages.some(h=>h.escortId===a.id);
@@ -371,6 +378,7 @@ export class BotController {
     const spawn=w.anchors[a.team][a.index],atSpawn=distance(a,spawn)<4&&!w.glass?.brokenCount&&!this.routeBlocked;
     let choices=atSpawn?tactical.choices(a.team,key):[];
     if(!choices.length){
+      if(!this.navigationTurn())return;
       const avoid=[...contacts,...(this.routeBlocked?[this.routeBlocked]:[])];
       const path=w.navigation.findPath(a,this.goal,{avoid,blockers:this.localBlockers()});this.routeSearches++;
       choices=path.length?[{id:'adaptive',path,length:path.reduce((s,p,i)=>s+distance(i?path[i-1]:a,p),0)}]:[];
@@ -439,7 +447,7 @@ export class BotController {
     if (this.routePlan && (game.bomb.status === 'planted' || game.hostages.some(h => h.escortId === actor.id) || !floor5&&this.mode === 'objective' && this.goal?.x > -15)) this.routePlan.gates = [];
     if(this.yieldPoint){if(now<this.yieldUntil)destination=this.yieldPoint;else{this.yieldPoint=null;this.yieldDirect=false;this.nextPath=0;}}
     if(this.yieldPoint&&this.yieldDirect)this.path=[this.yieldPoint];
-    else if (game.state.time >= this.nextPath || this.navigationRevision !== (game.world.navigation?.revision||0)) {
+    else if (this.navigationTurn() && (game.state.time >= this.nextPath || this.navigationRevision !== (game.world.navigation?.revision||0))) {
       this.navigationRevision=game.world.navigation?.revision||0;
       this.path = game.world.findPath(actor, destination,{blockers:this.localBlockers()}); this.nextPath = now + this.style.pathInterval;
     }

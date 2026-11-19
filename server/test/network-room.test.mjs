@@ -6,7 +6,7 @@ import {createLocalServer} from '../local-server.mjs';
 import {CONTRACT} from '../../shared/multiplayer/build.mjs';
 import {ROOM_TYPE,NETWORK_CONFIG} from '../../shared/multiplayer/rules.mjs';
 import {WEAPONS} from '../../src/fps/config.mjs';
-const options={code:'test-room-123',name:'Player',contract:CONTRACT};
+const options={fillBots:false,code:'test-room-123',name:'Player',contract:CONTRACT};
 async function until(fn,label){const end=performance.now()+5000;while(!fn()){assert(performance.now()<end,label);await delay(10);}}
 async function ready(room){room.reconnection.enabled=false;room.onMessage('events',()=>{});room.onMessage('problem',()=>{});room.onMessage('clock-probe',token=>room.send('clock-echo',token));room.send('ready',CONTRACT);await until(()=>[...(room.state.actors?.values()||[])].some(a=>a.sessionId===room.sessionId&&a.ready),'ready');return room;}
 const own=room=>[...room.state.actors.values()].find(a=>a.sessionId===room.sessionId);
@@ -26,7 +26,7 @@ test('real private room: admission, two independent humans, authority, life rese
  assert.equal(authority.maxClients,10,'capacity is now exercised by the 2/4/10-client suite');
  const g=authority.sim.game;assert.equal(g.actors.length,2);assert(g.actors.every(a=>a.controllerType==='human'&&!a.bot));
  assert.equal(g.hostages.length+g.state.zombies.length+g.state.wanderers.length,0);
- assert(g.actors.every(a=>!a.inventory.pistol&&!a.inventory.knife&&!a.inventory.he&&a.money===0));
+ assert(g.actors.every(a=>a.inventory.pistol?.id===(a.team==='analysts'?'p9':'p12')&&a.inventory.knife?.id==='knife'&&a.inventory.he===1&&a.money===0));
  const [x,z]=[own(a).x,own(b).z];
  for(let i=0;i<12;i++){send(a,{strafe:1});send(b,{forward:1,yaw:Math.PI});await delay(17);}
  await until(()=>own(a).x>x+.5&&own(b).z>z+.5,'independent movement');

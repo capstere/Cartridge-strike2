@@ -41,7 +41,8 @@ async function form(page,{id='',code='private-123'}={}){
   joinFrames.set(page,await page.evaluate(()=>__fps.renderBudget.stats.active));
   await page.locator('#network-name').fill('LAN '+(page===a?'desktop':'mobile'));
   await page.locator('#network-code').fill(code);await page.locator('#network-room').fill(id);
-  await page.locator(`[data-create="${!id}"]`).click();
+  if(!id)await page.locator('#network-fill-bots').uncheck();
+ await page.locator(`[data-create="${!id}"]`).click();
 }
 async function joined(page){
   await page.waitForFunction(()=>__fps.network?.view.player?.alive&&!document.querySelector('#hud').hidden);

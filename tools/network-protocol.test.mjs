@@ -27,7 +27,7 @@ test('shared prediction matches authoritative movement through authoritative doo
  assert.equal(b.game.eventSerial,before,'prediction never produces combat/audio side effects');
  assert.equal(a.game.actors[0].inventory.primary.ammo,30);
 });
-test('online bullets use the existing body hitbox and solid walls; fixed glass never breaks',async()=>{
+test('online bullets use the existing body hitbox and solid walls; a bullet breaks the struck glass pane',async()=>{
  const sim=await createHeadlessSimulation({mapId:'synthetic-demo',controllers:{'analysts-0':'human','counterAnalysts-0':'human'},config:NETWORK_CONFIG});
  const g=sim.game,[a,b]=g.actors;prepareNetworkWorld(g.world);
  Object.assign(a,{x:2,z:2,yaw:-Math.PI/2,spawnProtectedUntil:0});Object.assign(b,{x:12,z:2,spawnProtectedUntil:0});
@@ -35,8 +35,8 @@ test('online bullets use the existing body hitbox and solid walls; fixed glass n
  shoot();assert.equal(b.hp,100,'wall outside doorway blocks hit');
  a.z=3;b.z=3.5;b.x=4;shoot();assert.equal(b.hp,100,'half-meter miss cannot hit a prototype sphere');
  b.z=3;shoot();assert.equal(b.hp,82,'shared radius .20 / height 1.70 hitbox');
- a.yaw=Math.PI;shoot();assert.equal(g.world.glass.brokenCount,0,'window remains intact');
- assert(g.world.staticBoxes.filter(b=>b.glassId).every(b=>!b.disabled));
+ a.yaw=Math.PI;shoot();assert.equal(g.world.glass.brokenCount,1,'one pane breaks');
+ for(const box of g.world.staticBoxes.filter(b=>b.glassId))assert.equal(box.disabled,g.world.glass.panes.get(box.glassId).broken);
  for(let i=0;i<120;i++)g.stepActors(new Map([[a.id,{interact:true}]]));
  assert(g.world.doors.doors.some(d=>d.angle>0),'real doors react to approaching humans');
  assert.equal(g.actors.length,2);assert.equal(g.state.drops.length,0);
