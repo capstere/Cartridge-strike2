@@ -120,6 +120,11 @@ jobs:
         env:
           FPS_NETWORK_ANGLE: metal
         run: node tools/online-equipment-browser.mjs
+      - name: Classic desktop purchase and plant, touch purchase and defuse
+        timeout-minutes: 5
+        env:
+          FPS_NETWORK_ANGLE: metal
+        run: node tools/online-classic-browser.mjs
       - name: Keep compact online evidence
         if: always()
         uses: actions/upload-artifact@v4

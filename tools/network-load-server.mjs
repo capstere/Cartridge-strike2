@@ -13,18 +13,26 @@ const samples={tick:[],simulation:[],projection:[],serialization:[],interval:[],
 const totals=Object.fromEntries(Object.keys(samples).map(key=>[key,0]));
 const full = Object.fromEntries(['tick','interval'].map(key => [key, []]));
 const slow = [];
+const objectiveCosts={beginRound:[],breakAt:[],findPath:[],escortedTick:[]};
 let work;
 function profile(object, method, label) {
  const original=object[method];
  object[method]=function(...args){
-   if(!work)return original.apply(this,args);
+   const samples=objectiveCosts[label];
+   if(!work&&!samples)return original.apply(this,args);
    const t=performance.now();
-   try{return original.apply(this,args);}finally{work[label]=(work[label]||0)+performance.now()-t;}
+   let result;
+   try{result=original.apply(this,args);return result;}finally{
+     const ms=performance.now()-t;
+     if(work)work[label]=(work[label]||0)+ms;
+     if(samples&&(label!=='breakAt'||result))samples.push(ms);
+   }
  };
 }
 const push=(key,n)=>{totals[key]+=n;full[key]?.push(n);const a=samples[key];a.push(n);if(a.length>8192)a.shift();};
 const stats=a=>{const sorted=a.slice().sort((a,b)=>a-b),n=sorted.length;if(!n)return {n:0,p50:null,p95:null,p99:null,max:null};return {n,p50:sorted[Math.floor(n*.5)]||0,p95:sorted[Math.floor(n*.95)]||0,p99:sorted[Math.floor(n*.99)]||0,max:sorted.at(-1)||0};};
 const ai=process.env.CS2_LOAD_AI==='1';
+const classicMetrics={rounds:0,plants:0,defuses:0,escorts:0,rescues:0,hostageTravel:0};
 let botShots=0,botTravel=0,throws=0,breaks=0,updates=0;
 let local,started=performance.now(),cpu=process.cpuUsage(),bytes=0,inBytes=0,respawns=0,combatRespawns=0,fixtureTimer;
 const seen=new WeakSet(),connections=new WeakSet(),lives=new Map();
@@ -36,15 +44,27 @@ function instrument(){
    if(ai){
     const g=r.sim.game;
     for(const [obj,key] of [[g.world.navigation,'findPath'],[g.world,'findPath'],[g,'updateGrenades'],[g,'moveActor'],[g,'fire'],[g.world.glass,'breakAt']])profile(obj,key,(obj===g.world?'world.':'')+key);
-    const proto=Object.getPrototypeOf([...r.bots.values()][0]?.actor.bot||{});
-    for(const key of ['perceive','chooseFloorRoute','follow','update'])if(proto[key])profile(proto,key,key);
+    if(r.classic){profile(g,'beginRound','beginRound');profile(g,'updateHostages','updateHostages');}
    }
    for(const [obj,key,label] of [[r,'fixedTick','tick'],[r.sim,'tick','simulation'],[r,'project','projection'],[r,'broadcastPatch','serialization']]){
     const original=obj[key];obj[key]=function(...args){
       const dead=label==='simulation'?r.sim.game.actors.filter(a=>!a.alive):[];
       const t=performance.now();if(label==='tick'){if(last!==undefined)push('interval',t-last);last=t;work={};}
       try{
+          const classicRoom=label==='simulation'&&r.classic;
+          const followers=classicRoom?r.sim.game.hostages.map(h=>[h,h.distanceWalked]):[];
           const result=original.apply(this,args);
+          if(classicRoom){
+            if(followers.some(([h,before])=>h.distanceWalked>before))objectiveCosts.escortedTick.push(performance.now()-t);
+            for(const [h,before] of followers)classicMetrics.hostageTravel+=h.distanceWalked-before;
+            for(const e of result){
+              if(e.type==='round')classicMetrics.rounds++;
+              if(e.type==='planted')classicMetrics.plants++;
+              if(e.type==='result'&&e.reason==='defuse')classicMetrics.defuses++;
+              if(e.type==='hostage'&&e.escortId)classicMetrics.escorts++;
+              if(e.type==='rescued')classicMetrics.rescues++;
+            }
+          }
           if(ai&&label==='simulation'){
             throws+=result.filter(e=>e.type==='throw').length;breaks+=result.filter(e=>e.type==='glass-break').length;
             botShots+=result.filter(e=>e.type==='shot'&&r.bots.has(e.actorId)).length;
@@ -95,7 +115,7 @@ function snapshot(){
  const usage=process.cpuUsage(cpu),elapsed=(performance.now()-started)/1000;
  const loopSamples=Number(loops.count);
  return {thermal:thermal(),elapsedSeconds:elapsed,serverCpuPercent:(usage.user+usage.system)/1e4/elapsed,memory:process.memoryUsage(),
-  wholeRun:Object.fromEntries(Object.entries(full).map(([key,a])=>[key,{...stats(a),above33:a.filter(n=>n>33).length,above50:a.filter(n=>n>50).length,above100:a.filter(n=>n>100).length}])),slow:slow.slice().sort((a,b)=>b.ms-a.ms).slice(0,12),
+  classic:{...classicMetrics},objectiveCosts:Object.fromEntries(Object.entries(objectiveCosts).map(([k,a])=>[k,stats(a)])),wholeRun:Object.fromEntries(Object.entries(full).map(([key,a])=>[key,{...stats(a),above33:a.filter(n=>n>33).length,above50:a.filter(n=>n>50).length,above100:a.filter(n=>n>100).length}])),slow:slow.slice().sort((a,b)=>b.ms-a.ms).slice(0,12),
   eventLoopMs:loopSamples?{n:loopSamples,p50:loops.percentile(50)/1e6,p95:loops.percentile(95)/1e6,p99:loops.percentile(99)/1e6,max:loops.max/1e6}:{n:0,p50:null,p95:null,p99:null,max:null},
   costMs:Object.fromEntries(Object.entries(samples).filter(([k])=>k!=='shotAge').map(([k,v])=>[k,stats(v)])),shotAgeMs:stats(samples.shotAge),bytes,inBytes,respawns,combatRespawns,botShots,botTravel,throws,breaks,updates,workPerUpdateMs:updates?(totals.tick+totals.serialization)/updates:0,
   resources:process.getActiveResourcesInfo().reduce((o,k)=>(o[k]=(o[k]||0)+1,o),{}),
@@ -115,7 +135,8 @@ process.on('message',async({id,action,options})=>{
    const model=await readFile('/proc/device-tree/model','utf8').then(value=>value.replace(/\0/g,'').trim()).catch(()=>undefined);
    result={url:local.url,contract:CONTRACT,environment:{model,node:process.version,platform:platform(),arch:arch(),cpu:cpus()[0].model,cores:cpus().length}};
   }else if(action==='reset'){
-   for(const a of [...Object.values(samples),...Object.values(full),slow])a.length=0;for(const k of Object.keys(totals))totals[k]=0;updates=throws=breaks=botTravel=botShots=respawns=combatRespawns=bytes=inBytes=0;loops.reset();cpu=process.cpuUsage();started=performance.now();if(process.env.CS2_FORCE_GC==='1'||process.env.CS2_SOAK==='1')global.gc?.();result=snapshot();
+   for(const key of Object.keys(classicMetrics))classicMetrics[key]=0;
+   for(const a of [...Object.values(objectiveCosts),...Object.values(samples),...Object.values(full),slow])a.length=0;for(const k of Object.keys(totals))totals[k]=0;updates=throws=breaks=botTravel=botShots=respawns=combatRespawns=bytes=inBytes=0;loops.reset();cpu=process.cpuUsage();started=performance.now();if(process.env.CS2_FORCE_GC==='1'||process.env.CS2_SOAK==='1')global.gc?.();result=snapshot();
   }else if(action==='sample'){if(process.env.CS2_FORCE_GC==='1'||process.env.CS2_SOAK==='1')global.gc?.();result=snapshot();}
   else if(action==='drop'){const r=[...local.rooms].find(r=>r.roomId===options.room);r.clients.find(c=>c.sessionId===options.sid).ref.terminate();}
   else if(action==='close'){clearInterval(fixtureTimer);await local.close();loops.disable();result=snapshot();}
