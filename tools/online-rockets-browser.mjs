@@ -145,9 +145,34 @@ async function cycle(desktop,mobile,mode){
   if(mode==='tdm')await mobile.locator('[data-mobile-action=reload]').tap();
   else await desktop.keyboard.press('r');
   await until(()=>shooter.inventory.primary.ammo===1&&shooter.inventory.primary.reserve===4,'reload completed on the server');
-  for(const p of peers){
-    if(await p.locator('#pause').isHidden())await p.keyboard.press('Escape');
-    await p.locator('#restart').click();
+  if(mode==='tdm'){
+    // Set up match point, then decide it with a second real touch-fired rocket.
+    await until(()=>target.alive,'TDM target respawns');
+    for(const p of peers)await pause(p);
+    Object.assign(left,{x:22.8,z:-12,y:0,yaw:0,pitch:0,spawnProtectedUntil:0});
+    Object.assign(right,{x:22.8,z:-20,y:0,yaw:Math.PI,pitch:0,spawnProtectedUntil:0});
+    for(const [p,actor] of [[desktop,left],[mobile,right]]){
+      await until(()=>p.evaluate(z=>Math.abs(__fps.game.player.z-z)<.08,actor.z),'match point position');
+      await observe(p);
+    }
+    game.state.score[shooter.team]=room.state.scoreTarget-1;
+    await mobile.locator('#resume').tap();
+    await resumeDesktop(desktop);
+    const stop=await fireTouch(mobile);
+    try{await until(()=>room.state.phase==='results','rocket decides the match');}finally{await stop();}
+    for(const p of peers){
+      await until(()=>p.evaluate(()=>{
+        const session=__fps.network;
+        return session.room.state.phase==='results'&&session.view.state.time>session.room.state.time+.35
+          &&rocketEvidence.events.some(e=>e.type==='rocket-explosion')&&rocketEvidence.sounds.includes('rocket-explosion');
+      }),'deciding impact persists through result patches');
+      await p.locator('#room-leave').click();
+    }
+  }else{
+    for(const p of peers){
+      if(await p.locator('#pause').isHidden())await p.keyboard.press('Escape');
+      await p.locator('#restart').click();
+    }
   }
   console.log('PASS '+mode+' room setting, menu, same rendered rocket, explosion, sound and hit on both clients');
 }

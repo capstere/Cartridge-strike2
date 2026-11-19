@@ -120,9 +120,11 @@ export class NetworkSession {
     this.view.config=classic?CLASSIC_NETWORK_CONFIG:NETWORK_CONFIG;
     this.view.state.mode=classic?'classic':'endless';
     const newMatch=this.matchId!==state.matchId,newPhase=this.matchPhase!==state.phase;
+    if(newMatch||newRound)this.events=[];
     if(newMatch||newPhase){
       this.matchId=state.matchId;this.matchPhase=state.phase;
-      this.prediction?.reset();this.events=[];this.predictedShots.clear();this.actionTimes.clear();this.nextCosmetic=0;
+      this.resultsAt=state.phase==='results'?this.lastPatch:undefined;
+      this.prediction?.reset();this.keepRocketEffects();this.predictedShots.clear();this.actionTimes.clear();this.nextCosmetic=0;
       if(newMatch){for(const entry of this.remote.values())this.predict.detach(entry.schema);this.remote.clear();}
       this.view.state.round=classic?state.round:state.matchId;
     }
@@ -163,7 +165,7 @@ export class NetworkSession {
     applyNetworkWorld(this.world.doors,state);
     this.view.state.actors=ready.map(s=>actorView(s,this.localPlayerId));
     this.view.state.score={analysts:state.analysts,counterAnalysts:state.counterAnalysts};
-    this.view.state.time=state.time;
+    this.view.state.time=newMatch?state.time:Math.max(this.view.state.time??0,state.time);
     const self=state.actors.get(this.localPlayerId);
     for(const [id,entry] of this.remote)if(!ready.some(s=>s.id===id&&s===entry.schema&&s.lifeId===entry.lifeId&&s.alive===entry.alive)){
       this.predict.detach(entry.schema);this.remote.delete(id);
@@ -238,7 +240,7 @@ export class NetworkSession {
       // Reset the replay controller, NOT InputHandle's reliable wire counters.
       this.prediction.reset();if(newLife||newConnection){this.predictedShots.clear();this.actionTimes?.clear();}this.nextCosmetic=0;
       this.fireId=0;this.reloadId=0;this.trigger=false;
-      this.events=[];
+      this.keepRocketEffects();
     }
     if(newMatch||newPhase)queueMicrotask(()=>{if(!this.closed)this.onMatch(this.matchPhase);});
   }
@@ -246,6 +248,7 @@ export class NetworkSession {
     const self=this.room?.state.actors.get(this.localPlayerId);if(!self||this.connectionState!=='connected')return;
     this.notice='';this.room.send('match',{kind,matchId:this.room.state.matchId,controlEpoch:self.controlEpoch,...extra});
   }
+  keepRocketEffects(){this.events=this.events.filter(event=>event.rocketId);}
   receiveEvents(events){
     if(this.closed||this.connectionState==='reconnecting'||!Array.isArray(events))return;
     for(let event of events.slice(-64)){
@@ -305,8 +308,7 @@ export class NetworkSession {
     // wall-clock expiry could replay the same muzzle/audio after the stall.
     while(this.predictedShots.size>128)this.predictedShots.delete(this.predictedShots.keys().next().value);
     while(this.actionTimes?.size>128)this.actionTimes.delete(this.actionTimes.keys().next().value);
-    // Only the display clock advances here; it cannot tick combat or respawn.
-    this.view.state.time=state.time+Math.min(.1,(performance.now()-this.lastPatch)/1000);
+    this.updateDisplayTime(state,now);
     for(const a of this.view.actors){
       const s=state.actors.get(a.id);if(!s)continue;
       if(a.isPlayer&&a.alive){
@@ -330,11 +332,18 @@ export class NetworkSession {
     const rtt=Math.round(this.room.clock?.smoothedRtt?.()||0);
     this.status=stale?'Anslutningen väntar — kontroller stoppade':`${this.room.roomId} · ${this.view.actors.filter(a=>!a.pending).length}/${ROOM_CAPACITY} · ${rtt} ms${rtt>=200?' · Hög fördröjning':''}`;
   }
+  updateDisplayTime(state,now){
+    // Results freeze the simulation. Let the final effects age against a
+    // stable clock even as the server continues sending identical times.
+    const results=this.resultsAt!==undefined,elapsed=Math.max(0,(now-(this.resultsAt??this.lastPatch))/1000);
+    const time=state.time+Math.min(results?2:.1,elapsed);
+    this.view.state.time=Math.max(this.view.state.time??0,time);
+  }
   setInputEnabled(enabled){
     if(this.closed)return;
     enabled=enabled&&this.connectionState!=='reconnecting';
     this.trigger=false;this.enabled=enabled;this.view.state.paused=!enabled;
-    this.events=this.events.filter(event=>event.rocketId);
+    this.keepRocketEffects();
     if(this.room&&this.lifeId&&this.connectionState!=='reconnecting')this.room.send('controls',{enabled,lifeId:this.lifeId,controlEpoch:this.controlEpoch});
     if(enabled&&this.prediction)this.prediction.reset();
   }

@@ -261,4 +261,10 @@ test('clients retain rocket presentation across control disable and reject old r
   state.phase='active';session.events=[];
   session.receiveEvents([{...rocket,eventId:5,type:'rocket-explosion'}]);
   assert.equal(session.events.length,1,'reconnected peers can receive current rocket effects before resuming input');
+  session.resultsAt=1000;state.phase='results';state.time=30;
+  session.updateDisplayTime(state,1200);
+  assert.equal(session.view.state.time,30.2);
+  session.lastPatch=1350;
+  session.updateDisplayTime(state,1400);
+  assert.equal(session.view.state.time,30.4,'repeat result patches cannot rewind or freeze final effects');
 });
