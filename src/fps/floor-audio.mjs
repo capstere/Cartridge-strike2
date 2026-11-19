@@ -45,12 +45,13 @@ export class FloorAudio {
     if(d>=10){this.stopMusic();return;}
     const ctx=audio.context,buffer=this.buffers.get('danceman');
     if(!buffer)return;
+    if(this.music&&this.music.lifeId!==dancer.lifeId)this.stopMusic();
     if(!this.music){
       const channel=audio.channel({type:'music',position},0);
       const source=ctx.createBufferSource();source.buffer=buffer;source.loop=true;
       source.connect(channel.gain);
       source.start(0,game.state.time%buffer.duration);
-      this.music={source,channel};
+      this.music={source,channel,lifeId:dancer.lifeId};
     }
     const clear=audio.world.segmentClear(audio.listener,position,{vision:false});
     const gain=.48*Math.max(0,Math.min(1,(9-d)/5))*(clear?1:.24);

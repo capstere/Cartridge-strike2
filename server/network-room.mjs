@@ -3,11 +3,12 @@ import {createHash,timingSafeEqual,randomBytes} from 'node:crypto';
 import {createHeadlessSimulation} from './headless.mjs';
 import {WEAPONS} from '../src/fps/config.mjs';
 import {onlinePrimaries,respawnActor} from '../src/fps/action-rules.mjs';
+import {zombiePosition} from '../src/fps/zombie-poses.mjs';
 import {prepareClassicRound,projectClassic} from './classic-round.mjs';
 import {CLASSIC_NETWORK_CONFIG,NETWORK_CONFIG,NETWORK_MAP,ROOM_CAPACITY,TEAM_CAPACITY,RECONNECT_SECONDS,copyPose,safeName} from '../shared/multiplayer/rules.mjs';
 import {checkContract,validateNetworkInput,wireInput} from '../shared/multiplayer/protocol.mjs';
 import {CONTRACT} from '../shared/multiplayer/build.mjs';
-import {NetworkInput,ActorState,RoomState,DoorState,GrenadeState} from './network-schema.mjs';
+import {NetworkInput,ActorState,RoomState,DoorState,GrenadeState,ResidentState} from './network-schema.mjs';
 
 import {prepareNetworkWorld,DOOR_FIELDS} from '../shared/multiplayer/world.mjs';
 import {collisionContract} from '../shared/multiplayer/collision-contract.mjs';
@@ -38,7 +39,14 @@ export class NetworkRoom extends Room {
     this.clock.tick();
     this.templates=new Map(this.sim.game.actors.map(a=>[a.id,a]));
     this.sim.game.state.actors=[];this.sim.game.drainEvents();
-    this.state=new RoomState({mode:this.classic?'classic':'tdm',fillBots:options.fillBots!==false,worldRevision:1,elevatorOpenAt:-1});
+    this.sim.game.onResidentSpawn=resident=>{
+      resident.lifeId=++this.residentLife;
+      resident.lifeStartedAt=this.clock.elapsedTime;
+    };
+    this.residentLife=0;
+    const zombiesEnabled=options.zombies===true,dancemanEnabled=options.danceman===true;
+    Object.assign(this.sim.game.config,{zombies:zombiesEnabled,danceman:dancemanEnabled});
+    this.state=new RoomState({zombiesEnabled,dancemanEnabled,mode:this.classic?'classic':'tdm',fillBots:options.fillBots!==false,worldRevision:1,elevatorOpenAt:-1});
     for(const d of this.sim.game.world.doors.doors)this.state.doors.set(d.id,new DoorState());
     this.sim.game.onGlassBreak=id=>this.state.brokenGlass.set(id,this.clock.elapsedTime);
     this.project();
@@ -265,7 +273,8 @@ export class NetworkRoom extends Room {
     this.project();this.lag.recordTick();
     if(events.length){
       const wire=events.slice(-64).map(e=>{
-        const actor=this.sim.game.actors.find(a=>a.id===e.actorId),source=this.sim.game.actors.find(a=>a.id===e.sourceId);
+        const actor=this.state.actors.get(e.actorId)||this.state.residents.get(e.actorId);
+        const source=this.state.actors.get(e.sourceId)||this.state.residents.get(e.sourceId);
         return {...e,round:this.state.round,matchId:this.state.matchId,eventId:e.serial,tick:this.sim.tickNumber,lifeId:actor?.lifeId||0,sourceLifeId:source?.lifeId||0,controlEpoch:actor?.controlEpoch||0,sourceControlEpoch:source?.controlEpoch||0,
           actionId:actions.get(e.sourceId||e.actorId)||''};
       });
@@ -277,6 +286,18 @@ export class NetworkRoom extends Room {
   project() {
     const g=this.sim.game;
     if(this.classic)projectClassic(this);
+    const residents=this.state.residents;
+    for(const id of residents.keys())if(!g.state.zombies.some(z=>z.id===id))residents.delete(id);
+    for(const z of g.state.zombies){
+      let state=residents.get(z.id);
+      if(state?.lifeId!==z.lifeId){
+        state=new ResidentState({id:z.id,model:z.model,name:z.name,lifeId:z.lifeId,radius:z.radius,lifeStartedAt:z.lifeStartedAt});
+        residents.set(z.id,state);
+      }
+      if(!z.alive&&!state.diedAtMs)state.diedAtMs=this.clock.elapsedTime;
+      Object.assign(state,zombiePosition(z,g.state.time),{height:z.height,yaw:z.yaw,alive:z.alive,hp:z.hp,
+        behavior:z.behavior,clip:z.clip,poseAt:z.poseAt,rate:z.rate,offset:z.offset,loop:z.loop});
+    }
     for(const d of g.world.doors.doors){const s=this.state.doors.get(d.id);for(const key of DOOR_FIELDS)s[key]=d[key];s.poseAngle=d.angle*d.sign;}
     this.state.elevatorProgress=g.world.doors.elevators.progress;
     this.state.elevatorOpenAt=g.world.networkDynamics.elevatorOpenAt;

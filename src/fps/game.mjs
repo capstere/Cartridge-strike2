@@ -126,7 +126,8 @@ export class Game {
     prepareActionRound(this);
     this.world.setElevatorProgress?.(s.phase==='buy'?0:1);
     initializeCombat(this);
-    if (!this.config.networkSlice) populateZombies(this);
+    if (!this.config.networkSlice || this.config.zombies || this.config.danceman) populateZombies(this);
+    else s.zombies=[];
     this.squadTactics=new SquadTactics(this);
     this.afterBeginRound?.();
     this.emit('round', null, { round: s.round });
@@ -164,7 +165,10 @@ export class Game {
       s.phase = 'active'; this.emit('start', null);
     }
     this.roundCandidates = []; this.pendingDamage = [];
-    if (this.config.networkSlice) this.world.advanceNetworkWorld?.(s.time,dt,this.hostages.length?[...this.actors,...this.hostages]:this.actors);
+    if (this.config.networkSlice) {
+      const residents=s.zombies.filter(z=>z.alive).map(z=>z.seat?{...z,...zombiePosition(z,s.time)}:z);
+      this.world.advanceNetworkWorld?.(s.time,dt,[...this.actors,...this.hostages,...residents]);
+    }
     else this.world.doors?.update(s.time,dt,[...this.actors,...this.hostages,...s.zombies,...(this.config.wanderers?s.wanderers||[]:[])]);
     tickActionState(this,dt);
     for (const actor of this.actors) {
@@ -351,7 +355,7 @@ export class Game {
     const length = Math.hypot(hitPoint.x - sourcePosition.x, hitPoint.y - sourcePosition.y, hitPoint.z - sourcePosition.z) || 1;
     const incoming = context.direction ?? { x: (hitPoint.x - sourcePosition.x) / length, y: (hitPoint.y - sourcePosition.y) / length, z: (hitPoint.z - sourcePosition.z) / length };
     target.hurtTime = this.state.time; target.hurtDirection = { ...incoming };
-    const detail = { sourceId: this.config.networkSlice && !this.actors.includes(source) ? undefined : source?.id, sourceName: source?.name, targetName: target.name, weapon: kind, amount: dealt, hp: target.hp,
+    const detail = { sourceId: this.config.networkSlice && !this.actors.includes(source) && !this.state.zombies.includes(source) ? undefined : source?.id, sourceName: source?.name, targetName: target.name, weapon: kind, amount: dealt, hp: target.hp,
       point: { ...hitPoint }, direction: { ...incoming }, sourcePosition: { ...sourcePosition }, ...hitPoint };
     this.emit('damage', target, detail); this.emit('hit', target, detail);
     if(target.kind==='zombie')reactZombie(this,target,kind,detail,source);

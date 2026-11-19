@@ -13,6 +13,8 @@ const samples={tick:[],simulation:[],projection:[],serialization:[],interval:[],
 const totals=Object.fromEntries(Object.keys(samples).map(key=>[key,0]));
 const full = Object.fromEntries(['tick','interval'].map(key => [key, []]));
 const slow = [];
+const phaseCosts=Object.fromEntries(['combat','buy','result'].map(phase=>[phase,{tick:[],simulation:[],interval:[]}]));
+const residentActivity={distance:0,windups:0,stomps:0};
 const objectiveCosts={beginRound:[],breakAt:[],findPath:[],escortedTick:[]};
 let work;
 function profile(object, method, label) {
@@ -31,6 +33,7 @@ function profile(object, method, label) {
 }
 const push=(key,n)=>{totals[key]+=n;full[key]?.push(n);const a=samples[key];a.push(n);if(a.length>8192)a.shift();};
 const stats=a=>{const sorted=a.slice().sort((a,b)=>a-b),n=sorted.length;if(!n)return {n:0,p50:null,p95:null,p99:null,max:null};return {n,p50:sorted[Math.floor(n*.5)]||0,p95:sorted[Math.floor(n*.95)]||0,p99:sorted[Math.floor(n*.99)]||0,max:sorted.at(-1)||0};};
+const withSlowCounts=values=>({...stats(values),above33:values.filter(n=>n>33).length,above50:values.filter(n=>n>50).length,above100:values.filter(n=>n>100).length});
 const ai=process.env.CS2_LOAD_AI==='1';
 const classicMetrics={rounds:0,plants:0,defuses:0,escorts:0,rescues:0,hostageTravel:0};
 let botShots=0,botTravel=0,throws=0,breaks=0,updates=0;
@@ -49,9 +52,11 @@ function instrument(){
    for(const [obj,key,label] of [[r,'fixedTick','tick'],[r.sim,'tick','simulation'],[r,'project','projection'],[r,'broadcastPatch','serialization']]){
     const original=obj[key];obj[key]=function(...args){
       const dead=label==='simulation'?r.sim.game.actors.filter(a=>!a.alive):[];
-      const t=performance.now();if(label==='tick'){if(last!==undefined)push('interval',t-last);last=t;work={};}
+      const t=performance.now(),phase=r.state.phase==='results'?'result':r.sim.game.phase==='active'?'combat':r.sim.game.phase;
+      if(label==='tick'){if(last!==undefined){push('interval',t-last);phaseCosts[phase]?.interval.push(t-last);}last=t;work={};}
       try{
           const classicRoom=label==='simulation'&&r.classic;
+          const residents=label==='simulation'&&ai?r.sim.game.state.zombies.map(z=>[z,z.x,z.z]):[];
           const followers=classicRoom?r.sim.game.hostages.map(h=>[h,h.distanceWalked]):[];
           const result=original.apply(this,args);
           if(classicRoom){
@@ -66,6 +71,9 @@ function instrument(){
             }
           }
           if(ai&&label==='simulation'){
+            for(const [z,x,y] of residents)residentActivity.distance+=Math.hypot(z.x-x,z.z-y);
+            residentActivity.windups+=result.filter(e=>e.type==='zombie-windup').length;
+            residentActivity.stomps+=result.filter(e=>e.type==='zombie-stomp').length;
             throws+=result.filter(e=>e.type==='throw').length;breaks+=result.filter(e=>e.type==='glass-break').length;
             botShots+=result.filter(e=>e.type==='shot'&&r.bots.has(e.actorId)).length;
             for(const {actor} of r.bots.values())botTravel+=actor.alive?actor.moving/60:0;
@@ -73,7 +81,7 @@ function instrument(){
           return result;
         }finally{
         const ms=performance.now()-t;
-        push(label,ms);if(label==='tick'){updates++;if(ms>33&&slow.length<10000)slow.push({tick:r.sim.tickNumber,ms,work,respawns:combatRespawns,breaks});work=null;}
+        push(label,ms);phaseCosts[phase]?.[label]?.push(ms);if(label==='tick'){updates++;if(ms>33&&slow.length<10000)slow.push({tick:r.sim.tickNumber,ms,work,respawns:combatRespawns,breaks});work=null;}
         if(label==='simulation'){combatRespawns+=dead.filter(a=>a.alive).length;placeActors(r);}
       }
     };
@@ -115,11 +123,13 @@ function snapshot(){
  const usage=process.cpuUsage(cpu),elapsed=(performance.now()-started)/1000;
  const loopSamples=Number(loops.count);
  return {thermal:thermal(),elapsedSeconds:elapsed,serverCpuPercent:(usage.user+usage.system)/1e4/elapsed,memory:process.memoryUsage(),
-  classic:{...classicMetrics},objectiveCosts:Object.fromEntries(Object.entries(objectiveCosts).map(([k,a])=>[k,stats(a)])),wholeRun:Object.fromEntries(Object.entries(full).map(([key,a])=>[key,{...stats(a),above33:a.filter(n=>n>33).length,above50:a.filter(n=>n>50).length,above100:a.filter(n=>n>100).length}])),slow:slow.slice().sort((a,b)=>b.ms-a.ms).slice(0,12),
+  residents:{...residentActivity},phaseCosts:Object.fromEntries(Object.entries(phaseCosts).map(([phase,costs])=>[phase,
+    Object.fromEntries(Object.entries(costs).map(([label,values])=>[label,withSlowCounts(values)]))])),
+  classic:{...classicMetrics},objectiveCosts:Object.fromEntries(Object.entries(objectiveCosts).map(([k,a])=>[k,stats(a)])),wholeRun:Object.fromEntries(Object.entries(full).map(([key,a])=>[key,withSlowCounts(a)])),slow:slow.slice().sort((a,b)=>b.ms-a.ms).slice(0,12),
   eventLoopMs:loopSamples?{n:loopSamples,p50:loops.percentile(50)/1e6,p95:loops.percentile(95)/1e6,p99:loops.percentile(99)/1e6,max:loops.max/1e6}:{n:0,p50:null,p95:null,p99:null,max:null},
   costMs:Object.fromEntries(Object.entries(samples).filter(([k])=>k!=='shotAge').map(([k,v])=>[k,stats(v)])),shotAgeMs:stats(samples.shotAge),bytes,inBytes,respawns,combatRespawns,botShots,botTravel,throws,breaks,updates,workPerUpdateMs:updates?(totals.tick+totals.serialization)/updates:0,
   resources:process.getActiveResourcesInfo().reduce((o,k)=>(o[k]=(o[k]||0)+1,o),{}),
-  rooms:[...local.rooms].map(r=>({id:r.roomId,matchId:r.state.matchId,phase:r.state.phase,clients:r.clients.length,ai:r.bots?.size||0,seats:r.seats.size,actors:r.sim.game.actors.length,tick:r.sim.tickNumber,
+  rooms:[...local.rooms].map(r=>({id:r.roomId,matchId:r.state.matchId,phase:r.state.phase,residents:r.state.residents?.size||0,clients:r.clients.length,ai:r.bots?.size||0,seats:r.seats.size,actors:r.sim.game.actors.length,tick:r.sim.tickNumber,
    metrics:r.metrics,lag:r.lag?{...r.lag.metrics,ages:stats(r.lag.metrics.ages)}:undefined,histories:r.lag?.tickTimes.size,
    rewindEntities:r.lag?.rewind.groups?.map(g=>[...g.entities()].length),
    inputMax:Math.max(0,...[...r.seats.keys()].map(sid=>r.inputs.get(sid).size)),rtts:[...r.seats.values()].map(s=>s.rtt),
@@ -135,6 +145,8 @@ process.on('message',async({id,action,options})=>{
    const model=await readFile('/proc/device-tree/model','utf8').then(value=>value.replace(/\0/g,'').trim()).catch(()=>undefined);
    result={url:local.url,contract:CONTRACT,environment:{model,node:process.version,platform:platform(),arch:arch(),cpu:cpus()[0].model,cores:cpus().length}};
   }else if(action==='reset'){
+   for(const costs of Object.values(phaseCosts))for(const values of Object.values(costs))values.length=0;
+   for(const key of Object.keys(residentActivity))residentActivity[key]=0;
    for(const key of Object.keys(classicMetrics))classicMetrics[key]=0;
    for(const a of [...Object.values(objectiveCosts),...Object.values(samples),...Object.values(full),slow])a.length=0;for(const k of Object.keys(totals))totals[k]=0;updates=throws=breaks=botTravel=botShots=respawns=combatRespawns=bytes=inBytes=0;loops.reset();cpu=process.cpuUsage();started=performance.now();if(process.env.CS2_FORCE_GC==='1'||process.env.CS2_SOAK==='1')global.gc?.();result=snapshot();
   }else if(action==='sample'){if(process.env.CS2_FORCE_GC==='1'||process.env.CS2_SOAK==='1')global.gc?.();result=snapshot();}

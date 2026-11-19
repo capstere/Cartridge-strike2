@@ -1,3 +1,5 @@
+import {zombiePosition} from './zombie-poses.mjs';
+
 /** Shared capsule movement. Uses the existing world physics and body sweep.
  * Prediction may pass effects=false; it must supply its own restored actor/world
  * view and must never replay Game.step (combat/objective side effects).
@@ -40,7 +42,9 @@ export function moveActor(game, actor, input, dt, effects = true) {
 }
 export function moveBody(game, actor, dx, dy, dz) {
   const before = point(actor), projectedY = Math.max(0, actor.y + dy);
-  const bodies = [...game.actors.filter(a => a.alive), ...game.hostages.filter(h => h.alive!==false && !h.rescued), ...game.state.zombies.filter(z=>z.alive)].filter(other => other !== actor &&
+  const residents = game.state.zombies.filter(z=>z.alive&&z!==actor);
+  const residentBodies = game.config.networkSlice ? residents.map(z=>z.seat?{...z,...zombiePosition(z,game.state.time)}:z) : residents;
+  const bodies = [...game.actors.filter(a => a.alive), ...game.hostages.filter(h => h.alive!==false && !h.rescued), ...residentBodies].filter(other => other !== actor &&
     projectedY < other.y + other.height - .02 && projectedY + actor.height > other.y + .02);
   let x = actor.x, z = actor.z, remainingX = dx, remainingZ = dz;
   actor.blockedBy = null;

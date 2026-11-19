@@ -7,13 +7,13 @@ export function roomUi({leave,resume,activate}){
   #online-room[hidden]{display:none}#online-room .room-card{max-width:850px;margin:auto;padding:20px;border:1px solid #52716d;background:#182625}
   #online-room h2{font-size:clamp(24px,5vw,38px);margin:8px 0}#online-room .room-actions{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}
   #online-room button,#online-room select,#online-room input{font:inherit;padding:12px;min-height:44px;color:inherit;background:#263c38;border:1px solid #738780;border-radius:3px}
-  #online-room button.primary{background:#efbf64;color:#14201d;font-weight:700}#online-room button:disabled{opacity:.45}
+  #online-room .room-residents select{margin:.3rem .6rem .3rem 0}#online-room button.primary{background:#efbf64;color:#14201d;font-weight:700}#online-room button:disabled{opacity:.45}
   #online-room table{width:100%;border-collapse:collapse}#online-room td,#online-room th{text-align:left;padding:9px 5px;border-bottom:1px solid #39504b;font-size:14px}
   #online-room .room-roster{overflow-x:auto}#online-room input{width:100%;box-sizing:border-box}#online-room .muted{color:#b2c4bc}
   #online-room .notice{color:#ffce8c;min-height:1.3em}#online-room .room-eyebrow{letter-spacing:.15em;color:#efbf64;font-size:12px}
   `;document.head.append(style);
   const root=document.createElement('section');root.id='online-room';root.hidden=true;
-  root.innerHTML=`<div class="room-card"><div class="room-eyebrow">FLOOR 5 · PRIVAT RUM</div><h2 id="room-title">Väntrum</h2><p id="room-rules"></p><p id="room-identity" class="muted"></p><div class="room-actions"><button id="room-share">Dela rumslänk</button><button id="room-leave">Lämna rummet</button></div><input id="room-link" readonly aria-label="Rumslänk" hidden><p class="muted">Vännen behöver serverns inbjudningskod och din separata privata rumskod. Koder ingår aldrig i länken.</p><div class="room-roster"><table><thead><tr><th>Spelare</th><th>Lag</th><th>Status</th><th>K</th><th>D</th></tr></thead><tbody id="room-roster"></tbody></table></div><div class="room-actions"><label id="room-equipment-label">Utrustning <select id="room-primary"></select><small id="room-kit"></small></label><label id="room-team-label">Ditt lag <select id="room-team"><option value="analysts">Analysts</option><option value="counterAnalysts">Counter Analysts</option></select></label><button id="room-ready" class="primary">Redo</button><button id="room-start" class="primary">Starta match</button><button id="room-rematch" class="primary">Spela igen</button><button id="room-resume" class="primary">Fortsätt</button></div><p id="room-help"></p><p id="room-notice" class="notice" role="status"></p></div>`;
+  root.innerHTML=`<div class="room-card"><div class="room-eyebrow">FLOOR 5 · PRIVAT RUM</div><h2 id="room-title">Väntrum</h2><p id="room-rules"></p><p id="room-identity" class="muted"></p><p id="room-residents-status"></p><div class="room-residents" id="room-residents" hidden><label>Zombies <select id="room-zombies"><option value="off">Av</option><option value="on">På</option></select></label><label>Dansmannen <select id="room-danceman"><option value="off">Av</option><option value="on">På</option></select></label></div><div class="room-actions"><button id="room-share">Dela rumslänk</button><button id="room-leave">Lämna rummet</button></div><input id="room-link" readonly aria-label="Rumslänk" hidden><p class="muted">Vännen behöver serverns inbjudningskod och din separata privata rumskod. Koder ingår aldrig i länken.</p><div class="room-roster"><table><thead><tr><th>Spelare</th><th>Lag</th><th>Status</th><th>K</th><th>D</th></tr></thead><tbody id="room-roster"></tbody></table></div><div class="room-actions"><label id="room-equipment-label">Utrustning <select id="room-primary"></select><small id="room-kit"></small></label><label id="room-team-label">Ditt lag <select id="room-team"><option value="analysts">Analysts</option><option value="counterAnalysts">Counter Analysts</option></select></label><button id="room-ready" class="primary">Redo</button><button id="room-start" class="primary">Starta match</button><button id="room-rematch" class="primary">Spela igen</button><button id="room-resume" class="primary">Fortsätt</button></div><p id="room-help"></p><p id="room-notice" class="notice" role="status"></p></div>`;
   document.body.append(root);const $=id=>root.querySelector('#'+id);let session,key='';
   $('room-leave').onclick=()=>{root.hidden=true;session=null;leave();};
   $('room-ready').onclick=()=>{activate();const a=session.room.state.actors.get(session.localPlayerId);session.matchCommand('ready',{ready:!a.playerReady});};
@@ -22,6 +22,8 @@ export function roomUi({leave,resume,activate}){
   $('room-primary').onchange=()=>session.matchCommand('loadout',{primary:$('room-primary').value});
   $('room-team').onchange=()=>session.matchCommand('team',{team:$('room-team').value});
   $('room-resume').onclick=()=>{root.hidden=true;resume();};
+  const setResidents=()=>session.matchCommand('residents',{zombies:$('room-zombies').value==='on',danceman:$('room-danceman').value==='on'});
+  $('room-zombies').onchange=$('room-danceman').onchange=setResidents;
   $('room-share').onclick=async()=>{
     const current=session;if(!current?.room)return;
     const link=new URL(location.href);link.search='';link.searchParams.set('network',new URL(location.href).searchParams.get('network')||'internet');link.searchParams.set('room',current.room.roomId);link.hash='';
@@ -35,6 +37,12 @@ export function roomUi({leave,resume,activate}){
     $('room-title').textContent=result?(state.winner==='draw'?'Oavgjort':labels[state.winner]+' vinner'):state.phase==='countdown'?'Start om '+Math.ceil(state.remainingSeconds)+'…':'Väntrum';
     $('room-rules').textContent=state.mode==='classic'?'Classic · först till '+state.scoreTarget+' rundor. Counter Analysts planterar eller räddar gisslan. Analysts försvarar och desarmerar. Båda lagen kan vinna på eliminering.':`Team Deathmatch · ${state.durationSeconds/60} minuter · först till ${state.scoreTarget} fiendekills · högst 5 per lag`;
     $('room-identity').textContent='Rum '+s.room.roomId+' · Match '+state.matchId;
+    $('room-residents').hidden=!waiting||state.ownerId!==s.room.sessionId;
+    for(const [name,enabled] of [['zombies',state.zombiesEnabled],['danceman',state.dancemanEnabled]]){
+      const select=$('room-'+name);
+      if(document.activeElement!==select)select.value=enabled?'on':'off';
+    }
+    $('room-residents-status').textContent='Zombies '+(state.zombiesEnabled?'på':'av')+' · Dansmannen '+(state.dancemanEnabled?'på':'av');
     $('room-equipment-label').hidden=!waiting||state.mode==='classic';
     if(self?.ready&&waiting){
       if($('room-primary').dataset.team!==self.team){

@@ -15,7 +15,7 @@ test('render stalls do not masquerade as network loss; real silence still reconn
 
 test('reconnect rejects old-epoch effects and disposed sessions ignore late callbacks',()=>{
   const session={closed:false,enabled:true,connectionState:'connected',seenEvent:0,events:[],localPlayerId:'a',
-    room:{state:{actors:new Map([['b',{lifeId:3,controlEpoch:2}]])}}};
+    room:{state:{residents:new Map(),actors:new Map([['b',{lifeId:3,controlEpoch:2}]])}}};
   const old={eventId:1,type:'shot',actorId:'b',lifeId:3,controlEpoch:1};
   const fresh={...old,eventId:2,controlEpoch:2};
   NetworkSession.prototype.receiveEvents.call(session,[old,fresh]);
@@ -33,7 +33,7 @@ test('reconnect rejects old-epoch effects and disposed sessions ignore late call
 
 test('delayed combat events cannot leak across lives or departed seats; own effects deduplicate',()=>{
   const session={closed:false,enabled:true,seenEvent:0,events:[],localPlayerId:'a',
-    room:{state:{actors:new Map([['a',{lifeId:2}],['b',{lifeId:3}]])}},
+    room:{state:{residents:new Map(),actors:new Map([['a',{lifeId:2}],['b',{lifeId:3}]])}},
     predictedShots:new Map([['a:2:1',0]]),metrics:{confirmedShots:0,suppressedShots:0}};
   const events=[
     {eventId:1,type:'shot',actorId:'a',lifeId:1},
@@ -52,8 +52,8 @@ test('delayed combat events cannot leak across lives or departed seats; own effe
 
 test('late own shot confirmations stay deduplicated through render stalls and pause/resume',()=>{
   const self={id:'a',lifeId:2,alive:true,ready:true},old=performance.now()-5000;
-  const session={closed:false,enabled:true,seenEvent:0,events:[],localPlayerId:'a',lifeId:2,alive:true,lastPatch:old,remote:new Map(),
-    room:{state:{actors:new Map([['a',self]]),brokenGlass:new Map(),grenades:new Map(),time:0},send(){}},
+  const session={closed:false,enabled:true,seenEvent:0,events:[],localPlayerId:'a',lifeId:2,alive:true,lastPatch:old,remote:new Map(),residents:new Map(),
+    room:{state:{residents:new Map(),actors:new Map([['a',self]]),brokenGlass:new Map(),grenades:new Map(),time:0},send(){}},
     world:{glass:{reset(){},panes:new Map()},doors:{doors:[],elevators:{setProgress(){}}}},view:{state:{},actors:[]},predict:{tick:()=>0},prediction:{reset(){}},input:{pendingCount:0},
     predictedShots:new Map([['a:2:1',old],['a:2:2',old],['a:2:3',old]]),
     metrics:{confirmedShots:0,suppressedShots:0,maxPending:0,resets:0}};
@@ -76,4 +76,16 @@ test('late own shot confirmations stay deduplicated through render stalls and pa
   for(let i=1;i<1000;i++)session.predictedShots.set('a:3:'+i,old);
   NetworkSession.prototype.advanceFrame.call(session,performance.now(),{});
   assert(session.predictedShots.size<=128,'unconfirmed action history stays bounded');
+});
+
+test('resident events require the current resident generation on either side of damage',()=>{
+  const state={mode:'classic',round:2,actors:new Map([['a',{lifeId:2,controlEpoch:1}]]),
+    residents:new Map([['zombie-0',{lifeId:6}]])};
+  const session={closed:false,enabled:true,seenEvent:0,events:[],room:{state}};
+  const damage={type:'damage',actorId:'a',lifeId:2,controlEpoch:1,sourceId:'zombie-0',sourceLifeId:6,sourceControlEpoch:0,round:2};
+  const killed={type:'kill',actorId:'zombie-0',lifeId:6,controlEpoch:0,sourceId:'a',sourceLifeId:2,sourceControlEpoch:1,round:2};
+  const events=[{...damage,eventId:1,sourceLifeId:5},{...killed,eventId:2,lifeId:5},
+    {...damage,eventId:3,round:1},{...damage,eventId:4},{...killed,eventId:5}];
+  NetworkSession.prototype.receiveEvents.call(session,events);
+  assert.deepEqual(session.events,events.slice(-2));
 });

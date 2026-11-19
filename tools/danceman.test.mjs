@@ -55,3 +55,34 @@ test('start event waits for playable presentation, deduplicates and honors mute'
   floor.update(audio,[]);assert.equal(played.length,1);
   game.state.round++;floor.update(audio,start);assert.equal(played.length,2);
 });
+
+test('resident music follows replicated life, listener, mute and pause without overlapping sources',async()=>{
+  const {FloorAudio}=await import('../src/fps/floor-audio.mjs');
+  const floor=new FloorAudio(),loops=[],buffer={duration:9};
+  floor.buffers.set('danceman',buffer);
+  const dancer={id:'danceman',model:'danceman',x:18,y:0,z:-14,alive:true,lifeId:1};
+  const game={phase:'active',player:{},state:{round:1,time:23,paused:false,zombies:[dancer]}};
+  const signal=()=>({setTargetAtTime(value){this.value=value;}});
+  let clear=true;
+  const audio={game,volume:.5,listener:{x:18,y:1,z:-12},world:{segmentClear:()=>clear},
+    context:{state:'running',currentTime:1,createBufferSource:()=>({connect(){},disconnect(){},
+      start(_when,offset){this.offset=offset;loops.push(this);},stop(){assert(!this.stopped);this.stopped=true;}})},
+    channel:()=>({gain:{gain:signal()},nodes:[{disconnect(){}},{disconnect(){},frequency:signal()}]})};
+  floor.update(audio,[]);
+  const first=loops[0],gain=floor.music.gain;
+  assert.equal(first.offset,5);
+  assert(first.loop);
+  game.state.zombies=[{...dancer}];
+  clear=false;floor.update(audio,[]);
+  assert.equal(loops.length,1);
+  assert(floor.music.gain<gain);
+  assert.equal(floor.music.channel.nodes[1].frequency.value,780);
+  game.state.zombies=[{...dancer,lifeId:2}];
+  floor.update(audio,[]);assert(first.stopped);assert.equal(loops.length,2);
+  game.state.paused=true;floor.update(audio,[]);assert(loops[1].stopped);
+  game.state.paused=false;floor.update(audio,[]);assert.equal(loops.length,3);
+  audio.volume=0;floor.update(audio,[]);assert(loops[2].stopped);
+  audio.volume=.5;floor.update(audio,[]);assert.equal(loops.length,4);
+  game.state.zombies[0].alive=false;floor.update(audio,[]);assert(loops[3].stopped);
+  assert.equal(floor.music,null);
+});

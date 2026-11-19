@@ -3,12 +3,12 @@ import {CONFIG, WEAPONS} from '../../src/fps/config.mjs';
 // Trusted, deliberately small online ruleset. Offline defaults stay untouched.
 export const NETWORK_CONFIG = Object.freeze({...CONFIG, networkSlice:true,
   mode:'endless', difficulty:'normal', loadout:'smg', firefight:false,
-  wanderers:false, hostageDamage:false, friendlyFire:false,
+  wanderers:false, zombies:false, danceman:false, hostageDamage:false, friendlyFire:false,
   startMoney:0, maxMoney:0, killMoney:0});
 export const CLASSIC_NETWORK_CONFIG = Object.freeze({...NETWORK_CONFIG,mode:'classic',
   startMoney:CONFIG.startMoney,maxMoney:CONFIG.maxMoney,killMoney:CONFIG.killMoney,hostageDamage:CONFIG.hostageDamage});
 export const NETWORK_MAP = 'floor5-prepared';
-export const PROTOCOL_VERSION = 7;
+export const PROTOCOL_VERSION = 8;
 export const MATCH_DEFAULTS = Object.freeze({durationSeconds:600,scoreTarget:50,countdownSeconds:3});
 export const RTT_FRESH_MS = 4000;
 export const TEAM_CAPACITY = 5;

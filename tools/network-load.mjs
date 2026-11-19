@@ -12,6 +12,7 @@ const rtts=(process.env.CS2_LOAD_RTTS||'0').split(',').map(Number),soak=process.
 const output=process.env.CS2_LOAD_OUTPUT||'test-results/pass3b/load.json';
 const root=process.env.CS2_BENCH_ROOT?pathToFileURL(process.env.CS2_BENCH_ROOT+'/'):new URL('../',import.meta.url);
 const ai=process.env.CS2_LOAD_AI==='1',classic=process.env.CS2_LOAD_MODE==='classic';
+const withResidents=process.env.CS2_LOAD_RESIDENTS==='1';
 const results=[];
 for(const count of counts)for(const rtt of rtts){
  const child=fork(new URL('./network-load-server.mjs',import.meta.url),[],{stdio:['ignore','inherit','inherit','ipc'],execArgv:['--expose-gc','--import',new URL('server/register-shared.mjs',root).href]});
@@ -23,7 +24,7 @@ for(const count of counts)for(const rtt of rtts){
  const client=new Client(url,{headers:{Origin:url}}),peers=[];let running=true,timer,frames=0,joins=0,reconnects=0,maxPending=0;
  const own=p=>[...(p.room.state.actors?.values()||[])].find(a=>a.sessionId===p.room.sessionId);
  async function add(roomId){
-  const room=await (roomId?client.joinById(roomId,{...(info.contract.protocolVersion>=6?{fillBots:ai}:{}),...(classic?{mode:'classic'}:{}),code:'load-123',name:'Load',contract:info.contract}):client.create('private-fps',{...(info.contract.protocolVersion>=6?{fillBots:ai}:{}),...(classic?{mode:'classic'}:{}),code:'load-123',name:'Load',contract:info.contract}));
+  const room=await (roomId?client.joinById(roomId,{...(info.contract.protocolVersion>=6?{fillBots:ai}:{}),...(classic?{mode:'classic'}:{}),...(withResidents?{zombies:true,danceman:true}:{}),code:'load-123',name:'Load',contract:info.contract}):client.create('private-fps',{...(info.contract.protocolVersion>=6?{fillBots:ai}:{}),...(classic?{mode:'classic'}:{}),...(withResidents?{zombies:true,danceman:true}:{}),code:'load-123',name:'Load',contract:info.contract}));
   Object.assign(room.reconnection,{enabled:true,minUptime:0,minDelay:150,maxDelay:500,maxRetries:30,maxEnqueuedMessages:0});
   const p={room,fire:0,reload:0,life:0,epoch:0,shots:0,hits:0};
   room.onMessage('notice',()=>{});room.onMessage('clock-probe',token=>room.send('clock-echo',token));room.onMessage('problem',m=>{throw Error(String(m));});

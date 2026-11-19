@@ -31,7 +31,7 @@ function actorView(s,localId){
 export class NetworkSession {
   constructor(world,{onDisconnect=()=>{},onConnection=()=>{},onMatch=()=>{}}={}){
     this.onMatch=onMatch;this.matchId=0;this.matchPhase='';this.world=world;this.onDisconnect=onDisconnect;this.onConnection=onConnection;this.connectionState='connecting';this.controlEpoch=0;this.closed=false;this.enabled=true;
-    this.events=[];this.seenEvent=0;this.predictedShots=new Map();this.actionTimes=new Map();this.remote=new Map();this.unsub=[];
+    this.events=[];this.seenEvent=0;this.predictedShots=new Map();this.actionTimes=new Map();this.remote=new Map();this.residents=new Map();this.unsub=[];
     this.fireId=0;this.reloadId=0;this.trigger=false;this.nextCosmetic=0;this.lifeId=0;this.lastPatch=0;
     this.metrics={sent:0,replays:0,adopts:0,resets:0,cosmeticShots:0,confirmedShots:0,suppressedShots:0,corrections:[],adoptionDistance:[],shotLatency:[],hitLatency:[],maxPending:0,reconnects:0};
     this.view=new Game(world,{config:NETWORK_CONFIG,localPlayerId:null,controllers:{}});
@@ -63,8 +63,8 @@ export class NetworkSession {
     this.room.send('classic',{kind,item,serial:++this.classicSerial,round:s.round,matchId:s.matchId,lifeId:a.lifeId,controlEpoch:a.controlEpoch});
     return true;
   }
-  async connect({endpoint,roomId,code,name,team='auto',mode='tdm',fillBots=true,create=false,contract=CONTRACT}){
-    const url=networkEndpoint(endpoint),client=new SessionClient(url),options={code,name,team,contract,fillBots,mode};
+  async connect({endpoint,roomId,code,name,team='auto',mode='tdm',fillBots=true,zombies=false,danceman=false,create=false,contract=CONTRACT}){
+    const url=networkEndpoint(endpoint),client=new SessionClient(url),options={code,name,team,contract,fillBots,mode,zombies,danceman};
     client.owner=this;
     this.joinAbort=new AbortController();client.http.options.signal=this.joinAbort.signal;
     const pending=create?client.create(ROOM_TYPE,options):client.joinById(roomId,options);
@@ -139,7 +139,7 @@ export class NetworkSession {
     if(this.awaitingSnapshot){
       // onReconnect precedes the full state; only this callback can adopt it.
       this.awaitingSnapshot=false;clearTimeout(this.reconnectTimer);this.reconnectTimer=null;
-      this.connectionState='connected';this.metrics.reconnects++;
+      this.connectionState='connected';this.metrics.reconnects++;this.adoptedReconnect=true;
       for(const entry of this.remote.values())this.predict.detach(entry.schema);this.remote.clear();
       this.prediction?.reset();this.events=[];this.predictedShots.clear();
       this.onConnection('connected');
@@ -172,6 +172,22 @@ export class NetworkSession {
       this.predict.attach(s,{x:'lerp',y:'lerp',z:'lerp',height:'lerp',yaw:{mode:'lerp',angle:true},pitch:{mode:'lerp',angle:true}});
       this.remote.set(s.id,{schema:s,lifeId:s.lifeId,alive:s.alive});
     }
+    for(const [id,entry] of this.residents){
+      if(state.residents.get(id)===entry.schema&&entry.view.lifeId===entry.schema.lifeId&&!this.adoptedReconnect)continue;
+      this.predict.detach(entry.schema);this.residents.delete(id);
+    }
+    this.adoptedReconnect=false;
+    for(const s of state.residents.values()){
+      let entry=this.residents.get(s.id);
+      if(!entry){
+        this.predict.attach(s,{x:'lerp',y:'lerp',z:'lerp',yaw:{mode:'lerp',angle:true}});
+        entry={schema:s,view:{}};this.residents.set(s.id,entry);
+      }
+      const view=entry.view;
+      for(const key of ['id','lifeId','name','model','x','y','z','yaw','radius','height','alive','hp','behavior','clip','poseAt','rate','offset','loop'])view[key]=s[key];
+      view.kind='zombie';
+    }
+    this.view.state.zombies=[...this.residents.values()].map(entry=>entry.view);
     if(!self?.ready)return;
     if(!this.prediction){
       const actor=actorView(self,this.localPlayerId);
@@ -188,13 +204,14 @@ export class NetworkSession {
           w.dynamics.adopt(this.room.state);
           copyPose(w.actor,s);w.actor.alive=s.alive;w.actor.lifeId=s.lifeId;w.game.state.time=this.room.state.time;
           w.game.hostages=this.view.hostages;
+          w.game.state.zombies=[...this.residents.values()].map(({schema:s})=>({id:s.id,x:s.x,y:s.y,z:s.z,height:s.height,radius:s.radius,alive:s.alive}));
           w.game.actors=[w.actor,...[...this.room.state.actors.values()].filter(a=>a.ready&&a.id!==s.id).map(a=>actorView(a,null))];
         },
         step:(ctx,w,f)=>{
           if(ctx.isReplay)this.metrics.replays++;
           if(this.room.state.phase!=='active'||this.room.state.mode==='classic'&&this.room.state.roundPhase!=='active'||!w.actor.alive||f.lifeId!==w.actor.lifeId||f.controlEpoch!==this.controlEpoch)return;
           w.game.state.time+=ctx.dt;
-          w.dynamics.step(w.game.state.time,ctx.dt,w.game.actors,()=>moveActor(w.game,w.actor,f,ctx.dt,false));
+          w.dynamics.step(w.game.state.time,ctx.dt,[...w.game.actors,...w.game.hostages,...w.game.state.zombies],()=>moveActor(w.game,w.actor,f,ctx.dt,false));
         },
         pose:w=>({x:w.actor.x,y:w.actor.y,z:w.actor.z}),
         onReconcile:()=>{if(!this.prediction)return;const c=this.prediction.lastCorrection;
@@ -222,11 +239,11 @@ export class NetworkSession {
     for(const event of events.slice(-64)){
       if(event.matchId!==undefined&&event.matchId!==this.room.state.matchId)continue;
       if(event.eventId<=this.seenEvent)continue;this.seenEvent=event.eventId;
-      const actor=this.room.state.actors.get(event.actorId);
+      const actor=this.room.state.actors.get(event.actorId)||this.room.state.residents.get(event.actorId);
       if(event.round!==undefined&&this.room.state.mode==='classic'&&event.round!==this.room.state.round)continue;
-      if(event.actorId&&!this.room.state.hostages?.has(event.actorId)&&(!actor||event.lifeId&&actor.lifeId!==event.lifeId||event.controlEpoch!==undefined&&actor.controlEpoch!==event.controlEpoch))continue;
-      const source=this.room.state.actors.get(event.sourceId);
-      if(event.sourceId&&(!source||event.sourceLifeId&&source.lifeId!==event.sourceLifeId||event.sourceControlEpoch!==undefined&&source.controlEpoch!==event.sourceControlEpoch))continue;
+      if(event.actorId&&!this.room.state.hostages?.has(event.actorId)&&(!actor||event.lifeId&&actor.lifeId!==event.lifeId||event.controlEpoch!==undefined&&(actor.controlEpoch??0)!==event.controlEpoch))continue;
+      const source=this.room.state.actors.get(event.sourceId)||this.room.state.residents.get(event.sourceId);
+      if(event.sourceId&&(!source||event.sourceLifeId&&source.lifeId!==event.sourceLifeId||event.sourceControlEpoch!==undefined&&(source.controlEpoch??0)!==event.sourceControlEpoch))continue;
       if(event.type==='shot'&&event.actorId===this.localPlayerId){
         this.metrics.confirmedShots++;
         const sent=this.predictedShots.get(event.actionId);
@@ -282,6 +299,9 @@ export class NetworkSession {
         // Free look stays immediate even between fixed input steps.
         if(this.enabled){a.yaw=wrapYaw(controls.yaw??a.yaw);a.pitch=controls.pitch??a.pitch;}
       }else if(a.alive)for(const key of ['x','y','z','height','yaw','pitch'])a[key]=this.predict.value(s,key);
+    }
+    for(const {schema,view} of this.residents.values()){
+      for(const key of ['x','y','z','yaw'])view[key]=this.predict.value(schema,key);
     }
     // Display doors/shutters at the same snapshot time as remote hitboxes.
     // Local movement uses its separate, authoritative/replayed collision context.

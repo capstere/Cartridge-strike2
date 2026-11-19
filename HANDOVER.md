@@ -1,14 +1,14 @@
 # Cartridge-Strike 2 handover
 
-**Nästa utvecklingsuppdrag är zombies och Dansmannen online.** Återanvänd de
-befintliga offlineaktörerna och deras animationer. Börja med serverägd identitet,
-livscykel och replikering av en zombie i ett isolerat rum och kontrollera att
-den inte tar en lagplats. Ta sedan in Dansmannens beteende och ljud.
+**Classic och Team Deathmatch är driftsatta på cs2.capstere.com.** Publik
+release `f685ee759eef4f6183f2c135b6b251abbb3f1cd1` använder protokoll 7.
+PR #27 är mergad. Originalservern på 2567 och återställningsreleasen finns kvar.
 
-Classic-kandidaten och dess TDM-bas granskas på en separat loopbackport.
-[Rundregler, kontroller, prestanda och startinstruktioner](docs/multiplayer/ONLINE_CLASSIC_REPORT.md).
-Den publika Pi-tjänsten kör fortfarande den aktiva releasen nedan.
-Fysisk iPhone/Android-provning av köp, hållinteraktioner, ljud, åskådarläge,
+**Nästa steg är att provspela och granska NPC-kandidaten i PR #28.** Den
+separata kandidaten ger värden två reglage för zombies och Dansmannen i både
+Classic och TDM. Läs [drift, kandidat, mätningar och prov](docs/multiplayer/ONLINE_RESIDENTS_REPORT.md)
+och [Classic-regler och baslinje](docs/multiplayer/ONLINE_CLASSIC_REPORT.md).
+Fysisk iPhone/Android-provning av köp, uppdrag, ljud, åskådarläge,
 bakgrund/återanslutning och omspel återstår. Rök, flash och raketkastare
 återstår online.
 
@@ -16,7 +16,7 @@ bakgrund/återanslutning och omspel återstår. Rök, flash och raketkastare
 på golvet som ser ut som gamla väggar eller områdesgränser. Möbler ligger
 utanför den felrapporten. Exakta positioner återstår.
 
-## Aktiv internetrelease och tidigare prov
+## Historisk internetrelease och tidigare prov
 
 The first private online Team Deathmatch release adds a server-owned waiting
 lobby, Ready/Start, countdown, 10-minute/50-kill matches, results and same-room
@@ -24,7 +24,7 @@ rematch. See [the online release report](docs/multiplayer/ONLINE_RELEASE_REPORT.
 and [Swedish status/update/rollback instructions](deploy/online/README.md).
 The release payload is `d886a10060b8fbf9b2d3034e8c8d0ad46a8a39d1`, protocol 5,
 runtime build `3af2145a3d18bdbd58d53ebeb6f35f3309531892085dfe376b5aaab9098a473c`.
-This payload is deployed on loopback port 2568. Its seven CI jobs passed in
+This payload previously served loopback port 2568 and is the Classic rollback release. Its seven CI jobs passed in
 [44267713626](https://github.com/capstere/Cartridge-strike2/actions/runs/44267713626).
 The final server implementation completed a 30-minute ten-SDK-client Pi soak
 with 52 match transitions, 30 reconnects and 2,730 measured combat respawns.
