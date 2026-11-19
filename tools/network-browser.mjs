@@ -28,7 +28,10 @@ async function open(viewport={width:1280,height:720},mobile=false,endpoint=local
  await page.goto(endpoint+'/fps/?network=local&test&realtime');
  await page.waitForFunction(()=>window.__fps||!document.querySelector('#fatal').hidden);
  assert(await page.locator('#fatal').evaluate(e=>e.hidden),await page.locator('#fatal').textContent());
- await page.waitForFunction(()=>document.querySelector('#lb-objective').textContent.includes('inga uppdrag'));
+ await page.locator('#network-mode').waitFor();
+ assert.equal(await page.locator('#network-mode').inputValue(),'tdm');
+ assert.deepEqual(await page.locator('#network-mode option').allTextContents(),['Team Deathmatch','Classic']);
+ assert.match(await page.locator('#lb-objective').textContent(),/Team Deathmatch.*Classic/);
  assert.match(await page.locator('.lb-brief').textContent(),/Floor 5 Laboratory/);
  assert.match(await page.locator('.lb-brief').textContent(),/5 mot 5/);
  assert(await page.evaluate(()=>!__fps.renderer.zombieVisuals),'online renderer has no unused resident asset initialization');
