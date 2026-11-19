@@ -33,7 +33,7 @@ export class MatchLifecycle {
   command(client,m){
     const r=this.room,s=r.seats.get(client.sessionId),state=this.state;
     if(!s?.ready||!s.connected||s.client!==client||!m||m.matchId!==state.matchId||m.controlEpoch!==s.epoch||
-      Object.keys(m).some(k=>!['kind','matchId','controlEpoch','ready','team','primary','zombies','danceman'].includes(k)))return;
+      Object.keys(m).some(k=>!['kind','matchId','controlEpoch','ready','team','primary','zombies','danceman','friendlyFire'].includes(k)))return;
     if(!r.classic&&m.kind==='loadout'&&['waiting','active'].includes(state.phase)&&onlinePrimaries(s.actor.team).includes(m.primary))s.actor.loadout=m.primary;
     else if(m.kind==='ready'&&state.phase==='waiting'&&typeof m.ready==='boolean')s.playerReady=m.ready;
     else if(m.kind==='team'&&state.phase==='waiting')r.changeTeam(client,m.team);
@@ -41,6 +41,9 @@ export class MatchLifecycle {
       typeof m.zombies==='boolean'&&typeof m.danceman==='boolean'){
       state.zombiesEnabled=m.zombies;state.dancemanEnabled=m.danceman;
       Object.assign(r.sim.game.config,{zombies:m.zombies,danceman:m.danceman});
+    }else if(m.kind==='friendlyFire'&&state.phase==='waiting'&&state.ownerId===client.sessionId&&typeof m.friendlyFire==='boolean'){
+      state.friendlyFire=m.friendlyFire;
+      r.sim.game.config.friendlyFire=m.friendlyFire;
     }else if(m.kind==='start'&&state.phase==='waiting'){
       if(state.ownerId!==client.sessionId)throw Error('Bara rumsägaren kan starta matchen.');
       if(!this.eligible())throw Error('Alla anslutna spelare måste vara redo, med minst en spelare i varje lag.');
@@ -116,7 +119,7 @@ export class MatchLifecycle {
     const winner=forced||(score.analysts===score.counterAnalysts?'draw':score.analysts>score.counterAnalysts?'analysts':'counterAnalysts');
     Object.assign(this.state,{phase:'results',winner,reason,remainingSeconds:0,
       results:JSON.stringify({matchId:this.state.matchId,winner,reason,score:{...score},players:g.actors.map(a=>({id:a.id,name:a.name,team:a.team,kills:a.kills,deaths:a.deaths}))})});
-    g.state.paused=true;
+    g.state.paused=true;g.state.projectiles=[];
     for(const [sid,seat] of r.seats){seat.enabled=false;r.inputs.get(sid).clear();}
   }
 }

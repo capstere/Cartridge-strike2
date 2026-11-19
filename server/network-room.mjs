@@ -8,7 +8,7 @@ import {prepareClassicRound,projectClassic} from './classic-round.mjs';
 import {CLASSIC_NETWORK_CONFIG,NETWORK_CONFIG,NETWORK_MAP,ROOM_CAPACITY,TEAM_CAPACITY,RECONNECT_SECONDS,copyPose,safeName} from '../shared/multiplayer/rules.mjs';
 import {checkContract,validateNetworkInput,wireInput} from '../shared/multiplayer/protocol.mjs';
 import {CONTRACT} from '../shared/multiplayer/build.mjs';
-import {NetworkInput,ActorState,RoomState,DoorState,GrenadeState,ResidentState} from './network-schema.mjs';
+import {NetworkInput,ActorState,RoomState,DoorState,GrenadeState,ResidentState,RocketState} from './network-schema.mjs';
 
 import {prepareNetworkWorld,DOOR_FIELDS} from '../shared/multiplayer/world.mjs';
 import {collisionContract} from '../shared/multiplayer/collision-contract.mjs';
@@ -46,7 +46,7 @@ export class NetworkRoom extends Room {
     this.residentLife=0;
     const zombiesEnabled=options.zombies===true,dancemanEnabled=options.danceman===true;
     Object.assign(this.sim.game.config,{zombies:zombiesEnabled,danceman:dancemanEnabled});
-    this.state=new RoomState({zombiesEnabled,dancemanEnabled,mode:this.classic?'classic':'tdm',fillBots:options.fillBots!==false,worldRevision:1,elevatorOpenAt:-1});
+    this.state=new RoomState({zombiesEnabled,dancemanEnabled,friendlyFire:false,mode:this.classic?'classic':'tdm',fillBots:options.fillBots!==false,worldRevision:1,elevatorOpenAt:-1});
     for(const d of this.sim.game.world.doors.doors)this.state.doors.set(d.id,new DoorState());
     this.sim.game.onGlassBreak=id=>this.state.brokenGlass.set(id,this.clock.elapsedTime);
     this.project();
@@ -258,7 +258,7 @@ export class NetworkRoom extends Room {
       } // no cached held movement/fire on silence
       const selected=shot||latest,{input,frame:f,stamp}=selected;
       input.interact=latest.input.interact;
-      input.fire=!!shot&&this.lag.accept(seat,f,stamp);input.reload=reload;
+      input.fire=!!shot&&(WEAPONS[seat.actor.weapon].projectile||this.lag.accept(seat,f,stamp));input.reload=reload;
       frames.set(client.sessionId,input);
       actions.set(seat.id,`${seat.id}:${seat.actor.lifeId}:${seat.epoch}:${f.fireId}`);
     }
@@ -322,6 +322,14 @@ export class NetworkRoom extends Room {
       Object.assign(this.state.grenades.get(id),{x,y,z});
     }
     for(const id of this.state.grenades.keys())if(!active.has(id))this.state.grenades.delete(id);
+    const rockets=this.state.projectiles;
+    active.clear();
+    for(const {id,ownerId,ownerName,ownerLifeId,team,born,until,x,y,z,vx,vy,vz} of g.state.projectiles){
+      active.add(id);
+      if(!rockets.has(id))rockets.set(id,new RocketState({id,ownerId,ownerName,ownerLifeId,team,born,until,vx,vy,vz}));
+      Object.assign(rockets.get(id),{x,y,z});
+    }
+    for(const id of rockets.keys())if(!active.has(id))rockets.delete(id);
     this.state.tick=this.sim.tickNumber;this.state.time=g.state.time;
     this.state.analysts=g.state.score.analysts;this.state.counterAnalysts=g.state.score.counterAnalysts;
   }

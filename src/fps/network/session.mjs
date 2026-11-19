@@ -31,7 +31,7 @@ function actorView(s,localId){
 export class NetworkSession {
   constructor(world,{onDisconnect=()=>{},onConnection=()=>{},onMatch=()=>{}}={}){
     this.onMatch=onMatch;this.matchId=0;this.matchPhase='';this.world=world;this.onDisconnect=onDisconnect;this.onConnection=onConnection;this.connectionState='connecting';this.controlEpoch=0;this.closed=false;this.enabled=true;
-    this.events=[];this.seenEvent=0;this.predictedShots=new Map();this.actionTimes=new Map();this.remote=new Map();this.residents=new Map();this.unsub=[];
+    this.events=[];this.seenEvent=0;this.predictedShots=new Map();this.actionTimes=new Map();this.remote=new Map();this.residents=new Map();this.projectiles=new Map();this.unsub=[];
     this.fireId=0;this.reloadId=0;this.trigger=false;this.nextCosmetic=0;this.lifeId=0;this.lastPatch=0;
     this.metrics={sent:0,replays:0,adopts:0,resets:0,cosmeticShots:0,confirmedShots:0,suppressedShots:0,corrections:[],adoptionDistance:[],shotLatency:[],hitLatency:[],maxPending:0,reconnects:0};
     this.view=new Game(world,{config:NETWORK_CONFIG,localPlayerId:null,controllers:{}});
@@ -176,7 +176,19 @@ export class NetworkSession {
       if(state.residents.get(id)===entry.schema&&entry.view.lifeId===entry.schema.lifeId&&!this.adoptedReconnect)continue;
       this.predict.detach(entry.schema);this.residents.delete(id);
     }
+    for(const [id,entry] of this.projectiles){
+      if(state.projectiles.get(id)===entry.schema&&!this.adoptedReconnect)continue;
+      this.predict.detach(entry.schema);this.projectiles.delete(id);
+    }
     this.adoptedReconnect=false;
+    for(const rocket of state.projectiles.values()){
+      if(!this.projectiles.has(rocket.id)){
+        this.predict.attach(rocket,{x:'lerp',y:'lerp',z:'lerp'});
+        this.projectiles.set(rocket.id,{schema:rocket,view:{id:rocket.id,vx:rocket.vx,vy:rocket.vy,vz:rocket.vz}});
+      }
+      Object.assign(this.projectiles.get(rocket.id).view,{x:rocket.x,y:rocket.y,z:rocket.z});
+    }
+    this.view.state.projectiles=[...this.projectiles.values()].map(entry=>entry.view);
     for(const s of state.residents.values()){
       let entry=this.residents.get(s.id);
       if(!entry){
@@ -272,7 +284,7 @@ export class NetworkSession {
       if(data.fire&&(state.mode!=='classic'||state.roundPhase==='active')&&(weapon.automatic||!this.trigger)&&time+1e-8>=Math.max(this.nextCosmetic,self.nextShot)&&
           (self.ammo>0||self.weapon==='knife'||throwing&&self.he>0)&&!self.reloadUntil){
         data.fireId=++this.fireId;this.nextCosmetic=time+weapon.interval;
-        if(!throwing){
+        if(!throwing&&!weapon.projectile){
           const actionId=`${self.id}:${self.lifeId}:${self.controlEpoch}:${this.fireId}`;
           this.predictedShots.set(actionId,performance.now());this.actionTimes.set(actionId,performance.now());this.metrics.cosmeticShots++;
           const a=this.prediction.world.actor;
@@ -302,6 +314,9 @@ export class NetworkSession {
     }
     for(const {schema,view} of this.residents.values()){
       for(const key of ['x','y','z','yaw'])view[key]=this.predict.value(schema,key);
+    }
+    for(const {schema,view} of this.projectiles.values()){
+      for(const key of ['x','y','z'])view[key]=this.predict.value(schema,key);
     }
     // Display doors/shutters at the same snapshot time as remote hitboxes.
     // Local movement uses its separate, authoritative/replayed collision context.

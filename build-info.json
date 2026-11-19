@@ -1927,7 +1927,7 @@
     {
       "path": "shared/multiplayer/build.mjs",
       "bytes": 612,
-      "sha256": "e43d9ce5ac3055fa700efee9e564fe986d916b1ac7d0fd4b104ba077d70ba725"
+      "sha256": "bb4693790295d4777f9714599a4305b7c338479bba9d494eb73bba70a92d521b"
     },
     {
       "path": "shared/multiplayer/collision-contract.mjs",
@@ -1946,8 +1946,8 @@
     },
     {
       "path": "shared/multiplayer/rules.mjs",
-      "bytes": 2247,
-      "sha256": "e11998bd0c66b9a070bd7781d3c6ac227f83516c8256a41f520e7dbe72c5f938"
+      "bytes": 2257,
+      "sha256": "e35e005011882d42a060fcba6db3fe300307958dc6ff36131a0042ce9792288f"
     },
     {
       "path": "shared/multiplayer/world.mjs",
@@ -1976,8 +1976,8 @@
     },
     {
       "path": "src/fps/action-rules.mjs",
-      "bytes": 12298,
-      "sha256": "629800a18e6f154f38c570e98ec52484022eac98c8ba390345f63943c4ffd0e5"
+      "bytes": 13209,
+      "sha256": "2f21c12a69a7c0cc9ca78db2132fa72c936f71a038ed096fcd8a6acd24eb5ef0"
     },
     {
       "path": "src/fps/action-visuals.mjs",
@@ -1996,8 +1996,8 @@
     },
     {
       "path": "src/fps/app.mjs",
-      "bytes": 45433,
-      "sha256": "070c8368956437cd4776df033f2da0a1d76cae85da31592417cbc287012dd6cd"
+      "bytes": 45504,
+      "sha256": "bdbef67eaeebfc7922b1efa5de8cdbf30e92c4569e085df6db20ce7b44eca100"
     },
     {
       "path": "src/fps/audio.mjs",
@@ -2191,8 +2191,8 @@
     },
     {
       "path": "src/fps/game.mjs",
-      "bytes": 39737,
-      "sha256": "1173b86e9a352067bd462fc06f05a4500772de9a52b4d7d461c3c9cba4028e70"
+      "bytes": 40520,
+      "sha256": "02039357e1421398ac36c7a264302fdc93c46e7f6e9c5725d6035165509d6a52"
     },
     {
       "path": "src/fps/glass-visuals.mjs",
@@ -2296,13 +2296,13 @@
     },
     {
       "path": "src/fps/network/room-ui.mjs",
-      "bytes": 8879,
-      "sha256": "85dbcd80ed2edc20c21ea94b1958f52a77f29fc3291eacd05d2608054161520e"
+      "bytes": 9463,
+      "sha256": "933daf3a6aa40d480bb1834f21c2a6aa008560908d4356b606df81c352f7740a"
     },
     {
       "path": "src/fps/network/session.mjs",
-      "bytes": 25269,
-      "sha256": "f734b5337b7dd43d82fa0648ddf6208be965e41cbd997af5ebedb57302b70037"
+      "bytes": 26140,
+      "sha256": "71878681f06591bbbdb578d4aa38e9d3506b5c95d247e045cfed95175ef2b9d4"
     },
     {
       "path": "src/fps/physics.mjs",
@@ -2605,7 +2605,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 58734015,
+  "bytes": 58737245,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",
