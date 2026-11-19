@@ -3,6 +3,7 @@ import {setTimeout as delay} from 'node:timers/promises';
 import {chromium} from '../frontline/source/tools/dev/node_modules/playwright-core/index.mjs';
 import '../server/register-shared.mjs';
 const {createLocalServer}=await import('../server/local-server.mjs');
+import {POSES} from '../src/fps/zombie-poses.mjs';
 import {resumeDesktop} from './network-browser-resume.mjs';
 
 const local=await createLocalServer({port:0,testMatch:{countdownSeconds:.15}});
@@ -50,7 +51,10 @@ try{
   assert(game.world.canOccupy(spot.x,spot.z,.22,1.7));
   Object.assign(spawn[0],spot,{spawnProtectedUntil:0});
   Object.assign(spawn[1],spot,{x:spot.x+.65,spawnProtectedUntil:0});
-  await delay(180);
+  for(const p of [desktop,mobile])await p.waitForFunction(expected=>{
+    const actor=__fps.game.player;
+    return Math.abs(actor.yaw-expected.yaw)<.01&&Math.abs(actor.pitch-expected.pitch)<.01&&Math.abs(actor.z-expected.z)<.05;
+  },spot);
   await mobile.locator('#resume').tap();await resumeDesktop(desktop);
   const presented=p=>p.evaluate(()=>{
     const g=__fps.game,r=__fps.renderer.zombieVisuals;
@@ -64,12 +68,41 @@ try{
   const first=await presented(desktop),other=await presented(mobile);
   assert.deepEqual(first.lives,other.lives);
   assert.match(first.dance,/All_Night_Dance|Jazz_Hands|Flirty_Strut_inplace|Groovy_Walk/);
+  const frameCosts=await desktop.evaluate(()=>{
+    const {game,renderer}=__fps, residents=game.state.zombies,time=game.state.time;
+    const gl=renderer.renderer.getContext(),visible=game.player;
+    function sample(population){
+      game.state.zombies=population;
+      const times=[];
+      for(let i=0;i<12;i++){
+        game.state.time=time+i/60;
+        const start=performance.now();
+        renderer.render(game,visible,1/60);
+        gl.finish();
+        if(i>=3)times.push(performance.now()-start);
+      }
+      return times.sort((a,b)=>a-b);
+    }
+    try{
+      const on=sample(residents),off=sample([]);
+      return {on,off,assets:performance.getEntriesByType('resource').filter(r=>/\/(zombies|Danceman)\/.*\.glb\.gz$/.test(r.name))
+        .map(r=>({asset:r.name.split('/').at(-1),bytes:r.encodedBodySize,ms:Math.round(r.duration)}))};
+    }finally{game.state.zombies=residents;game.state.time=time;}
+  });
+  console.log('Resident client benchmark',JSON.stringify(frameCosts));
   const phase=await desktop.evaluate(()=>__fps.renderer.zombieVisuals.instances.get('danceman').current.time);
   await until(()=>desktop.evaluate(t=>Math.abs(__fps.renderer.zombieVisuals.instances.get('danceman').current.time-t)>.05,phase),'dance mixer advances');
   await desktop.mouse.down({button:'left'});
   try{await until(()=>!dancer.alive,'real mouse fire killed resident');}finally{await desktop.mouse.up({button:'left'});}
   for(const p of [desktop,mobile])await until(()=>p.evaluate(()=>!__fps.network.room.state.residents.get('danceman').alive&&
     __fps.renderer.zombieVisuals.instances.get('danceman')?.current?.getClip().name==='Dead'&&!__fps.audio.floorAudio.music),'both display death and stop the loop');
+  const walker=game.state.zombies.find(z=>z.model==='hollow'&&z.alive);
+  assert(walker,'living Hollow Walker');
+  Object.assign(walker,{x:dancer.x,y:0,z:dancer.z,goal:null,path:[],nextSense:game.state.time+.7});
+  for(const p of [desktop,mobile])await p.waitForFunction(({id,clips})=>{
+    const v=__fps.renderer.zombieVisuals.instances.get(id);
+    return v?.root.visible&&clips.includes(v.current?.getClip().name);
+  },{id:walker.id,clips:Object.values(POSES.hollow)});
   assert.equal(game.state.score.analysts+game.state.score.counterAnalysts,0);
   console.log('PASS full population, ten team slots, shared original models, dance mixer, one spatial loop and replicated mouse-driven death');
   assert.deepEqual(bad,[]);
