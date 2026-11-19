@@ -1,6 +1,6 @@
 # Classic online på Floor 5
 
-[Classic-PR #27](https://github.com/capstere/Cartridge-strike2/pull/27) utgår från main `39412f8c823610fd3f543971f0efba30f2a79ee3`. TDM-grunden mergades i [PR #26 efter sju godkända kontroller](https://github.com/capstere/Cartridge-strike2/actions/runs/44456517274). Classic-spelkodens commit är `f8e54aaad3f4ef994191f0289014d1dea34b3279`, protokoll 7 och byggidentitet `19eb2df3b9278ccff34a37b0de63f942ec71121d124200f8d5db34deb0536f27`.
+[Classic-PR #27](https://github.com/capstere/Cartridge-strike2/pull/27) utgår från main `39412f8c823610fd3f543971f0efba30f2a79ee3`. TDM-grunden mergades i [PR #26 efter sju godkända kontroller](https://github.com/capstere/Cartridge-strike2/actions/runs/44456517274). Den granskade spelkodens commit är `eae75f4aa1098537078c6e8b1268a1f8353852af`, protokoll 7 och byggidentitet `50b6e8d334b87862b848ecb922d3937221dbf1cd71e41a85911d8d1481e2df3e`.
 
 ## Spela Classic
 
@@ -16,6 +16,7 @@ Utslagna spelare kan följa levande lagkamrater. Befintliga spelare har 15 sekun
 - Två SDK-klienter använde hållinteraktionen för att plantera och desarmera. Släppt knapp och tyst input avbröt handlingen. Planterad bomb överlevde bärarens död. En desarmering vid exakt samma sluttid som explosionen gav detonation. Sen anslutning och återanslutning bevarade bombens ursprungliga deadline. En återansluten död spelare förblev död. En avbruten eskort kunde återupptas med samma gisslan.
 - En ensam värd startade med nio BotController. I kontrollerade positioner tog en bot upp en tappad bomb och planterade, en försvarare desarmerade och en tilldelad eskortör hämtade sin gisslan och ledde följaren hela vägen in i zonen. En väntande människa ersatte sin bot först vid nästa rundgräns. Ett separat Floor 5-prov lät en fysisk följare passera en öppnande dörr och en krossad ruta. Provet för nästa runda kontrollerade att glaset återställdes.
 - Två renderade Chromium-klienter i CI köpte HE på dator och rustning i mobilvy, såg rätt saldo, planterade med **E** och desarmerade med en hållen touchknapp. Båda klienterna visade rundresultatet. I det utökade provet startade spelaren dessutom en eskort med E, vände sig med piltangenten och gick in i räddningszonen med W. Båda klienterna registrerade samma räddade gisslan. [Renderad eskort](https://github.com/capstere/Cartridge-strike2/actions/runs/44459027593) Samma CI-jobb provade även TDM med åtta botar, glas, utrustning och samtidig rörelse/sikte/eld på mobil. [Körning på spelkodens revision](https://github.com/capstere/Cartridge-strike2/actions/runs/44458377862)
+- Slutgranskningen fann att Enter kunde lämna rummet i åskådarläget och att köpmenyn kunde behålla fel lagmärkning eller köpkraft. Det renderade provet kontrollerar nu köpbar rustning före och efter ett HE-köp, lagets gevär och att en utslagen spelare som trycker Enter får samma rundresultat. Ett serverprov ansluter precis före matchslut och kvitterar kartladdningen först efter omspel. Spelaren kan då byta lag i väntrummet och alla tio aktörerna behåller en egen plats.
 - Offline Classic och Endless behöll identiska händelse- och tillståndshashar i åtta återspelningar (9 600 tick). Driftpaketets 519 runtimefiler och sju driftprov passerade. HTTPS/WSS-proben på en isolerad inbjudningsinstans verifierade två klienter, rörelse, skott, omladdning och avslut. [Obligatoriska kontroller på aktuell PR-revision](https://github.com/capstere/Cartridge-strike2/pull/27/checks)
 
 ## Långa serveruppdateringar i Team Deathmatch
@@ -33,14 +34,14 @@ Före var spelrevisionen `8c2f310b860dd791b1938d1efef32d311d640da8`. I den läng
 
 ## Classic på Raspberry Pi
 
-Fem minuter på spelrevisionen ovan med normala startplatser, ordinarie rundtider, hela kartan, en SDK-spelare och nio aktiva botar. Servern gjorde 18 004 uppdateringar på 300,07 s. Under mätfönstret började tre nya rundor, botarna gick sammanlagt 3 386 m och avlossade 164 skott. Det registrerades 24 HE-kast, tre glasbrott, en plantering och en startad eskort. Gisslan gick 2,51 m i 52 uppdateringar. Ingen räddning eller desarmering inträffade under just detta prov. Fullföljd räddning och desarmering verifierades separat med riktiga botar i de kontrollerade scenarierna.
+Fem minuter på slutliga spelrevisionen `eae75f4aa1098537078c6e8b1268a1f8353852af` med Node 26.13.0, normala startplatser, ordinarie rundtider, hela kartan, en SDK-spelare och nio aktiva botar. Servern gjorde 18 004 uppdateringar på 300,06 s. Under mätfönstret började fyra nya rundor, botarna gick sammanlagt 3 455 m och avlossade 160 skott. Det registrerades 25 HE-kast, sex glasbrott, en plantering och fem påbörjade eskorter. Gisslan gick 69,21 m fördelat på 1 083 uppdateringar. Ingen räddning eller desarmering inträffade under just detta prov. Fullföljd räddning och desarmering verifierades separat med riktiga botar i de kontrollerade scenarierna.
 
 | Hela femminuterskörningen | p95 ms | p99 ms | Max ms | >33 ms | >50 ms | >100 ms |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Exekvering | 1,78 | 2,99 | 57,82 | 7 | 1 | 0 |
-| Intervall mellan uppdateringar | 16,92 | 32,24 | 72,40 | 53 | 16 | 0 |
+| Exekvering | 1,72 | 2,85 | 78,97 | 11 | 6 | 0 |
+| Intervall mellan uppdateringar | 16,95 | 32,27 | 79,33 | 54 | 16 | 0 |
 
-Själva simuleringen tog 1,24 ms vid p95 och 2,56 ms vid p99 för de sista 8 192 uppdateringarna. Högsta uppmätta kostnad var 7,72 ms för rundstart, 12,11 ms för glasbrott och 47,13 ms för ett taktiskt vägval. Under uppdateringar där gisslan rörde sig tog simuleringen som mest 57,40 ms. Dessa tider omfattar överlappande arbete och ska inte summeras. Medelarbetet inklusive serialisering var 1,03 ms per uppdatering. Serverprocessen använde 8,7 % av en CPU-kärna, 223,9 MiB RSS och 78,5 MiB använd heap vid slutmätningen. Utgående data var 12 123 byte/s till klienten. Inget nätverksmottryck eller termisk strypning registrerades och sista klientens avhopp tömde rummet.
+Själva simuleringen tog 1,22 ms vid p95 och 2,51 ms vid p99 för de sista 8 192 uppdateringarna. Högsta uppmätta kostnad var 8,73 ms för rundstart, 18,65 ms för glasbrott och 52,88 ms för ett taktiskt vägval. Under uppdateringar där gisslan rörde sig tog simuleringen som mest 78,38 ms. Dessa tider omfattar överlappande arbete och ska inte summeras. Medelarbetet inklusive serialisering var 0,99 ms per uppdatering. Serverprocessen använde 8,3 % av en CPU-kärna, 219,5 MiB RSS och 83,1 MiB använd heap vid slutmätningen. Utgående data var 11 988 byte/s till klienten. Inget nätverksmottryck eller termisk strypning registrerades och sista klientens avhopp tömde rummet.
 
 Återskapa med `CS2_LOAD_MODE=classic CS2_LOAD_AI=1 CS2_LOAD_COUNTS=1 CS2_LOAD_SECONDS=300 node tools/network-load.mjs`. För TDM-jämförelsen används 180 sekunder utan `CS2_LOAD_MODE`. För båda körningarna användes naturlig GC. Verktygets särskilda heapkontroll med framtvingad GC är ett separat prov.
 
