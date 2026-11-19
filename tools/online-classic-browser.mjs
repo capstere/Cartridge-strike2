@@ -45,6 +45,32 @@ try{
   await mobile.locator('#mobile-more').tap();await mobile.locator('[data-mobile-action=buy]').tap();
   await mobile.locator('[data-item=armor]').tap();await until(()=>defender.armor===100&&defender.money===150,'mobile bought armor');await mobile.locator('#return-buy').tap();
   game.state.buyDeadline=game.state.time;await until(()=>game.phase==='active','buy phase expires');
+  const rescue=game.world.anchors.rescue,h=game.hostages[0],world=game.world;
+  // Place the pair outside the rescue zone with a clear approach. The player
+  // acquires the follower and walks it in using keyboard input.
+  const spawn=world.navigation.nodes.find(p=>{
+    const d=Math.hypot(p.x-rescue.x,p.z-rescue.z);
+    if(d<rescue.radius+1.9||d>rescue.radius+2.6)return false;
+    return world.findPath(p,rescue).length===1&&world.segmentClear({...p,y:1},{...rescue,y:1},{vision:false});
+  });
+  assert(spawn);
+  const d=Math.hypot(spawn.x-rescue.x,spawn.z-rescue.z);
+  Object.assign(h,{x:spawn.x,z:spawn.z,y:0});
+  Object.assign(carrier,{x:spawn.x+(rescue.x-spawn.x)*.7/d,z:spawn.z+(rescue.z-spawn.z)*.7/d,y:0});
+  await desktop.waitForFunction(()=>document.querySelector('#prompt-text').textContent.includes('starta eskort'));
+  await desktop.keyboard.down('e');
+  try{await until(()=>h.escortId===carrier.id,'desktop starts escort');}finally{await desktop.keyboard.up('e');}
+  const target=Math.atan2(carrier.x-rescue.x,carrier.z-rescue.z);
+  const error=()=>Math.atan2(Math.sin(target-carrier.yaw),Math.cos(target-carrier.yaw));
+  if(Math.abs(error())>.15){
+    const key=error()>0?'ArrowLeft':'ArrowRight';await desktop.keyboard.down(key);
+    try{await until(()=>Math.abs(error())<.15,'turn toward rescue');}finally{await desktop.keyboard.up(key);}
+  }
+  await desktop.keyboard.down('w');
+  try{await until(()=>Math.hypot(carrier.x-rescue.x,carrier.z-rescue.z)<rescue.radius-.1,'walk into rescue');}
+  finally{await desktop.keyboard.up('w');}
+  await until(()=>h.rescued&&h.distanceWalked>1,'visible follower reached rescue');
+  for(const p of [desktop,mobile])await p.waitForFunction(()=>document.querySelector('#hostage-status').textContent.includes('1/'));
   Object.assign(carrier,game.world.anchors.bomb);
   await desktop.waitForFunction(()=>document.querySelector('#prompt-text').textContent.includes('plantera'));
   await desktop.keyboard.down('e');
