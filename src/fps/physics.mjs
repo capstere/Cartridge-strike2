@@ -101,7 +101,14 @@ export function createPhysics(description,data){
     return false;
   }
   const touchesPolygon=(x,z,r,p)=>insidePolygon(x,z,p)||nearEdge(x,z,p,r-EPS);
-  for(const p of data.floorPolygons)addPolygon(floorIndex,p);
+  const rectangularFloors=new WeakMap();
+  for(const p of data.floorPolygons){
+    addPolygon(floorIndex,p);
+    if(p.length===4&&p.every(([x,z],i)=>i%2===0 ? z===p[(i+1)%4][1] : x===p[(i+1)%4][0]) ||
+       p.length===4&&p.every(([x,z],i)=>i%2===0 ? x===p[(i+1)%4][0] : z===p[(i+1)%4][1])){
+      rectangularFloors.set(p,polygonBounds(p));
+    }
+  }
   for(const r of [...data.excludedRooms,...data.rooms.filter(r=>r.status==='uncertain'),...data.obstacles.filter(o=>o.kind==='uncertain-area')])addPolygon(scopeIndex,r.polygon);
   for(const o of data.obstacles)if(o.collision!=='none')addPolygon(navObstacleIndex,o.polygon);
   // Decorative objects remain visible but never enter the physical broadphase.
@@ -164,7 +171,11 @@ export function createPhysics(description,data){
   function scopeAllowed(x,z,r=ACTOR_RADIUS){
     if(!Number.isFinite(x)||!Number.isFinite(z))return false;
     if(!onFloor(x,z))return false;
-    for(const [cx,cz] of RING)if(!onFloor(x+cx*r,z+cz*r))return false;
+    // A disc strictly inside a rectangular floor has all sixteen samples
+    // inside it. Keep the original polygon tests at edges, holes and seams.
+    const floor=rectangularFloors.get(lastFloor);
+    if(!(floor&&x-r>floor.minX&&x+r<floor.maxX&&z-r>floor.minZ&&z+r<floor.maxZ))
+      for(const [cx,cz] of RING)if(!onFloor(x+cx*r,z+cz*r))return false;
     for(const p of scopeIndex.query(x,z,r,scopeScratch))if(touchesPolygon(x,z,r,p))return false;
     return true;
   }

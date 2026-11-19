@@ -88,6 +88,9 @@ export function createNavigation(data,physics,{spacing=.70,radius=ACTOR_RADIUS+.
   function findPath(from,to,{avoid=[],blockers=[]}={}){
     if(!from||!to||![from.x,from.z,to.x,to.z].every(Number.isFinite))return [];
     if(!avoid.length&&bodiesClear(from,to,blockers,true)&&clear(from,to,ACTOR_RADIUS))return [{x:to.x,z:to.z}];
+    // Each endpoint must connect via a swept capsule. Reject an obstructed
+    // endpoint once instead of testing it against every nearby graph node.
+    if(!physics.canOccupy(from.x,from.z,ACTOR_RADIUS)||!physics.canOccupy(to.x,to.z,ACTOR_RADIUS))return [];
     const start=nearest(from,blockers,true),end=nearest(to,blockers);if(!start||!end||component[start.id]!==component[end.id])return [];
     // Tactical costs are private to this query. They never mutate the shared
     // Yuka graph, remove valid edges, or change the collision footprint.

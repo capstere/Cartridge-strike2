@@ -11,7 +11,18 @@ const {CONTRACT}=await import(new URL('shared/multiplayer/build.mjs',root));
 const loops=monitorEventLoopDelay({resolution:10});loops.enable();
 const samples={tick:[],simulation:[],projection:[],serialization:[],interval:[],shotAge:[]};
 const totals=Object.fromEntries(Object.keys(samples).map(key=>[key,0]));
-const push=(key,n)=>{totals[key]+=n;const a=samples[key];a.push(n);if(a.length>8192)a.shift();};
+const full = Object.fromEntries(['tick','interval'].map(key => [key, []]));
+const slow = [];
+let work;
+function profile(object, method, label) {
+ const original=object[method];
+ object[method]=function(...args){
+   if(!work)return original.apply(this,args);
+   const t=performance.now();
+   try{return original.apply(this,args);}finally{work[label]=(work[label]||0)+performance.now()-t;}
+ };
+}
+const push=(key,n)=>{totals[key]+=n;full[key]?.push(n);const a=samples[key];a.push(n);if(a.length>8192)a.shift();};
 const stats=a=>{const sorted=a.slice().sort((a,b)=>a-b),n=sorted.length;if(!n)return {n:0,p50:null,p95:null,p99:null,max:null};return {n,p50:sorted[Math.floor(n*.5)]||0,p95:sorted[Math.floor(n*.95)]||0,p99:sorted[Math.floor(n*.99)]||0,max:sorted.at(-1)||0};};
 const ai=process.env.CS2_LOAD_AI==='1';
 let botShots=0,botTravel=0,throws=0,breaks=0,updates=0;
@@ -22,10 +33,16 @@ function instrument(){
   if(!r.sim||!r.state)continue;
   if(!seen.has(r)){
    seen.add(r);let last;
+   if(ai){
+    const g=r.sim.game;
+    for(const [obj,key] of [[g.world.navigation,'findPath'],[g.world,'findPath'],[g,'updateGrenades'],[g,'moveActor'],[g,'fire'],[g.world.glass,'breakAt']])profile(obj,key,(obj===g.world?'world.':'')+key);
+    const proto=Object.getPrototypeOf([...r.bots.values()][0]?.actor.bot||{});
+    for(const key of ['perceive','chooseFloorRoute','follow','update'])if(proto[key])profile(proto,key,key);
+   }
    for(const [obj,key,label] of [[r,'fixedTick','tick'],[r.sim,'tick','simulation'],[r,'project','projection'],[r,'broadcastPatch','serialization']]){
     const original=obj[key];obj[key]=function(...args){
       const dead=label==='simulation'?r.sim.game.actors.filter(a=>!a.alive):[];
-      const t=performance.now();if(label==='tick'){if(last!==undefined)push('interval',t-last);last=t;}
+      const t=performance.now();if(label==='tick'){if(last!==undefined)push('interval',t-last);last=t;work={};}
       try{
           const result=original.apply(this,args);
           if(ai&&label==='simulation'){
@@ -35,7 +52,8 @@ function instrument(){
           }
           return result;
         }finally{
-        push(label,performance.now()-t);if(label==='tick')updates++;
+        const ms=performance.now()-t;
+        push(label,ms);if(label==='tick'){updates++;if(ms>33&&slow.length<10000)slow.push({tick:r.sim.tickNumber,ms,work,respawns:combatRespawns,breaks});work=null;}
         if(label==='simulation'){combatRespawns+=dead.filter(a=>a.alive).length;placeActors(r);}
       }
     };
@@ -77,6 +95,7 @@ function snapshot(){
  const usage=process.cpuUsage(cpu),elapsed=(performance.now()-started)/1000;
  const loopSamples=Number(loops.count);
  return {thermal:thermal(),elapsedSeconds:elapsed,serverCpuPercent:(usage.user+usage.system)/1e4/elapsed,memory:process.memoryUsage(),
+  wholeRun:Object.fromEntries(Object.entries(full).map(([key,a])=>[key,{...stats(a),above33:a.filter(n=>n>33).length,above50:a.filter(n=>n>50).length,above100:a.filter(n=>n>100).length}])),slow:slow.slice().sort((a,b)=>b.ms-a.ms).slice(0,12),
   eventLoopMs:loopSamples?{n:loopSamples,p50:loops.percentile(50)/1e6,p95:loops.percentile(95)/1e6,p99:loops.percentile(99)/1e6,max:loops.max/1e6}:{n:0,p50:null,p95:null,p99:null,max:null},
   costMs:Object.fromEntries(Object.entries(samples).filter(([k])=>k!=='shotAge').map(([k,v])=>[k,stats(v)])),shotAgeMs:stats(samples.shotAge),bytes,inBytes,respawns,combatRespawns,botShots,botTravel,throws,breaks,updates,workPerUpdateMs:updates?(totals.tick+totals.serialization)/updates:0,
   resources:process.getActiveResourcesInfo().reduce((o,k)=>(o[k]=(o[k]||0)+1,o),{}),
@@ -96,8 +115,8 @@ process.on('message',async({id,action,options})=>{
    const model=await readFile('/proc/device-tree/model','utf8').then(value=>value.replace(/\0/g,'').trim()).catch(()=>undefined);
    result={url:local.url,contract:CONTRACT,environment:{model,node:process.version,platform:platform(),arch:arch(),cpu:cpus()[0].model,cores:cpus().length}};
   }else if(action==='reset'){
-   for(const a of Object.values(samples))a.length=0;for(const k of Object.keys(totals))totals[k]=0;updates=throws=breaks=botTravel=botShots=respawns=combatRespawns=bytes=inBytes=0;loops.reset();cpu=process.cpuUsage();started=performance.now();global.gc?.();result=snapshot();
-  }else if(action==='sample'){global.gc?.();result=snapshot();}
+   for(const a of [...Object.values(samples),...Object.values(full),slow])a.length=0;for(const k of Object.keys(totals))totals[k]=0;updates=throws=breaks=botTravel=botShots=respawns=combatRespawns=bytes=inBytes=0;loops.reset();cpu=process.cpuUsage();started=performance.now();if(process.env.CS2_FORCE_GC==='1'||process.env.CS2_SOAK==='1')global.gc?.();result=snapshot();
+  }else if(action==='sample'){if(process.env.CS2_FORCE_GC==='1'||process.env.CS2_SOAK==='1')global.gc?.();result=snapshot();}
   else if(action==='drop'){const r=[...local.rooms].find(r=>r.roomId===options.room);r.clients.find(c=>c.sessionId===options.sid).ref.terminate();}
   else if(action==='close'){clearInterval(fixtureTimer);await local.close();loops.disable();result=snapshot();}
   else throw Error('Unknown test IPC action');
