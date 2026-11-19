@@ -1,16 +1,48 @@
 # Cartridge-Strike 2 handover
 
-**Zombies och Dansmannen finns nu på cs2.capstere.com i Classic och Team Deathmatch.**
-[PR #28](https://github.com/capstere/Cartridge-strike2/pull/28) är mergad.
-Aktiv release `c976c871d783fcfadb298a2e94dfc741d7468a89` använder protokoll 8.
-Återställningsreleasen är `f685ee759eef4f6183f2c135b6b251abbb3f1cd1` med
-driftkonfiguration sparad i `20261119T084022788559Z`.
+**Friendly fire och Rocket Launcher är live i Classic och Team Deathmatch på [cs2.capstere.com](https://cs2.capstere.com).**
+[PR #30](https://github.com/capstere/Cartridge-strike2/pull/30) mergades som `3de711cdeb4e4bf74abc84e6f08dfe5f709f43f4`.
+Aktiv release `a00c57b63425e0ec19cad9dab82c2cf57c55a934` använder protokoll 9 och
+byggidentiteten `cc2162185e791bc603a05713f551d0bbd617159360b98a802720a02a10041ae6`.
 
-**Nästa steg är Jespers fysiska spelprov på iPhone och dator.** Värden slår på
-**Zombies** och **Dansmannen** var för sig i väntrummet. Prova särskilt ljudet,
-återanslutning, Classic-rundbyte och TDM-omspel. Fysisk iPhone och Android
-är **NOT RUN**. [Driftverifiering, spelkontroller och mätningar](docs/multiplayer/ONLINE_RESIDENTS_REPORT.md).
-Rök, flash och raketkastare återstår online.
+Värden väljer **Friendly fire** i väntrummet före **Starta match**. Nya rum
+startar med **Av**. I Classic kostar **Rocket Launcher** 3 600 i köpmenyn
+under köpperioden. Öppna med **B** på datorn eller **MER → KÖP** på touch.
+I Team Deathmatch väljs **Rocket Launcher** under **Utrustning** i väntrummet
+eller i utrustningsmenyn under matchen för nästa respawn. **Zombies** och
+**Dansmannen** kan fortfarande slås på var för sig i väntrummet.
+
+Alla sju [CI-jobb](https://github.com/capstere/Cartridge-strike2/actions/runs/44530033716)
+passerade på exakt releasecommit. Två renderade klienter verifierade menyer,
+raketflygning, gemensam explosion och ljud, skada och omladdning i båda lägena
+med mus och emulerad touch. TDM-provet täcker också avgörande raket vid matchslut.
+På den publika adressen passerade separat inloggning och HTTPS/WSS. Spelprovet
+gav 100 HP för lagkamraten med Friendly fire av och 0 med det på i TDM.
+Classic-provet tjänade ihop krediter via en riktig runda, köpte vapnet för
+3 600 och verifierade samma explosion och lagkamratsskada på två klienter.
+
+Pi 5 körde fyra jämförbara 30-sekunders prov efter 5 sekunders uppvärmning
+på hela Floor 5 med tio SDK-aktörer. Med SMG respektive raketkastare mättes
+tickarbetets p95 till 1,35 respektive 1,38 ms i TDM och 1,43 respektive 1,47 ms
+i Classic. Båda raketkörningarna skickade 60 riktiga raketer. Ingen tickexekvering
+överskred 33 ms. Högsta uppmätta tickintervall var 33,50 ms. SDK-aktörerna avfyrade
+vapnen i kontrollerade salvor mot ytor i C08.
+Jämförelse, CPU, minne, trafik och mätbuild finns i [PR #30](https://github.com/capstere/Cartridge-strike2/pull/30).
+
+Återställningspunkten är `c976c871d783fcfadb298a2e94dfc741d7468a89`
+(protokoll 8, [PR #28](https://github.com/capstere/Cartridge-strike2/pull/28)).
+Den versionsbundna managern verifierades mot båda paketerade releaserna i
+isolerade processer. Driftkonfigurationen sparades i `20261119T133500401188Z`.
+Originaltjänsten på 2567, tunneln, adressen och inbjudan behölls.
+Följ [driftguiden](deploy/online/README.md) för återställning.
+
+**Nästa steg är Jespers fysiska spelprov på iPhone och dator.** Prova
+raketkastarens köp eller utrustningsval, avfyrning och omladdning i båda lägena.
+Prova också Friendly fire På och Av med en lagkamrat. Fysisk iPhone och Android
+för denna release är **NOT RUN**. Pi:ns mjukvarurendering räckte inte för en
+tillförlitlig visuell kontroll. CI använde hårdvaruaccelererad rendering.
+[Residenternas driftverifiering och tidigare mätningar](docs/multiplayer/ONLINE_RESIDENTS_REPORT.md).
+Rök och flash återstår online.
 
 **Låg prioritet.** Jesper har hittat två lokala kollisionsproblem vid streck
 på golvet som ser ut som gamla väggar eller områdesgränser. Möbler ligger
