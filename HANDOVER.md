@@ -1,8 +1,64 @@
 # Cartridge-Strike 2 handover
 
+## Aktiv release på Pi:n
+
+**Botsvårighet, förbättrad Floor 5-karta och lagradio är live i Classic och Team Deathmatch.** [Spela på cs2.capstere.com](https://cs2.capstere.com).
+
+- Aktiv release `d8e780acae2d9998b2e2cf0d7f719e0c958b0fb9`, protokoll **11**, byggidentitet `6fb7d34c08d4b36fc26532d6779793eda61443f9081ff42cfc89dbb8919a5785`, protokollhash `6ed5ea19797e9019b7c9a1aa8327d1cbcd669b52e7b05ee0ce375232b975ed1e`.
+- Värden väljer **Botsvårighet** i väntrummet. **Normal** är standard. Valet låses vid nedräkning och behålls vid återanslutning och omspel. **Casual** använder 55 procent skada före rustning när en fientlig lagbot träffar en människa.
+- Öppna kartan med **M** eller **MER → KARTA**. Den visar den egna riktningen, lagkamrater, hissarna Cargo Lift och Transit Lift samt namngivna platser. Classic visar bombplatsen i North Laboratory (I01), gisslans start i Technical Storage (I12) och räddningszonen i Main Atrium (I31).
+- Öppna lagradion med **Z** eller **MER → RADIO**. **Håll ihop** och **Behöver understöd** kan omdirigera en tillgänglig lagbot till avsändarens position i högst åtta sekunder. Botens strid och kritiska uppdrag har företräde. En vanlig ping markerar en fast plats för lagkamraterna. Servern begränsar signaler till en varannan sekund per spelare och minst 250 ms mellan lagets signaler.
+
+### Granskning och testbevis
+
+| Ändring | Granskat PR-huvud | Merge | Alla sju CI-jobb |
+| --- | --- | --- | --- |
+| [#31 · Botsvårighet](https://github.com/capstere/Cartridge-strike2/pull/31) | `7f398c64878cbc8f285e10f6e75764e4605b3156` | `7b3d6a8cc8ec844d81ab719b7effe7bc5f43eac2` | [44784121146](https://github.com/capstere/Cartridge-strike2/actions/runs/44784121146) |
+| [#32 · Floor 5-karta](https://github.com/capstere/Cartridge-strike2/pull/32) | `3a6b0561c14dce2f1a5562c7231f564aabff111f` | `7bb2790a460faae50df1f041aa8ccfb7485de7aa` | [44790243454](https://github.com/capstere/Cartridge-strike2/actions/runs/44790243454) |
+| [#33 · Lagradio och pingar](https://github.com/capstere/Cartridge-strike2/pull/33) | `b579884cf9ffb961a2f32736e7a98d80cb3525d2` | `d8e780acae2d9998b2e2cf0d7f719e0c958b0fb9` | [44798442420](https://github.com/capstere/Cartridge-strike2/actions/runs/44798442420) |
+
+Efter merge passerade både Node-kontrollerna och Pages-bygget. [Node-kontroller](https://github.com/capstere/Cartridge-strike2/actions/runs/44804308371), [Pages-bygge](https://github.com/capstere/Cartridge-strike2/actions/runs/44804308145).
+
+- Botproven körde verkliga serverbotars reaktioner och träffar på alla tre nivåer. Separata fall kontrollerade skademultiplikatorn före rustning samt PvP, friendly fire, självskada och zombies. De täckte även värdbehörighet, rumsisolering, reservplatser, respawn, rundgränser och omspel.
+- Kartproven täckte båda hissarna, Classic-mål och scenarier för bomb, eskort, rundbyte och återanslutning. Renderad dator- och touchvy testades i **Clean** och **Full**, inklusive liggande bredd med säkra sidomarginaler.
+- Radioproven använde två lagkamrater, en motståndare och serverbotar. Bara laget tog emot ping och kommando. Proven täckte också botens strids- och uppdragsprioritet, utgångstid, dubbla kommandon, gamla liv och anslutningar samt omspel. Det renderade provet körde Z, muslås, MER → RADIO, avsiktlig platsmarkering och vapenstatus. Befintliga CI-prov körde även Classic-köp, plantering/desarmering, TDM-omspel, raketkastare, residenter och 24 allmänna Floor 5-livscykler.
+- Det första CI-försöket på #33 tappade ett raketljud på en klient. Det efterföljande försöket på samma revision passerade. I separata SwiftShader-prov på Pi:n nådde både ett raketljud och en radioreplik ljudmotorn senare än den befintliga åldersgränsen på 0,4 sekunder. Gränsen gör att klienten kan hoppa över ljud efter ett längre uppehåll i renderingen.
+- På speladressen passerade den ordinarie privata inloggningen, HTTPS/WSS, rörelse, skott och omladdning med två SDK-klienter. Tre separat inloggade SDK-klienter provade Hard i TDM och Casual i Classic med tio aktörer per rum. Lagkamraten fick ping och kommando. Motståndaren fick noll sådana meddelanden. Två separat inloggade renderade Chromium 156-klienter valde samma svårigheter i väntrummet, öppnade kartan med M och MER → KARTA och skickade bekräftad radio och touchping mellan klienterna i båda lägena. Det publika renderade provet kördes med ljudet av och SwiftShader på Pi:n. TDM visade tillfälligt cirka 1,19 s i klientens latensindikator under den samtidiga mjukvarurenderingen.
+- Fysisk iPhone och Android **NOT RUN**. Nästa steg är ett fysiskt prov med två lagkamrater, M och Z på datorn samt MER-menyn och kartans läsbarhet i liggande på telefon.
+
+### Drift och återställning
+
+Den versionsbundna managern `f685ee759eef4f6183f2c135b6b251abbb3f1cd1` och dess SDK-probe verifierades isolerat mot båda releaserna. Aktivering skedde när rumsantal och spelarantal var noll. Återställningspunkt `a00c57b63425e0ec19cad9dab82c2cf57c55a934` använder protokoll 9. Privat konfigurationskopia `20261120T194154484876Z`. Driftkontrollen bekräftade samma processer för originaltjänsten på port 2567 och Cloudflare-tunneln samt samma privata konfiguration. [Driftguide och rollback](deploy/online/README.md).
+
+### Belastning på Pi 5
+
+Före är release `a00c57b63425e0ec19cad9dab82c2cf57c55a934`, bygg `cc2162185e791bc603a05713f551d0bbd617159360b98a802720a02a10041ae6`. Efter är `b579884cf9ffb961a2f32736e7a98d80cb3525d2`, bygg `6fb7d34c08d4b36fc26532d6779793eda61443f9081ff42cfc89dbb8919a5785`. Belastningsverktygen körde full Floor 5 på samma Pi med Node 26.13.0, en loopback-SDK-klient och nio riktiga Normal-botar. Varje mätning började efter fem sekunders uppvärmning. Classic mättes i 180 s och TDM i 90 s. En körning per scenario och version, med vanlig GC och utan ett samtidigt webbläsarjobb. [Belastningsverktyg](tools/network-load.mjs).
+
+Alla värden är före → efter. Millisekunder gäller hela mätfönstret. Antalen visar >33 / >50 / >100 ms.
+
+| Läge och figurer | Tickarbete p50 / p95 / p99 / max | Långt tickarbete | Tickintervall p50 / p95 / p99 / max | Långa intervall |
+| --- | --- | --- | --- | --- |
+| Classic av | 0,81 / 1,87 / 3,48 / 95,69 → 0,86 / 1,83 / 3,15 / 65,64 | 4 / 2 / 0 → 4 / 2 / 0 | 16,16 / 17,50 / 32,35 / 97,30 → 16,17 / 17,00 / 32,25 / 65,87 | 28 / 9 / 0 → 24 / 11 / 0 |
+| Classic på | 1,13 / 2,22 / 3,59 / 86,95 → 1,21 / 2,21 / 3,65 / 86,71 | 8 / 3 / 0 → 6 / 3 / 0 | 16,14 / 17,01 / 32,30 / 87,39 → 16,16 / 16,96 / 32,27 / 87,10 | 33 / 14 / 0 → 29 / 12 / 0 |
+| TDM av | 1,12 / 5,82 / 19,85 / 84,86 → 1,11 / 5,50 / 18,93 / 85,66 | 19 / 9 / 0 → 20 / 12 / 0 | 16,18 / 20,74 / 32,39 / 85,73 → 16,17 / 21,91 / 32,36 / 130,52 | 25 / 9 / 0 → 26 / 14 / 1 |
+| TDM på | 1,41 / 5,90 / 18,78 / 82,18 → 1,41 / 5,93 / 19,75 / 93,63 | 20 / 11 / 0 → 21 / 11 / 0 | 16,17 / 21,96 / 32,41 / 82,40 → 16,15 / 21,03 / 32,45 / 113,34 | 26 / 11 / 0 → 24 / 11 / 1 |
+
+| Läge och figurer | Server-CPU % | RSS / använd heap vid slut, MiB | WebSocket ut / in per SDK-klient, KiB/s |
+| --- | --- | --- | --- |
+| Classic av | 8,8 → 8,8 | 216 / 77 → 219 / 68 | 10,21 / 0,98 → 11,56 / 0,91 |
+| Classic på | 10,5 → 10,7 | 225 / 68 → 212 / 82 | 12,72 / 0,88 → 12,66 / 0,86 |
+| TDM av | 15,1 → 14,8 | 262 / 88 → 256 / 89 | 24,15 / 1,48 → 24,10 / 1,48 |
+| TDM på | 17,3 → 17,5 | 258 / 97 → 266 / 73 | 25,63 / 1,48 → 25,55 / 1,48 |
+
+Server-CPU anges mot en kärnas kapacitet. Trafiken är WebSocket-nyttolast och mätningen avser loopback. Kandidatens Classic-botar sköt 60 gånger i båda körningarna och gisslan förflyttade sig cirka 26 m med figurer av och 67 m med dem på. Kandidatens TDM-botar sköt 153 respektive 118 gånger. Classic-stridens p95 var 2,05 → 2,01 ms med figurer av och 2,39 → 2,44 ms med dem på. Antalet stridstickar och uppdrag varierade. Körningarna mätte normal spelbelastning med vilande lagradio. De två längre TDM-intervallen gäller tid mellan uppdateringarna. Vägval var den största uppmätta delen av de längsta TDM-tickarna, 84,47 av 85,66 ms med figurer av och 79,47 av 93,63 ms med dem på. Orsaken till de två långa intervallen är okänd.
+
+Kartans separata Canvas 2D-prov jämförde bygg `98cc5d8da6db7c02729032c215fed946c74b26e3584e4cb6658a4d07ea8555e0` med `1879db1fb2e88aaaeec643fc0a137c62d3d5fd3b05120a9aaa6fc23d388f9785` på Chromium 156 med SwiftShader. För varm karta var p50 0,025 → 0,025–0,050 ms och p95 0,0375 → 0,0375–0,125 ms per ritkommando. Högsta värde var 0,1375 → 0,500 ms i de separata mätfönstren. Intervallets p95 var 16,7–16,8 ms i båda versionerna. Ett enskilt bildintervall på 116,7 ms förekom i kandidatprovet. Det blev noll dolda ritningar och noll varma cachebyggen. Separat prov med 30 kalla öppningar per läge och vy mätte p95 2,0–3,0 → 5,0–6,9 ms. Provet omfattar kartlagret isolerat i dator- och emulerad touchvy.
+
+## Tidigare leverans av Friendly fire och Rocket Launcher
+
 **Friendly fire och Rocket Launcher är live i Classic och Team Deathmatch på [cs2.capstere.com](https://cs2.capstere.com).**
 [PR #30](https://github.com/capstere/Cartridge-strike2/pull/30) mergades som `3de711cdeb4e4bf74abc84e6f08dfe5f709f43f4`.
-Aktiv release `a00c57b63425e0ec19cad9dab82c2cf57c55a934` använder protokoll 9 och
+Releasen för den leveransen `a00c57b63425e0ec19cad9dab82c2cf57c55a934` använder protokoll 9 och
 byggidentiteten `cc2162185e791bc603a05713f551d0bbd617159360b98a802720a02a10041ae6`.
 
 Värden väljer **Friendly fire** i väntrummet före **Starta match**. Nya rum
