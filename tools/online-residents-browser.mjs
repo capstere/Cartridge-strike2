@@ -166,6 +166,12 @@ try{
   await mobile.locator('#resume').tap();
   const reconnected=await checkBoth(peers,{dead:true});
   assert.deepEqual(reconnected.map(s=>[s.lives,s.uuid,s.starts]),dead.map(s=>[s.lives,s.uuid,s.starts]));
+  await mobile.locator('#mobile-more').tap();
+  await mobile.locator('[data-utility=karta]').tap();
+  assert(await mobile.locator('#map-legend').isVisible());
+  assert.doesNotMatch(await mobile.locator('#map-legend').textContent(),/Bombplats|Gisslanstart/);
+  await mobile.locator('#mobile-more').tap();
+  await mobile.locator('[data-utility=karta]').tap();
   const walker=game.state.zombies.find(z=>z.model==='hollow'&&z.alive);
   assert(walker,'living Hollow Walker');
   Object.assign(walker,{x:dancer.x,y:0,z:dancer.z,goal:null,path:[],nextSense:game.state.time+.7});
@@ -200,6 +206,10 @@ try{
   await approachFixture(desktop,mobile,classic);
   await until(()=>classic.state.roundPhase==='active','next Classic round plays');
   checkNewLife(round1,await checkBoth(peers));
+  await desktop.keyboard.press('m');
+  assert(await desktop.locator('#map-legend').isVisible());
+  assert.match(await desktop.locator('#map-legend').textContent(),/Bombplats.*Gisslanstart.*Räddningszon/);
+  assert(await desktop.locator('#bomb-status').isVisible());
   console.log('PASS Classic round change recreates six residents, restores the original dance and one loop per client');
   assert.deepEqual(bad,[]);
 }catch(error){

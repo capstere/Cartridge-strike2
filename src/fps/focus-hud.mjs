@@ -11,8 +11,8 @@ export function focusHudSettings(settings) {
 
 /** Presentation only. Reuses existing controls/listeners and never changes Game. */
 export class FocusHud {
-  constructor({ settings, mobile, getGame, getModal, onMap, onStats }) {
-    Object.assign(this, { settings, mobile, getGame, getModal, onMap, onStats });
+  constructor({ settings, mobile, getGame, getModal, onMap, onStats, networkMode = false }) {
+    Object.assign(this, { settings, mobile, getGame, getModal, onMap, onStats, networkMode });
     this.settings.hudMode = normalizeHudMode(settings.hudMode);
     this.mode = null; this.expanded = false; this.game = null; this.weapon = null;
     this.inventoryUntil = 0; this.placements = [];
@@ -51,8 +51,8 @@ export class FocusHud {
       if (action !== 'sneak') button.addEventListener('pointerup', () => this.setExpanded(false));
     }
     for (const [label, name, action] of [
-      ['KARTA', 'Visa eller dölj taktisk karta', on => this.onMap()],
-      ['RESULTAT', 'Pausa och visa sessionsresultat', on => this.onStats()],
+      ['KARTA', 'Visa eller dölj taktisk karta', () => this.onMap()],
+      ['RESULTAT', 'Pausa och visa sessionsresultat', () => this.onStats()],
     ]) {
       const button = document.createElement('button');
       button.type = 'button'; button.className = 'mobile-button utility-extra';
@@ -75,7 +75,7 @@ export class FocusHud {
     this.reset(); this.mode = mode;
     document.documentElement.dataset.hud = mode;
     if (this.more) {
-      this.more.hidden = mode !== 'clean';
+      this.more.hidden = mode !== 'clean' && !this.networkMode;
       // Move actual controls, not clones, preserving multi-pointer capture and
       // existing buy/throw/hold listeners. Full mode restores exact DOM positions.
       for (const { button, marker } of this.placements) {
@@ -91,9 +91,9 @@ export class FocusHud {
 
   setExpanded(value) {
     const g = this.getGame();
-    const next = !!value && this.mode === 'clean' && !!g?.player?.alive && !this.getModal();
+    const next = !!value && (this.mode === 'clean' || this.networkMode) && !!g?.player?.alive && !this.getModal();
     if (!this.drawer) return;
-    if (this.expanded !== next) this.mobile.clear();
+    if (this.expanded !== next && !this.networkMode) this.mobile.clear();
     this.expanded = next; this.drawer.hidden = !next;
     this.more.setAttribute('aria-expanded', String(next));
     this.more.setAttribute('aria-label', next ? 'Stäng extra spelkontroller' : 'Visa fler spelkontroller');
@@ -137,7 +137,7 @@ export class FocusHud {
       }
     }
     if (!this.mobile.enabled) return;
-    this.more.hidden = this.mode !== 'clean' || !p.alive;
+    this.more.hidden = (!this.networkMode && this.mode !== 'clean') || !p.alive;
     const firearm = ['primary', 'pistol'].includes(w?.slot);
     this.contextButton('reload', firearm && (p.reloadUntil || (item && item.ammo < w.magazine)));
     let interact = !!p.action || this.mobile.state.interact;

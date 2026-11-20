@@ -106,6 +106,76 @@ async function fireTouch(page){
   await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{id:1,x:box.x+box.width/2,y:box.y+box.height/2}]});
   return async()=>{await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await cdp.detach();};
 }
+async function mapControls(desktop,mobile,room){
+  const classic=room.state.mode==='classic';
+  const read=page=>page.evaluate(()=>{
+    const {minimapCache}=__fps;
+    const panel=document.querySelector('#hud .map-panel'),edges=panel.getBoundingClientRect();
+    return {open:!!panel.getClientRects().length&&minimapCache.canvas.width===448,
+      legend:document.querySelector('#map-legend').textContent,locked:document.pointerLockElement?.id==='game',
+      right:edges.right,aimLeft:document.querySelector('#crosshair').getBoundingClientRect().left,
+      events:getComputedStyle(panel).pointerEvents,
+      draws:minimapCache.stats.draws,skips:minimapCache.stats.hiddenSkips,builds:minimapCache.stats.builds,cache:minimapCache.layers.size};
+  });
+  const check=async page=>{
+    await until(async()=>(await read(page)).open,'the map becomes visible');
+    const state=await read(page);
+    assert(state.right+4<=state.aimLeft && state.events==='none','map stays outside aim and lets touch through');
+    assert.match(state.legend,/Pil · Du.*Punkt · Laget/);
+    assert.equal(state.legend.includes('Bombplats'),classic);
+    assert(state.cache<=2);
+    return state;
+  };
+  const touch=async()=>{
+    await mobile.locator('#mobile-more').tap();
+    await mobile.locator('[data-utility=karta]').tap();
+  };
+
+  assert(await desktop.locator('.online-map-hint').isVisible());
+  await desktop.keyboard.down('w');
+  try{
+    await desktop.keyboard.press('m');
+    assert((await check(desktop)).locked);
+    assert.equal(await desktop.evaluate(()=>__fps.input(0).forward),1,'keyboard movement stays held');
+  }finally{await desktop.keyboard.up('w');}
+  await desktop.keyboard.press('m');
+
+  const cdp=await mobile.context().newCDPSession(mobile);
+  await mobile.setViewportSize({width:932,height:430});
+  await cdp.send('Emulation.setSafeAreaInsetsOverride',{insets:{left:59,top:0,right:0,bottom:0}});
+  for(const mode of ['clean','full']){
+    await mobile.keyboard.press('Escape');
+    await mobile.locator('#pause [data-setting=hudMode]').selectOption(mode);
+    await mobile.locator('#resume').tap();
+    if(mode==='full'){
+      for(const id of ['#mobile-more','[data-mobile-action=buy]'])assert(await mobile.locator(id).evaluate(button=>{
+        const {x,y,width,height}=button.getBoundingClientRect();
+        return x>=59&&document.elementFromPoint(x+width/2,y+height/2)===button;
+      }),id+' stays inside the safe area and keeps its touch target in Full HUD');
+    }
+    await touch();
+    const first=await check(mobile);
+    await touch();
+    const hidden=await read(mobile);
+    assert(!hidden.open);
+    await mobile.waitForFunction(skips=>__fps.minimapCache.stats.hiddenSkips>skips+1,hidden.skips);
+    assert.equal((await read(mobile)).draws,hidden.draws,'hidden touch map does not draw');
+    await touch();
+    assert.equal((await check(mobile)).builds,first.builds,'warm reopen reuses the cached expanded map');
+    await touch();
+  }
+  await cdp.send('Emulation.setSafeAreaInsetsOverride',{insets:{left:0,top:0,right:0,bottom:0}});
+  await cdp.detach();
+  await mobile.setViewportSize({width:844,height:390});
+  await desktop.bringToFront();
+  if(await desktop.locator('#resume').isVisible())await resumeDesktop(desktop);
+  assert.equal(await desktop.evaluate(()=>document.pointerLockElement?.id),'game');
+  if(classic){
+    await desktop.waitForFunction(()=>document.querySelector('#bomb-status').textContent.includes('Stoppa'));
+    await mobile.waitForFunction(()=>document.querySelector('#bomb-status').textContent.includes('gisslan')||document.querySelector('#bomb-status').textContent.includes('North Laboratory'));
+  }
+  console.log('PASS tactical map',room.state.mode,JSON.stringify({desktop:await read(desktop),touch:await read(mobile)}));
+}
 async function cycle(desktop,mobile,mode){
   const room=await create(desktop,mobile,mode),game=room.sim.game,peers=[desktop,mobile];
   const [left,right]=['analysts','counterAnalysts'].map(team=>[...room.seats.values()].find(seat=>seat.actor.team===team).actor);
@@ -120,6 +190,10 @@ async function cycle(desktop,mobile,mode){
     game.state.buyDeadline=game.state.time;
     await until(()=>room.state.roundPhase==='active','Classic becomes active');
   }else assert.equal(shooter.weapon,'bazooka');
+  for(const p of peers)await pause(p);
+  await mobile.locator('#resume').tap();
+  await resumeDesktop(desktop);
+  await mapControls(desktop,mobile,room);
   for(const p of peers)await pause(p);
   Object.assign(left,{x:22.8,z:-12,y:0,yaw:0,pitch:0,spawnProtectedUntil:0});
   Object.assign(right,{x:22.8,z:-20,y:0,yaw:Math.PI,pitch:0,spawnProtectedUntil:0});

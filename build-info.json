@@ -641,8 +641,8 @@
     },
     {
       "path": "fps/index.html",
-      "bytes": 14056,
-      "sha256": "078454c14e1b63e5862cef5924bd6c00056bd4375cb2239e0c594a636d2aad02"
+      "bytes": 14176,
+      "sha256": "6b622568775266cc13aad02a54939ea76d21ce47ddb7a66d2fe748884614b0ae"
     },
     {
       "path": "fps/lobby.css",
@@ -661,8 +661,8 @@
     },
     {
       "path": "fps/network.css",
-      "bytes": 2085,
-      "sha256": "d618af08d5fafb9db3233117dde4747792997ebc7b3a3f1f8a5ea8457f8a655a"
+      "bytes": 4061,
+      "sha256": "f36d2f5936633ec401f44c29b080a8f537d4339d425264985afcd02358893091"
     },
     {
       "path": "fps/style.css",
@@ -1927,7 +1927,7 @@
     {
       "path": "shared/multiplayer/build.mjs",
       "bytes": 613,
-      "sha256": "7123bf386533b2124b032b4bcef026ac5f0f932e77ac43b2add300ea174f1729"
+      "sha256": "48ed0c3a8c642e5e198c11dfb4bf5078b341f18d0a23e608db006d8d983ba0c1"
     },
     {
       "path": "shared/multiplayer/collision-contract.mjs",
@@ -1996,8 +1996,8 @@
     },
     {
       "path": "src/fps/app.mjs",
-      "bytes": 45513,
-      "sha256": "c46ae91bce82b45d0679c881b70cd38305dc8ebd6c5d759b1b4ac1fbc0a02095"
+      "bytes": 47016,
+      "sha256": "239c8ab64de1cec9860703508aad2d9e8da38b96c9f4621f8a614ad1520b435d"
     },
     {
       "path": "src/fps/audio.mjs",
@@ -2166,8 +2166,8 @@
     },
     {
       "path": "src/fps/focus-hud.mjs",
-      "bytes": 7816,
-      "sha256": "ab1db5a675d62246bf22b28a0237d3b7b413ceba23a206868c2123216b7d13b5"
+      "bytes": 7937,
+      "sha256": "6cbd4a80651dcb203ef40a0adb4e7aba4d358b39764e96e8668ede8e9949c15a"
     },
     {
       "path": "src/fps/frame-time-window.mjs",
@@ -2256,8 +2256,8 @@
     },
     {
       "path": "src/fps/minimap-cache.mjs",
-      "bytes": 4071,
-      "sha256": "4f5e4e68e66ae7de9cd9f6ef10368d570a526556f53482dd04efd3937b813c91"
+      "bytes": 12575,
+      "sha256": "5d5e04dcf7d26d30c5cc815a562c41d3902e866bc6fb77000e3f6b1a625923b2"
     },
     {
       "path": "src/fps/mobile-controls.mjs",
@@ -2605,7 +2605,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 58740759,
+  "bytes": 58752983,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

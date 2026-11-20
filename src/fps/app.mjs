@@ -117,11 +117,14 @@ mobile.setAutoFire(networkMode?false:settings.mobileAutoFire);
 tactical=new TacticalControls({settings,mobile,getGame:()=>game,getModal:()=>modal,
   isInteracting:()=>keys.has('KeyE')||mobile.state.interact,onAimChange:resetAutoAim});
 const combatHud=new CombatHUD(settings);
-focusHud=new FocusHud({settings,mobile,getGame:()=>game,getModal:()=>modal,onMap:toggleMap,onStats:showPause});
-function toggleMap(){
- mapExpanded=!mapExpanded;
- document.documentElement.classList.toggle('hud-map-open',mapExpanded);
- $('minimap').width=mapExpanded?448:224;$('minimap').height=mapExpanded?316:158;
+focusHud=new FocusHud({settings,mobile,getGame:()=>game,getModal:()=>modal,onMap:toggleMap,onStats:showPause,networkMode});
+function toggleMap(){setMapExpanded(!mapExpanded);}
+function setMapExpanded(expanded){
+ if(mapExpanded===expanded)return;
+ mapExpanded=expanded;
+ document.documentElement.classList.toggle('hud-map-open',expanded);
+ $('map-legend').hidden=!networkMode||!expanded;
+ $('minimap').width=expanded?448:224;$('minimap').height=expanded?316:158;
  if(game?.player)minimap();
 }
 const reasonNames={detonation:'Uppdragsbomben detonerade.',defuse:'Bomben har desarmerats.',rescue:'Båda gisslan har nått räddningszonen.',elimination:'Motståndarlaget är utslaget.',timeout:'Tiden tog slut. Analysts höll uppdragen.',draw:'Båda lagen slogs ut samtidigt.'};
@@ -134,7 +137,7 @@ function difficultyText(){const active=game?.state.difficulty||settings.difficul
 function settingsPanel(target){const select=(key,values)=>`<select aria-label="${key==='difficulty'?'Svårighetsgrad':key==='graphics'?'Grafik':'Blod'}" data-setting="${key}">${values.map(([value,label])=>`<option value="${value}" ${settings[key]===value?'selected':''}>${label}</option>`).join('')}</select>`;
 $(target).innerHTML=`<label class="setting">Svårighetsgrad ${select('difficulty',[['casual','Casual · rekommenderat'],['normal','Normal'],['hard','Hard']])}</label><p class="setting-note" data-difficulty-note>${difficultyText()}</p><label class="setting">Grafik ${select('graphics',[['standard','Standard'],['low','Låg · upplösning och skuggor']])}</label><label class="setting">Blod ${select('blood',[['standard','Mer blod'],['reduced','Reducerat'],['off','Av']])}</label><label class="setting">Muskänslighet <input aria-label="Muskänslighet" data-setting="sensitivity" type="range" min="0.0006" max="0.006" step="0.0001" value="${settings.sensitivity}"></label><label class="setting">Ljudvolym <input aria-label="Ljudvolym" data-setting="volume" type="range" min="0" max="1" step="0.05" value="${settings.volume}"></label><label class="setting">Kontrollområden i Endless <input aria-label="Kontrollområden i Endless" data-setting="firefight" type="checkbox" ${settings.firefight?'checked':''}></label><p class="setting-note">Samlar striden runt ett område som flyttar varje minut. Gäller nästa match. Av = fri Endless.</p><label class="setting">Träff- och killbekräftelse <input data-setting="combatSounds" type="checkbox" ${settings.combatSounds?'checked':''}></label><label class="setting">Friendly fire <input data-setting="friendlyFire" type="checkbox" ${settings.friendlyFire?'checked':''}></label><label class="setting">Kringvandrande fantasidvärgar <input data-setting="wanderers" type="checkbox" ${settings.wanderers?'checked':''}></label><label class="setting">Radiorepliker <input data-setting="radioVoice" type="checkbox" ${settings.radioVoice?'checked':''}></label><label class="setting">Reducerad gånggung <input data-setting="reducedMotion" type="checkbox" ${settings.reducedMotion?'checked':''}></label><label class="setting">Mjukare flash <input data-setting="reducedFlash" type="checkbox" ${settings.reducedFlash?'checked':''}></label>${mobile.enabled?`<label class="setting">Automatisk eld på mobil <input aria-label="Automatisk eld på mobil" data-setting="mobileAutoFire" type="checkbox" ${settings.mobileAutoFire?'checked':''}></label><p class="setting-note">Skjuter när siktet ligger på en synlig fiende. Av = manuell ELD-knapp.</p>`:''}`;
 $(target).insertAdjacentHTML('beforeend',tactical.settingsMarkup()+grenadeSettingsMarkup(settings)+focusHudSettings(settings));
-if(networkMode){for(const input of $(target).querySelectorAll('[data-setting]'))if(!['graphics','blood','sensitivity','volume','combatSounds','reducedMotion','reducedFlash'].includes(input.dataset.setting)){input.disabled=true;const label=input.closest('label');if(label)label.hidden=true;}for(const note of $(target).querySelectorAll('.setting-note'))note.hidden=true;}
+if(networkMode){for(const input of $(target).querySelectorAll('[data-setting]'))if(!['graphics','blood','sensitivity','volume','combatSounds','reducedMotion','reducedFlash','hudMode'].includes(input.dataset.setting)){input.disabled=true;const label=input.closest('label');if(label)label.hidden=true;}for(const note of $(target).querySelectorAll('.setting-note'))note.hidden=true;}
 $(target).querySelectorAll('[data-setting]').forEach(input=>input.oninput=()=>{settings[input.dataset.setting]=input.tagName==='SELECT'?input.value:input.type==='checkbox'?input.checked:Number(input.value);if(input.dataset.setting==='difficulty')game?.setDifficulty(settings.difficulty);if(input.dataset.setting==='mobileAutoFire'){mobile.setAutoFire(networkMode?false:settings.mobileAutoFire);resetAutoAim();}if(game&&!networkMode&&['friendlyFire','wanderers'].includes(input.dataset.setting))game.config[input.dataset.setting]=settings[input.dataset.setting];saveSettings();document.querySelectorAll('[data-difficulty-note]').forEach(n=>n.textContent=difficultyText());});}
 settingsPanel('menu-settings');settingsPanel('pause-settings');
 function clearInput(){keys.clear();fire=false;mobile.clear();tactical?.reset();grenadeAssist?.reset();focusHud?.reset();resetAutoAim();radioOpen=false;if($('radio-menu'))$('radio-menu').hidden=true;if(game?.player){game.player.fireHeld=false;game.player.interactHeld=false;game.player.action=null;}}
@@ -190,7 +193,9 @@ async function joinNetwork(options){
  networkSession=session;
  try{await session.connect(options);if(session.room.state.mode==='classic')await renderer.prepareClassic();if(generation!==networkJoinGeneration){await session.dispose();throw Error('Join cancelled.');}}
  catch(e){await session.dispose();if(networkSession===session)networkSession=null;throw e;}
- game=session.view;world.networkClassic=game.state.mode==='classic';minimapCache.invalidate();
+ game=session.view;world.networkClassic=game.state.mode==='classic';minimapCache.invalidate();setMapExpanded(false);
+ setText('map-legend',world.networkClassic?'Pil · Du    Punkt · Laget    B · Bombplats    G · Gisslanstart    R · Räddningszon':'Pil · Du    Punkt · Laget');
+ $('minimap').setAttribute('aria-label',world.networkClassic?'Taktisk karta med din riktning, lagkamrater, startområden och uppdragsplatser':'Taktisk karta med din riktning, lagkamrater och startområden');
  document.documentElement.classList.toggle('online-classic',world.networkClassic);
  const equipment=document.querySelector('[data-mobile-action=buy]');
  equipment.textContent=world.networkClassic?'KÖP':'UTR.';
@@ -217,7 +222,7 @@ function networkPhase(){
  }
 }
 function restartMatch(){if(networkMode){newMatch();return;}window.__csFlow?.fullscreen?.start();audio.unlock();start(team);requestMouse();}
-function newMatch(){onlineRoomUi?.hide();if(networkSession){networkJoinGeneration++;networkSession.dispose();networkSession=null;game=new Game(world);game.network=true;lastRound=game.state.round;lastPhase=game.phase;} window.__csFlow?.fullscreen?.exit();clearInput();recoil.reset();game.pause(true);audio.reset();renderer.resetTransient();modal='menu';mobile.show(false);unlockMouse();for(const id of ['pause','buy','match-end','scoreboard','hud'])$(id).hidden=true;$('menu').hidden=false;settingsPanel('menu-settings');}
+function newMatch(){if(networkMode)setMapExpanded(false);onlineRoomUi?.hide();if(networkSession){networkJoinGeneration++;networkSession.dispose();networkSession=null;game=new Game(world);game.network=true;lastRound=game.state.round;lastPhase=game.phase;} window.__csFlow?.fullscreen?.exit();clearInput();recoil.reset();game.pause(true);audio.reset();renderer.resetTransient();modal='menu';mobile.show(false);unlockMouse();for(const id of ['pause','buy','match-end','scoreboard','hud'])$(id).hidden=true;$('menu').hidden=false;settingsPanel('menu-settings');}
 function viewActor(){if(game.player?.alive)return game.player;const alive=game.actors.filter(a=>a.alive&&a.team===game.team);return alive[spectateIndex%Math.max(1,alive.length)]||game.player;}
 function timer(value){const sec=Math.max(0,Math.ceil(value));return `${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}`;}
 function scoreboard(){
@@ -232,18 +237,42 @@ function scoreboard(){
  }
 }
 function minimap(){
- const visible=!document.hidden&&!$('hud').hidden&&!!minimapPanel.getClientRects().length;
+ const visible=!document.hidden&&!$('hud').hidden&&(!networkMode||!modal)
+   &&!!minimapPanel.getClientRects().length;
  minimapCache.draw(world,game,mapExpanded,visible);
+}
+function classicObjective(state,player){
+ const counter=player.team==='counterAnalysts';
+ const bomb=state.bomb;
+ if(bomb.status==='planted'){
+   const directive=counter?'Försvara bomben':'Desarmera bomben';
+   return directive+' · '+timer(bomb.deadline-state.time);
+ }
+ if(state.hostages.some(h=>h.alive&&!h.rescued&&h.escortId===player.id))return 'Eskortera till räddningszonen';
+ if(bomb.carrierId===player.id)return 'Du bär bomben · '+missionRoomName(world);
+ if(counter&&bomb.status==='dropped')return 'Ta upp bomben eller rädda gisslan';
+ return counter?'Plantera eller rädda gisslan':'Stoppa plantering och räddning';
 }
 
 function updateHud(){if(!game?.player)return;combatHud.update(game);const s=game.state,p=game.player,view=viewActor(),wp=WEAPONS[view.weapon],item=game.item(view),time=s.phase==='buy'?s.buyDeadline-s.time:s.phase==='result'?s.resultDeadline-s.time:s.bomb.status==='planted'?s.bomb.deadline-s.time:s.deadline-s.time;setText('timer',isEndless(game)?timer(s.time):timer(time));setText('round-label',isEndless(game)?'ENDLESS ACTION ∞':`RUNDA ${s.round}`);setText('difficulty-label',DIFFICULTIES[s.difficulty].name.toUpperCase());setText('phase',s.phase==='buy'?'KÖPFAS':s.bomb.status==='planted'?'BOMB PLANTERAD':s.phase==='result'?'RUNDA SLUT':isEndless(game)?'AUTO-RESPAWN':'HYBRID');for(const [side,id]of [['analysts','a'],['counterAnalysts','ca']]){setText('score-'+id,s.score[side]);setText('alive-'+id,game.actors.filter(a=>a.team===side&&a.alive).length+' kvar');}setText('health',Math.max(0,Math.ceil(view.hp)));setText('armor',view.armor?`${Math.ceil(view.armor)} rustning`:'');setText('money',isEndless(game)?'B · VÄLJ VAPEN':`${p.money} ¤`);setText('weapon-name',wp?.name||'UTRUSTNING');const ammo=wp?.slot==='grenade'?`${view.inventory[view.weapon]} <span>cartridge</span>`:wp?.slot==='bomb'?'BOMB':wp?.slot==='knife'?'KNIV':`${item?.ammo??0} <span>/ ${item?.reserve??0}</span>`;if($('ammo').innerHTML!==ammo)$('ammo').innerHTML=ammo;setText('reload-text',view.reloadUntil>s.time?`Laddar om · ${(view.reloadUntil-s.time).toFixed(1)} s`:s.phase==='buy'?'B · ÖPPNA KÖPMENYN':'');setText('location',roomDisplayName(world.roomAt?.(view.x,view.z)));
- const b=s.bomb;setText('bomb-status',b.status==='planted'?`BOMB · ${timer(b.deadline-s.time)}`:b.carrierId===p.id?(networkSession?'DU BÄR BOMBEN · E plantera · G släpp':'DU BÄR BOMBEN · 5'):b.status==='dropped'?'BOMB SLÄPPT':`BOMB · ${game.actors.find(a=>a.id===b.carrierId)?.name||'—'}`);$('bomb-status').classList.toggle('hot',b.status==='planted');setText('hostage-status',isEndless(game)?'Inga uppdrag · fortsätter tills du lämnar':`GISSLAN ${s.hostages.filter(h=>h.rescued).length}/2 · ${s.hostages.filter(h=>h.alive===false).length} döda`);if(isEndless(game))setText('bomb-status',`FRIENDLY FIRE ${game.config.friendlyFire?'PÅ':'AV'} · Z RADIO`);
+ const onlineClassic=!!networkSession&&s.mode==='classic';
+ const b=s.bomb,rescued=s.hostages.filter(h=>h.rescued).length;
+ $('objectives').hidden=onlineClassic&&(!p.alive||!['buy','active'].includes(s.phase));
+ $('bomb-status').classList.toggle('hot',b.status==='planted');
+ if(onlineClassic){
+   setText('bomb-status',classicObjective(s,p));
+   setText('hostage-status','Gisslan '+rescued+'/'+s.hostages.length);
+ }else{
+   const bombStatus=b.status==='planted'?`BOMB · ${timer(b.deadline-s.time)}`:b.carrierId===p.id?'DU BÄR BOMBEN · 5':b.status==='dropped'?'BOMB SLÄPPT':`BOMB · ${game.actors.find(a=>a.id===b.carrierId)?.name||'—'}`;
+   setText('bomb-status',isEndless(game)?`FRIENDLY FIRE ${game.config.friendlyFire?'PÅ':'AV'} · Z RADIO`:bombStatus);
+   setText('hostage-status',isEndless(game)?'Inga uppdrag · fortsätter tills du lämnar':`GISSLAN ${rescued}/2 · ${s.hostages.filter(h=>h.alive===false).length} döda`);
+ }
  const prompt=p.alive&&s.phase==='active'?game.prompt(p):'';$('prompt').hidden=!prompt;setText('prompt-text',prompt);const action=p.action;const progress=action?Math.max(0,Math.min(1,(s.time-action.start)/(action.duration||1))):0;$('action-progress').style.width=`${progress*100}%`;$('prompt').querySelector('.progress').hidden=!action;
  mobile.show(!modal&&game.phase!=='menu'&&game.phase!=='match',p.alive);$('crosshair').classList.toggle('auto-target',!!autoFireTarget&&mobile.enabled&&settings.mobileAutoFire);
  const inventory=p.inventory;const slots=[['1',inventory.primary?.id],['2',inventory.pistol?.id],['3','knife'],['4',['smoke','flash','he'].filter(k=>inventory[k]>0).join('/')],['5',b.carrierId===p.id?'bomb':null]];setHtml('weapon-slots',slots.map(([num,id])=>`<span class="${id===p.weapon||(num==='4'&&['smoke','flash','he'].includes(p.weapon))?'selected':''}"><b>${num}</b>${id?(WEAPONS[id]?.name?.replace(' Analyst','').replace(' Counter','')||'Granater'):'—'}</span>`).join(''));
  $('spawn-protection').hidden=!p.alive||!(p.spawnProtectedUntil>s.time);if(s.time>radioUntil)$('radio-caption').textContent='';$('spectate').hidden=p.alive;$('death-restart').hidden=!!networkSession||isEndless(game);setText('respawn-status',isEndless(game)?`ÅTERUPPSTÅR OM ${Math.max(0,(p.respawnAt||s.time)-s.time).toFixed(1)} s · Esc pausar`:'← → Byt lagkamrat · Nästa runda startar automatiskt');if(!p.alive){$('spectate').querySelector('span').textContent=`FÖLJER ${view.name}`;const c=p.deathCause;setText('death-cause',c?`${c.sourceName||'Explosion'} · ${WEAPONS[c.weapon]?.name||c.weapon||'Skada'}`:'Du är utslagen.');}$('round-result').hidden=s.phase!=='result';if(s.phase==='result'){setText('result-title',s.result.winner?`${TEAMS[s.result.winner]} vinner`:'Oavgjord runda');setText('result-reason',reasonNames[s.result.reason]||s.result.reason);}
  if(!networkSession&&s.phase==='match'&&modal!=='match'&&modal!=='menu'){modal='match';clearInput();unlockMouse();$('match-end').hidden=false;setText('match-winner',`${TEAMS[s.result?.winner]||TEAMS[Object.keys(s.score).sort((a,b)=>s.score[b]-s.score[a])[0]]} vinner`);setText('match-score',`${s.score.analysts} – ${s.score.counterAnalysts} · ${s.round} rundor`);}
- if(networkSession&&game.state.mode==='classic'){
+ if(onlineClassic){
    onlineRoomUi?.update(networkSession);setText('round-label','CLASSIC · RUNDA '+s.round+' · '+s.score.analysts+'–'+s.score.counterAnalysts);
    if(p.pending)setText('respawn-status','Ansluten · du spelar från nästa runda');
    if(modal==='buy')refreshShop();
@@ -323,7 +352,7 @@ if(networkMode)$('game').addEventListener('webglcontextrestored',()=>renderBudge
 $('death-restart').onclick=restartMatch;$('resume').onclick=resume;$('restart').onclick=newMatch;$('new-match').onclick=newMatch;$('close-buy').onclick=closeBuy;$('return-buy').onclick=closeBuy;
 $('fullscreen-toggle').onclick=()=>{window.__csFlow?.fullscreen?.toggle();syncFullscreenToggle();};
 document.addEventListener('fullscreenchange',()=>{syncFullscreenToggle();if(mobile.enabled&&document.fullscreenElement)mobile.attemptLandscape();window.dispatchEvent(new Event('resize'));});syncFullscreenToggle();
-window.addEventListener('keydown',e=>{if(!modal&&['Tab','Space','Escape','ControlLeft','ControlRight'].includes(e.code))e.preventDefault();if(e.code==='Escape'){if(radioOpen){radioOpen=false;$('radio-menu').hidden=true;return;}if(modal==='buy')closeBuy();else if(!modal)showPause();return;}if(modal)return;if(!networkMode&&e.code==='KeyZ'&&game.player?.alive){radioOpen=!radioOpen;$('radio-menu').hidden=!radioOpen;return;}if(radioOpen&&/^Digit[1-6]$/.test(e.code)){const result=game.radio(RADIO[Number(e.code.slice(-1))-1]?.id);if(!result)notify('Radion är upptagen. Försök strax igen.');return;}if(!networkMode&&e.code==='Enter'&&!game.player?.alive&&!isEndless(game)){restartMatch();return;}if(e.code==='Tab'){board=true;$('scoreboard').hidden=false;scoreboard();return;}if(e.repeat)return;keys.add(e.code);if(e.code==='KeyB'){showBuy();return;}if(e.code==='KeyR')game.reload();if(e.code==='KeyQ')game.select('last');if(e.code==='KeyG')game.drop();if(/^Digit[1-5]$/.test(e.code))game.select(e.code.slice(-1));if(e.code==='KeyM')toggleMap();if(!game.player.alive&&['ArrowLeft','ArrowRight'].includes(e.code)){const count=game.actors.filter(a=>a.alive&&a.team===game.team).length;spectateIndex=(spectateIndex+(e.code==='ArrowLeft'?-1:1)+count)%Math.max(1,count);}});
+window.addEventListener('keydown',e=>{if(!modal&&['Tab','Space','Escape','ControlLeft','ControlRight'].includes(e.code))e.preventDefault();if(e.code==='Escape'){if(radioOpen){radioOpen=false;$('radio-menu').hidden=true;return;}if(modal==='buy')closeBuy();else if(!modal)showPause();return;}if(modal)return;if(!networkMode&&e.code==='KeyZ'&&game.player?.alive){radioOpen=!radioOpen;$('radio-menu').hidden=!radioOpen;return;}if(radioOpen&&/^Digit[1-6]$/.test(e.code)){const result=game.radio(RADIO[Number(e.code.slice(-1))-1]?.id);if(!result)notify('Radion är upptagen. Försök strax igen.');return;}if(!networkMode&&e.code==='Enter'&&!game.player?.alive&&!isEndless(game)){restartMatch();return;}if(e.code==='Tab'){board=true;$('scoreboard').hidden=false;scoreboard();return;}if(e.repeat)return;keys.add(e.code);if(e.code==='KeyB'){showBuy();return;}if(e.code==='KeyR')game.reload();if(e.code==='KeyQ')game.select('last');if(e.code==='KeyG')game.drop();if(/^Digit[1-5]$/.test(e.code))game.select(e.code.slice(-1));if(e.code==='KeyM'){toggleMap();return;}if(!game.player.alive&&['ArrowLeft','ArrowRight'].includes(e.code)){const count=game.actors.filter(a=>a.alive&&a.team===game.team).length;spectateIndex=(spectateIndex+(e.code==='ArrowLeft'?-1:1)+count)%Math.max(1,count);}});
 window.addEventListener('keyup',e=>{keys.delete(e.code);if(e.code==='Tab'){board=false;$('scoreboard').hidden=true;}});
 window.addEventListener('mousemove',e=>{if(document.pointerLockElement!==$('game')||modal||!game.player?.alive)return;const k=settings.sensitivity*tactical.lookScale(false,yaw,pitch);yaw-=e.movementX*k;const before=pitch;pitch=Math.max(-1.49,Math.min(1.49,pitch-e.movementY*k));recoil.counter(pitch-before);});
 $('game').addEventListener('mousedown',e=>{if(e.button!==0||modal)return;if(document.pointerLockElement!==$('game')){resume();return;}fire=true;});window.addEventListener('mouseup',e=>{if(e.button===0)fire=false;});window.addEventListener('contextmenu',e=>e.preventDefault());
