@@ -308,8 +308,17 @@ async function cycle(desktop,mobile,mode){
     game.state.score[shooter.team]=room.state.scoreTarget-1;
     await mobile.locator('#resume').tap();
     await resumeDesktop(desktop);
+    const attemptedRematches=[];
+    const command=room.match.command.bind(room.match);
+    room.match.command=(client,message)=>{
+      if(message?.kind==='rematch')attemptedRematches.push(message.matchId);
+      return command(client,message);
+    };
     const stop=await fireTouch(mobile);
-    try{await until(()=>room.state.phase==='results','rocket decides the match');}finally{await stop();}
+    try{
+      await until(()=>room.state.phase==='results','rocket decides the match');
+      await mobile.locator('#room-rematch').waitFor();
+    }finally{await stop();}
     for(const p of peers){
       await p.bringToFront();
       await until(()=>p.evaluate(()=>{
@@ -317,6 +326,7 @@ async function cycle(desktop,mobile,mode){
         return session.room.state.phase==='results'&&session.view.state.time>session.room.state.time+.35
           &&rocketEvidence.events.some(e=>e.type==='rocket-explosion')&&rocketEvidence.sounds.includes('rocket-explosion');
       }),'deciding impact persists through result patches');
+      assert.deepEqual(attemptedRematches,[],'release of the deciding touch fire triggers no rematch');
       await p.locator('#room-leave').click();
     }
   }else{
