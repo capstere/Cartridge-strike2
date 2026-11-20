@@ -18,7 +18,22 @@ export function roomUi({leave,resume,activate}){
   $('room-leave').onclick=()=>{root.hidden=true;session=null;leave();};
   $('room-ready').onclick=()=>{activate();const a=session.room.state.actors.get(session.localPlayerId);session.matchCommand('ready',{ready:!a.playerReady});};
   $('room-start').onclick=()=>{activate();session.matchCommand('start');};
-  $('room-rematch').onclick=()=>{activate();session.matchCommand('rematch');};
+  const rematch=$('room-rematch');
+  let rematchPointer=null;
+  rematch.addEventListener('pointerdown',event=>{
+    if(event.button===0)rematchPointer=event.pointerId;
+  });
+  rematch.addEventListener('pointercancel',()=>{rematchPointer=null;});
+  rematch.onclick=event=>{
+    // A held gameplay touch can end after the result panel has appeared.
+    // A pointer activation must have begun on this button.
+    const pressed=rematchPointer!==null&&(!('pointerId' in event)||event.pointerId===rematchPointer);
+    rematchPointer=null;
+    if((event.detail!==0||event.pointerType)&&!pressed)return;
+    if(session?.room?.state.phase!=='results')return;
+    activate();
+    session.matchCommand('rematch');
+  };
   $('room-primary').onchange=()=>session.matchCommand('loadout',{primary:$('room-primary').value});
   $('room-friendly-fire').onchange=()=>session.matchCommand('friendlyFire',{friendlyFire:$('room-friendly-fire').value==='on'});
   $('room-bot-difficulty').replaceChildren(...Object.values(DIFFICULTIES).map(({id,name})=>new Option(name,id)));
@@ -34,8 +49,9 @@ export function roomUi({leave,resume,activate}){
       await navigator.clipboard.writeText(link.href);if(session===current&&!current.closed)current.notice='Rumslänken är kopierad. Dela koderna separat.';
     }catch{if(session!==current||current.closed)return;$('room-link').hidden=false;$('room-link').value=link.href;$('room-link').focus();$('room-link').select();current.notice='Kopiera den markerade rumslänken.';}
   };
-  return {hide(){root.hidden=true;session=null;key='';},update(s){
+  return {hide(){root.hidden=true;session=null;rematchPointer=null;key='';},update(s){
     if(!s?.room)return;session=s;const state=s.room.state,self=state.actors.get(s.localPlayerId),waiting=state.phase==='waiting',result=state.phase==='results';
+    if(!result)rematchPointer=null;
     root.hidden=state.phase==='active';if(root.hidden)return;
     $('room-title').textContent=result?(state.winner==='draw'?'Oavgjort':labels[state.winner]+' vinner'):state.phase==='countdown'?'Start om '+Math.ceil(state.remainingSeconds)+'…':'Väntrum';
     $('room-rules').textContent=state.mode==='classic'?'Classic · först till '+state.scoreTarget+' rundor. Counter Analysts planterar eller räddar gisslan. Analysts försvarar och desarmerar. Båda lagen kan vinna på eliminering.':`Team Deathmatch · ${state.durationSeconds/60} minuter · först till ${state.scoreTarget} fiendekills · högst 5 per lag`;

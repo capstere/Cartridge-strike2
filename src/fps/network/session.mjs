@@ -3,6 +3,8 @@ import '../../../vendor/colyseus/colyseus.js';
 import {Game,WEAPONS} from '../game.mjs';
 import {seededRandom} from '../config.mjs';
 import {moveActor} from '../movement.mjs';
+import {floor5MapAnchors} from '../minimap-cache.mjs';
+import {TEAM_COMMS_TYPE,TEAM_COMMS_COMMANDS,TEAM_COMMS_RATE_MS} from '../../../shared/multiplayer/protocol.mjs';
 import {CLASSIC_NETWORK_CONFIG,NETWORK_CONFIG,ROOM_TYPE,ROOM_CAPACITY,RECONNECT_SECONDS,INTERPOLATION_MS,copyPose,wrapYaw} from '../../../shared/multiplayer/rules.mjs';
 import {CONTRACT} from '../../../shared/multiplayer/build.mjs';
 
@@ -41,6 +43,13 @@ export class NetworkSession {
     this.view.pause=value=>this.setInputEnabled(!value);
     this.view.reload=()=>{if(!this.closed&&this.enabled&&this.view.player?.alive){this.reloadId++;return true;}return false;};
     this.selectId=0;this.botDifficultySerial=0;
+    this.teamAnchors=new Map();
+    this.teamCommsSerial=0;
+    this.receivedTeamComms=new Map();
+    this.nextTeamCommsAt=0;
+    this.teamSignal=null;
+    this.teamAudioQueued=false;
+    this.view.teamPing=null;
     this.view.select=value=>{
       const a=this.view.player;
       if(!this.enabled||!a?.alive||this.closed)return false;
@@ -53,7 +62,7 @@ export class NetworkSession {
     this.classicSerial=0;
     this.view.drop=()=>this.classicCommand('drop');
     this.view.buy=id=>this.classicCommand('buy',id)?{ok:true,pending:true}:{ok:false,reason:'Välj utrustning för nästa liv.'};
-    this.view.drainEvents=()=>{const e=this.events;this.events=[];return e;};
+    this.view.drainEvents=()=>this.drainEvents();
     this.view.update=()=>{throw Error('NetworkSession owns input; the client cannot step Game.');};
   }
   classicCommand(kind,item){
@@ -62,6 +71,73 @@ export class NetworkSession {
     this.notice='';
     this.room.send('classic',{kind,item,serial:++this.classicSerial,round:s.round,matchId:s.matchId,lifeId:a.lifeId,controlEpoch:a.controlEpoch});
     return true;
+  }
+  teamCommsActor(){
+    const state=this.room?.state;
+    if(this.closed||this.connectionState!=='connected'||state?.phase!=='active'||
+      (state.mode==='classic'&&state.roundPhase!=='active'))return null;
+    const self=state.actors.get(this.localPlayerId);
+    return self?.ready&&self.connected&&self.alive&&!self.pending?self:null;
+  }
+  canSendTeamComms(){
+    return this.enabled&&!!this.teamCommsActor();
+  }
+  sendTeamComms(kind,anchorId){
+    const self=this.teamCommsActor();
+    if(!this.enabled||!self||!TEAM_COMMS_COMMANDS.includes(kind))return false;
+    if(kind==='ping'&&!this.teamAnchors.has(anchorId))return false;
+    const now=performance.now();
+    if(now<this.nextTeamCommsAt)return false;
+    const state=this.room.state;
+    const message={kind,serial:++this.teamCommsSerial,matchId:state.matchId,round:state.round,
+      lifeId:self.lifeId,controlEpoch:self.controlEpoch,tick:state.tick};
+    if(kind==='ping')message.anchorId=anchorId;
+    this.room.send(TEAM_COMMS_TYPE,message);
+    this.nextTeamCommsAt=now+TEAM_COMMS_RATE_MS;
+    return true;
+  }
+  validTeamComms(message){
+    const self=this.teamCommsActor();
+    if(!self||!message)return false;
+    const state=this.room.state;
+    if(message.team!==self.team||message.matchId!==state.matchId||message.round!==state.round||
+      message.recipientLifeId!==self.lifeId||message.recipientEpoch!==self.controlEpoch||
+      !Number.isFinite(message.expiresAt)||message.expiresAt<=this.view.state.time)return false;
+    const sender=state.actors.get(message.senderId);
+    return !!sender?.connected&&sender.alive&&!sender.bot&&sender.team===self.team&&
+      sender.lifeId===message.senderLifeId&&sender.controlEpoch===message.senderEpoch;
+  }
+  receiveTeamComms(message){
+    if(!this.validTeamComms(message)||!TEAM_COMMS_COMMANDS.includes(message.kind)||
+      !Number.isSafeInteger(message.serial)||message.serial<=(this.receivedTeamComms.get(message.team)||0))return;
+    const anchor=message.kind==='ping'?this.teamAnchors.get(message.anchorId):null;
+    if(message.kind==='ping'&&!anchor)return;
+    this.receivedTeamComms.set(message.team,message.serial);
+    this.teamSignal={...message,anchor};
+    if(anchor)this.view.teamPing=this.teamSignal;
+    else if(this.enabled){
+      const sender=this.room.state.actors.get(message.senderId);
+      this.teamAudioQueued=true;
+      this.events.push({type:'radio',teamPrivate:true,teamPacket:message,command:message.kind,
+        actorId:sender.id,team:sender.team,x:sender.x,y:sender.y,z:sender.z,time:this.view.state.time,global:true});
+    }
+  }
+  drainEvents(){
+    const batch=this.events;
+    this.events=[];
+    if(!this.teamAudioQueued)return batch;
+    this.teamAudioQueued=false;
+    return batch.filter(event=>!event.teamPrivate||this.enabled&&this.validTeamComms(event.teamPacket));
+  }
+  clearTeamComms(){
+    this.teamSignal=null;
+    this.view.teamPing=null;
+    if(this.teamAudioQueued)this.events=this.events.filter(event=>!event.teamPrivate);
+    this.teamAudioQueued=false;
+  }
+  expireTeamComms(){
+    if(this.teamSignal&&!this.validTeamComms(this.teamSignal))this.teamSignal=null;
+    if(this.view.teamPing&&!this.validTeamComms(this.view.teamPing))this.view.teamPing=null;
   }
   async connect({endpoint,roomId,code,name,team='auto',mode='tdm',fillBots=true,zombies=false,danceman=false,create=false,contract=CONTRACT}){
     const url=networkEndpoint(endpoint),client=new SessionClient(url),options={code,name,team,contract,fillBots,mode,zombies,danceman};
@@ -78,6 +154,7 @@ export class NetworkSession {
     this.unsub.push(room.onMessage('problem',message=>{this.problem=String(message);}));
     this.unsub.push(room.onMessage('notice',message=>{this.notice=String(message);}));
     this.unsub.push(room.onMessage('events',events=>this.receiveEvents(events)));
+    this.unsub.push(room.onMessage(TEAM_COMMS_TYPE,message=>this.receiveTeamComms(message)));
     this.unsub.push(room.onMessage('clock-probe',token=>{if(!this.closed&&this.connectionState==='connected')room.send('clock-echo',token);}));
     const dropped=()=>this.beginReconnect();
     const reconnected=()=>{if(this.closed)return;this.awaitingSnapshot=true;};
@@ -102,6 +179,7 @@ export class NetworkSession {
     room.send('ready',contract);
     await wait(()=>this.closed||room.state.actors.get(this.localPlayerId)?.ready);
     if(this.closed)throw Error(this.problem||'Room closed before spawn.');
+    this.teamAnchors=new Map(floor5MapAnchors(this.world,room.state.mode==='classic').map(anchor=>[anchor.id,anchor]));
     this.connectionState='connected';this.snapshot();
     this.lastWatchdog=performance.now();this.silenceSince=0;
     this.watchdog=setInterval(()=>this.checkConnection(performance.now()),1000);
@@ -121,7 +199,10 @@ export class NetworkSession {
     this.view.state.difficulty=state.botDifficulty??this.view.config.difficulty;
     this.view.state.mode=classic?'classic':'endless';
     const newMatch=this.matchId!==state.matchId,newPhase=this.matchPhase!==state.phase;
-    if(newMatch||newRound)this.events=[];
+    if(newMatch||newRound){
+      this.events=[];
+      this.clearTeamComms();
+    }
     if(newMatch||newPhase){
       this.matchId=state.matchId;this.matchPhase=state.phase;
       this.resultsAt=state.phase==='results'?this.lastPatch:undefined;
@@ -168,6 +249,7 @@ export class NetworkSession {
     this.view.state.score={analysts:state.analysts,counterAnalysts:state.counterAnalysts};
     this.view.state.time=newMatch?state.time:Math.max(this.view.state.time??0,state.time);
     const self=state.actors.get(this.localPlayerId);
+    this.expireTeamComms();
     for(const [id,entry] of this.remote)if(!ready.some(s=>s.id===id&&s===entry.schema&&s.lifeId===entry.lifeId&&s.alive===entry.alive)){
       this.predict.detach(entry.schema);this.remote.delete(id);
     }
@@ -364,7 +446,7 @@ export class NetworkSession {
   beginReconnect(){
     if(this.closed||this.connectionState==='reconnecting')return;
     this.connectionState='reconnecting';this.enabled=false;this.view.state.paused=true;
-    this.events=[];this.status='Återansluter… Din plats reserveras i 15 sekunder. Matchen fortsätter.';
+    this.events=[];this.clearTeamComms();this.status='Återansluter… Din plats reserveras i 15 sekunder. Matchen fortsätter.';
     this.onConnection('reconnecting');
     this.reconnectTimer=setTimeout(()=>this.disconnect('Återanslutningen gick inte. Platsen har löpt ut eller servern startades om. Anslut till rummet igen.'),RECONNECT_SECONDS*1000);
   }
@@ -382,7 +464,7 @@ export class NetworkSession {
     clearInterval(this.watchdog);this.watchdog=null;clearTimeout(this.joinTimer);this.joinTimer=null;this.joinAbort?.abort();
     for(const off of this.unsub)if(typeof off==='function')off();this.unsub=[];
     this.predict?.dispose();this.prediction=null;this.predict=null;this.remote.clear();
-    this.events=[];this.predictedShots.clear();this.actionTimes?.clear();this.view.state.actors=[];this.view.state.phase='menu';
+    this.events=[];this.clearTeamComms();this.teamAnchors.clear();this.receivedTeamComms.clear();this.predictedShots.clear();this.actionTimes?.clear();this.view.state.actors=[];this.view.state.phase='menu';
     const room=this.room||this.joiningRoom;this.room=null;this.joiningRoom=null;this.input=null;
     if(leave&&room){room.reconnection.enabled=false;return room.leave().catch(()=>{});}
   }

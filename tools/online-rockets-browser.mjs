@@ -24,6 +24,10 @@ async function launch(touch){
   return page;
 }
 async function create(desktop,mobile,mode){
+  const name=desktop.locator('#network-name');
+  await name.fill('');
+  await name.press('z');
+  assert.equal(await name.inputValue(),'z','radio key allows typing into the lobby form');
   for(const [p,team] of [[desktop,'analysts'],[mobile,'counterAnalysts']]){
     await p.locator('#network-team').selectOption(team);
     await p.locator('#network-code').fill('rocket-five');
@@ -106,6 +110,11 @@ async function fireTouch(page){
   await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{id:1,x:box.x+box.width/2,y:box.y+box.height/2}]});
   return async()=>{await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await cdp.detach();};
 }
+async function setTouchHud(page,mode){
+  await page.keyboard.press('Escape');
+  await page.locator('#pause [data-setting=hudMode]').selectOption(mode);
+  await page.locator('#resume').tap();
+}
 async function mapControls(desktop,mobile,room){
   const classic=room.state.mode==='classic';
   const read=page=>page.evaluate(()=>{
@@ -132,6 +141,7 @@ async function mapControls(desktop,mobile,room){
   };
 
   assert(await desktop.locator('.online-map-hint').isVisible());
+  assert.match(await desktop.locator('.online-map-hint').textContent(),/Z radio/);
   await desktop.keyboard.down('w');
   try{
     await desktop.keyboard.press('m');
@@ -144,9 +154,7 @@ async function mapControls(desktop,mobile,room){
   await mobile.setViewportSize({width:932,height:430});
   await cdp.send('Emulation.setSafeAreaInsetsOverride',{insets:{left:59,top:0,right:0,bottom:0}});
   for(const mode of ['clean','full']){
-    await mobile.keyboard.press('Escape');
-    await mobile.locator('#pause [data-setting=hudMode]').selectOption(mode);
-    await mobile.locator('#resume').tap();
+    await setTouchHud(mobile,mode);
     if(mode==='full'){
       for(const id of ['#mobile-more','[data-mobile-action=buy]'])assert(await mobile.locator(id).evaluate(button=>{
         const {x,y,width,height}=button.getBoundingClientRect();
@@ -176,6 +184,57 @@ async function mapControls(desktop,mobile,room){
   }
   console.log('PASS tactical map',room.state.mode,JSON.stringify({desktop:await read(desktop),touch:await read(mobile)}));
 }
+async function radioControls(desktop,mobile,mode,shooter){
+  const ammo=shooter.inventory.primary?.ammo,weapon=shooter.weapon;
+  const show=page=>page.locator('#team-radio-menu').waitFor({state:'visible'});
+  const utility=async name=>{
+    await mobile.locator('#mobile-more').tap();
+    await mobile.locator('[data-utility='+name+']').tap();
+  };
+  if(mode==='classic'){
+    await desktop.waitForFunction(()=>__fps.audio.voiceBuffers.has('together')&&__fps.audio.context.state==='running');
+    await desktop.evaluate(()=>{
+      const audio=__fps.audio,play=audio.play.bind(audio);
+      window.playedTeamVoice=0;
+      audio.play=event=>{if(event.teamPrivate&&event.command==='together')window.playedTeamVoice++;return play(event);};
+    });
+    await desktop.keyboard.press('z');
+    await show(desktop);
+    await desktop.mouse.down();
+    try{
+      assert.equal(await desktop.evaluate(()=>!!__fps.input(0).fire),false,'radio blocks a mouse trigger');
+    }finally{await desktop.mouse.up();}
+    await desktop.keyboard.press('1');
+    await desktop.locator('#radio-caption').filter({hasText:'Håll ihop'}).waitFor();
+    await desktop.waitForFunction(()=>window.playedTeamVoice===1);
+    assert.equal(await desktop.evaluate(()=>document.pointerLockElement?.id),'game');
+    assert.equal(await mobile.evaluate(()=>__fps.network.teamSignal),null,'opposing touch client sees no Classic radio');
+  }else{
+    await setTouchHud(mobile,'clean');
+    await utility('radio');
+    await show(mobile);
+    assert.equal(await mobile.evaluate(()=>__fps.network.teamSignal),null,'opening the drawer sends no command');
+    await mobile.locator('#team-radio-close').tap();
+    await mobile.locator('#team-radio-menu').waitFor({state:'hidden'});
+    await setTouchHud(mobile,'full');
+    await utility('radio');
+    await show(mobile);
+    await mobile.locator('[data-team-radio=ping][data-anchor=analyst-start-lift]').tap();
+    await mobile.locator('#radio-caption').filter({hasText:'Cargo Lift'}).waitFor();
+    assert.equal(await desktop.evaluate(()=>__fps.network.teamSignal),null,'opposing desktop sees no touch ping');
+    await mobile.evaluate(()=>{
+      const ctx=__fps.minimapCache.context,arc=ctx.arc.bind(ctx);
+      window.teamPingRings=0;
+      ctx.arc=(x,y,r,...rest)=>{if(r===8)window.teamPingRings++;return arc(x,y,r,...rest);};
+    });
+    await utility('karta');
+    await mobile.waitForFunction(()=>window.teamPingRings>0);
+    await utility('karta');
+  }
+  assert.equal(shooter.inventory.primary?.ammo,ammo,'radio inputs spent no ammo');
+  assert.equal(shooter.weapon,weapon,'radio inputs kept the equipped weapon');
+  console.log('PASS team radio controls '+mode);
+}
 async function cycle(desktop,mobile,mode){
   const room=await create(desktop,mobile,mode),game=room.sim.game,peers=[desktop,mobile];
   const [left,right]=['analysts','counterAnalysts'].map(team=>[...room.seats.values()].find(seat=>seat.actor.team===team).actor);
@@ -194,6 +253,7 @@ async function cycle(desktop,mobile,mode){
   await mobile.locator('#resume').tap();
   await resumeDesktop(desktop);
   await mapControls(desktop,mobile,room);
+  await radioControls(desktop,mobile,mode,shooter);
   for(const p of peers)await pause(p);
   Object.assign(left,{x:22.8,z:-12,y:0,yaw:0,pitch:0,spawnProtectedUntil:0});
   Object.assign(right,{x:22.8,z:-20,y:0,yaw:Math.PI,pitch:0,spawnProtectedUntil:0});
@@ -248,14 +308,25 @@ async function cycle(desktop,mobile,mode){
     game.state.score[shooter.team]=room.state.scoreTarget-1;
     await mobile.locator('#resume').tap();
     await resumeDesktop(desktop);
+    const attemptedRematches=[];
+    const command=room.match.command.bind(room.match);
+    room.match.command=(client,message)=>{
+      if(message?.kind==='rematch')attemptedRematches.push(message.matchId);
+      return command(client,message);
+    };
     const stop=await fireTouch(mobile);
-    try{await until(()=>room.state.phase==='results','rocket decides the match');}finally{await stop();}
+    try{
+      await until(()=>room.state.phase==='results','rocket decides the match');
+      await mobile.locator('#room-rematch').waitFor();
+    }finally{await stop();}
     for(const p of peers){
+      await p.bringToFront();
       await until(()=>p.evaluate(()=>{
         const session=__fps.network;
         return session.room.state.phase==='results'&&session.view.state.time>session.room.state.time+.35
           &&rocketEvidence.events.some(e=>e.type==='rocket-explosion')&&rocketEvidence.sounds.includes('rocket-explosion');
       }),'deciding impact persists through result patches');
+      assert.deepEqual(attemptedRematches,[],'release of the deciding touch fire triggers no rematch');
       await p.locator('#room-leave').click();
     }
   }else{
@@ -273,6 +344,8 @@ try{
   assert.deepEqual(errors,[]);
 }catch(error){
   for(const p of pages)console.error(await p.evaluate(()=>({status:__fps.network?.status,modal:__fps.modal,
+    rendererClock:{time:__fps.game.state.time,roomTime:__fps.network?.room?.state.time,
+      phase:__fps.network?.room?.state.phase,resultAt:__fps.network?.resultsAt,visible:!document.hidden},
     actor:__fps.game.player&&{x:__fps.game.player.x,z:__fps.game.player.z,yaw:__fps.game.player.yaw,weapon:__fps.game.player.weapon},
     rocket:window.rocketEvidence&&{models:[...rocketEvidence.visible],events:rocketEvidence.events.map(e=>[e.type,e.rocketId]),sound:rocketEvidence.sounds},
     fatal:document.querySelector('#fatal pre')?.textContent})).catch(()=>null));

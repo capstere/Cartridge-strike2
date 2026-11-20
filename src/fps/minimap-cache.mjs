@@ -278,6 +278,15 @@ export class MinimapCache {
     ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
     ctx.drawImage(l.canvas,0,0);
     if (world.networkSlice) {
+      const ping=game.teamPing;
+      if(ping?.anchor&&ping.expiresAt>game.state.time){
+        const {x,z}=ping.anchor;
+        ctx.beginPath();
+        ctx.arc(l.ox+(x-l.xmin)*l.scale,l.oz+(z-l.zmin)*l.scale,expanded?8:5,0,Math.PI*2);
+        ctx.lineWidth=2;
+        ctx.strokeStyle='#f5c47c';
+        ctx.stroke();
+      }
       drawOnlineTeammates(ctx, l, game, expanded);
       this.stats.draws++;
       return true;

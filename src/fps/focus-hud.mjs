@@ -11,8 +11,8 @@ export function focusHudSettings(settings) {
 
 /** Presentation only. Reuses existing controls/listeners and never changes Game. */
 export class FocusHud {
-  constructor({ settings, mobile, getGame, getModal, onMap, onStats, networkMode = false }) {
-    Object.assign(this, { settings, mobile, getGame, getModal, onMap, onStats, networkMode });
+  constructor({ settings, mobile, getGame, getModal, onMap, onStats, onRadio, networkMode = false }) {
+    Object.assign(this, { settings, mobile, getGame, getModal, onMap, onStats, onRadio, networkMode });
     this.settings.hudMode = normalizeHudMode(settings.hudMode);
     this.mode = null; this.expanded = false; this.game = null; this.weapon = null;
     this.inventoryUntil = 0; this.placements = [];
@@ -50,20 +50,25 @@ export class FocusHud {
       button.before(marker); this.placements.push({ button, marker });
       if (action !== 'sneak') button.addEventListener('pointerup', () => this.setExpanded(false));
     }
-    for (const [label, name, action] of [
-      ['KARTA', 'Visa eller dölj taktisk karta', () => this.onMap()],
-      ['RESULTAT', 'Pausa och visa sessionsresultat', () => this.onStats()],
-    ]) {
+    const utilities = [['KARTA', 'Visa eller dölj taktisk karta', () => this.onMap()]];
+    if (this.onRadio) utilities.push(['RADIO', 'Öppna lagradion', () => this.onRadio()]);
+    utilities.push(['RESULTAT', 'Pausa och visa sessionsresultat', () => this.onStats()]);
+    for (const [label, name, action] of utilities) {
       const button = document.createElement('button');
       button.type = 'button'; button.className = 'mobile-button utility-extra';
       button.textContent = label; button.setAttribute('aria-label', name);
       button.dataset.utility = label.toLowerCase();
       const run = () => { this.setExpanded(false); action(); };
-      button.addEventListener('pointerdown', e => {
-        if (e.pointerType === 'mouse' && e.button !== 0) return;
-        e.preventDefault(); e.stopPropagation(); run();
-      });
-      button.addEventListener('click', e => { if (e.detail === 0) run(); });
+      if (label === 'RADIO') {
+        // Finish the tap before exposing interactive radio choices underneath it.
+        button.addEventListener('click', e => { e.stopPropagation(); run(); });
+      } else {
+        button.addEventListener('pointerdown', e => {
+          if (e.pointerType === 'mouse' && e.button !== 0) return;
+          e.preventDefault(); e.stopPropagation(); run();
+        });
+        button.addEventListener('click', e => { if (e.detail === 0) run(); });
+      }
       this.drawer.append(button);
     }
   }

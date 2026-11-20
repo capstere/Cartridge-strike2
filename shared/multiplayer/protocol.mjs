@@ -1,5 +1,9 @@
 import {validateInput} from './input.mjs';
 import {REWIND_MS} from './rules.mjs';
+export const TEAM_COMMS_TYPE='team-comms';
+export const TEAM_COMMS_COMMANDS=Object.freeze(['together','backup','ping']);
+export const TEAM_COMMS_RATE_MS=2000;
+export const TEAM_COMMS_LIFETIME=8;
 export const INPUT_FIELDS=['lifeId','controlEpoch','sampleTick','fireId','reloadId','forward','strafe','yaw','pitch','jump','crouch','sneak','aim','fire','interact'];
 export function wireInput(frame) {return Object.fromEntries(INPUT_FIELDS.map(key=>[key,frame[key]]));}
 export function validateNetworkInput(frame, actor, tick) {

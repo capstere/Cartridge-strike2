@@ -6,7 +6,7 @@ import {onlinePrimaries,respawnActor} from '../src/fps/action-rules.mjs';
 import {zombiePosition} from '../src/fps/zombie-poses.mjs';
 import {prepareClassicRound,projectClassic} from './classic-round.mjs';
 import {CLASSIC_NETWORK_CONFIG,DEFAULT_NETWORK_BOT_DIFFICULTY,NETWORK_CONFIG,NETWORK_MAP,ROOM_CAPACITY,TEAM_CAPACITY,RECONNECT_SECONDS,copyPose,safeName} from '../shared/multiplayer/rules.mjs';
-import {checkContract,validateNetworkInput,wireInput} from '../shared/multiplayer/protocol.mjs';
+import {checkContract,TEAM_COMMS_TYPE,validateNetworkInput,wireInput} from '../shared/multiplayer/protocol.mjs';
 import {CONTRACT} from '../shared/multiplayer/build.mjs';
 import {NetworkInput,ActorState,RoomState,DoorState,GrenadeState,ResidentState,RocketState} from './network-schema.mjs';
 
@@ -29,6 +29,7 @@ const seats=teams.flatMap(team=>Array.from({length:TEAM_CAPACITY},(_,i)=>`${team
 export const MAX_BUFFERED_BYTES=256*1024;
 import {LagCompensation, recordRtt} from './lag-compensation.mjs';
 import {MatchLifecycle} from './match-lifecycle.mjs';
+import {TeamComms} from './team-comms.mjs';
 export class NetworkRoom extends Room {
   async onCreate(options) {
     if(!validCode(options.code))throw new ServerError(400,'Use a private code of 6–64 letters, digits or hyphens.');
@@ -56,7 +57,7 @@ export class NetworkRoom extends Room {
     const zombiesEnabled=options.zombies===true,dancemanEnabled=options.danceman===true;
     Object.assign(this.sim.game.config,{zombies:zombiesEnabled,danceman:dancemanEnabled});
     this.state=new RoomState({zombiesEnabled,dancemanEnabled,friendlyFire:false,botDifficulty:DEFAULT_NETWORK_BOT_DIFFICULTY,
-      mode:this.classic?'classic':'tdm',fillBots:options.fillBots!==false,worldRevision:1,elevatorOpenAt:-1});
+      mode:this.classic?'classic':'tdm',round:0,fillBots:options.fillBots!==false,worldRevision:1,elevatorOpenAt:-1});
     for(const d of this.sim.game.world.doors.doors)this.state.doors.set(d.id,new DoorState());
     this.sim.game.onGlassBreak=id=>this.state.brokenGlass.set(id,this.clock.elapsedTime);
     this.project();
@@ -67,7 +68,9 @@ export class NetworkRoom extends Room {
       g.afterBeginRound=()=>{g.world.networkDynamics.elevatorOpenAt=Math.max(0,g.state.buyDeadline-1.5);};
     }
     this.match=new MatchLifecycle(this,this.matchOptions);
+    this.teamComms=new TeamComms(this);
     this.onMessage('match',(client,m)=>{try{this.match.command(client,m);}catch(e){client.send('notice',e.message);}});
+    this.onMessage(TEAM_COMMS_TYPE,(client,message)=>this.teamComms.receive(client,message));
     // Reliable WS input has its own monotonic wire sequence. Do not introduce a
     // second sequence/ack counter; dropping a queued frame still advances its ack.
     this.inputs=this.defineInput(NetworkInput,{bufferMaxSize:12});
@@ -91,6 +94,7 @@ export class NetworkRoom extends Room {
       if(!seat?.ready||!seat.connected||seat.client!==client||message?.lifeId!==seat.actor.lifeId||
         (message.controlEpoch??0)!==seat.epoch||typeof message.enabled!=='boolean')return;
       seat.enabled=message.enabled;seat.interactUntil=0;seat.actor.action=null;seat.aim=false;seat.trigger=false;seat.actor.aimAmount=0;this.inputs.get(client.sessionId).clear();
+      if(!seat.enabled)this.teamComms.prune();
     });
     this.onMessage('select',(client,m)=>{
       const s=this.seats.get(client.sessionId);
@@ -275,6 +279,7 @@ export class NetworkRoom extends Room {
       frames.set(client.sessionId,input);
       actions.set(seat.id,`${seat.id}:${seat.actor.lifeId}:${seat.epoch}:${f.fireId}`);
     }
+    this.teamComms.prune();
     const oldLives=new Map(this.sim.game.actors.map(a=>[a.id,a.lifeId]));
     const events=this.sim.tick(frames);this.match.afterTick();
     for(const seat of this.participants())if(!this.classic&&seat.ready&&oldLives.get(seat.id)!==seat.actor.lifeId){
@@ -296,9 +301,16 @@ export class NetworkRoom extends Room {
     if(this.metrics.ticks%60===0&&this.state.actors.size<ROOM_CAPACITY)this.fillVacancies();
     this.metrics.ticks++;
   }
+  broadcastPatch(){
+    const patched=super.broadcastPatch();
+    // A private signal needs the recipient's latest schema and the original socket.
+    this.teamComms?.flush();
+    return patched;
+  }
   project() {
     const g=this.sim.game;
     if(this.classic)projectClassic(this);
+    this.teamComms?.prune();
     const residents=this.state.residents;
     for(const id of residents.keys())if(!g.state.zombies.some(z=>z.id===id))residents.delete(id);
     for(const z of g.state.zombies){
@@ -367,5 +379,5 @@ export class NetworkRoom extends Room {
     if(!seat.pending)this.removeActor(seat.actor);
     this.state.actors.delete(seat.actor?.id||seat.waitId);this.seats.delete(client.sessionId);this.match.ownership();this.fillVacancies();this.project();
   }
-  onDispose(){this.lag?.dispose();this.sim?.controllers.clear();this.seats?.clear();this.templates?.clear();this.lives?.clear();}
+  onDispose(){this.teamComms?.dispose();this.lag?.dispose();this.sim?.controllers.clear();this.seats?.clear();this.templates?.clear();this.lives?.clear();}
 }

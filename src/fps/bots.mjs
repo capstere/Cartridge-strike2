@@ -29,6 +29,7 @@ export class BotController {
     this.machine = new StateMachine(this);
     this.machine.add('objective', new ObjectiveState()).add('combat', new CombatState()).add('investigate', new InvestigateState()).changeTo('objective');
     this.mode = 'objective'; this.nextDecision = 0; this.nextPath = 0; this.path = []; this.goal = null;
+    this.teamOrder = null;
     this.target = null; this.records = []; this.heardSerial = 0; this.nextGrenade = game.state.time + 5;
     this.stuckTime = 0; this.replans = 0; this.lastPosition = position(actor); this.lastProgress = game.state.time; this.lastReplan = game.state.time;
     this.command = {}; this.distanceTravelled = 0;
@@ -112,14 +113,16 @@ export class BotController {
   }
   update(dt) {
     const { game, actor } = this, now = game.state.time;
+    if (this.teamOrder && (now >= this.teamOrder.expiresAt || !this.canFollowTeamOrder())) this.setTeamOrder(null);
     if (now >= this.nextDecision) {
-      this.nextDecision = now + game.config.botDecisionInterval*this.style.cadence;
       game.squadTactics?.refresh();
       this.perceive();
       // Defusing and planting keep priority once in progress; fighting cannot
       // repeatedly reset the last second of a valid objective interaction.
       const readyToPlant = game.bomb.carrierId === actor.id && game.interaction(actor)?.type === 'plant';
       const nextMode = actor.action || readyToPlant ? 'objective' : this.target ? 'combat' : this.shouldInvestigate() ? 'investigate' : 'objective';
+      if (this.teamOrder && (nextMode !== 'objective' || !this.canFollowTeamOrder())) this.setTeamOrder(null);
+      this.nextDecision = now + game.config.botDecisionInterval*this.style.cadence;
       if (nextMode !== this.mode) { this.mode = nextMode; this.machine.changeTo(nextMode); }
       this.command = {}; this.aimGoal = null; this.machine.update();
     }
@@ -186,12 +189,48 @@ export class BotController {
     const { game, actor } = this;
     return game.bomb.status === 'planted' || game.bomb.carrierId === actor.id || game.hostages.some(h => h.escortId === actor.id);
   }
+  droppedBombRetriever() {
+    const { game, actor } = this, bomb = game.bomb;
+    if (bomb.status !== 'dropped' || actor.team !== 'counterAnalysts') return null;
+    let nearest = null, nearestDistance = Infinity;
+    for (const ally of game.actors) {
+      if (!ally.alive || ally.team !== actor.team || !ally.bot) continue;
+      const range = distance(ally, bomb);
+      if (range < nearestDistance) { nearest = ally; nearestDistance = range; }
+    }
+    return nearest;
+  }
+  assignedHostage() {
+    const id = this.task?.hostageId;
+    return id && this.game.hostages.find(h => h.id === id && h.alive !== false && !h.rescued && !h.escortId);
+  }
+  canFollowTeamOrder() {
+    const { game, actor, target, profile } = this;
+    return actor.alive && !actor.action && this.mode === 'objective' && !this.command.interact &&
+      !(target?.visible && target.entity?.alive !== false) && actor.flash < .3 &&
+      game.state.time - actor.hurtTime >= profile.hurtRecovery && !this.urgentObjective() &&
+      this.droppedBombRetriever() !== actor && !this.assignedHostage();
+  }
+  setTeamOrder(order) {
+    this.teamOrder = order;
+    this.setGoal(null);
+    this.nextDecision = this.nextPath = this.nextRouteChoice = 0;
+    this.routePlan = this.routeBlocked = this.actor.aiLane = null;
+  }
   setGoal(goal) {
     if (!goal) { this.goal = null; this.path = []; return; }
     if (!this.goal || distance(this.goal, goal) > .5){this.nextPath = 0;this.lastProgress=this.game.state.time;}
     this.goal = { x: goal.x, z: goal.z };
   }
   planObjective() {
+    if (this.teamOrder) {
+      const { game, actor } = this, { point } = this.teamOrder;
+      const arrived = distance(actor, point) <= 1.4 &&
+        game.world.segmentClear(eye(actor), { ...point, y: point.y + .8 }, { vision: false });
+      actor.aiState = 'radioorder';
+      this.setGoal(arrived ? null : point);
+      return;
+    }
     if(actionObjective(this))return;
     const { game, actor } = this, b = game.bomb, anchors = game.world.anchors;
     actor.aiState = 'uppdrag';
@@ -211,13 +250,10 @@ export class BotController {
       this.holdPosition(guard);
       return;
     }
-    if (b.status === 'dropped') {
-      const owners = game.actors.filter(a => a.alive && a.team === actor.team && a.bot).sort((a, c) => distance(a, b) - distance(c, b));
-      if (owners[0] === actor) {
-        if (game.interaction(actor)?.type === 'pickupBomb') { this.command.interact = !actor.interactHeld; this.setGoal(null); }
-        else this.setGoal(b);
-        return;
-      }
+    if (this.droppedBombRetriever() === actor) {
+      if (game.interaction(actor)?.type === 'pickupBomb') { this.command.interact = !actor.interactHeld; this.setGoal(null); }
+      else this.setGoal(b);
+      return;
     }
     if (b.carrierId === actor.id) {
       if (game.interaction(actor)?.type === 'plant') { this.command.interact = true; this.setGoal(null); actor.aiState = 'planterar'; }
@@ -231,15 +267,12 @@ export class BotController {
       if (escorted.some(h => distance(h, actor) > 3)) this.setGoal(null);
       return;
     }
-    const available = game.hostages.filter(h => h.alive!==false && !h.rescued && !h.escortId);
-    if (available.length) {
-      const hostage=available.find(h=>h.id===this.task?.hostageId);
-      if (hostage) {
-        if (distance(actor, hostage) < game.config.interactDistance - .15 && game.world.segmentClear(eye(actor), { ...position(hostage), y: .8 }, { vision: false })) {
-          this.command.interact = !actor.interactHeld; this.command.interactTarget = hostage.id; this.setGoal(null);
-        } else this.setGoal(hostage);
-        return;
-      }
+    const hostage = this.assignedHostage();
+    if (hostage) {
+      if (distance(actor, hostage) < game.config.interactDistance - .15 && game.world.segmentClear(eye(actor), { ...position(hostage), y: .8 }, { vision: false })) {
+        this.command.interact = !actor.interactHeld; this.command.interactTarget = hostage.id; this.setGoal(null);
+      } else this.setGoal(hostage);
+      return;
     }
     const escort = game.actors.find(a => a.alive && game.hostages.some(h => h.escortId === a.id));
     const cover = b.status === 'planted' ? b : escort ?? anchors.bomb;
@@ -435,11 +468,11 @@ export class BotController {
     const { game, actor } = this;
     const now=game.state.time;
     if(now<this.departAt&&distance(actor,game.world.anchors[actor.team][actor.index])<3)return;
-    this.chooseRoute();
+    if (!this.teamOrder) this.chooseRoute();
     // Gates survive short combat interruptions, but never pull an escort back
     // toward the lab or prevent an urgent planted-bomb objective.
     const floor5=game.world.tactical?.kind==='floor5';
-    const outbound = this.mode === 'objective' && (floor5||this.goal?.x < -15) && game.bomb.status !== 'planted' && !game.hostages.some(h => h.escortId === actor.id);
+    const outbound = !this.teamOrder && this.mode === 'objective' && (floor5||this.goal?.x < -15) && game.bomb.status !== 'planted' && !game.hostages.some(h => h.escortId === actor.id);
     if (outbound && this.routePlan) {
       while (this.routePlan.gates.length && distance(actor,this.routePlan.gates[0]) < .22) { this.routePlan.gates.shift(); this.nextPath = 0; }
     }
