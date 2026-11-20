@@ -85,6 +85,15 @@ export class Game {
     else this.state.pendingDifficulty = id === this.state.difficulty ? null : id;
     return true;
   }
+  setNetworkBotDifficulty(id) {
+    if (!this.config.networkSlice || !this.state.paused || typeof id !== 'string' || !Object.hasOwn(DIFFICULTIES, id)) return false;
+    this.state.difficulty = this.config.difficulty = id;
+    this.state.pendingDifficulty = null;
+    for (const actor of this.actors) {
+      if (actor.bot) actor.bot.profile = this.difficultyProfileFor(actor);
+    }
+    return true;
+  }
   get spectator() { return this.player?.alive ? this.player : this.actors.find(a => a.alive && a.team === this.team) ?? this.actors.find(a => a.alive) ?? this.player; }
   start(team = this.team) {
     if (!TEAMS[team]) throw new Error('Unknown team');
@@ -350,7 +359,13 @@ export class Game {
     if(kind==='stomp' && (!source?.alive || source.behavior!=='attack'))return false;
     if(target.kind==='hostage'&&!this.config.hostageDamage)return false;
     if(target.kind==='dwarf'&&!this.config.wanderers)return false;
-    if ((target.isPlayer || target.controllerType === 'human') && source && !source.isPlayer && source.controllerType !== 'human' && sourceTeam !== target.team) amount *= DIFFICULTIES[this.state.difficulty].humanDamage;
+    if (this.config.networkSlice) {
+      // A launched rocket or HE keeps its original shooter across seat reuse.
+      if (source?.controllerType === 'bot' && target.controllerType === 'human' &&
+        Object.hasOwn(TEAMS, sourceTeam) && Object.hasOwn(TEAMS, target.team) && sourceTeam !== target.team) {
+        amount *= DIFFICULTIES[this.state.difficulty].humanDamage;
+      }
+    } else if ((target.isPlayer || target.controllerType === 'human') && source && !source.isPlayer && source.controllerType !== 'human' && sourceTeam !== target.team) amount *= DIFFICULTIES[this.state.difficulty].humanDamage;
     const absorbed = Math.min(target.armor || 0, amount * .32); target.armor = Math.max(0, (target.armor || 0) - absorbed);
     const dealt = Math.min(target.hp, amount - absorbed); target.hp = Math.max(0, target.hp - dealt);
     const hitPoint = context.point ?? { x: target.x, y: target.y + target.height * .6, z: target.z };

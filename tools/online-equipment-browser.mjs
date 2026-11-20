@@ -80,6 +80,13 @@ try{
   await mobile.locator('#mobile-more').tap();
   await mobile.locator('[data-mobile-action=grenade]').tap();await until(()=>guest.weapon==='he','touch grenade selected');
   await until(()=>game.state.time>guest.nextShot,'throw ready');await until(async()=>await fire.textContent()==='KASTA','throw label');
+  // A single hold must begin after the matching client snapshot has made the
+  // selected grenade usable, including its predicted switch cooldown.
+  await mobile.waitForFunction(()=>{
+    const session=reviewSession,self=session.room.state.actors.get(session.localPlayerId);
+    return self.weapon==='he'&&self.he>0&&!session.trigger
+      &&session.prediction.world.game.state.time>=Math.max(session.nextCosmetic,self.nextShot);
+  });
   const t=await fire.boundingBox();
   await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{id:3,x:t.x+t.width/2,y:t.y+t.height/2}]});
   try{

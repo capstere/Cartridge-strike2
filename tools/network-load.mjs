@@ -139,7 +139,7 @@ for(const count of counts)for(const rtt of rtts){
  }
  try{
   if(weaponLoad){
-   assert.equal(info.contract.protocolVersion,9,'Weapon load requires the protocol 9 contract');
+   assert(info.contract.protocolVersion>=9,'Weapon load requires the rocket projectile contract');
    assert.equal(info.contract.mapId,'floor5-prepared','Weapon load requires the prepared Floor 5 map');
   }
   const first=await add();for(let i=1;i<count;i++)await add(first.room.roomId);
