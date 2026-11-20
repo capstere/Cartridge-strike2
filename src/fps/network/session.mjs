@@ -40,7 +40,7 @@ export class NetworkSession {
     this.view.random=seededRandom(81);this.view.network=true;
     this.view.pause=value=>this.setInputEnabled(!value);
     this.view.reload=()=>{if(!this.closed&&this.enabled&&this.view.player?.alive){this.reloadId++;return true;}return false;};
-    this.selectId=0;
+    this.selectId=0;this.botDifficultySerial=0;
     this.view.select=value=>{
       const a=this.view.player;
       if(!this.enabled||!a?.alive||this.closed)return false;
@@ -118,6 +118,7 @@ export class NetworkSession {
     }
     const classic=state.mode==='classic',newRound=classic&&this.view.state.round!==state.round;
     this.view.config=classic?CLASSIC_NETWORK_CONFIG:NETWORK_CONFIG;
+    this.view.state.difficulty=state.botDifficulty??this.view.config.difficulty;
     this.view.state.mode=classic?'classic':'endless';
     const newMatch=this.matchId!==state.matchId,newPhase=this.matchPhase!==state.phase;
     if(newMatch||newRound)this.events=[];
@@ -247,6 +248,9 @@ export class NetworkSession {
   matchCommand(kind,extra={}){
     const self=this.room?.state.actors.get(this.localPlayerId);if(!self||this.connectionState!=='connected')return;
     this.notice='';this.room.send('match',{kind,matchId:this.room.state.matchId,controlEpoch:self.controlEpoch,...extra});
+  }
+  setBotDifficulty(botDifficulty){
+    this.matchCommand('botDifficulty',{botDifficulty,serial:++this.botDifficultySerial});
   }
   keepRocketEffects(){this.events=this.events.filter(event=>event.rocketId);}
   receiveEvents(events){

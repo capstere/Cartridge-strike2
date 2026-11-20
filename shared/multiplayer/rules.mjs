@@ -1,14 +1,16 @@
 import {CONFIG, WEAPONS} from '../../src/fps/config.mjs';
 
+export const BOT_DIFFICULTY_IDS = Object.freeze(['casual', 'normal', 'hard']);
+export const DEFAULT_NETWORK_BOT_DIFFICULTY = 'normal';
 // Trusted, deliberately small online ruleset. Offline defaults stay untouched.
 export const NETWORK_CONFIG = Object.freeze({...CONFIG, networkSlice:true,
-  mode:'endless', difficulty:'normal', loadout:'smg', firefight:false,
+  mode:'endless', difficulty:DEFAULT_NETWORK_BOT_DIFFICULTY, loadout:'smg', firefight:false,
   wanderers:false, zombies:false, danceman:false, hostageDamage:false, friendlyFire:false,
   startMoney:0, maxMoney:0, killMoney:0});
 export const CLASSIC_NETWORK_CONFIG = Object.freeze({...NETWORK_CONFIG,mode:'classic',
   startMoney:CONFIG.startMoney,maxMoney:CONFIG.maxMoney,killMoney:CONFIG.killMoney,hostageDamage:CONFIG.hostageDamage});
 export const NETWORK_MAP = 'floor5-prepared';
-export const PROTOCOL_VERSION = 9;
+export const PROTOCOL_VERSION = 10;
 export const MATCH_DEFAULTS = Object.freeze({durationSeconds:600,scoreTarget:50,countdownSeconds:3});
 export const RTT_FRESH_MS = 4000;
 export const TEAM_CAPACITY = 5;
@@ -27,7 +29,7 @@ export function copyPose(target, source) {
 export const configContract = () => ({config:NETWORK_CONFIG,classic:CLASSIC_NETWORK_CONFIG, weapons:Object.values(WEAPONS).filter(w=>['smg','ar47','cr4','sniper','shotgun','bazooka','p9','p12','knife','he'].includes(w.id)),
   world:'floor5-authoritative-doors-spawn-shutters-breakable-glass-v2',
   capacity:ROOM_CAPACITY, teamCapacity:TEAM_CAPACITY, reconnectSeconds:RECONNECT_SECONDS,
-  rewindMs:REWIND_MS, interpolationMs:INTERPOLATION_MS, match:MATCH_DEFAULTS, rttFreshMs:RTT_FRESH_MS});
+  rewindMs:REWIND_MS, interpolationMs:INTERPOLATION_MS, match:MATCH_DEFAULTS, botDifficulties:BOT_DIFFICULTY_IDS, rttFreshMs:RTT_FRESH_MS});
 export const wrapYaw = value => Math.atan2(Math.sin(value),Math.cos(value));
 export function safeName(value) {
   if(typeof value!=='string')return 'Player';

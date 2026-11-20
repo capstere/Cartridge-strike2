@@ -38,6 +38,15 @@ async function create(desktop,mobile,mode){
   await mobile.locator('#room-ready').waitFor();
   assert.match(await mobile.locator('#room-friendly-fire-status').textContent(),/Av/);
   assert(await mobile.locator('#room-friendly-fire-label').isHidden());
+  const difficulty=desktop.locator('#room-bot-difficulty');
+  assert.equal(await difficulty.inputValue(),'normal');
+  assert(await mobile.locator('#room-bot-difficulty-label').isHidden());
+  await difficulty.selectOption('casual');
+  await until(async()=>/Casual/.test(await mobile.locator('#room-bot-difficulty-status').textContent()),'bot difficulty replicated to touch guest');
+  await difficulty.selectOption('hard');
+  await until(async()=>/Hard/.test(await mobile.locator('#room-bot-difficulty-status').textContent()),'hard lobby setting replicated');
+  await difficulty.selectOption('normal');
+  await until(async()=>/Normal/.test(await mobile.locator('#room-bot-difficulty-status').textContent()),'default restored for rocket scenario');
   await desktop.locator('#room-friendly-fire').selectOption('on');
   await until(async()=>/På/.test(await mobile.locator('#room-friendly-fire-status').textContent()),'owner setting replicated to touch');
   if(mode==='tdm')await mobile.locator('#room-primary').selectOption('bazooka');

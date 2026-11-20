@@ -1,4 +1,4 @@
-import {MATCH_DEFAULTS,RECONNECT_SECONDS} from '../shared/multiplayer/rules.mjs';
+import {BOT_DIFFICULTY_IDS,MATCH_DEFAULTS,RECONNECT_SECONDS} from '../shared/multiplayer/rules.mjs';
 import {prepareNetworkWorld} from '../shared/multiplayer/world.mjs';
 import {onlinePrimaries,respawnActor} from '../src/fps/action-rules.mjs';
 import {populateZombies} from '../src/fps/zombies.mjs';
@@ -32,8 +32,10 @@ export class MatchLifecycle {
   }
   command(client,m){
     const r=this.room,s=r.seats.get(client.sessionId),state=this.state;
+    const keys=m?.kind==='botDifficulty'?['kind','matchId','controlEpoch','botDifficulty','serial']:
+      ['kind','matchId','controlEpoch','ready','team','primary','zombies','danceman','friendlyFire'];
     if(!s?.ready||!s.connected||s.client!==client||!m||m.matchId!==state.matchId||m.controlEpoch!==s.epoch||
-      Object.keys(m).some(k=>!['kind','matchId','controlEpoch','ready','team','primary','zombies','danceman','friendlyFire'].includes(k)))return;
+      Object.keys(m).some(k=>!keys.includes(k)))return;
     if(!r.classic&&m.kind==='loadout'&&['waiting','active'].includes(state.phase)&&onlinePrimaries(s.actor.team).includes(m.primary))s.actor.loadout=m.primary;
     else if(m.kind==='ready'&&state.phase==='waiting'&&typeof m.ready==='boolean')s.playerReady=m.ready;
     else if(m.kind==='team'&&state.phase==='waiting')r.changeTeam(client,m.team);
@@ -44,6 +46,13 @@ export class MatchLifecycle {
     }else if(m.kind==='friendlyFire'&&state.phase==='waiting'&&state.ownerId===client.sessionId&&typeof m.friendlyFire==='boolean'){
       state.friendlyFire=m.friendlyFire;
       r.sim.game.config.friendlyFire=m.friendlyFire;
+    }else if(m.kind==='botDifficulty'){
+      if(state.phase!=='waiting'||state.ownerId!==client.sessionId||!BOT_DIFFICULTY_IDS.includes(m.botDifficulty)||
+        !Number.isSafeInteger(m.serial)||m.serial<1||(s.botDifficultyEpoch===s.epoch&&m.serial<=s.lastBotDifficultySerial))return;
+      if(!r.sim.game.setNetworkBotDifficulty(m.botDifficulty))return;
+      s.botDifficultyEpoch=s.epoch;
+      s.lastBotDifficultySerial=m.serial;
+      state.botDifficulty=m.botDifficulty;
     }else if(m.kind==='start'&&state.phase==='waiting'){
       if(state.ownerId!==client.sessionId)throw Error('Bara rumsägaren kan starta matchen.');
       if(!this.eligible())throw Error('Alla anslutna spelare måste vara redo, med minst en spelare i varje lag.');

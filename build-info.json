@@ -1926,8 +1926,8 @@
     },
     {
       "path": "shared/multiplayer/build.mjs",
-      "bytes": 612,
-      "sha256": "8246fe6679a1993e42635946cee50d65f696710dd91ce5a191173c117d38d61a"
+      "bytes": 613,
+      "sha256": "7123bf386533b2124b032b4bcef026ac5f0f932e77ac43b2add300ea174f1729"
     },
     {
       "path": "shared/multiplayer/collision-contract.mjs",
@@ -1946,8 +1946,8 @@
     },
     {
       "path": "shared/multiplayer/rules.mjs",
-      "bytes": 2257,
-      "sha256": "e35e005011882d42a060fcba6db3fe300307958dc6ff36131a0042ce9792288f"
+      "bytes": 2451,
+      "sha256": "aae931139665ee29cf6f30c4c6495cb2238bdfc6f6676c231e97e214b4eaf7f3"
     },
     {
       "path": "shared/multiplayer/world.mjs",
@@ -1996,8 +1996,8 @@
     },
     {
       "path": "src/fps/app.mjs",
-      "bytes": 45520,
-      "sha256": "6f3f7518b76667afb3c80ea0f48f700a8bfa4664cea7ec9cffbce0fbc7e3ba90"
+      "bytes": 45513,
+      "sha256": "c46ae91bce82b45d0679c881b70cd38305dc8ebd6c5d759b1b4ac1fbc0a02095"
     },
     {
       "path": "src/fps/audio.mjs",
@@ -2191,8 +2191,8 @@
     },
     {
       "path": "src/fps/game.mjs",
-      "bytes": 40574,
-      "sha256": "0fc555b19573cf301851cc90fa2e2d1f115cefa96818ca74ddcd6f3e9667d6ca"
+      "bytes": 41369,
+      "sha256": "97764859bb91fe05287e5133ffa5125056a38186b606cad890cb52458bfbd922"
     },
     {
       "path": "src/fps/glass-visuals.mjs",
@@ -2296,13 +2296,13 @@
     },
     {
       "path": "src/fps/network/room-ui.mjs",
-      "bytes": 9463,
-      "sha256": "933daf3a6aa40d480bb1834f21c2a6aa008560908d4356b606df81c352f7740a"
+      "bytes": 10225,
+      "sha256": "ab82d73b1296241ed849ec0cc521a487f0211f663e11440230a4546c5c02fcdd"
     },
     {
       "path": "src/fps/network/session.mjs",
-      "bytes": 26926,
-      "sha256": "9dff0f1b5474e482590584f820b222358617a207ed9c01938e2f8f5f28ba0af8"
+      "bytes": 27163,
+      "sha256": "43070ca8c5bc2296130336814ea886b711665967842dc64e230c1a4f9374b44b"
     },
     {
       "path": "src/fps/physics.mjs",
@@ -2605,7 +2605,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 58738777,
+  "bytes": 58740759,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

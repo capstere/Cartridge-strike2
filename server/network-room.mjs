@@ -5,7 +5,7 @@ import {WEAPONS} from '../src/fps/config.mjs';
 import {onlinePrimaries,respawnActor} from '../src/fps/action-rules.mjs';
 import {zombiePosition} from '../src/fps/zombie-poses.mjs';
 import {prepareClassicRound,projectClassic} from './classic-round.mjs';
-import {CLASSIC_NETWORK_CONFIG,NETWORK_CONFIG,NETWORK_MAP,ROOM_CAPACITY,TEAM_CAPACITY,RECONNECT_SECONDS,copyPose,safeName} from '../shared/multiplayer/rules.mjs';
+import {CLASSIC_NETWORK_CONFIG,DEFAULT_NETWORK_BOT_DIFFICULTY,NETWORK_CONFIG,NETWORK_MAP,ROOM_CAPACITY,TEAM_CAPACITY,RECONNECT_SECONDS,copyPose,safeName} from '../shared/multiplayer/rules.mjs';
 import {checkContract,validateNetworkInput,wireInput} from '../shared/multiplayer/protocol.mjs';
 import {CONTRACT} from '../shared/multiplayer/build.mjs';
 import {NetworkInput,ActorState,RoomState,DoorState,GrenadeState,ResidentState,RocketState} from './network-schema.mjs';
@@ -55,7 +55,8 @@ export class NetworkRoom extends Room {
     this.residentLife=0;
     const zombiesEnabled=options.zombies===true,dancemanEnabled=options.danceman===true;
     Object.assign(this.sim.game.config,{zombies:zombiesEnabled,danceman:dancemanEnabled});
-    this.state=new RoomState({zombiesEnabled,dancemanEnabled,friendlyFire:false,mode:this.classic?'classic':'tdm',fillBots:options.fillBots!==false,worldRevision:1,elevatorOpenAt:-1});
+    this.state=new RoomState({zombiesEnabled,dancemanEnabled,friendlyFire:false,botDifficulty:DEFAULT_NETWORK_BOT_DIFFICULTY,
+      mode:this.classic?'classic':'tdm',fillBots:options.fillBots!==false,worldRevision:1,elevatorOpenAt:-1});
     for(const d of this.sim.game.world.doors.doors)this.state.doors.set(d.id,new DoorState());
     this.sim.game.onGlassBreak=id=>this.state.brokenGlass.set(id,this.clock.elapsedTime);
     this.project();
