@@ -61,16 +61,21 @@ async function pause(page){
   if(await page.locator('#pause').isHidden())await page.keyboard.press('Escape');
   await page.locator('#resume').waitFor();
 }
-async function pointDesktop(page){
-  const yaw=()=>page.evaluate(()=>__fps.game.player.yaw);
-  // Face the target using keyboard look if Resume retained the spawn heading.
-  const start=await yaw();
-  if(Math.abs(start)>.1){
-    const key=start>0?'ArrowRight':'ArrowLeft';
-    await page.keyboard.down(key);
-    try{await until(async()=>Math.abs(await yaw())<.15,'desktop faces down the lane');}
-    finally{await page.keyboard.up(key);}
-  }
+async function pointDesktop(page,actor){
+  // Use the actual pointer-lock input handler. Keyboard turns can overshoot
+  // a capsule eight metres away even when the camera looks approximately right.
+  await page.evaluate(()=>{
+    const {yaw,pitch}=__fps.input(0);
+    const scale=__fps.settings.sensitivity*__fps.tactical.lookScale(false,yaw,pitch);
+    const heading=Math.atan2(Math.sin(yaw),Math.cos(yaw));
+    window.dispatchEvent(new MouseEvent('mousemove',{
+      movementX:Math.round(heading/scale),movementY:Math.round(pitch/scale)
+    }));
+  });
+  await until(async()=>Math.abs(actor.yaw)<.02&&Math.abs(actor.pitch)<.02&&await page.evaluate(()=>{
+    const {yaw,pitch}=__fps.input(0);
+    return Math.abs(Math.atan2(Math.sin(yaw),Math.cos(yaw)))<.02&&Math.abs(pitch)<.02;
+  }),'desktop and authority face down the lane');
 }
 async function observe(p){
   await p.evaluate(()=>{
@@ -124,7 +129,7 @@ async function cycle(desktop,mobile,mode){
   }
   await mobile.locator('#resume').tap();
   await resumeDesktop(desktop);
-  await pointDesktop(desktop);
+  await pointDesktop(desktop,left);
   let release;
   if(mode==='tdm')release=await fireTouch(mobile);
   else {await desktop.mouse.down();release=()=>desktop.mouse.up();}
