@@ -89,3 +89,43 @@ test('resident events require the current resident generation on either side of 
   NetworkSession.prototype.receiveEvents.call(session,events);
   assert.deepEqual(session.events,events.slice(-2));
 });
+
+test('private team packets are scoped to current teammates, match and life',()=>{
+ const self={id:'a',team:'analysts',ready:true,connected:true,alive:true,controlEpoch:2,lifeId:3};
+ const ally={...self,id:'b',controlEpoch:1,lifeId:4};
+ const enemy={...self,id:'c',team:'counterAnalysts'};
+ const state={actors:new Map([['a',self],['b',ally],['c',enemy]]),mode:'classic',phase:'active',roundPhase:'active',matchId:7,round:3,time:41};
+ const anchor={id:'bomb-site',label:'Bombplats',x:2,z:3};
+ const session=Object.assign(Object.create(NetworkSession.prototype),{
+  connected:true,connectionState:'connected',enabled:true,localPlayerId:'a',room:{state},
+  view:{state:{time:41}},events:[],teamAnchors:new Map([[anchor.id,anchor]]),receivedTeamComms:new Map()
+ });
+ const packet={kind:'ping',anchorId:anchor.id,senderId:'b',senderName:'Ally',senderLifeId:4,senderEpoch:1,
+  recipientLifeId:3,recipientEpoch:2,team:'analysts',matchId:7,round:3,expiresAt:48,serial:1,botAssigned:false};
+ for(const invalid of [{senderId:'c'},{senderLifeId:3},{senderEpoch:0},{recipientLifeId:2},{recipientEpoch:1},
+     {matchId:6},{round:2},{expiresAt:40},{anchorId:'custom-coordinate'}]){
+  session.receiveTeamComms({...packet,...invalid});
+  assert.equal(session.teamSignal,undefined);
+ }
+ session.receiveTeamComms(packet);
+ assert.equal(session.teamSignal.anchor,anchor);
+ assert.equal(session.view.teamPing,session.teamSignal);
+ assert.equal(session.events.length,0,'normal pings play no command voice');
+ session.receiveTeamComms({...packet,kind:'backup'});
+ assert.equal(session.events.length,0,'duplicate packet cannot play radio audio');
+ session.receiveTeamComms({...packet,kind:'backup',serial:2,anchorId:undefined});
+ assert.equal(session.events[0].teamPrivate,true);
+ assert.equal(session.events[0].command,'backup');
+ assert.equal(session.view.teamPing.anchor,anchor);
+ ally.alive=false;
+ session.expireTeamComms();
+ assert.equal(session.teamSignal,null);
+ assert.equal(session.view.teamPing,null);
+ assert.equal(session.events.length,0,'old sender life loses queued audio');
+ ally.alive=true;
+ session.receiveTeamComms({...packet,serial:3});
+ assert(session.view.teamPing);
+ state.roundPhase='result';
+ session.expireTeamComms();
+ assert.equal(session.view.teamPing,null);
+});

@@ -59,3 +59,20 @@ html.network-session-ui[data-hud=full] #mobile-controls #mobile-utilities .mobil
   html.network-session-ui.hud-map-open #hud .map-panel{top:max(94px,calc(env(safe-area-inset-top) + 64px))!important}
   html.network-session-ui.hud-map-open #hud #minimap{max-height:calc(100dvh - 180px)}
 }
+
+#team-radio-menu{
+  position:fixed;top:max(74px,calc(env(safe-area-inset-top,0px) + 62px));left:var(--map-left,12px);z-index:13;
+  width:min(300px,calc(50vw - var(--map-left,12px) - 16px));max-height:calc(100dvh - 112px);
+  display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:8px;padding:10px;
+  border:1px solid #60727c;border-left:2px solid #7ce4cd;background:#0b171ff5;
+  color:#edf4f6;pointer-events:auto
+}
+#team-radio-menu header{display:flex;justify-content:space-between;align-items:center;gap:8px}
+#team-radio-menu button{
+  background:#102732;border:1px solid #59717a;text-align:left;padding:6px 8px;min-height:38px
+}
+#team-radio-choices{display:grid;gap:4px;overflow:auto;overscroll-behavior:contain;touch-action:pan-y}
+#team-radio-menu button[data-current]{border-color:#7ce4cd;background:#20414a}
+#team-radio-menu .radio-key-hint{color:#aac0c9}
+html.touch-fps #team-radio-menu .radio-key-hint{display:none}
+html.touch-fps #team-radio-menu button{min-height:44px}

@@ -4,7 +4,7 @@ export function networkMenu(join,activate=()=>{},internet=false){
   menu.classList.add('network-menu');document.documentElement.classList.add('network-session-ui');
   document.querySelector('#pause .eyebrow').textContent='MATCHEN FORTSÄTTER';document.querySelector('#pause h2').textContent='MENY';
   document.querySelector('#scoreboard .small').textContent='Håll Tab · Upp till tio deltagare';
-  document.querySelector('.key-hints').textContent='WASD rörelse · höger musknapp sikte · 1–5 byt utrustning · B vapenval/köp · E uppdrag · SHIFT smyg · CTRL huka · SPACE hopp · R ladda om · ESC meny';
+  document.querySelector('.key-hints').textContent='WASD rörelse · höger musknapp sikte · 1–5 byt utrustning · B vapenval/köp · E uppdrag · M karta · Z radio · SHIFT smyg · CTRL huka · SPACE hopp · R ladda om · ESC meny';
   for(const el of menu.querySelectorAll('.lb-left > .lb-block,.lb-launch,#character-picker,.mission-strip'))el.hidden=true;
   menu.querySelector('.eyebrow').textContent=internet?'INTERNET MULTIPLAYER · 5v5':'LAN MULTIPLAYER · 5v5 · 10 PLAYERS';
   menu.querySelector('.lead').textContent='Välj Team Deathmatch för respawn eller Classic för köpfas, bomb och gisslan. Matchen fortsätter i menyer.';

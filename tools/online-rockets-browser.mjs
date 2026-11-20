@@ -24,6 +24,10 @@ async function launch(touch){
   return page;
 }
 async function create(desktop,mobile,mode){
+  const name=desktop.locator('#network-name');
+  await name.fill('');
+  await name.press('z');
+  assert.equal(await name.inputValue(),'z','radio key allows typing into the lobby form');
   for(const [p,team] of [[desktop,'analysts'],[mobile,'counterAnalysts']]){
     await p.locator('#network-team').selectOption(team);
     await p.locator('#network-code').fill('rocket-five');
@@ -176,6 +180,43 @@ async function mapControls(desktop,mobile,room){
   }
   console.log('PASS tactical map',room.state.mode,JSON.stringify({desktop:await read(desktop),touch:await read(mobile)}));
 }
+async function radioControls(desktop,mobile,mode,shooter){
+  const ammo=shooter.inventory.primary?.ammo,weapon=shooter.weapon;
+  const show=page=>page.locator('#team-radio-menu').waitFor({state:'visible'});
+  const utility=async name=>{
+    await mobile.locator('#mobile-more').tap();
+    await mobile.locator('[data-utility='+name+']').tap();
+  };
+  if(mode==='classic'){
+    await desktop.keyboard.press('z');
+    await show(desktop);
+    await desktop.mouse.down();
+    try{
+      assert.equal(await desktop.evaluate(()=>!!__fps.input(0).fire),false,'radio blocks a mouse trigger');
+    }finally{await desktop.mouse.up();}
+    await desktop.keyboard.press('1');
+    await desktop.locator('#radio-caption').filter({hasText:'Håll ihop'}).waitFor();
+    assert.equal(await desktop.evaluate(()=>document.pointerLockElement?.id),'game');
+    assert.equal(await mobile.evaluate(()=>__fps.network.teamSignal),null,'opposing touch client sees no Classic radio');
+  }else{
+    await utility('radio');
+    await show(mobile);
+    await mobile.locator('[data-team-radio=ping][data-anchor=analyst-start-lift]').tap();
+    await mobile.locator('#radio-caption').filter({hasText:'Cargo Lift'}).waitFor();
+    assert.equal(await desktop.evaluate(()=>__fps.network.teamSignal),null,'opposing desktop sees no touch ping');
+    await mobile.evaluate(()=>{
+      const ctx=__fps.minimapCache.context,arc=ctx.arc.bind(ctx);
+      window.teamPingRings=0;
+      ctx.arc=(x,y,r,...rest)=>{if(r===8)window.teamPingRings++;return arc(x,y,r,...rest);};
+    });
+    await utility('karta');
+    await mobile.waitForFunction(()=>window.teamPingRings>0);
+    await utility('karta');
+  }
+  assert.equal(shooter.inventory.primary?.ammo,ammo,'radio inputs spent no ammo');
+  assert.equal(shooter.weapon,weapon,'radio inputs kept the equipped weapon');
+  console.log('PASS team radio controls '+mode);
+}
 async function cycle(desktop,mobile,mode){
   const room=await create(desktop,mobile,mode),game=room.sim.game,peers=[desktop,mobile];
   const [left,right]=['analysts','counterAnalysts'].map(team=>[...room.seats.values()].find(seat=>seat.actor.team===team).actor);
@@ -194,6 +235,7 @@ async function cycle(desktop,mobile,mode){
   await mobile.locator('#resume').tap();
   await resumeDesktop(desktop);
   await mapControls(desktop,mobile,room);
+  await radioControls(desktop,mobile,mode,shooter);
   for(const p of peers)await pause(p);
   Object.assign(left,{x:22.8,z:-12,y:0,yaw:0,pitch:0,spawnProtectedUntil:0});
   Object.assign(right,{x:22.8,z:-20,y:0,yaw:Math.PI,pitch:0,spawnProtectedUntil:0});
