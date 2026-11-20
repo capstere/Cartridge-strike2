@@ -1927,7 +1927,7 @@
     {
       "path": "shared/multiplayer/build.mjs",
       "bytes": 613,
-      "sha256": "32a1f8aa0573637af2b7e70e4644fb26831048d9f7c29d42232099fac7f24c0b"
+      "sha256": "b75d9e23626a193080a2651977ba6c75ecbf1c432f09b12ad97aefc3c580e94e"
     },
     {
       "path": "shared/multiplayer/collision-contract.mjs",

@@ -212,6 +212,20 @@ test('private delivery waits for the patch containing a new recipient life',{tim
   const received=packets.get(ally)[0];
   assert(received.recipientLifeId>previous);
   assert.equal(received.recipientLifeId,received.lifeAtReceipt);
+
+  // Colyseus can rebind the old client object to a replacement WebSocket.
+  // Deliver a signal queued before the drop only to still-current recipients.
+  await delay(300);
+  send(ally,'ping',1,{anchorId:'commons'});
+  await until(()=>room.teamComms.teamSerial.get(body.team)===2,'second private signal queued');
+  const epoch=own(host).controlEpoch;
+  Object.assign(host.reconnection,{enabled:true,minUptime:0,minDelay:150});
+  room.seats.get(host.sessionId).client.ref.terminate();
+  await until(()=>own(host)?.connected&&own(host).controlEpoch>epoch,'receiver reconnects before the pending patch');
+  room.broadcastPatch();
+  await until(()=>packets.get(ally).length===2,'unchanged recipient receives the pending signal');
+  assert.equal(packets.get(host).length,1,'reconnected recipient gets no historical message');
+  assert.equal(packets.get(enemy).length,0);
 });
 test('Classic radio preserves bots planting, defusing and escorting',{timeout:35000},async t=>{
   const env=await fixture(t,'classic','counterAnalysts');

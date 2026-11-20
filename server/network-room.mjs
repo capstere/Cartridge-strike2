@@ -301,6 +301,12 @@ export class NetworkRoom extends Room {
     if(this.metrics.ticks%60===0&&this.state.actors.size<ROOM_CAPACITY)this.fillVacancies();
     this.metrics.ticks++;
   }
+  broadcastPatch(){
+    const patched=super.broadcastPatch();
+    // A private signal needs the recipient's latest schema and the original socket.
+    this.teamComms?.flush();
+    return patched;
+  }
   project() {
     const g=this.sim.game;
     if(this.classic)projectClassic(this);
