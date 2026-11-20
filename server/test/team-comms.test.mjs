@@ -31,7 +31,7 @@ async function fixture(t,mode,team='analysts'){
   const peers=[host,ally,enemy];
   for(const p of peers){
     const values=[];packets.set(p,values);
-    p.onMessage(TEAM_COMMS_TYPE,m=>values.push(m));
+    p.onMessage(TEAM_COMMS_TYPE,m=>values.push({...m,lifeAtReceipt:own(p)?.lifeId}));
     p.onMessage('events',batch=>general.push(...batch.map(e=>e.type)));
     p.onMessage('notice',()=>{});
   }
@@ -175,16 +175,44 @@ for(const mode of ['tdm','classic'])test(mode+' team signals stay private and re
     await delay(110);
     assertPrivate(env,6);
   }
-  const matchId=host.state.matchId;
+  const matchId=host.state.matchId,previousMatch=request(host,'ping',20,{anchorId});
   room.match.finish('time');
   await until(()=>host.state.phase==='results','room reaches results');
   match(host,'rematch');
   await until(()=>host.state.phase==='waiting'&&host.state.matchId>matchId,'same-room rematch ready');
   assert.equal(room.teamComms.orders.size,0);
+  const count=packets.get(host).length;
+  await env.start();
+  await cooldown();
+  host.send(TEAM_COMMS_TYPE,{...previousMatch,tick:host.state.tick});
+  await delay(120);
+  assertPrivate(env,count);
   for(const peer of [enemy,env.ally,host])await peer.leave();
   await until(()=>env.local.rooms.size===0,'abandoned room is disposed');
 });
 
+test('private delivery waits for the patch containing a new recipient life',{timeout:20000},async t=>{
+  const env=await fixture(t,'tdm');
+  const {host,ally,enemy,room,game,packets,actor}=env;
+  await env.start();
+  room.patchRate=0;
+  const previous=own(ally).lifeId,body=actor(ally);
+  body.spawnProtectedUntil=0;
+  assert(game.damage(body,200,actor(enemy),'smg'));
+  body.respawnAt=game.state.time;
+  await until(()=>room.state.actors.get(body.id).lifeId>previous,'recipient respawns on authority');
+  assert.equal(own(ally).lifeId,previous,'receiver is still on the previous patch');
+  send(host,'ping',1,{anchorId:'commons'});
+  await until(()=>room.teamComms.teamSerial.get(body.team)===1,'server accepted while state delivery was suspended');
+  await delay(100);
+  assertPrivate(env,0);
+  room.broadcastPatch();
+  await until(()=>packets.get(ally).length===1,'ping follows the new schema state');
+  assertPrivate(env,1);
+  const received=packets.get(ally)[0];
+  assert(received.recipientLifeId>previous);
+  assert.equal(received.recipientLifeId,received.lifeAtReceipt);
+});
 test('Classic radio preserves bots planting, defusing and escorting',{timeout:35000},async t=>{
   const env=await fixture(t,'classic','counterAnalysts');
   const {host,enemy,room,game,packets}=env;

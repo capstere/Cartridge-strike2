@@ -59,11 +59,16 @@ export class FocusHud {
       button.textContent = label; button.setAttribute('aria-label', name);
       button.dataset.utility = label.toLowerCase();
       const run = () => { this.setExpanded(false); action(); };
-      button.addEventListener('pointerdown', e => {
-        if (e.pointerType === 'mouse' && e.button !== 0) return;
-        e.preventDefault(); e.stopPropagation(); run();
-      });
-      button.addEventListener('click', e => { if (e.detail === 0) run(); });
+      if (label === 'RADIO') {
+        // Finish the tap before exposing interactive radio choices underneath it.
+        button.addEventListener('click', e => { e.stopPropagation(); run(); });
+      } else {
+        button.addEventListener('pointerdown', e => {
+          if (e.pointerType === 'mouse' && e.button !== 0) return;
+          e.preventDefault(); e.stopPropagation(); run();
+        });
+        button.addEventListener('click', e => { if (e.detail === 0) run(); });
+      }
       this.drawer.append(button);
     }
   }

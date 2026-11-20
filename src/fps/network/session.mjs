@@ -48,6 +48,7 @@ export class NetworkSession {
     this.receivedTeamComms=new Map();
     this.nextTeamCommsAt=0;
     this.teamSignal=null;
+    this.teamAudioQueued=false;
     this.view.teamPing=null;
     this.view.select=value=>{
       const a=this.view.player;
@@ -61,7 +62,7 @@ export class NetworkSession {
     this.classicSerial=0;
     this.view.drop=()=>this.classicCommand('drop');
     this.view.buy=id=>this.classicCommand('buy',id)?{ok:true,pending:true}:{ok:false,reason:'Välj utrustning för nästa liv.'};
-    this.view.drainEvents=()=>{const e=this.events;this.events=[];return e;};
+    this.view.drainEvents=()=>this.drainEvents();
     this.view.update=()=>{throw Error('NetworkSession owns input; the client cannot step Game.');};
   }
   classicCommand(kind,item){
@@ -116,20 +117,26 @@ export class NetworkSession {
     if(anchor)this.view.teamPing=this.teamSignal;
     else if(this.enabled){
       const sender=this.room.state.actors.get(message.senderId);
-      this.events.push({type:'radio',teamPrivate:true,command:message.kind,actorId:sender.id,team:sender.team,
-        x:sender.x,y:sender.y,z:sender.z,time:this.view.state.time,global:true});
+      this.teamAudioQueued=true;
+      this.events.push({type:'radio',teamPrivate:true,teamPacket:message,command:message.kind,
+        actorId:sender.id,team:sender.team,x:sender.x,y:sender.y,z:sender.z,time:this.view.state.time,global:true});
     }
+  }
+  drainEvents(){
+    const batch=this.events;
+    this.events=[];
+    if(!this.teamAudioQueued)return batch;
+    this.teamAudioQueued=false;
+    return batch.filter(event=>!event.teamPrivate||this.enabled&&this.validTeamComms(event.teamPacket));
   }
   clearTeamComms(){
     this.teamSignal=null;
     this.view.teamPing=null;
-    this.events=this.events.filter(event=>!event.teamPrivate);
+    if(this.teamAudioQueued)this.events=this.events.filter(event=>!event.teamPrivate);
+    this.teamAudioQueued=false;
   }
   expireTeamComms(){
-    if(this.teamSignal&&!this.validTeamComms(this.teamSignal)){
-      this.teamSignal=null;
-      this.events=this.events.filter(event=>!event.teamPrivate);
-    }
+    if(this.teamSignal&&!this.validTeamComms(this.teamSignal))this.teamSignal=null;
     if(this.view.teamPing&&!this.validTeamComms(this.view.teamPing))this.view.teamPing=null;
   }
   async connect({endpoint,roomId,code,name,team='auto',mode='tdm',fillBots=true,zombies=false,danceman=false,create=false,contract=CONTRACT}){

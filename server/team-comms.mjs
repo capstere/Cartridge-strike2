@@ -58,7 +58,9 @@ export class TeamComms {
       senderLifeId:actor.lifeId,senderEpoch:sender.epoch,team:actor.team,matchId:state.matchId,round:state.round,
       expiresAt,serial,botAssigned};
     for(const seat of seats.values())if(liveSeat(seat)&&seat.actor.team===actor.team){
-      seat.client.send(TEAM_COMMS_TYPE,{...packet,recipientLifeId:seat.actor.lifeId,recipientEpoch:seat.epoch});
+      // Deliver after the patch that carries both actors' current life and connection.
+      seat.client.send(TEAM_COMMS_TYPE,{...packet,recipientLifeId:seat.actor.lifeId,recipientEpoch:seat.epoch},
+        {afterNextPatch:true});
     }
     return true;
   }

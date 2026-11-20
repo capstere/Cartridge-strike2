@@ -94,7 +94,8 @@ test('private team packets are scoped to current teammates, match and life',()=>
  const self={id:'a',team:'analysts',ready:true,connected:true,alive:true,controlEpoch:2,lifeId:3};
  const ally={...self,id:'b',controlEpoch:1,lifeId:4};
  const enemy={...self,id:'c',team:'counterAnalysts'};
- const state={actors:new Map([['a',self],['b',ally],['c',enemy]]),mode:'classic',phase:'active',roundPhase:'active',matchId:7,round:3,time:41};
+ const other={...ally,id:'d'};
+ const state={actors:new Map([['a',self],['b',ally],['c',enemy],['d',other]]),mode:'classic',phase:'active',roundPhase:'active',matchId:7,round:3,time:41};
  const anchor={id:'bomb-site',label:'Bombplats',x:2,z:3};
  const session=Object.assign(Object.create(NetworkSession.prototype),{
   connected:true,connectionState:'connected',enabled:true,localPlayerId:'a',room:{state},
@@ -117,13 +118,17 @@ test('private team packets are scoped to current teammates, match and life',()=>
  assert.equal(session.events[0].teamPrivate,true);
  assert.equal(session.events[0].command,'backup');
  assert.equal(session.view.teamPing.anchor,anchor);
+ session.receiveTeamComms({...packet,senderId:'d',serial:3});
  ally.alive=false;
+ session.expireTeamComms();
+ assert.equal(session.teamSignal.senderId,'d','the newer ping remains valid');
+ assert.deepEqual(session.drainEvents(),[],'the earlier voice is scoped to its own sender life');
+ other.alive=false;
  session.expireTeamComms();
  assert.equal(session.teamSignal,null);
  assert.equal(session.view.teamPing,null);
- assert.equal(session.events.length,0,'old sender life loses queued audio');
  ally.alive=true;
- session.receiveTeamComms({...packet,serial:3});
+ session.receiveTeamComms({...packet,serial:4});
  assert(session.view.teamPing);
  state.roundPhase='result';
  session.expireTeamComms();

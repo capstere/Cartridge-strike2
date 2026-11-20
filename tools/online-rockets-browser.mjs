@@ -110,6 +110,11 @@ async function fireTouch(page){
   await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{id:1,x:box.x+box.width/2,y:box.y+box.height/2}]});
   return async()=>{await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await cdp.detach();};
 }
+async function setTouchHud(page,mode){
+  await page.keyboard.press('Escape');
+  await page.locator('#pause [data-setting=hudMode]').selectOption(mode);
+  await page.locator('#resume').tap();
+}
 async function mapControls(desktop,mobile,room){
   const classic=room.state.mode==='classic';
   const read=page=>page.evaluate(()=>{
@@ -148,9 +153,7 @@ async function mapControls(desktop,mobile,room){
   await mobile.setViewportSize({width:932,height:430});
   await cdp.send('Emulation.setSafeAreaInsetsOverride',{insets:{left:59,top:0,right:0,bottom:0}});
   for(const mode of ['clean','full']){
-    await mobile.keyboard.press('Escape');
-    await mobile.locator('#pause [data-setting=hudMode]').selectOption(mode);
-    await mobile.locator('#resume').tap();
+    await setTouchHud(mobile,mode);
     if(mode==='full'){
       for(const id of ['#mobile-more','[data-mobile-action=buy]'])assert(await mobile.locator(id).evaluate(button=>{
         const {x,y,width,height}=button.getBoundingClientRect();
@@ -188,6 +191,12 @@ async function radioControls(desktop,mobile,mode,shooter){
     await mobile.locator('[data-utility='+name+']').tap();
   };
   if(mode==='classic'){
+    await desktop.waitForFunction(()=>__fps.audio.voiceBuffers.has('together')&&__fps.audio.context.state==='running');
+    await desktop.evaluate(()=>{
+      const audio=__fps.audio,play=audio.play.bind(audio);
+      window.playedTeamVoice=0;
+      audio.play=event=>{if(event.teamPrivate&&event.command==='together')window.playedTeamVoice++;return play(event);};
+    });
     await desktop.keyboard.press('z');
     await show(desktop);
     await desktop.mouse.down();
@@ -196,9 +205,17 @@ async function radioControls(desktop,mobile,mode,shooter){
     }finally{await desktop.mouse.up();}
     await desktop.keyboard.press('1');
     await desktop.locator('#radio-caption').filter({hasText:'Håll ihop'}).waitFor();
+    await desktop.waitForFunction(()=>window.playedTeamVoice===1);
     assert.equal(await desktop.evaluate(()=>document.pointerLockElement?.id),'game');
     assert.equal(await mobile.evaluate(()=>__fps.network.teamSignal),null,'opposing touch client sees no Classic radio');
   }else{
+    await setTouchHud(mobile,'clean');
+    await utility('radio');
+    await show(mobile);
+    assert.equal(await mobile.evaluate(()=>__fps.network.teamSignal),null,'opening the drawer sends no command');
+    await mobile.locator('#team-radio-close').tap();
+    await mobile.locator('#team-radio-menu').waitFor({state:'hidden'});
+    await setTouchHud(mobile,'full');
     await utility('radio');
     await show(mobile);
     await mobile.locator('[data-team-radio=ping][data-anchor=analyst-start-lift]').tap();
@@ -293,6 +310,7 @@ async function cycle(desktop,mobile,mode){
     const stop=await fireTouch(mobile);
     try{await until(()=>room.state.phase==='results','rocket decides the match');}finally{await stop();}
     for(const p of peers){
+      await p.bringToFront();
       await until(()=>p.evaluate(()=>{
         const session=__fps.network;
         return session.room.state.phase==='results'&&session.view.state.time>session.room.state.time+.35
@@ -315,6 +333,8 @@ try{
   assert.deepEqual(errors,[]);
 }catch(error){
   for(const p of pages)console.error(await p.evaluate(()=>({status:__fps.network?.status,modal:__fps.modal,
+    rendererClock:{time:__fps.game.state.time,roomTime:__fps.network?.room?.state.time,
+      phase:__fps.network?.room?.state.phase,resultAt:__fps.network?.resultsAt,visible:!document.hidden},
     actor:__fps.game.player&&{x:__fps.game.player.x,z:__fps.game.player.z,yaw:__fps.game.player.yaw,weapon:__fps.game.player.weapon},
     rocket:window.rocketEvidence&&{models:[...rocketEvidence.visible],events:rocketEvidence.events.map(e=>[e.type,e.rocketId]),sound:rocketEvidence.sounds},
     fatal:document.querySelector('#fatal pre')?.textContent})).catch(()=>null));

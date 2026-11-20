@@ -1927,7 +1927,7 @@
     {
       "path": "shared/multiplayer/build.mjs",
       "bytes": 613,
-      "sha256": "cb43719efd8f6e217110056adc3cf3948034538739c62327dd09cf1d2806bf72"
+      "sha256": "32a1f8aa0573637af2b7e70e4644fb26831048d9f7c29d42232099fac7f24c0b"
     },
     {
       "path": "shared/multiplayer/collision-contract.mjs",
@@ -2166,8 +2166,8 @@
     },
     {
       "path": "src/fps/focus-hud.mjs",
-      "bytes": 8080,
-      "sha256": "1fb36aae6e3a53c1f0f28ac81837dcd2ce059ecc68b1dcbfe2f8f5b2157f2576"
+      "bytes": 8307,
+      "sha256": "edf8a7511a99fc80264566ca3651d7dd717d18baf02c959670111ca264c883f8"
     },
     {
       "path": "src/fps/frame-time-window.mjs",
@@ -2301,8 +2301,8 @@
     },
     {
       "path": "src/fps/network/session.mjs",
-      "bytes": 30852,
-      "sha256": "6b91d58b7d5182a733407be6106f93b706d38618c2578ef7c3164abcb25a1c81"
+      "bytes": 31135,
+      "sha256": "ae11ad502863e719fa76085bf94a3f890b26ab35292fe78deab9dadc969ff39d"
     },
     {
       "path": "src/fps/physics.mjs",
@@ -2605,7 +2605,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 58763489,
+  "bytes": 58763999,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",
