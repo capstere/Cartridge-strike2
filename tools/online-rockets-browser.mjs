@@ -94,7 +94,9 @@ async function observe(p){
 }
 async function fireTouch(page){
   const cdp=await page.context().newCDPSession(page);
-  const box=await page.locator('[data-mobile-action=fire]').boundingBox();
+  const fire=page.locator('[data-mobile-action=fire]');
+  await fire.waitFor({state:'visible',timeout:15000});
+  const box=await fire.boundingBox();
   assert(box);
   await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{id:1,x:box.x+box.width/2,y:box.y+box.height/2}]});
   return async()=>{await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await cdp.detach();};
