@@ -1,3 +1,4 @@
+import {ClientState} from '@colyseus/core';
 import {TEAM_COMMS_TYPE,TEAM_COMMS_COMMANDS,TEAM_COMMS_RATE_MS,TEAM_COMMS_LIFETIME} from '../shared/multiplayer/protocol.mjs';
 import {floor5MapAnchors} from '../src/fps/minimap-cache.mjs';
 
@@ -15,7 +16,8 @@ function validRequest(message,anchors){
 }
 
 function liveSeat(seat){
-  return seat?.ready&&seat.connected&&seat.client&&!seat.revoked&&!seat.pending&&seat.actor?.alive;
+  return seat?.ready&&seat.connected&&seat.client?.state===ClientState.JOINED&&
+    !seat.revoked&&!seat.pending&&seat.actor?.alive;
 }
 
 export class TeamComms {

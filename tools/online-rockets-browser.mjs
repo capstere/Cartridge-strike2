@@ -141,6 +141,7 @@ async function mapControls(desktop,mobile,room){
   };
 
   assert(await desktop.locator('.online-map-hint').isVisible());
+  assert.match(await desktop.locator('.online-map-hint').textContent(),/Z radio/);
   await desktop.keyboard.down('w');
   try{
     await desktop.keyboard.press('m');

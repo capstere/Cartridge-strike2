@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {Client} from '@colyseus/sdk';
+import {Client,Protocol} from '@colyseus/sdk';
+import {ClientState} from '@colyseus/core';
 import {TEAM_COMMS_TYPE,TEAM_COMMS_RATE_MS,TEAM_COMMS_LIFETIME} from '../../shared/multiplayer/protocol.mjs';
 import {createLocalServer} from '../local-server.mjs';
 import {delay,options,own,ready,until} from './helpers.mjs';
@@ -218,13 +219,37 @@ test('private delivery waits for the patch containing a new recipient life',{tim
   await delay(300);
   send(ally,'ping',1,{anchorId:'commons'});
   await until(()=>room.teamComms.teamSerial.get(body.team)===2,'second private signal queued');
-  const epoch=own(host).controlEpoch;
+  const epoch=own(host).controlEpoch,hostSeat=room.seats.get(host.sessionId);
+  let acknowledge;
+  host.onReconnect(()=>{
+    const connection=host.connection,send=connection.send.bind(connection);
+    connection.send=data=>{
+      if(data.byteLength===1&&data[0]===Protocol.JOIN_ROOM){
+        const ack=data.slice();
+        acknowledge=()=>{connection.send=send;send(ack);acknowledge=null;};
+      }else send(data);
+    };
+  });
   Object.assign(host.reconnection,{enabled:true,minUptime:0,minDelay:150});
-  room.seats.get(host.sessionId).client.ref.terminate();
-  await until(()=>own(host)?.connected&&own(host).controlEpoch>epoch,'receiver reconnects before the pending patch');
-  room.broadcastPatch();
-  await until(()=>packets.get(ally).length===2,'unchanged recipient receives the pending signal');
-  assert.equal(packets.get(host).length,1,'reconnected recipient gets no historical message');
+  hostSeat.client.ref.terminate();
+  try{
+    await until(()=>acknowledge&&hostSeat.connected&&hostSeat.epoch>epoch,'receiver starts reconnecting before the pending patch');
+    assert.notEqual(hostSeat.client.state,ClientState.JOINED);
+    room.broadcastPatch();
+    await until(()=>packets.get(ally).length===2,'unchanged recipient receives the pending signal');
+
+    await cooldown();
+    const oldTick=ally.state.tick;
+    room.broadcastPatch();
+    await until(()=>ally.state.tick>oldTick,'active ally receives a fresh tick while JOIN is held');
+    send(ally,'ping',2,{anchorId:'commons'});
+    await until(()=>room.teamComms.teamSerial.get(body.team)===3,'signal accepted during reconnect handshake');
+    room.broadcastPatch();
+    await until(()=>packets.get(ally).length===3,'active ally receives their signal');
+  }finally{acknowledge?.();}
+  await until(()=>own(host)?.connected&&own(host).controlEpoch>epoch,'receiver completes reconnect');
+  await delay(120);
+  assert.equal(packets.get(host).length,1,'no historic signal from before the drop or during JOIN');
   assert.equal(packets.get(enemy).length,0);
 });
 test('Classic radio preserves bots planting, defusing and escorting',{timeout:35000},async t=>{
