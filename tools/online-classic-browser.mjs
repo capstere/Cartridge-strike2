@@ -65,6 +65,7 @@ try{
   await desktop.waitForFunction(()=>document.querySelector('#prompt-text').textContent.includes('starta eskort'));
   await desktop.keyboard.down('e');
   try{await until(()=>h.escortId===carrier.id,'desktop starts escort');}finally{await desktop.keyboard.up('e');}
+  await desktop.waitForFunction(()=>document.querySelector('#bomb-status').textContent.includes('Eskortera till räddningszonen'));
   const target=Math.atan2(carrier.x-rescue.x,carrier.z-rescue.z);
   const error=()=>Math.atan2(Math.sin(target-carrier.yaw),Math.cos(target-carrier.yaw));
   if(Math.abs(error())>.15){
@@ -81,6 +82,8 @@ try{
   await desktop.keyboard.down('e');
   try{await until(()=>carrier.action?.type==='plant','desktop hold starts');await until(()=>game.bomb.status==='planted','desktop plant finishes');}
   finally{await desktop.keyboard.up('e');}
+  await desktop.waitForFunction(()=>document.querySelector('#bomb-status').textContent.includes('Försvara bomben'));
+  await mobile.waitForFunction(()=>document.querySelector('#bomb-status').textContent.includes('Desarmera bomben'));
   Object.assign(carrier,game.world.anchors.counterAnalysts[0]);Object.assign(defender,{x:game.bomb.x,z:game.bomb.z,y:0});
   assert(game.damage(carrier,200,defender));
   await desktop.locator('#spectate').waitFor();

@@ -6,8 +6,9 @@ import { MinimapCache } from '../src/fps/minimap-cache.mjs';
 import { RenderBudget } from '../src/fps/render-budget.mjs';
 
 function canvasFake(width=224,height=158) {
-  const counts={};const methods=['clearRect','drawImage','beginPath','lineTo','moveTo','closePath','fill','stroke','fillText','save','restore','arc'];
+  const counts={};const methods=['clearRect','drawImage','beginPath','lineTo','moveTo','closePath','fill','stroke','fillText','save','restore','arc','fillRect','strokeText','translate','rotate'];
   const context={};for(const k of methods)context[k]=()=>counts[k]=(counts[k]||0)+1;
+  context.measureText=text=>({width:text.length*6});
   return {width,height,counts,getContext:()=>context};
 }
 const world=()=>({data:{floorPolygons:[[[0,0],[10,0],[10,10],[0,10]]],walls:[{a:[0,0],b:[10,0]}]},anchors:{bomb:{x:2,z:2},rescue:{x:7,z:7},hostages:[{x:5,z:5}]},tactical:{lanes:[]}});
@@ -32,6 +33,27 @@ test('map resize/mode/world invalidate while cache remains bounded',()=>{
  c.width=300;m.draw(w,game);assert.equal(m.layers.size,2);
  m.draw(world(),game);assert.equal(m.layers.size,1);assert.equal(m.stats.builds,4);
  m.dispose();assert.equal(m.layers.size,0);assert.equal(m.world,null);
+});
+test('online minimap shows only living allies and selects cached labels by mode',()=>{
+ const c=canvasFake(448,316),layers=[],m=new MinimapCache(c,()=>{
+   const n=canvasFake(),labels=[];
+   n.getContext().fillText=text=>labels.push(text);
+   layers.push({canvas:n,labels});
+   return n;
+ }),w=world();
+ Object.assign(w,{networkSlice:true,networkClassic:true});
+ w.data.walls.push({a:[-5,2],b:[10,2]});
+ const actors=[...game.actors,{team:'a',alive:true,x:1,z:8},{team:'a',alive:false,x:4,z:9}];
+ m.draw(w,{...game,actors},true);
+ assert.equal(c.counts.arc,1,'one living ally, the player arrow and zero enemy dots');
+ assert.equal(m.layer(w,true).xmin,-5,'online projection includes walls beyond floor polygon');
+ assert(layers[0].labels.includes('B')&&layers[0].labels.includes('G')&&layers[0].labels.includes('R'));
+ w.networkClassic=false;
+ m.draw(w,{...game,actors},true);
+ for(const marker of ['B','G','R'])assert(!layers[1].labels.includes(marker),'TDM has no Classic objective markers');
+ assert.equal(m.stats.builds,2);
+ assert.equal(m.layers.size,2);
+ assert.equal(c.counts.arc,2);
 });
 test('live visible matches keep every supplied display frame',()=>{
  for(const hz of [30,60,120,144]){const b=new RenderBudget();for(let n=0;n<hz;n++)assert.ok(b.shouldRender(n*1000/hz,false,false));assert.equal(b.stats.active,hz);}

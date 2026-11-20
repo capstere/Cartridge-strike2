@@ -9,6 +9,7 @@ import {collisionContract} from '../shared/multiplayer/collision-contract.mjs';
 import {prepareNetworkWorld,createPredictedWorld,applyNetworkWorld} from '../shared/multiplayer/world.mjs';
 import {moveActor} from '../src/fps/movement.mjs';
 import {respawnActor} from '../src/fps/action-rules.mjs';
+import {floor5MapAnchors} from '../src/fps/minimap-cache.mjs';
 const snapshot=w=>({doors:new Map(w.doors.doors.map(d=>[d.id,{angle:d.angle,target:d.target,sign:d.sign,holdUntil:d.holdUntil}])),elevatorProgress:w.doors.elevators.progress,...w.networkDynamics});
 const hash=w=>createHash('sha256').update(collisionContract(w)).digest('hex');
 function route(w,d){
@@ -22,6 +23,33 @@ test('published Floor 5 contract includes resolved collision, all doors and spaw
  assert.equal(NETWORK_MAP,'floor5-prepared');assert.equal(sourceHash,CONTRACT.mapHash);assert.equal(hash(w),CONTRACT.collisionHash);
  assert.equal(w.doors.doors.length,51);assert.equal(w.doors.elevators.cabins.length,2);
  const box=w.staticBoxes[0],original=box.x;box.x+=1e-12;assert.equal(hash(w),CONTRACT.collisionHash,'hash tolerates libm ULP differences');assert.notEqual(box.x,original,'hashing never rounds the actual physics');box.x+=.01;assert.notEqual(hash(w),CONTRACT.collisionHash,'geometry drift is detected');
+});
+test('tactical map uses the actual elevators and Classic anchors on prepared Floor 5',async()=>{
+ const {world:w}=await loadHeadlessWorld(NETWORK_MAP);
+ const classic=floor5MapAnchors(w,true),tdm=floor5MapAnchors(w,false);
+ assert.equal(new Set(classic.map(a=>a.id)).size,classic.length);
+ const neutral=classic.filter(a=>!a.classicOnly);
+ assert.deepEqual(tdm,neutral);
+ for(const [team,name] of [['analysts','Cargo Lift'],['counterAnalysts','Transit Lift']]){
+   const elevator=w.project.gameplay.startElevators.find(e=>e.team===team);
+   const a=neutral.find(a=>a.roomId===elevator.floorId);
+   assert(a?.label.includes(name));
+   assert.equal(w.roomAt(a.x,a.z)?.id,elevator.floorId);
+   assert.equal(w.roomAt(w.anchors[team][0].x,w.anchors[team][0].z)?.id,elevator.floorId);
+ }
+ const objectives=classic.filter(a=>a.classicOnly);
+ assert.equal(objectives.length,3);
+ for(const [id,spot] of [['I01',w.anchors.bomb],['I31',w.anchors.rescue]]){
+   const a=objectives.find(a=>a.roomId===id);
+   assert.deepEqual([a?.x,a?.z],[spot.x,spot.z]);
+   assert.equal(w.roomAt(a.x,a.z)?.id,id);
+ }
+ const hostage=objectives.find(a=>a.roomId==='I12');
+ assert.match(hostage?.label,/Technical Storage/);
+ for(const actual of w.anchors.hostages){
+   assert.equal(w.roomAt(actual.x,actual.z)?.id,'I12');
+   assert(Math.hypot(hostage.x-actual.x,hostage.z-actual.z)<2);
+ }
 });
 test('Floor 5 prediction crosses all 102 door approaches with identical authoritative collision and isolated render poses',{timeout:30000},async()=>{
  const sim=await createHeadlessSimulation({mapId:NETWORK_MAP,config:NETWORK_CONFIG,controllers:{'analysts-0':'human','counterAnalysts-0':'human'}});
