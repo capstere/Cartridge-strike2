@@ -113,13 +113,14 @@ async function mapControls(desktop,mobile,room){
     const panel=document.querySelector('#hud .map-panel'),edges=panel.getBoundingClientRect();
     return {open:!!panel.getClientRects().length&&minimapCache.canvas.width===448,
       legend:document.querySelector('#map-legend').textContent,locked:document.pointerLockElement?.id==='game',
-      right:edges.right,width:innerWidth,events:getComputedStyle(panel).pointerEvents,
+      right:edges.right,aimLeft:document.querySelector('#crosshair').getBoundingClientRect().left,
+      events:getComputedStyle(panel).pointerEvents,
       draws:minimapCache.stats.draws,skips:minimapCache.stats.hiddenSkips,builds:minimapCache.stats.builds,cache:minimapCache.layers.size};
   });
   const check=async page=>{
     await until(async()=>(await read(page)).open,'the map becomes visible');
     const state=await read(page);
-    assert(state.right<state.width/2 && state.events==='none','map stays outside aim and lets touch through');
+    assert(state.right+4<=state.aimLeft && state.events==='none','map stays outside aim and lets touch through');
     assert.match(state.legend,/Pil · Du.*Punkt · Laget/);
     assert.equal(state.legend.includes('Bombplats'),classic);
     assert(state.cache<=2);
@@ -130,6 +131,7 @@ async function mapControls(desktop,mobile,room){
     await mobile.locator('[data-utility=karta]').tap();
   };
 
+  assert(await desktop.locator('.online-map-hint').isVisible());
   await desktop.keyboard.down('w');
   try{
     await desktop.keyboard.press('m');
@@ -138,6 +140,9 @@ async function mapControls(desktop,mobile,room){
   }finally{await desktop.keyboard.up('w');}
   await desktop.keyboard.press('m');
 
+  const cdp=await mobile.context().newCDPSession(mobile);
+  await mobile.setViewportSize({width:932,height:430});
+  await cdp.send('Emulation.setSafeAreaInsetsOverride',{insets:{left:59,top:0,right:0,bottom:0}});
   for(const mode of ['clean','full']){
     await mobile.keyboard.press('Escape');
     await mobile.locator('#pause [data-setting=hudMode]').selectOption(mode);
@@ -145,8 +150,8 @@ async function mapControls(desktop,mobile,room){
     if(mode==='full'){
       for(const id of ['#mobile-more','[data-mobile-action=buy]'])assert(await mobile.locator(id).evaluate(button=>{
         const {x,y,width,height}=button.getBoundingClientRect();
-        return document.elementFromPoint(x+width/2,y+height/2)===button;
-      }),id+' keeps its touch target in Full HUD');
+        return x>=59&&document.elementFromPoint(x+width/2,y+height/2)===button;
+      }),id+' stays inside the safe area and keeps its touch target in Full HUD');
     }
     await touch();
     const first=await check(mobile);
@@ -159,6 +164,9 @@ async function mapControls(desktop,mobile,room){
     assert.equal((await check(mobile)).builds,first.builds,'warm reopen reuses the cached expanded map');
     await touch();
   }
+  await cdp.send('Emulation.setSafeAreaInsetsOverride',{insets:{left:0,top:0,right:0,bottom:0}});
+  await cdp.detach();
+  await mobile.setViewportSize({width:844,height:390});
   await desktop.bringToFront();
   if(await desktop.locator('#resume').isVisible())await resumeDesktop(desktop);
   assert.equal(await desktop.evaluate(()=>document.pointerLockElement?.id),'game');

@@ -25,11 +25,13 @@
 
 /* Keep the tactical map left of the crosshair and let gameplay own all touches. */
 html.network-session-ui #hud .map-panel{pointer-events:none}
-html.network-session-ui #hud .offline-map-hint{display:none}
+.online-map-hint,html.network-session-ui #hud .offline-map-hint{display:none}
+html.network-session-ui:not(.touch-fps):not(.hud-map-open) #hud .online-map-hint{display:block}
+html.network-session-ui{--map-left:max(12px,env(safe-area-inset-left,0px))}
 html.network-session-ui.hud-map-open #hud .map-panel{
   display:block!important;
-  top:110px!important;left:max(12px,env(safe-area-inset-left))!important;
-  width:min(470px,44vw)!important;max-width:none!important;
+  top:110px!important;left:var(--map-left)!important;
+  width:min(470px,44vw,calc(50vw - var(--map-left) - 16px))!important;max-width:none!important;
   transform:none;padding:6px!important
 }
 html.network-session-ui.hud-map-open #hud #minimap{
@@ -42,8 +44,12 @@ html.network-session-ui.hud-map-open #hud #map-legend{
 html.network-session-ui.online-classic #hud #objectives{
   max-width:calc(100vw - 28px);white-space:normal;justify-content:center;text-align:center
 }
+html.network-session-ui[data-hud=full] #mobile-controls{
+  --full-buy-left:max(3%,calc(env(safe-area-inset-left,0px) + 12px))
+}
+html.network-session-ui[data-hud=full] #mobile-controls .mobile-buy{left:var(--full-buy-left)}
 html.network-session-ui[data-hud=full] #mobile-controls .mobile-more{
-  top:max(12px,env(safe-area-inset-top));left:calc(max(3%,env(safe-area-inset-left)) + 60px);
+  top:max(12px,env(safe-area-inset-top));left:calc(var(--full-buy-left) + 60px);
   bottom:auto;right:auto;width:52px;height:44px;min-height:44px;transform:none
 }
 html.network-session-ui[data-hud=full] #mobile-controls #mobile-utilities .mobile-button{
