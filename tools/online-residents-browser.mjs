@@ -81,7 +81,8 @@ async function openRoom(desktop,mobile,mode){
   await desktop.locator('#room-zombies').selectOption('on');
   // Each lobby action submits both values. Wait until the first setting was
   // adopted before changing the second, as the room UI renders server state.
-  await desktop.waitForFunction(()=>__fps.network.room.state.zombiesEnabled);
+  await desktop.waitForFunction(()=>__fps.network.room.state.zombiesEnabled
+    &&document.querySelector('#room-zombies').value==='on');
   await desktop.locator('#room-danceman').selectOption('on');
   await desktop.waitForFunction(()=>__fps.network.room.state.zombiesEnabled&&__fps.network.room.state.dancemanEnabled);
   await mobile.locator('#network-room').fill(room.roomId);
