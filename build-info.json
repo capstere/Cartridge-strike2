@@ -661,8 +661,8 @@
     },
     {
       "path": "fps/network.css",
-      "bytes": 3635,
-      "sha256": "943cfd9114492e3d56701300c6b65567be9e82424b45768b01fe19cc41337b18"
+      "bytes": 3646,
+      "sha256": "67ff041f140bf4fa368ed175eb578a43d27c80dc8e87a0533d4aadc290c918a2"
     },
     {
       "path": "fps/style.css",
@@ -1927,7 +1927,7 @@
     {
       "path": "shared/multiplayer/build.mjs",
       "bytes": 613,
-      "sha256": "585a136839c132f2a12e4a04de878958e5207ee6cfc45a1516ac32a133b80690"
+      "sha256": "02d845e641b7ed1076b067ff9a0b6065b65f1720841760d8fe2cdce4e8817c16"
     },
     {
       "path": "shared/multiplayer/collision-contract.mjs",
@@ -2605,7 +2605,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 58752500,
+  "bytes": 58752511,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

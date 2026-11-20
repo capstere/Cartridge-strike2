@@ -142,6 +142,12 @@ async function mapControls(desktop,mobile,room){
     await mobile.keyboard.press('Escape');
     await mobile.locator('#pause [data-setting=hudMode]').selectOption(mode);
     await mobile.locator('#resume').tap();
+    if(mode==='full'){
+      for(const id of ['#mobile-more','[data-mobile-action=buy]'])assert(await mobile.locator(id).evaluate(button=>{
+        const {x,y,width,height}=button.getBoundingClientRect();
+        return document.elementFromPoint(x+width/2,y+height/2)===button;
+      }),id+' keeps its touch target in Full HUD');
+    }
     await touch();
     const first=await check(mobile);
     await touch();

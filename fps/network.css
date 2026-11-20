@@ -43,7 +43,7 @@ html.network-session-ui.online-classic #hud #objectives{
   max-width:calc(100vw - 28px);white-space:normal;justify-content:center;text-align:center
 }
 html.network-session-ui[data-hud=full] #mobile-controls .mobile-more{
-  top:max(12px,env(safe-area-inset-top));left:max(12px,env(safe-area-inset-left));
+  top:max(12px,env(safe-area-inset-top));left:calc(max(3%,env(safe-area-inset-left)) + 60px);
   bottom:auto;right:auto;width:52px;height:44px;min-height:44px;transform:none
 }
 html.network-session-ui[data-hud=full] #mobile-controls #mobile-utilities .mobile-button{
