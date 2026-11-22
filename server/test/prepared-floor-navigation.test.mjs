@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {loadHeadlessWorld} from '../headless.mjs';
+import {prepareNetworkWorld} from '../../shared/multiplayer/world.mjs';
 import {glassCrossing} from '../../tools/network-glass-fixture.mjs';
 
 function orderedGraph(navigation) {
@@ -36,6 +37,8 @@ test('prepared Floor 5 recreates the original graph and routes with private room
 
   assert.ok(paths.some(({original}) => original.some(route => route.path.length)));
 
+  prepareNetworkWorld(cold);
+  prepareNetworkWorld(warm);
   const {pane, from, dir} = glassCrossing(cold);
   const to = {x: from.x + dir.x * 1.6, z: from.z + dir.z * 1.6};
   assert.equal(cold.navigation.clear(from, to), false);
@@ -45,6 +48,7 @@ test('prepared Floor 5 recreates the original graph and routes with private room
   assert.deepEqual(orderedGraph(warm.navigation), originalGraph);
 
   const {world: next} = await loadHeadlessWorld('floor5-prepared');
+  prepareNetworkWorld(next);
   assert.deepEqual(orderedGraph(next.navigation), originalGraph);
   for (const {team, goal, original} of paths) {
     assert.deepEqual(next.tactical.choices(team, goal), original);
