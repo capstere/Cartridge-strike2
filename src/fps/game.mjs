@@ -166,6 +166,7 @@ export class Game {
       const remaining=s.buyDeadline-s.time;
       this.world.setElevatorProgress?.(remaining<=EPS?1:1-remaining/1.5);
       for (const actor of this.actors) {
+        if (actor.alive) this.completeReloadIfDue(actor);
         const controls = inputsByActor ? (actor.controllerType === 'human' ? inputsByActor.get(actor.id) : null) : actor.isPlayer ? input : null;
         if (Number.isFinite(controls?.yaw)) actor.yaw = controls.yaw;
         if (Number.isFinite(controls?.pitch)) actor.pitch = clamp(controls.pitch, -1.49, 1.49);
@@ -184,11 +185,7 @@ export class Game {
       if (!actor.alive) continue;
       actor.recoil *= Math.exp(-8 * dt);
       actor.flash = actor.flashUntil > s.time ? actor.flashStrength * (actor.flashUntil - s.time) / (actor.flashUntil - actor.flashStart) : 0;
-      if (actor.reloadUntil && s.time + EPS >= actor.reloadUntil) {
-        const item = this.item(actor), w = WEAPONS[actor.weapon];
-        if (item && typeof item === 'object') { const amount = Math.min(w.magazine - item.ammo, item.reserve); item.ammo += amount; item.reserve -= amount; }
-        actor.reloadUntil = 0;
-      }
+      this.completeReloadIfDue(actor);
       const controls = actor.bot ? actor.bot.update(dt) : actor.controllerType === 'human' ? (inputsByActor?.get(actor.id) ?? (actor.isPlayer && !inputsByActor ? input : {})) : {};
       if(this.config.networkSlice && !actor.bot){
         actor.aiming=!!controls.aim && canAim(actor.weapon) && !actor.reloadUntil && !actor.action;
@@ -259,6 +256,16 @@ export class Game {
     const item = this.item(actor), w = WEAPONS[actor.weapon];
     if (!item || !w.reload || item.ammo >= w.magazine || !item.reserve) return false;
     actor.reloadUntil = this.state.time + w.reload; this.emit('reload', actor, { weapon: actor.weapon, duration: w.reload }); return true;
+  }
+  completeReloadIfDue(actor) {
+    if (!actor.reloadUntil || this.state.time + EPS < actor.reloadUntil) return;
+    const item = this.item(actor);
+    if (item && typeof item === 'object') {
+      const amount = Math.min(WEAPONS[actor.weapon].magazine - item.ammo, item.reserve);
+      item.ammo += amount;
+      item.reserve -= amount;
+    }
+    actor.reloadUntil = 0;
   }
   dropItem(actor, item) { if(this.config.networkSlice)return; this.state.drops.push({ ...point(actor), id: `drop-${++this.eventSerial}`, type: 'weapon', createdAt:this.state.time, item: { ...item } }); }
   drop(actor = this.player) {

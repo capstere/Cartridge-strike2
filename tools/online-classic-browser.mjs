@@ -11,6 +11,18 @@ async function until(check,label){
   const start=performance.now();
   while(!await check()){assert(performance.now()-start<25000,label);await delay(50);}
 }
+async function holdTouch(page,action,untilDone){
+  const button=await page.locator(`[data-mobile-action=${action}]`).boundingBox();
+  assert(button?.width>0,`touch ${action} is visible`);
+  const cdp=await page.context().newCDPSession(page);
+  try{
+    await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{id:1,x:button.x+button.width/2,y:button.y+button.height/2}]});
+    await untilDone();
+  }finally{
+    await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+    await cdp.detach();
+  }
+}
 async function lobby(mobile){
   const browser=await chromium.launch({channel:'chromium',executablePath:process.env.CHROMIUM_PATH||undefined,
     args:['--use-angle='+(process.env.FPS_NETWORK_ANGLE||'swiftshader'),'--disable-background-timer-throttling','--disable-renderer-backgrounding']});
@@ -50,6 +62,9 @@ try{
   await mobile.locator('#mobile-more').tap();await mobile.locator('[data-mobile-action=buy]').tap();
   await mobile.locator('[data-item=armor]').tap();await until(()=>defender.armor===100&&defender.money===150,'mobile bought armor');await mobile.locator('#return-buy').tap();
   game.state.buyDeadline=game.state.time;await until(()=>game.phase==='active','buy phase expires');
+  const pistol=defender.inventory.pistol,full=pistol.ammo,startingReserve=pistol.reserve;
+  await mobile.waitForFunction(()=>document.querySelector('#phase').textContent==='HYBRID');
+  await holdTouch(mobile,'fire',()=>until(()=>pistol.ammo===full-1,'defender fires a single pistol shot'));
   const rescue=game.world.anchors.rescue,h=game.hostages[0],world=game.world;
   // Place the pair outside the rescue zone with a clear approach. The player
   // acquires the follower and walks it in using keyboard input.
@@ -88,21 +103,26 @@ try{
   assert(game.damage(carrier,200,defender));
   await desktop.locator('#spectate').waitFor();
   await desktop.keyboard.press('Enter');
-  const interact=mobile.locator('[data-mobile-action=interact]');
   await mobile.waitForFunction(()=>document.querySelector('#prompt-text').textContent.includes('desarmera'));
-  const button=await interact.boundingBox();assert(button?.width>0);
-  const cdp=await mobile.context().newCDPSession(mobile);
-  await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{id:1,x:button.x+button.width/2,y:button.y+button.height/2}]});
-  try{
+  await holdTouch(mobile,'interact',async()=>{
     await until(()=>defender.action?.type==='defuse','mobile hold starts');
     await mobile.waitForFunction(()=>parseFloat(document.querySelector('#action-progress').style.width)>1);
     await until(()=>game.state.result?.reason==='defuse','mobile hold finishes');
-  }finally{await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await cdp.detach();}
+  });
   for(const p of [desktop,mobile]){
     await p.locator('#round-result').waitFor();assert(await p.locator('#fatal').isHidden());
     assert.match(await p.locator('#round-label').textContent(),/CLASSIC/);
   }
-  assert.deepEqual(errors,[]);console.log('PASS Classic two rendered clients, paid desktop and mobile buys, held plant, touch defuse and authoritative result.');
+  game.state.resultDeadline=game.state.time;
+  await until(()=>game.phase==='buy'&&game.state.round===2,'survivor reached the next buy phase');
+  await mobile.waitForFunction(()=>document.querySelector('#phase').textContent==='KÖPFAS');
+  const ammo=mobile.locator('#ammo');
+  assert.equal(await ammo.textContent(),`${full-1} / ${startingReserve}`);
+  await mobile.locator('[data-mobile-action=reload]').tap();
+  await until(()=>pistol.ammo===full&&pistol.reserve===startingReserve-1,'buy-phase reload finished on the server');
+  await mobile.waitForFunction(text=>document.querySelector('#ammo').textContent===text,`${full} / ${startingReserve-1}`);
+  assert.equal(game.phase,'buy');
+  assert.deepEqual(errors,[]);console.log('PASS Classic two rendered clients, desktop and mobile buys, plant, touch defuse, authoritative result and survivor touch reload during the next buy phase.');
 }catch(error){
  for(const page of pages)console.error(await page.evaluate(()=>({fatal:document.querySelector('#fatal pre')?.textContent,notice:document.querySelector('#room-notice')?.textContent,status:document.querySelector('#network-status')?.textContent,hud:document.querySelector('#phase')?.textContent,prompt:document.querySelector('#prompt-text')?.textContent})).catch(()=>null));
  console.error(errors);throw error;
