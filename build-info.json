@@ -1927,7 +1927,7 @@
     {
       "path": "shared/multiplayer/build.mjs",
       "bytes": 613,
-      "sha256": "ffc4caeffcd2e94c6829ba29c0a510d84cef3c331b96d6cd01ab4865f57f018f"
+      "sha256": "fef636774d4ca8d2d08253651c363f56243e363e61f0496c7e2e46dd656eaf21"
     },
     {
       "path": "shared/multiplayer/collision-contract.mjs",
@@ -2016,8 +2016,8 @@
     },
     {
       "path": "src/fps/bot-tactics.mjs",
-      "bytes": 5949,
-      "sha256": "b107fc0990be37a8acd168d1aaab5f03490c2f33ad50191b2497d470a0f3c043"
+      "bytes": 6216,
+      "sha256": "4952e04bf458e9881b7bbb817a9fff5e22ea69e7c4ed1a8b020c5b9aeaff2f22"
     },
     {
       "path": "src/fps/bots.mjs",
@@ -2281,8 +2281,8 @@
     },
     {
       "path": "src/fps/navigation.mjs",
-      "bytes": 10191,
-      "sha256": "21607173d3bc1021716919c01a283c1dbef9e41bb90809b81097009cb3f3ac21"
+      "bytes": 11364,
+      "sha256": "b762adcba9f6af0678430fae7d19e2024b3a46f6550548309177e7c0327e1a63"
     },
     {
       "path": "src/fps/network/connection.mjs",
@@ -2506,8 +2506,8 @@
     },
     {
       "path": "src/fps/world.mjs",
-      "bytes": 10175,
-      "sha256": "4550886a1a804ee197506b83494a3beb2e257629011dfae3d391c427a27c3fb6"
+      "bytes": 10232,
+      "sha256": "c0801bea4a8ce0adfae0091f9723899e4a6fa2b906586dfad7c04ff278161a7f"
     },
     {
       "path": "src/fps/zombie-poses.mjs",
@@ -2605,7 +2605,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 58764837,
+  "bytes": 58766334,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

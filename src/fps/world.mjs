@@ -36,7 +36,7 @@ export function inheritFloor5Gameplay(project){
  return p;
 }
 
-function createLevelWorld(project,{fresh=false}={}){
+function createLevelWorld(project,{fresh=false,template=null}={}){
  project=inheritFloor5Gameplay(fresh?structuredClone(project):project);
  const key=JSON.stringify(project);
  if(!fresh&&levelCacheKey===key&&levelCache)return levelCache;
@@ -59,19 +59,19 @@ function createLevelWorld(project,{fresh=false}={}){
  const navPhysics={...physics,dynamicPassages:()=>doors.elevators.progress<1,canOccupy:(x,z,r=ACTOR_RADIUS,h=1.7,y=0)=>physics.staticCanOccupy(x,z,r,h,y)&&
   !doorClearance.query(x,z,r,scratch).some(b=>circleHitsBox(x,z,r,b))&&
   !doors.elevators.boxes.some(b=>circleHitsBox(x,z,r,b))};
- const navigation=createNavigation(data,navPhysics),roomAt=(x,z)=>[...data.rooms,...data.corridors].find(r=>insidePolygon(x,z,r.polygon))||null;
+ const navigation=createNavigation(data,navPhysics,{template}),roomAt=(x,z)=>[...data.rooms,...data.corridors].find(r=>insidePolygon(x,z,r.polygon))||null;
  physics.setDynamicBoxes(doors.boxes);
  const glass=createGlassState(glassPlan,physics,change=>navigation.updateGlass(change));
  const setElevatorProgress=t=>{if(doors.elevators.cabins.length&&doors.elevators.setProgress(t))navigation.invalidate();};
- const world={setElevatorProgress,newLevel:true,project,projectScene:scene,description,data,anchors,doors,glass,details:null,living:null,furnishings:{instances:[],boxes:[]},tactical:createFloorTactics(navigation,anchors),
+ const world={setElevatorProgress,newLevel:true,project,projectScene:scene,description,data,anchors,doors,glass,details:null,living:null,furnishings:{instances:[],boxes:[]},tactical:createFloorTactics(navigation,anchors,template),
   roomAt,materialAt:(x,z)=>roomAt(x,z)?.surface||'carpet',...physics,findPath:navigation.findPath,navigation,
   statistics:{...physics.statistics,navigation:navigation.statistics,furnishings:0}};
  if(!fresh){levelCacheKey=key;levelCache=world;}
  return world;
 }
 
-export function createWorld({fresh=false,levelProject=null}={}){
- if(levelProject)return createLevelWorld(levelProject,{fresh});
+export function createWorld({fresh=false,levelProject=null,template=null}={}){
+ if(levelProject)return createLevelWorld(levelProject,{fresh,template});
   if(sharedWorld&&!fresh)return sharedWorld;
   // SpelWorld.build itself caches its description, even when sharedWorld is bypassed.
   const source=fresh?freshFloor5Source():globalThis.SpelWorld,data=source.data;

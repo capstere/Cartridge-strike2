@@ -5,9 +5,10 @@ import { ACTOR_RADIUS, STANDING_HEIGHT, SpatialIndex, polygonBounds, distanceSeg
  * All edges are swept with the actor footprint. The old reviewed routes provide samples
  * in narrow apertures where a regular grid alone could miss a valid existing doorway.
  */
-export function createNavigation(data,physics,{spacing=.70,radius=ACTOR_RADIUS+.002,clearanceCacheLimit=8192}={}){
+export function createNavigation(data,physics,{spacing=.70,radius=ACTOR_RADIUS+.002,clearanceCacheLimit=8192,template=null}={}){
   const graph=new Graph(),nodes=[],index=new SpatialIndex(1),dedup=new Map(),edgeKeys=new Set(),cache=new Map();
   const started=performance.now();
+  let baseEdgeData=template&&!template.navigation?[]:null;
   const clearanceCache=new Map(),clearanceStats={calls:0,hits:0,samples:0,size:0,limit:Math.max(0,Math.floor(clearanceCacheLimit))};
   let cacheClearance=false;
   function remember(key,result){
@@ -27,37 +28,71 @@ export function createNavigation(data,physics,{spacing=.70,radius=ACTOR_RADIUS+.
     for(let i=0;i<=steps;i++){if(cacheClearance)clearanceStats.samples++;if(!physics.canOccupy(a.x+(b.x-a.x)*i/steps,a.z+(b.z-a.z)*i/steps,r))return remember(key,false);}
     return remember(key,true);
   }
+  const pointKey=(x,z)=>`${x.toFixed(3)},${z.toFixed(3)}`;
+  const edgeKey=(a,b)=>a<b?`${a}:${b}`:`${b}:${a}`;
+  function insertNode(x,z,key){
+    const n={id:nodes.length,x,z};
+    nodes.push(n);dedup.set(key,n.id);
+    graph.addNode(new NavNode(n.id,new Vector3(x,0,z)));
+    index.insert(n,{minX:x,maxX:x,minZ:z,maxZ:z});
+    return n.id;
+  }
   function add(x,z){
-    const key=`${x.toFixed(3)},${z.toFixed(3)}`;if(dedup.has(key))return dedup.get(key);
+    const key=pointKey(x,z);if(dedup.has(key))return dedup.get(key);
     if(!physics.canOccupy(x,z,radius))return -1;
-    const n={id:nodes.length,x,z};nodes.push(n);dedup.set(key,n.id);graph.addNode(new NavNode(n.id,new Vector3(x,0,z)));index.insert(n,{minX:x,maxX:x,minZ:z,maxZ:z});return n.id;
+    return insertNode(x,z,key);
+  }
+  function insertEdge(a,b,cost,key){
+    graph.addEdge(new NavEdge(a,b,cost));edgeKeys.add(key);
   }
   function connect(a,b){
-    if(a===b||a<0||b<0)return;const key=a<b?`${a}:${b}`:`${b}:${a}`;if(edgeKeys.has(key))return;
+    if(a===b||a<0||b<0)return;const key=edgeKey(a,b);if(edgeKeys.has(key))return;
     const from=nodes[a],to=nodes[b];if(!clear(from,to))return;
-    graph.addEdge(new NavEdge(a,b,Math.hypot(to.x-from.x,to.z-from.z)));edgeKeys.add(key);
+    const cost=Math.hypot(to.x-from.x,to.z-from.z);
+    insertEdge(a,b,cost,key);
+    if(baseEdgeData)baseEdgeData.push(a,b,cost);
   }
-  for(const route of data.routes)for(const segment of route.segments){
-    let previous=-1;
-    for(let j=0;j<segment.points.length-1;j++){
-      const a=segment.points[j],b=segment.points[j+1],steps=Math.max(1,Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])/.65));
-      for(let i=0;i<=steps;i++){
-        const id=add(a[0]+(b[0]-a[0])*i/steps,a[1]+(b[1]-a[1])*i/steps);connect(previous,id);previous=id;
+  if(template?.navigation){
+    // Rebuild private Yuka objects and indices in their original insertion
+    // order. Runtime glass changes and clearance caches stay room-local.
+    const {positions,edges}=template.navigation;
+    for(let i=0;i<positions.length;i+=2){
+      const x=positions[i],z=positions[i+1];
+      insertNode(x,z,pointKey(x,z));
+    }
+    for(let i=0;i<edges.length;i+=3){
+      const a=edges[i],b=edges[i+1];
+      insertEdge(a,b,edges[i+2],edgeKey(a,b));
+    }
+  }else{
+    for(const route of data.routes)for(const segment of route.segments){
+      let previous=-1;
+      for(let j=0;j<segment.points.length-1;j++){
+        const a=segment.points[j],b=segment.points[j+1],steps=Math.max(1,Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])/.65));
+        for(let i=0;i<=steps;i++){
+          const id=add(a[0]+(b[0]-a[0])*i/steps,a[1]+(b[1]-a[1])*i/steps);connect(previous,id);previous=id;
+        }
       }
     }
-  }
-  // Sampling within each actual polygon avoids allocating a rectangular grid over excluded rooms.
-  for(const polygon of data.floorPolygons){
-    const b=polygonBounds(polygon);
-    for(let x=Math.ceil(b.minX/spacing)*spacing;x<=b.maxX;x+=spacing)for(let z=Math.ceil(b.minZ/spacing)*spacing;z<=b.maxZ;z+=spacing)add(x,z);
-  }
-  for(const door of data.doors.filter(d=>!d.blocked)){
-    const [x,z]=door.center,dx=door.b[0]-door.a[0],dz=door.b[1]-door.a[1],length=Math.hypot(dx,dz);
-    for(const offset of [-.65,0,.65])add(x-dz/length*offset,z+dx/length*offset);
-  }
-  for(const n of nodes){
-    const neighbors=[...index.nearby(n.x,n.z,1.04)].filter(m=>m.id<n.id&&Math.hypot(m.x-n.x,m.z-n.z)<=1.04);
-    for(const other of neighbors)connect(n.id,other.id);
+    // Sampling within each actual polygon avoids allocating a rectangular grid over excluded rooms.
+    for(const polygon of data.floorPolygons){
+      const b=polygonBounds(polygon);
+      for(let x=Math.ceil(b.minX/spacing)*spacing;x<=b.maxX;x+=spacing)for(let z=Math.ceil(b.minZ/spacing)*spacing;z<=b.maxZ;z+=spacing)add(x,z);
+    }
+    for(const door of data.doors.filter(d=>!d.blocked)){
+      const [x,z]=door.center,dx=door.b[0]-door.a[0],dz=door.b[1]-door.a[1],length=Math.hypot(dx,dz);
+      for(const offset of [-.65,0,.65])add(x-dz/length*offset,z+dx/length*offset);
+    }
+    for(const n of nodes){
+      const neighbors=[...index.nearby(n.x,n.z,1.04)].filter(m=>m.id<n.id&&Math.hypot(m.x-n.x,m.z-n.z)<=1.04);
+      for(const other of neighbors)connect(n.id,other.id);
+    }
+    if(baseEdgeData){
+      const positions=[];
+      for(const node of nodes)positions.push(node.x,node.z);
+      template.navigation=Object.freeze({positions:Object.freeze(positions),edges:Object.freeze(baseEdgeData)});
+      baseEdgeData=null;
+    }
   }
   // Relabel only at construction and glass events; impossible routes never teleport.
   let component,components=0,revision=0;

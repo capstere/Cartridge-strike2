@@ -20,10 +20,15 @@ export function routeChoices(navigation,from,to){
 
 /** Prepared during level load, with the same open-door navigation used by FPS.
  * No authored coordinates, new floor or imaginary passages. */
-export function createFloorTactics(navigation,anchors){
- const prepared=new Map(),targets={bomb:anchors.bomb,hostages:anchors.hostages[0]};
- for(const team of ['analysts','counterAnalysts'])for(const [key,to]of Object.entries(targets)){
-  const from=anchors[team]?.[0];if(from&&to)prepared.set(team+':'+key,routeChoices(navigation,from,to));
+export function createFloorTactics(navigation,anchors,template=null){
+ const targets={bomb:anchors.bomb,hostages:anchors.hostages[0]};
+ // Every room owns its route arrays, including the one that compiled them.
+ const prepared=template?.tacticalRoutes?structuredClone(template.tacticalRoutes):new Map();
+ if(!template?.tacticalRoutes){
+  for(const team of ['analysts','counterAnalysts'])for(const [key,to]of Object.entries(targets)){
+   const from=anchors[team]?.[0];if(from&&to)prepared.set(team+':'+key,routeChoices(navigation,from,to));
+  }
+  if(template)template.tacticalRoutes=structuredClone(prepared);
  }
  return {kind:'floor5',lanes:[],geometryChanged:false,
   choices:(team,key)=>prepared.get(team+':'+key)||[],
