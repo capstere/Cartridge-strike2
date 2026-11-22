@@ -16,7 +16,7 @@ const slow = [];
 const phaseCosts=Object.fromEntries(['combat','buy','result'].map(phase=>[phase,{tick:[],simulation:[],interval:[]}]));
 const residentActivity={distance:0,windups:0,stomps:0};
 const objectiveCosts={beginRound:[],breakAt:[],findPath:[],escortedTick:[]};
-let work;
+let work,roomStartup;
 function profile(object, method, label) {
  const original=object[method];
  object[method]=function(...args){
@@ -60,6 +60,7 @@ function instrument(){
       const dead=label==='simulation'?r.sim.game.actors.filter(a=>!a.alive):[];
       const t=performance.now(),phase=r.state.phase==='results'?'result':r.sim.game.phase==='active'?'combat':r.sim.game.phase;
       if(label==='tick'){
+        if(roomStartup?.id===r.roomId && last!==undefined)roomStartup.maxInterval=Math.max(roomStartup.maxInterval,t-last);
         if(last!==undefined&&(!weaponLoad||last>=started)){push('interval',t-last);phaseCosts[phase]?.interval.push(t-last);}
         last=t;work={};
       }
@@ -209,6 +210,15 @@ process.on('message',async({id,action,options})=>{
    local=await createLocalServer({port:0,testMatch});fixtureTimer=setInterval(instrument,20);
    const model=await readFile('/proc/device-tree/model','utf8').then(value=>value.replace(/\0/g,'').trim()).catch(()=>undefined);
    result={url:local.url,contract:CONTRACT,environment:{model,node:process.version,platform:platform(),arch:arch(),cpu:cpus()[0].model,cores:cpus().length}};
+  }else if(action==='room-startup'){
+   instrument();
+   const rooms=[...local.rooms];
+   if(options?.watch){
+    const room=rooms.find(r=>r.roomId===options.watch);if(!room)throw Error('Missing active room');
+    roomStartup={id:room.roomId,maxInterval:0};
+   }
+   result={rss:process.memoryUsage().rss,maxInterval:roomStartup?.maxInterval,
+    rooms:rooms.map(r=>({id:r.roomId,phase:r.state.phase,clients:r.clients.length,bots:r.bots.size,navigationBuildMs:r.sim.game.world.navigation.statistics.buildMs}))};
   }else if(action==='fund-weapon-fixture'){
    const room=weaponFixtureRoom();
    if(!room.classic||room.state.phase!=='waiting')throw Error('Set Classic fixture credits in the waiting lobby');
