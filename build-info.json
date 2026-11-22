@@ -1927,7 +1927,7 @@
     {
       "path": "shared/multiplayer/build.mjs",
       "bytes": 613,
-      "sha256": "bfb7c3ff1982651b712b6302588b4e19ddee8bbbe37ff1c063266a350fb111c4"
+      "sha256": "ffc4caeffcd2e94c6829ba29c0a510d84cef3c331b96d6cd01ab4865f57f018f"
     },
     {
       "path": "shared/multiplayer/collision-contract.mjs",
@@ -2191,8 +2191,8 @@
     },
     {
       "path": "src/fps/game.mjs",
-      "bytes": 41369,
-      "sha256": "97764859bb91fe05287e5133ffa5125056a38186b606cad890cb52458bfbd922"
+      "bytes": 41509,
+      "sha256": "a05c94fb087ee062c62a737879c1af162c9a85ec428660251795cc0043a93652"
     },
     {
       "path": "src/fps/glass-visuals.mjs",
@@ -2605,7 +2605,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 58764697,
+  "bytes": 58764837,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

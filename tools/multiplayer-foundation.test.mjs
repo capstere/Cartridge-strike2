@@ -72,6 +72,33 @@ test('two humans receive independent aim and movement; no bot takeover on round 
  assert.equal(classic.phase,'buy');assert.equal(ca.yaw,.7);assert.equal(cb.yaw,-.8);
 });
 
+for (const networkSlice of [false, true]) {
+ test(`Classic survivor completes a pistol reload during the ${networkSlice ? 'online' : 'offline'} buy phase`,()=>{
+   const game=fixture({config:{mode:'classic',networkSlice,buyTime:15}});
+   const player=game.actors[0], pistol=game.item(player), full=pistol.ammo, reserve=pistol.reserve;
+   game.state.phase='active';
+   assert(game.fire(player,true));
+   game.beginRound();
+   assert.equal(pistol.ammo,full-1);
+   assert(game.reload(player));
+   assert(game.select('knife',player));
+   assert.equal(player.reloadUntil,0);
+   for(let i=0;i<100;i++)game.stepActors();
+   assert.equal(pistol.ammo,full-1,'switching away cancels the transfer');
+   assert(game.select('pistol',player));
+   assert(game.reload(player));
+   while(game.state.time+game.config.fixedStep+1e-8<player.reloadUntil)game.stepActors();
+   assert.equal(pistol.ammo,full-1);
+   assert.equal(pistol.reserve,reserve);
+   game.stepActors();
+   assert.equal(game.phase,'buy');
+   assert.equal(pistol.ammo,full);
+   assert.equal(pistol.reserve,reserve-1);
+   assert.equal(player.reloadUntil,0);
+   assert.equal(game.reload(player),false);
+ });
+}
+
 test('offline identity, bot assignment, local input and pause stay backwards compatible',()=>{
  const g=fixture({controllers:null,localPlayerId:undefined}),p=g.player;
  assert.equal(p.id,'analysts-0');assert.equal(p.controllerType,'human');assert.equal(g.actors.filter(a=>a.bot).length,9);
