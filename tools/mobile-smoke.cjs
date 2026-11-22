@@ -9,7 +9,7 @@ const ORIGIN = process.env.FPS_TEST_ORIGIN || 'http://127.0.0.1:8765';
 const argumentsChrome = ['--no-sandbox', '--use-gl=angle', '--use-angle=swiftshader',
   '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'];
 
-async function openOriginal(browser, mobile) {
+async function openOriginal(browser, mobile, mode = 'classic') {
   const context = await browser.newContext(mobile
     ? {
         viewport: { width: 844, height: 390 }, isMobile: true, hasTouch: true,
@@ -37,6 +37,7 @@ async function openOriginal(browser, mobile) {
   const error = await page.locator('#fatal').evaluate(el => el.hidden ? '' : el.textContent);
   assert.equal(error, '', 'Game failed booting: ' + error);
   assert.equal(await page.locator('#start').isEnabled(), true, 'Start must unlock after assets load.');
+  await page.locator('#lb-mode-seg [data-value=' + mode + ']').click();
   await page.locator('#start').click({ timeout: 30000 });
   await page.waitForFunction(() => !!globalThis.__fps && globalThis.__fps.modal === null, null,
     { timeout: 20000, polling: 100 });
@@ -79,6 +80,7 @@ async function openOriginal(browser, mobile) {
     await page.locator('#resume').tap();
     assert.equal(await page.locator('[data-mobile-action=fire]').isVisible(), true,
       'Manual fire button must return when mobile auto-fire is disabled');
+    assert.ok(await page.locator('#objectives').isVisible(), 'Classic objectives are readable');
     const cdp = await mobileCtx.newCDPSession(page);
 
     const zone = await page.locator('[data-mobile-stick-zone]').boundingBox();
@@ -181,7 +183,9 @@ async function openOriginal(browser, mobile) {
     console.log('MOBILE PASS: auto-fire default, aim target, repeated pistol shots, manual opt-out, recoil, dual-touch, pause/resume', state);
     await mobileCtx.close();
 
-    const { context: desktopCtx, page: desktop, state: desktopState } = await openOriginal(browser, false);
+    const { context: desktopCtx, page: desktop, state: desktopState } = await openOriginal(browser, false, 'endless');
+    assert.ok(await desktop.locator('#control-card').isVisible(), 'Endless shows its active control area');
+    assert.ok(await desktop.locator('#objectives').isHidden(), 'The general objective strip leaves the control area unobstructed');
     assert.equal(desktopState.mobile, false, 'Desktop must preserve mouse input');
     assert.equal(desktopState.controlsVisible, false, 'Touch UI must be absent on desktop');
     assert.equal(desktopState.pointerLocks, 1, 'Desktop should still request pointer lock');
