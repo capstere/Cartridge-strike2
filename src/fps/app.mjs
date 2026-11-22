@@ -326,9 +326,9 @@ function classicObjective(state,player){
 function updateHud(){if(!game?.player)return;combatHud.update(game);const s=game.state,p=game.player,view=viewActor(),wp=WEAPONS[view.weapon],item=game.item(view),time=s.phase==='buy'?s.buyDeadline-s.time:s.phase==='result'?s.resultDeadline-s.time:s.bomb.status==='planted'?s.bomb.deadline-s.time:s.deadline-s.time;setText('timer',isEndless(game)?timer(s.time):timer(time));setText('round-label',isEndless(game)?'ENDLESS ACTION ∞':`RUNDA ${s.round}`);setText('difficulty-label',DIFFICULTIES[s.difficulty].name.toUpperCase());setText('phase',s.phase==='buy'?'KÖPFAS':s.bomb.status==='planted'?'BOMB PLANTERAD':s.phase==='result'?'RUNDA SLUT':isEndless(game)?'AUTO-RESPAWN':'HYBRID');for(const [side,id]of [['analysts','a'],['counterAnalysts','ca']]){setText('score-'+id,s.score[side]);setText('alive-'+id,game.actors.filter(a=>a.team===side&&a.alive).length+' kvar');}setText('health',Math.max(0,Math.ceil(view.hp)));setText('armor',view.armor?`${Math.ceil(view.armor)} rustning`:'');setText('money',isEndless(game)?'B · VÄLJ VAPEN':`${p.money} ¤`);setText('weapon-name',wp?.name||'UTRUSTNING');const ammo=wp?.slot==='grenade'?`${view.inventory[view.weapon]} <span>cartridge</span>`:wp?.slot==='bomb'?'BOMB':wp?.slot==='knife'?'KNIV':`${item?.ammo??0} <span>/ ${item?.reserve??0}</span>`;if($('ammo').innerHTML!==ammo)$('ammo').innerHTML=ammo;setText('reload-text',view.reloadUntil>s.time?`Laddar om · ${(view.reloadUntil-s.time).toFixed(1)} s`:s.phase==='buy'?'B · ÖPPNA KÖPMENYN':'');setText('location',roomDisplayName(world.roomAt?.(view.x,view.z)));
  const onlineClassic=!!networkSession&&s.mode==='classic';
  const b=s.bomb,rescued=s.hostages.filter(h=>h.rescued).length;
- $('objectives').hidden=onlineClassic&&(!p.alive||!['buy','active'].includes(s.phase));
  $('bomb-status').classList.toggle('hot',b.status==='planted');
  if(onlineClassic){
+   $('objectives').hidden=!p.alive||!['buy','active'].includes(s.phase);
    setText('bomb-status',classicObjective(s,p));
    setText('hostage-status','Gisslan '+rescued+'/'+s.hostages.length);
  }else{
