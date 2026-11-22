@@ -1,6 +1,14 @@
 # Cartridge-Strike 2 handover
 
-## Aktiv release på Pi:n
+## Aktiv release på Pi:n · kvalitetsgranskning 22 november 2026
+
+[Onlinespelet](https://cs2.capstere.com) kör `d14eed3725b4428fa61cdaa743f6543c8394e661`, spelversion 0.18.0, protokoll **11**, bygg `801c1f926936855e670d958da1c63d1d433e0894fcef28df6873c593cca11bb1`. Återställningsrelease `d8e780acae2d9998b2e2cf0d7f719e0c958b0fb9`, konfigurationskopia `20261122T145255858184Z`. Separat GitHub Pages-kontroll gav samma bygge.
+
+- [#34](https://github.com/capstere/Cartridge-strike2/pull/34) rättade målremsan som överlappade kontrollområdet i offline Endless. [#35](https://github.com/capstere/Cartridge-strike2/pull/35) låter en Classic-överlevare slutföra omladdningen under köpperioden. [#36](https://github.com/capstere/Cartridge-strike2/pull/36) minskade pausen i en redan pågående match när ytterligare ett rum skapas. Alla tre är mergade med oberoende granskning och 7/7 godkända slutjobb vardera.
+- I två jämförbara Pi-prov minskade den befintliga klientens patchgap från 2,89–2,98 s till 0,97–0,99 s. Ett kallt första rum tar fortfarande drygt tre sekunder. Botvägval sammanföll med separata långa tickar. Sen radio och raketljud reproducerades med två samtidiga mjukvarurenderare.
+- Detaljerade mätfönster, publika verifieringar, testbegränsningar och fem prioriterade nästa steg finns i [kvalitetsrapporten](docs/playtest-audit/QUALITY_AUDIT_2026-11-22.md). Nästa tekniska steg är att mäta det kvarvarande arbetet vid öppning av ett andra rum. Fysisk iPhone och Android **NOT RUN**.
+
+## Tidigare release av botsvårighet, karta och lagradio
 
 **Botsvårighet, förbättrad Floor 5-karta och lagradio är live i Classic och Team Deathmatch.** [Spela på cs2.capstere.com](https://cs2.capstere.com).
 
