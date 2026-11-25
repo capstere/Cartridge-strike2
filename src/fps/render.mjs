@@ -16,6 +16,7 @@ import {buildFacilityScene} from './facility-scene.mjs';
 import {installFocusLighting} from './strike-kit-environment.mjs';
 import {VisualDepth} from './visual-depth.mjs';
 import {inspectPose} from './view-surface.mjs';
+import {refitViewArms} from './presentation-hands.mjs';
 import {ZombieVisuals} from './zombie-visuals.mjs';
 import {isZombieFloor} from './zombie-sites.mjs';
 import {CombatVisuals} from './combat-visuals.mjs';
@@ -214,9 +215,11 @@ export class Renderer extends EngineRenderer {
     if(this.weaponModel&&p){
       if(p.id!==this.inspectActor||p.weapon!==this.inspectWeapon||!p.alive||p.reloadUntil>t||(this.shotAt??-Infinity)>=this.inspectAt)this.inspectAt=-Infinity;
       const pose=inspectPose(t-this.inspectAt,{reducedMotion:this.settings.reducedMotion});
+      if (!pose.rotation.some(Boolean) && !pose.position.some(Boolean)) return;
       // Show the authored side profile and gripping hands instead of the stock end.
       if(this.weaponModel.userData.heroKit){pose.rotation[1]*=-1.3;pose.rotation[2]*=-.67;}
       this.weaponModel.position.x+=pose.position[0];this.weaponModel.position.y+=pose.position[1];this.weaponModel.position.z+=pose.position[2];this.weaponModel.rotation.x+=pose.rotation[0];this.weaponModel.rotation.y+=pose.rotation[1];this.weaponModel.rotation.z+=pose.rotation[2];
+      refitViewArms(this.weaponModel);
       this.weaponModel.updateMatrixWorld(true);
     }
   }

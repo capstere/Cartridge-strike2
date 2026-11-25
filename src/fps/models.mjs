@@ -10,13 +10,13 @@ import * as THREE from '../../vendor/three/three.module.js';
 import { makeWeapon as primitiveWeapon, makeActor as primitiveActor,
   animateWeapon as primitiveWeaponAnimation, animateActor as primitiveActorAnimation,
   disposeWeaponResources as disposePrimitiveWeapons, animateCorpse as primitiveCorpse } from './model-primitives.mjs';
-import { fitPresentationHands, disposePresentationHands } from './presentation-hands.mjs';
+import {refitViewArms} from './presentation-hands.mjs';
 import { createViewMotion, viewMotion, strideSample, solveLeg, clamp } from './presentation-motion.mjs';
 
 export function makeWeapon(id='p9',options={}) {
   const hero=options.viewmodel!==false&&kitWeapon(id);
   const model=hero?makeKitWeapon(id):primitiveWeapon(id,options);
-  if(options.viewmodel!==false){if(!hero){fitPresentationHands(model);upgradeViewSurfaces(model);}model.userData.presentationMotion=createViewMotion();}
+  if(options.viewmodel!==false){if(!hero)upgradeViewSurfaces(model);model.userData.presentationMotion=createViewMotion();}
   return model;
 }
 export function animateWeapon(model,actor,time,dt,options={}) {
@@ -27,6 +27,7 @@ export function animateWeapon(model,actor,time,dt,options={}) {
     const offset=viewMotion(state,actor,time,{weapon:model.userData.id,shotAt:options.shotAt,reducedMotion:options.reducedMotion});
     model.position.x+=offset.position[0];model.position.y+=offset.position[1];model.position.z+=offset.position[2];
     model.rotation.x+=offset.rotation[0];model.rotation.y+=offset.rotation[1];model.rotation.z+=offset.rotation[2];
+    refitViewArms(model);
     model.updateMatrixWorld(true);
     // Muzzle effect follows the final pose. Bullet/hitscan origin stays owned by Game.
     pose.muzzle=model.localToWorld(model.userData.muzzle.clone());
@@ -97,6 +98,6 @@ export function animateActor(model,actor,time,dt,options={}) {
   if(d.bag){d.bag.rotation.x=Math.sin(g.phase*Math.PI*2+.7)*pace*.065;d.bag.rotation.z=Math.sin(g.phase*Math.PI*2+.3)*pace*.045;}
   // Arms, weapon sockets, hit reaction, corpses and animation timings remain original.
 }
-export function disposeWeaponResources(){disposeKitModels();disposeViewSurfaces();disposePresentationHands();disposePrimitiveWeapons();}
+export function disposeWeaponResources(){disposeKitModels();disposeViewSurfaces();disposePrimitiveWeapons();}
 
 export function animateCorpse(model,actor,time,options={}){return model.userData.avatar?authoredCorpse(model,actor,time,options):primitiveCorpse(model,actor,time,options);}

@@ -44,48 +44,51 @@ function maps(size,own,paint,{repeat=false,name=''}){
 }
 function glovePaint(u,v,px,py,o){
  const palm=u>=.5,x=((u*2)%1)*.11-.055,y=v*.25-.102;
+ // Both UV islands use the same dyed leather at their cut edge. Surface
+ // relief distinguishes the suede palm and the stitched dorsal panel.
+ px %= 256;
  const fine=noise(px*.72,py*.83)-.5,grain=noise(px*.19+7,py*.19)-.5,broad=noise(px*.035,py*.04)-.5;
  const cuff=1-ease(-.078,-.071,y),cuffRib=Math.sin(y*Math.PI*1700)*.5+.5;
- let r=palm?43:57,g=palm?49:66,b=palm?51:72,h=grain*.040+fine*.010,roughness=palm?.90:.88;
+ let shade=218+broad*7+grain*5, h=grain*.040+fine*.010, roughness=.89;
  // Broad, fitted dorsal fabric panel. The seam is shallow and continuous rather
  // than an added solid oval or isolated geometric buttons over the knuckles.
  if(!palm&&y>-.068&&y<.028&&Math.abs(x)<.036){
   const e=panelEdge(x,y),inside=e.inside?ease(0,.0012,e.distance):0;
-  r=mix(r,49,inside);g=mix(g,59,inside);b=mix(b,66,inside);roughness=mix(roughness,.94,inside);
+  roughness=mix(roughness,.94,inside);
   h+=inside*.022;
-  const channel=1-ease(.00025,.00115,e.distance);r-=channel*4;g-=channel*4;b-=channel*4;h-=channel*.030;
+  const channel=1-ease(.00025,.00115,e.distance);h-=channel*.030;
   // 2 mm stitched dash spacing, laid just inside the sewn panel edge.
   const stitchBand=1-ease(.00025,.00065,Math.abs(e.distance-.0018));
   const stitch=e.inside?stitchBand*(1-ease(.25,.48,Math.abs((e.along/.0023)%1-.5))):0;
-  r+=stitch*15;g+=stitch*16;b+=stitch*16;h+=stitch*.025;
+  shade+=stitch*12;h+=stitch*.025;
   // A few lengthwise tailoring lines follow the tendons, with no painted armor.
   for(const cx of[-.018,-.006,.007,.019]){
    const line=gauss((x-cx)/.00085)*ease(-.043,-.033,y)*(1-ease(-.001,.010,y));
-   h-=line*.010;r-=line*1.4;g-=line*1.4;b-=line*1.4;
+   h-=line*.010;
   }
  }
  if(palm){
   // Matte suede grip patch, fine stipple, and two crease families across the heel.
   const heel=(1-ease(.021,.036,Math.abs(x)))*ease(-.068,-.053,y)*(1-ease(.005,.026,y));
-  const suede=(noise(px*.45+17,py*.45+19)-.5)*3;
-  r+=heel*(3+suede);g+=heel*(4+suede);b+=heel*(3+suede);h+=heel*fine*.025;
+  h+=heel*fine*.025;roughness+=heel*.035;
   const crease1=gauss((y+.027+x*.27)/.0012)*(1-ease(.024,.037,Math.abs(x)));
   const crease2=gauss((y+.050-x*.35)/.0010)*(1-ease(.018,.034,Math.abs(x)));
-  h-=(crease1+crease2)*.030;r-=(crease1+crease2)*3;g-=(crease1+crease2)*3;b-=(crease1+crease2)*3;
+  h-=(crease1+crease2)*.030;
  }
  // Thin joint flexion marks on the fingers, not a checker pattern or round pads.
  const fingerRegion=ease(.018,.029,y)*(1-ease(.118,.140,y));
  for(const joint of[.048,.073,.096]){
   const fold=gauss((y-joint+.001*Math.sin(x*160))/.00125)*fingerRegion;
-  h-=fold*(palm?.022:.015);r-=fold*2;g-=fold*2;b-=fold*2;
+  h-=fold*(palm?.022:.015);shade-=fold*4;
  }
  const worn=ease(.012,.026,y)*(1-ease(.041,.060,y))*(1-ease(.028,.043,Math.abs(x)))*.7;
- r+=worn*2+broad*3+grain*2;g+=worn*2+broad*3+grain*2;b+=worn*1.5+broad*3+grain*2;
+ shade+=worn*4;
  // Dense knit cuff has restrained ribs and a seam at the glove transition.
- r=mix(r,37+cuffRib*2,cuff);g=mix(g,46+cuffRib*2,cuff);b=mix(b,55+cuffRib*2,cuff);
+ shade=mix(shade,166+cuffRib*5,cuff);
  h=mix(h,cuffRib*.022+fine*.009,cuff);roughness=mix(roughness,.96,cuff);
  const cuffSeam=gauss((y+.075)/.0008);h-=cuffSeam*.025;
- o.r=r;o.g=g;o.b=b;o.height=h;o.roughness=clamp(roughness+fine*.035,.72,.99);
+ // Relative dye values preserve the sewn panels when the operator supplies the glove colour.
+ o.r=o.g=o.b=shade;o.height=h;o.roughness=clamp(roughness+fine*.035,.72,.99);
 }
 function clothPaint(u,v,px,py,o){
  // Periodic thread directions and an unobtrusive ripstop reinforcement. Material
@@ -95,15 +98,13 @@ function clothPaint(u,v,px,py,o){
  const reinforcement=Math.max(reinforcementX,reinforcementY),grain=hash(px,py)-.5;
  const dye=Math.sin(u*Math.PI*2*3+Math.sin(v*Math.PI*2*2))*.65+Math.sin(v*Math.PI*2*5)*.35;
  const value=weave*.65+reinforcement*.8+grain*.65+dye;
- o.r=46+value;o.g=62+value;o.b=76+value;o.height=weave*.015+reinforcement*.011+grain*.007;o.roughness=.96+grain*.025;
+ o.r=o.g=o.b=247+value*2;o.height=weave*.015+reinforcement*.011+grain*.007;o.roughness=.96+grain*.025;
 }
 export function createHandMaterials(own=v=>v){
  const gloveMaps=maps(512,own,glovePaint,{name:'fitted-work-glove'}),clothMaps=maps(256,own,clothPaint,{repeat:true,name:'tailored-ripstop-sleeve'});
- const glove=own(new T.MeshStandardMaterial({color:0xffffff,metalness:0,roughness:1,...gloveMaps,normalScale:new T.Vector2(.32,.32),envMapIntensity:.6}));
- const cloth=own(new T.MeshStandardMaterial({color:0xffffff,metalness:0,roughness:1,...clothMaps,normalScale:new T.Vector2(.22,.22),envMapIntensity:.4}));
+ const glove=own(new T.MeshStandardMaterial({color:new T.Color(.045,.052,.055),metalness:0,roughness:1,...gloveMaps,normalScale:new T.Vector2(.32,.32),envMapIntensity:.6}));
+ const cloth=own(new T.MeshStandardMaterial({color:0x22435e,metalness:0,roughness:1,...clothMaps,normalScale:new T.Vector2(.22,.22),envMapIntensity:.4}));
  glove.name='strike-kit-fitted-work-glove';cloth.name='strike-kit-tailored-sleeve';
  for(const m of[glove,cloth]){m.userData.sharedWeapon=true;m.userData.authoredFinish='original-procedural-pbr-v1';}
- // White materials use their atlas colors. They intentionally ignore the old
- // vertex-color bands, which would double-tint the fabric and hide its detail.
  return {glove,cloth};
 }

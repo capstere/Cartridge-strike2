@@ -1,5 +1,7 @@
 import { createThrowableCartridge, disposeThrowableCartridges } from './throwable-cartridge.mjs';
 import {buildBazookaParts} from './action-models.mjs';
+import {fitPresentationHands, poseViewHands, refitViewArms, disposePresentationHands} from './presentation-hands.mjs';
+import {envelope} from './strike-kit-timing.mjs';
 // Original Cartridge Strike models. No Valve art or downloaded character assets.
 // All dimensions are metres; cosmetic meshes never participate in gameplay RNG,
 // collision, aim, ammunition or timers. Three.js r180 provides bevels and merging.
@@ -175,32 +177,6 @@ function glove(parent, x, y, z, side, palmMat, rubber, cuffMat, { view = false }
   capsule(g, [-side * .022, .026, .002], [-side * .038, -.003, -.021], .012, palmMat);
   bevel(g, 0, -.047, .003, .059, .024, .050, cuffMat, .005);
   if (view) { bevel(g, 0, -.047, .030, .035, .013, .005, rubber, .002); }
-  return consolidate(g);
-}
-
-// A compact, asymmetric two-hand pose for the first-person P9 only. Three
-// fingers close around the grip; index and thumb are articulated separately.
-function p9Glove(parent,x,y,z,side,palmMat,rubber,cuffMat){
-  const g=group(parent,side>0?'p9-trigger-hand':'p9-support-hand',x,y,z),support=side<0;
-  ellipsoid(g,side*.006,-.006,.002,.027,.038,.020,palmMat,14);
-  for(let i=0;i<3;i++){
-    const fy=(support?-.004:.008)-i*.016;
-    tube(g,[[side*.020,fy,-.003],[side*.013,fy,-.027],[-side*.011,fy,-.040],[-side*.031,fy,-.026]],.0061,palmMat);
-    ellipsoid(g,side*.014,fy,-.022,.007,.007,.008,rubber,8);
-  }
-  if(support){
-    tube(g,[[-.019,.024,-.005],[-.018,.030,-.028],[.001,.025,-.047],[.018,.017,-.040]],.0062,palmMat);
-    capsule(g,[.010,.029,.004],[.018,.038,-.027],.0085,palmMat);
-    capsule(g,[.018,.038,-.027],[.012,.034,-.056],.0075,palmMat);
-  }else{
-    tube(g,[[.019,.026,-.003],[.019,.036,-.035],[.010,.032,-.061],[-.001,.019,-.061]],.0062,palmMat);
-    capsule(g,[-.010,.027,.009],[-.029,.032,-.011],.009,palmMat);
-    capsule(g,[-.029,.032,-.011],[-.026,.024,-.040],.008,palmMat);
-  }
-  // Thin sewn reinforcement follows the palm; no large rectangular hand plate.
-  ellipsoid(g,side*.010,-.009,.021,.013,.018,.0015,rubber,12);
-  bevel(g,0,-.044,.005,.046,.018,.039,cuffMat,.004);
-  bevel(g,side*.015,-.044,.024,.017,.010,.003,rubber,.001);
   return consolidate(g);
 }
 
@@ -390,23 +366,6 @@ function buildWeapon(id = 'p9', { viewmodel = true } = {}) {
   else if (['p9', 'p12'].includes(id)) parts = pistol(weapon, id, p,{refined:refinedP9});
   else parts = rifle(weapon, id, p);
   const arms = group(root, 'viewmodel-arms'); arms.visible = viewmodel;
-  let leftHand, rightHand;
-  if (viewmodel) {
-    const fabric = cloth(0x364b59), cuff = material(0x26353d, .86), gloveMat = material(0x4e554e, .83), rubber = material(refinedP9 ? 0x414a43 : 0x202b2d, refinedP9 ? .86 : .72);
-    fabric.userData.privateViewRole='sleeve';cuff.userData.privateViewRole='cuff';
-    const right = parts.grip, left = parts.support;
-    const rightArm = group(arms, 'right-forearm');
-    sleeve(rightArm, [right.x + .16, -.37, .29], [right.x + .012, right.y - .05, right.z + .038], fabric, cuff,refinedP9?.040:.055);
-    // Forearm seam and a small wrist strap add shape without a large block hand.
-    tube(rightArm, [[right.x + .17, -.36, .28], [right.x + .09, -.23, .17], [right.x + .035, right.y - .08, right.z + .05]], .002, cuff);
-    rightHand = refinedP9?p9Glove(rightArm,right.x,right.y,right.z,1,gloveMat,rubber,cuff):glove(rightArm, right.x, right.y, right.z, 1, gloveMat, rubber, cuff, { view: true });
-    rightHand.rotation.x = -.16; consolidate(rightArm);
-    leftHand = group(arms, 'left-hand-and-forearm', left.x, left.y, left.z);
-    const primary = WEAPONS[id]?.slot === 'primary';
-    sleeve(leftHand, [-.22 - left.x, -.38 - left.y, .24 - left.z], [-.018, -.055, .025], fabric, cuff,refinedP9?.040:.055);
-    (refinedP9?p9Glove(leftHand,0,0,0,-1,gloveMat,rubber,cuff):glove(leftHand, 0, 0, 0, -1, gloveMat, rubber, cuff, { view: true })).rotation.z = primary ? -.35 : -.12;
-    consolidate(leftHand); leftHand.userData.home = leftHand.position.clone();
-  }
   let magazineGrip;
   if (parts.magazine) {
     // Store the actual magazine/shell centre in its own coordinates. Reload
@@ -414,8 +373,9 @@ function buildWeapon(id = 'p9', { viewmodel = true } = {}) {
     root.updateMatrixWorld(true);
     magazineGrip = parts.magazine.worldToLocal(new THREE.Box3().setFromObject(parts.magazine).getCenter(new THREE.Vector3()));
   }
-  root.userData = { ...root.userData, ...parts, id, weapon, arms, leftHand, rightHand, viewmodel, ...(refinedP9?{visualVariant:'p9-firstperson-refined'}:{}), pump: weapon.userData.pump,
-    magazineHome: parts.magazine?.position.clone(), magazineGrip, reloadGrip: new THREE.Vector3(), slideHome: parts.slide?.position.clone(), authored: 'Cartridge Strike original geometry' };
+  root.userData = { ...root.userData, ...parts, id, weapon, arms, viewmodel, ...(refinedP9?{visualVariant:'p9-firstperson-refined'}:{}), pump: weapon.userData.pump,
+    magazineHome: parts.magazine?.position.clone(), magazineGrip, slideHome: parts.slide?.position.clone(), authored: 'Cartridge Strike original geometry' };
+  if (viewmodel) fitPresentationHands(root);
   return root;
 }
 
@@ -491,6 +451,7 @@ export function disposeWeaponResources() {
   for (const texture of textures) texture.dispose();
   if (textures.has(sharedMachiningTexture)) sharedMachiningTexture = null;
   worldWeaponTemplates.clear();
+  disposePresentationHands();
   disposeThrowableCartridges();
 }
 
@@ -630,17 +591,6 @@ function mechanisms(model, actor, time, shotAt) {
       d.magazine.visible = !(reloading && progress > .43 && progress < .55);
     }
   }
-  if (d.leftHand) {
-    d.leftHand.position.copy(d.leftHand.userData.home); d.leftHand.rotation.set(0, 0, 0);
-    if (reloading && d.magazineGrip) {
-      d.magazine.updateMatrix();
-      d.reloadGrip.copy(d.magazineGrip).applyMatrix4(d.magazine.matrix);
-      d.reloadGrip.x -= .027; d.reloadGrip.z += .014;
-      d.leftHand.position.lerp(d.reloadGrip, reach);
-      d.leftHand.rotation.x = reach * (d.magazine.rotation.x - .15);
-      d.leftHand.rotation.z = reach * (d.magazine.rotation.z - .10);
-    }
-  }
   const shotAge = time - shotAt, shot = shotAge >= 0 && shotAge < .18 ? Math.exp(-shotAge * 28) : 0;
   if (d.slide) { d.slide.position.copy(d.slideHome); d.slide.position.z += shot * .035; }
   if (d.pump) d.pump.position.z = shotAge >= .08 && shotAge < .55 ? Math.sin((shotAge - .08) / .47 * Math.PI) * .080 : 0;
@@ -648,7 +598,7 @@ function mechanisms(model, actor, time, shotAt) {
 }
 
 export function animateWeapon(model, actor, time, dt, { reducedMotion = false, shotAt = -Infinity, switchAt = -Infinity, throwAt = -Infinity, swingAt = -Infinity, recoil = 0 } = {}) {
-  const d = model.userData, { reloading, reach, shot } = mechanisms(model, actor, time, shotAt);
+  const d = model.userData, { progress, reloading, reach, shot } = mechanisms(model, actor, time, shotAt);
   const speed = clamp((actor.moving || 0) / 4.2), stride = (actor.distanceWalked || time * speed * 3) * 8;
   const bob = reducedMotion ? 0 : Math.sin(stride) * .005 * speed;
   const idle = reducedMotion ? 0 : Math.sin(time * 1.7) * .0013;
@@ -663,6 +613,13 @@ export function animateWeapon(model, actor, time, dt, { reducedMotion = false, s
   if (reloading) model.position.y += reach * .055;
   if (swing) { model.position.x -= swing * .15; model.position.z -= swing * .15; }
   if (actor.action) { model.position.y -= .12; model.rotation.x -= .25; }
+  if (d.viewmodel) {
+    const shell = d.id === 'shotgun';
+    const hold = reloading ? (shell ? envelope(progress, 0, .095, .91, 1) : envelope(progress, .015, .15, .78, .92)) : 0;
+    const release = !shell && d.id !== 'bazooka' ? envelope(progress, .42, .46, .51, .56) : 0;
+    poseViewHands(model, hold, 0, shot, release, throwing);
+    if (!d.presentationMotion) refitViewArms(model);
+  }
   model.updateMatrixWorld(true);
   return { muzzle: model.localToWorld(d.muzzle.clone()), reloading };
 }

@@ -16,6 +16,12 @@ import {BUSINESS_HOSTAGE_FILE,prepareBusinessHostage} from './business-hostage.m
 let templates=null,pending=null,privateCharacter=null,privateViewAppearance=null;
 let hostageTemplate=null,hostagePending=null,hostageSupport=null;
 let privateActorIds=new Set(['analysts-0','analysts-1']);
+const originalViewProfiles = new Map();
+const operatorPalette = {
+ analysts:{shirt:0x22435e,pants:0x202c3b,vest:0x132d42,trim:0x5aa8cf},
+ counters:{shirt:0x9b967c,pants:0x454c3b,vest:0x505b42,trim:0xc9ad65},
+ hostage:{shirt:0xe0e7e2,pants:0x334552,vest:0xe4e7df,trim:0x468e8c}
+};
 const live=new Set();
 export function charactersReady(){return !!templates;}
 export function installCharacterTemplates(male,female){
@@ -66,7 +72,7 @@ export function createAuthoredAvatar(team,id,isHostage=false,options={}){
  if(isHostage&&!options.ignoreOverrides&&hostageTemplate)return createBusinessHostage(id);
  if(!templates)throw Error('Character library must be loaded before actor creation');
  const seed=hash(id),gender=options.gender||(seed%3===0?'female':'male'),asset=templates[gender],root=cloneSkinned(asset.scene),materials=new Map(),ownedGeometry=[],bones=new Map(),meshes=[],shoes=[];
- const palette=isHostage?{shirt:0xe0e7e2,pants:0x334552,vest:0xe4e7df,trim:0x468e8c}:team==='analysts'?{shirt:0x22435e,pants:0x202c3b,vest:0x132d42,trim:0x5aa8cf}:{shirt:0x9b967c,pants:0x454c3b,vest:0x505b42,trim:0xc9ad65};
+ const palette=isHostage?operatorPalette.hostage:team==='analysts'?operatorPalette.analysts:operatorPalette.counters;
  fabric??=fabricTexture();
  root.traverse(o=>{
   if(o.isBone)bones.set(o.name,o);
@@ -160,10 +166,20 @@ export function installPrivateCharacter(asset){
 }
 export function setPrivateCharacterActors(ids){privateActorIds=new Set(ids);}
 export function privateCharacterApplies(id){return !!privateCharacter&&privateActorIds.has(id);}
-export function privateCharacterAppearance(id){
+export function privateCharacterAppearance(id,team){
  if(privateCharacterApplies(id))return privateViewAppearance;
- const entry=getCharacterOverride('player',id);if(!entry)return null;
- return entry.viewAppearance??=createRuntimeViewAppearance(entry.asset,entry.contract.view);
+ const entry = getCharacterOverride('player',id);
+ if (entry) return entry.viewAppearance ??= createRuntimeViewAppearance(entry.asset,entry.contract.view);
+ if (!templates || !team) return null;
+ const gender = hash(id)%3 === 0 ? 'female' : 'male', key = team+'-'+gender;
+ if (!originalViewProfiles.has(key)) {
+  const profile = createRuntimeViewAppearance(templates[gender]);
+  profile.sleeve.color.setHex((team === 'analysts' ? operatorPalette.analysts : operatorPalette.counters).shirt);
+  profile.cloth = profile.sleeve.color.toArray();
+  profile.useRigFinish = true;
+  originalViewProfiles.set(key,profile);
+ }
+ return originalViewProfiles.get(key);
 }
 export function characterVisualSignature(team,id){
  if(team&&privateCharacterApplies(id))return 'private';
@@ -270,6 +286,7 @@ export function disposeAvatar(state){
  state.root.traverse(o=>{if(o.isSkinnedMesh)o.skeleton.dispose();});for(const m of new Set(state.materials.values())){m.userData.ownedTexture?.dispose();m.dispose();}for(const g of state.ownedGeometry)g.dispose();live.delete(state);
 }
 export function disposeCharacterLibrary(){
+ for(const p of originalViewProfiles.values())p.dispose();originalViewProfiles.clear();
  clearCharacterOverrides();privateViewAppearance?.dispose();privateViewAppearance=null;
  for(const state of [...live])disposeAvatar(state);const geometries=new Set(),materials=new Set(),textures=new Set();
  for(const asset of [...Object.values(templates||{}),privateCharacter,hostageTemplate].filter(Boolean))asset.scene.traverse(o=>{if(o.geometry)geometries.add(o.geometry);for(const m of [o.material].flat().filter(Boolean))materials.add(m);if(o.isSkinnedMesh)o.skeleton.dispose();});
