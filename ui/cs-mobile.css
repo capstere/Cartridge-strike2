@@ -4,8 +4,8 @@
 /* ---------- Rotate prompt (portrait phones) ---------- */
 .cs-rotate{display:none}
 @media (orientation:portrait) and (max-width:600px){
-  html:not(.cs-rotate-ok) .cs-rotate{position:fixed;inset:0;z-index:2147483000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:max(32px,env(safe-area-inset-top)) 32px max(32px,env(safe-area-inset-bottom));background:radial-gradient(90% 60% at 50% 40%,#132036,#05070b 75%);color:#eef2f7;text-align:center;font-family:"Barlow",system-ui,sans-serif}
-  html:not(.cs-rotate-ok) body{overflow:hidden!important}
+  html:not(.cs-rotate-ok):not(.cs-family-lobby) .cs-rotate{position:fixed;inset:0;z-index:2147483000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:max(32px,env(safe-area-inset-top)) 32px max(32px,env(safe-area-inset-bottom));background:radial-gradient(90% 60% at 50% 40%,#132036,#05070b 75%);color:#eef2f7;text-align:center;font-family:"Barlow",system-ui,sans-serif}
+  html:not(.cs-rotate-ok):not(.cs-family-lobby) body{overflow:hidden!important}
 }
 .cs-rotate-phone{width:62px;height:104px;border:2px solid #eef2f7;border-radius:12px;position:relative;animation:cs-rot 2.4s cubic-bezier(.2,.8,.2,1) infinite}
 .cs-rotate-phone::after{content:"";position:absolute;left:50%;bottom:7px;width:18px;height:3px;margin-left:-9px;border-radius:2px;background:#3d8bff}

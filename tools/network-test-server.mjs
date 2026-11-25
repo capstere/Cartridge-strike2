@@ -20,7 +20,7 @@ if(process.argv[1]===entry&&process.argv[2]==='--serve'){
     metrics:r.metrics,lag:r.lag&&{accepted:r.lag.metrics.accepted,rejected:r.lag.metrics.rejected,reasons:r.lag.metrics.reasons},
     clients:r.clients.map(c=>c.sessionId),seats:[...(r.seats?.entries()||[])].map(([sid,s])=>({sid,id:s.id,ready:s.ready,enabled:s.enabled,rtt:s.rtt,inputAge:r.clock.elapsedTime-r.inputs.get(sid).renderTime,queue:r.inputs.get(sid).size})),
     actors:(r.sim?.game.actors||[]).map(a=>({id:a.id,x:a.x,y:a.y,z:a.z,yaw:a.yaw,pitch:a.pitch,alive:a.alive,lifeId:a.lifeId,
-      inventory:{primary:{ammo:a.inventory.primary.ammo,reserve:a.inventory.primary.reserve}},sessionId:r.state.actors.get(a.id)?.sessionId})),
+      inventory:{primary:{ammo:a.inventory.primary?.ammo??0,reserve:a.inventory.primary?.reserve??0}},sessionId:r.state.actors.get(a.id)?.sessionId})),
   }))});
   process.on('message',async message=>{
     const {id,action,options}=message;

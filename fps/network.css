@@ -5,6 +5,10 @@
 .network-form>div{display:flex;flex-wrap:wrap;gap:8px}.network-form>p{overflow-wrap:anywhere;line-height:1.4}.network-form input[readonly]{color:#b7c8d8;font-size:13px}
 .network-form button{min-height:44px;padding:10px 20px;margin-right:8px;background:#377cbe;color:white;border:1px solid #7da8d9;cursor:pointer}
 .network-form button:disabled{opacity:.5}.network-form a,.local-network-link{color:#abcff5}
+.network-form .network-show-code{grid-column:1/-1;display:flex;align-items:center;min-height:44px;gap:8px}
+.network-show-code input{flex:none;min-height:0;margin:0}
+.network-family-menu #network-status:empty{display:none}
+@media(max-width:480px){.network-family-menu .network-form{grid-template-columns:minmax(0,1fr)}}
 .network-menu .lb-left{overflow-y:auto}.network-menu .lb-title{font-size:clamp(24px,5vw,52px)}
 .network-menu [hidden]{display:none!important}
 @media(max-height:480px){.network-menu .lb-title{display:none}.network-form{gap:6px;font-size:11px}.network-form input,.network-form select{padding:6px}.network-menu .lb-lead{font-size:12px}}

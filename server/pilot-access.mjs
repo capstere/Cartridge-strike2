@@ -2,6 +2,7 @@ import {createHash, createHmac, randomBytes, timingSafeEqual} from 'node:crypto'
 import {readFile} from 'node:fs/promises';
 import {isAbsolute} from 'node:path';
 import {isIP} from 'node:net';
+import {FAMILY_ROOM_ALIAS} from '../shared/multiplayer/family-room.mjs';
 
 const COOKIE = '__Host-cs2_pilot';
 const SESSION_SECONDS = 8 * 3600;
@@ -67,7 +68,7 @@ export function pilotAccess(config, limiter) {
       return {origin, authenticated};
     },
 
-    async login(req, res, origin) {
+    async login(req, res, origin, familyEnabled = false) {
       if (!/^application\/x-www-form-urlencoded(?:;|$)/i.test(req.headers['content-type'] || '') || req.headers['content-encoding']) {
         return [415, 'Expected a URL-encoded invite form.'];
       }
@@ -83,14 +84,17 @@ export function pilotAccess(config, limiter) {
       // Clipboard selections commonly include a trailing space or line break.
       // Only trim the edges: the generated code remains exact and case-sensitive.
       const invite = form.get('invite')?.trim();
-      if (![...form.keys()].every(k=>['invite','room'].includes(k)) || form.getAll('invite').length!==1 || form.getAll('room').length>1 || !invite || !timingSafeEqual(inviteHash, digest(invite))) {
-        showInvite(res, true,form.get('room'));
+      const family = familyEnabled && form.get('family') === FAMILY_ROOM_ALIAS;
+      if (![...form.keys()].every(k=>['invite','room','family'].includes(k)) ||
+          form.getAll('invite').length!==1 || form.getAll('room').length>1 || form.getAll('family').length>1 ||
+          !invite || !timingSafeEqual(inviteHash, digest(invite))) {
+        showInvite(res, true, form.get('room'), family);
         return;
       }
       const data = Math.floor(Date.now()/1000 + SESSION_SECONDS) + '.' + randomBytes(12).toString('base64url');
       res.setHeader('Set-Cookie', COOKIE + '=' + data + '.' + sign(origin, data) +
         '; Path=/; Max-Age=' + SESSION_SECONDS + '; HttpOnly; Secure; SameSite=Strict');
-      redirectLobby(res,form.get('room'));
+      redirectLobby(res, form.get('room'), family);
     },
   };
 }
@@ -102,13 +106,16 @@ export function localMonitor(req, port) {
 }
 
 const safeRoom=value=>typeof value==='string'&&/^[A-Za-z0-9_-]{1,32}$/.test(value)?value:'';
-export function redirectLobby(res,room) {
-  res.writeHead(303, {Location: publicLobby+(safeRoom(room)?'&room='+safeRoom(room):'')});
+export function redirectLobby(res, room, family = false) {
+  const destination = family ? '&family=' + FAMILY_ROOM_ALIAS : safeRoom(room) ? '&room=' + safeRoom(room) : '';
+  res.writeHead(303, {Location: publicLobby + destination});
   res.end();
 }
 
-export function showInvite(res, wrong = false,room) {
+export function showInvite(res, wrong = false, room, family = false) {
   const nonce = randomBytes(16).toString('base64');
+  const destination = family ? '<input type="hidden" name="family" value="' + FAMILY_ROOM_ALIAS + '">' :
+    safeRoom(room) ? '<input type="hidden" name="room" value="' + safeRoom(room) + '">' : '';
   res.writeHead(wrong ? 403 : 200, {
     'Content-Type': 'text/html; charset=utf-8',
     'Content-Security-Policy': "default-src 'none'; script-src 'nonce-" + nonce + "'; style-src 'unsafe-inline'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'",
@@ -119,11 +126,11 @@ export function showInvite(res, wrong = false,room) {
 main{width:min(100%,26rem);padding:2rem}h1{font-size:2rem}input,button{width:100%;padding:.8rem;font:inherit;margin-top:.5rem}
 input{color:inherit;background:#232c2c;border:1px solid #94a6a0}button{background:#efbf64;color:#161b1b;border:0;font-weight:bold;cursor:pointer}
 .show-code{display:flex;align-items:center;gap:.5rem;margin-top:.75rem}.show-code input{width:auto;margin:0}small{display:block;margin-top:.75rem}
-</style><main><h1>Cartridge-Strike 2</h1><p>Öppna Floor 5 med inbjudningskoden från serverns ägare.</p>
+</style><main><h1>${family ? FAMILY_ROOM_ALIAS : 'Cartridge-Strike 2'}</h1><p>Öppna ${family ? 'familjerummet' : 'Floor 5'} med inbjudningskoden från serverns ägare.</p>
 ${wrong ? '<p role="alert">Fel inbjudningskod. Försök igen.</p>' : ''}<form method="post" action="/pilot/session">
-${safeRoom(room)?'<input type="hidden" name="room" value="'+safeRoom(room)+'">':''}<label>Inbjudningskod<input id="pilot-invite" type="password" name="invite" maxlength="160" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" aria-describedby="invite-help" required></label>
+${destination}<label>Inbjudningskod<input id="pilot-invite" type="password" name="invite" maxlength="160" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" aria-describedby="invite-help" required></label>
 <label class="show-code"><input id="show-invite" type="checkbox">Visa kod</label>
-<small id="invite-help">Klistra in enbart inbjudningskoden. Din privata rumskod väljer du i nästa steg.</small>
+<small id="invite-help">${family ? 'Ange serverns inbjudningskod här. Familjerummets lösenord anges i nästa steg.' : 'Klistra in enbart inbjudningskoden. Din privata rumskod väljer du i nästa steg.'}</small>
 <button type="submit">Öppna lobbyn</button></form></main>
 <script nonce="${nonce}">document.getElementById('show-invite').addEventListener('change',event=>{document.getElementById('pilot-invite').type=event.target.checked?'text':'password';});</script></html>`);
 }

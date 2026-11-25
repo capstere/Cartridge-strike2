@@ -7,6 +7,7 @@ import {floor5MapAnchors} from '../minimap-cache.mjs';
 import {TEAM_COMMS_TYPE,TEAM_COMMS_COMMANDS,TEAM_COMMS_RATE_MS} from '../../../shared/multiplayer/protocol.mjs';
 import {CLASSIC_NETWORK_CONFIG,NETWORK_CONFIG,ROOM_TYPE,ROOM_CAPACITY,RECONNECT_SECONDS,INTERPOLATION_MS,copyPose,wrapYaw} from '../../../shared/multiplayer/rules.mjs';
 import {CONTRACT} from '../../../shared/multiplayer/build.mjs';
+import {FAMILY_ROOM_ALIAS} from '../../../shared/multiplayer/family-room.mjs';
 
 import {applyNetworkWorld,createPredictedWorld} from '../../../shared/multiplayer/world.mjs';
 
@@ -139,18 +140,20 @@ export class NetworkSession {
     if(this.teamSignal&&!this.validTeamComms(this.teamSignal))this.teamSignal=null;
     if(this.view.teamPing&&!this.validTeamComms(this.view.teamPing))this.view.teamPing=null;
   }
-  async connect({endpoint,roomId,code,name,team='auto',mode='tdm',fillBots=true,zombies=false,danceman=false,create=false,contract=CONTRACT}){
+  async connect({endpoint,roomId,code,name,family,team='auto',mode='tdm',fillBots=true,zombies=false,danceman=false,create=false,contract=CONTRACT}){
     const url=networkEndpoint(endpoint),client=new SessionClient(url),options={code,name,team,contract,fillBots,mode,zombies,danceman};
     client.owner=this;
     this.joinAbort=new AbortController();client.http.options.signal=this.joinAbort.signal;
-    const pending=create?client.create(ROOM_TYPE,options):client.joinById(roomId,options);
+    const pending=family===FAMILY_ROOM_ALIAS?client.joinOrCreate(FAMILY_ROOM_ALIAS,{code,name,team,contract}):
+      create?client.create(ROOM_TYPE,options):client.joinById(roomId,options);
     let expired=false;
     const timeout=new Promise((_,reject)=>{this.joinTimer=setTimeout(()=>{expired=true;this.joinAbort.abort();this.joiningRoom?.leave(false).catch(()=>{});reject(Error('Connection timeout.'));},10000);});
     let room;
     try{room=await Promise.race([pending.then(room=>{if(expired||this.closed){room.leave();throw Error('Join cancelled.');}return room;}),timeout]);}
     finally{clearTimeout(this.joinTimer);this.joinTimer=null;}
     if(this.closed){await room.leave();throw Error('Join cancelled.');}
-    this.joiningRoom=null;this.room=room;Object.assign(room.reconnection,{enabled:true,minUptime:0,minDelay:150,maxDelay:1000,maxRetries:30,maxEnqueuedMessages:0});
+    this.joiningRoom=null;this.room=room;this.familyAlias=room.name===FAMILY_ROOM_ALIAS?FAMILY_ROOM_ALIAS:'';
+    Object.assign(room.reconnection,{enabled:true,minUptime:0,minDelay:150,maxDelay:1000,maxRetries:30,maxEnqueuedMessages:0});
     this.unsub.push(room.onMessage('problem',message=>{this.problem=String(message);}));
     this.unsub.push(room.onMessage('notice',message=>{this.notice=String(message);}));
     this.unsub.push(room.onMessage('events',events=>this.receiveEvents(events)));
@@ -161,7 +164,9 @@ export class NetworkSession {
     room.onDrop(dropped);this.unsub.push(()=>room.onDrop.remove(dropped));
     room.onReconnect(reconnected);this.unsub.push(()=>room.onReconnect.remove(reconnected));
     const left=code=>{
-      if(this.closed)return;const problem=this.problem||`Anslutningen bröts (${code}). Anslut till rummet igen, eller skapa ett nytt om servern startades om.`;
+      if(this.closed)return;
+      const retry=this.familyAlias?'Öppna familjerummet igen via den fasta länken.':'Anslut till rummet igen, eller skapa ett nytt om servern startades om.';
+      const problem=this.problem||`Anslutningen bröts (${code}). ${retry}`;
       this.problem=problem;this.dispose(false);this.onDisconnect(problem);
     };
     const changed=()=>this.snapshot();
@@ -179,7 +184,6 @@ export class NetworkSession {
     room.send('ready',contract);
     await wait(()=>this.closed||room.state.actors.get(this.localPlayerId)?.ready);
     if(this.closed)throw Error(this.problem||'Room closed before spawn.');
-    this.teamAnchors=new Map(floor5MapAnchors(this.world,room.state.mode==='classic').map(anchor=>[anchor.id,anchor]));
     this.connectionState='connected';this.snapshot();
     this.lastWatchdog=performance.now();this.silenceSince=0;
     this.watchdog=setInterval(()=>this.checkConnection(performance.now()),1000);
@@ -195,15 +199,20 @@ export class NetworkSession {
       this.view.localPlayerId=mine.id;this.view.team=mine.team;
     }
     const classic=state.mode==='classic',newRound=classic&&this.view.state.round!==state.round;
+    const modeChanged=this.matchMode!==state.mode;
+    if(modeChanged){
+      this.matchMode=state.mode;
+      this.teamAnchors=new Map(floor5MapAnchors(this.world,classic).map(anchor=>[anchor.id,anchor]));
+    }
     this.view.config=classic?CLASSIC_NETWORK_CONFIG:NETWORK_CONFIG;
     this.view.state.difficulty=state.botDifficulty??this.view.config.difficulty;
     this.view.state.mode=classic?'classic':'endless';
     const newMatch=this.matchId!==state.matchId,newPhase=this.matchPhase!==state.phase;
-    if(newMatch||newRound){
+    if(newMatch||newRound||modeChanged){
       this.events=[];
       this.clearTeamComms();
     }
-    if(newMatch||newPhase){
+    if(newMatch||newPhase||modeChanged){
       this.matchId=state.matchId;this.matchPhase=state.phase;
       this.resultsAt=state.phase==='results'?this.lastPatch:undefined;
       this.prediction?.reset();this.keepRocketEffects();this.predictedShots.clear();this.actionTimes.clear();this.nextCosmetic=0;
@@ -218,6 +227,8 @@ export class NetworkSession {
         bomb:{status:state.bombStatus,carrierId:state.carrierId,x:state.bombX,y:state.bombY,z:state.bombZ,deadline:state.bombDeadline},
         hostages:[...state.hostages.values()].map(h=>({id:h.id,name:h.name,kind:'hostage',height:1.6,radius:NETWORK_CONFIG.radius,
           x:h.x,y:h.y,z:h.z,yaw:h.yaw,alive:h.alive,rescued:h.rescued,escortId:h.escortId||null,distanceWalked:h.distanceWalked}))});
+    }else if(modeChanged){
+      Object.assign(this.view.state,{hostages:[],bomb:{status:'none'},result:null,deadline:Infinity,buyDeadline:0,resultDeadline:0});
     }
     const ready=[...state.actors.values()].filter(a=>a.ready&&(!a.pending||a.id===this.localPlayerId));
     if(this.awaitingSnapshot){
@@ -235,7 +246,7 @@ export class NetworkSession {
       this.predict.attach(state,{elevatorProgress:'lerp'});
       for(const d of this.doorSchemas)this.predict.attach(d,{poseAngle:'lerp'});
     }
-    if(newMatch||newRound||this.glassCount===undefined){this.world.glass.reset();this.glassCount=-1;}
+    if(newMatch||newRound||modeChanged||this.glassCount===undefined){this.world.glass.reset();this.glassCount=-1;}
     if(this.glassCount!==state.brokenGlass.size){
       for(const id of state.brokenGlass.keys()){
         const pane=this.world.glass.panes.get(id);
@@ -325,7 +336,7 @@ export class NetworkSession {
       this.fireId=0;this.reloadId=0;this.trigger=false;
       this.keepRocketEffects();
     }
-    if(newMatch||newPhase)queueMicrotask(()=>{if(!this.closed)this.onMatch(this.matchPhase);});
+    if(newMatch||newPhase||modeChanged)queueMicrotask(()=>{if(!this.closed)this.onMatch(this.matchPhase);});
   }
   matchCommand(kind,extra={}){
     const self=this.room?.state.actors.get(this.localPlayerId);if(!self||this.connectionState!=='connected')return;
@@ -448,7 +459,10 @@ export class NetworkSession {
     this.connectionState='reconnecting';this.enabled=false;this.view.state.paused=true;
     this.events=[];this.clearTeamComms();this.status='Återansluter… Din plats reserveras i 15 sekunder. Matchen fortsätter.';
     this.onConnection('reconnecting');
-    this.reconnectTimer=setTimeout(()=>this.disconnect('Återanslutningen gick inte. Platsen har löpt ut eller servern startades om. Anslut till rummet igen.'),RECONNECT_SECONDS*1000);
+    this.reconnectTimer=setTimeout(()=>{
+      const retry=this.familyAlias?'Öppna familjerummet igen via den fasta länken.':'Anslut till rummet igen.';
+      this.disconnect('Återanslutningen gick inte. Platsen har löpt ut eller servern startades om. '+retry);
+    },RECONNECT_SECONDS*1000);
   }
   interruptConnection(){
     if(this.closed||this.connectionState==='reconnecting')return;

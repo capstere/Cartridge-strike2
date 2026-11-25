@@ -1,7 +1,10 @@
 // Cartridge-Strike game-only mobile orientation support.
+import {isFamilyRoomLink} from '../shared/multiplayer/family-room.mjs';
+
 const html = document.documentElement;
 const coarse = matchMedia('(pointer: coarse)').matches;
 if (coarse) html.classList.add('cs-touch');
+if (isFamilyRoomLink(location.search)) html.classList.add('cs-family-lobby');
 try { if (sessionStorage.getItem('cs-rotate-ok')) html.classList.add('cs-rotate-ok'); } catch {}
 
 function rotatePrompt() {

@@ -1,4 +1,4 @@
-import {BOT_DIFFICULTY_IDS,MATCH_DEFAULTS,RECONNECT_SECONDS} from '../shared/multiplayer/rules.mjs';
+import {BOT_DIFFICULTY_IDS,CLASSIC_NETWORK_CONFIG,MATCH_DEFAULTS,NETWORK_CONFIG,RECONNECT_SECONDS} from '../shared/multiplayer/rules.mjs';
 import {prepareNetworkWorld} from '../shared/multiplayer/world.mjs';
 import {onlinePrimaries,respawnActor} from '../src/fps/action-rules.mjs';
 import {populateZombies} from '../src/fps/zombies.mjs';
@@ -14,13 +14,19 @@ export class MatchLifecycle {
     // Old collision/combat fixtures can isolate continuous simulation. This is
     // only a factory argument in tests, never an env var or a client option.
     this.continuous=fixture.continuous===true;this.absent=new Map();
-    Object.assign(room.state,{phase:this.continuous?'active':'waiting',matchId:1,ownerId:'',
-      durationSeconds:room.classic?room.sim.game.config.roundTime:this.settings.durationSeconds,scoreTarget:room.classic?room.sim.game.config.matchWins:this.settings.scoreTarget,
-      remainingSeconds:this.settings.durationSeconds,winner:'',reason:'',results:''});
+    Object.assign(room.state,{phase:this.continuous?'active':'waiting',matchId:1,ownerId:'',winner:'',reason:'',results:''});
+    this.setModeLimits();
+    room.state.remainingSeconds=this.lobbySeconds;
     room.sim.game.state.paused=!this.continuous;
   }
   get state(){return this.room.state;}
   get now(){return this.room.clock.elapsedTime;}
+  get lobbySeconds(){return this.room.familyRoom?this.state.durationSeconds:this.settings.durationSeconds;}
+  setModeLimits(){
+    const r=this.room;
+    this.state.durationSeconds=r.classic?r.sim.game.config.roundTime:this.settings.durationSeconds;
+    this.state.scoreTarget=r.classic?r.sim.game.config.matchWins:this.settings.scoreTarget;
+  }
   eligible(){
     const connected=[...this.room.seats.values()].filter(s=>s.connected);
     return connected.length>0&&connected.every(s=>s.ready&&s.playerReady)&&teams.every(team=>connected.some(s=>s.actor?.team===team)||[...this.room.bots.values()].some(s=>s.actor.team===team));
@@ -28,27 +34,72 @@ export class MatchLifecycle {
   ownership(){
     const r=this.room;
     if(r.seats.has(this.state.ownerId))return;
+    if(r.familyRoom){
+      this.state.ownerId=[...r.seats].find(([,s])=>s.connected&&s.ready&&!s.revoked)?.[0]||'';
+      return;
+    }
     this.state.ownerId=[...r.seats].find(([,s])=>s.connected)?.[0]||r.seats.keys().next().value||'';
+  }
+  saveFamilySettings(changes){
+    const family=this.room.familyRoom;
+    if(!family)return;
+    const current=family.settings;
+    if(Object.entries(changes).some(([key,value])=>current[key]!==value))family.saveSettings({...current,...changes});
+  }
+  configureFamilyLobby(mode,fillBots){
+    const r=this.room,g=r.sim.game,state=this.state;
+    if(state.mode===mode&&state.fillBots===fillBots)return;
+    state.fillBots=fillBots;
+    if(!fillBots)for(const id of r.bots.keys())r.removeBot(id);
+    if(mode===state.mode){r.fillVacancies();return;}
+
+    // The same paused game, map and sessions continue into the selected ruleset.
+    r.classic=mode==='classic';state.mode=mode;
+    Object.assign(g.config,r.classic?CLASSIC_NETWORK_CONFIG:NETWORK_CONFIG,{difficulty:state.botDifficulty,
+      zombies:state.zombiesEnabled,danceman:state.dancemanEnabled,friendlyFire:state.friendlyFire});
+    prepareNetworkWorld(g.world);
+    g.state.resultDeadline=0;
+    this.resetRound();
+    if(!r.classic){
+      state.hostages.clear();
+      Object.assign(state,{round:0,roundPhase:'',deadline:0,buyDeadline:0,resultDeadline:0,roundWinner:'',roundReason:'',
+        bombStatus:'',carrierId:'',bombX:0,bombY:0,bombZ:0,bombDeadline:0});
+    }
+    r.teamComms.refreshAnchors();
+    this.setModeLimits();state.remainingSeconds=state.durationSeconds;
+    for(const seat of r.seats.values())seat.playerReady=false;
   }
   command(client,m){
     const r=this.room,s=r.seats.get(client.sessionId),state=this.state;
     const keys=m?.kind==='botDifficulty'?['kind','matchId','controlEpoch','botDifficulty','serial']:
+      m?.kind==='settings'?['kind','matchId','controlEpoch','mode','fillBots']:
       ['kind','matchId','controlEpoch','ready','team','primary','zombies','danceman','friendlyFire'];
-    if(!s?.ready||!s.connected||s.client!==client||!m||m.matchId!==state.matchId||m.controlEpoch!==s.epoch||
+    if(!s?.ready||!s.connected||s.client!==client||(r.familyRoom&&s.revoked)||!m||m.matchId!==state.matchId||m.controlEpoch!==s.epoch||
       Object.keys(m).some(k=>!keys.includes(k)))return;
+    const lobbyHost=state.phase==='waiting'&&state.ownerId===client.sessionId;
     if(!r.classic&&m.kind==='loadout'&&['waiting','active'].includes(state.phase)&&onlinePrimaries(s.actor.team).includes(m.primary))s.actor.loadout=m.primary;
     else if(m.kind==='ready'&&state.phase==='waiting'&&typeof m.ready==='boolean')s.playerReady=m.ready;
     else if(m.kind==='team'&&state.phase==='waiting')r.changeTeam(client,m.team);
-    else if(m.kind==='residents'&&state.phase==='waiting'&&state.ownerId===client.sessionId&&
+    else if(m.kind==='settings'){
+      if(!r.familyRoom||!lobbyHost||(!Object.hasOwn(m,'mode')&&!Object.hasOwn(m,'fillBots'))||
+        (Object.hasOwn(m,'mode')&&!['classic','tdm'].includes(m.mode))||
+        (Object.hasOwn(m,'fillBots')&&typeof m.fillBots!=='boolean'))return;
+      const mode=m.mode??state.mode,fillBots=m.fillBots??state.fillBots;
+      this.saveFamilySettings({mode,fillBots});
+      this.configureFamilyLobby(mode,fillBots);
+    }else if(m.kind==='residents'&&lobbyHost&&
       typeof m.zombies==='boolean'&&typeof m.danceman==='boolean'){
+      this.saveFamilySettings({zombiesEnabled:m.zombies,dancemanEnabled:m.danceman});
       state.zombiesEnabled=m.zombies;state.dancemanEnabled=m.danceman;
       Object.assign(r.sim.game.config,{zombies:m.zombies,danceman:m.danceman});
-    }else if(m.kind==='friendlyFire'&&state.phase==='waiting'&&state.ownerId===client.sessionId&&typeof m.friendlyFire==='boolean'){
+    }else if(m.kind==='friendlyFire'&&lobbyHost&&typeof m.friendlyFire==='boolean'){
+      this.saveFamilySettings({friendlyFire:m.friendlyFire});
       state.friendlyFire=m.friendlyFire;
       r.sim.game.config.friendlyFire=m.friendlyFire;
     }else if(m.kind==='botDifficulty'){
-      if(state.phase!=='waiting'||state.ownerId!==client.sessionId||!BOT_DIFFICULTY_IDS.includes(m.botDifficulty)||
+      if(!lobbyHost||!r.sim.game.state.paused||!BOT_DIFFICULTY_IDS.includes(m.botDifficulty)||
         !Number.isSafeInteger(m.serial)||m.serial<1||(s.botDifficultyEpoch===s.epoch&&m.serial<=s.lastBotDifficultySerial))return;
+      this.saveFamilySettings({botDifficulty:m.botDifficulty});
       if(!r.sim.game.setNetworkBotDifficulty(m.botDifficulty))return;
       s.botDifficultyEpoch=s.epoch;
       s.lastBotDifficultySerial=m.serial;
@@ -61,17 +112,19 @@ export class MatchLifecycle {
       state.matchId++;state.phase='waiting';state.winner=state.reason=state.results='';
       this.resetActors();
       for(const seat of r.seats.values())seat.playerReady=false;
-      state.remainingSeconds=this.settings.durationSeconds;
+      state.remainingSeconds=this.lobbySeconds;
     }
     r.project();
   }
+  resetRound(){
+    const r=this.room,g=r.sim.game;
+    g.state.paused=true;g.state.round=0;g.state.history=[];g.state.lossStreak={analysts:0,counterAnalysts:0};g.state.score={analysts:0,counterAnalysts:0};
+    for(const a of g.actors){a.alive=false;a.money=g.config.startMoney;a.kills=a.deaths=0;delete a.combat;}
+    g.beginRound();g.drainEvents();this.absent.clear();
+  }
   resetActors(){
     const r=this.room,g=r.sim.game;
-    if(r.classic){
-      g.state.paused=true;g.state.round=0;g.state.history=[];g.state.lossStreak={analysts:0,counterAnalysts:0};g.state.score={analysts:0,counterAnalysts:0};
-      for(const a of g.actors){a.alive=false;a.money=g.config.startMoney;a.kills=a.deaths=0;delete a.combat;}
-      g.beginRound();g.drainEvents();this.absent.clear();return;
-    }
+    if(r.classic){this.resetRound();return;}
     g.state.paused=true;g.state.score={analysts:0,counterAnalysts:0};
     g.events=[];g.soundEvents=[];g.pendingDamage=[];g.state.projectiles=[];g.state.smokes=[];g.state.grenades=[];g.state.drops=[];
     r.state.brokenGlass.clear();prepareNetworkWorld(g.world);g.tacticalContacts=[];g.state.combatFlow.firstKill=false;this.absent.clear();
@@ -95,7 +148,7 @@ export class MatchLifecycle {
     this.ownership();const s=this.state;
     if(this.continuous)return;
     if(s.phase==='countdown'){
-      if(!this.eligible()){s.phase='waiting';s.remainingSeconds=this.settings.durationSeconds;}
+      if(!this.eligible()){s.phase='waiting';s.remainingSeconds=this.lobbySeconds;}
       else if(this.now>=this.deadline){
         s.phase='active';this.deadline=this.now+this.settings.durationSeconds*1000;
         this.room.sim.game.state.paused=false;
