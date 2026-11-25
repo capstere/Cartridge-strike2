@@ -32,15 +32,22 @@ import {MatchLifecycle} from './match-lifecycle.mjs';
 import {TeamComms} from './team-comms.mjs';
 export class NetworkRoom extends Room {
   async onCreate(options) {
-    if(!validCode(options.code))throw new ServerError(400,'Use a private code of 6–64 letters, digits or hyphens.');
+    if(!this.familyRoom&&!validCode(options.code))throw new ServerError(400,'Use a private code of 6–64 letters, digits or hyphens.');
     try {checkContract(options.contract,CONTRACT);}catch(e){throw new ServerError(409,e.message);}
-    this.codeHash=hashCode(options.code);
+    if(!this.familyRoom)this.codeHash=hashCode(options.code);
     this.maxClients=ROOM_CAPACITY;this.maxMessagesPerSecond=120;this.patchRate=50;
     await this.setPrivate(true);
     this.bots=new Map();this.seats=new Map();this.lives=new Map();this.metrics={invalid:0,maxQueue:0,coalesced:0,ticks:0,events:0,reconnects:0,drops:0,backpressure:0};
-    if(options.mode!==undefined&&!['tdm','classic'].includes(options.mode))throw new ServerError(400,'Okänt spelläge.');
-    this.classic=options.mode==='classic';
-    this.sim=await createHeadlessSimulation({mapId:NETWORK_MAP,controllers:Object.fromEntries(seats.map(id=>[id,'human'])),config:this.classic?CLASSIC_NETWORK_CONFIG:NETWORK_CONFIG});
+    const settings=this.familyRoom?.settings??{
+      mode:options.mode===undefined?'tdm':options.mode,fillBots:options.fillBots!==false,
+      zombiesEnabled:options.zombies===true,dancemanEnabled:options.danceman===true,
+      friendlyFire:false,botDifficulty:DEFAULT_NETWORK_BOT_DIFFICULTY,
+    };
+    if(!['tdm','classic'].includes(settings.mode))throw new ServerError(400,'Okänt spelläge.');
+    this.classic=settings.mode==='classic';
+    const config=this.classic?CLASSIC_NETWORK_CONFIG:NETWORK_CONFIG;
+    this.sim=await createHeadlessSimulation({mapId:NETWORK_MAP,controllers:Object.fromEntries(seats.map(id=>[id,'human'])),
+      config:{...config,difficulty:settings.botDifficulty}});
     if(this.sim.sourceHash!==CONTRACT.mapHash)throw Error('Server map differs from built contract. Run npm run build --prefix server.');
     if(createHash('sha256').update(collisionContract(this.sim.game.world)).digest('hex')!==CONTRACT.collisionHash)throw Error('Server collision differs from built contract.');
     prepareNetworkWorld(this.sim.game.world);
@@ -54,18 +61,20 @@ export class NetworkRoom extends Room {
       resident.lifeStartedAt=this.clock.elapsedTime;
     };
     this.residentLife=0;
-    const zombiesEnabled=options.zombies===true,dancemanEnabled=options.danceman===true;
-    Object.assign(this.sim.game.config,{zombies:zombiesEnabled,danceman:dancemanEnabled});
-    this.state=new RoomState({zombiesEnabled,dancemanEnabled,friendlyFire:false,botDifficulty:DEFAULT_NETWORK_BOT_DIFFICULTY,
-      mode:this.classic?'classic':'tdm',round:0,fillBots:options.fillBots!==false,worldRevision:1,elevatorOpenAt:-1});
+    const {mode,fillBots,zombiesEnabled,dancemanEnabled,friendlyFire,botDifficulty}=settings;
+    Object.assign(this.sim.game.config,{zombies:zombiesEnabled,danceman:dancemanEnabled,friendlyFire});
+    this.state=new RoomState({mode,fillBots,zombiesEnabled,dancemanEnabled,friendlyFire,botDifficulty,
+      round:0,worldRevision:1,elevatorOpenAt:-1});
     for(const d of this.sim.game.world.doors.doors)this.state.doors.set(d.id,new DoorState());
     this.sim.game.onGlassBreak=id=>this.state.brokenGlass.set(id,this.clock.elapsedTime);
     this.project();
     this.lag=new LagCompensation(this);this.lag.recordTick();
-    if(this.classic){
+    if(this.classic||this.familyRoom){
       const g=this.sim.game;
-      g.beforeBeginRound=()=>prepareClassicRound(this);
-      g.afterBeginRound=()=>{g.world.networkDynamics.elevatorOpenAt=Math.max(0,g.state.buyDeadline-1.5);};
+      // beginRound commits config.mode to state.mode after preparing seats.
+      // A lobby mode change starts fresh lives but keeps queued lobby choices valid.
+      g.beforeBeginRound=()=>prepareClassicRound(this,g.state.mode===g.config.mode);
+      g.afterBeginRound=()=>{if(this.classic)g.world.networkDynamics.elevatorOpenAt=Math.max(0,g.state.buyDeadline-1.5);};
     }
     this.match=new MatchLifecycle(this,this.matchOptions);
     this.teamComms=new TeamComms(this);
@@ -75,7 +84,7 @@ export class NetworkRoom extends Room {
     // second sequence/ack counter; dropping a queued frame still advances its ack.
     this.inputs=this.defineInput(NetworkInput,{bufferMaxSize:12});
     this.onMessage('ready',(client,message)=>{
-      const seat=this.seats.get(client.sessionId);if(!seat||seat.ready)return;
+      const seat=this.seats.get(client.sessionId);if(!seat||seat.ready||!seat.connected||seat.client!==client)return;
       try{checkContract(message,CONTRACT);}catch(e){client.send('problem',e.message);client.leave(4009);return;}
       const actor=structuredClone(this.templates.get(seat.id));
       Object.assign(actor,{name:seat.name,alive:false,lifeId:this.lives.get(seat.id)||0,controlEpoch:seat.epoch,respawnAt:null});
@@ -87,6 +96,7 @@ export class NetworkRoom extends Room {
       seat.ready=true;seat.enabled=true;seat.actor=actor;seat.deadline=Infinity;
       seat.lifeStartedAt=this.clock.elapsedTime;seat.diedAtMs=0;
       if(!seat.pending)this.sim.controllers.bind(client.sessionId,actor.id);
+      if(this.familyRoom)this.match.ownership();
       this.project();
     });
     this.onMessage('controls',(client,message)=>{
@@ -135,11 +145,12 @@ export class NetworkRoom extends Room {
     this.setFixedTimestep(()=>this.fixedTick(),60);
   }
   acceptsCode(code) {
+    if(this.familyRoom)return this.familyRoom.acceptsCode(code);
     return validCode(code) && timingSafeEqual(hashCode(code), this.codeHash);
   }
   onAuth(client,options) {
     try{checkContract(options.contract,CONTRACT);}catch(e){throw new ServerError(409,e.message);}
-    if(!this.acceptsCode(options.code))throw new ServerError(403,'Incorrect private room code.');
+    if(!this.acceptsCode(options.code))throw new ServerError(403,this.familyRoom?'Incorrect family room password.':'Incorrect private room code.');
     this.chooseSeat(options.team);
     return true;
   }
@@ -232,6 +243,9 @@ export class NetworkRoom extends Room {
     this.state.actors.set(id,new ActorState({id,sessionId:client.sessionId,name:seat.name,team:actor.team}));this.fillVacancies();
   }
   fixedTick() {
+    // Colyseus can retain the room briefly for an outstanding reservation.
+    // Only actual seats (including the ordinary reconnect grace) keep its game ticking.
+    if(this.familyRoom&&!this.seats.size)return;
     this.match.beforeTick();
     const frames=new Map(),actions=new Map();this.lag.shots.clear();
     for(const client of this.clients){
@@ -371,6 +385,7 @@ export class NetworkRoom extends Room {
     seat.client=client;seat.revoked=false;client.ref.once('error',()=>{if(seat.client===client)seat.revoked=true;});seat.connected=true;seat.enabled=false;seat.epoch++;seat.actor.controlEpoch=seat.epoch;
     seat.lastSelect=seat.lastFire=seat.lastReload=seat.lastSampleTick=seat.lastShotStamp=0;seat.probe=null;seat.rtts=[];delete seat.rtt;delete seat.rttAt;
     this.inputs.get(client.sessionId).clear();if(!seat.pending)this.sim.controllers.bind(client.sessionId,seat.id);
+    if(this.familyRoom)this.match.ownership();
     this.metrics.reconnects++;this.project();
   }
   onLeave(client) {

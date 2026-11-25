@@ -2,7 +2,7 @@ import {HostageState,ActorState} from './network-schema.mjs';
 
 // Game.beginRound owns inventory carry-over, buying, objective placement and
 // round resolution. Session reservations take effect before it seats new lives.
-export function prepareClassicRound(room){
+export function prepareClassicRound(room,advanceEpoch=true){
   const game=room.sim.game;
   for(const [sid,seat] of room.seats){
     if(!seat.pending)continue;
@@ -30,7 +30,8 @@ export function prepareClassicRound(room){
   for(const seat of room.participants()){
     if(!seat.ready||seat.pending)continue;
     const a=seat.actor,sid=seat.client?.sessionId;
-    seat.epoch++;a.controlEpoch=seat.epoch;a.lifeId++;
+    if(advanceEpoch)seat.epoch++;
+    a.controlEpoch=seat.epoch;a.lifeId++;
     seat.lastSelect=seat.lastFire=seat.lastReload=seat.lastSampleTick=seat.lastShotStamp=0;
     seat.trigger=seat.aim=seat.releaseInteract=false;seat.interactUntil=0;
     a.aimAmount=0;a.aiming=false;

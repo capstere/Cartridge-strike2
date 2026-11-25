@@ -23,12 +23,17 @@ function liveSeat(seat){
 export class TeamComms {
   constructor(room){
     this.room=room;
-    this.anchors=new Set(floor5MapAnchors(room.sim.game.world,room.classic).map(anchor=>anchor.id));
+    this.refreshAnchors();
     this.requests=new WeakMap();
     this.teamRate=new Map();
     this.teamSerial=new Map();
     this.pending=[];
     this.orders=new Map();
+  }
+
+  refreshAnchors(){
+    const r=this.room;
+    this.anchors=new Set(floor5MapAnchors(r.sim.game.world,r.classic).map(anchor=>anchor.id));
   }
 
   active(){

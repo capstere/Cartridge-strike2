@@ -11,8 +11,7 @@ import '../server/register-shared.mjs';
 import {configFromEnv} from '../server/access.mjs';
 const {createLocalServer}=await import('../server/local-server.mjs');
 
-export async function startPilotFixture({testMatch}={}){
-  const host='pilot.example.test';
+export async function startPilotFixture({testMatch, familyRoom=false, host='pilot.example.test', startAuthority=createLocalServer}={}){
   const dir=await mkdtemp(join(tmpdir(),'cs2-pilot-tls-'));
   const certPath=join(dir,'cert.pem'),keyPath=join(dir,'key.pem');
   let edge,authority;
@@ -24,7 +23,7 @@ export async function startPilotFixture({testMatch}={}){
   }
   try{
     execFileSync('openssl',['req','-x509','-newkey','rsa:2048','-nodes','-days','1',
-      '-subj','/CN='+host,'-addext','subjectAltName=DNS:'+host,'-keyout',keyPath,'-out',certPath],{stdio:'ignore'});
+      '-subj','/CN='+host,'-addext','subjectAltName='+(host==='127.0.0.1'?'IP:':'DNS:')+host,'-keyout',keyPath,'-out',certPath],{stdio:'ignore'});
     const cert=await readFile(certPath);
     const publicKey=new X509Certificate(cert).publicKey.export({type:'spki',format:'der'});
     const pin=createHash('sha256').update(publicKey).digest('base64');
@@ -55,8 +54,13 @@ export async function startPilotFixture({testMatch}={}){
     await new Promise((resolve,reject)=>{edge.once('error',reject);edge.listen(0,'127.0.0.1',resolve);});
     const origin='https://'+host+':'+edge.address().port;
     const invite=randomBytes(32).toString('base64url');
-    const config=configFromEnv({CS2_PUBLIC_ORIGIN:origin,CS2_PILOT_INVITE:invite});
-    authority=await createLocalServer({...config,port:0,testMatch});
-    return {origin,invite,close,authority,args:['--host-resolver-rules=MAP '+host+' 127.0.0.1','--no-proxy-server','--ignore-certificate-errors-spki-list='+pin]};
+    const familyPassword=familyRoom?randomBytes(24).toString('base64url'):undefined;
+    const familyStateFile=familyRoom?join(dir,'family-settings.json'):undefined;
+    const config=configFromEnv({CS2_PUBLIC_ORIGIN:origin,CS2_PILOT_INVITE:invite,CS2_FAMILY_ROOM_PASSWORD:familyPassword,CS2_FAMILY_ROOM_STATE:familyStateFile});
+    const start=()=>startAuthority({...config,port:0,testMatch});
+    authority=await start();
+    return {origin,invite,familyPassword,close,get authority(){return authority;},
+      async restart(){await authority.close();authority=await start();},
+      args:['--host-resolver-rules=MAP '+host+' 127.0.0.1','--no-proxy-server','--ignore-certificate-errors-spki-list='+pin]};
   }catch(error){await close();throw error;}
 }

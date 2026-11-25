@@ -6,6 +6,9 @@ export function networkEndpoint(endpoint=globalThis.location?.origin,origin=glob
 }
 export function connectionMessage(error) {
   const message=String(error?.message||error||'');
+  if(/Incorrect family room password/i.test(message))return 'Fel lösenord till familjerummet. Kontrollera lösenordet du fick.';
+  if(/family room .*closed/i.test(message))return 'Öppna den fasta länken till familjerummet igen.';
+  if(/family room .*unavailable/i.test(message))return 'Familjerummet är tillfälligt otillgängligt. Försök igen om en stund.';
   if(/Incorrect private|AUTH_FAILED/.test(message))return 'Fel privat rumskod. Kontrollera koden med den andra spelaren.';
   if(/team is full/i.test(message))return 'Laget är fullt (5 spelare). Välj det andra laget eller automatisk lagfördelning.';
   if(/full|locked/i.test(message))return 'Rummet är fullt (10 spelare). Vänta tills någon lämnar.';

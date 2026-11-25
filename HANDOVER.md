@@ -1,5 +1,15 @@
 # Cartridge-Strike 2 handover
 
+## Permanenta familjerummet · 25 november 2026
+
+Den fasta länken öppnar `JESPERS-ROOM`. Spelarna anger serverns inbjudningskod om den efterfrågas och använder sedan det separata familjelösenordet. Första behöriga spelaren som ansluter färdigt blir värd. Om värden lämnar, eller den ordinarie återanslutningsfristen på 15 sekunder löper ut, tar en ansluten spelare över. [Fast länk](https://cs2.capstere.com/room/JESPERS-ROOM)
+
+En enda instans skapas när någon ansluter och stängs när människor och reserverade platser är borta. Spelläge, botfyllnad, botsvårighet, friendly fire, zombies och Dansmannen sparas på Pi:n. Efter omstart öppnar samma länk ett nytt väntrum med de sparade valen. Familjerummet har en egen plats utöver serverns två vanliga rum. Lösenordet ligger i `/etc/cartridge-strike2-pilot/family.env` med root-behörighet 0600. [Driftguide och lösenordsbyte](deploy/online/README.md#det-permanenta-familjerummet)
+
+Spelversion **0.18.0**, protokoll **11**, bygg-ID `4e69d28c8fc1089d83fb9e33ae481a58ed9dd5a06030f93ee9eedf07ac2227a0`. Föregående Pi-release för rollback är `d65b53bb9e0e67f2c90b77a52f9b2a960744cbb8`. Driftkvittot i PR:n anger exakt live-revision, konfigurationskopia och spelprov. Återställ med `sudo cs2-online rollback` när rummen är tomma. Lösenord och sparade inställningar ligger utanför releasen. [PR och driftkvitto](https://github.com/capstere/Cartridge-strike2/pull/39)
+
+**Nästa prov är fysiskt.** Öppna den fasta länken från ett meddelande på iPhone Safari och Android Chrome. Spela en match med två olika deltagare och prova återanslutning efter ett kort appbyte. De riktade regressionsproven finns i `server/test/family-room.test.mjs`, `server/test/family-lifecycle.test.mjs` och `tools/network-family-browser.mjs`.
+
 ## Förstapersonens armar och grepp · 25 november 2026
 
 Alla 13 utrustningsmodeller använder samma riggade händer. AR47:s stödhand följer magasinet, shotgun-handen följer pumpen och håller varje patron mellan tumme och pekfinger. Ärmarna böjs vid armbågen och möter handskens manschett även vid inspektion. Båda laguniformerna samt kompatibla sparade och registrerade karaktärer använder sina egna färger och ärmlängder. [Spela](https://cs2.capstere.com/) · [Före och efter i rörelse, material och renderingskostnad](docs/view-arms/README.md)

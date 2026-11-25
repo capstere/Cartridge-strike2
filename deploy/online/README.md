@@ -55,6 +55,47 @@ Den länken ska inte gå via `current`: driftverktyget och dess officiella SDK s
 finnas kvar även vid återställning till den äldre piloten. Tjänsterna och
 `cartridge-strike2-pilot-check.timer` ska vara enabled vid uppstart.
 
+## Det permanenta familjerummet
+
+På Jespers Pi går den fasta länken till `JESPERS-ROOM`. Serverns
+inbjudningskod öppnar spelsidan, sedan öppnar det separata familjelösenordet
+väntrummet. Dela de två koderna via en privat kanal. [Fast länk](https://cs2.capstere.com/room/JESPERS-ROOM)
+
+Familjelösenordet ligger i `/etc/cartridge-strike2-pilot/family.env`, ägt av
+root med behörighet 0600. Det finns på en rad med nyckeln
+`CS2_FAMILY_ROOM_PASSWORD`. Läs filen med
+`sudo cat /etc/cartridge-strike2-pilot/family.env` i en privat terminal.
+Använd `sudoedit /etc/cartridge-strike2-pilot/family.env` för att byta
+värdet till 24–64 tecken ur base64url. En separat slumpkod med 48 hextecken
+går att skapa med `openssl rand -hex 24`. När `sudo cs2-online status`
+visar noll rum och spelare, kör
+`sudo systemctl restart cartridge-strike2-pilot`. Öppna den fasta länken
+för att prova det nya lösenordet. Efter omstart anger spelarna
+serverns inbjudningskod igen.
+
+För första installationen läggs lösenordsfilen i samma privata
+konfigurationskatalog som `invite.env`. Installera
+`deploy/pilot/family-room.conf` som
+`/etc/systemd/system/cartridge-strike2-pilot.service.d/family-room.conf`
+och kör `sudo systemctl daemon-reload` före vanlig aktivering. Systemd skapar
+familjerummets skrivbara tillståndskatalog med behörighet 0700. Servern sparar
+spelläge, botfyllnad, botsvårighet, friendly fire och båda residentvalen i
+`/var/lib/cartridge-strike2-family-room/settings.json`. Filerna ligger utanför
+releasen. Ett rumsbyte eller en omstart skapar ett nytt väntrum med de sparade
+valen. Byt lösenord utan att redigera inställningsfilen.
+
+Den första spelaren som slutför anslutningen blir värd. Under ordinarie
+15 sekunders återanslutningsfrist kan värden återta sin plats. När platsen
+lämnas eller löper ut tar en ansluten spelare över. Värden väljer inställningar
+i väntrummet. Familjerummet har en egen plats på servern utöver de två vanliga
+rummen och startas när första behöriga spelaren ansluter. Det stängs efter
+sista spelarens frånvaro och eventuella platsreservationer.
+
+`sudo cs2-online rollback` byter till föregående revision när rummen är
+tomma. Familjens konfiguration och sparade val finns kvar på Pi:n. Om den
+föregående versionen är äldre än familjerumsfunktionen blir länken tillgänglig
+igen när en version med funktionen aktiveras.
+
 ## Stabil adress: namngiven Cloudflare Tunnel
 
 För installationen på Jespers Pi är den auktoriserade adressen

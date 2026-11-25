@@ -18,11 +18,13 @@ import { MobileControls, isTouchDevice } from './mobile-controls.mjs';
 import { PlayerRecoil } from './riposte-recoil.mjs';
 import { TacticalControls } from './tactical-controls.mjs';
 import {parseProject} from '../../furniture-editor/build/level-project.mjs?v=5.9.0';
+import {isFamilyRoomLink} from '../../shared/multiplayer/family-room.mjs';
 
 const $=id=>document.getElementById(id),testMode=new URLSearchParams(location.search).has('test');
 const networkTransport=new URLSearchParams(location.search).get('network');
 const internetMode=networkTransport==='internet';
 const networkMode=internetMode||['local','lan'].includes(networkTransport);
+const familyRoomLink=isFamilyRoomLink(location.search);
 import {sha256} from '../../shared/sha256.mjs';
 let networkSession=null,networkUi=null,onlineRoomUi=null,networkJoinGeneration=0;
 import {roomUi} from './network/room-ui.mjs';
@@ -262,14 +264,7 @@ async function joinNetwork(options){
  networkSession=session;
  try{await session.connect(options);if(session.room.state.mode==='classic')await renderer.prepareClassic();if(generation!==networkJoinGeneration){await session.dispose();throw Error('Join cancelled.');}}
  catch(e){await session.dispose();if(networkSession===session)networkSession=null;throw e;}
- game=session.view;world.networkClassic=game.state.mode==='classic';minimapCache.invalidate();setMapExpanded(false);
- setText('map-legend',world.networkClassic?'Pil · Du    Punkt · Laget    B · Bombplats    G · Gisslanstart    R · Räddningszon':'Pil · Du    Punkt · Laget');
- $('minimap').setAttribute('aria-label',world.networkClassic?'Taktisk karta med din riktning, lagkamrater, startområden och uppdragsplatser':'Taktisk karta med din riktning, lagkamrater och startområden');
- document.documentElement.classList.toggle('online-classic',world.networkClassic);
- const equipment=document.querySelector('[data-mobile-action=buy]');
- equipment.textContent=world.networkClassic?'KÖP':'UTR.';
- equipment.setAttribute('aria-label',world.networkClassic?'Öppna köpmenyn':'Välj utrustning');
- $('buy').querySelector('h2').textContent=world.networkClassic?'Köp utrustning':'Välj utrustning';
+ game=session.view;applyNetworkMode();
  team=game.team;setPrivateCharacterActors([]);modal=null;lastRound=game.state.round;lastPhase='active';spectateIndex=0;feed=[];
  yaw=game.player.yaw;pitch=game.player.pitch;for(const id of ['menu','pause','buy','match-end','scoreboard'])$(id).hidden=true;
  $('hud').hidden=false;mobile.show(true,true);audio.unlock();updateHud();
@@ -278,11 +273,30 @@ async function joinNetwork(options){
  networkPhase();
  return session;
 }
+function applyNetworkMode(){
+ world.networkClassic=game.state.mode==='classic';minimapCache.invalidate();setMapExpanded(false);
+ setText('map-legend',world.networkClassic?'Pil · Du    Punkt · Laget    B · Bombplats    G · Gisslanstart    R · Räddningszon':'Pil · Du    Punkt · Laget');
+ $('minimap').setAttribute('aria-label',world.networkClassic?'Taktisk karta med din riktning, lagkamrater, startområden och uppdragsplatser':'Taktisk karta med din riktning, lagkamrater och startområden');
+ document.documentElement.classList.toggle('online-classic',world.networkClassic);
+ const equipment=document.querySelector('[data-mobile-action=buy]');
+ equipment.textContent=world.networkClassic?'KÖP':'UTR.';
+ equipment.setAttribute('aria-label',world.networkClassic?'Öppna köpmenyn':'Välj utrustning');
+ $('buy').querySelector('h2').textContent=world.networkClassic?'Köp utrustning':'Välj utrustning';
+}
 function networkPhase(){
  if(!networkSession?.room||!game.player)return;
+ if(world.networkClassic!==(game.state.mode==='classic')){
+  applyNetworkMode();
+  if(world.networkClassic){
+   const session=networkSession;
+   renderer.prepareClassic().catch(()=>{if(networkSession===session)session.notice='Gisslanmodellen kunde inte laddas.';});
+  }
+ }
  clearInput();audio.reset();renderer.resetTransient();combatHud.reset();recoil.reset();feed=[];
  yaw=game.player.yaw;pitch=game.player.pitch;
- if(networkSession.room.state.phase==='active'){
+ const active=networkSession.room.state.phase==='active';
+ if(familyRoomLink||networkSession.familyAlias)document.documentElement.classList.toggle('cs-family-lobby',!active);
+ if(active){
   onlineRoomUi?.update(networkSession);modal=null;
   if(!testMode)showPause();else game.pause(false);
  }else{
@@ -291,7 +305,7 @@ function networkPhase(){
  }
 }
 function restartMatch(){if(networkMode){newMatch();return;}window.__csFlow?.fullscreen?.start();audio.unlock();start(team);requestMouse();}
-function newMatch(){if(networkMode)setMapExpanded(false);onlineRoomUi?.hide();if(networkSession){networkJoinGeneration++;networkSession.dispose();networkSession=null;game=new Game(world);game.network=true;lastRound=game.state.round;lastPhase=game.phase;} window.__csFlow?.fullscreen?.exit();clearInput();recoil.reset();game.pause(true);audio.reset();renderer.resetTransient();modal='menu';mobile.show(false);unlockMouse();for(const id of ['pause','buy','match-end','scoreboard','hud'])$(id).hidden=true;$('menu').hidden=false;settingsPanel('menu-settings');}
+function newMatch(){if(networkMode){setMapExpanded(false);document.documentElement.classList.toggle('cs-family-lobby',familyRoomLink);}onlineRoomUi?.hide();if(networkSession){networkJoinGeneration++;networkSession.dispose();networkSession=null;game=new Game(world);game.network=true;lastRound=game.state.round;lastPhase=game.phase;} window.__csFlow?.fullscreen?.exit();clearInput();recoil.reset();game.pause(true);audio.reset();renderer.resetTransient();modal='menu';mobile.show(false);unlockMouse();for(const id of ['pause','buy','match-end','scoreboard','hud'])$(id).hidden=true;$('menu').hidden=false;settingsPanel('menu-settings');}
 function viewActor(){if(game.player?.alive)return game.player;const alive=game.actors.filter(a=>a.alive&&a.team===game.team);return alive[spectateIndex%Math.max(1,alive.length)]||game.player;}
 function timer(value){const sec=Math.max(0,Math.ceil(value));return `${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}`;}
 function scoreboard(){

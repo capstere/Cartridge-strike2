@@ -1,5 +1,6 @@
 import {isIP} from 'node:net';
 import {pilotConfig} from './pilot-access.mjs';
+import {familyRoomConfig} from './family-room.mjs';
 
 export function privateIPv4(address) {
   if(isIP(address)!==4)return false;
@@ -7,19 +8,21 @@ export function privateIPv4(address) {
   return a===10 || a===172&&b>=16&&b<=31 || a===192&&b===168;
 }
 const loopback=ip=>ip==='::1'||ip==='127.0.0.1';
-export function hostingConfig({lan=false,host,port=2567,publicOrigin,publicOriginFile,pilotInvite}={}) {
+export function hostingConfig({lan=false,host,port=2567,publicOrigin,publicOriginFile,pilotInvite,familyPassword,familyStateFile}={}) {
   if(typeof lan!=='boolean')throw Error('LAN must be explicitly enabled.');
   if(!Number.isInteger(port)||port<0||port>65535)throw Error('PORT must be an integer between 0 and 65535.');
   host??='127.0.0.1';
   if(lan?!privateIPv4(host):host!=='127.0.0.1')throw Error(lan?
     'CS2_LAN_HOST must be the Pi\'s private IPv4 address (10.x, 172.16–31.x or 192.168.x); wildcard/public binds are disabled.':
     'Local mode binds only 127.0.0.1. Set CS2_LAN=1 and CS2_LAN_HOST explicitly to enable LAN.');
-  return {lan,host,port,...pilotConfig({lan,publicOrigin,publicOriginFile,pilotInvite})};
+  return {lan,host,port,...pilotConfig({lan,publicOrigin,publicOriginFile,pilotInvite}),
+    ...familyRoomConfig({familyPassword,familyStateFile,pilotInvite})};
 }
 export function configFromEnv(env) {
   if(env.CS2_LAN!==undefined&&!['0','1'].includes(env.CS2_LAN))throw Error('CS2_LAN must be 0 or 1.');
   if(env.PORT!==undefined&&(!/^\d+$/.test(env.PORT)||Number(env.PORT)<1))throw Error('PORT must be between 1 and 65535.');
   return hostingConfig({publicOrigin:env.CS2_PUBLIC_ORIGIN,publicOriginFile:env.CS2_PUBLIC_ORIGIN_FILE,pilotInvite:env.CS2_PILOT_INVITE,
+    familyPassword:env.CS2_FAMILY_ROOM_PASSWORD,familyStateFile:env.CS2_FAMILY_ROOM_STATE,
     lan:env.CS2_LAN==='1',host:env.CS2_LAN_HOST||undefined,port:env.PORT===undefined?2567:Number(env.PORT)});
 }
 
