@@ -6,8 +6,7 @@
 import * as T from '../../vendor/three/three.module.js';
 import {RoundedBoxGeometry} from '../../vendor/three/addons/geometries/RoundedBoxGeometry.js';
 import {mergeGeometries} from '../../vendor/three/addons/utils/BufferGeometryUtils.js';
-import {createHandMaterials} from './hand-materials.mjs';
-import {createKitHand,createKitSleeve,poseKitFingers,fitKitSleeve} from './strike-kit-hands.mjs?v=6.1.2';
+import {fitPresentationHands,poseViewHands,refitViewArms} from './presentation-hands.mjs';
 import {WEAPONS} from './config.mjs';
 import {kitWeapon,reloadPose,reloadPhase,reloadIsEmpty,smooth,envelope} from './strike-kit-timing.mjs';
 const Y=new T.Vector3(0,1,0),owned=new Set();
@@ -23,7 +22,7 @@ function materials(){
  black:mat('rubber',0x111b22,.87),polymer:mat('sand-polymer',0x8b806c,.79,.02),
  inset:mat('deep-insets',0x0b1117,.68,.15),accent:mat('safety-mark',0xdca65f,.52,.18)};
  for(const m of Object.values(palette)){m.roughnessMap=rough;m.envMapIntensity=.85;}
- Object.assign(palette,createHandMaterials(own));return palette;
+ return palette;
 }
 const group=(p,name)=>{const g=new T.Group();g.name=name;p?.add(g);return g;};
 function mesh(p,g,m,x=0,y=0,z=0){const o=new T.Mesh(g,m);o.position.set(x,y,z);o.castShadow=false;o.receiveShadow=true;p.add(o);return o;}
@@ -125,28 +124,21 @@ function carbine(root,m){
  return {weapon:gun,magazine:mag,slide:bolt,muzzle:new T.Vector3(0,.022,-.645),grip:new T.Vector3(.039,-.105,.020),support:new T.Vector3(-.010,-.047,-.358)};
 }
 
-function palmBasis(u,v,n){return new T.Quaternion().setFromRotationMatrix(new T.Matrix4().makeBasis(new T.Vector3(...u),new T.Vector3(...v),new T.Vector3(...n)));}
-const rightQ=palmBasis([0,-1,0],[0,0,-1],[1,0,0]),leftPistolQ=palmBasis([0,1,0],[0,0,-1],[-1,0,0]),leftRifleQ=palmBasis([0,0,-1],[1,0,0],[0,-1,0]);
-const RIGHT_SHOULDER=new T.Vector3(.26,-.66,.32),LEFT_SHOULDER=new T.Vector3(-.30,-.35,.14);
 export function makeKitWeapon(id){
  if(!kitWeapon(id))return null;
  const root=group(null,'weapon-'+id),m=materials(),rifle=id==='cr4',parts=rifle?carbine(root,m):pistol(root,id,m),arms=group(root,'viewmodel-arms');
- const right=createKitHand(arms,1,{material:m.glove,own}),left=createKitHand(arms,-1,{material:m.glove,own}),rightArm=createKitSleeve(arms,1,{material:m.cloth,own}),leftArm=createKitSleeve(arms,-1,{material:m.cloth,own});
- right.userData.weapon=id;left.userData.weapon=id;
- right.position.copy(parts.grip);right.quaternion.copy(rightQ);left.position.copy(parts.support);left.quaternion.copy(rifle?leftRifleQ:leftPistolQ);
- poseKitFingers(right,1,true);poseKitFingers(left,1);
- left.userData.home=left.position.clone();
- root.userData={...parts,id,viewmodel:true,heroKit:true,visualVariant:'strike-kit-authored-hands',arms,rightHand:right,leftHand:left,
-  rightArm,leftArm,magazineHome:parts.magazine.position.clone(),magazineGrip:new T.Vector3(0,rifle?-.075:-.02,0),reloadGrip:new T.Vector3(),slideHome:parts.slide.position.clone(),
+ root.userData={...parts,id,viewmodel:true,heroKit:true,visualVariant:'strike-kit-authored-hands',arms,
+  magazineHome:parts.magazine.position.clone(),magazineGrip:new T.Vector3(0,rifle?-.075:-.02,0),slideHome:parts.slide.position.clone(),
   viewSurfaces:{materials:8,kind:'new-authored-geometry-and-skinned-hands'},emptyReload:false,reloadToken:0,
   authored:'Original fictional game art. Not a real-weapon CAD model.'};
+ fitPresentationHands(root);
  animateKitWeapon(root,{alive:true,weapon:id,moving:0,reloadUntil:0,onGround:true},1,.016,{});return root;
 }
 export function animateKitWeapon(model,actor,time,dt,{shotAt=-Infinity,switchAt=-Infinity,reducedMotion=false,recoil=0}={}){
  const d=model.userData,rifle=d.id==='cr4',duration=WEAPONS[d.id].reload,reloading=actor.reloadUntil>time,p=reloadPhase(actor,d.id,time,duration);
  if(reloading&&d.reloadToken!==actor.reloadUntil){d.reloadToken=actor.reloadUntil;d.emptyReload=reloadIsEmpty(actor,d.id);}
  if(!reloading)d.reloadToken=0;
- const pose=reloadPose(p,{empty:d.emptyReload,rifle}),k=reloading?pose.lift:0;
+ const pose=reloadPose(p,{empty:d.emptyReload,rifle});
  const shotAge=time-shotAt,shot=shotAge>=0&&shotAge<.18?Math.exp(-shotAge*30):0;
  const swap=1-smooth((time-switchAt)/.30),speed=Math.min(1,(actor.moving||0)/4.2),stride=(actor.distanceWalked||0)*8;
  model.position.set(rifle?.205:.17,(rifle?-.17:-.14)-swap*.23,rifle?-.64:-.54);
@@ -158,19 +150,10 @@ export function animateKitWeapon(model,actor,time,dt,{shotAt=-Infinity,switchAt=
  d.magazine.position.copy(d.magazineHome);d.magazine.rotation.set(0,0,0);d.magazine.visible=true;
  if(reloading){d.magazine.position.add(new T.Vector3(...pose.magPosition));d.magazine.rotation.set(...pose.magRotation);d.magazine.visible=!pose.hidden;}
  d.slide.position.copy(d.slideHome);d.slide.position.z+=shot*.036+(reloading&&d.emptyReload?pose.action*.033:0);
- d.leftHand.position.copy(d.support);d.leftHand.quaternion.copy(rifle?leftRifleQ:leftPistolQ);
- d.magazine.updateMatrix();d.reloadGrip.copy(d.magazineGrip).applyMatrix4(d.magazine.matrix);d.reloadGrip.x-=.029;
- if(reloading){
-  d.leftHand.position.lerp(d.reloadGrip,pose.grip);
-  d.leftHand.quaternion.slerp(leftPistolQ,pose.grip);
-  if(pose.action>0){const boltGrip=new T.Vector3(-.032,.060,rifle?.034:.015);d.leftHand.position.lerp(boltGrip,pose.action);}
- }
- const curl=reloading&&p>.41&&p<.49?.50:1;poseKitFingers(d.leftHand,curl);poseKitFingers(d.rightHand,1,true);
- // A small trigger curl reacts only to confirmed shot events; never changes aim.
- {const b=d.rightHand.userData.fingers[0][1],u=b.userData;u.bend.setFromAxisAngle(u.flexAxis,u.curl-shot*.20);b.quaternion.copy(u.rest).multiply(u.bend);}
- fitKitSleeve(d.rightArm,d.rightHand,RIGHT_SHOULDER);
- fitKitSleeve(d.leftArm,d.leftHand,LEFT_SHOULDER);
- model.updateMatrixWorld(true);d.leftHand.userData.skin.skeleton.update();d.rightHand.userData.skin.skeleton.update();
+ const release=reloading?envelope(p,.40,.43,.47,.50):0;
+ poseViewHands(model,pose.grip,pose.action,shot,release);
+ if(!d.presentationMotion)refitViewArms(model);
+ model.updateMatrixWorld(true);
  d.kitPose={progress:p,empty:d.emptyReload,reloading,magazineHidden:!d.magazine.visible};
  return {muzzle:model.localToWorld(d.muzzle.clone()),reloading};
 }

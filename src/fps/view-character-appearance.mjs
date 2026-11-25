@@ -43,36 +43,39 @@ export function createPrivateViewAppearance(asset){
  const sleeve=new T.MeshStandardMaterial({map,roughnessMap,roughness:1,metalness:0});
  glove.name='private-character-hands';sleeve.name='private-character-short-sleeves';for(const m of [glove,sleeve])m.userData.sharedWeapon=true;
  let disposed=false;
- return {glove,sleeve,skin:skin.toArray(),cloth:cloth.toArray(),dispose(){if(disposed)return;disposed=true;glove.dispose();sleeve.dispose();map.dispose();roughnessMap.dispose();}};
+ return {glove,sleeve,shortSleeves:true,skin:skin.toArray(),cloth:cloth.toArray(),dispose(){if(disposed)return;disposed=true;glove.dispose();sleeve.dispose();map.dispose();roughnessMap.dispose();}};
 }
 export function syncWeaponAppearance(model,profile){
- if(!model.userData.viewmodel)return;
- let state=model.userData.characterAppearance;
- if(!state&&!profile||state?.profile===profile)return;
- if(!state){
-  const targets=[],d=model.userData,add=(mesh,role)=>targets.push({mesh,role,material:mesh.material,uv:mesh.geometry.attributes.uv,visible:mesh.visible});
-  if(d.heroKit){for(const hand of [d.rightHand,d.leftHand])add(hand.userData.skin,'hand');for(const arm of [d.rightArm,d.leftArm])add(arm,'kit-sleeve');}
-  else{
-   for(const hand of Object.values(d.presentationHands||{}))hand?.traverse(o=>{if(o.isMesh)add(o,'hand');});
-   d.arms?.traverse(o=>{if(o.isMesh&&o.material?.userData.privateViewRole)add(o,o.material.userData.privateViewRole);});
-  }
-  state=model.userData.characterAppearance={profile:null,targets};
+ const d = model.userData;
+ if (!d.viewmodel || d.characterAppearance?.profile === profile || (!d.characterAppearance && !profile)) return;
+ if (!d.characterAppearance) {
+   const targets = [
+     [d.rightHand.userData.skin,'hand'], [d.leftHand.userData.skin,'hand'],
+     [d.rightArm,'kit-sleeve'], [d.leftArm,'kit-sleeve']
+   ].map(([mesh,role]) => ({mesh,role,material:mesh.material,uv:mesh.geometry.attributes.uv,visible:mesh.visible}));
+   d.characterAppearance = {targets,profile:null};
  }
- for(const item of state.targets){const {mesh,role}=item;
-  mesh.material=profile?(role==='hand'?profile.glove:profile.sleeve):item.material;
-  mesh.visible=item.visible;
-  // Keep the legacy wrist connector: hiding it leaves a gap at the glove.
-  if(role==='cuff'){
-   if(profile&&!item.privateUV){item.privateUV=item.uv.clone();for(let i=0;i<item.privateUV.count;i++)item.privateUV.setXY(i,.5,1);}
-   mesh.geometry.setAttribute('uv',profile?item.privateUV:item.uv);
-  }
-  if(role==='kit-sleeve'){
-   if(profile&&!item.privateUV){item.privateUV=item.uv.clone();for(let i=0;i<item.privateUV.count;i++)item.privateUV.setXY(i,.5,1-item.uv.getY(i)/6);}
-   mesh.geometry.setAttribute('uv',profile?item.privateUV:item.uv);
-   mesh.userData.privateShortSleeves=!!profile&&profile.shortSleeves!==false;mesh.userData.last.fill(NaN);
-  }
+ const short = !!profile?.shortSleeves;
+ for (const item of d.characterAppearance.targets) {
+   const {mesh,role} = item;
+   mesh.material = profile ? (role === 'hand' ? profile.glove : profile.sleeve) : item.material;
+   if (profile?.useRigFinish && !mesh.material.normalMap) {
+     // The issued jacket and gloves use the actor's dye with the view rig's
+     // close-up stitching and weave. All weapons share this profile.
+     for (const name of ['map','normalMap','roughnessMap']) mesh.material[name] = item.material[name];
+     mesh.material.normalScale.copy(item.material.normalScale);
+     mesh.material.needsUpdate = true;
+   }
+   if (role === 'hand') continue;
+   if (short && !item.privateUV) {
+     item.privateUV = item.uv.clone();
+     for (let i=0; i<item.uv.count; i++) item.privateUV.setXY(i,.5,1-item.uv.getY(i)/6);
+   }
+   mesh.geometry.setAttribute('uv',short ? item.privateUV : item.uv);
+   mesh.userData.privateShortSleeves = short;
+   mesh.userData.last.fill(NaN);
  }
- state.profile=profile;
+ d.characterAppearance.profile = profile;
 }
 
 /** Long- and short-sleeved exported designs share their actual material colours. */
@@ -80,7 +83,7 @@ export function createRuntimeViewAppearance(asset,{shortSleeves=false}={}){
  let shirt,hand,skin;asset.scene.traverse(o=>{if(!o.isMesh)return;const ms=Array.isArray(o.material)?o.material:[o.material];for(const m of ms){if(m.name==='jacket-fabric')shirt=m;if(m.name==='gloves-leather')hand=m;if(m.name==='face-skin')skin=m;}});
  if(!shirt||!hand||!skin)throw Error('Spelkaraktären saknar hand-/ärmmaterial.');
  // A short-sleeved export needs vertex/atlas matching; reuse its verified reader.
- if(shortSleeves){const p=createPrivateViewAppearance(asset);p.shortSleeves=true;return p;}
+ if(shortSleeves)return createPrivateViewAppearance(asset);
  const cloth=textureColor(shirt,.005,.005),glove=hand.clone(),sleeve=new T.MeshStandardMaterial({color:cloth,roughness:shirt.roughness,metalness:shirt.metalness});
  glove.name='runtime-character-hands';sleeve.name='runtime-character-long-sleeves';for(const m of [glove,sleeve]){delete m.userData.ownedTexture;m.userData.sharedWeapon=true;}
  return {glove,sleeve,shortSleeves:false,cloth:cloth.toArray(),skin:skin.color.toArray(),dispose(){glove.dispose();sleeve.dispose();}};

@@ -6,7 +6,7 @@ export const CONTRACT = Object.freeze({
   "collisionHash": "a5351e073a01ac95466acf4346acf9812f4265224e56712ce3e889085a42b6d9",
   "mapHash": "89283f437623457a10da37be29a282a41591f202270051ba940549ba01b4b050",
   "configHash": "15061666d57e0544c10555844ec7ed8cc549a6faa783296fddb6d389cf90f8a8",
-  "buildHash": "801c1f926936855e670d958da1c63d1d433e0894fcef28df6873c593cca11bb1",
+  "buildHash": "81a46070f94ce2030a3f61d7bc589b1e1ceab896463b0c9391c9cdfca91565be",
   "tickRate": 60,
   "patchMs": 50
 });

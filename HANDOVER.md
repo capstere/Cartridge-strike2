@@ -1,8 +1,18 @@
 # Cartridge-Strike 2 handover
 
-## Aktiv release på Pi:n · kvalitetsgranskning 22 november 2026
+## Förstapersonens armar och grepp · 25 november 2026
 
-[Onlinespelet](https://cs2.capstere.com) kör `d14eed3725b4428fa61cdaa743f6543c8394e661`, spelversion 0.18.0, protokoll **11**, bygg `801c1f926936855e670d958da1c63d1d433e0894fcef28df6873c593cca11bb1`. Återställningsrelease `d8e780acae2d9998b2e2cf0d7f719e0c958b0fb9`, konfigurationskopia `20261122T145255858184Z`. Separat GitHub Pages-kontroll gav samma bygge.
+Alla 13 utrustningsmodeller använder samma riggade händer. AR47:s stödhand följer magasinet, shotgun-handen följer pumpen och håller varje patron mellan tumme och pekfinger. Ärmarna böjs vid armbågen och möter handskens manschett även vid inspektion. Båda laguniformerna samt kompatibla sparade och registrerade karaktärer använder sina egna färger och ärmlängder. [Spela](https://cs2.capstere.com/) · [Före och efter i rörelse, material och renderingskostnad](docs/view-arms/README.md)
+
+Releasen har spelversion **0.18.0**, protokoll **11** och bygg-ID `81a46070f94ce2030a3f61d7bc589b1e1ceab896463b0c9391c9cdfca91565be`. Föregående fungerande Pi-release är `d14eed3725b4428fa61cdaa743f6543c8394e661`. Driftkvittot i PR:n anger aktiverad revision, konfigurationskopia och resultat från spelprovet på domänen. Återställ med `sudo cs2-online rollback` när rummen är tomma. [Granskning och driftkvitto](https://github.com/capstere/Cartridge-strike2/pull/38) · [Driftguide](deploy/online/README.md)
+
+I C08 gick AR47 från 21 till 16 ritanrop och shotgun från 20 till 15. Båda fick 2 316 fler trianglar i förstapersonspasset. Alla 13 föremålens vapenytor, tredjepersonsmodeller och rörliga vapendelar matchade baslinjen. [Granskad spelkod](https://github.com/capstere/Cartridge-strike2/commit/307b3fa3ead66267260ed09a0cd6d43cfb6ec740)
+
+**Nästa prov är fysiskt.** Spela AR47 och shotgun på iPhone och Android i liggande läge. Kontrollera greppet genom en hel omladdning och under löpande inspektion. Här provades 844 × 390 och 932 × 430 med emulerad touch i Chromium på Pi 5. P9:s stödarm skymmer kort en del av manteln vid tomomladdning. Raketkastarens kropp skymmer delar av stödhanden längst bak i omladdningen.
+
+## Föregående release på Pi:n · kvalitetsgranskning 22 november 2026
+
+Den 22 november körde [onlinespelet](https://cs2.capstere.com) `d14eed3725b4428fa61cdaa743f6543c8394e661`, spelversion 0.18.0, protokoll **11**, bygg `801c1f926936855e670d958da1c63d1d433e0894fcef28df6873c593cca11bb1`. Återställningsrelease `d8e780acae2d9998b2e2cf0d7f719e0c958b0fb9`, konfigurationskopia `20261122T145255858184Z`. Separat GitHub Pages-kontroll gav samma bygge.
 
 - [#34](https://github.com/capstere/Cartridge-strike2/pull/34) rättade målremsan som överlappade kontrollområdet i offline Endless. [#35](https://github.com/capstere/Cartridge-strike2/pull/35) låter en Classic-överlevare slutföra omladdningen under köpperioden. [#36](https://github.com/capstere/Cartridge-strike2/pull/36) minskade pausen i en redan pågående match när ytterligare ett rum skapas. Alla tre är mergade med oberoende granskning och 7/7 godkända slutjobb vardera.
 - I två jämförbara Pi-prov minskade den befintliga klientens patchgap från 2,89–2,98 s till 0,97–0,99 s. Ett kallt första rum tar fortfarande drygt tre sekunder. Botvägval sammanföll med separata långa tickar. Sen radio och raketljud reproducerades med två samtidiga mjukvarurenderare.

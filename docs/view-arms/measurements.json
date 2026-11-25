@@ -1,0 +1,489 @@
+{
+  "camera": "Floor 5 C08, seed 42",
+  "devices": {
+    "desktop": {
+      "viewport": [
+        1280,
+        720
+      ],
+      "buffer": [
+        1088,
+        612
+      ],
+      "gpu": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "mobile": false,
+      "graphics": "low",
+      "level": "Unit 05"
+    },
+    "touch": {
+      "viewport": [
+        844,
+        390
+      ],
+      "buffer": [
+        658,
+        304
+      ],
+      "gpu": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "mobile": true,
+      "graphics": "low",
+      "level": "Unit 05"
+    },
+    "wide": {
+      "viewport": [
+        932,
+        430
+      ],
+      "buffer": [
+        726,
+        335
+      ],
+      "gpu": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "mobile": true,
+      "graphics": "low",
+      "level": "Unit 05"
+    }
+  },
+  "idle": {
+    "ar47": {
+      "before": {
+        "calls": 21,
+        "triangles": 6918
+      },
+      "after": {
+        "calls": 16,
+        "triangles": 9234
+      }
+    },
+    "shotgun": {
+      "before": {
+        "calls": 20,
+        "triangles": 6542
+      },
+      "after": {
+        "calls": 15,
+        "triangles": 8858
+      }
+    },
+    "p9": {
+      "before": {
+        "calls": 17,
+        "triangles": 46220
+      },
+      "after": {
+        "calls": 17,
+        "triangles": 35696
+      }
+    },
+    "p12": {
+      "before": {
+        "calls": 17,
+        "triangles": 46220
+      },
+      "after": {
+        "calls": 17,
+        "triangles": 35696
+      }
+    },
+    "cr4": {
+      "before": {
+        "calls": 17,
+        "triangles": 40808
+      },
+      "after": {
+        "calls": 17,
+        "triangles": 30284
+      }
+    },
+    "smg": {
+      "before": {
+        "calls": 19,
+        "triangles": 8406
+      },
+      "after": {
+        "calls": 14,
+        "triangles": 10722
+      }
+    },
+    "sniper": {
+      "before": {
+        "calls": 19,
+        "triangles": 6330
+      },
+      "after": {
+        "calls": 14,
+        "triangles": 8646
+      }
+    },
+    "bazooka": {
+      "before": {
+        "calls": 15,
+        "triangles": 7364
+      },
+      "after": {
+        "calls": 9,
+        "triangles": 9540
+      }
+    },
+    "knife": {
+      "before": {
+        "calls": 14,
+        "triangles": 4356
+      },
+      "after": {
+        "calls": 8,
+        "triangles": 6532
+      }
+    },
+    "he": {
+      "before": {
+        "calls": 15,
+        "triangles": 4476
+      },
+      "after": {
+        "calls": 9,
+        "triangles": 6652
+      }
+    },
+    "flash": {
+      "before": {
+        "calls": 15,
+        "triangles": 4476
+      },
+      "after": {
+        "calls": 9,
+        "triangles": 6652
+      }
+    },
+    "smoke": {
+      "before": {
+        "calls": 15,
+        "triangles": 4476
+      },
+      "after": {
+        "calls": 9,
+        "triangles": 6652
+      }
+    },
+    "bomb": {
+      "before": {
+        "calls": 29,
+        "triangles": 6044
+      },
+      "after": {
+        "calls": 23,
+        "triangles": 8220
+      }
+    }
+  },
+  "reloadPoseCpuUs": {
+    "ar47": {
+      "before": {
+        "median": 13.33,
+        "blockMeans": [
+          21.67,
+          20.83,
+          15.83,
+          14.17,
+          12.5,
+          12.5,
+          11.67,
+          13.33,
+          12.5
+        ]
+      },
+      "after": {
+        "median": 365.0,
+        "blockMeans": [
+          375.83,
+          372.5,
+          365.0,
+          363.33,
+          374.17,
+          369.17,
+          364.17,
+          363.33,
+          364.17
+        ]
+      }
+    },
+    "shotgun": {
+      "before": {
+        "median": 13.33,
+        "blockMeans": [
+          18.33,
+          23.33,
+          15.0,
+          15.83,
+          13.33,
+          12.5,
+          12.5,
+          12.5,
+          12.5
+        ]
+      },
+      "after": {
+        "median": 361.67,
+        "blockMeans": [
+          367.5,
+          369.17,
+          360.0,
+          365.83,
+          361.67,
+          360.0,
+          361.67,
+          360.0,
+          360.83
+        ]
+      }
+    },
+    "p9": {
+      "before": {
+        "median": 251.67,
+        "blockMeans": [
+          257.5,
+          254.17,
+          253.33,
+          251.67,
+          251.67,
+          250,
+          250.83,
+          250.83,
+          250.83
+        ]
+      },
+      "after": {
+        "median": 380.0,
+        "blockMeans": [
+          394.17,
+          386.67,
+          380.83,
+          379.17,
+          378.33,
+          379.17,
+          385.0,
+          380.0,
+          377.5
+        ]
+      }
+    },
+    "cr4": {
+      "before": {
+        "median": 251.67,
+        "blockMeans": [
+          257.5,
+          255.0,
+          252.5,
+          250.83,
+          251.67,
+          250.83,
+          250,
+          251.67,
+          250.83
+        ]
+      },
+      "after": {
+        "median": 365.0,
+        "blockMeans": [
+          378.33,
+          365.0,
+          363.33,
+          365.0,
+          363.33,
+          364.17,
+          365.0,
+          363.33,
+          370.0
+        ]
+      }
+    }
+  },
+  "appearance": {
+    "short": {
+      "before": {
+        "private": true,
+        "role": false,
+        "matchedHands": 6,
+        "sourceGlove": [
+          0.045,
+          0.052,
+          0.055
+        ],
+        "sourceFace": [
+          0.8069522576650873,
+          0.6375968739867731,
+          0.48514994004665124
+        ],
+        "sourceShirt": [
+          0.015996293361446288,
+          0.05612849004241121,
+          0.11193242782769693
+        ],
+        "glove": [
+          0.045,
+          0.052,
+          0.055
+        ],
+        "skin": [
+          0.8069522380828857,
+          0.637596845626831,
+          0.48514994978904724
+        ],
+        "cloth": [
+          0.015996293361446288,
+          0.05612849004241121,
+          0.11193242782769693
+        ],
+        "shortSleeves": true
+      },
+      "after": {
+        "private": true,
+        "role": false,
+        "matchedHands": 2,
+        "sourceGlove": [
+          0.045,
+          0.052,
+          0.055
+        ],
+        "sourceFace": [
+          0.8069522576650873,
+          0.6375968739867731,
+          0.48514994004665124
+        ],
+        "sourceShirt": [
+          0.015996293361446288,
+          0.05612849004241121,
+          0.11193242782769693
+        ],
+        "glove": [
+          0.045,
+          0.052,
+          0.055
+        ],
+        "skin": [
+          0.8069522380828857,
+          0.637596845626831,
+          0.48514994978904724
+        ],
+        "cloth": [
+          0.015996293361446288,
+          0.05612849004241121,
+          0.11193242782769693
+        ],
+        "shortSleeves": true,
+        "fixtureSHA256": "258a33a34d81ee2c24e272e55c3564498237bd76c47e30163fdc52727ced51a6"
+      }
+    },
+    "long": {
+      "before": {
+        "private": false,
+        "role": true,
+        "matchedHands": 6,
+        "sourceGlove": [
+          0.045,
+          0.052,
+          0.055
+        ],
+        "sourceFace": [
+          0.8069522576650873,
+          0.6375968739867731,
+          0.48514994004665124
+        ],
+        "sourceShirt": [
+          0.015996293361446288,
+          0.05612849004241121,
+          0.11193242782769693
+        ],
+        "glove": [
+          0.045,
+          0.052,
+          0.055
+        ],
+        "skin": [
+          0.8069522576650873,
+          0.6375968739867731,
+          0.48514994004665124
+        ],
+        "cloth": [
+          0.015996293361446288,
+          0.05612849004241121,
+          0.11193242782769693
+        ],
+        "shortSleeves": false
+      },
+      "after": {
+        "private": false,
+        "role": true,
+        "matchedHands": 2,
+        "sourceGlove": [
+          0.045,
+          0.052,
+          0.055
+        ],
+        "sourceFace": [
+          0.8069522576650873,
+          0.6375968739867731,
+          0.48514994004665124
+        ],
+        "sourceShirt": [
+          0.015996293361446288,
+          0.05612849004241121,
+          0.11193242782769693
+        ],
+        "glove": [
+          0.045,
+          0.052,
+          0.055
+        ],
+        "skin": [
+          0.8069522576650873,
+          0.6375968739867731,
+          0.48514994004665124
+        ],
+        "cloth": [
+          0.015996293361446288,
+          0.05612849004241121,
+          0.11193242782769693
+        ],
+        "shortSleeves": false,
+        "fixtureSHA256": "1dbfd5631306231845e1c07c4d7dba6df7373100b507f449d9c7b48586570b17"
+      }
+    },
+    "counters": {
+      "before": {
+        "team": "counterAnalysts",
+        "sourceShirt": "9b967c",
+        "sourceGlove": "3c4042"
+      },
+      "after": {
+        "team": "counterAnalysts",
+        "sourceShirt": "9b967c",
+        "sourceGlove": "3c4042",
+        "sleeve": "9b967c",
+        "glove": "3c4042"
+      }
+    }
+  },
+  "backgroundChecks": {
+    "desktop": 65,
+    "touch": 65
+  },
+  "sprintInspection": {
+    "before": {
+      "elapsed": 0.36666666666666664,
+      "yawRate": -3,
+      "yaw": -2.3,
+      "speed": 4.200000000000001,
+      "height": 720,
+      "highestShoulderY": null
+    },
+    "after": {
+      "elapsed": 0.36666666666666664,
+      "yawRate": -3,
+      "yaw": -2.3,
+      "speed": 4.200000000000001,
+      "height": 720,
+      "highestShoulderY": 740.0940763383236
+    }
+  }
+}
