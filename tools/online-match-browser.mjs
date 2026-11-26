@@ -103,7 +103,8 @@ try{
  async function fireUntil(check,label){
   const end=performance.now()+30000;
   while(!await check()){
-   assert(performance.now()<end,label);const snapshot=await readHost();if(snapshot.phase!=='active')break;
+   assert(performance.now()<end,label);const snapshot=await readHost();
+   if(snapshot.phase!=='active'){assert(await check(),label);return;}
    const a=snapshot.players.find(p=>p.team==='analysts'),b=snapshot.players.find(p=>p.team==='counterAnalysts');
    if(!a.alive||!b.alive||b.time<b.protectedUntil){await delay(100);continue;}
    if(a.ammo===0){await host.keyboard.press('r');await delay(1800);continue;}
@@ -126,13 +127,21 @@ try{
  await host.screenshot({path:output+'/results.png'});
  const scoreResult=JSON.parse(score.results);assert.equal(scoreResult.winner,'analysts');assert.equal(scoreResult.reason,'score');assert.equal(scoreResult.score.analysts,2);
  assert.equal(scoreResult.players.find(a=>a.team==='counterAnalysts').deaths,2);
- // Short authoritative clock settings only in this in-process fixture.
- r.match.settings.durationSeconds=8;r.match.settings.scoreTarget=50;r.state.durationSeconds=8;r.state.scoreTarget=50;
+ // Let combat and reload complete before expiring this isolated match clock.
+ // This avoids consuming the reload window while two browsers render.
+ r.match.settings.durationSeconds=45;r.match.settings.scoreTarget=50;r.state.durationSeconds=45;r.state.scoreTarget=50;
  await host.locator('#room-rematch').click();await until(async()=> (await readFriend()).phase==='waiting','same-room lobby');
  await readyAndStart(host,friend);assert.equal((await readHost()).room,roomId);
  progress('second match active');
  await fireUntil(async()=> (await readHost()).players.find(a=>a.team==='analysts').kills===1,'rematch damage and score');
- await host.keyboard.press('r');await until(async()=> (await readHost()).players.find(a=>a.team==='analysts').ammo===30,'reload');
+ const magazine=snapshot=>snapshot.players.find(a=>a.team==='analysts').ammo;
+ assert(magazine(await readHost())<30,'the rematch kill consumed ammunition');
+ await host.keyboard.press('r');
+ await until(async()=>{
+   const snapshot=await readHost();
+   return snapshot.phase==='active'&&magazine(snapshot)===30;
+ },'reload during the rematch');
+ r.match.deadline=r.clock.elapsedTime;
  await until(async()=> (await readHost()).phase==='results','time-limit victory');
  await until(async()=> (await readFriend()).results===(await readHost()).results,'same time result');
  progress('time-limit result');

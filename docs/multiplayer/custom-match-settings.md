@@ -30,4 +30,6 @@ Rollbackprovet körde den äldre installerade koden med en separat v1-fil. Den k
 
 I ett separat prov lät två SDK-klienter Compact Arena gå hela den valda tiden med noll botar utan att ändra serverklockan. Båda fick resultatet oavgjort efter 180,07 sekunders uppmätt speltid. [Tidsgräns i realtid](custom-match-settings/natural-match.json)
 
+Vid omkörningen av Floor 5-regressionen i dokumentations-PR:n hann den korta testmatchen ta slut innan omladdningen blev klar. Provet väntar nu på en bekräftad omladdning medan matchen är aktiv och låter sedan serverns ordinarie resultathantering avsluta tidsmatchen.
+
 Via den publika familjelänken startade en emulerad touchklient på Compact Arena med tre minuter, tio kills och två botar hos Analysts samt tre hos Counter Analysts. Servern bekräftade skotten. Värden öppnade familjerummet igen med samma val, återställde familjens tidigare inställningar och lämnade. Servern hade noll öppna rum före bytet och efter provet. [Publikt familjeprov](custom-match-settings/live.json) · [Spelbild från liveprovet](custom-match-settings/live-compact.jpg) · [Aktivering och Floor 5-verifiering](custom-match-settings/activation.json)
