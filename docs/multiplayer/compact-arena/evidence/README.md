@@ -4,6 +4,8 @@ Alla fyra matcherna gick till slutsignal. Den lokala mätversionen `7c73b3bfe621
 
 [Strid, utslagning och återkomst med nio botar, 12,8 s](compact-arena.mp4) · [Från Blue Intake genom Pulse Chamber till Cryogenics, 18,0 s](compact-runda.mp4) · [Väntrummet](compact-lobby.jpg) · [Desktop](desktop-game.jpg) · [Pixel 7-emulering](mobile-game.jpg) · [Expanderad taktisk karta](compact-map.jpg)
 
+Den 26 november 2026 aktiverades revision `75feffd9360da2380098bfea18f60df12713feff` medan rummen var tomma. Två officiella SDK-klienter verifierade Floor 5 via den publika domänen. På familjelänken startade en renderad klient och nio botar en match på Compact Arena. Manuell touch-eld sänkte magasinet från 30 till 28 på servern. Familjerummet öppnade samma karta vid nästa besök och de sju tidigare inställningarna återställdes. [Aktiveringsprovet](activation.json) · [Publikt spelprov](live.json) · [Skärmbild från familjematchen](live-compact.jpg)
+
 | Bana och klient | Människoplatser + botar | Bildintervall, median/p95 | Ritanrop, median/p95 | Tickarbete, median/p95 | Tickintervall, median/p95 |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | [Compact, mobil](mobile.json) | 2 + 0 | 18,8 / 25,8 ms | 208 / 209 | 0,57 / 1,58 ms | 16,27 / 20,24 ms |
@@ -18,6 +20,10 @@ Familjematchen med en spelare och nio botar slutade 12–14. Desktopklienten bek
 Värden bytte efter omspel Floor 5 → Compact → Floor 5 → Compact i samma familjelobby. På Floor 5 upprepades 358 geometrier och 124 texturer i båda besöken. På Compact upprepades 153 geometrier och 66 texturer. Vid vart och ett av de fyra mättillfällena återstod exakt en nåbar och aktiv renderare efter skräpinsamling. En skadad nivåfil stoppade inträdet innan spel och frigjorde platsen. Samma familjelänk öppnade rätt karta när filen kunde hämtas igen.
 
 Med nio botar tog 0 av 605 tickar på Compact mer än 33 ms. Högsta tickarbete var 14,78 ms. En av 604 intervall mellan tickstarter var längre än 33 ms. På Floor 5 nådde tickarbetet 45,35 ms i motsvarande prov. [Compact](desktop.json) · [Floor 5](floor.json)
+
+Med `FPS_MAP_CASE=desktop FPS_MAP_SWITCH_PAIRS=8` växlade samma klient 16 gånger. Efter varje byte kunde Chromium nå exakt en renderare. Vid det sista bytet hade 17 av 18 skapade renderare frigjorts genom `dispose`. Geometrier, texturer och shaderprogram höll samma antal vid alla åtta återbesök per karta. Kartbytena tog 3,56–4,68 s till Compact och 8,45–8,71 s till Floor 5. [Samtliga 16 byten](stress.json)
+
+Två separat inloggade Chromium-fönster spelade tre matcher utan botar. Båda renderade Compact Arena, det ena med tangentbord och mus och det andra med emulerad touch. För att pröva själva striden placerades spelarna inom sikt i Pulse Chamber. Båda såg samma slutresultat, 2–0 vid poänggränsen och därefter 1–0 och 0–0 vid tidsgränsen. Skott, död, återuppståndelse, omladdning, omspel och värdbyte passerade. Det första försöket utan synligt fönster nådde väntrummet och fick timeout vid Fortsätt. Det godkända provet använde Pi:ns EGL-drivrutin med synliga fönster. Kör `FPS_MATCH_MAP=compact-arena node tools/online-match-browser.mjs` med Pi-inställningarna nedan. [Duell med två renderade klienter](duel.json)
 
 Den andra filmen följer en vanlig spelare med tangentbord och mus, från Blue Intake genom West Lock och Pulse Chamber till Cryogenics. De tre SDK-medspelarna stod kvar. Turen kördes i en extra match med samma spelbygge och `FPS_MAP_CASE=four FPS_MAP_TOUR=1`; bara testverktyget hade ett extra inspelningsval. [Turens spelkvitto](tour.json)
 

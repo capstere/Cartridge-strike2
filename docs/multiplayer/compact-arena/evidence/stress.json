@@ -1,0 +1,632 @@
+{
+  "scenario": "desktop",
+  "map": "compact-arena",
+  "physicalPhone": false,
+  "transport": "TLS loopback",
+  "date": "2026-11-26T20:26:35.941Z",
+  "revision": "0f6b22de5c3dc65eb609f10e48d069ec373e49b9",
+  "buildHash": "09cc3fcc2f9ea016674b5b66be65716f0cf21c0df6deb432cff2f323717192a7",
+  "manifestHash": "c86db35051783befe7b19801e4b442fe9677c3916d6aba79178d60fa501d8e40",
+  "cpu": "Cortex-A76",
+  "arch": "arm64",
+  "os": "linux",
+  "node": "v26.13.0",
+  "model": "Raspberry Pi 5 Model B Rev 1.1",
+  "warmupMs": 3000,
+  "windowMs": 10000,
+  "scheduledSeconds": 45,
+  "scoreTarget": 150,
+  "args": [
+    "--use-angle=gl-egl",
+    "--ignore-gpu-blocklist",
+    "--enable-unsafe-swiftshader",
+    "--disable-renderer-backgrounding",
+    "--disable-background-timer-throttling",
+    "--disable-backgrounding-occluded-windows",
+    "--host-resolver-rules=MAP 127.0.0.1 127.0.0.1",
+    "--no-proxy-server",
+    "--ozone-platform=wayland"
+  ],
+  "renderedClients": 1,
+  "sdkPeers": 0,
+  "phaseLog": [
+    {
+      "step": "enter waiting room",
+      "elapsedMs": 6475
+    },
+    {
+      "step": "load compact-arena",
+      "elapsedMs": 33459
+    },
+    {
+      "step": "start match",
+      "elapsedMs": 38295
+    },
+    {
+      "step": "measure active game",
+      "elapsedMs": 44375
+    },
+    {
+      "step": "record gameplay",
+      "elapsedMs": 54662
+    },
+    {
+      "step": "finish match",
+      "elapsedMs": 68773
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 85180
+    },
+    {
+      "step": "switch compact-arena",
+      "elapsedMs": 94313
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 98271
+    },
+    {
+      "step": "switch compact-arena",
+      "elapsedMs": 107291
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 111154
+    },
+    {
+      "step": "switch compact-arena",
+      "elapsedMs": 120407
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 125325
+    },
+    {
+      "step": "switch compact-arena",
+      "elapsedMs": 134307
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 138170
+    },
+    {
+      "step": "switch compact-arena",
+      "elapsedMs": 147356
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 151258
+    },
+    {
+      "step": "switch compact-arena",
+      "elapsedMs": 160279
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 164153
+    },
+    {
+      "step": "switch compact-arena",
+      "elapsedMs": 173127
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 176973
+    },
+    {
+      "step": "switch compact-arena",
+      "elapsedMs": 185931
+    },
+    {
+      "step": "reject a damaged level and retry on the saved map",
+      "elapsedMs": 189755
+    },
+    {
+      "step": "complete",
+      "elapsedMs": 204087
+    }
+  ],
+  "browser": "156.0.8078.79",
+  "viewport": {
+    "width": 1024,
+    "height": 576
+  },
+  "signInToFormMs": 5472,
+  "enterToWaitingMs": 26984,
+  "selectMapMs": 4575,
+  "players": {
+    "humanSlots": 1,
+    "bots": 9
+  },
+  "startToPlayableMs": 1624,
+  "controls": {
+    "distanceM": 0.56,
+    "ammoBefore": 30,
+    "ammoAfter": 29,
+    "rightClickAim": true,
+    "team": "analysts"
+  },
+  "measurement": {
+    "client": {
+      "frameIntervalMs": {
+        "n": 286,
+        "min": 19.6,
+        "p50": 29.8,
+        "p95": 56.9,
+        "p99": 105.7,
+        "max": 117.7
+      },
+      "renderCpuMs": {
+        "n": 287,
+        "min": 15.6,
+        "p50": 23,
+        "p95": 44,
+        "p99": 90.7,
+        "max": 114.1
+      },
+      "draws": {
+        "n": 287,
+        "min": 188,
+        "p50": 264,
+        "p95": 318,
+        "p99": 333,
+        "max": 342
+      },
+      "triangles": {
+        "n": 287,
+        "min": 20086,
+        "p50": 64812,
+        "p95": 109254,
+        "p99": 114150,
+        "max": 114294
+      },
+      "pixelRatio": {
+        "n": 287,
+        "min": 0.47,
+        "p50": 0.51,
+        "p95": 0.68,
+        "p99": 0.77,
+        "max": 0.77
+      }
+    },
+    "server": {
+      "executionMs": {
+        "n": 605,
+        "min": 0.6,
+        "p50": 1.47,
+        "p95": 4.87,
+        "p99": 9.33,
+        "max": 11.89
+      },
+      "intervalMs": {
+        "n": 604,
+        "min": 1.32,
+        "p50": 16.15,
+        "p95": 17.66,
+        "p99": 32.06,
+        "max": 35.29
+      },
+      "executionOver33": 0,
+      "executionOver50": 0,
+      "intervalOver33": 1,
+      "rttMs": 0,
+      "tick": 2564
+    },
+    "resources": {
+      "projectId": "lvl-compact-arena",
+      "level": "Compact Arena",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        478,
+        269
+      ],
+      "quality": "low",
+      "geometries": 269,
+      "textures": 83,
+      "programs": 93,
+      "owners": 2,
+      "disposals": 1,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    }
+  },
+  "videoLocations": [
+    "Blue Intake",
+    "West Lock"
+  ],
+  "completed": {
+    "matchId": 1,
+    "winner": "counterAnalysts",
+    "reason": "time",
+    "score": {
+      "analysts": 12,
+      "counterAnalysts": 18
+    },
+    "players": [
+      {
+        "id": "analysts-1",
+        "name": "BOT A-02",
+        "team": "analysts",
+        "kills": 3,
+        "deaths": 4
+      },
+      {
+        "id": "analysts-2",
+        "name": "BOT A-03",
+        "team": "analysts",
+        "kills": 3,
+        "deaths": 4
+      },
+      {
+        "id": "analysts-3",
+        "name": "BOT A-04",
+        "team": "analysts",
+        "kills": 1,
+        "deaths": 5
+      },
+      {
+        "id": "analysts-4",
+        "name": "BOT A-05",
+        "team": "analysts",
+        "kills": 5,
+        "deaths": 3
+      },
+      {
+        "id": "counterAnalysts-0",
+        "name": "BOT C-01",
+        "team": "counterAnalysts",
+        "kills": 1,
+        "deaths": 3
+      },
+      {
+        "id": "counterAnalysts-1",
+        "name": "BOT C-02",
+        "team": "counterAnalysts",
+        "kills": 1,
+        "deaths": 1
+      },
+      {
+        "id": "counterAnalysts-2",
+        "name": "BOT C-03",
+        "team": "counterAnalysts",
+        "kills": 4,
+        "deaths": 2
+      },
+      {
+        "id": "counterAnalysts-3",
+        "name": "BOT C-04",
+        "team": "counterAnalysts",
+        "kills": 9,
+        "deaths": 3
+      },
+      {
+        "id": "counterAnalysts-4",
+        "name": "BOT C-05",
+        "team": "counterAnalysts",
+        "kills": 3,
+        "deaths": 3
+      },
+      {
+        "id": "analysts-0",
+        "name": "Mapptest",
+        "team": "analysts",
+        "kills": 0,
+        "deaths": 2
+      }
+    ]
+  },
+  "transitions": [
+    {
+      "id": "floor5-prepared",
+      "ms": 8714,
+      "projectId": "lvl-floor5-preppad-20261105",
+      "level": "Unit 05",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 3,
+      "disposals": 2,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "compact-arena",
+      "ms": 3725,
+      "projectId": "lvl-compact-arena",
+      "level": "Compact Arena",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 153,
+      "textures": 66,
+      "programs": 90,
+      "owners": 4,
+      "disposals": 3,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "floor5-prepared",
+      "ms": 8567,
+      "projectId": "lvl-floor5-preppad-20261105",
+      "level": "Unit 05",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 5,
+      "disposals": 4,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "compact-arena",
+      "ms": 3621,
+      "projectId": "lvl-compact-arena",
+      "level": "Compact Arena",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 153,
+      "textures": 66,
+      "programs": 90,
+      "owners": 6,
+      "disposals": 5,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "floor5-prepared",
+      "ms": 8703,
+      "projectId": "lvl-floor5-preppad-20261105",
+      "level": "Unit 05",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 7,
+      "disposals": 6,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "compact-arena",
+      "ms": 4676,
+      "projectId": "lvl-compact-arena",
+      "level": "Compact Arena",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 153,
+      "textures": 66,
+      "programs": 90,
+      "owners": 8,
+      "disposals": 7,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "floor5-prepared",
+      "ms": 8507,
+      "projectId": "lvl-floor5-preppad-20261105",
+      "level": "Unit 05",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 9,
+      "disposals": 8,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "compact-arena",
+      "ms": 3626,
+      "projectId": "lvl-compact-arena",
+      "level": "Compact Arena",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 153,
+      "textures": 66,
+      "programs": 90,
+      "owners": 10,
+      "disposals": 9,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "floor5-prepared",
+      "ms": 8706,
+      "projectId": "lvl-floor5-preppad-20261105",
+      "level": "Unit 05",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 11,
+      "disposals": 10,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "compact-arena",
+      "ms": 3616,
+      "projectId": "lvl-compact-arena",
+      "level": "Compact Arena",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 153,
+      "textures": 66,
+      "programs": 90,
+      "owners": 12,
+      "disposals": 11,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "floor5-prepared",
+      "ms": 8516,
+      "projectId": "lvl-floor5-preppad-20261105",
+      "level": "Unit 05",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 13,
+      "disposals": 12,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "compact-arena",
+      "ms": 3628,
+      "projectId": "lvl-compact-arena",
+      "level": "Compact Arena",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 153,
+      "textures": 66,
+      "programs": 90,
+      "owners": 14,
+      "disposals": 13,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "floor5-prepared",
+      "ms": 8526,
+      "projectId": "lvl-floor5-preppad-20261105",
+      "level": "Unit 05",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 15,
+      "disposals": 14,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "compact-arena",
+      "ms": 3560,
+      "projectId": "lvl-compact-arena",
+      "level": "Compact Arena",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 153,
+      "textures": 66,
+      "programs": 90,
+      "owners": 16,
+      "disposals": 15,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "floor5-prepared",
+      "ms": 8448,
+      "projectId": "lvl-floor5-preppad-20261105",
+      "level": "Unit 05",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 17,
+      "disposals": 16,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "compact-arena",
+      "ms": 3592,
+      "projectId": "lvl-compact-arena",
+      "level": "Compact Arena",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 153,
+      "textures": 66,
+      "programs": 90,
+      "owners": 18,
+      "disposals": 17,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    }
+  ],
+  "damagedMapRejected": true,
+  "retryMap": "floor5-prepared",
+  "video": {
+    "frames": 291,
+    "recordedSeconds": 12.85
+  },
+  "status": "PASS"
+}

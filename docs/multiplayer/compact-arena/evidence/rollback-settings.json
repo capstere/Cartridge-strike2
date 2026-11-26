@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "oldRelease": "6093bf6d11ccdc79a469ceb430d6d64375dc1379",
+  "oldFileDefault": "floor5-prepared",
+  "writtenByNew": "compact-arena",
+  "verifiedOlderSettings": [
+    "mode",
+    "fillBots",
+    "friendlyFire",
+    "botDifficulty",
+    "zombiesEnabled",
+    "dancemanEnabled"
+  ],
+  "afterSaveByOld": "floor5-prepared",
+  "isolatedTemporaryFile": true
+}
