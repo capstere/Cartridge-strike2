@@ -12,6 +12,10 @@ Spelversion 0.18.0, protokoll **12**, bygg-ID `5a438af3b9d8d19fa82b045f6fb148326
 
 Det isolerade matchprovet på Pi:n följde hela klippet i båda spellägena. Den andra klienten bekräftade samma dödstid och variant. Första P9-träffen lämnade 77 hälsa och den femte dödade. Familjelobbyn öppnades och stängdes med befintliga inställningar. Webbläsarprovet för Dansmannen inväntar nu samma runda och liv på klient och server innan det pausar för testplacering. [PR #41 och driftkvitto](https://github.com/capstere/Cartridge-strike2/pull/41)
 
+**Live på Pi:n sedan 26 november 2026.** Revision `6093bf6d11ccdc79a469ceb430d6d64375dc1379`, bygg-ID `5a438af3b9d8d19fa82b045f6fb1483261c43b81737c4796ce8be21c112d5376`. Alla sju CI-jobb passerade. Aktiveringen skedde klockan 13.34 svensk tid med noll spelare och noll rum. Både den nya releasen och återställningsversionen klarade det isolerade förprovet med två klienter. Pi:ns privata konfigurationsbackup är `20261126T123423101508Z`. Återställ föregående release med `sudo cs2-online rollback` när rummen är tomma. [Godkänd CI](https://github.com/capstere/Cartridge-strike2/actions/runs/45817867328)
+
+Två separat inloggade klienter bekräftade samma dödstid och huvudträff i publika Classic- och Team Deathmatch-matcher. Skyttens webbläsare visade hela landningen fram till 2,50 sekunder i båda lägena. I Team Deathmatch återställdes dödsvarianten vid respawn. P9 krävde fem träffar i båda proven. Skytten använde manuell pekskärmseld i Classic och växlade till automatisk eld i Team Deathmatch. Touch emulerades som en Pixel 7 i Chromium på Pi:n. Familjelänken och lösenordet öppnade rätt lobby, och familjens sparade inställningar hade samma kontrollsumma efter provet. Slutkontrollen visade noll rum och noll spelare. Fjorton filer från den publika domänen och GitHub Pages stämde byte för byte med Pi-releasen, inklusive båda animationsbankerna. [Inspelning från den publika Team Deathmatch-matchen](docs/headshot/publik-match.mp4)
+
 ## Valbar automatisk eld online · 26 november 2026
 
 Mobilens befintliga **Automatisk eld på mobil** fungerar även i Classic och
