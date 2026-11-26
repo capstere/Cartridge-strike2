@@ -19,7 +19,14 @@ mobilinmatning och nätklienten. Separat kodgranskning gav inga blockerande fynd
 Fyra av fem riktade servertester passerade först; det befintliga provet för
 sammanförda avtryck föll en gång och passerade sedan isolerat på både oförändrad
 bas och kandidat. Orsaken till det första utfallet är inte fastställd.
+Ett separat integrationsprov i `server/test/mobile-autofire.test.mjs` passerade:
+den riktiga servern bekräftade minst tre P9-skott, ammunition och skada samt
+oförändrad manuell avtryckare, utan ogiltiga indata.
+
 Det nya browserprovet är `tools/online-autofire-browser.mjs` och ingår i CI.
+Den lokala mjukvarurenderingen nådde verklig målmarkering men klarade inte kravet
+på tre bekräftade skott; mobilklienten visade cirka en sekunds latens. Det är
+inget godkänt browserprov. Invänta godkänd hårdvaruaccelererad CI före merge.
 
 **Pi-aktivering återstår.** Denna ändring är ännu inte verifierad live på
 `cs2.capstere.com`. Fortsätt med befintliga driftverktyget när rummen är tomma,
