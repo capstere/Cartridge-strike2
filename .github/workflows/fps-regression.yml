@@ -271,10 +271,14 @@ jobs:
         env:
           FPS_MAP_CASE: mobile
         run: node --import ./server/register-shared.mjs tools/multimap-browser.mjs
+      - name: Verify custom match settings in desktop and mobile family lobbies
+        run: node tools/custom-match-browser.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: compact-arena
-          path: test-results/multiplayer-maps/
+          path: |
+            test-results/multiplayer-maps/
+            test-results/custom-match-settings/
           if-no-files-found: ignore
           retention-days: 7

@@ -10,11 +10,19 @@ export const NETWORK_CONFIG = Object.freeze({...CONFIG, networkSlice:true,
 export const CLASSIC_NETWORK_CONFIG = Object.freeze({...NETWORK_CONFIG,mode:'classic',
   startMoney:CONFIG.startMoney,maxMoney:CONFIG.maxMoney,killMoney:CONFIG.killMoney,hostageDamage:CONFIG.hostageDamage});
 export {DEFAULT_MAP_ID as NETWORK_MAP} from './maps.mjs';
-export const PROTOCOL_VERSION = 13;
-export const MATCH_DEFAULTS = Object.freeze({durationSeconds:600,scoreTarget:50,countdownSeconds:3});
-export const RTT_FRESH_MS = 4000;
+export const PROTOCOL_VERSION = 14;
 export const TEAM_CAPACITY = 5;
 export const ROOM_CAPACITY = TEAM_CAPACITY * 2;
+export const TDM_MINUTES = Object.freeze([3,5,10,15]);
+export const TDM_KILLS = Object.freeze([10,25,50,100]);
+export const CLASSIC_WINS = Object.freeze([3,5,8]);
+export const BOT_COUNTS = Object.freeze(Array.from({length: TEAM_CAPACITY+1}, (_, count)=>count));
+export const MATCH_PREFERENCES = Object.freeze({tdmMinutes:10,tdmKills:50,classicWins:CLASSIC_NETWORK_CONFIG.matchWins,
+  analystsBots:TEAM_CAPACITY,counterAnalystsBots:TEAM_CAPACITY});
+export const MATCH_CHOICES = Object.freeze({tdmMinutes:TDM_MINUTES,tdmKills:TDM_KILLS,classicWins:CLASSIC_WINS,
+  analystsBots:BOT_COUNTS,counterAnalystsBots:BOT_COUNTS});
+export const MATCH_DEFAULTS = Object.freeze({durationSeconds:MATCH_PREFERENCES.tdmMinutes*60,scoreTarget:MATCH_PREFERENCES.tdmKills,countdownSeconds:3});
+export const RTT_FRESH_MS = 4000;
 export const RECONNECT_SECONDS = 15;
 export const INTERPOLATION_MS = 100;
 // The 250 ms ordered-jitter run measured ~310 ms SDK RTT; 400 ms rejected
@@ -29,7 +37,8 @@ export function copyPose(target, source) {
 export const configContract = () => ({config:NETWORK_CONFIG,classic:CLASSIC_NETWORK_CONFIG, weapons:Object.values(WEAPONS).filter(w=>['smg','ar47','cr4','sniper','shotgun','bazooka','p9','p12','knife','he'].includes(w.id)),
   world:'floor5-authoritative-doors-spawn-shutters-breakable-glass-v2',
   capacity:ROOM_CAPACITY, teamCapacity:TEAM_CAPACITY, reconnectSeconds:RECONNECT_SECONDS,
-  rewindMs:REWIND_MS, interpolationMs:INTERPOLATION_MS, match:MATCH_DEFAULTS, botDifficulties:BOT_DIFFICULTY_IDS, rttFreshMs:RTT_FRESH_MS});
+  rewindMs:REWIND_MS, interpolationMs:INTERPOLATION_MS, match:MATCH_DEFAULTS, matchPreferences:MATCH_PREFERENCES,
+  matchChoices:MATCH_CHOICES, botDifficulties:BOT_DIFFICULTY_IDS, rttFreshMs:RTT_FRESH_MS});
 export const wrapYaw = value => Math.atan2(Math.sin(value),Math.cos(value));
 export function safeName(value) {
   if(typeof value!=='string')return 'Player';

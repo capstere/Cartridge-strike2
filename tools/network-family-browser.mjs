@@ -211,10 +211,11 @@ try {
   await revisit(iphone);
   await enter(iphone, 'Familj iPhone', true);
   await share(iphone);
-  const mode = iphone.page.locator('#room-mode'), fill = iphone.page.locator('#room-fill-bots');
+  const mode = iphone.page.locator('#room-mode');
+  const botControls = ['#room-analysts-bots', '#room-counter-analysts-bots'];
   await mode.selectOption('classic');
   await iphone.page.locator('#room-rules').filter({hasText: 'Classic'}).waitFor();
-  await fill.uncheck();
+  for (const selector of botControls) await iphone.page.locator(selector).selectOption('0');
 
   const angle = process.env.FPS_NETWORK_ANGLE || (process.platform === 'darwin' ? 'metal' : 'swiftshader');
   const chrome = await chromium.launch({channel: 'chromium', executablePath: process.env.CHROMIUM_PATH || undefined,
@@ -267,7 +268,7 @@ try {
   await invite(desktop);
   await enter(desktop, 'Familj desktop');
   assert.equal(await desktop.page.locator('#room-mode').inputValue(), 'classic');
-  assert.equal(await desktop.page.locator('#room-fill-bots').isChecked(), false);
+  for (const selector of botControls) assert.equal(await desktop.page.locator(selector).inputValue(), '0');
   await share(desktop);
   await press(desktop, desktop.page.locator('#room-leave'));
   await desktop.page.locator('#network-code').waitFor();

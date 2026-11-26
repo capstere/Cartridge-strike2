@@ -1,0 +1,25 @@
+# Matchinställningar i privata rum
+
+Värden ändrar inställningarna före start i väntrummet. Välj karta och spelläge, sedan matchlängd och mål. Alla deltagare ser serverns bekräftade värden. Efter slutsignal öppnar **Spela igen** väntrummet med samma val. Det permanenta familjerummet sparar dem även när alla lämnar.
+
+| Spelalternativ | Val | Standard |
+| --- | --- | --- |
+| Team Deathmatch, matchlängd | 3, 5, 10 eller 15 minuter | 10 minuter |
+| Team Deathmatch, poängmål | 10, 25, 50 eller 100 fiendekills | 50 |
+| Classic, poängmål | 3, 5 eller 8 rundvinster | 5 |
+| Botar per lag | 0–5, separat för Analysts och Counter Analysts | 5 på lediga platser |
+
+Värdet för botar är ett tak. Ett lag med tre människor och taket fem får två botar. Ett lag med tre människor och taket ett får en bot. Classic släpper in sena anslutningar vid nästa rundstart. En återanslutande spelare har kvar sin plats under den ordinarie återanslutningsfristen. Botarnas svårighetsgrader väljs som tidigare.
+
+Floor 5 erbjuder båda spellägena. Compact Arena erbjuder Team Deathmatch. Lobbyn kommer ihåg inställningarna för respektive spelläge när värden växlar mellan lägena och banorna. Zombies och Dansmannen kan ändras oberoende i väntrummet på Floor 5.
+
+Servern validerar värdena och låser värdens ändringar under nedräkning, spel och resultat. Familjens v1-fil får nya numeriska fält och behåller den tidigare botflaggan. En gammal fil får dagens standardvärden. Botflaggan `false` ger 0 på båda lagen. Vid rollback känner den äldre servern igen familjefilen och använder sina tidigare matchregler. En asymmetrisk botfördelning med minst en bot översätts då till fyllnad av lediga platser. Om den äldre servern skriver om filen behöver de nya värdena väljas igen vid uppgradering. En säkerhetskopia kan bevara exakt fördelning.
+
+## Reproducera proven
+
+```sh
+node --import ./server/register-shared.mjs --test --test-concurrency=1 server/test/custom-match-settings.test.mjs server/test/family-lifecycle.test.mjs server/test/family-room.test.mjs
+node tools/custom-match-browser.mjs
+```
+
+Webbläsarprovet använder en isolerad HTTPS/WSS-server, en skrivbordsprofil och en mobilprofil med emulerad touch. Det sparar skärmbilder och en JSON-rapport i `test-results/custom-match-settings/`. På Pi:n kan Chromium köras med `WAYLAND_DISPLAY=wayland-0 CHROMIUM_PATH=/usr/bin/chromium FPS_NETWORK_HEADED=1 FPS_NETWORK_ANGLE=gl-egl`.

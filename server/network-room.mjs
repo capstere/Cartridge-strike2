@@ -28,6 +28,7 @@ const teams=['analysts','counterAnalysts'];
 export const MAX_BUFFERED_BYTES=256*1024;
 import {LagCompensation, recordRtt} from './lag-compensation.mjs';
 import {MatchLifecycle} from './match-lifecycle.mjs';
+import {matchPreferences} from './match-preferences.mjs';
 import {TeamComms} from './team-comms.mjs';
 export class NetworkRoom extends Room {
   async onCreate(options) {
@@ -39,10 +40,13 @@ export class NetworkRoom extends Room {
     this.bots=new Map();this.seats=new Map();this.lives=new Map();this.metrics={invalid:0,maxQueue:0,coalesced:0,ticks:0,events:0,reconnects:0,drops:0,backpressure:0};
     const settings={mapId:DEFAULT_MAP_ID,...(this.familyRoom?.settings??{
       mapId:options.mapId===undefined?DEFAULT_MAP_ID:options.mapId,
-      mode:options.mode===undefined?'tdm':options.mode,fillBots:options.fillBots!==false,
+      mode:options.mode===undefined?'tdm':options.mode,
       zombiesEnabled:options.zombies===true,dancemanEnabled:options.danceman===true,
       friendlyFire:false,botDifficulty:DEFAULT_NETWORK_BOT_DIFFICULTY,
     })};
+    const preferences=matchPreferences(this.familyRoom?settings:options);
+    if(!preferences)throw new ServerError(400,'Ogiltiga matchinställningar.');
+    Object.assign(settings,preferences);
     const map=networkMap(settings.mapId);
     if(!map)throw new ServerError(400,'Okänd multiplayerkarta.');
     if(!map.modes.includes(settings.mode)||(!map.residents&&(settings.zombiesEnabled||settings.dancemanEnabled))){
@@ -192,18 +196,26 @@ export class NetworkRoom extends Room {
   }
   fillVacancies(roundBoundary=false){
     if(this.classic&&this.state.phase==='active'&&!roundBoundary)return;
-    if(!this.state.fillBots||!this.seats.size)return;
-    const occupied=new Set([...this.participants()].map(s=>s.id));
-    for(const id of seats){
-      if(occupied.has(id))continue;
-      const a=structuredClone(this.templates.get(id));
-      Object.assign(a,{controllerType:'bot',name:'BOT '+a.name,lifeId:this.lives.get(id)||0,
-        loadout:onlinePrimaries(a.team)[a.index%4],alive:false});
-      if(this.classic)this.prepareClassicActor(a,true);
-      else if(!respawnActor(this.sim.game,a))continue;
-      this.sim.game.actors.push(a);
-      this.bots.set(id,{id,actor:a,ready:true,connected:true,playerReady:true,epoch:0,lifeStartedAt:this.clock.elapsedTime,diedAtMs:0});
-      this.state.actors.set(id,new ActorState({id,team:a.team,name:a.name,bot:true}));
+    const reserved=new Set([...this.seats.values()].map(s=>s.id));
+    for(const team of teams){
+      const limit=reserved.size?this.state[team+'Bots']:0;
+      const teamSeats=seats.filter(id=>id.startsWith(team+'-'));
+      const current=teamSeats.filter(id=>this.bots.has(id));
+      for(const id of current.slice(limit))this.removeBot(id);
+      let count=Math.min(current.length,limit);
+      for(const id of teamSeats){
+        if(count>=limit)break;
+        if(reserved.has(id)||this.bots.has(id))continue;
+        const a=structuredClone(this.templates.get(id));
+        Object.assign(a,{controllerType:'bot',name:'BOT '+a.name,lifeId:this.lives.get(id)||0,
+          loadout:onlinePrimaries(team)[a.index%4],alive:false});
+        if(this.classic)this.prepareClassicActor(a,true);
+        else if(!respawnActor(this.sim.game,a))continue;
+        this.sim.game.actors.push(a);
+        this.bots.set(id,{id,actor:a,ready:true,connected:true,playerReady:true,epoch:0,lifeStartedAt:this.clock.elapsedTime,diedAtMs:0});
+        this.state.actors.set(id,new ActorState({id,team,name:a.name,bot:true}));
+        count++;
+      }
     }
   }
   changeTeam(client,team){
