@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "mapId": "compact-arena",
+  "buildHash": "30f8f4af97b2b082f995196f06f498b132ba9bf8d303671ee8ab8d4b69590385",
+  "protocol": 14,
+  "clients": 2,
+  "bots": 0,
+  "configuredSeconds": 180,
+  "observedSeconds": 180.07,
+  "scoreTarget": 10,
+  "tickAdvance": 10802,
+  "result": {
+    "winner": "draw",
+    "reason": "time",
+    "score": {
+      "analysts": 0,
+      "counterAnalysts": 0
+    }
+  }
+}

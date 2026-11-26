@@ -23,3 +23,11 @@ node tools/custom-match-browser.mjs
 ```
 
 Webbläsarprovet använder en isolerad HTTPS/WSS-server, en skrivbordsprofil och en mobilprofil med emulerad touch. Det sparar skärmbilder och en JSON-rapport i `test-results/custom-match-settings/`. På Pi:n kan Chromium köras med `WAYLAND_DISPLAY=wayland-0 CHROMIUM_PATH=/usr/bin/chromium FPS_NETWORK_HEADED=1 FPS_NETWORK_ANGLE=gl-egl`.
+
+På Pi 5 såg båda webbläsarna samma inställningar. Värden valde åtta rundvinster på Floor 5 och växlade sedan till Compact Arena med tre minuter, 25 kills samt en respektive tre botar. Touchklienten tog över som värd, startade matchen, såg tidsresultatet och spelade om. Testet kontrollerade den valda matchlängden innan klockan snabbades upp. Genom omstart av den isolerade servern bekräftades att familjen hade kvar sina val. [Classic på desktop](custom-match-settings/desktop-floor5-classic.jpg) · [Mobilvärd](custom-match-settings/mobile-compact-host.jpg) · [Mobilgäst](custom-match-settings/mobile-compact-tdm.jpg) · [Webbläsarkvitto](custom-match-settings/report.json)
+
+Rollbackprovet körde den äldre installerade koden med en separat v1-fil. Den kunde läsa nya inställningar och tolka en asymmetrisk botfördelning som lediga botplatser i den äldre versionen. Efter en omsparning av den äldre servern använde den nya servern standardgränser och den äldre botflaggan vid nästa läsning. [Kompatibilitetskvitto](custom-match-settings/rollback-settings.json)
+
+I ett separat prov lät två SDK-klienter Compact Arena gå hela den valda tiden med noll botar utan att ändra serverklockan. Båda fick resultatet oavgjort efter 180,07 sekunders uppmätt speltid. [Tidsgräns i realtid](custom-match-settings/natural-match.json)
+
+Via den publika familjelänken startade en emulerad touchklient på Compact Arena med tre minuter, tio kills och två botar hos Analysts samt tre hos Counter Analysts. Servern bekräftade skotten. Värden öppnade familjerummet igen med samma val, återställde familjens tidigare inställningar och lämnade. Servern hade noll öppna rum före bytet och efter provet. [Publikt familjeprov](custom-match-settings/live.json) · [Spelbild från liveprovet](custom-match-settings/live-compact.jpg) · [Aktivering och Floor 5-verifiering](custom-match-settings/activation.json)

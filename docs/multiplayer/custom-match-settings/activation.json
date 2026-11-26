@@ -1,0 +1,79 @@
+{
+  "status": "PASS",
+  "revision": "8307e91118dba4fdca964012d2b0c247a40221fd",
+  "rollback": "75feffd9360da2380098bfea18f60df12713feff",
+  "roomsBefore": 0,
+  "playersBefore": 0,
+  "staged": {
+    "status": "PASS",
+    "path": "loopback with tunnel headers",
+    "clients": 2,
+    "map": "floor5-prepared",
+    "build": "30f8f4af97b2b082f995196f06f498b132ba9bf8d303671ee8ab8d4b69590385",
+    "unauthenticatedStatus": 401,
+    "wrongRoomCodeRejected": true,
+    "checkpoints": [
+      {
+        "clients": 2,
+        "readyOnEachSocket": 2,
+        "analysts": 1,
+        "counterAnalysts": 1
+      }
+    ],
+    "gameplayPeers": 2,
+    "tickAdvance": 123,
+    "movementMetres": [
+      0.42,
+      0.42
+    ],
+    "ammoAfterFire": [
+      29,
+      29
+    ],
+    "reloadAmmo": [
+      30,
+      30
+    ],
+    "sharedShots": [
+      1,
+      1
+    ],
+    "consentedLeaves": 2
+  },
+  "public": {
+    "status": "PASS",
+    "path": "HTTPS/WSS via public origin",
+    "clients": 2,
+    "map": "floor5-prepared",
+    "build": "30f8f4af97b2b082f995196f06f498b132ba9bf8d303671ee8ab8d4b69590385",
+    "unauthenticatedStatus": 401,
+    "wrongRoomCodeRejected": true,
+    "checkpoints": [
+      {
+        "clients": 2,
+        "readyOnEachSocket": 2,
+        "analysts": 1,
+        "counterAnalysts": 1
+      }
+    ],
+    "gameplayPeers": 2,
+    "tickAdvance": 121,
+    "movementMetres": [
+      0.28,
+      0.28
+    ],
+    "ammoAfterFire": [
+      29,
+      29
+    ],
+    "reloadAmmo": [
+      30,
+      30
+    ],
+    "sharedShots": [
+      1,
+      1
+    ],
+    "consentedLeaves": 2
+  }
+}

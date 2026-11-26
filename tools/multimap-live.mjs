@@ -53,13 +53,16 @@ function state(){
   return page.evaluate(()=>{
     const r=window.mapReceipt?.room;
     if(!r)return null;
-    const s=r.state,a=[...s.actors.values()].find(row=>row.sessionId===r.sessionId);
+    const s=r.state,actors=[...s.actors.values()],a=actors.find(row=>row.sessionId===r.sessionId);
     return {settings:{map:s.mapId,mode:s.mode,'analysts-bots':String(s.analystsBots),'counter-analysts-bots':String(s.counterAnalystsBots),
       'tdm-minutes':String(s.tdmMinutes),'tdm-kills':String(s.tdmKills),'classic-wins':String(s.classicWins),'friendly-fire':s.friendlyFire?'on':'off',
       'bot-difficulty':s.botDifficulty,zombies:s.zombiesEnabled?'on':'off',danceman:s.dancemanEnabled?'on':'off'},
       host:r.sessionId===s.ownerId,ready:a?.ready,phase:s.phase,ammo:a?.primaryAmmo,tick:s.tick,actors:s.actors.size,
-      duration:s.durationSeconds,target:s.scoreTarget,
-      x:a?.x,z:a?.z,life:a?.lifeId,others:[...s.actors.values()].filter(p=>p.sessionId&&p.sessionId!==r.sessionId&&!p.bot).length};
+      duration:s.durationSeconds,target:s.scoreTarget,bots:{
+        analysts:actors.filter(p=>p.bot&&p.team==='analysts').length,
+        counterAnalysts:actors.filter(p=>p.bot&&p.team==='counterAnalysts').length,
+      },
+      x:a?.x,z:a?.z,life:a?.lifeId,others:actors.filter(p=>p.sessionId&&p.sessionId!==r.sessionId&&!p.bot).length};
   });
 }
 async function set(key,value) {
@@ -100,6 +103,7 @@ try {
   await page.locator('#resume').tap();await until(async()=>(await state())?.phase==='active','Live Compact match active');
   const before=await state();assert.equal(before.settings.map,arena);assert.equal(before.settings.mode,'tdm');assert.equal(before.actors,6);
   assert.equal(before.duration,180);assert.equal(before.target,10);
+  assert.deepEqual(before.bots,{analysts:2,counterAnalysts:3});
   const cdp=await context.newCDPSession(page);
   try {
     const button=await page.locator('[data-mobile-action=fire]').boundingBox();assert(button);
@@ -109,7 +113,7 @@ try {
   const after=await state();
   await page.screenshot({path:join(out,'live-compact.jpg'),quality:83});
   report.active={actors:before.actors,mode:before.settings.mode,map:before.settings.map,minutes:before.duration/60,kills:before.target,
-    bots:{analysts:2,counterAnalysts:3},ammoBefore:before.ammo,ammoAfter:after.ammo,ticks:[before.tick,after.tick]};
+    bots:before.bots,ammoBefore:before.ammo,ammoAfter:after.ammo,ticks:[before.tick,after.tick]};
   assert.deepEqual(errors,[]);
 } catch(error) {report.error=String(error.stack).replaceAll(invite,'[private]').replaceAll(password,'[private]').replace(/(?:sessionId|reconnectionToken)=[^\s&]+/ig,'[session]');}
 finally {
