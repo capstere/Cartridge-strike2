@@ -10,6 +10,8 @@ Separata animationsbanker laddas före matchen. Gamla och registrerade kompatibl
 
 Spelversion 0.18.0, protokoll **12**, bygg-ID `5a438af3b9d8d19fa82b045f6fb1483261c43b81737c4796ce8be21c112d5376`. Mobilproven på Pi:n använder emulerad touch. Fysisk iPhone och Android återstår. Vid mycket trång placering kan vapnet kort överlappa väggen i övergången från den levande posen. Föregående fungerande Pi-release för rollback är `5f740bf84fe9b16bdaa9fd257569d86f6d62d91f`. Aktivering och återställning går genom `cs2-online` när rummen är tomma. [Driftguide](deploy/online/README.md)
 
+Det isolerade matchprovet på Pi:n följde hela klippet i båda spellägena. Den andra klienten bekräftade samma dödstid och variant. Första P9-träffen lämnade 77 hälsa och den femte dödade. Familjelobbyn öppnades och stängdes med befintliga inställningar. Webbläsarprovet för Dansmannen inväntar nu samma runda och liv på klient och server innan det pausar för testplacering. [PR #41 och driftkvitto](https://github.com/capstere/Cartridge-strike2/pull/41)
+
 ## Valbar automatisk eld online · 26 november 2026
 
 Mobilens befintliga **Automatisk eld på mobil** fungerar även i Classic och
