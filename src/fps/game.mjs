@@ -21,6 +21,7 @@ export const direction = (yaw, pitch = 0) => ({ x: -Math.sin(yaw) * Math.cos(pit
 const point = a => ({ x: a.x, y: a.y ?? 0, z: a.z });
 const clamp = (x, min, max) => Math.max(min, Math.min(max, x));
 const EPS = 1e-8;
+const inHeadRegion = (body, hitY) => Number.isFinite(hitY) && hitY >= body.y + body.height * .83;
 
 /** One resolver owns the complete hybrid rule table. Candidates carry simulation
  * timestamps; render order cannot change priority at equal timestamps. */
@@ -123,7 +124,7 @@ export class Game {
       Object.assign(actor, { ...point(spawn), yaw: spawn.yaw ?? 0, pitch: 0, hp: this.config.health, alive: true,
         height: this.config.standingHeight, vy: 0, onGround: true, crouching: false, reloadUntil: 0,
         nextShot: s.time, flashUntil: 0, flash: 0, flashStart: 0, action: null, moving: 0, distanceWalked: 0, recoil: 0,
-        lastStep: s.time, fireHeld: false, interactHeld: false, jumpHeld: false, lastWeapon: 'knife', hurtTime: -Infinity, hurtDirection: null, deathAt: null, deathCause: null,
+        lastStep: s.time, fireHeld: false, interactHeld: false, jumpHeld: false, lastWeapon: 'knife', hurtTime: -Infinity, hurtDirection: null, deathAt: null, deathCause: null, deathVariant: '',
         weapon: actor.inventory.primary?.id ?? actor.inventory.pistol?.id ?? 'knife',
       });
       actor.bot = actor.controllerType === 'bot' ? new BotController(this, actor) : null;
@@ -336,12 +337,11 @@ export class Game {
       const dir = direction(actor.yaw + (this.random() - .5) * spread, actor.pitch + (this.random() - .5) * spread);
       // The room may supply read-only historical hitboxes/collision context.
       // Weapon cadence, RNG, ammunition and deferred damage stay in this Game.
-      const {wall,nearest,victim} = this.hitscanQuery
+      const {wall,point:hitPoint,victim,head} = this.hitscanQuery
         ? this.hitscanQuery(actor,origin,dir,w.range) : this.traceHitscan(actor,origin,dir,w.range);
-      const hitPoint = { x: origin.x + dir.x * nearest, y: origin.y + dir.y * nearest, z: origin.z + dir.z * nearest };
       if (victim) {
         if (victim.team !== actor.team || this.config.friendlyFire) {
-          this.pendingDamage.push({ target: victim, amount: w.damage, source: actor, kind: actor.weapon, point: hitPoint, direction: dir, sourcePosition: origin });
+          this.pendingDamage.push({ target: victim, amount: w.damage, source: actor, kind: actor.weapon, head, point: hitPoint, direction: dir, sourcePosition: origin });
         }
       } else if (wall) {
         this.emit('impact', null, { ...hitPoint, sourceId: actor.id, surface: wall.material ?? 'wall', surfaceId: wall.id, normal: wall.normal, direction: dir });
@@ -353,13 +353,16 @@ export class Game {
   }
   traceHitscan(actor,origin,dir,range,targets=[...this.actors,...(this.state.zombies||[]),...(this.config.hostageDamage?this.hostages:[]),...(this.config.wanderers?this.state.wanderers||[]:[])],rayOptions={vision:false}) {
     const wall=this.world.raycast(origin,dir,range,rayOptions);
-    let nearest=wall?.distance??range,victim=null;
+    let nearest=wall?.distance??range,body=null;
     for(const target of targets){
       if(!target.alive||target.rescued||target.id===actor.id)continue;
       const hit=rayActor(origin,dir,target,nearest);
-      if(hit!==null&&hit<nearest){nearest=hit;victim=target.entity||target;}
+      if(hit!==null&&hit<nearest){nearest=hit;body=target;}
     }
-    return {wall,nearest,victim};
+    const point = { x: origin.x + dir.x * nearest, y: origin.y + dir.y * nearest, z: origin.z + dir.z * nearest };
+    // A rewind body belongs to the collision instant. Its entity receives the
+    // damage later and can already be standing, crouching or on another floor.
+    return {wall,nearest,point,victim:body?.entity??body,head:!!body&&inHeadRegion(body,point.y)};
   }
   damage(target, amount, source, kind = 'shot', context = {}) {
     if (this.phase !== 'active' || !target?.alive || !Number.isFinite(amount) || amount <= 0) return false;
@@ -389,12 +392,14 @@ export class Game {
     const sameGeneration = !owner || (source && source.id === owner.ownerId && (source.lifeId ?? 0) === owner.ownerLifeId && (source.controlEpoch ?? 0) === owner.ownerControlEpoch);
     const currentSource = sameGeneration && (!this.config.networkSlice || this.actors.includes(source) || this.state.zombies.includes(source));
     const sourceId = currentSource ? source?.id : undefined;
-    const detail = { ...(context.rocketId?{rocketId:context.rocketId}:{}), sourceId, sourceName, targetName: target.name, weapon: kind, amount: dealt, hp: target.hp,
+    const head = context.head ?? inHeadRegion(target, hitPoint.y);
+    const detail = { ...(context.rocketId?{rocketId:context.rocketId}:{}), sourceId, sourceName, targetName: target.name, weapon: kind, amount: dealt, hp: target.hp, head,
       point: { ...hitPoint }, direction: { ...incoming }, sourcePosition: { ...sourcePosition }, ...hitPoint };
     this.emit('damage', target, detail); this.emit('hit', target, detail);
     if(target.kind==='zombie')reactZombie(this,target,kind,detail,owner&&!currentSource?undefined:source);
     if (target.hp > 0) return true;
     target.alive = false; target.deaths++; target.action = null; target.reloadUntil = 0; target.deathAt = this.state.time;
+    target.deathVariant = context.head && canAim(kind) && Object.hasOwn(TEAMS,target.team) ? 'headshot' : '';
     target.deathCause = { sourceId, sourceName, weapon: kind, point: { ...hitPoint }, direction: { ...incoming } };
     if (source && sourceTeam && source!==target && target.team && sourceTeam!==target.team) { source.kills++; source.money = Math.min(this.config.maxMoney, source.money + this.config.killMoney); }
     if (target.inventory?.primary) this.dropItem(target, target.inventory.primary);

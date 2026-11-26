@@ -1,4 +1,5 @@
 import {missionRoomName} from './player-names.mjs';
+import {headshotSpace} from './headshot-pose.mjs';
 import {syncWeaponAppearance} from './view-character-appearance.mjs?v=6.1.2';
 import {refreshActorCharacter} from './character-actors.mjs?v=6.1.2';
 import {privateCharacterAppearance} from './character-library.mjs?v=6.1.2';
@@ -120,8 +121,20 @@ export class Renderer{
   model=makeActor(a.team||'hostage',a.id,!a.team);model.traverse(o=>{if(o.isMesh)o.castShadow=false;});this.actors.set(a.id,model);this.scene.add(model);
   const shadow=new THREE.Mesh(new THREE.PlaneGeometry(.62,.62),this.contactMaterial);shadow.rotation.x=-Math.PI/2;this.scene.add(shadow);model.userData.contact=shadow;return model;
  }
- corpsePose(model,a,time){const age=time-a.deathAt;if(age<0||age>18)return false;if(!model.userData.fall){let choice=null;for(let i=0;i<12;i++){const angle=a.yaw+i*Math.PI/6;let free=0;for(let d=.2;d<1.7;d+=.15){if(!this.world.canOccupy(a.x+Math.sin(angle)*d,a.z+Math.cos(angle)*d,.25,.68,0))break;free=d;}if(!choice||free>choice.free)choice={angle,free};}model.userData.fall=choice;}
- model.userData.contact&&(model.userData.contact.visible=false);return animateCorpse(model,a,time,model.userData.fall);}
+ corpsePose(model,a,time){
+  const age=time-a.deathAt,d=model.userData;
+  if(age<0||age>18)return false;
+  if(d.fall?.at!==a.deathAt||d.fall.variant!==a.deathVariant){
+   if(a.deathVariant==='headshot'&&d.avatar?.knockdown)d.fall=headshotSpace(this.world,a,d.avatar.knockdown);
+   else{
+    let choice=null;for(let i=0;i<12;i++){const angle=a.yaw+i*Math.PI/6;let free=0;for(let dist=.2;dist<1.7;dist+=.15){if(!this.world.canOccupy(a.x+Math.sin(angle)*dist,a.z+Math.cos(angle)*dist,.25,.68,0))break;free=dist;}if(!choice||free>choice.free)choice={angle,free};}
+    d.fall=choice;
+   }
+   d.fall.at=a.deathAt;d.fall.variant=a.deathVariant;
+  }
+  if(d.contact)d.contact.visible=false;
+  return animateCorpse(model,a,time,d.fall);
+ }
  resize(){const w=innerWidth,h=innerHeight;this.renderer.setSize(w,h,false);this.camera.userData.cartridgeViewportHeight=this.renderer.domElement.height;this.camera.aspect=this.viewCamera.aspect=w/h;this.camera.updateProjectionMatrix();this.viewCamera.updateProjectionMatrix();}
  events(events,game){this.combatEffects.handle(events,game);for(const e of events){if(e.type==='shot'||e.type==='knife'){const actor=this.actors.get(e.actorId);if(actor)actor.userData.shotAt=game.state.time;}if(e.type==='throw'&&e.actorId===game.player?.id)this.throwAt=game.state.time;if(e.type==='tracer'&&e.from&&e.to&&e.weapon!=='knife')this.tracerBatch.add(e.from,e.to,game.state.time);if(e.type==='shot'||e.type==='knife'){if(e.actorId===game.player?.id){this.recoil=.035;this.shotAt=game.state.time;if(e.weapon==='knife')this.swingAt=game.state.time;else this.muzzleUntil=game.state.time+.055;}}if(e.type==='hit'&&e.sourceId===game.player?.id)this.hitUntil=game.state.time+.15;if(e.type==='damage'&&e.actorId===game.player?.id){this.damageUntil=game.state.time+.55;this.damageDirection=e.direction;}if(['explosion','he','flash'].includes(e.type)&&Number.isFinite(e.x)){const blast=e.type!=='flash';for(let i=0;i<(blast?12:4);i++){const mesh=new THREE.Mesh(new THREE.PlaneGeometry(blast?.44:.28,blast?.44:.28),new THREE.MeshBasicMaterial({map:this.muzzle.material.map,color:blast?0xffb06a:0xfff8de,transparent:true,opacity:.9,depthWrite:false,side:THREE.DoubleSide,blending:THREE.AdditiveBlending}));const a=i*2.4,r=(i%3)*.12;mesh.position.set(e.x+Math.cos(a)*r,(e.y??1)+Math.sin(i)*r,e.z+Math.sin(a)*r);this.scene.add(mesh);this.effects.push({mesh,until:game.state.time+(blast?.28:.11),start:game.state.time,billboard:true,origin:mesh.position.clone(),velocity:new THREE.Vector3(Math.cos(a)*2.2,1+Math.sin(i)*1.5,Math.sin(a)*2.2)});}}}}
 
@@ -130,6 +143,9 @@ export class Renderer{
  this.tracerBatch.update(t);this.updateLights(p,t,s.phase==='active'&&!s.paused);this.combatEffects.update(t,this.effectTime==null?0:Math.max(0,Math.min(.1,t-this.effectTime)),this.camera);this.effectTime=t;
  this.objectiveMarkers.visible=!game.network||s.mode==='classic';
  if(game.network)for(const [id,model] of this.actors)if(!s.actors.some(a=>a.id===id)){model.visible=false;model.userData.contact.visible=false;const shadow=this.actorShadows.get(id);if(shadow)shadow.visible=false;}
+ // Local Classic freezes simulation on match victory. Finish only the terminal
+ // corpse presentation under the results screen, using its normal lifetime.
+ this.matchCorpseTime=!game.network&&s.phase==='match'?(this.matchCorpseTime??t)+dt:null;
  for(const a of [...s.actors,...s.hostages]){
   if(a.pending)continue;
   if(!this.neutralLighting){
@@ -142,7 +158,22 @@ export class Renderer{
    caster.visible=a.alive!==false&&!a.rescued;
    caster.position.set(a.x,(a.y||0)+(a.height||1.7)/2,a.z);caster.scale.set(1,(a.height||1.7)/1.68,1);
   }
-  const model=this.actorModel(a);const dead=a.alive===false;this.actorSphere.center.set(a.x,(a.y||0)+.9,a.z);const inFrame=this.actorFrustum.intersectsSphere(this.actorSphere);model.visible=a.id!==p.id&&!a.rescued&&inFrame&&(!dead||Number.isFinite(a.deathAt)&&t-a.deathAt<18);if(!inFrame)this.stats.culledActors++;else if(model.visible)this.stats.posedActors++;model.userData.contact.visible=model.visible&&!dead;model.userData.contact.position.set(a.x,.014,a.z);if(!model.visible)continue;if(dead){model.visible=this.corpsePose(model,a,t);continue;}model.userData.fall=null;model.position.set(a.x,a.y||0,a.z);model.rotation.set(0,a.yaw||0,0);const previousWeapon=model.userData.weaponModel;animateActor(model,a,t,dt,{cameraYaw:this.camera.rotation.y,shotAt:model.userData.shotAt??-Infinity});if(previousWeapon!==model.userData.weaponModel)model.userData.weaponModel?.traverse(o=>{if(o.isMesh)o.castShadow=false;});}
+  const model=this.actorModel(a),dead=a.alive===false;
+  const knockdown=dead&&a.deathVariant==='headshot'&&model.userData.avatar?.knockdown;
+  const corpseTime=knockdown?(s.headshotTime??this.matchCorpseTime??t):t;
+  this.actorSphere.radius=knockdown?Math.max(2.2,3*knockdown.size):2.2;
+  this.actorSphere.center.set(a.x,(a.y||0)+.9,a.z);
+  const inFrame=this.actorFrustum.intersectsSphere(this.actorSphere);
+  model.visible=a.id!==p.id&&!a.rescued&&inFrame&&(!dead||Number.isFinite(a.deathAt)&&corpseTime-a.deathAt<18);
+  if(!inFrame)this.stats.culledActors++;else if(model.visible)this.stats.posedActors++;
+  model.userData.contact.visible=model.visible&&!dead;model.userData.contact.position.set(a.x,.014,a.z);
+  if(!model.visible)continue;
+  if(dead){model.visible=this.corpsePose(model,a,corpseTime);continue;}
+  model.userData.fall=null;model.position.set(a.x,a.y||0,a.z);model.rotation.set(0,a.yaw||0,0);
+  const previousWeapon=model.userData.weaponModel;
+  animateActor(model,a,t,dt,{cameraYaw:this.camera.rotation.y,shotAt:model.userData.shotAt??-Infinity});
+  if(previousWeapon!==model.userData.weaponModel)model.userData.weaponModel?.traverse(o=>{if(o.isMesh)o.castShadow=false;});
+ }
  for(const g of s.grenades){let model=this.grenades.get(g.id);if(!model){model=createThrownCartridge(g,t);this.grenades.set(g.id,model);this.scene.add(model);}updateThrownCartridge(model,g,t);}for(const [id,m]of this.grenades)if(!s.grenades.some(g=>g.id===id)){this.disposeTransient(m);this.grenades.delete(id);}
  for(const smoke of s.smokes){
   const id=smoke.id||smoke.until;let cloud=this.smokes.get(id);

@@ -100,4 +100,14 @@ export function animateActor(model,actor,time,dt,options={}) {
 }
 export function disposeWeaponResources(){disposeKitModels();disposeViewSurfaces();disposePrimitiveWeapons();}
 
-export function animateCorpse(model,actor,time,options={}){return model.userData.avatar?authoredCorpse(model,actor,time,options):primitiveCorpse(model,actor,time,options);}
+export function animateCorpse(model,actor,time,options={}){
+  const d=model.userData,s=d.avatar;
+  if(!s)return primitiveCorpse(model,actor,time,options);
+  // A reconnect or first visible frame may be a corpse. Equip it from the same
+  // actor snapshot as a live render before sampling the absolute death time.
+  if(s.knockdown&&actor.deathVariant==='headshot'&&s.death?.at!==actor.deathAt&&
+     (d.weaponId!==actor.weapon||s.time==null||Math.abs(s.time-actor.deathAt)>.5)){
+    animateActor(model,actor,actor.deathAt,0);
+  }
+  return authoredCorpse(model,actor,time,options);
+}

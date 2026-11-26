@@ -20,6 +20,16 @@
       "sha256": "8848008569ae5a35733f1ecc9456cd90a6c505cf3ccde375de7e228bd4a264d4"
     },
     {
+      "path": "assets/animations/headshot-female.animation.glb",
+      "bytes": 52212,
+      "sha256": "75e4fe14d9880d20bfb7edb5e6f92d59c8db75dd83ae43fd4d6eac29a1c6e9a3"
+    },
+    {
+      "path": "assets/animations/headshot-male.animation.glb",
+      "bytes": 52324,
+      "sha256": "ffcc720356d81d301ad70be36b2bce2ce869790f100306f3e13e8eb929ecae28"
+    },
+    {
       "path": "assets/fps/Danceman/Danceman.glb",
       "bytes": 5738204,
       "sha256": "3a8e003ac5ae18e0691de8dcb1d0e89d95636dca486afc7faa0546f070e224f4"
@@ -1927,7 +1937,7 @@
     {
       "path": "shared/multiplayer/build.mjs",
       "bytes": 613,
-      "sha256": "4aaf552fa3d0a1e9acf5a4747c5b2483bd867799d8e4ad0adb4ff7d67519eb9f"
+      "sha256": "5ebbe680bcc96a1203777eeb25a893e1296a658a3cf25bccb516ad309ae02810"
     },
     {
       "path": "shared/multiplayer/collision-contract.mjs",
@@ -1952,7 +1962,7 @@
     {
       "path": "shared/multiplayer/rules.mjs",
       "bytes": 2451,
-      "sha256": "9bdd89662fed7c137a11bfaa91eaa494156024732f5ce455ab0765ea5462a60a"
+      "sha256": "ba6479d1b038f22926c6f485bf43b4d033a9436eed9b06dafe7855914dc12fde"
     },
     {
       "path": "shared/multiplayer/world.mjs",
@@ -1981,8 +1991,8 @@
     },
     {
       "path": "src/fps/action-rules.mjs",
-      "bytes": 13245,
-      "sha256": "7b55a53ef630578ca618b797fa8abd7c34fac926667f61a5b2ba2552a7ee3471"
+      "bytes": 13261,
+      "sha256": "fa49359eabfb14d1339aa2d7fd1700527235e64ff5c7b1a86609c9a3614d42eb"
     },
     {
       "path": "src/fps/action-visuals.mjs",
@@ -1991,8 +2001,8 @@
     },
     {
       "path": "src/fps/actor-occlusion.mjs",
-      "bytes": 4068,
-      "sha256": "6c87cc5e4632823333d99cf91c89a9979bdbedbf772e19d24302792d13efad65"
+      "bytes": 4278,
+      "sha256": "db572c0238a05d3cd79c16fbb255b3d4d6533ef21ba3df3e06dd180a9d15a026"
     },
     {
       "path": "src/fps/adaptive-resolution.mjs",
@@ -2046,8 +2056,8 @@
     },
     {
       "path": "src/fps/character-actors.mjs",
-      "bytes": 6868,
-      "sha256": "3c847b874a7a994b4a249fd5753d8cdeeab480e7e3c45a93fcec6387767f2c7e"
+      "bytes": 7202,
+      "sha256": "d1bc244d2878a50f1328f279f4281c80dc97623c550397268adbebdfdebf2c33"
     },
     {
       "path": "src/fps/character-footwear.mjs",
@@ -2056,8 +2066,8 @@
     },
     {
       "path": "src/fps/character-library.mjs",
-      "bytes": 23521,
-      "sha256": "9db1f697f832bb851b43e444617961c4aa145b6b2eb167b5559b3a98f690bcb7"
+      "bytes": 24770,
+      "sha256": "a03b972c86747507488fa92ddb5b071ff52994e5b2672f10e7bab5a18888b830"
     },
     {
       "path": "src/fps/character-overrides.mjs",
@@ -2086,8 +2096,8 @@
     },
     {
       "path": "src/fps/combat-flow.mjs",
-      "bytes": 8340,
-      "sha256": "7515494cbc30291d68c09482db1f6c69a3e4ec224a0a3faffe39933e7c68c0ff"
+      "bytes": 8280,
+      "sha256": "57a98323afcf34e024d363b63c02b1c3109c673eeedf62928eb9c72e892fd866"
     },
     {
       "path": "src/fps/combat-hud.mjs",
@@ -2196,8 +2206,8 @@
     },
     {
       "path": "src/fps/game.mjs",
-      "bytes": 41817,
-      "sha256": "00b01443e164c50ddd468203a147035d56701218a18334cd6d69e8f294fc5879"
+      "bytes": 42334,
+      "sha256": "9952adc1f5b9c8504adb2e54175965b347dd346daf60f3a78a0c0fd261ca0f1d"
     },
     {
       "path": "src/fps/glass-visuals.mjs",
@@ -2218,6 +2228,11 @@
       "path": "src/fps/hand-materials.mjs",
       "bytes": 7428,
       "sha256": "731b02ddf8d9c1579fca9d1969bddf4ce4a778965c8f9e41044f0d42a94e962d"
+    },
+    {
+      "path": "src/fps/headshot-pose.mjs",
+      "bytes": 5711,
+      "sha256": "c62b419f67dc757a697b88453d8e9667d30f85880cb54fca313505ab5908bf0f"
     },
     {
       "path": "src/fps/hud-shell.mjs",
@@ -2276,8 +2291,8 @@
     },
     {
       "path": "src/fps/models.mjs",
-      "bytes": 6557,
-      "sha256": "2336e333da3ec3877bc8ef80e21c2d85dad4be1ce342c5b775d238b4b48a13ab"
+      "bytes": 6966,
+      "sha256": "d89448dc779135fd5ee790991d78c1fffeaa7c415ec959f25bc66abe8174f17c"
     },
     {
       "path": "src/fps/movement.mjs",
@@ -2306,8 +2321,8 @@
     },
     {
       "path": "src/fps/network/session.mjs",
-      "bytes": 32401,
-      "sha256": "990d0c7dc82027e7b9df5573fd7126cb6e64f644ae0cdbb9d240a8f08f3dfd5e"
+      "bytes": 32903,
+      "sha256": "53ee4e9985939cad67a2e8c912cc203443625f1be8989df57d031786c4e0470c"
     },
     {
       "path": "src/fps/physics.mjs",
@@ -2361,8 +2376,8 @@
     },
     {
       "path": "src/fps/render-engine.mjs",
-      "bytes": 32405,
-      "sha256": "44eff22b36565eb89c57075af61dd7fd0e1d93b3c4c8dc6847a9ab971e84101d"
+      "bytes": 33207,
+      "sha256": "8add418b8be529595933251a14fbc6cf3708b3119d3dd28b72ae8d05530070d9"
     },
     {
       "path": "src/fps/render.mjs",
@@ -2610,7 +2625,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 58776519,
+  "bytes": 58890745,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

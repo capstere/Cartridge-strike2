@@ -20,12 +20,19 @@ const wait=async(predicate,timeout=15000)=>{
   const end=performance.now()+timeout;
   while(!predicate()){if(performance.now()>end)throw Error('The local server did not become ready.');await new Promise(r=>setTimeout(r,20));}
 };
+// Match results freeze simulation time. The finishing shot still follows the
+// room clock, including on a late client's first snapshot.
+function headshotResultTime(room){
+  return room.state.time+Math.max(0,room.clock.serverNow()-room.state.resultsAtMs)/1000;
+}
 function actorView(s,localId){
   const a={id:s.id,name:s.name,team:s.team,index:Number(s.id.split('-').at(-1)),isPlayer:s.id===localId,controllerType:s.bot?'bot':'human',bot:null,
     pending:!!s.pending,radius:NETWORK_CONFIG.radius,weapon:s.weapon,lastWeapon:s.lastWeapon,loadout:s.loadout,aimAmount:s.aimAmount,aiming:s.aiming,money:s.money,flash:0,action:s.actionType?{type:s.actionType,start:s.actionStart,duration:s.actionDuration}:null,
     inventory:{primary:s.primary?{id:s.primary,ammo:s.primaryAmmo,reserve:s.primaryReserve}:null,pistol:{id:s.pistol,ammo:s.pistolAmmo,reserve:s.pistolReserve},knife:{id:'knife',ammo:Infinity,reserve:0},smoke:0,flash:0,he:s.he}};
   copyPose(a,s);
-  for(const k of ['lifeId','controlEpoch','connected','alive','hp','armor','kills','deaths','reloadUntil','nextShot','respawnAt','spawnProtectedUntil','deathAt','hurtTime','recoil'])a[k]=s[k];
+  for(const k of ['lifeId','controlEpoch','connected','alive','hp','armor','kills','deaths','reloadUntil','nextShot','respawnAt','spawnProtectedUntil','deathVariant','hurtTime','recoil'])a[k]=s[k];
+  // An unspawned Classic reservation also has alive=false, with no death.
+  a.deathAt=s.deathWeapon?s.deathAt:null;
   a.deathCause=s.deathWeapon?{sourceName:s.deathSource,weapon:s.deathWeapon}:null;
   return a;
 }
@@ -215,6 +222,7 @@ export class NetworkSession {
     if(newMatch||newPhase||modeChanged){
       this.matchId=state.matchId;this.matchPhase=state.phase;
       this.resultsAt=state.phase==='results'?this.lastPatch:undefined;
+      this.view.state.headshotTime=this.resultsAt!==undefined?headshotResultTime(this.room):undefined;
       this.prediction?.reset();this.keepRocketEffects();this.predictedShots.clear();this.actionTimes.clear();this.nextCosmetic=0;
       if(newMatch){for(const entry of this.remote.values())this.predict.detach(entry.schema);this.remote.clear();}
       this.view.state.round=classic?state.round:state.matchId;
@@ -438,11 +446,12 @@ export class NetworkSession {
     this.status=stale?'Anslutningen väntar — kontroller stoppade':`${this.room.roomId} · ${this.view.actors.filter(a=>!a.pending).length}/${ROOM_CAPACITY} · ${rtt} ms${rtt>=200?' · Hög fördröjning':''}`;
   }
   updateDisplayTime(state,now){
-    // Results freeze the simulation. Let the final effects age against a
-    // stable clock even as the server continues sending identical times.
     const results=this.resultsAt!==undefined,elapsed=Math.max(0,(now-(this.resultsAt??this.lastPatch))/1000);
     const time=state.time+Math.min(results?2:.1,elapsed);
     this.view.state.time=Math.max(this.view.state.time??0,time);
+    if(this.view.state.headshotTime!==undefined){
+      this.view.state.headshotTime=Math.max(this.view.state.headshotTime,headshotResultTime(this.room));
+    }
   }
   setInputEnabled(enabled){
     if(this.closed)return;

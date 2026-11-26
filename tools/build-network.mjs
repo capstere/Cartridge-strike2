@@ -11,8 +11,11 @@ const check=process.argv.includes('--check'),root=new URL('../',import.meta.url)
 const read=path=>readFile(new URL(path,root));
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
 const graph=JSON.parse(await read('docs/multiplayer/imports.json'));
+const knockdownFiles=['src/fps/character-actors.mjs','src/fps/character-library.mjs','src/fps/models.mjs',
+  'src/fps/actor-occlusion.mjs','src/fps/headshot-pose.mjs',
+  'assets/animations/headshot-male.animation.glb','assets/animations/headshot-female.animation.glb'];
 const paths=[...Object.keys(graph),'shared/multiplayer/rules.mjs','shared/multiplayer/protocol.mjs','server/network-schema.mjs','server/network-room.mjs','server/team-comms.mjs','server/lag-compensation.mjs','server/match-lifecycle.mjs','server/classic-round.mjs','server/headless.mjs','shared/multiplayer/input.mjs','src/fps/app.mjs','src/fps/tactical-controls.mjs','src/fps/render-engine.mjs','src/fps/render.mjs','src/fps/minimap-cache.mjs','src/fps/hud-shell.mjs','src/fps/zombie-visuals.mjs','src/fps/floor-audio.mjs','fps/network.css','src/fps/network/menu.mjs','src/fps/network/session.mjs','src/fps/network/room-ui.mjs','shared/multiplayer/world.mjs','shared/multiplayer/collision-contract.mjs','shared/sha256.mjs','src/fps/network/connection.mjs','server/access.mjs','server/pilot-access.mjs','server/local-server.mjs',
-  'server/family-room.mjs','shared/multiplayer/family-room.mjs','ui/cs-mobile.mjs','ui/cs-mobile.css'].sort();
+  'server/family-room.mjs','shared/multiplayer/family-room.mjs','ui/cs-mobile.mjs','ui/cs-mobile.css',...knockdownFiles].sort();
 const sources=await Promise.all(paths.map(async path=>[path,hash(await read(path))]));
 const {loadHeadlessWorld}=await import('../server/headless.mjs');
 const {world}=await loadHeadlessWorld(NETWORK_MAP);
@@ -29,7 +32,7 @@ const files={
 // runtime allowlist. The old synthetic slice never requested these GLBs.
 const {LIBRARY_MAP}=await import('../furniture-editor/library/catalog.mjs');
 const info=JSON.parse(await read('build-info.json'));
-const runtime=new Set([...info.files.map(f=>f.path),...Object.keys(files),
+const runtime=new Set([...info.files.map(f=>f.path),...Object.keys(files),...knockdownFiles,
   'shared/multiplayer/world.mjs','shared/multiplayer/collision-contract.mjs','shared/sha256.mjs','src/fps/network/connection.mjs','src/fps/network/room-ui.mjs','shared/multiplayer/family-room.mjs']);
 for(const item of world.projectScene.items){
   const url=LIBRARY_MAP.get(item.assetId)?.url;

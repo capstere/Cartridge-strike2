@@ -15,8 +15,8 @@ export const ActorState=schema({
   ammo:t.uint16(),reserve:t.uint16(),kills:t.uint16(),deaths:t.uint16(),
   reloadUntil:t.float64(),nextShot:t.float64(),respawnAt:t.float64(),
   spawnProtectedUntil:t.float64(),deathAt:t.float64(),hurtTime:t.float64(),
-  deathSource:t.string(),deathWeapon:t.string(),recoil:t.float64(),
-},'FPSActorV10');
+  deathSource:t.string(),deathWeapon:t.string(),deathVariant:t.string(),recoil:t.float64(),
+},'FPSActorV12');
 export const DoorState=schema({angle:t.float64(),poseAngle:t.float64(),target:t.float64(),sign:t.float64(),holdUntil:t.float64()},'FPSDoorV10');
 export const GrenadeState=schema({id:t.string(),type:t.string(),ownerId:t.string(),team:t.string(),ownerLifeId:t.uint32(),deadline:t.float64(),x:t.float32(),y:t.float32(),z:t.float32()},'FPSGrenadeV10');
 export const RocketState=schema({
@@ -32,5 +32,5 @@ export const ResidentState=schema({
 export const RoomState=schema({mode:t.string(),round:t.uint32(),roundPhase:t.string(),zombiesEnabled:t.boolean(),dancemanEnabled:t.boolean(),friendlyFire:t.boolean(),botDifficulty:t.string(),residents:t.map(ResidentState),deadline:t.float64(),buyDeadline:t.float64(),resultDeadline:t.float64(),roundReason:t.string(),roundWinner:t.string(),
   bombStatus:t.string(),carrierId:t.string(),bombX:t.float32(),bombY:t.float32(),bombZ:t.float32(),bombDeadline:t.float64(),hostages:t.map(HostageState),fillBots:t.boolean(),brokenGlass:t.map('number'),grenades:t.map(GrenadeState),projectiles:t.map(RocketState),actors:t.map(ActorState),tick:t.uint32(),time:t.float64(),
   phase:t.string(),matchId:t.uint32(),ownerId:t.string(),remainingSeconds:t.float64(),durationSeconds:t.uint16(),scoreTarget:t.uint16(),
-  winner:t.string(),reason:t.string(),results:t.string(),
-  analysts:t.uint16(),counterAnalysts:t.uint16(),worldRevision:t.uint32(),doors:t.map(DoorState),elevatorProgress:t.float64(),elevatorOpenAt:t.float64()},'FPSRoomV10');
+  winner:t.string(),reason:t.string(),results:t.string(),resultsAtMs:t.float64(),
+  analysts:t.uint16(),counterAnalysts:t.uint16(),worldRevision:t.uint32(),doors:t.map(DoorState),elevatorProgress:t.float64(),elevatorOpenAt:t.float64()},'FPSRoomV12');
