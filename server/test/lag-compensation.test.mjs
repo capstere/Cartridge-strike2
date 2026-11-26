@@ -28,6 +28,13 @@ test('bounded Colyseus hitbox rewind hits moving targets without changing live p
  target.x=20;target.height=.9;
  assert.equal(g.traceHitscan(shooter,from,dir,20).victim,null,'current crouched box is below the ray');
  assert.equal(r.lag.query(shooter,from,dir,20).victim,target,'historic standing height is retained');
+ const lowRay={...from,y:.82};
+ assert.equal(g.traceHitscan(shooter,lowRay,dir,20).head,true,'head on the low current body');
+ assert.equal(r.lag.query(shooter,lowRay,dir,20).head,false,'body on the standing rewind, even though both intersect');
+ target.y=.44;target.height=1.7;
+ assert.equal(g.traceHitscan(shooter,from,dir,20).head,false,'body on the elevated current pose');
+ assert.equal(r.lag.query(shooter,from,dir,20).head,true,'head on the lower historical pose');
+ target.y=0;
  target.x=21.4;target.height=1.7;
  // Current-life history cannot be used for a just-respawned body.
  r.state.actors.get(target.id).lifeStartedAt=at+1;

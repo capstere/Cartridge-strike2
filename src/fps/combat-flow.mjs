@@ -77,7 +77,7 @@ export function combatEvent(g,e){
  }
  if(e.type==='damage'&&hostile(source,victim)){
   source.combat.damage+=e.amount;source.combat.hits++;
-  const head=Number.isFinite(e.point?.y)&&e.point.y>=victim.y+victim.height*.83;
+  const head=e.head;
   if(head)source.combat.headHits++;
   g.emit('combat-hit',source,{head,amount:e.amount,targetId:victim.id,lethal:e.hp<=0});
  }

@@ -1,5 +1,17 @@
 # Cartridge-Strike 2 handover
 
+## Landning efter dödande huvudträff · 26 november 2026
+
+I Classic och Team Deathmatch får spelare och lagbotar en bakåtkastning när den dödande kulan träffar de översta 17 procenten av träffvolymen. Servern använder samma kroppsläge som vid skottet och skickar dödstid och variant även vid återanslutning. Den lokala simuleringen använder samma träffregel. Skada och rustning följer tidigare regler. Vanliga dödsfall använder `Death01`.
+
+Prova i ett privat rum med två lag. Minska motståndarens hälsa med kroppsträffar från P9 och sikta på huvudet inför det sista skottet. Skytten kan se hela rörelsen på 2,5 sekunder. Upprepa med sista träffen i bålen för att jämföra. [Familjerummet](https://cs2.capstere.com/room/JESPERS-ROOM) · [Film med båda figurerna](docs/headshot/landning-fore-efter.mp4)
+
+Separata animationsbanker laddas före matchen. Gamla och registrerade kompatibla karaktärer behåller sina 13 originalklipp. Skjutvapen, patronväska, skor och dräkt ingår i det visuella provet. När en kropp ligger still återanvänds slutposen och dess synlighetsgränser. [Kontaktmått, väggprov och prestanda](docs/headshot/README.md)
+
+Spelversion 0.18.0, protokoll **12**, bygg-ID `5a438af3b9d8d19fa82b045f6fb1483261c43b81737c4796ce8be21c112d5376`. Mobilproven på Pi:n använder emulerad touch. Fysisk iPhone och Android återstår. Vid mycket trång placering kan vapnet kort överlappa väggen i övergången från den levande posen. Föregående fungerande Pi-release för rollback är `5f740bf84fe9b16bdaa9fd257569d86f6d62d91f`. Aktivering och återställning går genom `cs2-online` när rummen är tomma. [Driftguide](deploy/online/README.md)
+
+Det isolerade matchprovet på Pi:n följde hela klippet i båda spellägena. Den andra klienten bekräftade samma dödstid och variant. Första P9-träffen lämnade 77 hälsa och den femte dödade. Familjelobbyn öppnades och stängdes med befintliga inställningar. Webbläsarprovet för Dansmannen inväntar nu samma runda och liv på klient och server innan det pausar för testplacering. [PR #41 och driftkvitto](https://github.com/capstere/Cartridge-strike2/pull/41)
+
 ## Valbar automatisk eld online · 26 november 2026
 
 Mobilens befintliga **Automatisk eld på mobil** fungerar även i Classic och
@@ -33,15 +45,25 @@ skottkrav samt server- och pekardiagnostik behålls. Nästa körning godkände m
 och raketproven men visade att residentprovets datorkamera kunde återta en gammal
 riktning efter testplacering. Även den fixturen inväntar nu serverbekräftad paus
 och verifierar den verkliga inmatningens kamerariktning. Synlighets-, animations-
-och ljudkraven är oförändrade. Invänta grönt CI på slutcommit.
+och ljudkraven är oförändrade. Alla sju CI-jobb passerade på slutrevisionen.
 Den lokala mjukvarurenderingen nådde verklig målmarkering men klarade inte kravet
 på tre bekräftade skott; mobilklienten visade cirka en sekunds latens. Det är
-inget godkänt browserprov. Invänta godkänd hårdvaruaccelererad CI före merge.
+inget godkänt browserprov. Det hårdvaruaccelererade CI-provet passerade på slutrevisionen.
 
-**Pi-aktivering återstår.** Denna ändring är ännu inte verifierad live på
-`cs2.capstere.com`. Fortsätt med befintliga driftverktyget när rummen är tomma,
-behåll rollback och verifiera publicerad revision/bygg-ID samt båda skjutlägena
-via familjelänken. Fysiska iPhone- och Android-prov återstår.
+**Live på Pi:n sedan 26 november 2026.** Revision
+`5f740bf84fe9b16bdaa9fd257569d86f6d62d91f`, bygg-ID
+`e1bb12c95cf06c597739e3d8f4d0b6014e23e7f05d0469ccbe47ebc387cd6976`,
+spelversion 0.18.0 och protokoll 11. Rollback
+`1631e8300946d2a048635ce3e5e4e5ebdad46d0d` finns kvar och klarade det isolerade
+förprovet. [Driftkvitto för PR #40](https://github.com/capstere/Cartridge-strike2/pull/40#issuecomment-7189550540)
+
+Två separata inloggningar i familjerummet verifierade automatisk P9-eld mot en
+synlig motspelare, stopp vid målförlust och paus, manuell **ELD** samt att valet
+låg kvar efter magasins- och sidomladdning. **KASTA** och **AVFYRA** avfyrade
+granat och raket manuellt med automatisk eld på. Familjerummets inställningar
+återställdes efter provet. Mobilproven kördes med emulerad Pixel 7 i Chromium,
+liggande 915 × 412. Fysiska iPhone- och Android-prov återstår.
+[Familjelänk](https://cs2.capstere.com/room/JESPERS-ROOM)
 
 ## Permanenta familjerummet · 25 november 2026
 

@@ -14,6 +14,8 @@ import {WEAPONS} from './config.mjs';
 import {GLTFLoader} from '../../vendor/three/addons/loaders/GLTFLoader.js';
 import {BUSINESS_HOSTAGE_FILE,prepareBusinessHostage} from './business-hostage.mjs';
 let templates=null,pending=null,privateCharacter=null,privateViewAppearance=null;
+const knockdownName='Headshot_KnockDown_Pilot';
+const knockdowns=new Map();
 let hostageTemplate=null,hostagePending=null,hostageSupport=null;
 let privateActorIds=new Set(['analysts-0','analysts-1']);
 const originalViewProfiles = new Map();
@@ -24,19 +26,33 @@ const operatorPalette = {
 };
 const live=new Set();
 export function charactersReady(){return !!templates;}
-export function installCharacterTemplates(male,female){
+export function installCharacterTemplates(male,female,banks={}){
  for(const asset of [male,female]){
   const clips=new Set(asset.animations.map(c=>c.name));
   for(const name of ['Idle_Loop','Walk_Loop','Crouch_Idle_Loop','Pistol_Idle_Loop','Pistol_Reload','Death01'])if(!clips.has(name))throw Error('Missing authored character clip: '+name);
   let skins=0;asset.scene.traverse(o=>{if(o.isSkinnedMesh){skins++;o.frustumCulled=false;}});if(skins<5)throw Error('Incomplete dressed skinned character');
  }
  templates={male,female};
+ knockdowns.clear();
+ for(const gender of ['male','female']){
+  const clip=banks[gender]?.animations.find(c=>c.name===knockdownName);
+  if(clip?.duration>0&&clip.tracks.some(t=>t.name==='pelvis.position'))knockdowns.set(gender,clip);
+ }
 }
 export async function loadCharacterLibrary(){
  if(pending)return pending;if(templates)return;
  const loader=new GLTFLoader();
- pending=Promise.all(['male','female'].map(name=>loader.loadAsync(new URL(`../../assets/fps/models/quaternius-operator-${name}.glb`,import.meta.url).href)))
-  .then(async([male,female])=>{installCharacterTemplates(male,female);await loadCharacterOverrides({male,female});}).catch(e=>{pending=null;templates=null;throw new Error('Karaktärsmodellerna kunde inte laddas: '+e.message);});
+ pending=Promise.all(['male','female'].map(async gender=>{
+  const [model,bank]=await Promise.all([
+   loader.loadAsync(new URL(`../../assets/fps/models/quaternius-operator-${gender}.glb`,import.meta.url).href),
+   loader.loadAsync(new URL(`../../assets/animations/headshot-${gender}.animation.glb`,import.meta.url).href)
+    .catch(()=>null) // Optional bank. Death01 is supplied by every compatible model.
+  ]);
+  return {model,bank};
+ })).then(async([male,female])=>{
+  installCharacterTemplates(male.model,female.model,{male:male.bank,female:female.bank});
+  await loadCharacterOverrides(templates);
+ }).catch(e=>{pending=null;templates=null;throw new Error('Karaktärsmodellerna kunde inte laddas: '+e.message);});
  return pending;
 }
 /** Separate from the studio's operator reference rig; fetched once for FPS use. */
@@ -138,7 +154,16 @@ function finishAvatar({asset,root,bones,materials,meshes,shoes,footSamples=[],se
  const idle=base.get('Idle_Loop');idle.play();if(!isHostage)upper.get('Pistol_Idle_Loop').play();mixer.update(0);root.updateMatrixWorld(true);root.traverse(o=>{if(o.isSkinnedMesh)o.skeleton.update();});
  const holder=new T.Group();holder.name='authored-humanoid-'+gender;holder.rotation.y=Math.PI;holder.add(root);
  const bounds=posedBounds(root),scale=normalize?1.69/(bounds.max.y-bounds.min.y):1;holder.scale.setScalar(scale);holder.position.y=-bounds.min.y*scale+.004;
- const state={holder,root,bones,mixer,base,upper,clips,materials,meshes,shoes,footSamples,scale,seed,gender,ownedGeometry,activeBase:'Idle_Loop',activeUpper:isHostage?null:'Pistol_Idle_Loop',time:null,x:null,z:null,motionSpeed:0,groundOffset:holder.position.y,isHostage,disposed:false,groundInverse:new T.Matrix4(),groundMatrix:new T.Matrix4(),hitBase:new T.Quaternion(),hitRotation:new T.Quaternion(),hitEuler:new T.Euler(),hitApplied:false};live.add(state);return state;
+ const state={holder,root,bones,mixer,base,upper,clips,materials,meshes,shoes,footSamples,scale,seed,gender,ownedGeometry,activeBase:'Idle_Loop',activeUpper:isHostage?null:'Pistol_Idle_Loop',time:null,x:null,z:null,motionSpeed:0,groundOffset:holder.position.y,isHostage,disposed:false,groundInverse:new T.Matrix4(),groundMatrix:new T.Matrix4(),hitBase:new T.Quaternion(),hitRotation:new T.Quaternion(),hitEuler:new T.Euler(),hitApplied:false};
+ // The bank is a separate mixer action. Exporters and saved designs retain the original 13 clips.
+ const clip=!isHostage&&knockdowns.get(gender),armature=bones.get('root')?.parent;
+ if(clip&&armature&&clip.tracks.every(t=>bones.has(t.name.split('.')[0]))){
+  holder.updateMatrixWorld(true);
+  const basis=new T.Matrix4().copy(holder.matrixWorld).invert().multiply(armature.matrixWorld).elements;
+  state.knockdown={action:mixer.clipAction(clip),yaw:Math.atan2(basis[8],basis[10]),
+   size:scale*Math.hypot(basis[8],basis[9],basis[10]),floorOffset:-basis[13]*scale};
+ }
+ live.add(state);return state;
 }
 function createBusinessHostage(id){
  const asset=hostageTemplate,root=cloneSkinned(asset.scene),bones=new Map(),meshes=[],footSamples=[];
@@ -286,6 +311,7 @@ export function disposeAvatar(state){
  state.root.traverse(o=>{if(o.isSkinnedMesh)o.skeleton.dispose();});for(const m of new Set(state.materials.values())){m.userData.ownedTexture?.dispose();m.dispose();}for(const g of state.ownedGeometry)g.dispose();live.delete(state);
 }
 export function disposeCharacterLibrary(){
+ knockdowns.clear();
  for(const p of originalViewProfiles.values())p.dispose();originalViewProfiles.clear();
  clearCharacterOverrides();privateViewAppearance?.dispose();privateViewAppearance=null;
  for(const state of [...live])disposeAvatar(state);const geometries=new Set(),materials=new Set(),textures=new Set();

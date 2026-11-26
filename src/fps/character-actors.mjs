@@ -2,6 +2,7 @@
 import * as T from '../../vendor/three/three.module.js';
 import {createAuthoredAvatar,animateAuthored,posedBounds,privateCharacterApplies,characterVisualSignature,disposeAvatar} from './character-library.mjs?v=6.1.2';
 import {WEAPONS} from './config.mjs';
+import {poseHeadshot} from './headshot-pose.mjs';
 const V=()=>new T.Vector3(),Q=()=>new T.Quaternion();
 export function upgradeActor(model,team,id,isHostage){
  const d=model.userData,keep=new Set();for(const root of[d.bag,d.marker])root?.traverse(o=>keep.add(o));
@@ -56,10 +57,14 @@ export function syncAuthoredActor(model,actor,time,options={}){
  }
  d.marker.position.y=(actor.height||1.7)+.14;d.marker.rotation.y=(options.cameraYaw||0)-(actor.yaw||0);
 }
-export function authoredCorpse(model,actor,time,{angle=actor.yaw||0,free=1.7}={}){
+export function authoredCorpse(model,actor,time,space={}){
  const age=time-actor.deathAt;if(!Number.isFinite(age)||age<0||age>18)return false;
  const d=model.userData,s=d.avatar,progress=Math.min(1,age/.85);
+ if(actor.deathVariant==='headshot'&&s.knockdown)return poseHeadshot(model,actor,age,space);
+ const {angle=actor.yaw||0,free=1.7}=space;
  if(!s.death||s.death.at!==actor.deathAt){s.mixer.stopAllAction();const clip=s.mixer.clipAction(s.clips.get('Death01'));clip.reset().setLoop(T.LoopOnce,1).play();clip.clampWhenFinished=true;s.death={at:actor.deathAt,action:clip,bounds:null};s.time=null;}
+ const finished=progress===1&&age*3>=s.death.action.getClip().duration-.001;
+ if(s.death.settled&&finished)return true;
  s.mixer.setTime(Math.min(s.death.action.getClip().duration-.001,age*3));
  d.marker.visible=false;model.position.set(0,0,0);model.rotation.set(0,0,0);model.scale.set(1,1,1);d.frame.rotation.set(0,0,0);s.holder.scale.setScalar(s.scale);s.holder.position.set(0,0,0);s.holder.rotation.set(0,Math.PI,0);
  model.updateMatrixWorld(true);
@@ -68,5 +73,5 @@ export function authoredCorpse(model,actor,time,{angle=actor.yaw||0,free=1.7}={}
  model.updateMatrixWorld(true);const box=progress===1&&s.death.bounds?s.death.bounds:posedBounds(model);if(progress===1)s.death.bounds=box.clone();
  model.scale.x=Math.min(1,.42/Math.max(.01,box.max.x-box.min.x));model.scale.z=Math.min(1,(Math.max(.2,free)+.24)/Math.max(.01,box.max.z-box.min.z));
  const shiftX=-(box.min.x+box.max.x)*.5*model.scale.x,shiftZ=Math.max(-.12-box.min.z*model.scale.z,Math.min(0,Math.max(.2,free)+.12-box.max.z*model.scale.z));
- model.rotation.y=angle;model.position.set(actor.x+Math.cos(angle)*shiftX+Math.sin(angle)*shiftZ,.006-box.min.y+(actor.y||0)*(1-progress),actor.z-Math.sin(angle)*shiftX+Math.cos(angle)*shiftZ);return true;
+ model.rotation.y=angle;model.position.set(actor.x+Math.cos(angle)*shiftX+Math.sin(angle)*shiftZ,.006-box.min.y+(actor.y||0)*(1-progress),actor.z-Math.sin(angle)*shiftX+Math.cos(angle)*shiftZ);s.death.settled=finished;s.death.occlusionBox=null;return true;
 }

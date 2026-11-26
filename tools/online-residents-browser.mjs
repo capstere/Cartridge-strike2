@@ -99,12 +99,19 @@ async function start(desktop,mobile,room){
 async function approachFixture(desktop,mobile,room){
   const game=room.sim.game,dancer=game.state.zombies.find(z=>z.id==='danceman');
   for(const [page,team,dz,yaw] of [[desktop,'analysts',2.2,0],[mobile,'counterAnalysts',-1,Math.PI]]){
-    await page.waitForFunction(()=>__fps.network.room.state.phase==='active'&&__fps.modal!== 'online');
+    const seat=[...room.seats.values()].find(s=>s.actor.team===team),actor=seat.actor;
+    const round=room.state.mode==='classic'?room.state.round:room.state.matchId;
+    // A Classic round can advance on the server before this client receives
+    // its new life. The server accepts Pause only for the current life and epoch.
+    await page.waitForFunction(({round,lifeId,epoch})=>{
+      const {game,network,modal}=__fps;
+      return network.room.state.phase==='active'&&modal!=='online'&&game.state.round===round
+        &&network.lifeId===lifeId&&network.controlEpoch===epoch;
+    },{round,lifeId:actor.lifeId,epoch:seat.epoch});
     if(await page.locator('#pause').isHidden())await page.keyboard.press('Escape');
     await page.locator('#resume').waitFor();
     const spot={x:dancer.x,z:dancer.z+dz,y:0,yaw,pitch:-.22};
     assert(game.world.canOccupy(spot.x,spot.z,.22,1.7));
-    const seat=[...room.seats.values()].find(s=>s.actor.team===team),actor=seat.actor;
     await until(()=>!seat.enabled,'authority acknowledges pause before resident placement');
     Object.assign(actor,spot,{spawnProtectedUntil:0});
     await until(()=>page.evaluate(spot=>{

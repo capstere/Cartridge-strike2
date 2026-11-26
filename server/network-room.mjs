@@ -351,7 +351,7 @@ export class NetworkRoom extends Room {
         pistol:pistol.id,pistolAmmo:pistol.ammo,pistolReserve:pistol.reserve,he});
       const item=g.item(a);s.ammo=Number.isFinite(item?.ammo)?item.ammo:0;s.reserve=item?.reserve||0;
       s.respawnAt=a.respawnAt??0;s.deathAt=a.deathAt??0;s.hurtTime=Number.isFinite(a.hurtTime)?a.hurtTime:-100;
-      s.deathSource=a.deathCause?.sourceName||'';s.deathWeapon=a.deathCause?.weapon||'';
+      s.deathSource=a.deathCause?.sourceName||'';s.deathWeapon=a.deathCause?.weapon||'';s.deathVariant=a.deathVariant||'';
     }
     const active=new Set();
     for(const grenade of g.state.grenades){

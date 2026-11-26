@@ -109,7 +109,7 @@ export class MatchLifecycle {
       if(!this.eligible())throw Error('Alla anslutna spelare måste vara redo, med minst en spelare i varje lag.');
       this.resetActors();state.phase='countdown';this.deadline=this.now+this.settings.countdownSeconds*1000;
     }else if(m.kind==='rematch'&&state.phase==='results'){
-      state.matchId++;state.phase='waiting';state.winner=state.reason=state.results='';
+      state.matchId++;state.phase='waiting';state.winner=state.reason=state.results='';state.resultsAtMs=0;
       this.resetActors();
       for(const seat of r.seats.values())seat.playerReady=false;
       state.remainingSeconds=this.lobbySeconds;
@@ -179,7 +179,7 @@ export class MatchLifecycle {
     const r=this.room,g=r.sim.game,score=g.state.score;
     // Resolve after the complete damage batch: simultaneous final kills can draw.
     const winner=forced||(score.analysts===score.counterAnalysts?'draw':score.analysts>score.counterAnalysts?'analysts':'counterAnalysts');
-    Object.assign(this.state,{phase:'results',winner,reason,remainingSeconds:0,
+    Object.assign(this.state,{phase:'results',winner,reason,remainingSeconds:0,resultsAtMs:this.now,
       results:JSON.stringify({matchId:this.state.matchId,winner,reason,score:{...score},players:g.actors.map(a=>({id:a.id,name:a.name,team:a.team,kills:a.kills,deaths:a.deaths}))})});
     g.state.paused=true;g.state.projectiles=[];
     for(const [sid,seat] of r.seats){seat.enabled=false;r.inputs.get(sid).clear();}

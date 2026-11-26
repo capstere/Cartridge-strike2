@@ -69,7 +69,14 @@ export class ActorOcclusion{
  update(actors,camera){
   this.hidden=0;if(!this.enabled)return;
   this.visibility.update(camera.position);
-  for(const model of actors)if(model.visible&&actorBounds(model,this.box)){
+  for(const model of actors){
+   if(!model.visible)continue;
+   const death=model.userData.avatar?.death;
+   if(death?.occlusionBox)this.box.copy(death.occlusionBox);
+   else{
+    if(!actorBounds(model,this.box))continue;
+    if(death?.settled)death.occlusionBox=this.box.clone();
+   }
    const contact=model.userData.contact;
    if(contact?.visible){
     contact.updateWorldMatrix(true,false);
