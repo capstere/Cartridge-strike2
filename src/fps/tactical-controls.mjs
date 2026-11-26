@@ -126,7 +126,7 @@ export class TacticalControls {
     if (!trigger) return;
     const manual = w?.slot === 'grenade' || !!w?.projectile;
     // Auto-fire must not make grenades/rocket launchers impossible to use.
-    trigger.hidden = !this.getGame()?.network && !!this.settings.mobileAutoFire && !manual;
+    trigger.hidden = !!this.settings.mobileAutoFire && !manual;
     const label = w?.slot === 'grenade' ? 'KASTA' : w?.projectile ? 'AVFYRA' : 'ELD';
     if (trigger.textContent !== label) trigger.textContent = label;
     trigger.setAttribute('aria-label', label === 'KASTA' ? 'Kasta vald granat' : 'Skjut');

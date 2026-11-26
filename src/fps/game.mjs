@@ -305,6 +305,10 @@ export class Game {
       if (hit !== null && hit < nearest) { nearest = hit; target = other; }
     }
     if (!target || target.team === actor.team || (!target.team && target.kind!=='zombie')) return null;
+    // Residents still block the shot ray. Online, only a pursuing/attacking
+    // zombie is an automatic target; never shoot the dancer or a passive NPC.
+    if (this.network && target.kind==='zombie' &&
+        (target.model==='danceman' || !['pursuing','attack'].includes(target.behavior))) return null;
     const endpoint = {
       x: from.x + dir.x * nearest, y: from.y + dir.y * nearest, z: from.z + dir.z * nearest,
     };

@@ -1,6 +1,118 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {NetworkSession} from '../src/fps/network/session.mjs';
+import {WEAPONS} from '../src/fps/config.mjs';
+import {validateNetworkInput} from '../shared/multiplayer/protocol.mjs';
+
+// Exercise the real fixed-step input writer while capturing its ordinary wire
+// packets. The SDK advances prediction once per send, independently of renders.
+function triggerSession(weapon='p9'){
+ const self={id:'a',lifeId:2,controlEpoch:1,alive:true,weapon,ammo:100,he:1,reloadUntil:0,nextShot:0,yaw:0,pitch:0};
+ const state={phase:'active',mode:'tdm',time:0,tick:0,actors:new Map([['a',self]])};
+ const wire=[];
+ let steps=1;
+ const prediction={world:{game:{state:{time:0}},actor:{x:0,y:0,z:0}},reset(){}};
+ const session=Object.assign(Object.create(NetworkSession.prototype),{
+  closed:false,enabled:true,connectionState:'connected',lastPatch:performance.now(),localPlayerId:'a',lifeId:self.lifeId,controlEpoch:self.controlEpoch,
+  room:{roomId:'test',state},view:{state:{time:0},actors:[]},prediction,predict:{tick:()=>steps},
+  world:{doors:{doors:[]}},residents:new Map(),projectiles:new Map(),
+  fireId:0,reloadId:0,trigger:false,nextCosmetic:0,events:[],predictedShots:new Map(),actionTimes:new Map(),
+  metrics:{sent:0,cosmeticShots:0,maxPending:0}
+ });
+ session.input={data:{},pendingCount:0,send(){
+  const data={...this.data};
+  validateNetworkInput(data,self,state.tick);
+  assert.equal(Object.hasOwn(data,'autoFire'),false,'automatic fire remains local intent, never a wire field');
+  wire.push({time:prediction.world.game.state.time,data});
+  prediction.world.game.state.time+=1/60;state.time=prediction.world.game.state.time;state.tick++;
+ }};
+ return {session,self,state,wire,frame(controls,count=1){steps=count;session.advanceFrame(performance.now(),controls);}};
+}
+const shots=wire=>wire.filter((entry,index)=>entry.data.fireId>(wire[index-1]?.data.fireId||0));
+
+test('mobile automatic fire repeats semiautomatic weapons with ordinary release packets',()=>{
+ for(const weapon of ['p9','p12','shotgun','sniper','knife']){
+  const f=triggerSession(weapon),interval=WEAPONS[weapon].interval;
+  for(let tick=0;tick<Math.ceil(interval*60*3)+2;tick++)f.frame({fire:true,autoFire:true});
+  const fired=shots(f.wire);
+  assert(fired.length>=3,weapon+' should keep firing while an eligible target stays under the reticle');
+  assert.deepEqual(fired.map(x=>x.data.fireId),fired.map((_,i)=>i+1));
+  for(let i=0;i<fired.length;i++){
+   assert.equal(fired[i].data.fire,true,weapon+' shot must be a normal trigger press');
+   if(i===0)continue;
+   const from=f.wire.indexOf(fired[i-1]),to=f.wire.indexOf(fired[i]);
+   assert(f.wire.slice(from+1,to).some(x=>!x.data.fire),weapon+' must release before its next semiautomatic shot');
+   const gap=fired[i].time-fired[i-1].time;
+   assert(gap>=interval-1e-8,weapon+' must keep its normal cadence');
+   assert(gap<=interval+2/60,weapon+' should resume within two input ticks of readiness');
+  }
+  const before=f.session.fireId;
+  for(let tick=0;tick<90;tick++)f.frame({fire:false,autoFire:false});
+  assert.equal(f.session.fireId,before,weapon+' loses the trigger immediately when the target disappears');
+  assert.equal(f.wire.at(-1).data.fire,false);
+ }
+});
+
+test('manual semiautomatic hold stays a single press until a real release',()=>{
+ const f=triggerSession('p9');
+ for(let tick=0;tick<90;tick++)f.frame({fire:true});
+ assert.equal(shots(f.wire).length,1);
+ assert(f.wire.every(x=>x.data.fire),'manual hold must remain a held button');
+ f.frame({fire:false});
+ for(let tick=0;tick<90;tick++)f.frame({fire:true});
+ assert.equal(shots(f.wire).length,2,'a released and pressed manual trigger fires again');
+});
+
+test('automatic weapons keep the same continuous input and cadence in both modes',()=>{
+ const automatic=triggerSession('smg'),manual=triggerSession('smg');
+ for(let tick=0;tick<120;tick++){
+  automatic.frame({fire:true,autoFire:true});manual.frame({fire:true});
+ }
+ assert.deepEqual(automatic.wire,manual.wire);
+ assert(automatic.wire.every(x=>x.data.fire));
+ const fired=shots(automatic.wire);
+ assert(fired.length>10);
+ for(let i=1;i<fired.length;i++)assert(fired[i].time-fired[i-1].time>=WEAPONS.smg.interval-1e-8);
+});
+
+test('automatic trigger follows fixed input ticks across batched render frames',()=>{
+ const single=triggerSession(),batched=triggerSession(),controls={fire:true,autoFire:true};
+ for(let tick=0;tick<120;tick++)single.frame(controls);
+ for(let frame=0;frame<20;frame++)batched.frame(controls,6);
+ assert.deepEqual(batched.wire,single.wire,'render grouping must not change trigger edges or cadence');
+ const bounded=triggerSession();bounded.frame(controls,18);
+ assert.equal(bounded.wire.length,6,'a delayed render retains the existing six-step catch-up bound');
+});
+
+test('automatic trigger cannot fire while controls or combat are unavailable',()=>{
+ const cases=[
+  ['disabled',f=>f.session.enabled=false],
+  ['reconnecting',f=>f.session.connectionState='reconnecting'],
+  ['stale',f=>f.session.lastPatch=performance.now()-1100],
+  ['dead',f=>f.self.alive=false],
+  ['results',f=>f.state.phase='results'],
+  ['Classic buy phase',f=>{f.state.mode='classic';f.state.roundPhase='buy';}],
+  ['reloading',f=>f.self.reloadUntil=10],
+  ['empty magazine',f=>f.self.ammo=0],
+ ];
+ for(const [name,block] of cases){
+  const f=triggerSession();block(f);
+  for(let frame=0;frame<10;frame++)f.frame({fire:true,autoFire:true},6);
+  assert.equal(f.session.fireId,0,name+' must not create a shot');
+  assert.equal(f.session.events.length,0,name+' must not present a shot');
+ }
+});
+
+test('automatic fire never launches explosives while their manual trigger remains usable',()=>{
+ for(const weapon of ['he','bazooka']){
+  const automatic=triggerSession(weapon);
+  for(let tick=0;tick<120;tick++)automatic.frame({fire:true,autoFire:true});
+  assert.equal(automatic.session.fireId,0,weapon+' must not launch from automatic intent');
+  assert(automatic.wire.every(x=>!x.data.fire),weapon+' must not put an automatic trigger on the wire');
+  const manual=triggerSession(weapon);manual.frame({fire:true});
+  assert.equal(manual.session.fireId,1,weapon+' retains its explicit manual launch');
+ }
+});
 
 test('render stalls do not masquerade as network loss; real silence still reconnects',()=>{
  let drops=0;

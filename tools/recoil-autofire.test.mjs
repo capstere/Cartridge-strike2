@@ -72,6 +72,35 @@ test('automatic trigger may also use semi-auto rifles, pistols and knife at its 
   assert.equal(point(),enemy);
 });
 
+test('online auto-trigger treats neutral residents as blockers, not enemies',()=>{
+  const {mock,point}=setupTarget();
+  mock.network=true;
+  const resident={...p('resident',0,-3),kind:'zombie',model:'hollow',behavior:'idle'};
+  delete resident.team;
+  mock.state.zombies=[resident];
+  for(const behavior of ['idle','sleeping','sitting','investigating','dancing']){
+    resident.behavior=behavior;
+    assert.equal(point(),null,behavior+' blocks the enemy behind it');
+  }
+  for(const behavior of ['pursuing','attack']){
+    resident.behavior=behavior;
+    assert.equal(point(),resident,behavior+' is an enemy');
+  }
+  resident.model='danceman';
+  assert.equal(point(),null,'the dancer never becomes an automatic target');
+  resident.alive=false;
+  assert.equal(point(),mock.actors[1],'dead bodies are not targets or live blockers');
+});
+
+test('online auto-trigger stops for local death, pause and objective interaction',()=>{
+  const {human,mock,point}=setupTarget();
+  mock.network=true;
+  human.alive=false;assert.equal(point(),null);
+  human.alive=true;mock.state.paused=true;assert.equal(point(),null);
+  mock.state.paused=false;human.action={type:'defuse'};assert.equal(point(),null);
+  human.action=null;assert.equal(point(),mock.actors[1]);
+});
+
 test('all eight player firearms have configured Riposte-style recoil',()=>{
   for(const id of ['p9','p12','ar47','cr4','smg','shotgun','sniper','bazooka']){
     assert.ok(RECOIL_WEAPONS[id]?.v>0,id);
