@@ -1,5 +1,11 @@
 # Cartridge-Strike 2 handover
 
+## Egna matchinställningar i multiplayer
+
+Värden väljer 3, 5, 10 eller 15 minuter och 10, 25, 50 eller 100 fiendekills i Team Deathmatch. Classic kan spelas till 3, 5 eller 8 rundvinster. Botar ställs in separat för varje lag, upp till ledig lagkapacitet. Värden kan ändra Zombies och Dansmannen oberoende. Matchvalen följer med vid omspel och sparas i familjerummet.
+
+Protokoll 14 skickar inställningarna i auktoritativt rumstillstånd. V1-filen får fem nya värden medan den tidigare botflaggan finns kvar för rollback. [Inställningar, kompatibilitet och testkommandon](docs/multiplayer/custom-match-settings.md)
+
 ## Kartval i multiplayer · 26 november 2026
 
 Compact Arena är den första nya onlinebanan. Värden väljer karta i väntrummet, alla laddar serverns val och väljer **Redo**. Floor 5 har kvar Classic och Team Deathmatch. Compact Arena har tre stridsvägar, sju namngivna platser och Team Deathmatch för upp till fem spelare per lag. Familjerummet minns kartvalet på samma inbjudningslänk.

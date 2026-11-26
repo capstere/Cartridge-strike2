@@ -2,6 +2,7 @@ import {networkMap} from '../shared/multiplayer/maps.mjs';
 import {isIP} from 'node:net';
 import {pilotConfig} from './pilot-access.mjs';
 import {familyRoomConfig} from './family-room.mjs';
+import {matchPreferenceKeys,matchPreferences} from './match-preferences.mjs';
 
 export function privateIPv4(address) {
   if(isIP(address)!==4)return false;
@@ -70,7 +71,8 @@ export async function readAdmission(req) {
   const chunks=[];let size=0;
   for await(const chunk of req){size+=chunk.length;if(size>4096)throw Object.assign(Error('Request too large.'),{status:413});chunks.push(chunk);}
   let body;try{body=JSON.parse(Buffer.concat(chunks).toString('utf8'));}catch{throw Object.assign(Error('Malformed JSON.'),{status:400});}
-  if(!body||Array.isArray(body)||typeof body!=='object'||Object.keys(body).some(k=>!['name','code','contract','team','fillBots','mapId','mode','zombies','danceman'].includes(k))||['fillBots','zombies','danceman'].some(key=>body[key]!==undefined&&typeof body[key]!=='boolean')||
+  if(!body||Array.isArray(body)||typeof body!=='object'||Object.keys(body).some(k=>!['name','code','contract','team','fillBots','mapId','mode','zombies','danceman',...matchPreferenceKeys].includes(k))||
+    !matchPreferences(body)||['zombies','danceman'].some(key=>body[key]!==undefined&&typeof body[key]!=='boolean')||
     (body.mapId!==undefined&&!networkMap(body.mapId))||
     (body.mode!==undefined&&!['tdm','classic'].includes(body.mode))||
     (body.team!==undefined&&!['auto','analysts','counterAnalysts'].includes(body.team))||

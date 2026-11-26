@@ -5,6 +5,7 @@ import {FAMILY_ROOM_ALIAS} from '../shared/multiplayer/family-room.mjs';
 import {BOT_DIFFICULTY_IDS, DEFAULT_NETWORK_BOT_DIFFICULTY} from '../shared/multiplayer/rules.mjs';
 
 import {DEFAULT_MAP_ID, networkMap} from '../shared/multiplayer/maps.mjs';
+import {matchPreferences} from './match-preferences.mjs';
 
 const passwordPattern = /^[A-Za-z0-9_-]{24,64}$/;
 const digest = value => createHash('sha256').update(value).digest();
@@ -32,7 +33,9 @@ function validateSettings(value) {
       !BOT_DIFFICULTY_IDS.includes(value.botDifficulty) || flags.some(key => typeof value[key] !== 'boolean')) {
     throw Error('Invalid family room settings.');
   }
-  return Object.freeze({...Object.fromEntries(Object.keys(defaults).map(key => [key, value[key]])), mapId});
+  const preferences=matchPreferences(value);
+  if(!preferences)throw Error('Invalid family room settings.');
+  return Object.freeze({...Object.fromEntries(Object.keys(defaults).map(key => [key, value[key]])),...preferences,mapId});
 }
 
 // Outside the versioned release. Only changes made by the waiting room host

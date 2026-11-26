@@ -14,7 +14,7 @@ import {ready,until} from './helpers.mjs';
 // resolver, file storage and invitation. The transport listens solely on loopback.
 async function fixture(t){
   const code=randomBytes(24).toString('base64url');
-  let settings=Object.freeze({mode:'tdm',fillBots:false,botDifficulty:'casual',friendlyFire:false,zombiesEnabled:false,dancemanEnabled:false});
+  let settings=Object.freeze({mode:'tdm',fillBots:false,tdmMinutes:10,tdmKills:50,classicWins:5,analystsBots:0,counterAnalystsBots:0,botDifficulty:'casual',friendlyFire:false,zombiesEnabled:false,dancemanEnabled:false});
   const log={writes:0,fail:false,grace:[],disposed:[]};
   const family=Object.freeze({alias:'JESPERS-ROOM',get settings(){return settings;},acceptsCode:value=>value===code,
     saveSettings(next){
@@ -87,7 +87,7 @@ test('family lobby persists only accepted host settings and switches rules on th
   assert.equal(old.actor.money,g.config.startMoney);assert.equal(old.actor.inventory.primary,null);
   assert(old.actor.lifeId>life);assert.equal(old.epoch,epoch);assert.equal(r.seats.get(first.sessionId).playerReady,false);
   assert.equal(r.bots.size,ROOM_CAPACITY-2);
-  assert.deepEqual(f.family.settings,{mode:'classic',fillBots:true,botDifficulty:'hard',friendlyFire:true,zombiesEnabled:true,dancemanEnabled:false});
+  assert.deepEqual(f.family.settings,{mode:'classic',fillBots:true,tdmMinutes:10,tdmKills:50,classicWins:5,analystsBots:5,counterAnalystsBots:5,botDifficulty:'hard',friendlyFire:true,zombiesEnabled:true,dancemanEnabled:false});
 
   for(const member of [first,host])f.command(member,'ready',{ready:true});
   f.command(host,'start');await until(()=>r.state.phase==='active','Classic active');
@@ -106,7 +106,7 @@ test('family lobby persists only accepted host settings and switches rules on th
   f.command(host,'settings',{mode:'tdm',fillBots:false});
   assert.equal(r.sim.game,g);assert.equal(g.state.mode,'endless');assert.equal(r.state.hostages.size,0);
   assert.equal(r.state.bombStatus,'');assert.equal(g.state.bomb.status,'inactive');
-  assert.deepEqual(r.teamComms.anchors,tdmAnchors);assert.equal(r.bots.size,0);assert.equal(r.state.scoreTarget,r.match.settings.scoreTarget);
+  assert.deepEqual(r.teamComms.anchors,tdmAnchors);assert.equal(r.bots.size,0);assert.equal(r.state.scoreTarget,50);
   assert.equal(old.actor.inventory.primary.id,'smg');assert.equal(old.actor.money,0);assert.equal(g.difficulty,'hard');
   for(const member of [first,host,visitor])f.command(member,'ready',{ready:true});
   f.command(host,'start');await until(()=>r.state.phase==='active','TDM active');
