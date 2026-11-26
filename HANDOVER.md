@@ -29,7 +29,11 @@ Ett senare raketljud uteblev på en klient, som i det äldre dokumenterade CI-fe
 Vid omkörningen missade det nya provet ett manuellt Classic-avtryck direkt efter
 återupptagning. Provet inväntar nu en ny neutral inmatning hos servern efter
 återupptagning och vapenberedskap före sitt enda manuella tryck; oförändrade
-skottkrav samt server- och pekardiagnostik behålls. Invänta grönt CI på slutcommit.
+skottkrav samt server- och pekardiagnostik behålls. Nästa körning godkände mobil-
+och raketproven men visade att residentprovets datorkamera kunde återta en gammal
+riktning efter testplacering. Även den fixturen inväntar nu serverbekräftad paus
+och verifierar den verkliga inmatningens kamerariktning. Synlighets-, animations-
+och ljudkraven är oförändrade. Invänta grönt CI på slutcommit.
 Den lokala mjukvarurenderingen nådde verklig målmarkering men klarade inte kravet
 på tre bekräftade skott; mobilklienten visade cirka en sekunds latens. Det är
 inget godkänt browserprov. Invänta godkänd hårdvaruaccelererad CI före merge.
