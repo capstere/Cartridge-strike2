@@ -104,25 +104,33 @@ async function approachFixture(desktop,mobile,room){
     await page.locator('#resume').waitFor();
     const spot={x:dancer.x,z:dancer.z+dz,y:0,yaw,pitch:-.22};
     assert(game.world.canOccupy(spot.x,spot.z,.22,1.7));
-    const actor=[...room.seats.values()].find(s=>s.actor.team===team).actor;
+    const seat=[...room.seats.values()].find(s=>s.actor.team===team),actor=seat.actor;
+    await until(()=>!seat.enabled,'authority acknowledges pause before resident placement');
     Object.assign(actor,spot,{spawnProtectedUntil:0});
-    await until(()=>page.evaluate(z=>Math.abs(__fps.game.player.z-z)<.05,spot.z),'confirmed C08 position');
+    await until(()=>page.evaluate(spot=>{
+      const p=__fps.game.player;
+      return Math.abs(p.x-spot.x)<.05&&Math.abs(p.z-spot.z)<.05&&Math.abs(p.pitch-spot.pitch)<.01&&
+        Math.abs(Math.atan2(Math.sin(p.yaw-spot.yaw),Math.cos(p.yaw-spot.yaw)))<.01;
+    },spot),'confirmed C08 position and heading');
   }
   await mobile.locator('#resume').tap();
   await resumeDesktop(desktop);
-  // Resume can retain the Classic spawn heading across a reconcile. Use
-  // the normal keyboard look control to face C08 after the new life.
-  const heading=()=>desktop.evaluate(()=>{
-    const yaw=__fps.game.player.yaw;
-    return Math.atan2(Math.sin(yaw),Math.cos(yaw));
+  const desktopSeat=[...room.seats.values()].find(s=>s.actor.team==='analysts'),resumeTick=room.sim.tickNumber;
+  await until(()=>desktopSeat.enabled&&desktopSeat.lastSampleTick>resumeTick,'fresh desktop input after resume');
+  // Read the actual look input, not a displayed snapshot that can still show
+  // the assigned pose while Resume retains a previous spawn heading.
+  await desktop.evaluate(()=>{
+    const {yaw,pitch}=__fps.input(0),heading=Math.atan2(Math.sin(yaw),Math.cos(yaw));
+    const scale=__fps.settings.sensitivity*__fps.tactical.lookScale(false,yaw,pitch);
+    window.dispatchEvent(new MouseEvent('mousemove',{
+      movementX:Math.round(heading/scale),movementY:Math.round((pitch+.22)/scale)
+    }));
   });
-  const angle=await heading();
-  if(Math.abs(angle)>.12){
-    const key=angle>0?'ArrowRight':'ArrowLeft';
-    await desktop.keyboard.down(key);
-    try{await until(async()=>Math.abs(await heading())<.16,'player turns to face C08');}
-    finally{await desktop.keyboard.up(key);}
-  }
+  await until(async()=>Math.abs(desktopSeat.actor.yaw)<.02&&Math.abs(desktopSeat.actor.pitch+.22)<.02&&
+    await desktop.evaluate(()=>{
+      const {yaw,pitch}=__fps.input(0);
+      return document.pointerLockElement?.id==='game'&&Math.abs(Math.atan2(Math.sin(yaw),Math.cos(yaw)))<.02&&Math.abs(pitch+.22)<.02;
+    }),'desktop input and authority face the resident');
   return dancer;
 }
 try{

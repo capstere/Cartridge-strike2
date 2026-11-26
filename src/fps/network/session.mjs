@@ -385,8 +385,16 @@ export class NetworkSession {
         jump:!!controls.jump,crouch:!!controls.crouch,sneak:!!controls.sneak,interact:!!controls.interact,aim:!!controls.aim,fire:!!controls.fire});
       const time=this.prediction.world.game.state.time;
       const weapon=WEAPONS[self.weapon],throwing=self.weapon==='he';
-      if(data.fire&&(state.mode!=='classic'||state.roundPhase==='active')&&(weapon.automatic||!this.trigger)&&time+1e-8>=Math.max(this.nextCosmetic,self.nextShot)&&
-          (self.ammo>0||self.weapon==='knife'||throwing&&self.he>0)&&!self.reloadUntil){
+      const shotReady=(state.mode!=='classic'||state.roundPhase==='active')&&time+1e-8>=Math.max(this.nextCosmetic,self.nextShot)&&
+        (self.ammo>0||self.weapon==='knife'||throwing&&self.he>0)&&!self.reloadUntil;
+      if(controls.autoFire){
+        // Auto-trigger is local input intent, never a new server privilege.
+        // Semi-auto weapons need a real release between ordinary fire frames;
+        // generate it per fixed input step, including render catch-up batches.
+        const eligible=['primary','pistol','knife'].includes(weapon.slot)&&!weapon.projectile;
+        data.fire=data.fire&&eligible&&(weapon.automatic||(!this.trigger&&shotReady));
+      }
+      if(data.fire&&shotReady&&(weapon.automatic||!this.trigger)){
         data.fireId=++this.fireId;this.nextCosmetic=time+weapon.interval;
         if(!throwing&&!weapon.projectile){
           const actionId=`${self.id}:${self.lifeId}:${self.controlEpoch}:${this.fireId}`;

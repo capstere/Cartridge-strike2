@@ -1,5 +1,48 @@
 # Cartridge-Strike 2 handover
 
+## Valbar automatisk eld online · 26 november 2026
+
+Mobilens befintliga **Automatisk eld på mobil** fungerar även i Classic och
+Team Deathmatch online, inklusive familjerummet. Välj i matchmenyn (pausknappen,
+eller **MER → RESULTAT** i Clean-vyn). På skjuter när siktet ligger på en synlig
+fiende; av visar **ELD**. Valet sparas lokalt. Ett nytt onlinebesök börjar med
+manuell eld; tidigare sparade val och offlinelägets standard behålls.
+
+Halvautomatiska vapen använder vanliga avtryck och släpp i klientens fasta
+inmatningssteg. Serverns skottregler, protokoll, skada, magasin och eldhastighet
+är oförändrade. Granater och raketer förblir manuella. Passiva figurer och
+Dansmannen är aldrig automatiska mål online och blockerar fortfarande skottlinjen.
+[Mobilguide](docs/mobile-controls.md).
+
+Alla 252 grundtester passerade, inklusive de 36 riktade proven för skjutning,
+mobilinmatning och nätklienten. Separat kodgranskning gav inga blockerande fynd.
+Fyra av fem riktade servertester passerade först; det befintliga provet för
+sammanförda avtryck föll en gång och passerade sedan isolerat på både oförändrad
+bas och kandidat. Orsaken till det första utfallet är inte fastställd.
+Ett separat integrationsprov i `server/test/mobile-autofire.test.mjs` passerade:
+den riktiga servern bekräftade minst tre P9-skott, ammunition och skada samt
+oförändrad manuell avtryckare, utan ogiltiga indata.
+
+Det nya browserprovet är `tools/online-autofire-browser.mjs` och ingår i CI.
+Första CI-försöket verifierade båda skjutlägena i Classic och Team Deathmatch.
+Ett senare raketljud uteblev på en klient, som i det äldre dokumenterade CI-felet.
+Vid omkörningen missade det nya provet ett manuellt Classic-avtryck direkt efter
+återupptagning. Provet inväntar nu en ny neutral inmatning hos servern efter
+återupptagning och vapenberedskap före sitt enda manuella tryck; oförändrade
+skottkrav samt server- och pekardiagnostik behålls. Nästa körning godkände mobil-
+och raketproven men visade att residentprovets datorkamera kunde återta en gammal
+riktning efter testplacering. Även den fixturen inväntar nu serverbekräftad paus
+och verifierar den verkliga inmatningens kamerariktning. Synlighets-, animations-
+och ljudkraven är oförändrade. Invänta grönt CI på slutcommit.
+Den lokala mjukvarurenderingen nådde verklig målmarkering men klarade inte kravet
+på tre bekräftade skott; mobilklienten visade cirka en sekunds latens. Det är
+inget godkänt browserprov. Invänta godkänd hårdvaruaccelererad CI före merge.
+
+**Pi-aktivering återstår.** Denna ändring är ännu inte verifierad live på
+`cs2.capstere.com`. Fortsätt med befintliga driftverktyget när rummen är tomma,
+behåll rollback och verifiera publicerad revision/bygg-ID samt båda skjutlägena
+via familjelänken. Fysiska iPhone- och Android-prov återstår.
+
 ## Permanenta familjerummet · 25 november 2026
 
 Den fasta länken öppnar `JESPERS-ROOM`. Spelarna anger serverns inbjudningskod om den efterfrågas och använder sedan det separata familjelösenordet. Första behöriga spelaren som ansluter färdigt blir värd. Om värden lämnar, eller den ordinarie återanslutningsfristen på 15 sekunder löper ut, tar en ansluten spelare över. [Fast länk](https://cs2.capstere.com/room/JESPERS-ROOM)

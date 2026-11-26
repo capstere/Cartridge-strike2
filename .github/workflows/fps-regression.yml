@@ -120,6 +120,11 @@ jobs:
         env:
           FPS_NETWORK_ANGLE: metal
         run: node tools/online-equipment-browser.mjs
+      - name: Mobile automatic and manual fire against the authoritative server
+        timeout-minutes: 4
+        env:
+          FPS_NETWORK_ANGLE: metal
+        run: node --import ./server/register-shared.mjs tools/online-autofire-browser.mjs
       - name: Classic desktop purchase and plant, touch purchase and defuse
         timeout-minutes: 5
         env:
