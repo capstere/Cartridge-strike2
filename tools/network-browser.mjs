@@ -22,7 +22,9 @@ fs.mkdirSync('test-results/network',{recursive:true});
 async function open(viewport={width:1280,height:720},mobile=false,endpoint=local.url){
  const context=await (mobile?peerBrowser:browser).newContext({viewport,hasTouch:mobile,isMobile:mobile,deviceScaleFactor:testDpr}),page=await context.newPage();
  page.setDefaultTimeout(60000);page.on('pageerror',e=>errors.push(e.stack));
- page.on('request',r=>{if(/assets\/fps\/(zombies\/|Danceman\/)/.test(r.url()))errors.push('Online slice requested an unused resident model: '+r.url());});
+ const levelRequests=[];
+ page.on('request',r=>{if(/\/levels\/(?!manifest\.json)[^/?]+\.json$/.test(new URL(r.url()).pathname))levelRequests.push(r.url());
+  if(/assets\/fps\/(zombies\/|Danceman\/)/.test(r.url()))errors.push('Online slice requested an unused resident model: '+r.url());});
  page.on('response',r=>{if(r.status()>=400&&r.request().method()==='GET'&&/\.(glb|mjs|mp3|ogg|webp)(\?|$)/.test(r.url()))errors.push(`Asset HTTP ${r.status()}: ${r.url()}`);});
  await page.addInitScript(()=>localStorage.setItem('cartridge-settings',JSON.stringify({graphics:'low',volume:0,autoReload:false,mobileAutoFire:false})));
  await page.goto(endpoint+'/fps/?network=local&test&realtime');
@@ -34,8 +36,8 @@ async function open(viewport={width:1280,height:720},mobile=false,endpoint=local
  assert.match(await page.locator('#lb-objective').textContent(),/Team Deathmatch.*Classic/);
  assert.match(await page.locator('.lb-brief').textContent(),/Floor 5 Laboratory/);
  assert.match(await page.locator('.lb-brief').textContent(),/5 mot 5/);
- assert(await page.evaluate(()=>!__fps.renderer.zombieVisuals),'online renderer has no unused resident asset initialization');
- console.log('scene ready',mobile?'mobile':'desktop',await page.evaluate(()=>{const gl=__fps.renderer.renderer.getContext(),ext=gl.getExtension('WEBGL_debug_renderer_info');return {draws:__fps.renderer.stats.drawCalls,focused:document.hasFocus(),hidden:document.hidden,renderer:gl.getParameter(ext?.UNMASKED_RENDERER_WEBGL||gl.RENDERER),antialias:gl.getContextAttributes().antialias,samples:gl.getParameter(gl.SAMPLES)};}));
+ assert.deepEqual(levelRequests,[],'no LevelProject requested before room admission');
+ assert(await page.evaluate(()=>!__fps.world&&!__fps.renderer&&__fps.renderBudget.stats.rendered===0));
  return page;
 }
 async function join(page,endpoint,roomId='',name='Player'){
@@ -55,11 +57,14 @@ async function join(page,endpoint,roomId='',name='Player'){
    await page.locator('#resume').click();await page.waitForFunction(()=>__fps.modal===null&&__fps.network.enabled);
   }
   assert(await page.evaluate(()=>__fps.network?.view.player?.alive&&__fps.game.network&&__fps.modal===null),'joined player must enter playable state');
+  await page.waitForFunction(()=>__fps.renderBudget.stats.active>0&&__fps.renderer?.stats.drawCalls>0);
+  assert(await page.evaluate(()=>!__fps.renderer.zombieVisuals),'online renderer has no unused resident asset initialization');
+  console.log('scene ready',name,await page.evaluate(()=>{const gl=__fps.renderer.renderer.getContext(),ext=gl.getExtension('WEBGL_debug_renderer_info');return {draws:__fps.renderer.stats.drawCalls,focused:document.hasFocus(),hidden:document.hidden,renderer:gl.getParameter(ext?.UNMASKED_RENDERER_WEBGL||gl.RENDERER),antialias:gl.getContextAttributes().antialias,samples:gl.getParameter(gl.SAMPLES)};}));
  }catch(error){
   const client=await page.evaluate(()=>({modal:__fps.modal,focused:document.hasFocus(),hidden:document.hidden,
    status:document.querySelector('#network-status').textContent,fatal:document.querySelector('#fatal').hidden?'':document.querySelector('#fatal pre').textContent,
    room:__fps.network?.room?.roomId,problem:__fps.network?.problem,closed:__fps.network?.closed,connection:__fps.network?.connectionState,
-   alive:__fps.network?.view.player?.alive,draws:__fps.renderer.stats.drawCalls}));
+   alive:__fps.network?.view.player?.alive,draws:__fps.renderer?.stats.drawCalls}));
   console.error('admission diagnostic',JSON.stringify({client,rooms:[...local.rooms].map(r=>({id:r.roomId,tick:r.sim.tickNumber,
    clients:r.clients.length,seats:[...r.seats.values()].map(s=>({id:s.id,ready:s.ready}))})),errors}));throw error;
  }

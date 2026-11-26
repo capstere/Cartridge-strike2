@@ -22,10 +22,13 @@ export class LagCompensation {
     this.rewind.attachAll(room.state.residents,{fields:residentPose});
     this.rewind.attachAll(room.state.doors,{fields:['poseAngle']});
     this.rewind.attach(room.state,{fields:['elevatorProgress']});
-    const world=room.sim.game.world;
-    this.doors=createDoors(world.data,world);this.context=world.createDynamicContext(this.doors.boxes);
     this.metrics={accepted:0,rejected:0,live:0,ages:[],reasons:{}};
-    room.sim.game.hitscanQuery=(...args)=>this.query(...args);
+    this.bindWorld();
+  }
+  bindWorld(){
+    const world=this.room.sim.game.world;
+    this.doors=createDoors(world.data,world);this.context=world.createDynamicContext(this.doors.boxes);
+    this.room.sim.game.hitscanQuery=(...args)=>this.query(...args);
   }
   recordTick(){
     this.tickTimes.set(this.room.sim.tickNumber,this.room.clock.elapsedTime);

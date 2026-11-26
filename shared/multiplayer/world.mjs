@@ -10,6 +10,14 @@ export function advanceNetworkWorld(doors,state,time,dt,actors){
   return doors.elevators.setProgress(progress);
 }
 export function prepareNetworkWorld(world){
+  if(world.project?.mode==='new-level'){
+    // Online worlds have already been selected from the published map registry.
+    for(const zone of [...world.data.rooms,...world.data.corridors])zone.publicName=zone.name;
+    world.tactical.patrolPoints=world.project.navHints.filter(hint=>hint.role==='patrol').map(hint=>{
+      const [x,z]=hint.points.at(-1);
+      return {x,z};
+    });
+  }
   world.networkSlice=true;world.enableNetworkGlassThresholds();world.glass.reset();world.doors.reset();
   world.setElevatorProgress?.(0);
   world.networkDynamics={elevatorOpenAt:-1};

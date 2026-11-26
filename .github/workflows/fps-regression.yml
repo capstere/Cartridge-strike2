@@ -250,3 +250,31 @@ jobs:
           path: test-results/pass3b/
           if-no-files-found: ignore
           retention-days: 3
+
+  multiplayer-maps:
+    if: github.event_name != 'push'
+    runs-on: macos-15
+    timeout-minutes: 12
+    env:
+      FPS_NETWORK_ANGLE: metal
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: server/.node-version
+      - run: npm ci --prefix server --ignore-scripts
+      - run: npm ci --prefix frontline/source/tools/dev
+      - run: node frontline/source/tools/dev/node_modules/playwright-core/cli.js install chromium
+      - name: Recover the rendered client after a failed or interrupted map load
+        run: node --import ./server/register-shared.mjs tools/multimap-recovery-browser.mjs
+      - name: Play a complete human-only match on Compact Arena with touch controls
+        env:
+          FPS_MAP_CASE: mobile
+        run: node --import ./server/register-shared.mjs tools/multimap-browser.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: compact-arena
+          path: test-results/multiplayer-maps/
+          if-no-files-found: ignore
+          retention-days: 7

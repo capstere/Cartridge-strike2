@@ -59,6 +59,15 @@ export function floor5MapAnchors(world, classic = false) {
   return anchors;
 }
 
+/** Project-authored room landmarks double as the team's finite, validated ping targets. */
+export function multiplayerMapAnchors(world, classic = false) {
+  if (world.project?.mode !== 'new-level') return floor5MapAnchors(world, classic);
+  return [...world.data.rooms, ...world.data.corridors].map(room => ({
+    id: room.id, label: roomDisplayName(room), ...roomCenter(world, room.id),
+    roomId: room.id, classicOnly: false,
+  }));
+}
+
 const CALLOUTS = {
   'analyst-start-lift': {detail: 'Analysts', color: '#a9d1f5', align: 'right'},
   'counter-analyst-start-lift': {detail: 'Counter Analysts', color: '#fac090', align: 'above-left'},
@@ -252,7 +261,12 @@ export class MinimapCache {
       ctx.restore();
     }
     if (online) {
-      if (onlineExpanded) drawFloor5Labels(ctx, world, classic, w, h, xof, zof, floor5MapAnchors(world, classic));
+      if (onlineExpanded) {
+        const anchors = multiplayerMapAnchors(world, classic);
+        if (world.project?.mode === 'new-level') {
+          for (const anchor of anchors) roomLabel(ctx, w, xof(anchor.x), zof(anchor.z), anchor.label);
+        } else drawFloor5Labels(ctx, world, classic, w, h, xof, zof, anchors);
+      }
       else if (classic) for (const {point, letter, color} of SITES) {
         const p = point(world.anchors);
         if (!p) continue;

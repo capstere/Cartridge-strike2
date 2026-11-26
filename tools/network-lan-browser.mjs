@@ -14,6 +14,7 @@ const angle=process.env.FPS_NETWORK_ANGLE||(process.platform==='darwin'?'metal':
 const launch=engine=>engines[engine].launch(engine==='chromium'?{channel:'chromium',args:['--use-angle='+angle,'--disable-background-timer-throttling','--disable-renderer-backgrounding','--disable-backgrounding-occluded-windows']}:{});
 let local=await createTestServer({lan:true,host:testLanHost(),port:0});
 const url=local.url,port=local.httpServer.address().port,host=local.config.host;
+const reports=new WeakMap();
 const browsers=[],pages=[],pendingRequests=new Map(),joinFrames=new WeakMap(),browserWarnings=[];let safeArea=null;
 fs.mkdirSync('test-results/lan',{recursive:true});
 async function until(fn,label,timeout=10000){const end=performance.now()+timeout;while(!fn()){assert(performance.now()<end,label);await new Promise(r=>setTimeout(r,25));}}
@@ -22,7 +23,8 @@ async function open(engine,mobile){
   const context=await browser.newContext({viewport:mobile?{width:844,height:390}:{width:1280,height:720},hasTouch:mobile,isMobile:mobile,deviceScaleFactor:Number(process.env.FPS_NETWORK_DPR||1)}),page=await context.newPage();
   page.on('console',m=>{if(['warning','error'].includes(m.type())){browserWarnings.push(m.text());if(browserWarnings.length>30)browserWarnings.shift();}});
   pages.push(page);const pending=new Set();pendingRequests.set(page,pending);
-  page.on('request',r=>pending.add(r.url()));page.on('requestfinished',r=>pending.delete(r.url()));page.on('requestfailed',r=>pending.delete(r.url()));
+  const levelRequests=[];
+  page.on('request',r=>{pending.add(r.url());if(/\/levels\/(?!manifest\.json)[^/?]+\.json$/.test(new URL(r.url()).pathname))levelRequests.push(r.url());});page.on('requestfinished',r=>pending.delete(r.url()));page.on('requestfailed',r=>pending.delete(r.url()));
   page.setDefaultTimeout(90000);page.on('pageerror',e=>{errors.push(e.message);console.error('LAN page error',e.message);});page.on('requestfailed',r=>console.error('LAN request failed',r.url(),r.failure()));
   await page.addInitScript(()=>localStorage.setItem('cartridge-settings',JSON.stringify({graphics:'low',volume:.2,mobileAutoFire:false,autoReload:false})));
   // Readiness is the fully loaded game below, not the window load event (which
@@ -31,10 +33,12 @@ async function open(engine,mobile){
   try{await page.waitForFunction(()=>window.__fps||document.querySelector('#fatal pre').textContent);}catch(e){console.error(await page.locator('body').innerText({timeout:5000}).catch(()=>'(page unresponsive)'),errors);throw e;}
   assert(await page.locator('#fatal').evaluate(e=>e.hidden),await page.locator('#fatal').textContent());
   assert.equal(await page.locator('#network-endpoint').inputValue(),url);
-  const features=await page.evaluate(()=>{const gl=__fps.renderer.renderer.getContext(),ext=gl.getExtension('WEBGL_debug_renderer_info');return {secure:isSecureContext,subtle:!!crypto.subtle,touch:__fps.mobile.enabled,map:__fps.world.project?.name,fullscreen:!!document.documentElement.requestFullscreen,renderer:gl.getParameter(ext?.UNMASKED_RENDERER_WEBGL||gl.RENDERER)};});
+  const features=await page.evaluate(()=>({secure:isSecureContext,subtle:!!crypto.subtle,touch:__fps.mobile.enabled,
+    fullscreen:!!document.documentElement.requestFullscreen,worldBeforeAdmission:!!__fps.world,rendererBeforeAdmission:!!__fps.renderer,framesBeforeAdmission:__fps.renderBudget.stats.rendered}));
   assert.equal(features.secure,false,'actual private-IP HTTP must exercise the insecure-context path');assert.equal(features.subtle,false);assert.equal(features.touch,mobile);
-  if(engine==='chromium'&&angle==='swiftshader')assert.match(features.renderer,/SwiftShader/,'Software CI must exercise real SwiftShader WebGL');
-  rows.push({engine,mobile,version:browser.version(),features});console.log('LAN scene ready',engine,mobile,features.renderer);
+  assert(!features.worldBeforeAdmission&&!features.rendererBeforeAdmission);assert.equal(features.framesBeforeAdmission,0);
+  assert.deepEqual(levelRequests,[],'no LevelProject requested before authenticating to a room');
+  const report={engine,mobile,version:browser.version(),features};rows.push(report);reports.set(page,report);
   return page;
 }
 async function form(page,{id='',code='private-123'}={}){
@@ -48,6 +52,15 @@ async function joined(page){
   await page.waitForFunction(()=>__fps.network?.view.player?.alive&&!document.querySelector('#hud').hidden);
   await page.waitForFunction(before=>__fps.renderer.stats.drawCalls>0&&__fps.renderBudget.stats.active>before,joinFrames.get(page));
   assert(await page.locator('#fatal').evaluate(e=>e.hidden),await page.locator('#fatal pre').textContent());
+  const report=reports.get(page);
+  if(!report.features.renderer){
+    Object.assign(report.features,await page.evaluate(()=>{
+      const gl=__fps.renderer.renderer.getContext(),ext=gl.getExtension('WEBGL_debug_renderer_info');
+      return {renderer:gl.getParameter(ext?.UNMASKED_RENDERER_WEBGL||gl.RENDERER),map:__fps.world.project.name};
+    }));
+    if(report.engine==='chromium'&&angle==='swiftshader')assert.match(report.features.renderer,/SwiftShader/,'Software CI must exercise real SwiftShader WebGL');
+    console.log('LAN scene ready',report.engine,report.mobile,report.features.renderer);
+  }
 }
 async function leave(page){await page.keyboard.press('Escape');await page.locator('#restart').click();await page.locator('.network-form').waitFor();}
 async function touchGesture(page,engine){
@@ -89,6 +102,8 @@ try{
   else{await form(a);await joined(a);id=await a.locator('#network-room').inputValue();}
   await form(b,{id,code:'wrong-123'});await b.locator('#network-status').filter({hasText:'Fel privat'}).waitFor();
   assert.equal([...local.rooms][0].clients.length,1,'wrong code cannot allocate the second player');
+  assert(await b.evaluate(()=>!__fps.world&&!__fps.renderer&&__fps.renderBudget.stats.rendered===0),
+    'wrong code cannot allocate a world on the joining browser');
   await form(b,{id});await joined(b);const room=[...local.rooms][0];await until(()=>room.sim.game.actors.length===2,'two humans');
   console.log('LAN two humans joined');
   assert.equal(room.state.doors.size,51);assert.equal(room.sim.sourceHash,CONTRACT.mapHash);
@@ -166,7 +181,7 @@ try{
   const probes=await Promise.all([...new Set([url+'/health',...pending.flat()])].slice(0,8).map(async url=>{try{const r=await fetch(url,{signal:AbortSignal.timeout(3000)});return {url,status:r.status,bytes:(await r.arrayBuffer()).byteLength};}catch(e){return {url,error:String(e)};}}));
   const bounded=promise=>Promise.race([promise,new Promise(resolve=>setTimeout(()=>resolve({error:'Diagnostic timed out'}),5000))]);
   const {connections,trace:httpTrace=[]}=await bounded(local.diagnostics());
-  const clients=await Promise.all(pages.map(page=>bounded(page.evaluate(()=>{const gl=window.__fps?.renderer.renderer.getContext(),ext=gl?.getExtension('WEBGL_debug_renderer_info');return {ready:document.readyState,loading:document.querySelector('#loading')?.textContent,connection:document.querySelector('#network-status')?.textContent,modal:window.__fps?.modal,renderer:gl?.getParameter(ext?.UNMASKED_RENDERER_WEBGL||gl.RENDERER),resources:performance.getEntriesByType('resource').slice(-8).map(r=>({name:r.name,duration:r.duration,bytes:r.transferSize}))};}).catch(e=>({error:String(e)})))));
+  const clients=await Promise.all(pages.map(page=>bounded(page.evaluate(()=>{const gl=window.__fps?.renderer?.renderer.getContext(),ext=gl?.getExtension('WEBGL_debug_renderer_info');return {ready:document.readyState,loading:document.querySelector('#loading')?.textContent,connection:document.querySelector('#network-status')?.textContent,modal:window.__fps?.modal,renderer:gl?.getParameter(ext?.UNMASKED_RENDERER_WEBGL||gl.RENDERER),resources:performance.getEntriesByType('resource').slice(-8).map(r=>({name:r.name,duration:r.duration,bytes:r.transferSize}))};}).catch(e=>({error:String(e)})))));
   const pendingPaths=new Set(pending.flat().map(u=>new URL(u).pathname)),httpPending=httpTrace.filter(row=>!row.finishedMs||pendingPaths.has(new URL(row.path,url).pathname));
   for(const [i,page] of pages.entries())if(!page.isClosed())await page.screenshot({path:`test-results/lan/failure-${mobileEngine}-${i}.png`,timeout:5000}).catch(()=>{});
   fs.writeFileSync(`test-results/lan/failure-${mobileEngine}.json`,JSON.stringify({error:String(error),errors,browsers:rows,pending,probes,connections,clients,browserWarnings,httpPending},null,2));console.error('LAN pending requests',JSON.stringify({pending,probes,connections,clients,browserWarnings,httpPending}));throw error;

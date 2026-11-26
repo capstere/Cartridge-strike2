@@ -1,17 +1,17 @@
 import {Room,ServerError} from '@colyseus/core';
 import {createHash,timingSafeEqual,randomBytes} from 'node:crypto';
-import {createHeadlessSimulation} from './headless.mjs';
+import {MAP_LOAD_MS,ROOM_SEATS as seats,installRoomSimulation,prepareRoomSimulation} from './room-world.mjs';
+import {DEFAULT_MAP_ID,networkMap} from '../shared/multiplayer/maps.mjs';
 import {WEAPONS} from '../src/fps/config.mjs';
 import {onlinePrimaries,respawnActor} from '../src/fps/action-rules.mjs';
 import {zombiePosition} from '../src/fps/zombie-poses.mjs';
-import {prepareClassicRound,projectClassic} from './classic-round.mjs';
-import {CLASSIC_NETWORK_CONFIG,DEFAULT_NETWORK_BOT_DIFFICULTY,NETWORK_CONFIG,NETWORK_MAP,ROOM_CAPACITY,TEAM_CAPACITY,RECONNECT_SECONDS,copyPose,safeName} from '../shared/multiplayer/rules.mjs';
+import {projectClassic} from './classic-round.mjs';
+import {DEFAULT_NETWORK_BOT_DIFFICULTY,ROOM_CAPACITY,RECONNECT_SECONDS,copyPose,safeName} from '../shared/multiplayer/rules.mjs';
 import {checkContract,TEAM_COMMS_TYPE,validateNetworkInput,wireInput} from '../shared/multiplayer/protocol.mjs';
-import {CONTRACT} from '../shared/multiplayer/build.mjs';
-import {NetworkInput,ActorState,RoomState,DoorState,GrenadeState,ResidentState,RocketState} from './network-schema.mjs';
+import {CONTRACT,MAP_CONTRACTS} from '../shared/multiplayer/build.mjs';
+import {NetworkInput,ActorState,RoomState,GrenadeState,ResidentState,RocketState} from './network-schema.mjs';
 
-import {prepareNetworkWorld,DOOR_FIELDS} from '../shared/multiplayer/world.mjs';
-import {collisionContract} from '../shared/multiplayer/collision-contract.mjs';
+import {DOOR_FIELDS} from '../shared/multiplayer/world.mjs';
 
 const hashCode=code=>createHash('sha256').update(code).digest();
 const MAX_PATCH_EVENTS=64;
@@ -25,7 +25,6 @@ function eventsForPatch(events){
 }
 const validCode=code=>typeof code==='string'&&/^[A-Za-z0-9-]{6,64}$/.test(code);
 const teams=['analysts','counterAnalysts'];
-const seats=teams.flatMap(team=>Array.from({length:TEAM_CAPACITY},(_,i)=>`${team}-${i}`));
 export const MAX_BUFFERED_BYTES=256*1024;
 import {LagCompensation, recordRtt} from './lag-compensation.mjs';
 import {MatchLifecycle} from './match-lifecycle.mjs';
@@ -38,62 +37,45 @@ export class NetworkRoom extends Room {
     this.maxClients=ROOM_CAPACITY;this.maxMessagesPerSecond=120;this.patchRate=50;
     await this.setPrivate(true);
     this.bots=new Map();this.seats=new Map();this.lives=new Map();this.metrics={invalid:0,maxQueue:0,coalesced:0,ticks:0,events:0,reconnects:0,drops:0,backpressure:0};
-    const settings=this.familyRoom?.settings??{
+    const settings={mapId:DEFAULT_MAP_ID,...(this.familyRoom?.settings??{
+      mapId:options.mapId===undefined?DEFAULT_MAP_ID:options.mapId,
       mode:options.mode===undefined?'tdm':options.mode,fillBots:options.fillBots!==false,
       zombiesEnabled:options.zombies===true,dancemanEnabled:options.danceman===true,
       friendlyFire:false,botDifficulty:DEFAULT_NETWORK_BOT_DIFFICULTY,
-    };
-    if(!['tdm','classic'].includes(settings.mode))throw new ServerError(400,'Okänt spelläge.');
-    this.classic=settings.mode==='classic';
-    const config=this.classic?CLASSIC_NETWORK_CONFIG:NETWORK_CONFIG;
-    this.sim=await createHeadlessSimulation({mapId:NETWORK_MAP,controllers:Object.fromEntries(seats.map(id=>[id,'human'])),
-      config:{...config,difficulty:settings.botDifficulty}});
-    if(this.sim.sourceHash!==CONTRACT.mapHash)throw Error('Server map differs from built contract. Run npm run build --prefix server.');
-    if(createHash('sha256').update(collisionContract(this.sim.game.world)).digest('hex')!==CONTRACT.collisionHash)throw Error('Server collision differs from built contract.');
-    prepareNetworkWorld(this.sim.game.world);
-    // Map construction is synchronous and can take >1 s. Seed the handshake
-    // clock after loading, or the first SDK offset starts one load-time behind.
+    })};
+    const map=networkMap(settings.mapId);
+    if(!map)throw new ServerError(400,'Okänd multiplayerkarta.');
+    if(!map.modes.includes(settings.mode)||(!map.residents&&(settings.zombiesEnabled||settings.dancemanEnabled))){
+      throw new ServerError(400,'Inställningarna stöds inte på den valda kartan.');
+    }
+    const sim=await prepareRoomSimulation(settings);
     this.clock.tick();
-    this.templates=new Map(this.sim.game.actors.map(a=>[a.id,a]));
-    this.sim.game.state.actors=[];this.sim.game.drainEvents();
-    this.sim.game.onResidentSpawn=resident=>{
-      resident.lifeId=++this.residentLife;
-      resident.lifeStartedAt=this.clock.elapsedTime;
-    };
+    this.state=new RoomState({...settings,round:0,worldRevision:1,elevatorOpenAt:-1});
     this.residentLife=0;
-    const {mode,fillBots,zombiesEnabled,dancemanEnabled,friendlyFire,botDifficulty}=settings;
-    Object.assign(this.sim.game.config,{zombies:zombiesEnabled,danceman:dancemanEnabled,friendlyFire});
-    this.state=new RoomState({mode,fillBots,zombiesEnabled,dancemanEnabled,friendlyFire,botDifficulty,
-      round:0,worldRevision:1,elevatorOpenAt:-1});
-    for(const d of this.sim.game.world.doors.doors)this.state.doors.set(d.id,new DoorState());
-    this.sim.game.onGlassBreak=id=>this.state.brokenGlass.set(id,this.clock.elapsedTime);
+    installRoomSimulation(this,sim);
     this.project();
     this.lag=new LagCompensation(this);this.lag.recordTick();
-    if(this.classic||this.familyRoom){
-      const g=this.sim.game;
-      // beginRound commits config.mode to state.mode after preparing seats.
-      // A lobby mode change starts fresh lives but keeps queued lobby choices valid.
-      g.beforeBeginRound=()=>prepareClassicRound(this,g.state.mode===g.config.mode);
-      g.afterBeginRound=()=>{if(this.classic)g.world.networkDynamics.elevatorOpenAt=Math.max(0,g.state.buyDeadline-1.5);};
-    }
     this.match=new MatchLifecycle(this,this.matchOptions);
     this.teamComms=new TeamComms(this);
-    this.onMessage('match',(client,m)=>{try{this.match.command(client,m);}catch(e){client.send('notice',e.message);}});
+    this.onMessage('match',async(client,m)=>{try{await this.match.command(client,m);}catch(e){client.send('notice',e.message);}});
     this.onMessage(TEAM_COMMS_TYPE,(client,message)=>this.teamComms.receive(client,message));
     // Reliable WS input has its own monotonic wire sequence. Do not introduce a
     // second sequence/ack counter; dropping a queued frame still advances its ack.
     this.inputs=this.defineInput(NetworkInput,{bufferMaxSize:12});
     this.onMessage('ready',(client,message)=>{
       const seat=this.seats.get(client.sessionId);if(!seat||seat.ready||!seat.connected||seat.client!==client)return;
-      try{checkContract(message,CONTRACT);}catch(e){client.send('problem',e.message);client.leave(4009);return;}
+      // A slow previous load can finish after the room adopted another map.
+      if((message?.worldRevision??1)!==this.state.worldRevision)return;
+      try{checkContract(message,MAP_CONTRACTS[this.state.mapId]);}catch(e){client.send('problem',e.message);client.leave(4009);return;}
       const actor=structuredClone(this.templates.get(seat.id));
       Object.assign(actor,{name:seat.name,alive:false,lifeId:this.lives.get(seat.id)||0,controlEpoch:seat.epoch,respawnAt:null});
+      if(onlinePrimaries(actor.team).includes(seat.loadout))actor.loadout=seat.loadout;
       if(seat.pending)actor.id=seat.waitId;
       else this.sim.game.actors.push(actor);
       if(this.classic)this.prepareClassicActor(actor,!seat.pending);
       else if(!respawnActor(this.sim.game,actor)){this.sim.game.state.actors.pop();client.send('problem','No safe spawn is available.');client.leave(4008);return;}
       if(this.sim.game.world.networkDynamics.elevatorOpenAt<0)this.sim.game.world.networkDynamics.elevatorOpenAt=this.sim.game.state.time;
-      seat.ready=true;seat.enabled=true;seat.actor=actor;seat.deadline=Infinity;
+      seat.admitted=true;seat.ready=true;seat.enabled=true;seat.actor=actor;seat.deadline=Infinity;
       seat.lifeStartedAt=this.clock.elapsedTime;seat.diedAtMs=0;
       if(!seat.pending)this.sim.controllers.bind(client.sessionId,actor.id);
       if(this.familyRoom)this.match.ownership();
@@ -167,7 +149,7 @@ export class NetworkRoom extends Room {
     const waiting=this.classic&&this.state.phase==='active';
     if(!waiting)this.removeBot(id);
     const waitId=waiting?id+'-waiting':id;
-    const seat={id,waitId,pending:waiting,name:safeName(options.name),ready:false,playerReady:false,enabled:false,lastFire:0,lastReload:0,lastSampleTick:0,lastShotStamp:0,epoch:0,connected:true,client,rtts:[],deadline:this.clock.elapsedTime+20000};
+    const seat={id,waitId,pending:waiting,name:safeName(options.name),ready:false,playerReady:false,enabled:false,lastFire:0,lastReload:0,lastSampleTick:0,lastShotStamp:0,epoch:0,connected:true,client,rtts:[],deadline:this.clock.elapsedTime+MAP_LOAD_MS};
     client.ref.once('error',()=>{if(seat.client===client)seat.revoked=true;});
     this.seats.set(client.sessionId,seat);this.match.ownership();
     this.state.actors.set(waitId,new ActorState({id:waitId,sessionId:client.sessionId,name:seat.name,team:id.split('-')[0],controlEpoch:seat.epoch,connected:true}));
@@ -374,17 +356,28 @@ export class NetworkRoom extends Room {
   }
   onDrop(client,code){
     const seat=this.seats.get(client.sessionId);if(!seat||seat.client!==client)return;
+    if(!seat.ready)this.state.actors.get(seat.waitId).connected=false;
     this.releaseObjectives(seat.actor,false);seat.interactUntil=0;
     seat.enabled=false;seat.aim=seat.trigger=false;if(seat.actor)seat.actor.aimAmount=0;seat.connected=false;seat.playerReady=false;this.inputs.get(client.sessionId).clear();
     this.sim.controllers.unbind(client.sessionId);this.metrics.drops++;this.project();
     // Protocol violations, payload limits and server shutdown never reserve a seat.
-    if(seat.ready&&!seat.revoked&&[1000,1001,1005,1006].includes(code))this.allowReconnection(client,RECONNECT_SECONDS).catch(()=>{});
+    if(seat.admitted&&!seat.revoked&&[1000,1001,1005,1006].includes(code))this.allowReconnection(client,RECONNECT_SECONDS).catch(()=>{});
   }
   onReconnect(client){
-    const seat=this.seats.get(client.sessionId);if(!seat?.ready||seat.connected)throw new ServerError(409,'Expired player session.');
-    seat.client=client;seat.revoked=false;client.ref.once('error',()=>{if(seat.client===client)seat.revoked=true;});seat.connected=true;seat.enabled=false;seat.epoch++;seat.actor.controlEpoch=seat.epoch;
+    const seat=this.seats.get(client.sessionId);if(!seat?.admitted||seat.connected)throw new ServerError(409,'Expired player session.');
+    seat.client=client;seat.revoked=false;client.ref.once('error',()=>{if(seat.client===client)seat.revoked=true;});seat.connected=true;seat.enabled=false;seat.epoch++;
+    if(seat.actor)seat.actor.controlEpoch=seat.epoch;
+    else {
+      seat.deadline=this.clock.elapsedTime+MAP_LOAD_MS;
+      if(this.classic&&this.state.phase==='active'){
+        this.state.actors.delete(seat.id);
+        seat.pending=true;seat.waitId=seat.id+'-waiting';
+        this.state.actors.set(seat.waitId,new ActorState({id:seat.waitId,sessionId:client.sessionId,name:seat.name,team:seat.id.split('-')[0]}));
+      }
+      Object.assign(this.state.actors.get(seat.waitId),{connected:true,controlEpoch:seat.epoch});
+    }
     seat.lastSelect=seat.lastFire=seat.lastReload=seat.lastSampleTick=seat.lastShotStamp=0;seat.probe=null;seat.rtts=[];delete seat.rtt;delete seat.rttAt;
-    this.inputs.get(client.sessionId).clear();if(!seat.pending)this.sim.controllers.bind(client.sessionId,seat.id);
+    this.inputs.get(client.sessionId).clear();if(seat.ready&&!seat.pending)this.sim.controllers.bind(client.sessionId,seat.id);
     if(this.familyRoom)this.match.ownership();
     this.metrics.reconnects++;this.project();
   }
@@ -394,5 +387,5 @@ export class NetworkRoom extends Room {
     if(!seat.pending)this.removeActor(seat.actor);
     this.state.actors.delete(seat.actor?.id||seat.waitId);this.seats.delete(client.sessionId);this.match.ownership();this.fillVacancies();this.project();
   }
-  onDispose(){this.teamComms?.dispose();this.lag?.dispose();this.sim?.controllers.clear();this.seats?.clear();this.templates?.clear();this.lives?.clear();}
+  onDispose(){this.disposed=true;this.teamComms?.dispose();this.lag?.dispose();this.sim?.controllers.clear();this.seats?.clear();this.templates?.clear();this.lives?.clear();}
 }

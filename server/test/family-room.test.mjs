@@ -13,7 +13,7 @@ import {createTestServer} from '../../tools/network-test-server.mjs';
 import {CONTRACT} from '../../shared/multiplayer/build.mjs';
 import {FAMILY_ROOM_ALIAS, FAMILY_ROOM_PATH} from '../../shared/multiplayer/family-room.mjs';
 import {ROOM_TYPE, ROOM_CAPACITY} from '../../shared/multiplayer/rules.mjs';
-import {delay, own, ready, until} from './helpers.mjs';
+import {acknowledgeWorld, delay, own, ready, until} from './helpers.mjs';
 
 globalThis.WebSocket = WebSocket;
 const {Client} = await import('@colyseus/sdk');
@@ -66,6 +66,19 @@ test('family configuration is private, durable and rejects corrupt state', async
   assert.equal((await stat(familyStateFile)).mode & 0o077, 0);
   assert(!saved.includes(familyPassword) && !saved.includes(proof));
   assert.deepEqual(openFamilyRoom(config).settings, updated);
+  const {mapId, ...legacy} = updated;
+  await writeFile(familyStateFile, JSON.stringify({version: 1, alias: FAMILY_ROOM_ALIAS, settings: legacy}));
+  assert.deepEqual(openFamilyRoom(config).settings, updated, 'existing saved choices default to Floor 5');
+  const compact = {...updated, mapId: 'compact-arena', mode: 'tdm', zombiesEnabled: false, dancemanEnabled: false};
+  room.saveSettings(compact);
+  assert.deepEqual(openFamilyRoom(config).settings, compact);
+  const record = JSON.parse(await readFile(familyStateFile, 'utf8'));
+  assert.equal(record.version, 1);
+  assert.deepEqual(Object.fromEntries(Object.keys(legacy).map(key => [key, record.settings[key]])),
+    {...legacy, mode: 'tdm'}, 'previous reader selects its known fields after rollback');
+  for (const patch of [{mapId: 'synthetic-demo'}, {mapId: null}, {mode: 'classic'}, {zombiesEnabled: true}])
+    assert.throws(() => room.saveSettings({...compact, ...patch}), /Invalid family room settings/);
+  room.saveSettings(updated);
   assert.throws(() => room.saveSettings({...updated, fillBots: 'invalid'}), /Invalid family room settings/);
   assert.deepEqual(room.settings, updated);
   await rename(stateDir, unavailable);
@@ -160,8 +173,11 @@ test('stable family link, independent admission, singleton at capacity and state
   match(guest, 'botDifficulty', {botDifficulty: 'hard', serial: 1});
   await until(() => guest.state.mode === 'classic' && !guest.state.fillBots && guest.state.friendlyFire &&
     guest.state.zombiesEnabled && guest.state.dancemanEnabled && guest.state.botDifficulty === 'hard', 'host preferences persisted');
+  match(guest, 'settings', {mapId: 'compact-arena'});
+  await until(() => guest.state.mapId === 'compact-arena' && !own(guest).ready, 'family changes the map before start');
+  await acknowledgeWorld(guest);
   const stored = JSON.parse(await readFile(options.familyStateFile, 'utf8')).settings;
-  assert.deepEqual(stored, {mode: 'classic', fillBots: false, friendlyFire: true, botDifficulty: 'hard', zombiesEnabled: true, dancemanEnabled: true});
+  assert.deepEqual(stored, {mapId: 'compact-arena', mode: 'tdm', fillBots: false, friendlyFire: true, botDifficulty: 'hard', zombiesEnabled: false, dancemanEnabled: false});
 
   const ordinary = {...body, code: 'ordinary-room-code', fillBots: false};
   const ordinaryA = await ready(await first.client.create(ROOM_TYPE, ordinary));

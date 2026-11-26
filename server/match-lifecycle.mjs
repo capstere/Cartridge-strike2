@@ -2,6 +2,8 @@ import {BOT_DIFFICULTY_IDS,CLASSIC_NETWORK_CONFIG,MATCH_DEFAULTS,NETWORK_CONFIG,
 import {prepareNetworkWorld} from '../shared/multiplayer/world.mjs';
 import {onlinePrimaries,respawnActor} from '../src/fps/action-rules.mjs';
 import {populateZombies} from '../src/fps/zombies.mjs';
+import {networkMap} from '../shared/multiplayer/maps.mjs';
+import {changeRoomMap} from './room-world.mjs';
 import {ActorState} from './network-schema.mjs';
 
 const teams=['analysts','counterAnalysts'];
@@ -46,7 +48,7 @@ export class MatchLifecycle {
     const current=family.settings;
     if(Object.entries(changes).some(([key,value])=>current[key]!==value))family.saveSettings({...current,...changes});
   }
-  configureFamilyLobby(mode,fillBots){
+  configureLobby(mode,fillBots){
     const r=this.room,g=r.sim.game,state=this.state;
     if(state.mode===mode&&state.fillBots===fillBots)return;
     state.fillBots=fillBots;
@@ -72,22 +74,29 @@ export class MatchLifecycle {
   command(client,m){
     const r=this.room,s=r.seats.get(client.sessionId),state=this.state;
     const keys=m?.kind==='botDifficulty'?['kind','matchId','controlEpoch','botDifficulty','serial']:
-      m?.kind==='settings'?['kind','matchId','controlEpoch','mode','fillBots']:
+      m?.kind==='settings'?['kind','matchId','controlEpoch','mapId','mode','fillBots']:
       ['kind','matchId','controlEpoch','ready','team','primary','zombies','danceman','friendlyFire'];
-    if(!s?.ready||!s.connected||s.client!==client||(r.familyRoom&&s.revoked)||!m||m.matchId!==state.matchId||m.controlEpoch!==s.epoch||
+    if(r.changingMap||!s?.ready||!s.connected||s.client!==client||(r.familyRoom&&s.revoked)||!m||m.matchId!==state.matchId||m.controlEpoch!==s.epoch||
       Object.keys(m).some(k=>!keys.includes(k)))return;
     const lobbyHost=state.phase==='waiting'&&state.ownerId===client.sessionId;
     if(!r.classic&&m.kind==='loadout'&&['waiting','active'].includes(state.phase)&&onlinePrimaries(s.actor.team).includes(m.primary))s.actor.loadout=m.primary;
     else if(m.kind==='ready'&&state.phase==='waiting'&&typeof m.ready==='boolean')s.playerReady=m.ready;
     else if(m.kind==='team'&&state.phase==='waiting')r.changeTeam(client,m.team);
     else if(m.kind==='settings'){
-      if(!r.familyRoom||!lobbyHost||(!Object.hasOwn(m,'mode')&&!Object.hasOwn(m,'fillBots'))||
-        (Object.hasOwn(m,'mode')&&!['classic','tdm'].includes(m.mode))||
+      if(!lobbyHost||!['mapId','mode','fillBots'].some(key=>Object.hasOwn(m,key))||
         (Object.hasOwn(m,'fillBots')&&typeof m.fillBots!=='boolean'))return;
-      const mode=m.mode??state.mode,fillBots=m.fillBots??state.fillBots;
+      const map=networkMap(Object.hasOwn(m,'mapId')?m.mapId:state.mapId);
+      if(!map||Object.hasOwn(m,'mode')&&!map.modes.includes(m.mode))return;
+      const mode=m.mode??(map.modes.includes(state.mode)?state.mode:map.modes[0]);
+      const fillBots=m.fillBots??state.fillBots;
+      if(map.id!==state.mapId){
+        return changeRoomMap(r,client,{mapId:map.id,mode,fillBots,
+          zombiesEnabled:map.residents&&state.zombiesEnabled,dancemanEnabled:map.residents&&state.dancemanEnabled,
+          friendlyFire:state.friendlyFire,botDifficulty:state.botDifficulty});
+      }
       this.saveFamilySettings({mode,fillBots});
-      this.configureFamilyLobby(mode,fillBots);
-    }else if(m.kind==='residents'&&lobbyHost&&
+      this.configureLobby(mode,fillBots);
+    }else if(m.kind==='residents'&&lobbyHost&&networkMap(state.mapId).residents&&
       typeof m.zombies==='boolean'&&typeof m.danceman==='boolean'){
       this.saveFamilySettings({zombiesEnabled:m.zombies,dancemanEnabled:m.danceman});
       state.zombiesEnabled=m.zombies;state.dancemanEnabled=m.danceman;

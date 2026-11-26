@@ -25,8 +25,10 @@ const networkTransport=new URLSearchParams(location.search).get('network');
 const internetMode=networkTransport==='internet';
 const networkMode=internetMode||['local','lan'].includes(networkTransport);
 const familyRoomLink=isFamilyRoomLink(location.search);
+import {networkMap} from '../../shared/multiplayer/maps.mjs';
 import {sha256} from '../../shared/sha256.mjs';
 let networkSession=null,networkUi=null,onlineRoomUi=null,networkJoinGeneration=0;
+import {connectionMessage} from './network/connection.mjs';
 import {roomUi} from './network/room-ui.mjs';
 const touchDevice=isTouchDevice();
 const renderBudget=new RenderBudget();
@@ -70,14 +72,57 @@ async function preparePrivateCharacter(){
  document.querySelector('[data-team="counterAnalysts"]').disabled=true;
  }catch(e){if(rehearsalMode)throw e;characterSelectionFailed=true;privateCharacterDraft=null;characterMenu.error(e.message);}
 }
-async function prepareLocalNetworkWorld(world){
- const [{CONTRACT},{collisionContract},{prepareNetworkWorld}]=await Promise.all([
-  import('../../shared/multiplayer/build.mjs'),import('../../shared/multiplayer/collision-contract.mjs'),import('../../shared/multiplayer/world.mjs')]);
- if(await sha256(collisionContract(world))!==CONTRACT.collisionHash)throw Error('Collision version mismatch. Reload the matching local build.');
- prepareNetworkWorld(world);
+// Character and weapon caches are shared within a renderer. Finish tearing down
+// the previous world before preparing another one on this page.
+let presentationQueue=Promise.resolve(),displayMapId=null;
+function releaseWorldPresentation(){
+ grenadeAssist?.dispose();grenadeAssist=null;
+ if(renderer){
+  const canvas=$('game'),replacement=canvas.cloneNode(false);
+  renderer.renderer.forceContextLoss();renderer.dispose({keepCharacterLibrary:true});renderer=null;
+  canvas.replaceWith(replacement);
+ }
+ renderBudget.invalidate();minimapCache.invalidate();minimapCache.world=null;
+ audio.reset();audio.world=null;audio.game=null;
+ world=null;displayMapId=null;
+}
+function loadRoomWorld(contract,mode,signal){
+ async function load(){
+  signal.throwIfAborted();
+  const {prepareNetworkWorld}=await import('../../shared/multiplayer/world.mjs');
+  if(displayMapId!==contract.mapId){
+   const map=networkMap(contract.mapId);
+   const response=await fetch('../'+map.file,{signal,cache:'no-store'});
+   if(!response.ok)throw Error('Kunde inte ladda '+map.name+'. Anslut igen för att försöka på nytt.');
+   const body=await response.text();
+   if(await sha256(body)!==contract.mapHash)throw Error('Map version mismatch');
+   signal.throwIfAborted();
+   const {collisionContract}=await import('../../shared/multiplayer/collision-contract.mjs');
+   const candidate=createWorld({levelProject:parseProject(body),fresh:true});
+   if(await sha256(collisionContract(candidate))!==contract.collisionHash)throw Error('Collision version mismatch');
+   signal.throwIfAborted();
+   prepareNetworkWorld(candidate);
+   releaseWorldPresentation();
+   try{
+    renderer=new Renderer($('game'),candidate,settings);
+    await renderer.assetsReady;
+    signal.throwIfAborted();
+    grenadeAssist=new GrenadeAssist(renderer,settings);
+    world=audio.world=candidate;displayMapId=map.id;
+   }catch(error){releaseWorldPresentation();throw error;}
+  }else{
+   prepareNetworkWorld(world);
+  }
+  if(mode==='classic')await renderer.prepareClassic();
+  signal.throwIfAborted();
+  return world;
+ }
+ const pending=presentationQueue.then(load);
+ presentationQueue=pending.catch(()=>{});
+ return pending;
 }
 async function selectedLevel(){
- let id=networkMode?(await import('../../shared/multiplayer/build.mjs')).CONTRACT.mapId:new URLSearchParams(location.search).get('level');if(id==='classic-floor5')return null;
+ let id=new URLSearchParams(location.search).get('level');if(id==='classic-floor5')return null;
  if(id==='preview'){
   const saved=localStorage.getItem('cartridge-level-preview');if(!saved)throw Error('Ingen privat förhandsvisning finns i den här webbläsaren.');
   return parseProject(saved);
@@ -89,9 +134,9 @@ async function selectedLevel(){
  if(!/^[a-z0-9-]{1,48}$/.test(id||''))throw Error('Ogiltigt nivå-ID.');
  const entry=manifest.levels?.find(row=>row.id===id);
  if(!entry||entry.file!==`levels/${id}.json`)throw Error('Nivån finns inte i det publicerade manifestet.');
+ if(entry.multiplayerOnly)throw Error('Den här banan spelas i multiplayer. Öppna ett privat rum och välj kartan i väntrummet.');
  const response=await fetch('../'+entry.file);if(!response.ok)throw Error('Nivåfilen saknas.');
  const body=await response.text();
- if(networkMode){const {CONTRACT}=await import('../../shared/multiplayer/build.mjs');if(await sha256(body)!==CONTRACT.mapHash)throw Error('Map version mismatch. Reload the matching local build.');}
  return parseProject(body);
 }
 function nameWorld(){
@@ -259,9 +304,13 @@ function start(selected=team,overrides={},autoplay=false){team=rehearsalMode?'an
 async function joinNetwork(options){
  if(!networkMode)throw Error('Open the local multiplayer lobby first.');
  const generation=++networkJoinGeneration;
- await networkSession?.dispose();networkSession=null;clearInput();audio.reset();renderer.resetTransient();combatHud.reset();recoil.reset();
+ await networkSession?.dispose();networkSession=null;clearInput();audio.reset();renderer?.resetTransient();combatHud.reset();recoil.reset();
  const {NetworkSession}=await import('./network/session.mjs');
- const session=new NetworkSession(world,{onMatch:()=>{if(networkSession===session&&game===session.view)networkPhase();},onConnection:status=>{if(networkSession!==session)return;clearInput();audio.reset();renderer.resetTransient();recoil.reset();if(status==='reconnecting')showPause();$('pause').querySelector('p:not(.eyebrow)').textContent=status==='reconnecting'?'Återansluter… Platsen reserveras i 15 sekunder. Matchen fortsätter.':'Ansluten igen. Tryck Fortsätt för kontroller och ljud.';},onDisconnect:message=>{if(networkSession!==session)return;newMatch();networkUi?.status(message);}});
+ if(generation!==networkJoinGeneration)throw Error('Join cancelled.');
+ const session=new NetworkSession(null,{loadWorld:loadRoomWorld,onLoading:id=>{
+  if(networkSession!==session)return;
+  networkUi?.status('Laddar '+networkMap(id).name+'…');if(game===session.view)onlineRoomUi?.update(session);
+ },onMatch:()=>{if(networkSession===session&&game===session.view)networkPhase();},onConnection:status=>{if(networkSession!==session)return;clearInput();audio.reset();renderer?.resetTransient();recoil.reset();if(status==='reconnecting')showPause();$('pause').querySelector('p:not(.eyebrow)').textContent=status==='reconnecting'?'Återansluter… Platsen reserveras i 15 sekunder. Matchen fortsätter.':'Ansluten igen. Tryck Fortsätt för kontroller och ljud.';},onDisconnect:message=>{if(networkSession!==session)return;newMatch();networkUi?.status(connectionMessage(message));}});
  networkSession=session;
  try{await session.connect(options);if(session.room.state.mode==='classic')await renderer.prepareClassic();if(generation!==networkJoinGeneration){await session.dispose();throw Error('Join cancelled.');}}
  catch(e){await session.dispose();if(networkSession===session)networkSession=null;throw e;}
@@ -285,7 +334,7 @@ function applyNetworkMode(){
  $('buy').querySelector('h2').textContent=world.networkClassic?'Köp utrustning':'Välj utrustning';
 }
 function networkPhase(){
- if(!networkSession?.room||!game.player)return;
+ if(!networkSession?.room||!game?.player)return;
  if(world.networkClassic!==(game.state.mode==='classic')){
   applyNetworkMode();
   if(world.networkClassic){
@@ -306,7 +355,7 @@ function networkPhase(){
  }
 }
 function restartMatch(){if(networkMode){newMatch();return;}window.__csFlow?.fullscreen?.start();audio.unlock();start(team);requestMouse();}
-function newMatch(){if(networkMode){setMapExpanded(false);document.documentElement.classList.toggle('cs-family-lobby',familyRoomLink);}onlineRoomUi?.hide();if(networkSession){networkJoinGeneration++;networkSession.dispose();networkSession=null;game=new Game(world);game.network=true;lastRound=game.state.round;lastPhase=game.phase;} window.__csFlow?.fullscreen?.exit();clearInput();recoil.reset();game.pause(true);audio.reset();renderer.resetTransient();modal='menu';mobile.show(false);unlockMouse();for(const id of ['pause','buy','match-end','scoreboard','hud'])$(id).hidden=true;$('menu').hidden=false;settingsPanel('menu-settings');}
+function newMatch(){if(networkMode){networkJoinGeneration++;setMapExpanded(false);document.documentElement.classList.toggle('cs-family-lobby',familyRoomLink);}onlineRoomUi?.hide();if(networkSession){networkSession.dispose();networkSession=null;game=new Game(world);game.network=true;lastRound=game.state.round;lastPhase=game.phase;} window.__csFlow?.fullscreen?.exit();clearInput();recoil.reset();game.pause(true);audio.reset();renderer?.resetTransient();modal='menu';mobile.show(false);unlockMouse();for(const id of ['pause','buy','match-end','scoreboard','hud'])$(id).hidden=true;$('menu').hidden=false;settingsPanel('menu-settings');}
 function viewActor(){if(game.player?.alive)return game.player;const alive=game.actors.filter(a=>a.alive&&a.team===game.team);return alive[spectateIndex%Math.max(1,alive.length)]||game.player;}
 function timer(value){const sec=Math.max(0,Math.ceil(value));return `${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}`;}
 function scoreboard(){
@@ -407,6 +456,9 @@ function consumeEvents(){audio.game=game;const events=game.drainEvents();combatH
  }
 if(game.phase!==lastPhase){if(['result','match'].includes(game.phase)){audio.reset();}lastPhase=game.phase;}if(game.state.round!==lastRound){lastRound=game.state.round;audio.reset();renderer.resetTransient();recoil.reset();yaw=game.player.yaw;pitch=game.player.pitch;clearInput();}for(const event of events){if(event.type==='respawn'&&event.actorId===game.player.id){clearInput();recoil.reset();yaw=game.player.yaw;pitch=0;renderer.lastWeapon='';}if(event.type==='radio'&&!event.teamPrivate){setText('radio-caption',`RADIO · ${event.text}`);radioUntil=game.state.time+3.4;radioOpen=false;$('radio-menu').hidden=true;}if(event.type==='kill'){if(event.actorId===game.player.id){fire=false;radioOpen=false;$('radio-menu').hidden=true;if(!isEndless(game))unlockMouse();}const killer=game.actors.find(a=>a.id===event.sourceId),victim=game.actors.find(a=>a.id===event.actorId);feed.push({text:`${killer?.name||event.sourceName||'—'}  ▸  ${victim?.name||event.targetName||'—'}`,until:game.state.time+5});}if(event.type==='planted')notify('Bomben är planterad i '+missionRoomName(world)+'.',4);if(event.type==='rescued')notify('Gisslan har nått räddningszonen.',3);}const effectEvents=['result','match'].includes(game.phase)?events.filter(e=>['result','match','kill','rocket-launch','rocket-explosion'].includes(e.type)):events;renderer.events(events,game);const view=viewActor();if(view)audio.handle(effectEvents,{...view,y:view.y+view.height-.12,ambient:['buy','active'].includes(game.phase)&&!game.state.paused,floorAudioReady:!modal&&$('cs-loading').hidden},game.state.time);return events;}
 function frame(now){try{
+ if(networkMode&&(!renderer||!grenadeAssist||networkSession&&(!networkSession.view.player||networkSession.worldRevision!==networkSession.room?.state.worldRevision||game!==networkSession.view))){
+  lastFrame=now;raf=requestAnimationFrame(frame);return;
+ }
  // The empty network lobby has a fixed camera and simulation time. Retain its
  // pixels until a new lobby, viewport or graphics setting needs a redraw.
  const stillLobby=networkMode&&modal==='menu'&&game.phase==='menu';
@@ -432,14 +484,14 @@ function launchMatch(event){
  audio.unlock();requestMouse();
 }
 $('start').addEventListener('cs-start-match',launchMatch);
-if(networkMode)$('game').addEventListener('webglcontextrestored',()=>renderBudget.invalidate());
+if(networkMode)document.addEventListener('webglcontextrestored',()=>renderBudget.invalidate(),true);
 $('death-restart').onclick=restartMatch;$('resume').onclick=resume;$('restart').onclick=newMatch;$('new-match').onclick=newMatch;$('close-buy').onclick=closeBuy;$('return-buy').onclick=closeBuy;
 $('fullscreen-toggle').onclick=()=>{window.__csFlow?.fullscreen?.toggle();syncFullscreenToggle();};
 document.addEventListener('fullscreenchange',()=>{syncFullscreenToggle();if(mobile.enabled&&document.fullscreenElement)mobile.attemptLandscape();window.dispatchEvent(new Event('resize'));});syncFullscreenToggle();
 window.addEventListener('keydown',e=>{if(teamRadioKey(e))return;if(!modal&&['Tab','Space','Escape','ControlLeft','ControlRight'].includes(e.code))e.preventDefault();if(e.code==='Escape'){if(radioOpen){radioOpen=false;$('radio-menu').hidden=true;return;}if(modal==='buy')closeBuy();else if(!modal)showPause();return;}if(modal)return;if(!networkMode&&e.code==='KeyZ'&&game.player?.alive){radioOpen=!radioOpen;$('radio-menu').hidden=!radioOpen;return;}if(radioOpen&&/^Digit[1-6]$/.test(e.code)){const result=game.radio(RADIO[Number(e.code.slice(-1))-1]?.id);if(!result)notify('Radion är upptagen. Försök strax igen.');return;}if(!networkMode&&e.code==='Enter'&&!game.player?.alive&&!isEndless(game)){restartMatch();return;}if(e.code==='Tab'){board=true;$('scoreboard').hidden=false;scoreboard();return;}if(e.repeat)return;keys.add(e.code);if(e.code==='KeyB'){showBuy();return;}if(e.code==='KeyR')game.reload();if(e.code==='KeyQ')game.select('last');if(e.code==='KeyG')game.drop();if(/^Digit[1-5]$/.test(e.code))game.select(e.code.slice(-1));if(e.code==='KeyM'){toggleMap();return;}if(!game.player.alive&&['ArrowLeft','ArrowRight'].includes(e.code)){const count=game.actors.filter(a=>a.alive&&a.team===game.team).length;spectateIndex=(spectateIndex+(e.code==='ArrowLeft'?-1:1)+count)%Math.max(1,count);}});
 window.addEventListener('keyup',e=>{keys.delete(e.code);if(e.code==='Tab'){board=false;$('scoreboard').hidden=true;}});
 window.addEventListener('mousemove',e=>{if(document.pointerLockElement!==$('game')||modal||teamRadioOpen||!game.player?.alive)return;const k=settings.sensitivity*tactical.lookScale(false,yaw,pitch);yaw-=e.movementX*k;const before=pitch;pitch=Math.max(-1.49,Math.min(1.49,pitch-e.movementY*k));recoil.counter(pitch-before);});
-$('game').addEventListener('mousedown',e=>{if(e.button!==0||modal||teamRadioOpen)return;if(document.pointerLockElement!==$('game')){resume();return;}fire=true;});window.addEventListener('mouseup',e=>{if(e.button===0)fire=false;});window.addEventListener('contextmenu',e=>e.preventDefault());
+document.addEventListener('mousedown',e=>{if(e.target!==$('game')||e.button!==0||modal||teamRadioOpen)return;if(document.pointerLockElement!==$('game')){resume();return;}fire=true;});window.addEventListener('mouseup',e=>{if(e.button===0)fire=false;});window.addEventListener('contextmenu',e=>e.preventDefault());
 document.addEventListener('pointerlockerror',()=>{if(!mobile.enabled&&!modal){showPause();$('pause').querySelector('p:not(.eyebrow)').textContent='Muslås kunde inte aktiveras. Tryck Fortsätt igen i en separat webbläsarflik.';}});
 window.addEventListener('offline',()=>networkSession?.interruptConnection());
 document.addEventListener('pointerlockchange',()=>{if(mobile.enabled)return;if(document.pointerLockElement=== $('game')&&modal){unlockMouse();return;}if(document.pointerLockElement!==$('game')){clearInput();if(!modal&&game.player?.alive)showPause();}});window.addEventListener('blur',()=>{clearInput();if(!modal)showPause();});document.addEventListener('visibilitychange',()=>{if(document.hidden){clearInput();if(!modal)showPause();}});
@@ -454,7 +506,25 @@ $('radio-options').innerHTML=RADIO.map((r,i)=>`<div><kbd>${i+1}</kbd><span>${r.t
 const characterQuery=new URLSearchParams(location.search);
 if(!window.__csFlow && !rehearsalMode && characterQuery.get('team')==='counterAnalysts')team='counterAnalysts';
 if(characterQuery.has('seed'))$('seed').value=String(Math.min(999999,Math.max(1,Number(characterQuery.get('seed'))||42)));
-try{await new Promise(r=>setTimeout(r,10));await preparePrivateCharacter();const levelProject=await selectedLevel();world=createWorld({levelProject,fresh:networkMode});if(networkMode)await prepareLocalNetworkWorld(world);nameWorld();if(levelProject){$('loading').textContent='Bygger '+COMPLEX_NAME+'…';document.title=GAME_NAME+' · '+COMPLEX_NAME;document.querySelector('.intro .eyebrow').textContent=(new URLSearchParams(location.search).get('level')==='preview'?'PRIVAT PROVSPELNING / ':'PUBLICERAD BANA / ')+COMPLEX_NAME;document.querySelector('.intro .lead').textContent='Egen bana · fem mot fem med befintlig spelmekanik.';}game=new Game(world);renderer=new Renderer($('game'),world,settings);audio=new AudioSystem(world,settings);await Promise.all([renderer.assetsReady,audio.prepareFloorAudio()]);grenadeAssist=new GrenadeAssist(renderer,settings);$('loading').hidden=true;$('start').disabled=characterSelectionFailed||networkMode;if(networkMode){game.network=true;const {networkMenu}=await import('./network/menu.mjs');networkUi=networkMenu(joinNetwork,()=>{audio.unlock();},internetMode);}raf=requestAnimationFrame(frame);if(testMode){globalThis.__fps={stopFrameLoop(){cancelAnimationFrame(raf);raf=0;},get game(){return game;},get network(){return networkSession;},joinNetwork,world,renderer,audio,settings,start(selected,config={},autoplay=false){start(selected,config,autoplay);return this.snapshot();},step(controls=null,dt=1/60){tactical.update(dt);game.update(dt,controls??input(dt));yaw=game.player.yaw;pitch=game.player.pitch;consumeEvents();tactical.render(renderer);grenadeAssist.update(game,viewActor(),modal);renderer.render(game,viewActor(),dt);updateHud();return this.snapshot();},snapshot(){return JSON.parse(JSON.stringify({...game.state,player:game.player,actors:game.actors.map(({bot,...rest})=>rest),hostages:game.hostages},(k,v)=>k==='bot'?undefined:v));},render(){tactical.render(renderer);grenadeAssist.update(game,viewActor(),modal);renderer.render(game,viewActor(),1/60);updateHud();},pause(value){game.pause(value);},input,showBuy,newMatch,get modal(){return modal;},mobile,recoil,tactical,grenadeAssist,focusHud,renderBudget,minimapCache};}}
+try{
+ await preparePrivateCharacter();
+ if(networkMode){
+  game=new Game(null);game.network=true;
+  audio=new AudioSystem(null,settings);
+  const {networkMenu}=await import('./network/menu.mjs');
+  networkUi=networkMenu(joinNetwork,()=>audio.unlock(),internetMode,newMatch);
+ }else{
+  const levelProject=await selectedLevel();world=createWorld({levelProject});nameWorld();
+  if(levelProject){
+   $('loading').textContent='Bygger '+COMPLEX_NAME+'…';document.title=GAME_NAME+' · '+COMPLEX_NAME;
+   document.querySelector('.intro .eyebrow').textContent=(new URLSearchParams(location.search).get('level')==='preview'?'PRIVAT PROVSPELNING / ':'PUBLICERAD BANA / ')+COMPLEX_NAME;
+   document.querySelector('.intro .lead').textContent='Egen bana · fem mot fem med befintlig spelmekanik.';
+  }
+  game=new Game(world);renderer=new Renderer($('game'),world,settings);audio=new AudioSystem(world,settings);
+  await Promise.all([renderer.assetsReady,audio.prepareFloorAudio()]);grenadeAssist=new GrenadeAssist(renderer,settings);
+ }
+ $('loading').hidden=true;$('start').disabled=characterSelectionFailed||networkMode;
+ raf=requestAnimationFrame(frame);if(testMode){globalThis.__fps={stopFrameLoop(){cancelAnimationFrame(raf);raf=0;},get game(){return game;},get network(){return networkSession;},joinNetwork,get world(){return world;},get renderer(){return renderer;},audio,settings,start(selected,config={},autoplay=false){start(selected,config,autoplay);return this.snapshot();},step(controls=null,dt=1/60){tactical.update(dt);game.update(dt,controls??input(dt));yaw=game.player.yaw;pitch=game.player.pitch;consumeEvents();tactical.render(renderer);grenadeAssist.update(game,viewActor(),modal);renderer.render(game,viewActor(),dt);updateHud();return this.snapshot();},snapshot(){return JSON.parse(JSON.stringify({...game.state,player:game.player,actors:game.actors.map(({bot,...rest})=>rest),hostages:game.hostages},(k,v)=>k==='bot'?undefined:v));},render(){tactical.render(renderer);grenadeAssist.update(game,viewActor(),modal);renderer.render(game,viewActor(),1/60);updateHud();},pause(value){game.pause(value);},input,showBuy,newMatch,get modal(){return modal;},mobile,recoil,tactical,get grenadeAssist(){return grenadeAssist;},focusHud,renderBudget,minimapCache};}}
 catch(error){fatal(error);}
 
-window.addEventListener('pagehide',event=>{if(!event.persisted){cancelAnimationFrame(raf);networkJoinGeneration++;networkSession?.dispose();audio?.reset();renderer?.dispose();}});
+window.addEventListener('pagehide',event=>{if(!event.persisted){cancelAnimationFrame(raf);networkJoinGeneration++;networkSession?.dispose();grenadeAssist?.dispose();audio?.dispose();renderer?.dispose();}});

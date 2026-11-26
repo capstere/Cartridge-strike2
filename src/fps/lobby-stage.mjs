@@ -14,7 +14,7 @@ function syncTeam(){
   const sel=document.querySelector('.lobby .team-option.selected'),team=sel?.dataset.team||'analysts';
   menu.dataset.side=team;
   $('lb-team-name').textContent=sel?.querySelector('strong')?.textContent||'Analysts';
-  $('lb-objective').textContent=menu.classList.contains('network-menu')?'Pulse SMG · automatisk respawn · inga uppdrag':sel?.querySelector('em')?.textContent||'';
+  if(!menu.classList.contains('network-menu'))$('lb-objective').textContent=sel?.querySelector('em')?.textContent||'';
   stage?.setTeam(team);
 }
 document.querySelectorAll('.lobby .team-option').forEach(b=>b.addEventListener('click',()=>setTimeout(syncTeam,0)));

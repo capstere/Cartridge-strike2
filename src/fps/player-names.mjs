@@ -16,6 +16,7 @@ export const ROOM_NAMES=Object.freeze({
  'BYGG-G-0001':'Connecting Passage','BYGG-G-41001':'Cargo Lift','BYGG-G-41002':'Transit Lift'
 });
 export function roomDisplayName(room){
+ if(room?.publicName)return room.publicName;
  const id=typeof room==='string'?room:room?.id;
  if(ROOM_NAMES[id])return ROOM_NAMES[id];
  if(/^C\d{2}$/.test(id||''))return 'Sector '+String.fromCharCode(64+Number(id.slice(1)));
