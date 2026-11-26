@@ -1,0 +1,28 @@
+{
+  "status": "PASS",
+  "previousRevision": "75feffd9360da2380098bfea18f60df12713feff",
+  "isolatedTemporaryFile": true,
+  "newReadsLegacy": {
+    "tdmMinutes": 10,
+    "tdmKills": 50,
+    "classicWins": 5,
+    "analystsBots": 0,
+    "counterAnalystsBots": 0
+  },
+  "customSaved": {
+    "tdmMinutes": 3,
+    "tdmKills": 25,
+    "classicWins": 8,
+    "analystsBots": 1,
+    "counterAnalystsBots": 3
+  },
+  "oldFillBotsFallback": true,
+  "customRetainedIfNotResaved": true,
+  "afterOldResave": {
+    "tdmMinutes": 10,
+    "tdmKills": 50,
+    "classicWins": 5,
+    "analystsBots": 5,
+    "counterAnalystsBots": 5
+  }
+}

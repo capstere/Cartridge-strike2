@@ -6,6 +6,10 @@ Värden väljer 3, 5, 10 eller 15 minuter och 10, 25, 50 eller 100 fiendekills i
 
 Protokoll 14 skickar inställningarna i auktoritativt rumstillstånd. V1-filen får fem nya värden medan den tidigare botflaggan finns kvar för rollback. [Inställningar, kompatibilitet och testkommandon](docs/multiplayer/custom-match-settings.md)
 
+Live på Pi:n med revision `8307e91118dba4fdca964012d2b0c247a40221fd` och bygg-ID `30f8f4af97b2b082f995196f06f498b132ba9bf8d303671ee8ab8d4b69590385`. Alla åtta CI-jobb passerade, inklusive 258 FPS-tester och 53 servertester. Rummen var tomma vid aktiveringen. Floor 5 verifierades med två klienter via publik HTTPS/WSS. Via familjelänken hade Compact Arena tre minuter, tio kills och två respektive tre botar. Manuell eld bekräftades av servern. Samma matchval öppnades igen. Därefter återställdes familjens val och jämfördes med säkerhetskopian. [PR 45](https://github.com/capstere/Cartridge-strike2/pull/45) · [Aktiveringskvitto](docs/multiplayer/custom-match-settings/activation.json) · [Familjeprov](docs/multiplayer/custom-match-settings/live.json)
+
+Återställ när rummen är tomma med `sudo cs2-online status` och `sudo cs2-online rollback`. Föregående Pi-revision är `75feffd9360da2380098bfea18f60df12713feff`. Den äldre servern läser familjefilen med sina tidigare matchgränser. Exakta nya värden kan bevaras i en separat säkerhetskopia om den äldre versionen sparar om filen. Mobiltesterna använde emulerad touch. Nästa praktiska prov är en match från en fysisk mobil. [Desktopbild](docs/multiplayer/custom-match-settings/desktop-floor5-classic.jpg) · [Mobilbild](docs/multiplayer/custom-match-settings/mobile-compact-host.jpg)
+
 ## Kartval i multiplayer · 26 november 2026
 
 Compact Arena är den första nya onlinebanan. Värden väljer karta i väntrummet, alla laddar serverns val och väljer **Redo**. Floor 5 har kvar Classic och Team Deathmatch. Compact Arena har tre stridsvägar, sju namngivna platser och Team Deathmatch för upp till fem spelare per lag. Familjerummet minns kartvalet på samma inbjudningslänk.

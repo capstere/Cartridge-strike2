@@ -1,0 +1,30 @@
+{
+  "status": "PASS",
+  "buildHash": "30f8f4af97b2b082f995196f06f498b132ba9bf8d303671ee8ab8d4b69590385",
+  "physicalMobile": false,
+  "transport": "isolated HTTPS/WSS",
+  "checks": [
+    "Desktop host and touch guest see the same Floor 5 defaults",
+    "Asymmetric bot counts, Team Deathmatch limits and rapid independent resident changes replicate",
+    "Floor 5 Classic uses the selected round limit",
+    "Compact only shows Team Deathmatch and retains its custom limits",
+    "Touch host takes over, starts the selected match and retains choices after rematch",
+    "Family choices survive a server restart and both catalogued map transitions"
+  ],
+  "viewports": {
+    "desktop-floor5-classic.jpg": {
+      "width": 1200,
+      "height": 1020
+    },
+    "mobile-compact-tdm.jpg": {
+      "width": 430,
+      "height": 932
+    },
+    "mobile-compact-host.jpg": {
+      "width": 430,
+      "height": 932
+    }
+  },
+  "time": "2026-11-26T21:35:55.809Z",
+  "browser": "156.0.8078.79"
+}
