@@ -13,7 +13,7 @@ const command=(p,kind,extra={})=>p.send('match',{kind,matchId:p.state.matchId,co
 function present(peer,id,frameDelayMs=0) {
   const world={data:{},glass:{reset(){},panes:new Map()},doors:{doors:[],elevators:{setProgress(){}}}};
   const session=new NetworkSession(world);
-  Object.assign(session,{room:peer,localPlayerId:own(peer).id,predict:{attach(){}},prediction:{reset(){}}});
+  Object.assign(session,{room:peer,worldRevision:peer.state.worldRevision,localPlayerId:own(peer).id,predict:{attach(){}},prediction:{reset(){}}});
   session.snapshot();
   session.updateDisplayTime(peer.state,performance.now()+frameDelayMs);
   const actor=session.view.actors.find(a=>a.id===id);

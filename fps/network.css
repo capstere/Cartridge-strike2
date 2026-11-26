@@ -80,3 +80,8 @@ html.network-session-ui[data-hud=full] #mobile-controls #mobile-utilities .mobil
 #team-radio-menu .radio-key-hint{color:#aac0c9}
 html.touch-fps #team-radio-menu .radio-key-hint{display:none}
 html.touch-fps #team-radio-menu button{min-height:44px}
+
+#online-room .room-map-card{display:flex;align-items:center;gap:16px;margin:12px 0;border-block:1px solid #39504b;padding:10px 0}
+#online-room .room-map-card img{width:clamp(112px,24vw,240px);height:auto;aspect-ratio:2/1;object-fit:cover}
+#online-room .room-map-card h3,#online-room .room-map-card p{margin:0 0 5px}
+#online-room .room-map-card p{color:#b2c4bc;font-size:14px}

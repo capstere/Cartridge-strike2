@@ -4,8 +4,10 @@ import {createWorld} from '../src/fps/world.mjs';
 import {Game, CONFIG} from '../src/fps/game.mjs';
 import {ControllerRegistry} from '../shared/multiplayer/input.mjs';
 
+import {networkMap} from '../shared/multiplayer/maps.mjs';
+
 const root = new URL('../', import.meta.url);
-let preparedFloor;
+const preparedMaps = new Map();
 
 /** Load the actual manifest-selected LevelProject, never the legacy fallback. */
 export async function loadHeadlessWorld(mapId) {
@@ -14,13 +16,14 @@ export async function loadHeadlessWorld(mapId) {
   if (!entry || !/^levels\/[a-z0-9-]+\.json$/.test(entry.file)) throw new Error('Unknown public map');
   const bytes = await readFile(new URL(entry.file, root));
   const sourceHash = createHash('sha256').update(bytes).digest('hex');
-  // Only the shipped multiplayer level uses this single-entry, process-local
-  // template. Geometry edits, other maps and runtime glass never seed it.
-  const template = entry.id === 'floor5-prepared'
-    ? (preparedFloor?.sourceHash === sourceHash ? preparedFloor : {sourceHash})
-    : null;
+  // Cache immutable navigation templates for approved maps; all live door,
+  // glass and actor state belongs to the newly constructed world.
+  const approved = networkMap(entry.id);
+  if (approved && entry.file !== approved.file) throw Error('Unexpected map source.');
+  const cached = preparedMaps.get(entry.id);
+  const template = approved ? (cached?.sourceHash === sourceHash ? cached : {sourceHash}) : null;
   const world = createWorld({levelProject: JSON.parse(bytes), fresh: true, template});
-  if (template) preparedFloor = template;
+  if (template) preparedMaps.set(entry.id, template);
   return {world, mapId: entry.id, sourceHash};
 }
 

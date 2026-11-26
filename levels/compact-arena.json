@@ -1875,6 +1875,7 @@
     }
   ],
   "intent": {
+    "runtimeLighting": "neutral-daylight",
     "setting": "Fictional pulse-testing laboratory. Blue and Amber intakes feed a central test column, a chilled return and a turbine maintenance bay."
   },
   "validation": {},

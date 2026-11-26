@@ -45,7 +45,7 @@ async function fixture(t){
   const join=()=>sdk.joinById(room.roomId,options);
   const command=(member,kind,extra={})=>{
     const seat=room.seats.get(member.sessionId);
-    room.match.command(seat.client,{kind,matchId:room.state.matchId,controlEpoch:seat.epoch,...extra});
+    return room.match.command(seat.client,{kind,matchId:room.state.matchId,controlEpoch:seat.epoch,...extra});
   };
   return {get room(){return room;},family,log,create,join,command};
 }
@@ -66,6 +66,9 @@ test('family lobby persists only accepted host settings and switches rules on th
   assert.equal(f.log.writes,0);
   f.log.fail=true;
   assert.throws(()=>f.command(host,'settings',{mode:'classic',fillBots:true}),/could not be saved/);
+  await assert.rejects(f.command(host,'settings',{mapId:'compact-arena'}),/could not be saved/);
+  assert.equal(r.sim.game.world,world,'a failed map save leaves the old simulation installed');
+  assert.equal(r.state.worldRevision,1);assert.equal(r.changingMap,false);
   assert.throws(()=>f.command(host,'botDifficulty',{botDifficulty:'hard',serial:1}),/could not be saved/);
   assert.equal(r.state.mode,'tdm');assert.equal(r.bots.size,0);assert.equal(g.difficulty,'casual');
   f.log.fail=false;

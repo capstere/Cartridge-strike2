@@ -6,6 +6,7 @@ export function networkEndpoint(endpoint=globalThis.location?.origin,origin=glob
 }
 export function connectionMessage(error) {
   const message=String(error?.message||error||'');
+  if(/Join cancelled/i.test(message))return 'Anslutningen avbröts.';
   if(/Incorrect family room password/i.test(message))return 'Fel lösenord till familjerummet. Kontrollera lösenordet du fick.';
   if(/family room .*closed/i.test(message))return 'Öppna den fasta länken till familjerummet igen.';
   if(/family room .*unavailable/i.test(message))return 'Familjerummet är tillfälligt otillgängligt. Försök igen om en stund.';

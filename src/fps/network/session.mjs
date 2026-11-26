@@ -3,10 +3,10 @@ import '../../../vendor/colyseus/colyseus.js';
 import {Game,WEAPONS} from '../game.mjs';
 import {seededRandom} from '../config.mjs';
 import {moveActor} from '../movement.mjs';
-import {floor5MapAnchors} from '../minimap-cache.mjs';
+import {multiplayerMapAnchors} from '../minimap-cache.mjs';
 import {TEAM_COMMS_TYPE,TEAM_COMMS_COMMANDS,TEAM_COMMS_RATE_MS} from '../../../shared/multiplayer/protocol.mjs';
 import {CLASSIC_NETWORK_CONFIG,NETWORK_CONFIG,ROOM_TYPE,ROOM_CAPACITY,RECONNECT_SECONDS,INTERPOLATION_MS,copyPose,wrapYaw} from '../../../shared/multiplayer/rules.mjs';
-import {CONTRACT} from '../../../shared/multiplayer/build.mjs';
+import {CONTRACT,MAP_CONTRACTS} from '../../../shared/multiplayer/build.mjs';
 import {FAMILY_ROOM_ALIAS} from '../../../shared/multiplayer/family-room.mjs';
 
 import {applyNetworkWorld,createPredictedWorld} from '../../../shared/multiplayer/world.mjs';
@@ -39,7 +39,8 @@ function actorView(s,localId){
 
 /** A Game-shaped presentation only. Never advances Game combat/rules locally. */
 export class NetworkSession {
-  constructor(world,{onDisconnect=()=>{},onConnection=()=>{},onMatch=()=>{}}={}){
+  constructor(world,{loadWorld,onLoading=()=>{},onDisconnect=()=>{},onConnection=()=>{},onMatch=()=>{}}={}){
+    this.loadWorld=loadWorld;this.onLoading=onLoading;this.worldRevision=0;
     this.onMatch=onMatch;this.matchId=0;this.matchPhase='';this.world=world;this.onDisconnect=onDisconnect;this.onConnection=onConnection;this.connectionState='connecting';this.controlEpoch=0;this.closed=false;this.enabled=true;
     this.events=[];this.seenEvent=0;this.predictedShots=new Map();this.actionTimes=new Map();this.remote=new Map();this.residents=new Map();this.projectiles=new Map();this.unsub=[];
     this.fireId=0;this.reloadId=0;this.trigger=false;this.nextCosmetic=0;this.lifeId=0;this.lastPatch=0;
@@ -147,8 +148,9 @@ export class NetworkSession {
     if(this.teamSignal&&!this.validTeamComms(this.teamSignal))this.teamSignal=null;
     if(this.view.teamPing&&!this.validTeamComms(this.view.teamPing))this.view.teamPing=null;
   }
-  async connect({endpoint,roomId,code,name,family,team='auto',mode='tdm',fillBots=true,zombies=false,danceman=false,create=false,contract=CONTRACT}){
+  async connect({endpoint,roomId,code,name,family,mapId,team='auto',mode='tdm',fillBots=true,zombies=false,danceman=false,create=false,contract=CONTRACT}){
     const url=networkEndpoint(endpoint),client=new SessionClient(url),options={code,name,team,contract,fillBots,mode,zombies,danceman};
+    if(create&&mapId)options.mapId=mapId;
     client.owner=this;
     this.joinAbort=new AbortController();client.http.options.signal=this.joinAbort.signal;
     const pending=family===FAMILY_ROOM_ALIAS?client.joinOrCreate(FAMILY_ROOM_ALIAS,{code,name,team,contract}):
@@ -163,11 +165,11 @@ export class NetworkSession {
     Object.assign(room.reconnection,{enabled:true,minUptime:0,minDelay:150,maxDelay:1000,maxRetries:30,maxEnqueuedMessages:0});
     this.unsub.push(room.onMessage('problem',message=>{this.problem=String(message);}));
     this.unsub.push(room.onMessage('notice',message=>{this.notice=String(message);}));
-    this.unsub.push(room.onMessage('events',events=>this.receiveEvents(events)));
+    this.unsub.push(room.onMessage('events',events=>{if(this.worldRevision===room.state.worldRevision)this.receiveEvents(events);}));
     this.unsub.push(room.onMessage(TEAM_COMMS_TYPE,message=>this.receiveTeamComms(message)));
     this.unsub.push(room.onMessage('clock-probe',token=>{if(!this.closed&&this.connectionState==='connected')room.send('clock-echo',token);}));
     const dropped=()=>this.beginReconnect();
-    const reconnected=()=>{if(this.closed)return;this.awaitingSnapshot=true;};
+    const reconnected=()=>{if(this.closed)return;this.awaitingSnapshot=true;this.sentReadyRevision=null;};
     room.onDrop(dropped);this.unsub.push(()=>room.onDrop.remove(dropped));
     room.onReconnect(reconnected);this.unsub.push(()=>room.onReconnect.remove(reconnected));
     const left=code=>{
@@ -187,29 +189,75 @@ export class NetworkSession {
     this.input=room.input({mode:'reliable'});
     if(this.input.stepSeconds!==NETWORK_CONFIG.fixedStep)throw Error('Incompatible simulation step.');
     this.predict=Predict.get(room,{mode:'lerp',delay:INTERPOLATION_MS});
-    // World and bundled presentation have loaded before this ready command.
-    room.send('ready',contract);
-    await wait(()=>this.closed||room.state.actors.get(this.localPlayerId)?.ready);
+    this.snapshot();
+    await wait(()=>this.closed||(this.worldRevision===room.state.worldRevision&&room.state.actors.get(this.localPlayerId)?.ready),125000);
     if(this.closed)throw Error(this.problem||'Room closed before spawn.');
     this.connectionState='connected';this.snapshot();
     this.lastWatchdog=performance.now();this.silenceSince=0;
     this.watchdog=setInterval(()=>this.checkConnection(performance.now()),1000);
     return this;
   }
+  resetWorldBindings(){
+    this.prediction?.dispose();
+    this.prediction=null;
+    for(const collection of [this.remote,this.residents,this.projectiles]){
+      for(const entry of collection.values())this.predict.detach(entry.schema);
+      collection.clear();
+    }
+    if(this.worldSchema)this.predict.detach(this.worldSchema);
+    for(const door of this.doorSchemas||[])this.predict.detach(door);
+    this.doorSchemas=[];this.worldSchema=null;this.glassCount=undefined;
+    this.matchMode=null;this.matchPhase='';this.matchId=0;
+    this.events=[];this.clearTeamComms();this.teamAnchors.clear();this.receivedTeamComms.clear();
+    this.predictedShots.clear();this.actionTimes.clear();
+    this.view.state.actors=[];
+  }
+  prepareRoomWorld(state){
+    const {mapId,worldRevision}=state;
+    if(this.loadingRevision===worldRevision)return;
+    const contract=Object.hasOwn(MAP_CONTRACTS,mapId)&&MAP_CONTRACTS[mapId];
+    if(!contract||worldRevision<1||(this.worldRevision&&!this.awaitingSnapshot&&state.phase!=='waiting')){
+      this.disconnect('Incompatible room world. Reload the game.');return;
+    }
+    this.loadingRevision=worldRevision;
+    this.mapAbort?.abort();this.mapAbort=new AbortController();
+    const signal=this.mapAbort.signal;
+    this.resetWorldBindings();this.onLoading(mapId);
+    this.loadWorld(contract,state.mode,signal).then(world=>{
+      if(signal.aborted||this.closed||worldRevision!==this.room.state.worldRevision)return;
+      this.world=this.view.world=world;
+      this.worldRevision=worldRevision;this.loadingRevision=null;
+      this.snapshot();
+    }).catch(error=>{
+      if(!signal.aborted&&!this.closed)this.disconnect(error.message);
+    });
+  }
   snapshot(){
     if(this.closed||!this.localPlayerId||!this.predict)return;
     this.lastPatch=performance.now();
     const state=this.room.state;
+    if(this.awaitingSnapshot){
+      // A reserved seat may have missed a waiting-room map selection.
+      clearTimeout(this.reconnectTimer);this.reconnectTimer=null;
+    }
+    if(this.worldRevision!==state.worldRevision){this.prepareRoomWorld(state);return;}
     const mine=[...state.actors.values()].find(a=>a.sessionId===this.room.sessionId);
     if(mine&&mine.id!==this.localPlayerId){
       this.prediction?.dispose();this.prediction=null;this.localPlayerId=mine.id;
       this.view.localPlayerId=mine.id;this.view.team=mine.team;
     }
+    if(!mine?.ready){
+      if(mine&&this.sentReadyRevision!==state.worldRevision&&(this.connectionState!=='reconnecting'||this.awaitingSnapshot)){
+        this.sentReadyRevision=state.worldRevision;
+        this.room.send('ready',{...MAP_CONTRACTS[state.mapId],worldRevision:state.worldRevision});
+      }
+      return;
+    }
     const classic=state.mode==='classic',newRound=classic&&this.view.state.round!==state.round;
     const modeChanged=this.matchMode!==state.mode;
     if(modeChanged){
       this.matchMode=state.mode;
-      this.teamAnchors=new Map(floor5MapAnchors(this.world,classic).map(anchor=>[anchor.id,anchor]));
+      this.teamAnchors=new Map(multiplayerMapAnchors(this.world,classic).map(anchor=>[anchor.id,anchor]));
     }
     this.view.config=classic?CLASSIC_NETWORK_CONFIG:NETWORK_CONFIG;
     this.view.state.difficulty=state.botDifficulty??this.view.config.difficulty;
@@ -492,7 +540,7 @@ export class NetworkSession {
   dispose(leave=true){
     if(this.closed)return;this.closed=true;this.connectionState='disconnected';
     clearTimeout(this.reconnectTimer);this.reconnectTimer=null;
-    clearInterval(this.watchdog);this.watchdog=null;clearTimeout(this.joinTimer);this.joinTimer=null;this.joinAbort?.abort();
+    clearInterval(this.watchdog);this.watchdog=null;clearTimeout(this.joinTimer);this.joinTimer=null;this.joinAbort?.abort();this.mapAbort?.abort();
     for(const off of this.unsub)if(typeof off==='function')off();this.unsub=[];
     this.predict?.dispose();this.prediction=null;this.predict=null;this.remote.clear();
     this.events=[];this.clearTeamComms();this.teamAnchors.clear();this.receivedTeamComms.clear();this.predictedShots.clear();this.actionTimes?.clear();this.view.state.actors=[];this.view.state.phase='menu';

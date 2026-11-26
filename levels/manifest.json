@@ -10,6 +10,12 @@
       "id": "floor5-prepared",
       "file": "levels/floor5-prepared.json",
       "rights": "reviewed original/approved assets"
+    },
+    {
+      "id": "compact-arena",
+      "multiplayerOnly": true,
+      "file": "levels/compact-arena.json",
+      "rights": "Original fictional geometry and existing original/MIT procedural furnishings"
     }
   ],
   "defaultLevel": "floor5-prepared"

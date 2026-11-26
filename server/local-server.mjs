@@ -60,7 +60,7 @@ export async function createLocalServer(options={}) {
   const server=new Server({greet:false,gracefullyShutdown:false,transport,
     express:async app=>{
       app.get('/health',(_req,res)=>res.set('Cache-Control','no-store').json({status:'ok',localOnly:!lan&&!pilot,lan,pilot:!!pilot,host,
-        matches:[...active].map(r=>({phase:r.state?.phase??'loading',matchId:r.state?.matchId,tick:r.state?.tick,players:r.clients.length})),rooms:active.size,players:[...active].reduce((n,r)=>n+r.clients.length,0),contract:CONTRACT}));
+        matches:[...active].map(r=>({phase:r.state?.phase??'loading',mapId:r.state?.mapId,matchId:r.state?.matchId,tick:r.state?.tick,players:r.clients.length})),rooms:active.size,players:[...active].reduce((n,r)=>n+r.clients.length,0),contract:CONTRACT}));
       app.use(express.static(root,{dotfiles:'deny',index:'index.html'}));
     },
   });

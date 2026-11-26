@@ -1,3 +1,4 @@
+import {NETWORK_MAPS,networkMap} from '../../../shared/multiplayer/maps.mjs';
 import {onlinePrimaries} from '../action-rules.mjs';
 import {DIFFICULTIES,WEAPONS} from '../config.mjs';
 import {FAMILY_ROOM_PATH} from '../../../shared/multiplayer/family-room.mjs';
@@ -17,9 +18,17 @@ export function roomUi({leave,resume,activate}){
   #online-room .notice{color:#ffce8c;min-height:1.3em}#online-room .room-eyebrow{letter-spacing:.15em;color:#efbf64;font-size:12px}
   `;document.head.append(style);
   const root=document.createElement('section');root.id='online-room';root.hidden=true;
-  root.innerHTML=`<div class="room-card"><div class="room-eyebrow">FLOOR 5 · PRIVAT RUM</div><h2 id="room-title">Väntrum</h2><p id="room-rules"></p><p id="room-identity" class="muted"></p><p id="room-residents-status"></p><label id="room-friendly-fire-label" hidden>Friendly fire <select id="room-friendly-fire"><option value="off">Av</option><option value="on">På</option></select></label><p id="room-friendly-fire-status"></p><label id="room-bot-difficulty-label" hidden>Botsvårighet <select id="room-bot-difficulty"></select></label><p id="room-bot-difficulty-status"></p><div class="room-residents" id="room-residents" hidden><label>Zombies <select id="room-zombies"><option value="off">Av</option><option value="on">På</option></select></label><label>Dansmannen <select id="room-danceman"><option value="off">Av</option><option value="on">På</option></select></label></div><div class="room-actions"><button id="room-share">Dela rumslänk</button><button id="room-leave">Lämna rummet</button></div><input id="room-link" readonly aria-label="Rumslänk" hidden><p class="muted">Vännen behöver serverns inbjudningskod och din separata privata rumskod. Koder ingår aldrig i länken.</p><div class="room-roster"><table><thead><tr><th>Spelare</th><th>Lag</th><th>Status</th><th>K</th><th>D</th></tr></thead><tbody id="room-roster"></tbody></table></div><div class="room-actions"><label id="room-equipment-label">Utrustning <select id="room-primary"></select><small id="room-kit"></small></label><label id="room-team-label">Ditt lag <select id="room-team"><option value="analysts">Analysts</option><option value="counterAnalysts">Counter Analysts</option></select></label><button id="room-ready" class="primary">Redo</button><button id="room-start" class="primary">Starta match</button><button id="room-rematch" class="primary">Spela igen</button><button id="room-resume" class="primary">Fortsätt</button></div><p id="room-help"></p><p id="room-notice" class="notice" role="status"></p></div>`;
+  root.innerHTML=`<div class="room-card"><div class="room-eyebrow">PRIVAT RUM</div><h2 id="room-title">Väntrum</h2><p id="room-rules"></p><p id="room-identity" class="muted"></p><p id="room-residents-status"></p><label id="room-friendly-fire-label" hidden>Friendly fire <select id="room-friendly-fire"><option value="off">Av</option><option value="on">På</option></select></label><p id="room-friendly-fire-status"></p><label id="room-bot-difficulty-label" hidden>Botsvårighet <select id="room-bot-difficulty"></select></label><p id="room-bot-difficulty-status"></p><div class="room-residents" id="room-residents" hidden><label>Zombies <select id="room-zombies"><option value="off">Av</option><option value="on">På</option></select></label><label>Dansmannen <select id="room-danceman"><option value="off">Av</option><option value="on">På</option></select></label></div><div class="room-actions"><button id="room-share">Dela rumslänk</button><button id="room-leave">Lämna rummet</button></div><input id="room-link" readonly aria-label="Rumslänk" hidden><p class="muted">Vännen behöver serverns inbjudningskod och din separata privata rumskod. Koder ingår aldrig i länken.</p><div class="room-roster"><table><thead><tr><th>Spelare</th><th>Lag</th><th>Status</th><th>K</th><th>D</th></tr></thead><tbody id="room-roster"></tbody></table></div><div class="room-actions"><label id="room-equipment-label">Utrustning <select id="room-primary"></select><small id="room-kit"></small></label><label id="room-team-label">Ditt lag <select id="room-team"><option value="analysts">Analysts</option><option value="counterAnalysts">Counter Analysts</option></select></label><button id="room-ready" class="primary">Redo</button><button id="room-start" class="primary">Starta match</button><button id="room-rematch" class="primary">Spela igen</button><button id="room-resume" class="primary">Fortsätt</button></div><p id="room-help"></p><p id="room-notice" class="notice" role="status"></p></div>`;
   document.body.append(root);const $=id=>root.querySelector('#'+id);let session,key='';
   $('room-rules').insertAdjacentHTML('afterend','<div id="room-family-settings" class="room-actions" hidden><label>Spelläge <select id="room-mode"><option value="tdm">Team Deathmatch</option><option value="classic">Classic</option></select></label><label class="room-fill-label"><input id="room-fill-bots" type="checkbox">Fyll lediga platser med botar</label></div>');
+  $('room-rules').insertAdjacentHTML('beforebegin',`<section class="room-map-card" aria-label="Matchkarta">
+    <img id="room-map-preview" alt="" width="256" height="128">
+    <div><h3 id="room-map-name"></h3><p id="room-map-modes"></p>
+    <label id="room-map-label" hidden>Karta <select id="room-map"></select></label></div>
+  </section>`);
+  $('room-map').replaceChildren(...NETWORK_MAPS.map(map=>new Option(map.name,map.id)));
+  $('room-map').onchange=()=>session.matchCommand('settings',{mapId:$('room-map').value});
+  const modeLabels={tdm:'Team Deathmatch',classic:'Classic'};
   const shareHelp=$('room-link').nextElementSibling,normalShareHelp=shareHelp.textContent;
   $('room-leave').onclick=()=>{root.hidden=true;session=null;leave();};
   $('room-ready').onclick=()=>{activate();const a=session.room.state.actors.get(session.localPlayerId);session.matchCommand('ready',{ready:!a.playerReady});};
@@ -67,11 +76,25 @@ export function roomUi({leave,resume,activate}){
     root.hidden=state.phase==='active';if(root.hidden)return;
     $('room-title').textContent=result?(state.winner==='draw'?'Oavgjort':labels[state.winner]+' vinner'):state.phase==='countdown'?'Start om '+Math.ceil(state.remainingSeconds)+'…':'Väntrum';
     $('room-rules').textContent=state.mode==='classic'?'Classic · först till '+state.scoreTarget+' rundor. Counter Analysts planterar eller räddar gisslan. Analysts försvarar och desarmerar. Båda lagen kan vinna på eliminering.':`Team Deathmatch · ${state.durationSeconds/60} minuter · först till ${state.scoreTarget} fiendekills · högst 5 per lag`;
-    const host=state.ownerId===s.room.sessionId,canEdit=waiting&&host&&s.connectionState==='connected';
-    root.querySelector('.room-eyebrow').textContent=s.familyAlias?'FLOOR 5 · FAMILJERUM':'FLOOR 5 · PRIVAT RUM';
+    const map=networkMap(state.mapId);
+    if(!map)return;
+    const loading=s.worldRevision!==state.worldRevision||!self?.ready;
+    const host=state.ownerId===s.room.sessionId,canEdit=waiting&&host&&!loading&&s.connectionState==='connected';
+    if($('room-map-preview').dataset.map!==map.id){
+      $('room-map-preview').dataset.map=map.id;
+      $('room-map-preview').src='../'+map.preview;
+      $('room-map-preview').alt='Spelvy från '+map.name;
+      $('room-map-name').textContent=map.name;
+      $('room-map-modes').textContent=map.modes.map(id=>modeLabels[id]).join(' · ');
+      $('room-mode').replaceChildren(...map.modes.map(id=>new Option(modeLabels[id],id)));
+    }
+    $('room-map').value=map.id;$('room-map-label').hidden=!canEdit;
+    $('room-mode').parentElement.hidden=map.modes.length<2;
+    $('room-fill-bots').parentElement.hidden=!s.familyAlias;
+    root.querySelector('.room-eyebrow').textContent=s.familyAlias?'FAMILJERUM':'PRIVAT RUM';
     $('room-identity').textContent=s.familyAlias||'Rum '+s.room.roomId+' · Match '+state.matchId;
     shareHelp.textContent=s.familyAlias?'Dela den fasta länken. Skicka serverns inbjudningskod och familjerummets lösenord separat.':normalShareHelp;
-    $('room-family-settings').hidden=!s.familyAlias||!canEdit;
+    $('room-family-settings').hidden=!canEdit||!s.familyAlias&&map.modes.length<2;
     if($('room-mode').value!==state.mode)$('room-mode').value=state.mode;
     if($('room-fill-bots').checked!==state.fillBots)$('room-fill-bots').checked=state.fillBots;
     $('room-friendly-fire-label').hidden=!waiting||state.ownerId!==s.room.sessionId;
@@ -82,7 +105,8 @@ export function roomUi({leave,resume,activate}){
     $('room-bot-difficulty').value=state.botDifficulty;
     $('room-bot-difficulty-status').hidden=canSetDifficulty;
     $('room-bot-difficulty-status').textContent='Botsvårighet · '+DIFFICULTIES[state.botDifficulty].name;
-    $('room-residents').hidden=!waiting||state.ownerId!==s.room.sessionId;
+    $('room-residents').hidden=!map.residents||!canEdit;
+    $('room-residents-status').hidden=!map.residents;
     for(const [name,enabled] of [['zombies',state.zombiesEnabled],['danceman',state.dancemanEnabled]]){
       const select=$('room-'+name);
       if(document.activeElement!==select)select.value=enabled?'on':'off';
@@ -102,9 +126,9 @@ export function roomUi({leave,resume,activate}){
     const connected=[...state.actors.values()].filter(a=>a.connected);
     const canStart=connected.every(a=>a.ready&&a.playerReady)&&['analysts','counterAnalysts'].every(t=>connected.some(a=>a.team===t));
     $('room-start').hidden=!waiting||state.ownerId!==s.room.sessionId;$('room-start').disabled=!canStart;
-    $('room-ready').disabled=s.connectionState!=='connected';$('room-rematch').hidden=!result;$('room-resume').hidden=true;
+    $('room-ready').disabled=loading||s.connectionState!=='connected';$('room-rematch').hidden=!result;$('room-resume').hidden=true;
     $('room-help').textContent=result?`${state.analysts} – ${state.counterAnalysts} · ${state.reason==='rounds'?'Fem vunna rundor':state.reason==='score'?'Poänggränsen nådd':state.reason==='forfeit'?'Ett lag lämnade matchen':'Tiden är slut'}. Spela igen återgår till samma väntrum.`:waiting?'Välj lag och tryck Redo. Rumsägaren startar när båda lagen är redo.':'Matchen börjar snart. Därefter: Fortsätt för kontroller och ljud.';
-    $('room-notice').textContent=s.notice|| (s.connectionState==='reconnecting'?'Återansluter… din plats reserveras i 15 sekunder.':'');
+    $('room-notice').textContent=loading?'Laddar '+map.name+'…':s.notice|| (s.connectionState==='reconnecting'?'Återansluter… din plats reserveras i 15 sekunder.':'');
     let rows=[...state.actors.values()];if(result)try{rows=JSON.parse(state.results).players;}catch{}
     const next=JSON.stringify([state.ownerId,rows.map(a=>[a.id,a.name,a.team,a.ready,a.playerReady,a.connected,a.kills,a.deaths])]);
     if(next===key)return;key=next;$('room-roster').replaceChildren();

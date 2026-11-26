@@ -1,0 +1,170 @@
+{
+  "mapId": "compact-arena",
+  "fixture": "Headless 60 Hz, all slots bot-controlled; normal TDM timer and score target",
+  "matches": [
+    {
+      "actors": 2,
+      "seed": 42,
+      "score": {
+        "analysts": 43,
+        "counterAnalysts": 38
+      },
+      "winner": "analysts",
+      "reason": "time",
+      "simulationSeconds": 600,
+      "firstKillSeconds": 5.37,
+      "respawns": 82,
+      "doorsOpened": 2,
+      "areasVisited": {
+        "analysts-0": [
+          "Blue Intake",
+          "Cryogenics",
+          "East Lock",
+          "Pulse Chamber",
+          "Turbine Hall",
+          "West Lock"
+        ],
+        "counterAnalysts-0": [
+          "Amber Intake",
+          "Cryogenics",
+          "East Lock",
+          "Pulse Chamber",
+          "Turbine Hall",
+          "West Lock"
+        ]
+      }
+    },
+    {
+      "actors": 4,
+      "seed": 42,
+      "score": {
+        "analysts": 50,
+        "counterAnalysts": 48
+      },
+      "winner": "analysts",
+      "reason": "score",
+      "simulationSeconds": 339.82,
+      "firstKillSeconds": 6.28,
+      "respawns": 100,
+      "doorsOpened": 2,
+      "areasVisited": {
+        "analysts-0": [
+          "Blue Intake",
+          "Cryogenics",
+          "East Lock",
+          "Pulse Chamber",
+          "Turbine Hall",
+          "West Lock"
+        ],
+        "analysts-1": [
+          "Blue Intake",
+          "Cryogenics",
+          "East Lock",
+          "Pulse Chamber",
+          "Turbine Hall",
+          "West Lock"
+        ],
+        "counterAnalysts-0": [
+          "Amber Intake",
+          "Cryogenics",
+          "East Lock",
+          "Pulse Chamber",
+          "Turbine Hall",
+          "West Lock"
+        ],
+        "counterAnalysts-1": [
+          "Amber Intake",
+          "Cryogenics",
+          "East Lock",
+          "Pulse Chamber",
+          "Turbine Hall",
+          "West Lock"
+        ]
+      }
+    },
+    {
+      "actors": 10,
+      "seed": 42,
+      "score": {
+        "analysts": 49,
+        "counterAnalysts": 50
+      },
+      "winner": "counterAnalysts",
+      "reason": "score",
+      "simulationSeconds": 132.15,
+      "firstKillSeconds": 5.98,
+      "respawns": 106,
+      "doorsOpened": 2,
+      "areasVisited": {
+        "analysts-0": [
+          "Blue Intake",
+          "Cryogenics",
+          "Pulse Chamber",
+          "West Lock"
+        ],
+        "analysts-1": [
+          "Blue Intake",
+          "Cryogenics",
+          "Pulse Chamber",
+          "Turbine Hall",
+          "West Lock"
+        ],
+        "analysts-2": [
+          "Blue Intake",
+          "Cryogenics",
+          "Pulse Chamber",
+          "Turbine Hall",
+          "West Lock"
+        ],
+        "analysts-3": [
+          "Blue Intake",
+          "Cryogenics",
+          "Pulse Chamber",
+          "Turbine Hall",
+          "West Lock"
+        ],
+        "analysts-4": [
+          "Blue Intake",
+          "Cryogenics",
+          "Pulse Chamber",
+          "West Lock"
+        ],
+        "counterAnalysts-0": [
+          "Amber Intake",
+          "Cryogenics",
+          "East Lock",
+          "Pulse Chamber",
+          "Turbine Hall",
+          "West Lock"
+        ],
+        "counterAnalysts-1": [
+          "Amber Intake",
+          "Cryogenics",
+          "East Lock",
+          "Pulse Chamber",
+          "Turbine Hall"
+        ],
+        "counterAnalysts-2": [
+          "Amber Intake",
+          "Cryogenics",
+          "East Lock",
+          "Pulse Chamber",
+          "Turbine Hall"
+        ],
+        "counterAnalysts-3": [
+          "Amber Intake",
+          "Cryogenics",
+          "East Lock",
+          "Pulse Chamber",
+          "Turbine Hall"
+        ],
+        "counterAnalysts-4": [
+          "Amber Intake",
+          "East Lock",
+          "Pulse Chamber",
+          "Turbine Hall"
+        ]
+      }
+    }
+  ]
+}

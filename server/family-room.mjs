@@ -4,10 +4,12 @@ import {isAbsolute} from 'node:path';
 import {FAMILY_ROOM_ALIAS} from '../shared/multiplayer/family-room.mjs';
 import {BOT_DIFFICULTY_IDS, DEFAULT_NETWORK_BOT_DIFFICULTY} from '../shared/multiplayer/rules.mjs';
 
+import {DEFAULT_MAP_ID, networkMap} from '../shared/multiplayer/maps.mjs';
+
 const passwordPattern = /^[A-Za-z0-9_-]{24,64}$/;
 const digest = value => createHash('sha256').update(value).digest();
 const defaults = Object.freeze({
-  mode: 'tdm', fillBots: true, friendlyFire: false,
+  mapId: DEFAULT_MAP_ID, mode: 'tdm', fillBots: true, friendlyFire: false,
   botDifficulty: DEFAULT_NETWORK_BOT_DIFFICULTY, zombiesEnabled: false, dancemanEnabled: false,
 });
 const flags = ['fillBots', 'friendlyFire', 'zombiesEnabled', 'dancemanEnabled'];
@@ -22,11 +24,15 @@ export function familyRoomConfig({familyPassword, familyStateFile, pilotInvite})
 }
 
 function validateSettings(value) {
-  if (!value || !['tdm', 'classic'].includes(value.mode) ||
+  // Earlier v1 files omitted mapId. Keep the v1 envelope: the previous
+  // reader ignores extra fields and can continue on Floor 5 after rollback.
+  const mapId = value?.mapId === undefined ? DEFAULT_MAP_ID : value.mapId;
+  const map = networkMap(mapId);
+  if (!value || !map?.modes.includes(value.mode) || !map.residents && (value.zombiesEnabled || value.dancemanEnabled) ||
       !BOT_DIFFICULTY_IDS.includes(value.botDifficulty) || flags.some(key => typeof value[key] !== 'boolean')) {
     throw Error('Invalid family room settings.');
   }
-  return Object.freeze(Object.fromEntries(Object.keys(defaults).map(key => [key, value[key]])));
+  return Object.freeze({...Object.fromEntries(Object.keys(defaults).map(key => [key, value[key]])), mapId});
 }
 
 // Outside the versioned release. Only changes made by the waiting room host

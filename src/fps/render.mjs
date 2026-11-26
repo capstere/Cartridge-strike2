@@ -26,7 +26,7 @@ import {CombatVisuals} from './combat-visuals.mjs';
  */
 import * as THREE from '../../vendor/three/three.module.js';
 import { Renderer as EngineRenderer } from './render-engine.mjs?v=6.1.2';
-import {loadCharacterLibrary,loadDefaultHostages,disposeCharacterLibrary} from './character-library.mjs?v=6.1.2';
+import {loadCharacterLibrary,loadDefaultHostages,disposeAvatar,disposeCharacterLibrary} from './character-library.mjs?v=6.1.2';
 import { bakeLightfield } from './presentation-lightfield.mjs';
 import {ActionVisuals} from './action-visuals.mjs?v=6.1.2';
 import { buildLivingScene } from './living-floor-scene.mjs';
@@ -263,12 +263,16 @@ export class Renderer extends EngineRenderer {
     for(const model of this.weaponCache?.values()||[])if(model.userData.presentationMotion)model.userData.presentationMotion.time=null;
     for(const model of this.actors?.values()||[]){if(model.userData.presentationGait)model.userData.presentationGait.time=null;if(model.userData.avatar){model.userData.avatar.time=-1;model.userData.avatar.death=null;}}
   }
-  dispose(){
+  dispose({keepCharacterLibrary=false}={}){
     if(this.presentationDisposed)return;this.presentationDisposed=true;
     this.zombieVisuals?.dispose();this.floorEnvironment?.dispose();this.glassVisuals?.dispose();this.detailScene?.dispose();this.doorVisuals?.dispose();this.riposteProps?.dispose();
     this.focusLighting?.dispose();this.facilityScene?.dispose();
     for(const restore of this.presentationRestores||[])restore();
      for(const m of this.floor5PatternMaterials?.values()||[])m.dispose();this.floor5PatternMaterials?.clear();
-    window.removeEventListener('keydown',this.onInspectKey);this.renderer.render=this.nativeRender;this.visualDepth?.dispose();this.combatVisuals?.dispose();this.actionVisuals?.dispose();disposeCharacterLibrary();this.presentationRestores=[];this.presentationField?.dispose();this.livingScene?.dispose();super.dispose();
+    window.removeEventListener('keydown',this.onInspectKey);this.renderer.render=this.nativeRender;this.visualDepth?.dispose();this.combatVisuals?.dispose();this.actionVisuals?.dispose();
+    if(keepCharacterLibrary){
+      for(const actor of this.actors.values())disposeAvatar(actor.userData.avatar);
+    }else disposeCharacterLibrary();
+    this.presentationRestores=[];this.presentationField?.dispose();this.livingScene?.dispose();super.dispose();
   }
 }

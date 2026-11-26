@@ -28,15 +28,15 @@ export class TacticalControls {
       });
       this.installDoubleTap(mobile.root.querySelector('[data-mobile-look]'));
     }
-    const canvas = document.getElementById('game');
-    canvas.addEventListener('mousedown', e => {
-      if (!mobile.enabled && e.button === 2 && document.pointerLockElement === canvas) {
+    document.addEventListener('mousedown', e => {
+      const canvas = document.getElementById('game');
+      if (!mobile.enabled && e.button === 2 && e.target === canvas && document.pointerLockElement === canvas) {
         e.preventDefault(); this.setAim(true);
       }
     });
     window.addEventListener('mouseup', e => { if (!mobile.enabled && e.button === 2) this.setAim(false); });
     window.addEventListener('keydown', e => {
-      if (!mobile.enabled && e.code === 'KeyF' && !e.repeat && document.pointerLockElement === canvas) {
+      if (!mobile.enabled && e.code === 'KeyF' && !e.repeat && document.pointerLockElement?.id === 'game') {
         e.preventDefault(); this.toggle();
       }
     });

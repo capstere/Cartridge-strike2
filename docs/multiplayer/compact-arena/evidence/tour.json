@@ -1,0 +1,215 @@
+{
+  "scenario": "four",
+  "map": "compact-arena",
+  "physicalPhone": false,
+  "transport": "TLS loopback",
+  "date": "2026-11-26T20:23:00.820Z",
+  "revision": "d54f2a2473fb8efa5f2d79544b51c4ed868e9dd2",
+  "buildHash": "09cc3fcc2f9ea016674b5b66be65716f0cf21c0df6deb432cff2f323717192a7",
+  "manifestHash": "ea0a93e20cc715ac7c41b84e3b1882923ab536285796bae51a1dd18196a880c1",
+  "cpu": "Cortex-A76",
+  "arch": "arm64",
+  "os": "linux",
+  "node": "v26.13.0",
+  "model": "Raspberry Pi 5 Model B Rev 1.1",
+  "warmupMs": 3000,
+  "windowMs": 10000,
+  "scheduledSeconds": 45,
+  "scoreTarget": 150,
+  "args": [
+    "--use-angle=gl-egl",
+    "--ignore-gpu-blocklist",
+    "--enable-unsafe-swiftshader",
+    "--disable-renderer-backgrounding",
+    "--disable-background-timer-throttling",
+    "--disable-backgrounding-occluded-windows",
+    "--host-resolver-rules=MAP 127.0.0.1 127.0.0.1",
+    "--no-proxy-server",
+    "--ozone-platform=wayland"
+  ],
+  "renderedClients": 1,
+  "sdkPeers": 3,
+  "phaseLog": [
+    {
+      "step": "enter waiting room",
+      "elapsedMs": 6598
+    },
+    {
+      "step": "load compact-arena",
+      "elapsedMs": 17527
+    },
+    {
+      "step": "start match",
+      "elapsedMs": 24231
+    },
+    {
+      "step": "measure active game",
+      "elapsedMs": 29739
+    },
+    {
+      "step": "record gameplay",
+      "elapsedMs": 40072
+    },
+    {
+      "step": "finish match",
+      "elapsedMs": 59260
+    },
+    {
+      "step": "complete",
+      "elapsedMs": 75797
+    }
+  ],
+  "browser": "156.0.8078.79",
+  "viewport": {
+    "width": 1024,
+    "height": 576
+  },
+  "signInToFormMs": 2352,
+  "enterToWaitingMs": 10928,
+  "players": {
+    "humanSlots": 4,
+    "bots": 0
+  },
+  "startToPlayableMs": 1666,
+  "controls": {
+    "distanceM": 0.56,
+    "ammoBefore": 30,
+    "ammoAfter": 29,
+    "rightClickAim": true,
+    "team": "analysts"
+  },
+  "measurement": {
+    "client": {
+      "frameIntervalMs": {
+        "n": 377,
+        "min": 13.5,
+        "p50": 22.6,
+        "p95": 42.5,
+        "p99": 110.8,
+        "max": 159.3
+      },
+      "renderCpuMs": {
+        "n": 378,
+        "min": 11.2,
+        "p50": 14.1,
+        "p95": 24.3,
+        "p99": 105.8,
+        "max": 137.2
+      },
+      "draws": {
+        "n": 378,
+        "min": 207,
+        "p50": 207,
+        "p95": 207,
+        "p99": 209,
+        "max": 211
+      },
+      "triangles": {
+        "n": 378,
+        "min": 48610,
+        "p50": 48610,
+        "p95": 48610,
+        "p99": 48688,
+        "max": 48738
+      },
+      "pixelRatio": {
+        "n": 378,
+        "min": 0.47,
+        "p50": 0.51,
+        "p95": 0.68,
+        "p99": 0.77,
+        "max": 0.77
+      }
+    },
+    "server": {
+      "executionMs": {
+        "n": 605,
+        "min": 0.14,
+        "p50": 0.63,
+        "p95": 1.37,
+        "p99": 2.27,
+        "max": 3.75
+      },
+      "intervalMs": {
+        "n": 604,
+        "min": 0.5,
+        "p50": 16.19,
+        "p95": 19.22,
+        "p99": 32.1,
+        "max": 43.91
+      },
+      "executionOver33": 0,
+      "executionOver50": 0,
+      "intervalOver33": 2,
+      "rttMs": 0,
+      "tick": 1922
+    },
+    "resources": {
+      "projectId": "lvl-compact-arena",
+      "level": "Compact Arena",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        478,
+        269
+      ],
+      "quality": "low",
+      "geometries": 116,
+      "textures": 57,
+      "programs": 87,
+      "owners": 1,
+      "disposals": 0,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    }
+  },
+  "videoLocations": [
+    "Blue Intake",
+    "West Lock",
+    "Pulse Chamber",
+    "Cryogenics"
+  ],
+  "completed": {
+    "matchId": 1,
+    "winner": "draw",
+    "reason": "time",
+    "score": {
+      "analysts": 0,
+      "counterAnalysts": 0
+    },
+    "players": [
+      {
+        "id": "analysts-0",
+        "name": "Mapptest",
+        "team": "analysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "counterAnalysts-0",
+        "name": "Spelare 1",
+        "team": "counterAnalysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "analysts-1",
+        "name": "Spelare 2",
+        "team": "analysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "counterAnalysts-1",
+        "name": "Spelare 3",
+        "team": "counterAnalysts",
+        "kills": 0,
+        "deaths": 0
+      }
+    ]
+  },
+  "video": {
+    "frames": 498,
+    "recordedSeconds": 17.99
+  },
+  "status": "PASS"
+}

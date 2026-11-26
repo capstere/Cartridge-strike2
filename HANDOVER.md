@@ -1,5 +1,13 @@
 # Cartridge-Strike 2 handover
 
+## Kartval i multiplayer · 26 november 2026
+
+Compact Arena är den första nya onlinebanan. Värden väljer karta i väntrummet, alla laddar serverns val och väljer **Redo**. Floor 5 har kvar Classic och Team Deathmatch. Compact Arena har tre stridsvägar, sju namngivna platser och Team Deathmatch för upp till fem spelare per lag. Familjerummet minns kartvalet på samma inbjudningslänk.
+
+Protokoll 13 förhandlar en godkänd kollisionsvärld per rum. De renderade Pi-proven gick till slutsignal med två, fyra och tio aktörer. Med nio botar på Compact Arena var bildintervallet 30,3 ms i median och 56 ms vid p95. Den emulerade mobilmatchen med två människoplatser hade 18,8 respektive 25,8 ms. Fysisk mobil och långtidsmätning av minne återstår. [Film, skärmbilder och mätvärden](docs/multiplayer/compact-arena/evidence/README.md)
+
+Nästa leveranskontroll är spel via den fasta familjelänken på den aktiverade Pi-releasen. [Kartor, arkitektur och tester](docs/multiplayer/compact-arena/README.md) · [Banans PR](https://github.com/capstere/Cartridge-strike2/pull/42) · [Flerspelarklient och server](https://github.com/capstere/Cartridge-strike2/pull/43)
+
 ## Landning efter dödande huvudträff · 26 november 2026
 
 I Classic och Team Deathmatch får spelare och lagbotar en bakåtkastning när den dödande kulan träffar de översta 17 procenten av träffvolymen. Servern använder samma kroppsläge som vid skottet och skickar dödstid och variant även vid återanslutning. Den lokala simuleringen använder samma träffregel. Skada och rustning följer tidigare regler. Vanliga dödsfall använder `Death01`.

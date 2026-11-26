@@ -1,6 +1,6 @@
 import {ClientState} from '@colyseus/core';
 import {TEAM_COMMS_TYPE,TEAM_COMMS_COMMANDS,TEAM_COMMS_RATE_MS,TEAM_COMMS_LIFETIME} from '../shared/multiplayer/protocol.mjs';
-import {floor5MapAnchors} from '../src/fps/minimap-cache.mjs';
+import {multiplayerMapAnchors} from '../src/fps/minimap-cache.mjs';
 
 const MAX_TICK_AGE=120;
 const TEAM_RATE_MS=250;
@@ -33,7 +33,7 @@ export class TeamComms {
 
   refreshAnchors(){
     const r=this.room;
-    this.anchors=new Set(floor5MapAnchors(r.sim.game.world,r.classic).map(anchor=>anchor.id));
+    this.anchors=new Set(multiplayerMapAnchors(r.sim.game.world,r.classic).map(anchor=>anchor.id));
   }
 
   active(){

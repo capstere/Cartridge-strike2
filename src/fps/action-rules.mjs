@@ -118,7 +118,8 @@ export function actionObjective(bot){
  if(!isEndless(g))return false;
  if(controlObjective(bot))return true;
  // Shared public patrol destinations, not enemy coordinates. Perception still needs sight/hearing.
- const w=g.world,points=[w.anchors.bomb,w.tactical?.guardPoints?.south,w.anchors.rescue,w.tactical?.guardPoints?.north,...w.anchors.hostages].filter(Boolean);
+ const w=g.world;
+ const points=w.tactical?.patrolPoints?.length?w.tactical.patrolPoints:[w.anchors.bomb,w.tactical?.guardPoints?.south,w.anchors.rescue,w.tactical?.guardPoints?.north,...w.anchors.hostages].filter(Boolean);
  const phase=Math.floor((s.time+a.index*4)/18),target=points[(phase+a.index)%points.length];
  if(dist(a,target)>.7){bot.setGoal(target);a.aiState='söker strid';}
  else {bot.setGoal(points[(phase+a.index+1)%points.length]);a.aiState='patrullerar';}
