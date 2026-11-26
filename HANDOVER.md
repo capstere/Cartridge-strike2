@@ -24,6 +24,12 @@ den riktiga servern bekräftade minst tre P9-skott, ammunition och skada samt
 oförändrad manuell avtryckare, utan ogiltiga indata.
 
 Det nya browserprovet är `tools/online-autofire-browser.mjs` och ingår i CI.
+Första CI-försöket verifierade båda skjutlägena i Classic och Team Deathmatch.
+Ett senare raketljud uteblev på en klient, som i det äldre dokumenterade CI-felet.
+Vid omkörningen missade det nya provet ett manuellt Classic-avtryck direkt efter
+återupptagning. Provet inväntar nu en ny neutral inmatning hos servern efter
+återupptagning och vapenberedskap före sitt enda manuella tryck; oförändrade
+skottkrav samt server- och pekardiagnostik behålls. Invänta grönt CI på slutcommit.
 Den lokala mjukvarurenderingen nådde verklig målmarkering men klarade inte kravet
 på tre bekräftade skott; mobilklienten visade cirka en sekunds latens. Det är
 inget godkänt browserprov. Invänta godkänd hårdvaruaccelererad CI före merge.

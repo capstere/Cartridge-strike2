@@ -115,11 +115,39 @@ try{
     target.x=20;
     await delay(400);assert.equal(shooter.inventory.pistol.ammo,stopped,'pause blocks automatic input');
     await setAuto(mobile,false);
+    // Resume resets prediction and sends controls asynchronously. Establish a
+    // fresh neutral input at the authority before testing one manual edge;
+    // a rejected edge must never be retried by holding a semiautomatic trigger.
+    const resumedTick=room.sim.tickNumber;
+    await until(()=>seat.enabled&&!seat.trigger&&seat.lastSampleTick>resumedTick,'fresh neutral input after manual resume');
+    await mobile.waitForFunction(()=>{
+      const n=__fps.network,p=n.room.state.actors.get(n.localPlayerId);
+      return !n.trigger&&!__fps.mobile.state.fire&&p.weapon==='p9'&&!p.reloadUntil&&
+        n.prediction.world.game.state.time>=Math.max(n.nextCosmetic,p.nextShot)&&performance.now()-n.lastPatch<500;
+    });
     const fire=mobile.locator('[data-mobile-action=fire]');
     assert(await fire.isVisible(),'manual trigger is restored');
     const cd=await mobile.context().newCDPSession(mobile),box=await fire.boundingBox();
+    assert(await fire.evaluate(button=>{
+      const b=button.getBoundingClientRect();return document.elementFromPoint(b.x+b.width/2,b.y+b.height/2)===button;
+    }),'manual trigger receives the touch');
     await cd.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{id:7,x:box.x+box.width/2,y:box.y+box.height/2}]});
-    try{await until(()=>shooter.inventory.pistol.ammo===stopped-1,'manual press fires once');}
+    try{
+      await mobile.waitForFunction(()=>__fps.mobile.state.fire&&__fps.input().fire&&!__fps.input().autoFire);
+      await until(()=>shooter.inventory.pistol.ammo===stopped-1,'manual press fires once');
+    }catch(error){
+      const client=await mobile.evaluate(()=>{
+        const n=__fps.network,p=n.room.state.actors.get(n.localPlayerId);
+        return {fireId:n.fireId,trigger:n.trigger,input:__fps.input(),patchAge:performance.now()-n.lastPatch,
+          time:n.prediction.world.game.state.time,nextShot:p.nextShot,nextCosmetic:n.nextCosmetic,
+          touchFire:__fps.mobile.state.fire,visible:__fps.mobile.visible,
+          pointers:[...__fps.mobile.buttonPointers.values()].map(b=>b.dataset.mobileAction)};
+      });
+      console.error('Manual fire diagnostics',JSON.stringify({mode,client,server:{enabled:seat.enabled,
+        trigger:seat.trigger,lastFire:seat.lastFire,lastSampleTick:seat.lastSampleTick,lastShotStamp:seat.lastShotStamp,
+        ammo:shooter.inventory.pistol.ammo,expected:stopped-1,lag:room.lag.metrics,invalid:room.metrics.invalid}}));
+      throw error;
+    }
     finally{await cd.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await cd.detach();}
     await delay(350);assert.equal(shooter.inventory.pistol.ammo,stopped-1,'manual tap does not continue automatically');
 
