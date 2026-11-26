@@ -64,6 +64,13 @@ async function set(key,value) {
   const before=await state();
   assert(before?.host&&before.phase==='waiting'&&before.others===0,'Only the probe owns the waiting room');
   if(before.settings[key]===value)return;
+  // The resident selects submit one pair. Wait until the lobby displays its
+  // last acknowledged pair before sending a second change.
+  if(key==='zombies'||key==='danceman'){
+    await page.evaluate(()=>document.activeElement?.blur());
+    await until(async()=>await control('zombies').inputValue()===before.settings.zombies&&
+      await control('danceman').inputValue()===before.settings.danceman,'Both resident controls reflect the server');
+  }
   if(key==='fill-bots')await control(key).setChecked(value);
   else await control(key).selectOption(value);
   await until(async()=>{const row=await state();return row?.settings[key]===value&&row.ready;},'Persisted '+key);
@@ -91,6 +98,8 @@ try {
   });
   await connect(); original=(await state()).settings;
   changed=true;await set('map',arena);await set('fill-bots',true);
+  const lobby=await state();
+  assert(lobby?.host&&lobby.phase==='waiting'&&lobby.settings.map===arena&&lobby.others===0,'Only the probe may start its family match');
   await control('ready').tap();await control('start').tap();
   await page.locator('#resume').tap();await until(async()=>(await state())?.phase==='active','Live Compact match active');
   const before=await state();assert.equal(before.settings.map,arena);assert.equal(before.settings.mode,'tdm');assert.equal(before.actors,10);
@@ -119,6 +128,7 @@ finally {
     report.finalRooms=(await health()).rooms;
   } catch(error) {report.cleanupError=String(error.message).replaceAll(password,'[private]');}
   await browser.close();
+  if(report.active&&report.reopenedMap!==arena)report.error||='The reopened family room lost its map choice.';
   report.status=report.error||report.cleanupError?'FAIL':'PASS';await writeFile(join(out,'live.json'),JSON.stringify(report,null,2)+'\n');
 }
 console.log(JSON.stringify(report));if(report.status!=='PASS')process.exitCode=1;

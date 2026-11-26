@@ -21,6 +21,9 @@ const cases = {
 const name = process.env.FPS_MAP_CASE || 'desktop';
 const tour = name==='four' && process.env.FPS_MAP_TOUR==='1';
 const spec = cases[name];
+// A pair switches the same family room to Floor 5 and then back to Compact.
+const switchPairs = Number(process.env.FPS_MAP_SWITCH_PAIRS ?? 2);
+assert(Number.isSafeInteger(switchPairs) && switchPairs>=1, 'Use a positive number of map switch pairs');
 assert(spec, 'Choose desktop, mobile, four or floor');
 const floor = 'floor5-prepared', arena = 'compact-arena', map = spec.floor ? floor : arena;
 const out = process.env.FPS_MAP_OUT || 'test-results/multiplayer-maps';
@@ -353,15 +356,21 @@ try {
   if(!spec.floor) await acknowledge(map);
   if(spec.video) {
     result.transitions=[];
-    for(const id of [floor,arena,floor,arena]) {
+    for(let turn=0;turn<2*switchPairs;turn++) {
+      const id=turn%2 ? arena : floor;
       mark('switch '+id); const ms=await selectMap(id);
       const cdp=await context.newCDPSession(page);
       try {await cdp.send('HeapProfiler.collectGarbage');} finally {await cdp.detach();}
       result.transitions.push({id,ms,...await renderedResources()});
     }
-    for(const row of result.transitions) assert.equal(row.liveOwners,1,'Only the current rendered world stays live');
-    const [a,b,c,d]=result.transitions;
-    assert.equal(a.level,c.level); assert.equal(b.level,d.level);
+    for(const row of result.transitions) {
+      assert.equal(row.liveOwners,1,'Only the current renderer stays live');
+      assert.equal(row.reachableOwners,1,'Previous renderers were collected');
+      const first=result.transitions.find(t=>t.id===row.id);
+      assert.equal(row.level,first.level);
+      assert.equal(row.geometries,first.geometries,'Stable waiting-room geometry count for '+row.id);
+      assert.equal(row.textures,first.textures,'Stable waiting-room texture count for '+row.id);
+    }
     mark('reject a damaged level and retry on the saved map');
     const route='**/levels/floor5-prepared.json';
     await page.route(route,r=>r.fulfill({status:200,contentType:'application/json',body:'{}'}));

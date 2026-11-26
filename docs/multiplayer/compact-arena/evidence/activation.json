@@ -1,0 +1,79 @@
+{
+  "deployedRevision": "75feffd9360da2380098bfea18f60df12713feff",
+  "previousRevision": "6093bf6d11ccdc79a469ceb430d6d64375dc1379",
+  "roomsBeforeChange": 0,
+  "playersBeforeChange": 0,
+  "isolatedPreflight": {
+    "status": "PASS",
+    "path": "loopback with tunnel headers",
+    "clients": 2,
+    "map": "floor5-prepared",
+    "build": "09cc3fcc2f9ea016674b5b66be65716f0cf21c0df6deb432cff2f323717192a7",
+    "unauthenticatedStatus": 401,
+    "wrongRoomCodeRejected": true,
+    "checkpoints": [
+      {
+        "clients": 2,
+        "readyOnEachSocket": 2,
+        "analysts": 1,
+        "counterAnalysts": 1
+      }
+    ],
+    "gameplayPeers": 2,
+    "tickAdvance": 120,
+    "movementMetres": [
+      0.35,
+      0.35
+    ],
+    "ammoAfterFire": [
+      29,
+      29
+    ],
+    "reloadAmmo": [
+      30,
+      30
+    ],
+    "sharedShots": [
+      1,
+      1
+    ],
+    "consentedLeaves": 2
+  },
+  "publicOrigin": "https://cs2.capstere.com",
+  "production": {
+    "status": "PASS",
+    "path": "HTTPS/WSS via public origin",
+    "clients": 2,
+    "map": "floor5-prepared",
+    "build": "09cc3fcc2f9ea016674b5b66be65716f0cf21c0df6deb432cff2f323717192a7",
+    "unauthenticatedStatus": 401,
+    "wrongRoomCodeRejected": true,
+    "checkpoints": [
+      {
+        "clients": 2,
+        "readyOnEachSocket": 2,
+        "analysts": 1,
+        "counterAnalysts": 1
+      }
+    ],
+    "gameplayPeers": 2,
+    "tickAdvance": 120,
+    "movementMetres": [
+      0.28,
+      0.28
+    ],
+    "ammoAfterFire": [
+      29,
+      29
+    ],
+    "reloadAmmo": [
+      30,
+      30
+    ],
+    "sharedShots": [
+      1,
+      1
+    ],
+    "consentedLeaves": 2
+  }
+}

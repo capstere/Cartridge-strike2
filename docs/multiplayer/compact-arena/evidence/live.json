@@ -1,0 +1,23 @@
+{
+  "url": "https://cs2.capstere.com/room/JESPERS-ROOM",
+  "revision": "75feffd9360da2380098bfea18f60df12713feff",
+  "buildHash": "09cc3fcc2f9ea016674b5b66be65716f0cf21c0df6deb432cff2f323717192a7",
+  "physicalPhone": false,
+  "browser": "156.0.8078.79",
+  "initialRooms": 0,
+  "active": {
+    "actors": 10,
+    "mode": "tdm",
+    "map": "compact-arena",
+    "ammoBefore": 30,
+    "ammoAfter": 28,
+    "ticks": [
+      1685,
+      1754
+    ]
+  },
+  "reopenedMap": "compact-arena",
+  "restored": true,
+  "finalRooms": 0,
+  "status": "PASS"
+}

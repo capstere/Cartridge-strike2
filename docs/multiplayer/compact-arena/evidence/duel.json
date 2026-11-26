@@ -1,0 +1,96 @@
+{
+  "status": "PASS",
+  "mapId": "compact-arena",
+  "buildHash": "09cc3fcc2f9ea016674b5b66be65716f0cf21c0df6deb432cff2f323717192a7",
+  "browser": "156.0.8078.79",
+  "bots": 0,
+  "date": "2026-11-26T20:41:12.476Z",
+  "renderedClients": 2,
+  "protocolOnlyClients": 0,
+  "physicalDevices": false,
+  "transport": "HTTPS/WSS pinned loopback fixture",
+  "scoreResult": {
+    "matchId": 1,
+    "winner": "analysts",
+    "reason": "score",
+    "score": {
+      "analysts": 2,
+      "counterAnalysts": 0
+    },
+    "players": [
+      {
+        "id": "analysts-0",
+        "name": "Host",
+        "team": "analysts",
+        "kills": 2,
+        "deaths": 0
+      },
+      {
+        "id": "counterAnalysts-0",
+        "name": "Friend",
+        "team": "counterAnalysts",
+        "kills": 0,
+        "deaths": 2
+      }
+    ]
+  },
+  "timeResult": {
+    "matchId": 2,
+    "winner": "analysts",
+    "reason": "time",
+    "score": {
+      "analysts": 1,
+      "counterAnalysts": 0
+    },
+    "players": [
+      {
+        "id": "analysts-0",
+        "name": "Host",
+        "team": "analysts",
+        "kills": 1,
+        "deaths": 0
+      },
+      {
+        "id": "counterAnalysts-0",
+        "name": "Friend",
+        "team": "counterAnalysts",
+        "kills": 0,
+        "deaths": 1
+      }
+    ]
+  },
+  "drawResult": {
+    "matchId": 3,
+    "winner": "draw",
+    "reason": "time",
+    "score": {
+      "analysts": 0,
+      "counterAnalysts": 0
+    },
+    "players": [
+      {
+        "id": "analysts-0",
+        "name": "Host",
+        "team": "analysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "counterAnalysts-0",
+        "name": "Friend",
+        "team": "counterAnalysts",
+        "kills": 0,
+        "deaths": 0
+      }
+    ]
+  },
+  "sharedRoomLogin": true,
+  "expiredLoginRecovery": true,
+  "bothMovementControls": true,
+  "touchFire": true,
+  "deathRespawn": true,
+  "sameRoomRematch": true,
+  "teamChange": true,
+  "ownerTransfer": true,
+  "cleanup": true
+}

@@ -1,16 +1,29 @@
 // Two rendered, independently authenticated clients using the shipped UI.
+// Set FPS_MATCH_MAP=compact-arena to run the same match flow on the published arena.
+// On Pi, FPS_NETWORK_HEADED=1 and FPS_NETWORK_ANGLE=gl-egl enable a headed EGL run.
 // Only the isolated server's match duration/target and spawn placement are fixtures.
 import assert from 'node:assert/strict';
 import {mkdir,writeFile} from 'node:fs/promises';
 import {setTimeout as delay} from 'node:timers/promises';
 import {chromium} from '../frontline/source/tools/dev/node_modules/playwright-core/index.mjs';
+import {CONTRACT} from '../shared/multiplayer/build.mjs';
+import {DEFAULT_MAP_ID} from '../shared/multiplayer/maps.mjs';
 import {startPilotFixture} from './network-pilot-fixture.mjs';
 import {resumeDesktop} from './network-browser-resume.mjs';
+const mapId=process.env.FPS_MATCH_MAP??DEFAULT_MAP_ID;
+const lanes={
+ 'floor5-prepared':{x:20,hostZ:-16,friendZ:-18},
+ 'compact-arena':{x:10.98,hostZ:11.45,friendZ:7.35},
+};
+assert(Object.hasOwn(lanes,mapId),'No rendered duel placement for '+mapId);
+const lane=lanes[mapId];
+const progress=step=>console.log(mapId,step);
+const output=mapId===DEFAULT_MAP_ID?'test-results/online':'test-results/online/'+mapId;
 const fixture=await startPilotFixture({testMatch:{durationSeconds:45,scoreTarget:2,countdownSeconds:.3}});
 const browsers=[],pages=[],errors=[],observed=new Map();let placing;
 async function until(fn,label,timeout=25000){const end=performance.now()+timeout;while(!await fn()){assert(performance.now()<end,label);await delay(30);}}
 async function open(mobile,room=''){
- const browser=await chromium.launch({channel:'chromium',executablePath:process.env.CHROMIUM_PATH||undefined,args:[...fixture.args,'--use-angle='+(process.env.FPS_NETWORK_ANGLE||(process.platform==='darwin'?'metal':'swiftshader')),'--disable-background-timer-throttling','--disable-renderer-backgrounding','--disable-backgrounding-occluded-windows']});browsers.push(browser);
+ const browser=await chromium.launch({channel:'chromium',headless:process.env.FPS_NETWORK_HEADED!=='1',executablePath:process.env.CHROMIUM_PATH||undefined,args:[...fixture.args,...(process.env.FPS_NETWORK_HEADED==='1'&&process.env.WAYLAND_DISPLAY?['--ozone-platform=wayland']:[]),'--use-angle='+(process.env.FPS_NETWORK_ANGLE||(process.platform==='darwin'?'metal':'swiftshader')),'--disable-background-timer-throttling','--disable-renderer-backgrounding','--disable-backgrounding-occluded-windows']});browsers.push(browser);
  const context=await browser.newContext({viewport:mobile?{width:844,height:390}:{width:960,height:540},isMobile:mobile,hasTouch:mobile,deviceScaleFactor:.75});
  const page=await context.newPage();pages.push(page);page.setDefaultTimeout(45000);page.on('pageerror',e=>errors.push(e.name));
  await page.addInitScript(()=>localStorage.setItem('cartridge-settings',JSON.stringify({graphics:'low',volume:0,autoReload:false,mobileAutoFire:false})));
@@ -24,7 +37,7 @@ async function roomRead(page){
  const {result}=await cdp.send('Runtime.callFunctionOn',{objectId:objects.objectId,functionDeclaration:'function(){return Array.from(this).find(r=>r.connection?.isOpen&&r.state?.actors?.size)}'});
  assert(result.objectId);
  return async()=>{
-  const {result:value,exceptionDetails}=await cdp.send('Runtime.callFunctionOn',{objectId:result.objectId,returnByValue:true,functionDeclaration:`function(){return {phase:this.state.phase,matchId:this.state.matchId,results:this.state.results,room:this.roomId,players:[...this.state.actors.values()].map(a=>({id:a.id,team:a.team,alive:a.alive,hp:a.hp,life:a.lifeId,kills:a.kills,deaths:a.deaths,ammo:a.ammo,x:a.x,z:a.z,yaw:a.yaw,pitch:a.pitch,protectedUntil:a.spawnProtectedUntil,time:this.state.time}))}}`});
+  const {result:value,exceptionDetails}=await cdp.send('Runtime.callFunctionOn',{objectId:result.objectId,returnByValue:true,functionDeclaration:`function(){return {mapId:this.state.mapId,mode:this.state.mode,phase:this.state.phase,matchId:this.state.matchId,results:this.state.results,room:this.roomId,players:[...this.state.actors.values()].map(a=>({id:a.id,bot:a.bot,team:a.team,alive:a.alive,hp:a.hp,life:a.lifeId,kills:a.kills,deaths:a.deaths,ammo:a.ammo,x:a.x,z:a.z,yaw:a.yaw,pitch:a.pitch,protectedUntil:a.spawnProtectedUntil,time:this.state.time}))}}`});
   assert(!exceptionDetails);return value.value;
  };
 }
@@ -35,42 +48,58 @@ async function readyAndStart(host,friend){
 try{
  const host=await open(false);
  await host.locator('#network-name').fill('Host');await host.locator('#network-team').selectOption('analysts');await host.locator('#network-code').fill('browser-match-123');
+ assert.equal(await host.locator('#network-map').inputValue(),DEFAULT_MAP_ID,'Floor 5 is selected when the private lobby opens');
+ if(mapId!==DEFAULT_MAP_ID)await host.locator('#network-map').selectOption(mapId);
  await host.locator('#network-fill-bots').uncheck();
  await host.locator('[data-create=true]').click();await host.locator('#room-ready').waitFor();const roomId=await host.locator('#network-room').inputValue();
  const friend=await open(true,roomId);assert.equal(await friend.locator('#network-room').inputValue(),roomId,'shared room survived authentication');
  await friend.locator('#network-name').fill('Friend');await friend.locator('#network-team').selectOption('counterAnalysts');await friend.locator('#network-code').fill('browser-match-123');
  await friend.locator('[data-create=false]').click();await friend.locator('#room-ready').waitFor();
  await until(async()=>await host.locator('#room-roster tr').count()===2,'two-player roster');
- await mkdir('test-results/online',{recursive:true});
- await friend.screenshot({path:'test-results/online/mobile-lobby.png'});
+ await mkdir(output,{recursive:true});
+ await friend.screenshot({path:output+'/mobile-lobby.png'});
  const r=[...fixture.authority.rooms][0];
+ assert.equal(r.state.mapId,mapId);
+ assert(r.sim.game.world.segmentClear({x:lane.x,y:1.5,z:lane.hostZ},{x:lane.x,y:1.5,z:lane.friendZ},{vision:false}),'duel sightline');
  // Place only new lives, before the authority projects them. No damage/score writes.
  const original=r.sim.tick;
  r.sim.tick=function(...args){
   const events=original.apply(this,args);
   for(const a of r.sim.game.actors){if(observed.get(a.id)===a.lifeId)continue;observed.set(a.id,a.lifeId);
-   Object.assign(a,{x:20,y:0,z:a.team==='analysts'?-16:-18,yaw:a.team==='analysts'?0:Math.PI,pitch:0});
+   Object.assign(a,{x:lane.x,y:0,z:a.team==='analysts'?lane.hostZ:lane.friendZ,yaw:a.team==='analysts'?0:Math.PI,pitch:0});
    assert(r.sim.game.world.canOccupy(a.x,a.z,a.radius,a.height,0));
   }return events;
  };
+ progress('both lobby clients loaded');
  const readHost=await roomRead(host),readFriend=await roomRead(friend);
  // Exercise changing team and back: prediction/controller identity must remain usable.
  await friend.locator('#room-team').selectOption('analysts');await until(async()=> (await readFriend()).players.every(a=>a.team==='analysts'),'team change');
  await friend.locator('#room-team').selectOption('counterAnalysts');await until(async()=> (await readFriend()).players.some(a=>a.team==='counterAnalysts'),'restore team');
  await readyAndStart(host,friend);
+ for(const read of [readHost,readFriend]){
+  const state=await read();
+  assert.equal(state.mapId,mapId);
+  assert.equal(state.mode,'tdm');
+  assert.equal(state.players.length,2);
+  assert(state.players.every(a=>!a.bot));
+ }
+ progress('both match clients ready');
  const positions=(await readHost()).players;
  const movedTeam=async team=>{const a=(await readHost()).players.find(a=>a.team===team),before=positions.find(b=>b.id===a.id);return Math.hypot(a.x-before.x,a.z-before.z)>.15;};
  await host.keyboard.down('w');try{await until(()=>movedTeam('analysts'),'desktop movement');}finally{await host.keyboard.up('w');}
+ progress('desktop moved');
  const zone=await friend.locator('[data-mobile-stick-zone]').boundingBox();
  const contact={id:1,x:zone.x+zone.width*.35,y:zone.y+zone.height*.7};
  const touch=await friend.context().newCDPSession(friend);
  await touch.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[contact]});
  await touch.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{...contact,y:contact.y-42}]});
  try{await until(()=>movedTeam('counterAnalysts'),'touch movement');}finally{await touch.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await touch.detach();}
+ progress('touch moved');
  const fireButton=await friend.locator('[data-mobile-action=fire]').boundingBox(),fireTouch=await friend.context().newCDPSession(friend);
  await fireTouch.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{id:2,x:fireButton.x+fireButton.width/2,y:fireButton.y+fireButton.height/2}]});
  try{await until(async()=> (await readHost()).players.find(a=>a.team==='counterAnalysts').ammo<30,'touch fire replicated to host');}
  finally{await fireTouch.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await fireTouch.detach();}
+ progress('touch fire replicated');
  async function fireUntil(check,label){
   const end=performance.now()+30000;
   while(!await check()){
@@ -87,25 +116,32 @@ try{
  }
  const first=await readFriend();assert.equal(first.phase,'active');const victim=()=>readFriend().then(s=>s.players.find(a=>a.team==='counterAnalysts'));
  await fireUntil(async()=>!(await victim()).alive,'real death');
+ progress('first death');
  await until(async()=>{const a=await victim();return a.alive&&a.life>first.players.find(a=>a.team==='counterAnalysts').life;},'real automatic respawn');
+ progress('respawn');
  await fireUntil(async()=> (await readHost()).phase==='results','score-limit result');
  await until(async()=> (await readFriend()).phase==='results','replicated results');
+ progress('score-limit result');
  const score=await readHost();assert.equal(score.results,(await readFriend()).results);
- await host.screenshot({path:'test-results/online/results.png'});
+ await host.screenshot({path:output+'/results.png'});
  const scoreResult=JSON.parse(score.results);assert.equal(scoreResult.winner,'analysts');assert.equal(scoreResult.reason,'score');assert.equal(scoreResult.score.analysts,2);
  assert.equal(scoreResult.players.find(a=>a.team==='counterAnalysts').deaths,2);
  // Short authoritative clock settings only in this in-process fixture.
  r.match.settings.durationSeconds=8;r.match.settings.scoreTarget=50;r.state.durationSeconds=8;r.state.scoreTarget=50;
  await host.locator('#room-rematch').click();await until(async()=> (await readFriend()).phase==='waiting','same-room lobby');
  await readyAndStart(host,friend);assert.equal((await readHost()).room,roomId);
+ progress('second match active');
  await fireUntil(async()=> (await readHost()).players.find(a=>a.team==='analysts').kills===1,'rematch damage and score');
  await host.keyboard.press('r');await until(async()=> (await readHost()).players.find(a=>a.team==='analysts').ammo===30,'reload');
  await until(async()=> (await readHost()).phase==='results','time-limit victory');
  await until(async()=> (await readFriend()).results===(await readHost()).results,'same time result');
+ progress('time-limit result');
  const timed=JSON.parse((await readHost()).results);assert.equal(timed.winner,'analysts');assert.equal(timed.reason,'time');assert.equal(timed.score.analysts,1);
+ progress('third match');
  r.match.settings.durationSeconds=2;r.state.durationSeconds=2;
  await friend.locator('#room-rematch').tap();await until(async()=> (await readHost()).phase==='waiting','third lobby');await readyAndStart(host,friend);
  await until(async()=> (await readHost()).phase==='results','time draw');const draw=JSON.parse((await readHost()).results);assert.equal(draw.winner,'draw');
+ await until(async()=> (await readFriend()).results===(await readHost()).results,'same draw on both clients');
  assert.equal(draw.matchId,score.matchId+2);assert.deepEqual(draw.score,{analysts:0,counterAnalysts:0});
  await host.locator('#room-leave').click();await until(async()=> (await readFriend()).players.length===1,'host departure');
  await friend.locator('#room-rematch').tap();await friend.locator('#room-start').waitFor({state:'visible'});assert(await friend.locator('#room-start').isDisabled());
@@ -120,8 +156,8 @@ try{
  await friend.getByText('Logga in igen',{exact:true}).tap();await friend.locator('[name=invite]').waitFor();
  await friend.locator('[name=invite]').fill(fixture.invite);await friend.locator('button[type=submit]').tap();
  await friend.locator('#network-name').waitFor();assert.equal(await friend.locator('#network-room').inputValue(),roomId);
- const result={status:'PASS',date:new Date().toISOString(),renderedClients:2,protocolOnlyClients:0,physicalDevices:false,transport:'HTTPS/WSS pinned loopback fixture',scoreResult,timeResult:timed,drawResult:draw,sharedRoomLogin:true,expiredLoginRecovery:true,bothMovementControls:true,touchFire:true,deathRespawn:true,sameRoomRematch:true,teamChange:true,ownerTransfer:true,cleanup:true};
- await mkdir('test-results/online',{recursive:true});await writeFile('test-results/online/rendered-match.json',JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));
+ const result={status:'PASS',mapId,buildHash:CONTRACT.buildHash,browser:browsers[0].version(),bots:0,date:new Date().toISOString(),renderedClients:2,protocolOnlyClients:0,physicalDevices:false,transport:'HTTPS/WSS pinned loopback fixture',scoreResult,timeResult:timed,drawResult:draw,sharedRoomLogin:true,expiredLoginRecovery:true,bothMovementControls:true,touchFire:true,deathRespawn:true,sameRoomRematch:true,teamChange:true,ownerTransfer:true,cleanup:true};
+ await mkdir(output,{recursive:true});await writeFile(output+'/rendered-match.json',JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));
 }catch(e){
  // Never expose invitations/cookies in Playwright action diagnostics.
  console.error(String(e.stack||e).replaceAll(fixture.invite,'[invite]'));process.exitCode=1;

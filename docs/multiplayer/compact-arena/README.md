@@ -25,6 +25,8 @@ Familjens v1-fil utan kart-ID öppnar Floor 5. En äldre release kan läsa en fi
 
 Kontrollera att rummen är tomma med `sudo cs2-online status`. Återställ föregående Pi-release med `sudo cs2-online rollback`. Kommandot kontrollerar klient och server via den riktiga domänen. [Driftguide](../../../deploy/online/README.md)
 
+Vid leveransen verifierades de två formatens läsning och omsparning mot koden i den faktiskt installerade rollbackrevisionen, med en separat inställningsfil. Den äldre versionen läser sina sex kända värden när filen innehåller Compact Arena. Om den äldre versionen sparar om filen väljer den nya versionen Floor 5 vid nästa start. [Kompatibilitetsprov](evidence/rollback-settings.json)
+
 ## Reproducerbara prov
 
 Från repots rot, med låsta server- och webbläsarberoenden installerade:
