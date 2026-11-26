@@ -371,8 +371,8 @@
     },
     {
       "path": "assets/fps/maps/compact-arena.jpg",
-      "bytes": 51619,
-      "sha256": "c238a4dd772c46b2e6550e36b8587460e9c3e9bfd3ab224c5d630c19fb505ae7"
+      "bytes": 48890,
+      "sha256": "bc904bfa26a16d5caba69c5ff0cd6ae4599157432b3ca000aa1ad5aad88e5dcd"
     },
     {
       "path": "assets/fps/maps/floor5-prepared.jpg",
@@ -666,8 +666,8 @@
     },
     {
       "path": "fps/lobby.css",
-      "bytes": 16918,
-      "sha256": "94e08df5078ee00d6a3027b89624f6eef7e343f56a20fc5dee8ffea7f82d40ff"
+      "bytes": 16963,
+      "sha256": "575883783883f770b3fe86fa9afe9848a13db99e4da03ade8257001941c63d8e"
     },
     {
       "path": "fps/match-loading.css",
@@ -2650,7 +2650,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 59024192,
+  "bytes": 59021508,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

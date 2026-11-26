@@ -170,3 +170,4 @@
   .lb-launch{position:sticky;bottom:12px;z-index:5}
 }
 .lobby[hidden]{display:none!important}
+.network-family-menu .lb-brief{display:none}

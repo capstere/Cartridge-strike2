@@ -19,6 +19,7 @@ const cases = {
   floor: {actors:10, bots:9, family:true, floor:true},
 };
 const name = process.env.FPS_MAP_CASE || 'desktop';
+const tour = name==='four' && process.env.FPS_MAP_TOUR==='1';
 const spec = cases[name];
 assert(spec, 'Choose desktop, mobile, four or floor');
 const floor = 'floor5-prepared', arena = 'compact-arena', map = spec.floor ? floor : arena;
@@ -63,6 +64,7 @@ async function observe() {
   const draw = Renderer.prototype.render, dispose = Renderer.prototype.dispose;
   Renderer.prototype.render = function(...args) {
     const started = performance.now();
+    if(observed.camera) args[1]=observed.camera;
     const result = draw.apply(this,args);
     if(observed.last?.deref() !== this) {
       observed.last = new WeakRef(this);
@@ -212,7 +214,7 @@ async function video() {
   try {
     // Drive ordinary WASD and pointer-lock look along the real navmesh, then
     // turn to a combatant visible from the real player. No forced actor poses.
-    const game=room.sim.game, visited=new Set(), end=performance.now()+12500;
+    const game=room.sim.game, visited=new Set(), end=performance.now()+(tour?18000:12500);
     const goals=[{x:13.25,z:8.75},{x:12,z:6.5},{x:14.3,z:3.45},{x:13.25,z:8.75}];
     let index=0, lastShot=0;
     async function turnTo(target) {
@@ -284,12 +286,13 @@ try {
   await page.locator('#network-name').fill('Mapptest');
   await page.locator('#network-code').fill(spec.family ? fixture.familyPassword : code);
   if(!spec.family) await page.locator('#network-fill-bots').uncheck();
+  if(tour) await page.locator('#network-map').selectOption(arena);
   mark('enter waiting room');
   const enter=performance.now(); await page.locator('[data-create='+!spec.family+']').click();
   await page.locator('#room-ready').waitFor(); room=[...fixture.authority.rooms][0]; assert(room);
   result.enterToWaitingMs=Math.round(performance.now()-enter);
   mark('load '+map);
-  if(!spec.floor) result.selectMapMs=await selectMap(map);
+  if(!spec.floor && !tour) result.selectMapMs=await selectMap(map);
   else if(room.state.mapId) await acknowledge(map);
   if(spec.mobile) await page.locator('#room-team').selectOption('counterAnalysts');
   if(spec.mobile) await until(()=>localSeat()?.actor.team==='counterAnalysts','Mobile plays the opposite team');
@@ -311,14 +314,26 @@ try {
   result.measurement=await sample();
   assert(result.measurement.client.draws.min>0);
   await page.screenshot({path:join(out,name+'-game.jpg'), quality:86});
-  if(spec.video) {
+  if(spec.video || tour) {
     mark('record gameplay');
     footage=await video();
     await page.keyboard.press('m'); await delay(300);
     await page.screenshot({path:join(out,'compact-map.jpg'),quality:86}); await page.keyboard.press('m');
     const style=await page.addStyleTag({content:'#game{z-index:2147483647!important;opacity:1!important}'});
-    try { await page.screenshot({path:join(out,'compact-arena.jpg'),quality:85}); }
-    finally {await style.evaluate(e=>e.remove());}
+    try {
+      if(tour) {
+        await page.evaluate(()=>{
+          const r=mapProbe.last.deref(), camera={x:11.3,z:8,y:0,height:1.76,yaw:-1.76,pitch:-.04,radius:.32};
+          if(!r.world.canOccupy(camera.x,camera.z,camera.radius,camera.height,0))throw Error('Preview camera in a solid');
+          r.viewScene.visible=false;mapProbe.camera=camera;
+        });
+        await page.evaluate(()=>new Promise(done=>requestAnimationFrame(()=>requestAnimationFrame(done))));
+      }
+      await page.screenshot({path:join(out,'compact-arena.jpg'),quality:85});
+    } finally {
+      if(tour) await page.evaluate(()=>{mapProbe.camera=null;mapProbe.last.deref().viewScene.visible=true;});
+      await style.evaluate(e=>e.remove());
+    }
   }
   if(spec.mobile) {
     mark('reconnect');

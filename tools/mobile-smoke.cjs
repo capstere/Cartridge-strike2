@@ -37,11 +37,15 @@ async function openOriginal(browser, mobile, mode = 'classic') {
   const error = await page.locator('#fatal').evaluate(el => el.hidden ? '' : el.textContent);
   assert.equal(error, '', 'Game failed booting: ' + error);
   assert.equal(await page.locator('#start').isEnabled(), true, 'Start must unlock after assets load.');
+  // The desktop case checks a native start gesture and one Standard-quality frame.
+  // Let SwiftShader finish that frame after it has delivered the real mouse click.
+  if (!mobile) await page.evaluate(() => __fps.stopFrameLoop());
   await page.locator('#lb-mode-seg [data-value=' + mode + ']').click();
   await page.locator('#start').click({ timeout: 30000 });
   await page.waitForFunction(() => !!globalThis.__fps && globalThis.__fps.modal === null, null,
     { timeout: 20000, polling: 100 });
-  await page.waitForTimeout(900);
+  if (mobile) await page.waitForTimeout(900);
+  else await page.evaluate(() => __fps.render());
   const state = await page.evaluate(() => ({
     mobile: __fps.mobile.enabled,
     controlsVisible: !document.getElementById('mobile-controls').hidden,

@@ -1,0 +1,356 @@
+{
+  "scenario": "desktop",
+  "map": "compact-arena",
+  "physicalPhone": false,
+  "transport": "TLS loopback",
+  "date": "2026-11-26T20:16:20.311Z",
+  "revision": "7c73b3bfe621995af84e77ce2df2417fe1119088",
+  "buildHash": "09cc3fcc2f9ea016674b5b66be65716f0cf21c0df6deb432cff2f323717192a7",
+  "manifestHash": "ea0a93e20cc715ac7c41b84e3b1882923ab536285796bae51a1dd18196a880c1",
+  "cpu": "Cortex-A76",
+  "arch": "arm64",
+  "os": "linux",
+  "node": "v26.13.0",
+  "model": "Raspberry Pi 5 Model B Rev 1.1",
+  "warmupMs": 3000,
+  "windowMs": 10000,
+  "scheduledSeconds": 45,
+  "scoreTarget": 150,
+  "args": [
+    "--use-angle=gl-egl",
+    "--ignore-gpu-blocklist",
+    "--enable-unsafe-swiftshader",
+    "--disable-renderer-backgrounding",
+    "--disable-background-timer-throttling",
+    "--disable-backgrounding-occluded-windows",
+    "--host-resolver-rules=MAP 127.0.0.1 127.0.0.1",
+    "--no-proxy-server",
+    "--ozone-platform=wayland"
+  ],
+  "renderedClients": 1,
+  "sdkPeers": 0,
+  "phaseLog": [
+    {
+      "step": "enter waiting room",
+      "elapsedMs": 6892
+    },
+    {
+      "step": "load compact-arena",
+      "elapsedMs": 34247
+    },
+    {
+      "step": "start match",
+      "elapsedMs": 39314
+    },
+    {
+      "step": "measure active game",
+      "elapsedMs": 45272
+    },
+    {
+      "step": "record gameplay",
+      "elapsedMs": 55592
+    },
+    {
+      "step": "finish match",
+      "elapsedMs": 69376
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 85939
+    },
+    {
+      "step": "switch compact-arena",
+      "elapsedMs": 95029
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 99799
+    },
+    {
+      "step": "switch compact-arena",
+      "elapsedMs": 109039
+    },
+    {
+      "step": "reject a damaged level and retry on the saved map",
+      "elapsedMs": 112860
+    },
+    {
+      "step": "complete",
+      "elapsedMs": 127126
+    }
+  ],
+  "browser": "156.0.8078.79",
+  "viewport": {
+    "width": 1024,
+    "height": 576
+  },
+  "signInToFormMs": 5804,
+  "enterToWaitingMs": 27354,
+  "selectMapMs": 4754,
+  "players": {
+    "humanSlots": 1,
+    "bots": 9
+  },
+  "startToPlayableMs": 1577,
+  "controls": {
+    "distanceM": 0.63,
+    "ammoBefore": 30,
+    "ammoAfter": 29,
+    "rightClickAim": true,
+    "team": "analysts"
+  },
+  "measurement": {
+    "client": {
+      "frameIntervalMs": {
+        "n": 287,
+        "min": 20.6,
+        "p50": 30.3,
+        "p95": 56,
+        "p99": 93.7,
+        "max": 115.1
+      },
+      "renderCpuMs": {
+        "n": 288,
+        "min": 16.8,
+        "p50": 23.4,
+        "p95": 43.6,
+        "p99": 84.2,
+        "max": 105.6
+      },
+      "draws": {
+        "n": 288,
+        "min": 188,
+        "p50": 259,
+        "p95": 316,
+        "p99": 333,
+        "max": 333
+      },
+      "triangles": {
+        "n": 288,
+        "min": 20012,
+        "p50": 64482,
+        "p95": 108158,
+        "p99": 111300,
+        "max": 112872
+      },
+      "pixelRatio": {
+        "n": 288,
+        "min": 0.47,
+        "p50": 0.51,
+        "p95": 0.68,
+        "p99": 0.77,
+        "max": 0.77
+      }
+    },
+    "server": {
+      "executionMs": {
+        "n": 605,
+        "min": 0.55,
+        "p50": 1.47,
+        "p95": 4.72,
+        "p99": 7.81,
+        "max": 14.78
+      },
+      "intervalMs": {
+        "n": 604,
+        "min": 1.28,
+        "p50": 16.17,
+        "p95": 19.39,
+        "p99": 32.31,
+        "max": 33.47
+      },
+      "executionOver33": 0,
+      "executionOver50": 0,
+      "intervalOver33": 1,
+      "rttMs": 0,
+      "tick": 2601
+    },
+    "resources": {
+      "projectId": "lvl-compact-arena",
+      "level": "Compact Arena",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        478,
+        269
+      ],
+      "quality": "low",
+      "geometries": 270,
+      "textures": 83,
+      "programs": 93,
+      "owners": 2,
+      "disposals": 1,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    }
+  },
+  "videoLocations": [
+    "Blue Intake",
+    "West Lock"
+  ],
+  "completed": {
+    "matchId": 1,
+    "winner": "counterAnalysts",
+    "reason": "time",
+    "score": {
+      "analysts": 12,
+      "counterAnalysts": 14
+    },
+    "players": [
+      {
+        "id": "analysts-1",
+        "name": "BOT A-02",
+        "team": "analysts",
+        "kills": 3,
+        "deaths": 4
+      },
+      {
+        "id": "analysts-2",
+        "name": "BOT A-03",
+        "team": "analysts",
+        "kills": 4,
+        "deaths": 3
+      },
+      {
+        "id": "analysts-3",
+        "name": "BOT A-04",
+        "team": "analysts",
+        "kills": 1,
+        "deaths": 3
+      },
+      {
+        "id": "analysts-4",
+        "name": "BOT A-05",
+        "team": "analysts",
+        "kills": 4,
+        "deaths": 2
+      },
+      {
+        "id": "counterAnalysts-0",
+        "name": "BOT C-01",
+        "team": "counterAnalysts",
+        "kills": 0,
+        "deaths": 3
+      },
+      {
+        "id": "counterAnalysts-1",
+        "name": "BOT C-02",
+        "team": "counterAnalysts",
+        "kills": 1,
+        "deaths": 2
+      },
+      {
+        "id": "counterAnalysts-2",
+        "name": "BOT C-03",
+        "team": "counterAnalysts",
+        "kills": 3,
+        "deaths": 2
+      },
+      {
+        "id": "counterAnalysts-3",
+        "name": "BOT C-04",
+        "team": "counterAnalysts",
+        "kills": 9,
+        "deaths": 3
+      },
+      {
+        "id": "counterAnalysts-4",
+        "name": "BOT C-05",
+        "team": "counterAnalysts",
+        "kills": 1,
+        "deaths": 2
+      },
+      {
+        "id": "analysts-0",
+        "name": "Mapptest",
+        "team": "analysts",
+        "kills": 0,
+        "deaths": 2
+      }
+    ]
+  },
+  "transitions": [
+    {
+      "id": "floor5-prepared",
+      "ms": 8590,
+      "projectId": "lvl-floor5-preppad-20261105",
+      "level": "Unit 05",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 3,
+      "disposals": 2,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "compact-arena",
+      "ms": 4526,
+      "projectId": "lvl-compact-arena",
+      "level": "Compact Arena",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 153,
+      "textures": 66,
+      "programs": 90,
+      "owners": 4,
+      "disposals": 3,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "floor5-prepared",
+      "ms": 8832,
+      "projectId": "lvl-floor5-preppad-20261105",
+      "level": "Unit 05",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 5,
+      "disposals": 4,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "compact-arena",
+      "ms": 3576,
+      "projectId": "lvl-compact-arena",
+      "level": "Compact Arena",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 153,
+      "textures": 66,
+      "programs": 90,
+      "owners": 6,
+      "disposals": 5,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    }
+  ],
+  "damagedMapRejected": true,
+  "retryMap": "floor5-prepared",
+  "video": {
+    "frames": 302,
+    "recordedSeconds": 12.77
+  },
+  "status": "PASS"
+}

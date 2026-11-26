@@ -1,0 +1,192 @@
+{
+  "scenario": "mobile",
+  "map": "compact-arena",
+  "physicalPhone": false,
+  "transport": "TLS loopback",
+  "date": "2026-11-26T20:18:29.334Z",
+  "revision": "7c73b3bfe621995af84e77ce2df2417fe1119088",
+  "buildHash": "09cc3fcc2f9ea016674b5b66be65716f0cf21c0df6deb432cff2f323717192a7",
+  "manifestHash": "ea0a93e20cc715ac7c41b84e3b1882923ab536285796bae51a1dd18196a880c1",
+  "cpu": "Cortex-A76",
+  "arch": "arm64",
+  "os": "linux",
+  "node": "v26.13.0",
+  "model": "Raspberry Pi 5 Model B Rev 1.1",
+  "warmupMs": 3000,
+  "windowMs": 10000,
+  "scheduledSeconds": 45,
+  "scoreTarget": 150,
+  "args": [
+    "--use-angle=gl-egl",
+    "--ignore-gpu-blocklist",
+    "--enable-unsafe-swiftshader",
+    "--disable-renderer-backgrounding",
+    "--disable-background-timer-throttling",
+    "--disable-backgrounding-occluded-windows",
+    "--host-resolver-rules=MAP 127.0.0.1 127.0.0.1",
+    "--no-proxy-server",
+    "--ozone-platform=wayland"
+  ],
+  "renderedClients": 1,
+  "sdkPeers": 1,
+  "phaseLog": [
+    {
+      "step": "enter waiting room",
+      "elapsedMs": 6774
+    },
+    {
+      "step": "load compact-arena",
+      "elapsedMs": 26769
+    },
+    {
+      "step": "start match",
+      "elapsedMs": 30954
+    },
+    {
+      "step": "measure active game",
+      "elapsedMs": 36515
+    },
+    {
+      "step": "reconnect",
+      "elapsedMs": 46862
+    },
+    {
+      "step": "finish match",
+      "elapsedMs": 47248
+    },
+    {
+      "step": "complete",
+      "elapsedMs": 78302
+    }
+  ],
+  "browser": "156.0.8078.79",
+  "viewport": {
+    "width": 915,
+    "height": 412
+  },
+  "signInToFormMs": 5705,
+  "enterToWaitingMs": 19990,
+  "selectMapMs": 2921,
+  "players": {
+    "humanSlots": 2,
+    "bots": 0
+  },
+  "startToPlayableMs": 1534,
+  "controls": {
+    "distanceM": 0.64,
+    "ammoBefore": 30,
+    "ammoAfter": 28,
+    "team": "counterAnalysts"
+  },
+  "measurement": {
+    "client": {
+      "frameIntervalMs": {
+        "n": 497,
+        "min": 13.3,
+        "p50": 18.8,
+        "p95": 25.8,
+        "p99": 43.6,
+        "max": 105.6
+      },
+      "renderCpuMs": {
+        "n": 498,
+        "min": 9.4,
+        "p50": 12.5,
+        "p95": 17.1,
+        "p99": 37.3,
+        "max": 101
+      },
+      "draws": {
+        "n": 498,
+        "min": 208,
+        "p50": 208,
+        "p95": 209,
+        "p99": 211,
+        "max": 212
+      },
+      "triangles": {
+        "n": 498,
+        "min": 18624,
+        "p50": 18624,
+        "p95": 18626,
+        "p99": 18790,
+        "max": 18808
+      },
+      "pixelRatio": {
+        "n": 498,
+        "min": 0.55,
+        "p50": 0.55,
+        "p95": 0.62,
+        "p99": 0.62,
+        "max": 0.7
+      }
+    },
+    "server": {
+      "executionMs": {
+        "n": 609,
+        "min": 0.08,
+        "p50": 0.57,
+        "p95": 1.58,
+        "p99": 2.87,
+        "max": 5.11
+      },
+      "intervalMs": {
+        "n": 608,
+        "min": 0.08,
+        "p50": 16.27,
+        "p95": 20.24,
+        "p99": 32.6,
+        "max": 51.43
+      },
+      "executionOver33": 0,
+      "executionOver50": 0,
+      "intervalOver33": 5,
+      "rttMs": 0,
+      "tick": 2098
+    },
+    "resources": {
+      "projectId": "lvl-compact-arena",
+      "level": "Compact Arena",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        499,
+        224
+      ],
+      "quality": "low",
+      "geometries": 147,
+      "textures": 52,
+      "programs": 56,
+      "owners": 2,
+      "disposals": 1,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    }
+  },
+  "reconnectMap": "compact-arena",
+  "completed": {
+    "matchId": 1,
+    "winner": "draw",
+    "reason": "time",
+    "score": {
+      "analysts": 0,
+      "counterAnalysts": 0
+    },
+    "players": [
+      {
+        "id": "counterAnalysts-0",
+        "name": "Mapptest",
+        "team": "counterAnalysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "analysts-0",
+        "name": "Spelare 2",
+        "team": "analysts",
+        "kills": 0,
+        "deaths": 0
+      }
+    ]
+  },
+  "status": "PASS"
+}

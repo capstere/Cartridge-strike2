@@ -1,0 +1,243 @@
+{
+  "scenario": "floor",
+  "map": "floor5-prepared",
+  "physicalPhone": false,
+  "transport": "TLS loopback",
+  "date": "2026-11-26T20:21:17.970Z",
+  "revision": "7c73b3bfe621995af84e77ce2df2417fe1119088",
+  "buildHash": "09cc3fcc2f9ea016674b5b66be65716f0cf21c0df6deb432cff2f323717192a7",
+  "manifestHash": "ea0a93e20cc715ac7c41b84e3b1882923ab536285796bae51a1dd18196a880c1",
+  "cpu": "Cortex-A76",
+  "arch": "arm64",
+  "os": "linux",
+  "node": "v26.13.0",
+  "model": "Raspberry Pi 5 Model B Rev 1.1",
+  "warmupMs": 3000,
+  "windowMs": 10000,
+  "scheduledSeconds": 45,
+  "scoreTarget": 150,
+  "args": [
+    "--use-angle=gl-egl",
+    "--ignore-gpu-blocklist",
+    "--enable-unsafe-swiftshader",
+    "--disable-renderer-backgrounding",
+    "--disable-background-timer-throttling",
+    "--disable-backgrounding-occluded-windows",
+    "--host-resolver-rules=MAP 127.0.0.1 127.0.0.1",
+    "--no-proxy-server",
+    "--ozone-platform=wayland"
+  ],
+  "renderedClients": 1,
+  "sdkPeers": 0,
+  "phaseLog": [
+    {
+      "step": "enter waiting room",
+      "elapsedMs": 6741
+    },
+    {
+      "step": "load floor5-prepared",
+      "elapsedMs": 33833
+    },
+    {
+      "step": "start match",
+      "elapsedMs": 34046
+    },
+    {
+      "step": "measure active game",
+      "elapsedMs": 42068
+    },
+    {
+      "step": "finish match",
+      "elapsedMs": 52666
+    },
+    {
+      "step": "complete",
+      "elapsedMs": 81670
+    }
+  ],
+  "browser": "156.0.8078.79",
+  "viewport": {
+    "width": 1024,
+    "height": 576
+  },
+  "signInToFormMs": 5689,
+  "enterToWaitingMs": 27092,
+  "players": {
+    "humanSlots": 1,
+    "bots": 9
+  },
+  "startToPlayableMs": 2512,
+  "controls": {
+    "distanceM": 0.63,
+    "ammoBefore": 30,
+    "ammoAfter": 29,
+    "rightClickAim": true,
+    "team": "analysts"
+  },
+  "measurement": {
+    "client": {
+      "frameIntervalMs": {
+        "n": 158,
+        "min": 50.8,
+        "p50": 60.7,
+        "p95": 79.8,
+        "p99": 103.6,
+        "max": 176.9
+      },
+      "renderCpuMs": {
+        "n": 159,
+        "min": 47.1,
+        "p50": 54.3,
+        "p95": 70.9,
+        "p99": 95.6,
+        "max": 166.9
+      },
+      "draws": {
+        "n": 159,
+        "min": 1159,
+        "p50": 1159,
+        "p95": 1409,
+        "p99": 1412,
+        "max": 1413
+      },
+      "triangles": {
+        "n": 159,
+        "min": 573732,
+        "p50": 573732,
+        "p95": 712062,
+        "p99": 712186,
+        "max": 712190
+      },
+      "pixelRatio": {
+        "n": 159,
+        "min": 0.47,
+        "p50": 0.59,
+        "p95": 0.77,
+        "p99": 0.77,
+        "max": 0.77
+      }
+    },
+    "server": {
+      "executionMs": {
+        "n": 611,
+        "min": 0.86,
+        "p50": 1.5,
+        "p95": 7.16,
+        "p99": 19.18,
+        "max": 45.35
+      },
+      "intervalMs": {
+        "n": 610,
+        "min": 1.13,
+        "p50": 16.19,
+        "p95": 20.2,
+        "p99": 32.16,
+        "max": 46.46
+      },
+      "executionOver33": 3,
+      "executionOver50": 0,
+      "intervalOver33": 3,
+      "rttMs": 0,
+      "tick": 2435
+    },
+    "resources": {
+      "projectId": "lvl-floor5-preppad-20261105",
+      "level": "Unit 05",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        478,
+        269
+      ],
+      "quality": "low",
+      "geometries": 562,
+      "textures": 126,
+      "programs": 123,
+      "owners": 1,
+      "disposals": 0,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    }
+  },
+  "completed": {
+    "matchId": 1,
+    "winner": "counterAnalysts",
+    "reason": "time",
+    "score": {
+      "analysts": 1,
+      "counterAnalysts": 2
+    },
+    "players": [
+      {
+        "id": "analysts-1",
+        "name": "BOT A-02",
+        "team": "analysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "analysts-2",
+        "name": "BOT A-03",
+        "team": "analysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "analysts-3",
+        "name": "BOT A-04",
+        "team": "analysts",
+        "kills": 1,
+        "deaths": 1
+      },
+      {
+        "id": "analysts-4",
+        "name": "BOT A-05",
+        "team": "analysts",
+        "kills": 0,
+        "deaths": 1
+      },
+      {
+        "id": "counterAnalysts-0",
+        "name": "BOT C-01",
+        "team": "counterAnalysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "counterAnalysts-1",
+        "name": "BOT C-02",
+        "team": "counterAnalysts",
+        "kills": 1,
+        "deaths": 0
+      },
+      {
+        "id": "counterAnalysts-2",
+        "name": "BOT C-03",
+        "team": "counterAnalysts",
+        "kills": 1,
+        "deaths": 1
+      },
+      {
+        "id": "counterAnalysts-3",
+        "name": "BOT C-04",
+        "team": "counterAnalysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "counterAnalysts-4",
+        "name": "BOT C-05",
+        "team": "counterAnalysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "analysts-0",
+        "name": "Mapptest",
+        "team": "analysts",
+        "kills": 0,
+        "deaths": 0
+      }
+    ]
+  },
+  "status": "PASS"
+}

@@ -11,6 +11,8 @@ Värden väljer **Karta** i väntrummet. Alla deltagare ser samma spelbild, spel
 
 Compact Arena är en LevelProject v2 med sju zoner, tio startpunkter, två rörliga dörrar och sex patrullmål. Möbler, golvmarkeringar och instrument kommer från projektets befintliga material. Öppna den taktiska kartan med **M** eller **MER → KARTA**. **Z** eller **MER → RADIO** ger platsmarkörer från den aktuella banan.
 
+Spelets vägplanering hittade en väg för alla 25 par av motstående startplatser på båda banorna. Med öppna starthissar och fria gångvägar var medianen 28,69 modellenheter på Compact Arena och 124,97 på Floor 5. Det ger 77 procent kortare väg mellan lagen. Banans två sidovägar ger samtidigt utrymme att gå runt mitten.
+
 En godkänd onlinebana har en nivåfil i `levels/manifest.json` och en post i `shared/multiplayer/maps.mjs`. Registret anger namn, förhandsbild, lägen och stöd för residenter. Kör `node tools/build-network.mjs` efter en ändring. Verktyget läser de riktiga nivåfilerna, bygger deras kollisionsvärldar och skriver nivåfilernas och kollisionernas SHA-256-värden, det gemensamma bygg-ID:t och publiceringsmanifestet. Endast granskade offentliga filer får registreras.
 
 Klienten autentiserar och reserverar en plats. Serverns rum anger kart-ID och en räknare för kartbyten. Klienten bygger världen först när den fått dessa uppgifter. Den verifierar filen, den härledda kollisionen och sina renderingsresurser innan servern släpper in spelaren i simuleringen. Varje rum har egna botar, dörrar, glasrutor och poäng.
