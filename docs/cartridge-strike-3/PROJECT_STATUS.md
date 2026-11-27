@@ -33,7 +33,9 @@ The approved preparation head and merge share the CS2 runtime. The [production i
 | `npm run build --prefix server -- --check` | 107 compatibility sources, protocol 14 |
 | `node --experimental-vm-modules docs/cartridge-strike-3/baseline/runtime-inventory.mjs` | Five script entry points, 166 statically imported modules, 230 editor dependencies, 59,025,743 manifest bytes |
 
-The production sample showed healthy services and zero rooms. Private restoration and matched performance measurements are in progress. The lead will record the sanitized receipts, reviewer decision and subsequent work here.
+The [private backup and public verification](baseline/recovery.json) passed. Its 17,155 regular files and 28 links matched the independent restore, including four release directories. Two clients played both the restored active authority and the live authority. Two peers also read the earlier authority's supported family settings. Services, release identity and private state matched after the live test. The copy resides on the production disk. Matched performance measurements are running. The reviewer has verified source hashes, runtime identity, tests and the static inventory. The death-carry, durable reward key, legacy level and input replay contracts incorporate the review findings.
+
+Eleven sampled dependencies matched build-info SHA-256 byte for byte on both Pages and the authenticated production Pi, including all four dynamic imports from app.mjs, the browser SDK, CSS, level, audio and a furniture GLB. The private server returned 401 for a guest request to the session module. Representative screenshot and ZIP HEAD requests returned 200 on Pages and 404 on the authenticated Pi. [Distribution requests](baseline/distribution.json).
 
 ## Historical pre-implementation review on November 27
 

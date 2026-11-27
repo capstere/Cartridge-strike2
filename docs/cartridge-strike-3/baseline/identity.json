@@ -27,14 +27,19 @@
   "branchPublication": {
     "environment": "github-pages",
     "ref": "main",
-    "source": "1a9dc3f10605a7ccd2c28fef354b25bcd4418c1b",
-    "deployment": 8106261269,
-    "workflow": "dynamic/pages/pages-build-deployment"
+    "source": "5364240599164c0aee278bb0ac2a35d662c3a818",
+    "deployment": 8107023141,
+    "workflow": "dynamic/pages/pages-build-deployment",
+    "state": "success",
+    "deploymentCompletedAt": "2026-11-27T10:06:22Z"
   },
   "localTests": {
     "fps": 258,
     "server": 53,
     "deployment": 7,
     "failed": 0
-  }
+  },
+  "productionSample": "2026-11-27T10:06:49Z",
+  "comparedFrom": "8307e91118dba4fdca964012d2b0c247a40221fd",
+  "comparedTo": "5364240599164c0aee278bb0ac2a35d662c3a818"
 }

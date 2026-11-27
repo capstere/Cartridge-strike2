@@ -1,0 +1,131 @@
+{
+  "sampledAt": "2026-11-27T10:08:37+00:00",
+  "reference": "5364240599164c0aee278bb0ac2a35d662c3a818",
+  "pages": {
+    "fps/index.html": {
+      "http": 200,
+      "bytes": 14527,
+      "matchesBuild": true
+    },
+    "fps/lobby.css": {
+      "http": 200,
+      "bytes": 16963,
+      "matchesBuild": true
+    },
+    "ui/cs-theme.css": {
+      "http": 200,
+      "bytes": 1007,
+      "matchesBuild": true
+    },
+    "shared/multiplayer/world.mjs": {
+      "http": 200,
+      "bytes": 2090,
+      "matchesBuild": true
+    },
+    "shared/multiplayer/collision-contract.mjs": {
+      "http": 200,
+      "bytes": 1013,
+      "matchesBuild": true
+    },
+    "src/fps/network/menu.mjs": {
+      "http": 200,
+      "bytes": 7206,
+      "matchesBuild": true
+    },
+    "src/fps/network/session.mjs": {
+      "http": 200,
+      "bytes": 35428,
+      "matchesBuild": true
+    },
+    "vendor/colyseus/colyseus.js": {
+      "http": 200,
+      "bytes": 222653,
+      "matchesBuild": true
+    },
+    "levels/compact-arena.json": {
+      "http": 200,
+      "bytes": 37169,
+      "matchesBuild": true
+    },
+    "assets/fps/audio/action-death.ogg": {
+      "http": 200,
+      "bytes": 5026,
+      "matchesBuild": true
+    },
+    "furniture-editor/library/models/house-interior/Knife.glb": {
+      "http": 200,
+      "bytes": 3196,
+      "matchesBuild": true
+    },
+    "IMG_8150.PNG": {
+      "http": 200
+    },
+    "ScreenRecording_11-27-2026 09-56-51_1.zip": {
+      "http": 200
+    }
+  },
+  "pi": {
+    "guestStaticStatus": 401,
+    "fps/index.html": {
+      "http": 200,
+      "bytes": 14527,
+      "matchesBuild": true
+    },
+    "fps/lobby.css": {
+      "http": 200,
+      "bytes": 16963,
+      "matchesBuild": true
+    },
+    "ui/cs-theme.css": {
+      "http": 200,
+      "bytes": 1007,
+      "matchesBuild": true
+    },
+    "shared/multiplayer/world.mjs": {
+      "http": 200,
+      "bytes": 2090,
+      "matchesBuild": true
+    },
+    "shared/multiplayer/collision-contract.mjs": {
+      "http": 200,
+      "bytes": 1013,
+      "matchesBuild": true
+    },
+    "src/fps/network/menu.mjs": {
+      "http": 200,
+      "bytes": 7206,
+      "matchesBuild": true
+    },
+    "src/fps/network/session.mjs": {
+      "http": 200,
+      "bytes": 35428,
+      "matchesBuild": true
+    },
+    "vendor/colyseus/colyseus.js": {
+      "http": 200,
+      "bytes": 222653,
+      "matchesBuild": true
+    },
+    "levels/compact-arena.json": {
+      "http": 200,
+      "bytes": 37169,
+      "matchesBuild": true
+    },
+    "assets/fps/audio/action-death.ogg": {
+      "http": 200,
+      "bytes": 5026,
+      "matchesBuild": true
+    },
+    "furniture-editor/library/models/house-interior/Knife.glb": {
+      "http": 200,
+      "bytes": 3196,
+      "matchesBuild": true
+    },
+    "IMG_8150.PNG": {
+      "http": 404
+    },
+    "ScreenRecording_11-27-2026 09-56-51_1.zip": {
+      "http": 404
+    }
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "package": "CS3-00",
+  "verification": "PASS",
+  "utc": "2026-11-27T10:06:49Z",
+  "approvedPreparationMerge": "5364240599164c0aee278bb0ac2a35d662c3a818",
+  "platform": "Raspberry Pi 5, ARM64, Debian 12, Node 26.13.1",
+  "active": {
+    "revision": "8307e91118dba4fdca964012d2b0c247a40221fd",
+    "build": "30f8f4af97b2b082f995196f06f498b132ba9bf8d303671ee8ab8d4b69590385",
+    "protocol": 14
+  },
+  "previous": {
+    "revision": "75feffd9360da2380098bfea18f60df12713feff",
+    "build": "09cc3fcc2f9ea016674b5b66be65716f0cf21c0df6deb432cff2f323717192a7",
+    "protocol": 13
+  },
+  "backup": {
+    "procedure": "root-only independent copy, SHA-256 regular files, symlinks, Unix type/mode/uid/gid comparison, independent restore and comparison",
+    "manifestSha256": "0a1e303a962af4df0aa495d2bf6ceb6b530ffa2a6450245d25917acd1e4cf90b",
+    "files": 17155,
+    "links": 28,
+    "regularFileBytes": 878472977,
+    "releaseTrees": 4,
+    "scope": [
+      "active and previous releases with installed server dependencies",
+      "separately pinned deployed operator and tunnel-helper releases",
+      "game and tunnel unit files, enabled states, drop-ins, check service/timer, journald policy, rollback link targets",
+      "private pilot configuration and family settings",
+      "cloudflared, Node binary, dynamic loader and shared libraries, npm and OS version record"
+    ],
+    "familyStateVersion": 1,
+    "accountDatabase": "No account database configured on the active CS2 authority; the family v1 settings file is the only file in its configured systemd StateDirectory.",
+    "storage": "root-only copy and independent restore on the same Pi filesystem"
+  },
+  "isolatedRestore": {
+    "process": "restored Node + dynamic loader, real game server and Colyseus SDK running as an unprivileged user in a private network/mount namespace",
+    "transport": "HTTP and WebSocket on isolated loopback, test HTTPS forwarding headers and synthetic credentials",
+    "activeFamily": {
+      "clients": 2,
+      "settingsFields": 12,
+      "hostChangeReplicated": true,
+      "cloneWritePersistedAcrossServerRestart": true,
+      "allSettingsVerifiedAgainByTwoClients": true
+    },
+    "previousFamily": {
+      "clients": 2,
+      "supportedSettingsVerified": 7,
+      "copiedV1FileRetainedByteForByte": true
+    },
+    "gameplay": {
+      "clients": 2,
+      "sharedShots": [
+        1,
+        1
+      ],
+      "reloadedAmmo": [
+        30,
+        30
+      ]
+    },
+    "allRestoredFilesMatchedManifest": true
+  },
+  "public": {
+    "command": "sudo -n cs2-online verify",
+    "route": "real HTTPS/WSS",
+    "mapId": "floor5-prepared",
+    "clients": 2,
+    "tickAdvance": 123,
+    "remoteMovementMetres": [
+      0.35,
+      0.35
+    ],
+    "sharedShots": [
+      2,
+      2
+    ],
+    "ammoAfterFire": [
+      29,
+      29
+    ],
+    "ammoAfterReload": [
+      30,
+      30
+    ],
+    "normalLeaves": 2,
+    "roomsAfter": 0,
+    "playersAfter": 0,
+    "sameProductionGameAndTunnelProcesses": true
+  },
+  "limits": [
+    "Recovery on another device/disk and Cloudflare-side DNS/control-plane restoration were not executed.",
+    "The current and prior copies were tested on the same ARM64 host. The isolated probe did not launch a duplicate external tunnel.",
+    "Gameplay used two real SDK clients, without rendering or physical touch input."
+  ],
+  "integrity": "Active release pointer, public build, game/tunnel process identities, private config and family-state bytes matched the snapshot after public verification."
+}
