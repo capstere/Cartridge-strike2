@@ -1,7 +1,7 @@
 import * as THREE from '../../vendor/three/three.module.js';
 
 const folder=new URL('../../assets/fps/maps/meltem/',import.meta.url);
-const textureFiles={plaster:'plaster.webp',stone:'stone.webp',ground:'pavers.webp',wood:'../../materials/riposte/timber/map.webp'};
+const textureFiles={plaster:'plaster.webp',stone:'stone.webp',ground:'pavers.webp',wood:'../../materials/riposte/timber/map.webp',signs:'signs.webp'};
 const temporary=new THREE.Vector3();
 function unpack(bytes,materials,root){
   const view=new DataView(bytes),size=view.getUint32(0,true);
@@ -39,9 +39,10 @@ export function referenceScene(scene,world,settings){
   const abort=new AbortController(),root=new THREE.Group(),detail=new THREE.Group(),water=world.project.referenceMap.water;
   root.name='Meltem';detail.name='Meltem fine detail';root.add(detail);scene.add(root);
   const materials={},textures=[];
-  const palette={color:0xffffff,plaster:0xffffff,stone:0xffffff,wood:0xffffff,ground:0xdfd7c1,glass:0x82b2ce};
+  const palette={color:0xffffff,plaster:0xffffff,stone:0xffffff,wood:0xffffff,ground:0xdfd7c1,glass:0x82b2ce,signs:0xffffff,decals:0xffffff};
   for(const [k,color] of Object.entries(palette))materials[k]=new THREE.MeshLambertMaterial({color,vertexColors:true});
   materials.glass.transparent=true;materials.glass.opacity=.74;
+  Object.assign(materials.decals,{transparent:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-4,polygonOffsetUnits:-4});
   // One water surface below the quay and the pier. Donor volumes own support
   // and ray queries; this independent surface carries no invisible collider.
   const seaMaterial=new THREE.MeshLambertMaterial({color:0x17627e});
@@ -60,7 +61,12 @@ export function referenceScene(scene,world,settings){
     await Promise.all(Object.entries(textureFiles).map(async([k,f])=>{
       const texture=await loader.loadAsync(new URL(f,folder).href);
       if(disposed){texture.dispose();return;}
-      texture.colorSpace=THREE.SRGBColorSpace;texture.wrapS=texture.wrapT=THREE.RepeatWrapping;
+      texture.colorSpace=THREE.SRGBColorSpace;
+      if(k==='signs'){
+        texture.flipY=false;
+        materials.decals.map=texture;
+        materials.decals.needsUpdate=true;
+      }else texture.wrapS=texture.wrapT=THREE.RepeatWrapping;
       texture.anisotropy=settings.graphics==='low'?1:2;textures.push(texture);materials[k].map=texture;materials[k].needsUpdate=true;
     }));
     if(disposed)return;

@@ -1,0 +1,55 @@
+{
+  "map": "meltem",
+  "quality": "low",
+  "position": [
+    -26.27,
+    0,
+    18.6
+  ],
+  "yaw": -1.5707963267948966,
+  "pitch": 0.18,
+  "frameIntervals": {
+    "n": 90,
+    "p50": 19.899999999999636,
+    "p95": 33.30000000000109,
+    "p99": 41
+  },
+  "renderer": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+  "buffer": [
+    816,
+    459
+  ],
+  "drawCalls": 445,
+  "triangles": 370674,
+  "textures": 72,
+  "signage": [
+    {
+      "triangles": 88,
+      "uvRange": [
+        0,
+        0.5
+      ],
+      "transparent": false,
+      "flipY": false,
+      "width": 1024,
+      "height": 512,
+      "texture": "9acd095f-5de1-4dbb-b5c1-3d17da1b358a"
+    },
+    {
+      "triangles": 186,
+      "uvRange": [
+        0.5,
+        1
+      ],
+      "transparent": true,
+      "flipY": false,
+      "width": 1024,
+      "height": 512,
+      "texture": "9acd095f-5de1-4dbb-b5c1-3d17da1b358a"
+    }
+  ],
+  "browser": "156.0.8078.79",
+  "baseline": null,
+  "revision": "c52c3363649fb27d4d1ef1130d6e7b99984cd79f",
+  "dirty": false
+}
