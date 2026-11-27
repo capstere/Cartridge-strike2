@@ -44,12 +44,19 @@ export class AccountStore {
       this.db.exec('PRAGMA trusted_schema=OFF; PRAGMA foreign_keys=ON; PRAGMA busy_timeout=250; PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL');
       this.transaction(()=>{
         const version=this.db.prepare('PRAGMA user_version').get().user_version;
-        if(version>2)throw Error('Unsupported account database version.');
+        if(version>3)throw Error('Unsupported account database version.');
         if(!version)this.db.exec(schema);
         if(version<2)this.db.exec(`CREATE TABLE credential_attempts(name_hash TEXT PRIMARY KEY, failures INTEGER NOT NULL, until_ms INTEGER NOT NULL);
           CREATE INDEX attempts_expiry ON credential_attempts(until_ms);
           CREATE INDEX grants_invite ON grants(invite);
           PRAGMA user_version=2;`);
+        if(version<3)this.db.exec(`CREATE TABLE public_grants(device TEXT NOT NULL REFERENCES devices ON DELETE CASCADE,
+          room TEXT NOT NULL,session TEXT NOT NULL REFERENCES sessions(token) ON DELETE CASCADE,epoch TEXT NOT NULL,expires INTEGER NOT NULL,PRIMARY KEY(device,room));
+          CREATE TABLE public_blocks(id TEXT PRIMARY KEY,owner TEXT NOT NULL REFERENCES users ON DELETE CASCADE,target TEXT NOT NULL REFERENCES users ON DELETE CASCADE,UNIQUE(owner,target));
+          CREATE TABLE public_reports(epoch TEXT NOT NULL,reporter TEXT NOT NULL REFERENCES users ON DELETE CASCADE,target TEXT NOT NULL REFERENCES users ON DELETE CASCADE,
+            reason TEXT NOT NULL,created INTEGER NOT NULL,PRIMARY KEY(epoch,reporter,target,reason));
+          CREATE INDEX reports_expiry ON public_reports(created);
+          PRAGMA user_version=3;`);
       });
       this.findUser=this.db.prepare('SELECT u.*,s.token AS session FROM users u JOIN sessions s ON s.user_id=u.id WHERE s.token=? AND s.origin=? AND s.expires>?');
       this.findDevice=this.db.prepare('SELECT token FROM devices WHERE token=? AND origin=? AND expires>?');
@@ -65,8 +72,9 @@ export class AccountStore {
     const now=this.now();if(now<this.nextCleanup)return;
     this.nextCleanup=now+60000;
     this.transaction(()=>{
-      for(const table of ['sessions','devices','grants'])this.db.prepare(`DELETE FROM ${table} WHERE expires<=?`).run(now);
+      for(const table of ['public_grants','sessions','devices','grants'])this.db.prepare(`DELETE FROM ${table} WHERE expires<=?`).run(now);
       this.db.prepare('DELETE FROM credential_attempts WHERE until_ms<=?').run(now);
+      this.db.prepare('DELETE FROM public_reports WHERE created<=?').run(now-30*DAY);
       // A used invitation continues to identify its grants for host revocation.
       this.db.prepare('DELETE FROM invites WHERE expires<=? AND NOT EXISTS(SELECT 1 FROM grants WHERE invite=invites.id)').run(now);
     });

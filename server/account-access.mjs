@@ -3,7 +3,7 @@ import {readFile} from 'node:fs/promises';
 import {FAMILY_ROOM_ALIAS} from '../shared/multiplayer/family-room.mjs';
 import {AccountStore} from './account-store.mjs';
 import {readJson} from './access.mjs';
-import {matchMaker} from '@colyseus/core';
+import {publicRooms} from './public-rooms.mjs';
 
 const accountCookie='__Host-cs3_account',roomCookie='__Host-cs3_room';
 const cookie=(req,name)=>(req.headers.cookie||'').split(/;\s*/).find(s=>s.startsWith(name+'='))?.slice(name.length+1);
@@ -46,15 +46,19 @@ form.addEventListener('submit',e=>{e.preventDefault();const code=form.elements.c
 
 export function accountAccess(config,active){
   const store=new AccountStore(config.accountDb);
+  const directory=config.publicListing?publicRooms(store,active):null;
   // Colyseus process-private rooms do not survive an authority restart.
   store.transaction(()=>{
+    store.db.exec('DELETE FROM public_grants');
     store.db.prepare('DELETE FROM grants WHERE room<>?').run(FAMILY_ROOM_ALIAS);
     store.db.prepare('DELETE FROM invites WHERE room<>?').run(FAMILY_ROOM_ALIAS);
   });
+  const features={publicMatches:!!directory};
   function context(req,origin){
     const token=cookie(req,accountCookie),roomToken=cookie(req,roomCookie);
     const device=store.deviceFor(roomToken,origin);
-    return {origin,token,roomToken,device,rooms:store.rooms(device)};
+    const publicScopes=directory?.scopes(device,store.userFor(token,origin))??[];
+    return {origin,token,roomToken,device,publicScopes,rooms:[...new Set([...store.rooms(device),...publicScopes])]};
   }
   function bind(ctx,res,legacy){
     store.clean();
@@ -90,21 +94,51 @@ export function accountAccess(config,active){
     if(!path.startsWith('/api/'))return false;
     const user=store.userFor(ctx.token,ctx.origin);
     if(req.method==='GET'){
-      if(path==='/api/account')json(res,store.profile(user,ctx.rooms));
+      if(path==='/api/account')json(res,{...store.profile(user,ctx.rooms),features});
       else if(path==='/api/account/export'){
         if(!user)fail(401,'Sign in to export your account.');
-        res.setHeader('Content-Disposition','attachment; filename="cartridge-strike-account.json"');json(res,store.profile(user,[],true));
+        res.setHeader('Content-Disposition','attachment; filename="cartridge-strike-account.json"');json(res,{...store.profile(user,[],true),
+          blocks:store.db.prepare('SELECT u.display_name AS name FROM public_blocks b JOIN users u ON b.target=u.id WHERE b.owner=?').all(user.id),
+          reports:store.db.prepare('SELECT reason,created FROM public_reports WHERE reporter=? ORDER BY created DESC').all(user.id)});
       }else if(path==='/api/rooms/public'&&config.publicListing){
         if(!user)fail(401,'Sign in to view public matches.');
-        const listings=await matchMaker.query({private:false,locked:false});
-        const rooms=listings.filter(room=>room.metadata?.moderatedPublic===true&&room.clients<room.maxClients)
-          .slice(0,24).map(room=>({id:room.roomId,players:room.clients,capacity:room.maxClients}));
-        json(res,{enabled:true,rooms});
+        json(res,{enabled:true,rooms:directory.list(user.id)});
+      }else if(directory&&path==='/api/room/moderation'){
+        if(!user)fail(401,'Sign in to manage a public match.');
+        const room=roomFor(new URL(req.url,'http://local').searchParams.get('room'));
+        json(res,directory.moderation(room,user,ctx.device));
+      }else if(directory&&path==='/api/account/blocks'){
+        if(!user)fail(401,'Sign in to manage blocked players.');
+        json(res,{blocks:directory.blocks(user)});
       }else fail(404,'Unknown route.');
       return true;
     }
     if(req.method!=='POST')fail(405,'Method not allowed.');
     const match=/^\/api\/(account|room)\/([a-z-]+)$/.exec(path),group=match?.[1],action=match?.[2];
+    const publicFields={publish:['room','enabled'],'public-join':['room'],report:['room','player','reason'],block:['room','player'],remove:['room','player'],unblock:['id']};
+    if(Object.hasOwn(publicFields,action)){
+      if(!directory||group!==(action==='unblock'?'account':'room'))fail(404,'Unknown route.');
+      if(!user)fail(401,'Sign in to use public matches.');
+      const input=await readJson(req),fields=publicFields[action];
+      if(Object.keys(input).length!==fields.length||!fields.every(key=>Object.hasOwn(input,key))||
+        (fields.includes('room')&&(typeof input.room!=='string'||!/^[A-Za-z0-9_-]{1,32}$/.test(input.room)))||
+        (fields.includes('player')&&(typeof input.player!=='string'||input.player.length!==36))||
+        (action==='unblock'&&(typeof input.id!=='string'||input.id.length!==36)))fail(400,'Invalid request fields.');
+      const room=roomFor(input.room);
+      if(action==='publish'){
+        if(typeof input.enabled!=='boolean')fail(400,'Choose a listing status.');
+        directory.publish(room,user,ctx.device,input.enabled);json(res,{room:room.roomId,enabled:input.enabled});
+      }else if(action==='public-join'){
+        if(!room)fail(404,'That public room is unavailable.');
+        const {device}=bind(ctx,res,false);
+        directory.grant(room,user,device);json(res,{room:room.roomId,destination:destination(room.roomId)});
+      }else{
+        if(action==='unblock')directory.unblock(user,input.id);
+        else directory.moderate(action,room,user,ctx.device,input);
+        json(res,{ok:true});
+      }
+      return true;
+    }
     if(!Object.hasOwn(actions,action)||(['invites','exchange','forget','revoke'].includes(action)!==(group==='room')))fail(404,'Unknown route.');
     const input=await readJson(req);
     if(Object.keys(input).some(k=>!actions[action].includes(k)))fail(400,'Invalid request fields.');
@@ -115,11 +149,12 @@ export function accountAccess(config,active){
         setCookie(res,roomCookie,device.token);json(res,{room,destination:destination(room)});return true;
       }
       if(typeof input.room!=='string'||!/^[A-Za-z0-9_-]{1,32}$/.test(input.room))fail(400,'Invalid room.');
+      if(action==='invites'&&directory?.publication(roomFor(input.room)))fail(409,'Unpublish the room before issuing private invitations.');
       if(action==='invites')json(res,store.issue(requireHost(ctx,input.room),ctx.origin));
       else if(action==='revoke'){
         const scope=requireHost(ctx,input.room);store.revoke(scope,ctx.origin);disconnectRevoked(scope);json(res,{room:scope});
       }else{
-        store.forget(ctx.device,input.room);if(ctx.device)disconnectRevoked(input.room,ctx.device);json(res,{rooms:store.rooms(ctx.device)});
+        store.forget(ctx.device,input.room);if(ctx.device)directory?.forget(input.room,ctx.device);if(ctx.device)disconnectRevoked(input.room,ctx.device);json(res,{rooms:store.rooms(ctx.device)});
       }
       return true;
     }
@@ -131,9 +166,12 @@ export function accountAccess(config,active){
       if(action==='profile')store.rename(user,input.displayName);
       else result=await store.change(action,user,input,ctx.origin,ctx.token);
     }
+    directory?.reconcile();
     if(Object.hasOwn(result,'token'))setCookie(res,accountCookie,result.token);
     const token=Object.hasOwn(result,'token')?result.token:ctx.token;
-    json(res,{...store.profile(store.userFor(token,ctx.origin),ctx.rooms),...(result.recoveryCode?{recoveryCode:result.recoveryCode}:{})});
+    const current=store.userFor(token,ctx.origin);
+    const rooms=[...new Set([...store.rooms(ctx.device),...directory?.scopes(ctx.device,current)??[]])];
+    json(res,{...store.profile(current,rooms),features,...(result.recoveryCode?{recoveryCode:result.recoveryCode}:{})});
     return true;
   }
   const pending=new Map();
@@ -158,7 +196,7 @@ export function accountAccess(config,active){
   function close(){
     clearInterval(retry);flush();
     if(pending.size)console.error('Account storage still has unsaved match results at shutdown.');
-    store.close();
+    directory?.close();store.close();
   }
-  return {store,context,bind,handle,roomFor,recordMatch,close};
+  return {directory,store,context,bind,handle,roomFor,recordMatch,close};
 }

@@ -41,12 +41,15 @@ export async function createLocalServer(options={}) {
     }
     acceptsCode(code){return !!this.rememberedProof&&code===this.rememberedProof||super.acceptsCode(code);}
     onAuth(client,options){
-      if(accounts&&options.credential&&!options.credential.legacy&&!accounts.store.rooms(options.credential.device).includes(this.familyRoom?FAMILY_ROOM_ALIAS:this.roomId)){
+      if(options.credential?.publicEpoch||accounts?.directory?.publication(this)){
+        if(!accounts?.directory?.canJoin(this,options.credential))throw new ServerError(403,'Public room access has expired.');
+      }else if(accounts&&options.credential&&!options.credential.legacy&&!accounts.store.rooms(options.credential.device).includes(this.familyRoom?FAMILY_ROOM_ALIAS:this.roomId)){
         throw new ServerError(403,'Room access has expired.');
       }
       return super.onAuth(client,options);
     }
     onJoin(client,options){
+      if(options.credential?.publicEpoch||accounts?.directory?.publication(this))accounts.directory.enter(this,options.credential);
       super.onJoin(client,options);
       if(!accounts||!options.credential)return;
       this.seats.get(client.sessionId).credential=options.credential;
@@ -60,10 +63,19 @@ export async function createLocalServer(options={}) {
       if(!user||!seat.admitted||seat.pending||!actor)return;
       return {user,session:seat.credential.session,kills:actor.kills,deaths:actor.deaths,team:actor.team};
     }
+    onDrop(client,code){
+      super.onDrop(client,code);
+      accounts?.directory?.publication(this);
+    }
+    onReconnect(client){
+      const credential=this.seats.get(client.sessionId)?.credential;
+      if(credential?.publicEpoch&&!accounts?.directory?.canJoin(this,credential))throw new ServerError(403,'Public room access has expired.');
+      super.onReconnect(client);
+    }
     onLeave(client){
       const entry=this.accountMatch&&this.state.phase==='active'&&this.snapshotAccount(this.seats.get(client.sessionId));
       if(entry)this.accountMatch.departed.set(entry.user,entry);
-      super.onLeave(client);
+      super.onLeave(client);accounts?.directory?.publication(this);
     }
     finishAccountMatch(winner){
       if(!this.accountMatch)return;
@@ -79,7 +91,7 @@ export async function createLocalServer(options={}) {
       this.accountMatch=null;
     }
     onDispose(){
-      super.onDispose();active.delete(this);
+      accounts?.directory?.revoke(this);super.onDispose();active.delete(this);
       if(accounts&&!this.familyRoom)accounts.store.removeScope(this.roomId);
     }
   }
@@ -214,6 +226,9 @@ export async function createLocalServer(options={}) {
         const room=route?.[1]&&[...active].find(r=>r.roomId===route[1]);
         if(route?.[1]&&!room)return rejectHttp(res,404,'Private room not found.');
         const scope=viaAlias||room?.familyRoom?FAMILY_ROOM_ALIAS:room?.roomId;
+        const published=accounts?.directory?.publication(room);
+        if(published&&!ctx?.publicScopes.includes(scope))return rejectHttp(res,403,'Use authenticated public room admission.');
+        if(published&&!accounts.directory.visible(room,accounts.store.userFor(ctx.token,ctx.origin)?.id))return rejectHttp(res,409,'That public room is currently unavailable.');
         const remembered=ctx?.rooms.includes(scope)&&req.body.code==='';
         if(ctx&&!pilotAuthorized&&!ctx.rooms.includes(scope))return rejectHttp(res,403,'This device has no access to that room.');
         if(viaAlias||room?.familyRoom){
@@ -236,7 +251,10 @@ export async function createLocalServer(options={}) {
         if(!remembered&&room&&!room.acceptsCode(req.body.code))return rejectHttp(res,403,'Incorrect private room code.');
         if(ctx){
           req.body.credential=accounts.bind(ctx,res,!remembered);
-          if(remembered)req.body.code=room.rememberedProof;
+          if(published){
+            req.body.credential.legacy=false;req.body.credential.publicEpoch=published.epoch;
+            req.body.code=room.rememberedProof;
+          }else if(remembered)req.body.code=room.rememberedProof;
         }
       }else{
         if(!readMethod(req.method))return rejectHttp(res,405,'Method not allowed.');

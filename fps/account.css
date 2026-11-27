@@ -42,3 +42,7 @@
 .room-invitation { max-width:570px; border:1px solid #657870; padding:14px; margin:8px 0 15px }
 .room-invitation h3 { margin:0 0 8px }
 .room-invitation canvas { display:block; image-rendering:pixelated; max-width:100%; height:auto; margin:10px 0 }
+
+.room-public-dialog { width:min(92vw,580px); max-height:83dvh; overflow:auto }
+.room-public-dialog::backdrop { background:#071017c9 }
+.room-public-dialog select { min-height:44px; padding:6px; font:16px system-ui; background:#15222c; color:#edf2f4 }

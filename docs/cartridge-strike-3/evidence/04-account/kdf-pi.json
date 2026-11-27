@@ -1,0 +1,1 @@
+{"node":"v26.13.1","arch":"arm64","N":32768,"r":8,"p":1,"maxConcurrent":2,"samplesMs":[84.7,83.9,84.5,90.6,89.1],"twoConcurrentWallMs":106,"processPeakRssKiB":120656}

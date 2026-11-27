@@ -73,6 +73,7 @@ export function networkMenu(join,activate=()=>{},internet=false,cancel=()=>{}){
     if (!internet) return;
     try {
       const account = await accountRequest('/api/account');
+      document.documentElement.toggleAttribute('data-public-rooms',!!account.features?.publicMatches && !!account.user);
       rememberedRooms = Array.isArray(account.rooms) ? account.rooms : [];
       const name = $('network-name');
       if (account.user && !name.dataset.edited && (!name.value || name.value === 'Player')) name.value = account.user.displayName;

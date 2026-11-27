@@ -117,7 +117,7 @@ export function mountAccountProfile(root) {
       const input = element('input'), label = element('label','Your recovery code');
       input.readOnly = true; input.value = code;
       label.append(input);
-      view.replaceChildren(element('h2','Save your recovery code'),element('p','Keep it somewhere private. Use it to reset your password if you lose access.'),label,
+      view.replaceChildren(element('h2','Save your recovery code'),element('p','Keep it somewhere private. If you lose both your password and this code, you cannot recover your account.'),label,
         actions(button('Copy code',async () => {
           try { await navigator.clipboard.writeText(code); message('Recovery code copied.'); }
           catch { input.focus(); input.select(); message('Select and copy your recovery code.'); }
@@ -143,6 +143,47 @@ export function mountAccountProfile(root) {
         view.append(actions(entry,forget));
       }
     }
+    function publicMatches() {
+      view.replaceChildren(element('h2','Public matches'),element('p','Join an available room hosted by another signed-in player.'));
+      const list = element('div'), back = button('Back to profile',render);
+      view.append(list,actions(button('Refresh rooms',publicMatches),back));
+      message('Loading available rooms…');
+      accountRequest('/api/rooms/public').then(result => {
+        if (!valid() || !list.isConnected) return;
+        message('');
+        if (!result.rooms.length) list.append(element('p','No public rooms are accepting players.'));
+        for (const item of result.rooms) {
+          const summary = element('span',(knownMaps[item.map] || item.map)+' · '+(modes[item.mode] || item.mode)+' · '+item.players+'/'+item.capacity+' players');
+          const enter = button('Join match',async () => {
+            enter.disabled = true;
+            try {
+              const seat = await accountRequest('/api/room/public-join',{room:item.id});
+              if (valid() && list.isConnected) location.assign(seat.destination);
+            } catch (e) { message(e.message); enter.disabled = false; }
+          },true);
+          list.append(actions(summary,enter));
+        }
+      }).catch(e => { if (list.isConnected) message(e.message); });
+    }
+    function blockedPlayers() {
+      view.replaceChildren(element('h2','Blocked players'));
+      const list=element('div');
+      view.append(list,actions(button('Back to profile',render)));
+      accountRequest('/api/account/blocks').then(result => {
+        if (!valid() || !list.isConnected) return;
+        if (!result.blocks.length) list.append(element('p','You have no blocked players.'));
+        for (const person of result.blocks) {
+          const unblock = button('Unblock', async () => {
+            unblock.disabled = true;
+            try {
+              await accountRequest('/api/account/unblock',{id:person.id});
+              if (list.isConnected) blockedPlayers();
+            } catch(e) { message(e.message); unblock.disabled=false; }
+          });
+          list.append(actions(element('span',person.name),unblock));
+        }
+      }).catch(e=>{ if (list.isConnected) message(e.message); });
+    }
     function render() {
       view.replaceChildren(); message('');
       if (!data.user) {
@@ -163,7 +204,9 @@ export function mountAccountProfile(root) {
       for (const [key,title] of Object.entries(labels)) {
         const cell = element('div'); cell.append(element('dt',title),element('dd',String(data.stats[key] || 0))); stats.append(cell);
       }
-      view.append(stats,element('h3','Recent matches'));
+      view.append(stats);
+      if (data.features?.publicMatches) view.append(actions(button('Find a public match',publicMatches,true),button('Blocked players',blockedPlayers)));
+      view.append(element('h3','Recent matches'));
       if (data.recent.length) {
         const ul = element('ul');
         for (const match of data.recent) {
@@ -186,6 +229,7 @@ export function mountAccountProfile(root) {
       if (!valid()) return;
       if (!Array.isArray(value.rooms)) { unavailable('Online accounts are unavailable on this server.'); return; }
       data = value; render();
+      if (value.user && value.features?.publicMatches && location.hash === '#public-matches') publicMatches();
     }).catch(error => { if (valid()) unavailable(error.message); });
   }
   return {open,reset};

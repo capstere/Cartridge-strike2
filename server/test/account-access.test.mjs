@@ -14,9 +14,9 @@ globalThis.WebSocket=WebSocket;
 const {Client}=await import('@colyseus/sdk');
 
 const origin='https://accounts.example.test';
-function browser(url) {
+function browser(url,address) {
   const jar=new Map();
-  const headers=()=>({Host:new URL(origin).host,Origin:origin,'X-Forwarded-Proto':'https',Cookie:[...jar].map(([k,v])=>k+'='+v).join('; ')});
+  const headers=()=>({...address&&{'CF-Connecting-IP':address},Host:new URL(origin).host,Origin:origin,'X-Forwarded-Proto':'https',Cookie:[...jar].map(([k,v])=>k+'='+v).join('; ')});
   const send=(path,body,extras={})=>new Promise((resolve,reject)=>{
     const req=http.request(url+path,{method:body===undefined?'GET':'POST',
       headers:{...headers(),...(body!==undefined&&{'Content-Type':'application/json'}),...extras}},res=>{
@@ -42,7 +42,10 @@ test('real HTTPS-origin account lifecycle survives process replacement and separ
   let b=browser(server.url);
   const password=randomBytes(24).toString('hex'),secondPassword=randomBytes(24).toString('hex');
   const user={username:'player_one',displayName:'Player One',password};
+  assert.deepEqual((await b.send('/api/account')).json().features,{publicMatches:false});
   assert.equal((await b.send('/api/account')).json().user,null);
+  assert.equal((await b.send('/api/room/public-join',{room:'example'})).status,404);
+  assert.equal((await b.send('/api/room/publish',{room:'example',enabled:true})).status,404);
   const registered=await b.send('/api/account/register',user);
   assert.equal(registered.status,200);const code=registered.json().recoveryCode;
   assert.equal(code.length,27);assert.equal(registered.json().user.username,user.username);
@@ -180,4 +183,73 @@ test('concurrent room-local match one, rematch and sign-out resolve to distinct 
   await start(b);await until(()=>b.state.phase==='results','guest can finish after account sign-out');
   const again=await host.send('/api/account/login',{username:'match_user',password});
   assert.equal(again.json().stats.matches,3);
+});
+
+test('explicit public host consent, scoped admission, reports, removal, blocks and private transitions',async t=>{
+  const dir=await mkdtemp(join(tmpdir(),'cs3-public-'));
+  const config={port:0,publicOrigin:origin,pilotInvite:randomBytes(24).toString('hex'),familyPassword:randomBytes(24).toString('hex'),
+    familyStateFile:join(dir,'settings.json'),publicListing:true};
+  const local=await createLocalServer(config),sockets=[];
+  t.after(async()=>{for(const room of sockets)if(room.connection.isOpen)await room.leave();await local.close();await rm(dir,{recursive:true,force:true});});
+  const host=browser(local.url,'192.0.2.1'),guest=browser(local.url,'192.0.2.2'),friend=browser(local.url,'192.0.2.3');
+  const signedOut=browser(local.url,'192.0.2.4');
+  assert.deepEqual((await signedOut.send('/api/account')).json().features,{publicMatches:true});
+  const creds=name=>({username:name,password:randomBytes(20).toString('hex'),displayName:name});
+  for(const [b,name] of [[host,'public_host'],[guest,'public_guest'],[friend,'public_friend']])assert.equal((await b.send('/api/account/register',creds(name))).status,200);
+  await host.send('/pilot/session',new URLSearchParams({invite:config.pilotInvite}),{'Content-Type':'application/x-www-form-urlencoded'});
+  async function connect(browser,path,body){
+    const reserved=await browser.send(path,body);assert.equal(reserved.status,200);
+    const sdk=new Client(local.url,{headers:browser.headers()});
+    const room=await sdk.consumeSeatReservation(reserved.json());sockets.push(room);return ready(room);
+  }
+  const privateRoom=await connect(host,'/matchmake/create/private-fps',{...options,name:'Host'});
+  const room=privateRoom.roomId,direct='/matchmake/joinById/'+room,mod='/api/room/moderation?room='+room;
+  const send=(browser,action,extra={})=>browser.send('/api/room/'+action,{room,...extra});
+  const list=async browser=>(await browser.send('/api/rooms/public')).json().rooms;
+  assert.deepEqual(await list(guest),[]);
+  assert.equal((await send(friend,'publish',{enabled:true})).status,403);
+  assert.equal((await send(guest,'public-join')).status,404);
+  assert.equal((await send(host,'publish',{enabled:true})).status,200);
+  assert.equal((await signedOut.send('/api/rooms/public')).status,401);
+  assert.equal((await send(signedOut,'public-join')).status,401);
+  const available=await list(guest);assert.equal(available.length,1);
+  assert.deepEqual(Object.keys(available[0]).sort(),['id','map','mode','players','capacity'].sort());
+  assert.equal(available[0].id,room);
+  assert.equal((await send(host,'invites')).status,409);
+  assert.equal((await guest.send(mod)).status,404);
+  assert.equal((await send(guest,'public-join')).json().destination,'/fps/?network=internet&room='+room);
+  const g=await connect(guest,direct,{...options,name:'Visiting player',code:''});
+  assert.equal((await send(friend,'public-join')).status,200);
+  const f=await connect(friend,direct,{...options,name:'Second visitor',code:''});
+  const authority=[...local.rooms].find(r=>r.roomId===room),capacity=authority.maxClients;
+  authority.maxClients=3;assert.deepEqual(await list(host),[]);assert.equal((await send(host,'public-join')).status,404);
+  authority.maxClients=capacity;
+  const roster=(await guest.send(mod)).json();
+  assert.equal(roster.host,false);assert.deepEqual(roster.reports,[]);
+  const target=roster.players.find(p=>p.name==='Second visitor').id;
+  assert.equal((await send(guest,'report',{player:target,reason:'unknown'})).status,400);
+  assert.equal((await send(guest,'report',{player:target,reason:'harassment'})).status,200);
+  assert.equal((await send(guest,'report',{player:target,reason:'harassment'})).status,200);
+  assert.equal((await send(guest,'remove',{player:target})).status,403);
+  const owner=(await host.send(mod)).json();
+  assert.equal(owner.host,true);assert.deepEqual(owner.reports,[{player:target,reason:'harassment',count:1}]);
+  assert.equal((await send(host,'remove',{player:target})).status,200);
+  await until(()=>!f.connection.isOpen,'host removal disconnects the exact public peer');
+  assert.deepEqual(await list(friend),[]);assert.equal((await send(friend,'public-join')).status,404);
+  const ownerId=roster.players.find(p=>p.name==='Host').id;
+  assert.equal((await send(guest,'block',{player:ownerId})).status,200);
+  await until(()=>!g.connection.isOpen,'a guest can leave and block a host');
+  assert.deepEqual(await list(guest),[]);assert.equal((await send(guest,'public-join')).status,404);
+  const blocks=(await guest.send('/api/account/blocks')).json().blocks;assert.equal(blocks[0].name,'public_host');
+  assert.equal((await guest.send('/api/account/unblock',{id:blocks[0].id})).status,200);
+  assert.equal((await list(guest)).length,1);
+  await send(guest,'public-join');
+  assert.equal((await send(host,'publish',{enabled:false})).status,200);
+  assert.deepEqual(await list(guest),[]);assert.equal((await guest.send(direct,{...options,code:''})).status,401);
+  assert.equal((await send(host,'publish',{enabled:true})).status,200);
+  const family=await connect(host,'/matchmake/joinOrCreate/'+FAMILY_ROOM_ALIAS,{...options,code:config.familyPassword});
+  assert.equal((await host.send('/api/room/publish',{room:family.roomId,enabled:true})).status,403);
+  assert.equal((await list(guest)).length,1);
+  await host.send('/api/account/logout',{});
+  assert.deepEqual(await list(guest),[]);
 });
