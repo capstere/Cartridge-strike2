@@ -80,3 +80,19 @@ test('the movement slide ships the actual Nox Sound CC0 cut on all surfaces',()=
  assert.equal(credits.sources.nox.licence,'CC0 1.0');
  assert.match(readFileSync(new URL('credits.html',root),'utf8'),/Nox_Sound/);
 });
+
+test('slide foley uses one decoded movement source through 30 metres on carpet and concrete',async()=>{
+ const {AudioSystem}=await import('./riposte-audio.mjs'),buf={duration:.82};
+ const played=[];
+ const sys={reuseBuffers:new Map([['foley/s_slide_soft.mp3',buf]]),reuseOffsets:new Map(),
+   listener:{x:0,y:0,z:0},listenerId:'self',active:new Set(),stats:{},reuseStats:{},
+   context:{createBufferSource(){return{playbackRate:{value:1},connect(){}};}},
+   channel(event,gain,delay){return{event,gain,delay};},track(source,channel){played.push({source,channel});}};
+ for(const [actorId,x,surface] of [['self',55,'carpet'],['other',30,'concrete'],['other',30.01,'wood']]){
+   AudioSystem.prototype.play.call(sys,{type:'slide',actorId,x,y:0,z:0,surface,serial:3});
+ }
+ assert.equal(played.length,2);
+ for(const {source,channel} of played){
+   assert.equal(source.buffer,buf);assert.equal(channel.gain,.5);assert.equal(channel.delay,0);assert.equal(source.playbackRate.value,.98);
+ }
+});

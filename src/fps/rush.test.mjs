@@ -10,7 +10,8 @@ import {makeWeapon,animateWeapon} from './models.mjs';
 
 const dt=1/60;
 function fixture(){
- const world=createWorld({levelProject:JSON.parse(readFileSync(new URL('../../levels/synthetic-demo.json',import.meta.url)))});
+ // Each case changes the test world's support, capsule sweep or ceiling.
+ const world=createWorld({fresh:true,levelProject:JSON.parse(readFileSync(new URL('../../levels/synthetic-demo.json',import.meta.url)))});
  const game=new Game(world,{controllers:{'analysts-0':'human','counterAnalysts-0':'human'},localPlayerId:'analysts-0',
    config:{networkSlice:true,mode:'classic',buyTime:0,zombies:false,wanderers:false}}).start();
  game.state.phase='active';
@@ -290,4 +291,16 @@ test('fresh competing actions and lifecycle transitions clear the actual buffere
  game.beginRound();game.warmupRemaining=.2;
  run(game,{...rush,crouch:true,crouchEdge:true},12);assert.equal(a.slideBuffer,0);
  assert.equal(run(game,rush,6).filter(e=>e.type==='slide').length,0);
+});
+
+test('an airborne SDK sample gap can retain a new Rush crouch edge, but cannot supply launch speed',()=>{
+ const {game,a}=fixture(),rush={forward:1,sprint:true};
+ run(game,rush,20);run(game,{...rush,jump:true},1);run(game,{},1);
+ assert(!a.onGround && a.moving===0);assert(a.travelDirZ<0);
+ run(game,{...rush,crouch:true,crouchEdge:true},1);
+ assert.equal(a.slideBuffer,.3);assert.equal(a.slideUntil,0);
+ const events=run(game,rush,45).filter(e=>e.type==='slide');
+ assert.equal(events.length,1);assert(Math.abs(events[0].y)<1e-6);
+ resetRush(a);a.slideBuffer=.3;a.moving=0;
+ assert.equal(run(game,{},22).filter(e=>e.type==='slide').length,0);
 });

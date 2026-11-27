@@ -2287,7 +2287,7 @@
     {
       "path": "shared/multiplayer/build.mjs",
       "bytes": 660,
-      "sha256": "6c794d734923fd17a6b381e9cf1e6320f1c523dff99e39dc132bc95d306de921"
+      "sha256": "4aaacb78f3348e63fcf12a6942f0774864a4a6bc2330e221fbc14269d4af4839"
     },
     {
       "path": "shared/multiplayer/collision-contract.mjs",
@@ -2307,7 +2307,7 @@
     {
       "path": "shared/multiplayer/map-build.mjs",
       "bytes": 1753,
-      "sha256": "b69010e2130f367f4b63067977395c9ec9dad4ebb93dca3c6ebee4632d2c68b1"
+      "sha256": "1880bc5ecdaf07eaf7d5f752c05f14e3f1cce9c62ed4c7ec7cc2496c5690e7ae"
     },
     {
       "path": "shared/multiplayer/maps.mjs",
@@ -2851,8 +2851,8 @@
     },
     {
       "path": "src/fps/rush.mjs",
-      "bytes": 4540,
-      "sha256": "16ce00c9554fccf51b66128afcba354fc315469ef19d7f852dd0f2c51241e811"
+      "bytes": 4721,
+      "sha256": "0a471c414c3caf7370b392189673378a432de9f44cd34c4910fa391e39b71d41"
     },
     {
       "path": "src/fps/shot-audio.mjs",
@@ -3070,7 +3070,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 65283104,
+  "bytes": 65283285,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

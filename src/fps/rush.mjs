@@ -27,7 +27,9 @@ export function beginBufferedSlide(actor,input,time,dt,runSpeed){
   const released=!forward && !input.strafe;
   const hasDirection=!!(actor.travelDirX || actor.travelDirZ);
   const chain=actor.slideUntil || (input.sprint && actor.slideReadyAt>time);
-  const airborne=!actor.onGround && moving && (run || (released && hasDirection));
+  // A quiet SDK tick can end its movement sample between two real inputs.
+  // Only the request is remembered here. Launch still requires resolved speed.
+  const airborne=!actor.onGround && (run && (moving || hasDirection) || released && moving && hasDirection);
   if(edge && (actor.rushing || chain || airborne)){
     actor.slideBuffer=SLIDE.buffer;
   }
