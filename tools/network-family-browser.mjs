@@ -1,6 +1,7 @@
 // Runs only against the generated loopback HTTPS fixture. Both touch profiles
 // enter through the public-shaped link with independent browser storage.
 import assert from 'node:assert/strict';
+import {rememberedFamilyForm} from './test-helpers/remembered-family.mjs';
 import {enterTouchMatch, waitForActiveHud} from './network-browser-resume.mjs';
 import {createHash, randomBytes} from 'node:crypto';
 import {mkdir, readFile, writeFile} from 'node:fs/promises';
@@ -154,15 +155,6 @@ async function invite(client, wrongFirst = false) {
   assert.equal(await page.locator('form:has(#network-code) button[type=submit]:visible').count(), 1);
   assert.equal(await page.locator('#network-room:visible, #network-endpoint:visible, #network-mode:visible').count(), 0);
   await snap(client, 'family-form', code);
-}
-
-async function rememberedFamilyForm(page) {
-  await page.locator('#network-name').waitFor();
-  await page.getByText('This device remembers access to this room.', {exact:false}).waitFor();
-  const password = page.locator('#network-code');
-  assert(await password.isHidden());
-  assert.equal(await password.inputValue(), '');
-  assert.equal(await password.evaluate(input => input.required), false);
 }
 
 async function revisit({page}, remembered = false) {

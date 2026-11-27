@@ -986,8 +986,8 @@
     },
     {
       "path": "fps/index.html",
-      "bytes": 19972,
-      "sha256": "df02797c17ee4c2c00a46c7f782650d74f079f05832992fad82221e0bda0fe37"
+      "bytes": 20012,
+      "sha256": "b44940d77bc3ff1560a83d060980567eb64506defaaf526d6361094232bf3b37"
     },
     {
       "path": "fps/lobby.css",
@@ -3285,7 +3285,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 65786322,
+  "bytes": 65786362,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

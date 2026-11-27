@@ -1,6 +1,7 @@
 // Two independently authenticated Chromium contexts and an isolated Pi-shaped
 // game server. Run from the repository root: node tools/custom-match-browser.mjs
 import assert from 'node:assert/strict';
+import {rememberedFamilyForm} from './test-helpers/remembered-family.mjs';
 import {enterTouchMatch} from './network-browser-resume.mjs';
 import {mkdir, writeFile} from 'node:fs/promises';
 import {join} from 'node:path';
@@ -60,10 +61,7 @@ async function enter(client, {remembered = false} = {}) {
   await client.page.locator('#network-name').fill(client.name);
   const password = client.page.locator('#network-code');
   if (remembered) {
-    await client.page.getByText('This device remembers access to this room.', {exact:false}).waitFor();
-    assert(await password.isHidden());
-    assert.equal(await password.inputValue(), '');
-    assert.equal(await password.evaluate(input => input.required), false);
+    await rememberedFamilyForm(client.page);
   } else {
     assert(await password.evaluate(input => input.required));
     await password.fill(fixture.familyPassword);
