@@ -1,0 +1,99 @@
+/* CS3 navigation uses the real Floor 5 artwork and the current operator rig. */
+#menu [hidden] { display: none !important }
+#menu .route-panel { grid-column: 1 / -1; grid-row: 2; min-height: 0; overflow: auto; scrollbar-gutter: stable }
+#menu .lb-bar { grid-row: 1; padding-inline: max(22px, env(safe-area-inset-left)) max(22px, env(safe-area-inset-right)) }
+#menu .lb-tools { margin-left: auto; flex-wrap: wrap; justify-content: flex-end; gap: 8px }
+#menu .cs-quick, #menu .route-back, #menu #menu-fullscreen { display: inline-flex; align-items: center; min-height: 44px; padding: 0 13px; border: 1px solid #afc0d135; border-radius: 2px; background: #111921dd; color: #f4f6f7; font: 600 15px var(--lb-display); text-decoration: none; cursor: pointer }
+#menu .cs-quick { color: #f6cc80 }
+#menu .route-panel :is(a,button):focus-visible, #menu :is(.lb-icon,.route-back,.cs-quick,.map-tile,.lb-brand):focus-visible { outline: 3px solid #f6c464; outline-offset: 3px }
+#menu .route-panel h1:focus, #setup-title:focus { outline: none }
+#menu[data-screen=outfits] [data-panel=outfits] { pointer-events: none }
+#menu[data-screen=outfits] .route-details { pointer-events: auto }
+#menu .home-panel { align-self: stretch; display: flex; align-items: center; padding: 20px clamp(24px,7vw,110px); pointer-events: none }
+.home-copy { width: min(39vw,420px); pointer-events: auto }
+.home-copy h1 { margin: 0 0 25px; color: #f4f5ed; font: 800 clamp(55px,7.8vw,140px)/.78 var(--lb-display); text-transform: uppercase; letter-spacing: -.045em; text-shadow: 0 3px 32px #06090a }
+.home-copy h1 span { color: #b8c7d1 }
+.home-copy h1 em { display: inline-block; margin-left: .12em; color: #edb34d; font-style: normal }
+.home-nav { display: grid; gap: 2px }
+#menu .home-nav button { min-height: 44px; text-align: left; border: 0; border-bottom: 1px solid #b4c5d129; color: #e0e9ed; border-radius: 0; padding: 6px 14px; font: 600 clamp(18px,2.2vw,32px)/1.05 var(--lb-display); background: linear-gradient(90deg,#0e1722e0,transparent); cursor: pointer }
+#menu .home-nav .home-play, #menu .route-action { display: flex; align-items: center; justify-content: space-between; background: #f0bc5e; border-color: #f0bc5e; color: #10161c; font-weight: 750 }
+#menu .home-nav button:hover { color: #fff; background: #253747eb }
+#menu .home-nav .home-play:hover, #menu .route-action:hover { background:#ffcf77; color:#10161c }
+#menu .home-nav button span { font: 400 24px var(--lb-body) }
+#menu[data-screen=main] .lb-grade { background: linear-gradient(90deg,#071018ed 7%,#0c1724a8 52%,#172c41a8), url('../assets/fps/maps/floor5-prepared.jpg') center / cover; backdrop-filter: none }
+#menu[data-screen=main] .lb-grade::after { background: linear-gradient(0deg,#080f16ed,transparent 47%,#0d182177) }
+#menu[data-screen=main] #lobby-stage.is-ready { opacity: 1 !important }
+#menu:not([data-screen=main]):not([data-screen=outfits]):not([data-screen=solo]) #lobby-stage { visibility: hidden }
+#menu .sub-panel { padding: clamp(20px,5vh,60px) clamp(22px,5vw,80px) 22px; color: #edf1f2 }
+#menu .sub-panel h1, #menu #setup-title { margin: 0 0 18px; font: 750 clamp(36px,5vw,70px)/.95 var(--lb-display); letter-spacing: -.025em }
+.route-cards { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,200px),1fr)); gap: 14px; max-width: 1080px }
+#menu .route-card, #menu .map-tile, #menu .route-details { border: 1px solid #b7c7ce45; border-radius: 3px; background-color: #131e28; color: #f3f5f6; text-align: left }
+#menu .route-card, #menu .map-tile { display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-end; min-width: 0; padding: 18px; background-position: center; background-size: cover; cursor: pointer; text-decoration: none }
+#menu .route-card { min-height: clamp(140px,29vh,260px); gap: 5px; text-shadow: 0 1px 6px #000b }
+#menu .route-card strong, #menu .map-tile strong { font: 700 clamp(23px,2.8vw,40px)/1 var(--lb-display) }
+#menu .route-card span, #menu .route-details p { margin: 4px 0; font: 400 15px/1.45 var(--lb-body) }
+#menu .route-card:disabled { opacity: .74; cursor: default }
+#menu .route-card[aria-pressed=true] { border: 2px solid #e8ad4e }
+#menu .route-card[aria-pressed=true]::after { content: 'Selected'; color: #ffe0a5; font: 650 14px var(--lb-display) }
+#menu .image-floor { background-image: linear-gradient(0deg,#111922 2%,#142637d4 50%,#13212f33),url('../assets/fps/maps/floor5-prepared.jpg') }
+#menu .image-arena { background-image: linear-gradient(0deg,#151b22 2%,#1a2934d4 50%,#13212f33),url('../assets/fps/maps/compact-arena.jpg') }
+#menu .map-art { background-image: linear-gradient(0deg,#111922 2%,#142637d4 50%,#13212f33),var(--cs-map-art) }
+#menu #solo-map-notice { color:#ffce7e; line-height:1.45 }
+#menu :is(a,button).route-card:not(:disabled):hover, #menu .map-tile:hover { border-color: #e8ba65 }
+#menu .route-details { max-width: 580px; padding: 22px; background: #101921ed }
+#menu .route-details h2 { margin: 8px 0; font: 700 32px var(--lb-display) }
+#menu .route-details time { color: #e2ba73; font: 600 14px var(--lb-body) }
+#menu .route-action { min-height: 44px; margin: 15px 0; padding: 10px 18px; border: 0; border-radius: 2px; cursor: pointer; font: 650 18px var(--lb-display) }
+#menu .map-tile { min-height: 93px; position: relative; width: 100% }
+#menu .map-tile strong { font-size: 25px }
+#menu .map-tile i { position: absolute; top: 8px; right: 11px; font-style: normal }
+#menu .map-tile span, #menu .solo-roster dt { color: #eec474; font: 600 13px var(--lb-display) }
+#menu .solo-roster { margin: 0; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 6px }
+#menu .solo-roster div { padding: 7px 9px; border-left: 2px solid #69a3d5; background: #101923d6 }
+#menu .solo-roster div + div { border-color: #deac65 }
+#menu .solo-roster dd { margin: 3px 0 0; font: 600 15px var(--lb-body) }
+#menu[data-screen=network] :is(.solo-roster,.map-tile) { display: none }
+html.touch-fps #menu .lb-foot { display: flex }
+#menu .lb-foot, #menu .lb-foot a { color: #a6b6c5 }
+#menu .lb-foot { grid-column: 1/-1; grid-row: 3; justify-content: flex-end; padding: 5px max(22px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) }
+#menu[data-screen=options] .lb-drawer[open] { position: relative !important; grid-column: 1/-1; grid-row: 2; inset: auto; width: min(100%,750px); max-width: 100%; height: 100%; min-height: 0; transform: none; display: block; margin-inline: auto; padding: 18px 22px; overflow: auto; box-sizing: border-box; background: #101821f5 }
+#menu[data-screen=options] .lb-drawer summary { min-height: 44px }
+#menu[data-screen=solo] .lb-left, #menu[data-screen=network] .lb-left, #menu[data-screen=solo] .lb-right { min-height: 0; overflow-y: auto }
+#menu[data-screen=solo] .lb-launch { position: sticky; bottom: 0; z-index: 3; padding-block: 5px; background: linear-gradient(0deg,#0b121bf5 58%,transparent) }
+#menu[data-screen=solo] .lb-left { scroll-padding-bottom: 75px }
+#menu .lb-seg button:disabled { cursor: default; opacity: .45; text-decoration: line-through }
+#menu .lb-block .lb-label b:only-child { background: none; padding: 0; color: inherit; font: inherit }
+
+@media (orientation: landscape) and (max-height: 520px) {
+  #menu.lobby:not([hidden]) { display: grid !important; grid-template-rows: auto minmax(0,1fr) auto !important }
+  #menu .lb-bar { gap: 8px; padding-block: 1px }
+  #menu .home-panel { padding-block: 7px }
+  #menu .home-copy { display: grid; grid-template-columns: auto minmax(135px,1fr); gap: 18px; align-items: center; width: min(60vw,515px) }
+  #menu .home-copy h1 { font-size: clamp(38px,6vw,70px); margin: 0 }
+  #menu .home-nav { gap: 0 }
+  #menu .home-nav button { font-size: 17px; padding-block: 3px; min-height: 44px }
+  #menu .lb-foot { display: flex; padding-block: 1px; font-size: 9px }
+  #menu .sub-panel { padding-block: 10px }
+  #menu .sub-panel h1 { font-size: 34px; margin-bottom: 10px }
+  #menu .route-card { min-height: 115px }
+  #menu .lb-left, #menu .lb-right { scrollbar-width: thin }
+}
+@media (max-width: 760px) and (orientation: portrait) {
+  #menu.lobby:not([hidden]) { display: grid !important; grid-template-columns: 1fr; grid-template-rows: auto minmax(0,1fr) auto; overflow-y: auto; height: 100dvh }
+  #menu .lb-bar { flex-wrap: wrap; gap: 5px; padding-inline: max(12px,env(safe-area-inset-left)) max(12px,env(safe-area-inset-right)); padding-block: 6px }
+  #menu .home-panel { align-items: flex-end; padding: 32px 22px }
+  .home-copy { width: min(68%,340px) }
+  .home-copy h1 { font-size: clamp(51px,14vw,76px) }
+  #menu .sub-panel { padding: 18px }
+  #menu .route-cards { grid-template-columns: 1fr }
+  #menu .route-card { min-height: 104px }
+  #menu .lb-tools { gap: 2px }
+  #menu .lb-icon, #menu .cs-quick, #menu #menu-fullscreen { padding-inline: 7px; font-size: 13px }
+  #menu[data-screen=solo], #menu[data-screen=network] { grid-template-rows: auto auto auto auto }
+  #menu[data-screen=solo] .lb-left, #menu[data-screen=network] .lb-left { grid-row: 2; grid-column: 1; overflow: visible }
+  #menu[data-screen=solo] .lb-right, #menu[data-screen=network] .lb-right { grid-row: 3; grid-column: 1; overflow: visible }
+  #menu[data-screen=solo] .lb-foot, #menu[data-screen=network] .lb-foot { grid-row: 4 }
+}
+/* Ring diameter is 1.15 × the base stick, matching the Rush entry threshold. */
+html #mobile-controls .mobile-stick.active::after { content: ''; position: absolute; inset: -7.5%; border-radius: 50%; border: 2px dashed #c4d5df8a; border-bottom-color: transparent; pointer-events: none }
+html #mobile-controls .mobile-stick.active.rushing::after { border-style: solid; border-color: #ffd36c; border-bottom-color: transparent; box-shadow: 0 -3px 12px #e1a73b65 }

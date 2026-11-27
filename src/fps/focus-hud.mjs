@@ -6,7 +6,7 @@ export const normalizeHudMode = value => value === 'full' ? 'full' : 'clean';
 
 export function focusHudSettings(settings) {
   const mode = normalizeHudMode(settings.hudMode);
-  return `<label class="setting">Skärmvisning <select data-setting="hudMode" aria-label="Skärmvisning"><option value="clean" ${mode === 'clean' ? 'selected' : ''}>Ren · rekommenderad</option><option value="full" ${mode === 'full' ? 'selected' : ''}>Full · alla paneler</option></select></label><p class="setting-note">Ren visar hälsa, ammunition och uppdrag. Mobilens extraknappar finns under MER. Full återställer den tidigare layouten.</p><p class="focus-session-summary" hidden></p>`;
+  return `<label class="setting">HUD layout <select data-setting="hudMode" aria-label="HUD layout"><option value="clean" ${mode === 'clean' ? 'selected' : ''}>Clean · recommended</option><option value="full" ${mode === 'full' ? 'selected' : ''}>Full · all panels</option></select></label><p class="setting-note">Clean shows health, ammo and objectives. Tap More for extra mobile controls. Full shows all panels.</p><p class="focus-session-summary" hidden></p>`;
 }
 
 /** Presentation only. Reuses existing controls/listeners and never changes Game. */
@@ -31,11 +31,11 @@ export class FocusHud {
     for (const b of root.querySelectorAll('[data-mobile-action]')) this.buttons.set(b.dataset.mobileAction, b);
     this.more = document.createElement('button');
     this.more.type = 'button'; this.more.id = 'mobile-more'; this.more.className = 'mobile-button mobile-more';
-    this.more.textContent = 'MER'; this.more.setAttribute('aria-label', 'Visa fler spelkontroller');
+    this.more.textContent = 'MORE'; this.more.setAttribute('aria-label', 'Show more game controls');
     this.more.setAttribute('aria-expanded', 'false'); this.more.setAttribute('aria-controls', 'mobile-utilities');
     this.drawer = document.createElement('div');
     this.drawer.id = 'mobile-utilities'; this.drawer.hidden = true;
-    this.drawer.setAttribute('role', 'group'); this.drawer.setAttribute('aria-label', 'Extra spelkontroller');
+    this.drawer.setAttribute('role', 'group'); this.drawer.setAttribute('aria-label', 'Extra game controls');
     root.append(this.more, this.drawer);
     this.more.addEventListener('pointerdown', e => {
       if (e.pointerType === 'mouse' && e.button !== 0) return;
@@ -50,14 +50,14 @@ export class FocusHud {
       button.before(marker); this.placements.push({ button, marker });
       if (action !== 'sneak') button.addEventListener('pointerup', () => this.setExpanded(false));
     }
-    const utilities = [['KARTA', 'Visa eller dölj taktisk karta', () => this.onMap()]];
-    if (this.onRadio) utilities.push(['RADIO', 'Öppna lagradion', () => this.onRadio()]);
-    utilities.push(['RESULTAT', 'Pausa och visa sessionsresultat', () => this.onStats()]);
-    for (const [label, name, action] of utilities) {
+    const utilities = [['karta', 'MAP', 'Toggle tactical map', () => this.onMap()]];
+    if (this.onRadio) utilities.push(['radio', 'RADIO', 'Open team radio', () => this.onRadio()]);
+    utilities.push(['resultat', 'STATS', 'Pause and view session stats', () => this.onStats()]);
+    for (const [id, label, name, action] of utilities) {
       const button = document.createElement('button');
       button.type = 'button'; button.className = 'mobile-button utility-extra';
       button.textContent = label; button.setAttribute('aria-label', name);
-      button.dataset.utility = label.toLowerCase();
+      button.dataset.utility = id;
       const run = () => { this.setExpanded(false); action(); };
       if (label === 'RADIO') {
         // Finish the tap before exposing interactive radio choices underneath it.
@@ -101,8 +101,8 @@ export class FocusHud {
     if (this.expanded !== next && !this.networkMode) this.mobile.clear();
     this.expanded = next; this.drawer.hidden = !next;
     this.more.setAttribute('aria-expanded', String(next));
-    this.more.setAttribute('aria-label', next ? 'Stäng extra spelkontroller' : 'Visa fler spelkontroller');
-    this.more.textContent = next ? 'STÄNG' : 'MER';
+    this.more.setAttribute('aria-label', next ? 'Close extra game controls' : 'Show more game controls');
+    this.more.textContent = next ? 'CLOSE' : 'MORE';
   }
 
   reset() { this.setExpanded(false); }
@@ -137,7 +137,7 @@ export class FocusHud {
       el.hidden = this.getModal() !== 'pause';
       if (!el.hidden) {
         const c = p.combat;
-        const text = `SESSION · ${p.kills} kills · ${c?.assists || 0} assist · ${p.deaths} dödsfall · ${c?.points || 0} poäng · bästa serie ${c?.bestStreak || 0}`;
+        const text = `SESSION · ${p.kills} kills · ${c?.assists || 0} assist · ${p.deaths} deaths · ${c?.points || 0} points · best streak ${c?.bestStreak || 0}`;
         if (el.textContent !== text) el.textContent = text;
       }
     }

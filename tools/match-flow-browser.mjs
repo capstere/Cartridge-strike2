@@ -58,14 +58,14 @@ try {
   await start.click();
   await retry.waitFor({ state: 'visible' });
   const timeout = await page.locator('#csl-err-text').textContent();
-  assert.match(timeout, /svarar inte/);
+  assert.match(timeout, /too long to load/);
   await pendingManifest.fulfill({ status: 503, body: 'Unavailable' });
   await page.waitForFunction(() => !document.getElementById('fatal').hidden);
   assert.equal(await page.locator('#csl-err-text').textContent(), timeout);
   await page.locator('#csl-back').click();
   assert.ok(await page.locator('#fatal').isHidden());
   await start.click();
-  assert.match(await page.locator('#csl-err-text').textContent(), /Banlistan/);
+  assert.match(await page.locator('#csl-err-text').textContent(), /map (list|manifest)/i);
   holdManifest = false;
   // Restore the production timeout for the successful boot on slower software GPUs.
   await page.evaluate(() => {
@@ -84,8 +84,15 @@ try {
   assert.ok(await page.evaluate(() => __csFlow.music.track.paused));
   await page.evaluate(() => __fps.showBuy());
   await page.locator('[data-item=armor]').tap();
-  assert.match(await page.locator('#buy-message').textContent(), /köpt/);
-  assert.equal(await page.locator('.cs-buy-detail h4').textContent(), 'Kroppsrustning');
+  assert.equal(await page.locator('#buy-message').getAttribute('data-outcome'), 'accepted');
+  assert.match(await page.locator('#buy-message').textContent(), /purchased|bought/i);
+  assert.match(await page.locator('.cs-buy-detail h4').textContent(), /^Body armor$/i);
+  const remaining = await page.locator('#buy-money').getAttribute('data-credits');
+  assert.equal(Number(remaining), 150);
+  await page.locator('[data-item=smg]').tap();
+  assert.equal(await page.locator('#buy-message').getAttribute('data-outcome'), 'denied');
+  assert.equal(await page.locator('#buy-money').getAttribute('data-credits'), remaining);
+  assert.match(await page.locator('#buy-message').textContent(), /funds|afford|credits|money/i);
   await page.locator('#return-buy').tap();
   // Drive the real final-round transition without waiting for a full first-to-five match.
   await page.evaluate(() => {

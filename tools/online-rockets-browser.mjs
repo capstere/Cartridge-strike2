@@ -40,7 +40,7 @@ async function create(desktop,mobile,mode){
   await mobile.locator('#network-room').fill(room.roomId);
   await mobile.locator('[data-create=false]').tap();
   await mobile.locator('#room-ready').waitFor();
-  assert.match(await mobile.locator('#room-friendly-fire-status').textContent(),/Av/);
+  assert.equal(await mobile.locator('#room-friendly-fire-status').textContent(),'Friendly fire · Off');
   assert(await mobile.locator('#room-friendly-fire-label').isHidden());
   const difficulty=desktop.locator('#room-bot-difficulty');
   assert.equal(await difficulty.inputValue(),'normal');
@@ -52,7 +52,7 @@ async function create(desktop,mobile,mode){
   await difficulty.selectOption('normal');
   await until(async()=>/Normal/.test(await mobile.locator('#room-bot-difficulty-status').textContent()),'default restored for rocket scenario');
   await desktop.locator('#room-friendly-fire').selectOption('on');
-  await until(async()=>/På/.test(await mobile.locator('#room-friendly-fire-status').textContent()),'owner setting replicated to touch');
+  await until(async()=>(await mobile.locator('#room-friendly-fire-status').textContent())==='Friendly fire · On','owner setting replicated to touch');
   if(mode==='tdm')await mobile.locator('#room-primary').selectOption('bazooka');
   await mobile.locator('#room-ready').tap();
   await desktop.locator('#room-ready').click();
@@ -131,7 +131,7 @@ async function mapControls(desktop,mobile,room){
     const state=await read(page);
     assert(state.right+4<=state.aimLeft && state.events==='none','map stays outside aim and lets touch through');
     assert.match(state.legend,/Pil · Du.*Punkt · Laget/);
-    assert.equal(state.legend.includes('Bombplats'),classic);
+    assert.equal(state.legend.includes('Bomb site'),classic);
     assert(state.cache<=2);
     return state;
   };

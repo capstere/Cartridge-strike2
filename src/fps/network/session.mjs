@@ -1,3 +1,4 @@
+import {purchaseReasons} from '../game-english.mjs';
 import {networkEndpoint} from './connection.mjs';
 import '../../../vendor/colyseus/colyseus.js';
 import {Game,WEAPONS} from '../game.mjs';
@@ -68,9 +69,9 @@ export class NetworkSession {
       return true;
     };
     this.view.radio=this.view.setDifficulty=()=>false;
-    this.classicSerial=0;
+    this.classicSerial=0;this.purchase=null;
     this.view.drop=()=>this.classicCommand('drop');
-    this.view.buy=id=>this.classicCommand('buy',id)?{ok:true,pending:true}:{ok:false,reason:'Välj utrustning för nästa liv.'};
+    this.view.buy=id=>this.classicCommand('buy',id)?{ok:true,pending:true}:{ok:false,reasonId:'nextRound',reason:purchaseReasons.nextRound};
     this.view.drainEvents=()=>this.drainEvents();
     this.view.update=()=>{throw Error('NetworkSession owns input; the client cannot step Game.');};
   }
@@ -78,8 +79,24 @@ export class NetworkSession {
     const a=this.view.player,s=this.room?.state;
     if(!a||s?.mode!=='classic'||this.connectionState!=='connected')return false;
     this.notice='';
-    this.room.send('classic',{kind,item,serial:++this.classicSerial,round:s.round,matchId:s.matchId,lifeId:a.lifeId,controlEpoch:a.controlEpoch});
+    const command={kind,item,serial:++this.classicSerial,round:s.round,matchId:s.matchId,lifeId:a.lifeId,controlEpoch:a.controlEpoch};
+    if(kind==='buy')this.purchase={...command,outcome:'pending'};
+    this.room.send('classic', command);
     return true;
+  }
+  currentPurchase(){
+    const p=this.purchase, state=this.room?.state, self=state?.actors.get(this.localPlayerId);
+    if(!p || !self || this.closed || this.connectionState!=='connected' || state.phase!=='active' ||
+       state.mode!=='classic' || state.roundPhase!=='buy' || !self.alive || !self.connected ||
+       p.round!==state.round || p.matchId!==state.matchId || p.lifeId!==self.lifeId || p.controlEpoch!==self.controlEpoch)return null;
+    return p;
+  }
+  receivePurchase(reply){
+    const pending=this.currentPurchase();
+    if(!pending || pending.outcome!=='pending' || !reply ||
+       !['matchId','round','lifeId','controlEpoch','serial','item'].every(key=>reply[key]===pending[key]))return;
+    if(reply.outcome!=='accepted' && !(reply.outcome==='denied' && Object.hasOwn(purchaseReasons,reply.reasonId)))return;
+    this.purchase={...pending,outcome:reply.outcome,reasonId:reply.reasonId};
   }
   teamCommsActor(){
     const state=this.room?.state;
@@ -164,6 +181,7 @@ export class NetworkSession {
     this.joiningRoom=null;this.room=room;this.familyAlias=room.name===FAMILY_ROOM_ALIAS?FAMILY_ROOM_ALIAS:'';
     Object.assign(room.reconnection,{enabled:true,minUptime:0,minDelay:150,maxDelay:1000,maxRetries:30,maxEnqueuedMessages:0});
     this.unsub.push(room.onMessage('problem',message=>{this.problem=String(message);}));
+    this.unsub.push(room.onMessage('purchase',message=>this.receivePurchase(message)));
     this.unsub.push(room.onMessage('notice',message=>{this.notice=String(message);}));
     this.unsub.push(room.onMessage('events',events=>{if(this.worldRevision===room.state.worldRevision)this.receiveEvents(events);}));
     this.unsub.push(room.onMessage(TEAM_COMMS_TYPE,message=>this.receiveTeamComms(message)));
@@ -174,8 +192,8 @@ export class NetworkSession {
     room.onReconnect(reconnected);this.unsub.push(()=>room.onReconnect.remove(reconnected));
     const left=code=>{
       if(this.closed)return;
-      const retry=this.familyAlias?'Öppna familjerummet igen via den fasta länken.':'Anslut till rummet igen, eller skapa ett nytt om servern startades om.';
-      const problem=this.problem||`Anslutningen bröts (${code}). ${retry}`;
+      const retry=this.familyAlias?'Reopen the family room using its permanent link.':'Rejoin the room, or create one if the server restarted.';
+      const problem=this.problem||`Connection lost (${code}). ${retry}`;
       this.problem=problem;this.dispose(false);this.onDisconnect(problem);
     };
     const changed=()=>this.snapshot();
@@ -491,7 +509,7 @@ export class NetworkSession {
       d.angle=Math.abs(angle);d.sign=Math.sign(angle)||s.sign;this.world.doors.pose(d);}
     if(this.predict.value)this.world.doors.elevators.setProgress(this.predict.value(state,'elevatorProgress'));
     const rtt=Math.round(this.room.clock?.smoothedRtt?.()||0);
-    this.status=stale?'Anslutningen väntar — kontroller stoppade':`${this.room.roomId} · ${this.view.actors.filter(a=>!a.pending).length}/${ROOM_CAPACITY} · ${rtt} ms${rtt>=200?' · Hög fördröjning':''}`;
+    this.status=stale?'Waiting for the connection · controls paused':`${this.room.roomId} · ${this.view.actors.filter(a=>!a.pending).length}/${ROOM_CAPACITY} · ${rtt} ms${rtt>=200?' · High latency':''}`;
   }
   updateDisplayTime(state,now){
     const results=this.resultsAt!==undefined,elapsed=Math.max(0,(now-(this.resultsAt??this.lastPatch))/1000);
@@ -521,12 +539,12 @@ export class NetworkSession {
   }
   beginReconnect(){
     if(this.closed||this.connectionState==='reconnecting')return;
-    this.connectionState='reconnecting';this.enabled=false;this.view.state.paused=true;
-    this.events=[];this.clearTeamComms();this.status='Återansluter… Din plats reserveras i 15 sekunder. Matchen fortsätter.';
+    this.connectionState='reconnecting';this.purchase=null;this.enabled=false;this.view.state.paused=true;
+    this.events=[];this.clearTeamComms();this.status='Reconnecting… Your seat is reserved for 15 seconds. The match continues.';
     this.onConnection('reconnecting');
     this.reconnectTimer=setTimeout(()=>{
-      const retry=this.familyAlias?'Öppna familjerummet igen via den fasta länken.':'Anslut till rummet igen.';
-      this.disconnect('Återanslutningen gick inte. Platsen har löpt ut eller servern startades om. '+retry);
+      const retry=this.familyAlias?'Reopen the family room using its permanent link.':'Rejoin the room.';
+      this.disconnect('Reconnection failed. Your seat expired or the server restarted. '+retry);
     },RECONNECT_SECONDS*1000);
   }
   interruptConnection(){

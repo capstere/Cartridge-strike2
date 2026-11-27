@@ -141,7 +141,7 @@ try {
 
   await select(bad);
   await ready();
-  assert.match(await page.locator('#character-status').innerText(),/Originalkaraktär/);
+  assert.match(await page.locator('#character-status').innerText(),/default operator/i);
   assert.ok(await start.isDisabled());
   await select('');
   await ready();
@@ -150,7 +150,7 @@ try {
   await match();
   assert.equal(await page.evaluate(()=>!!__fps.renderer.actorModel(__fps.game.player).userData.avatar?.privateDesign),false);
   await back();
-  await page.goto(origin+'/fps/?test',{waitUntil:'domcontentloaded'});
+  await page.goto(origin+'/fps/?screen=solo&test',{waitUntil:'domcontentloaded'});
   await ready();
   assert.equal(await picker.inputValue(),'');
   assert.ok(await picker.locator('option').count()>=3);

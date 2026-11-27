@@ -172,7 +172,7 @@ try{
     const state=await page.evaluate(()=>({
       path:location.pathname,roomAssigned:!!document.querySelector('#network-room')?.value,
       fatal:document.querySelector('#fatal')?.hidden===false,loading:document.querySelector('#loading')?.hidden===false,
-      paused:document.querySelector('#pause')?.hidden===false,pointerLockDenied:document.querySelector('#pause')?.textContent.includes('Muslås'),
+      paused:document.querySelector('#pause')?.hidden===false,pointerLockDenied:document.querySelector('#pause')?.textContent.includes('Mouse capture failed'),
       focused:document.hasFocus(),locked:!!document.pointerLockElement,focusEvents:window.__pilotFocus
     })).catch(()=>({closed:true}));
     console.error('Browser state',JSON.stringify(state));

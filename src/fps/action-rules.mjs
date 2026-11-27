@@ -3,14 +3,14 @@ import {controlObjective,combatSpawnCandidates,activeControl} from './combat-flo
 import {seededRandom, WEAPONS} from './config.mjs';
 import {zombiePosition} from './zombie-poses.mjs';
 import {BotController} from './bots.mjs';
-export const MODES=Object.freeze({classic:'Klassiska rundor',endless:'Endless Action · auto-respawn'});
+export const MODES=Object.freeze({classic:'Classic rounds',endless:'Endless Action · auto-respawn'});
 export const RADIO=Object.freeze([
- {id:'together',text:'Stick together team',label:'Håll ihop'},
- {id:'fallback',text:'Fall back',label:'Dra er tillbaka'},
- {id:'incoming',text:'Incoming!',label:'Fiende på väg'},
- {id:'cover',text:'Cover me',label:'Täck mig'},
- {id:'go',text:'Go, go, go!',label:'Framåt'},
- {id:'backup',text:'Need backup!',label:'Behöver understöd'},
+ {id:'together',text:'Stick together team',label:'Group up'},
+ {id:'fallback',text:'Fall back',label:'Fall back'},
+ {id:'incoming',text:'Incoming!',label:'Enemy approaching'},
+ {id:'cover',text:'Cover me',label:'Cover me'},
+ {id:'go',text:'Go, go, go!',label:'Move up'},
+ {id:'backup',text:'Need backup!',label:'Request support'},
 ]);
 const dist=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 const pos=a=>({x:a.x,y:a.y||0,z:a.z});
@@ -182,7 +182,7 @@ function initializeWanderers(g){
  g.wanderNodes=[...roomNodes.values()];
  const points=[...g.wanderNodes];
  for(let i=0;i<Math.min(14,points.length);i++){
-  const p=points.splice(Math.floor(random()*points.length),1)[0];g.state.wanderers.push({id:`dwarf-${i}`,name:`Fantasidvärg ${i+1}`,kind:'dwarf',hp:65,armor:0,alive:true,deaths:0,deathAt:null,respawnAt:null,spawn:{x:p.x,z:p.z},x:p.x,y:0,z:p.z,yaw:random()*6.28,height:.86,radius:.16,path:[],nextPlan:random()*4,moving:0,steps:0,variant:i%5});
+  const p=points.splice(Math.floor(random()*points.length),1)[0];g.state.wanderers.push({id:`dwarf-${i}`,name:`Dwarf ${i+1}`,kind:'dwarf',hp:65,armor:0,alive:true,deaths:0,deathAt:null,respawnAt:null,spawn:{x:p.x,z:p.z},x:p.x,y:0,z:p.z,yaw:random()*6.28,height:.86,radius:.16,path:[],nextPlan:random()*4,moving:0,steps:0,variant:i%5});
  }
 }
 function updateWanderers(g,dt){

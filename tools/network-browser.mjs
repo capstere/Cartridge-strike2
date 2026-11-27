@@ -330,7 +330,7 @@ try{
    try{await a.waitForFunction(()=>__fps.modal===null&&document.pointerLockElement===document.querySelector('#game'),null,{timeout:5000});break;}
    catch(e){const diagnostic=await a.evaluate(()=>({modal:__fps.modal,focused:document.hasFocus(),hidden:document.hidden,fullscreen:!!document.fullscreenElement,text:document.querySelector('#pause p:not(.eyebrow)').textContent}));
     console.log('resume diagnostic',diagnostic);
-    if(resumeAttempts===2||diagnostic.modal!=='pause'||!diagnostic.text.includes('Muslås'))throw e;
+    if(resumeAttempts===2||diagnostic.modal!=='pause'||!diagnostic.text.includes('Mouse capture failed'))throw e;
    }
   }
   // Rotation uses the existing mobile input/audio lifecycle, without room pause.
