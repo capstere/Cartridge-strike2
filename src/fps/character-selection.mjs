@@ -1,37 +1,38 @@
 /** Menu for local, validated playable GLBs; no network or studio-project parsing. */
-import {listPrivateCharacters,deletePrivateCharacter,validCharacterId} from './private-character-store.mjs';
+import {listPrivateCharacters,deletePrivateCharacter,validCharacterId,savedCharacterMessage} from './private-character-store.mjs';
 export const CHARACTER_PREFERENCE='cartridge-selected-character';
 export function preferredCharacter(url,storage){
  const q=new URL(url).searchParams;if(q.has('avatar'))return q.get('avatar');
  try{return storage.getItem(CHARACTER_PREFERENCE)||'';}catch{return '';}
 }
 export function characterMenuURL(url,id,{team='analysts',seed=42}={}){
- if(id&&!validCharacterId(id))throw Error('Ogiltig sparad karaktär. Välj Originalkaraktär.');
+ if(id&&!validCharacterId(id))throw Error('Invalid saved character. Choose the default operator.');
  const next=new URL(url);next.searchParams.delete('character');next.searchParams.set('avatar',id);
  next.searchParams.set('team',team==='counterAnalysts'?'counterAnalysts':'analysts');
  next.searchParams.set('seed',String(Math.min(999999,Math.max(1,Math.floor(Number(seed)||42)))));return next.href;
 }
 export function characterOptionLabel(row,rows){
  const same=rows.filter(r=>r.name===row.name);if(same.length<2)return row.name;
- const date=new Date(row.updated),stamp=Number.isFinite(date.getTime())?date.toLocaleString('sv-SE'):'okänd tid';
- return row.name+' · '+stamp+' · kopia '+(same.findIndex(r=>r.id===row.id)+1);
+ const date=new Date(row.updated),stamp=Number.isFinite(date.getTime())?date.toLocaleString('en-US'):'unknown time';
+ return row.name+' · '+stamp+' · copy '+(same.findIndex(r=>r.id===row.id)+1);
 }
 export async function setupCharacterMenu({getTeam,getSeed}){
  const select=document.getElementById('player-character'),status=document.getElementById('character-status'),remove=document.getElementById('delete-character');
  const id=preferredCharacter(location.href,{getItem:key=>localStorage.getItem(key)});let rows=[];
  const say=text=>{status.textContent=text;};
- try{rows=await listPrivateCharacters();}catch(e){say('Kunde inte läsa lokala karaktärer. Du kan välja Originalkaraktär. '+e.message);}
- select.replaceChildren(new Option('Originalkaraktär',''));
- for(const row of rows){const option=new Option(characterOptionLabel(row,rows)+(row.compatible?'':' · behöver sparas om'),row.id);select.append(option);}
- if(id&&!rows.some(r=>r.id===id))select.append(new Option('Sparad karaktär saknas på denna enhet',id));
+ try{rows=await listPrivateCharacters();}catch(error){say(savedCharacterMessage(error,'Saved characters could not be read. You can still use the default operator.'));}
+ select.replaceChildren(new Option('Default operator',''));
+ for(const row of rows){const option=new Option(characterOptionLabel(row,rows)+(row.compatible?'':' · update required'),row.id);option.dataset.name=row.name;select.append(option);}
+ if(id&&!rows.some(r=>r.id===id))select.append(new Option('Saved character missing from this device',id));
  select.value=id;remove.hidden=!id||!rows.some(r=>r.id===id);
- if(!status.textContent)say(rows.length?'Sparade på denna enhet. Bara din spelare använder designen.':'Inga lokalt sparade spelkaraktärer hittades. Originalkaraktären är tillgänglig.');
- const navigate=value=>{document.getElementById('start').disabled=true;select.disabled=true;say('Laddar karaktären…');location.assign(characterMenuURL(location.href,value,{team:getTeam(),seed:getSeed()}));};
+ if(!status.textContent)say(rows.length?'Saved on this device. Your design is applied to your player.':'No saved characters on this device. The default operator is ready.');
+ const navigate=value=>{document.getElementById('start').disabled=true;select.disabled=true;say('Loading character…');location.assign(characterMenuURL(location.href,value,{team:getTeam(),seed:getSeed()}));};
  select.onchange=()=>navigate(select.value);
- remove.onclick=async()=>{if(!confirm('Ta bort den här lokala spelkopian? Detta påverkar inte andra sparade filer.'))return;remove.disabled=true;try{await deletePrivateCharacter(select.value);navigate('');}catch(e){say(e.message);remove.disabled=false;}};
- return {id,loaded(name){try{if(id)localStorage.setItem(CHARACTER_PREFERENCE,id);else localStorage.removeItem(CHARACTER_PREFERENCE);}catch{say('Valet används nu men kunde inte kommas ihåg i denna webbläsare.');return;}
-  if(name)say(name+' · Lokalt sparad. Händerna matchar. Välj lag och starta match.');
- },error(message){
-  say(message.includes('Välj Originalkaraktär') ? message : message+' Välj Originalkaraktär eller en annan sparad karaktär för att fortsätta.');
+ remove.onclick=async()=>{if(!confirm('Delete this local game copy? Your other saved files will be kept.'))return;remove.disabled=true;try{await deletePrivateCharacter(select.value);navigate('');}catch(error){say(savedCharacterMessage(error,'This browser could not delete the saved game copy.'));remove.disabled=false;}};
+ return {id,loaded(name){try{if(id)localStorage.setItem(CHARACTER_PREFERENCE,id);else localStorage.removeItem(CHARACTER_PREFERENCE);}catch{say('Your choice applies now. This browser could not save your preference.');return;}
+  if(name)say(name+' · Saved locally. Your first-person hands match this operator.');
+ },error(error){
+  const detail=savedCharacterMessage(error,'The selected character could not be loaded.');
+  say(detail+' Choose the default operator or another compatible saved character.');
  }};
 }

@@ -592,7 +592,8 @@ function mechanisms(model, actor, time, shotAt) {
   const empty=reloading && d.emptyReload;
   if (d.magazine) {
     d.magazine.position.copy(d.magazineHome);
-    const pull = reloading ? pulse(progress, .13, .39, .78) : 0;
+    const seat=empty && d.id==='sniper'?.64:.78;
+    const pull = reloading ? pulse(progress, .13, .39, seat) : 0;
     if(d.id==='bazooka'){
       d.magazine.position.z+=pull*.47;d.magazine.position.y-=pull*.06;d.magazine.visible=reloading;
     } else if (d.id === 'shotgun') {

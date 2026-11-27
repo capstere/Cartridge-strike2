@@ -192,3 +192,37 @@ test('interrupting a cartridge with a rifle switch needs a fresh trigger on the 
    send(host,{fire:false,holdThrow:false,fireId});
  }
 });
+
+test('each firearm spends one authoritative round and delivers the same action to both SDK seats',{timeout:30000},async t=>{
+ const local=await createLocalServer({testMatch:{continuous:true},port:0});
+ let host,observer;
+ t.after(async()=>{await Promise.allSettled([host?.leave(),observer?.leave()]);await local.close();});
+ const client=new Client(local.url,{headers:{Origin:local.url}});
+ host=await ready(await client.create('private-fps',options));observer=await ready(await client.joinById(host.roomId,options));
+ const room=[...local.rooms][0],game=room.sim.game,seat=room.seats.get(host.sessionId),actor=seat.actor;
+ const peers=[host,observer],received=[[],[]],proof=[];
+ peers.forEach((peer,i)=>peer.onMessage('events',batch=>received[i].push(...batch.filter(e=>e.type==='shot' && e.actorId===actor.id))));
+ await until(()=>Number.isFinite(seat.rttAt),'measured SDK clock');
+ const weapons=['p9','p12','cr4','ar47','smg','shotgun','sniper','bazooka'];
+ for(const [index,weapon] of weapons.entries()){
+   const slot=index<2?'pistol':'primary',fireId=index+1;
+   // The private-room loadout is the fixture. Selection, trigger and release all
+   // traverse the normal SDK/authority path, including real hit queries.
+   actor.inventory[slot]=game.weaponItem(weapon);
+   host.send('select',{slot,serial:fireId,lifeId:actor.lifeId,controlEpoch:seat.epoch});
+   await until(()=>peers.every(peer=>peer.state.actors.get(actor.id).weapon===weapon),'both seats see '+weapon);
+   await until(()=>game.state.time>=actor.nextShot,weapon+' ready on authority');
+   const before=game.item(actor).ammo;
+   send(host,{fire:true,fireEdge:true,holdThrow:true,fireId,shotYaw:Math.PI,shotPitch:.3});
+   send(host,{fire:false,fireEdge:false,holdThrow:false,fireId});
+   await until(()=>received.every(events=>events.length>index),weapon+' shot confirmed on both seats');
+   const a=received[0][index],b=received[1][index];
+   assert.equal(a.weapon,weapon);assert.equal(a.actionId,[actor.id,actor.lifeId,seat.epoch,fireId].join(':'));
+   assert.equal(a.actionId,b.actionId);assert.equal(a.eventId,b.eventId);assert.equal(a.tick,b.tick);
+   assert.equal(game.item(actor).ammo,before-1);
+   await until(()=>peers.every(peer=>peer.state.actors.get(actor.id).ammo===before-1),weapon+' replicated one debit');
+   proof.push({weapon,actionId:a.actionId,eventId:a.eventId,tick:a.tick,ammoBefore:before,ammoAfter:before-1});
+ }
+ await delay(90);assert(received.every(events=>events.length===weapons.length));assert.equal(room.metrics.invalid,0);
+ t.diagnostic(JSON.stringify(proof));
+});

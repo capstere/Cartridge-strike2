@@ -39,8 +39,8 @@ export class AudioSystem extends BaseAudio{
   const previous=this.lastSimTime;
   super.handle(events,listener,time);
   this.floorAudio.update(this,events,listener?.floorAudioReady);
-  this.reloadFoley.update(this,previous,time);
+  this.reloadFoley.update(this,previous,time,events);
  }
- reset(){super.reset();this.floorAudio?.reset();this.reloadFoley?.voices.clear();}
+ reset(){super.reset();this.floorAudio?.reset();this.reloadFoley?.reset();}
  async dispose(){this.floorAudio.buffers.clear();this.reloadFoley.buffers.clear();this.voiceBuffers.clear();await super.dispose();}
 }

@@ -1,6 +1,6 @@
 /** Stable cosmetic slots. Counts describe presentation; never change game rules. */
 export const ROLE_SCHEMA=1;
-export const ROLE_NAMES=Object.freeze({player:'Spelkaraktär / lagbot',hostage:'Gisslan',dwarf:'Bot-dvärg'});
+export const ROLE_NAMES=Object.freeze({player:'Player or team bot',hostage:'Hostage',dwarf:'Dwarf bot'});
 export const ROLE_TARGETS=Object.freeze({
  player:Object.freeze(['analysts-all','counterAnalysts-all',...['analysts','counterAnalysts'].flatMap(t=>Array.from({length:5},(_,i)=>`${t}-${i}`))]),
  hostage:Object.freeze(['hostage-all','hostage-0','hostage-1']),
@@ -8,14 +8,14 @@ export const ROLE_TARGETS=Object.freeze({
 });
 export function roleOf(project){return project?.runtime?.role||(project?.base?.team==='hostage'?'hostage':'player');}
 export function targetOf(project){return project?.runtime?.target||(roleOf(project)==='hostage'?'hostage-0':roleOf(project)==='dwarf'?'dwarf-variant-0':`${project?.base?.team==='counterAnalysts'?'counterAnalysts':'analysts'}-0`);}
-export function validateRole(role,target){if(!ROLE_TARGETS[role]?.includes(target))throw Error('Okänd karaktärsroll eller spelplats.');return {role,target};}
+export function validateRole(role,target){if(!Object.hasOwn(ROLE_TARGETS,role)||!ROLE_TARGETS[role].includes(target))throw Error('Unknown character role or roster slot.');return {role,target};}
 export function roleSelection(project){return validateRole(roleOf(project),targetOf(project));}
 export function targetLabel(target){
- if(target==='hostage-all')return 'Alla gisslan';if(target==='dwarf-all')return 'Alla dvärgar';
- if(target.endsWith('-all'))return target.startsWith('counter')?'Hela Counter Analysts-laget':'Hela Analysts-laget';
- if(target.startsWith('dwarf-variant-'))return `Dvärgutseende ${Number(target.split('-').at(-1))+1} · återanvänds`;
- if(target.startsWith('dwarf-'))return `Enskild dvärg ${Number(target.slice(6))+1}`;
- if(target.startsWith('hostage-'))return `Gisslan ${Number(target.slice(8))+1}`;
+ if(target==='hostage-all')return 'All hostages';if(target==='dwarf-all')return 'All dwarf bots';
+ if(target.endsWith('-all'))return target.startsWith('counter')?'All Counter Analysts':'All Analysts';
+ if(target.startsWith('dwarf-variant-'))return `Dwarf appearance ${Number(target.split('-').at(-1))+1} · shared`;
+ if(target.startsWith('dwarf-'))return `Dwarf bot ${Number(target.slice(6))+1}`;
+ if(target.startsWith('hostage-'))return `Hostage ${Number(target.slice(8))+1}`;
  return `${target.startsWith('counter')?'C':'A'}-${String(Number(target.split('-').at(-1))+1).padStart(2,'0')}`;
 }
 export function dwarfVariant(project){return Number.isInteger(project?.base?.variant)?project.base.variant:0;}

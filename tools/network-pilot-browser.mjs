@@ -116,7 +116,7 @@ try{
   console.log('Host created a private room');
   roomId=await host.locator('#network-room').inputValue();assert(roomId);
   await submit(friend,'Pilot friend',roomId,'incorrect-'+roomCode);
-  await friend.locator('#network-status').filter({hasText:'Fel privat'}).waitFor();
+  await friend.locator('#network-status').filter({hasText:'Incorrect private room code'}).waitFor();
   await submit(friend,'Pilot friend',roomId);await friend.locator('#room-ready').waitFor({state:'visible'});
   await host.locator('#room-ready').click();await friend.locator('#room-ready').tap();await host.locator('#room-start').click();
   await host.locator('#resume').waitFor({state:'visible'});await friend.locator('#resume').tap();
@@ -156,7 +156,7 @@ try{
     matchCycle={sameRoom:true,shippingDefaults:!!external,durationSeconds:before.duration,scoreTarget:before.scoreTarget,firstMatch:before.matchId,result,secondMatch:next.matchId,rematchFire:true};
   }
   await host.keyboard.press('Escape');await host.locator('#restart').click();
-  await friend.waitForFunction(()=>document.querySelector('#alive-a')?.textContent==='0 kvar');
+  await friend.waitForFunction(()=>document.querySelector('#alive-a')?.textContent==='0 alive');
   await friend.locator('[data-mobile-action=pause]').tap();await friend.locator('#restart').tap();
   assert.deepEqual(errors,[]);
   const report={status:'PASS',path:external?'public HTTPS':'loopback TLS',date:new Date().toISOString(),
@@ -172,7 +172,7 @@ try{
     const state=await page.evaluate(()=>({
       path:location.pathname,roomAssigned:!!document.querySelector('#network-room')?.value,
       fatal:document.querySelector('#fatal')?.hidden===false,loading:document.querySelector('#loading')?.hidden===false,
-      paused:document.querySelector('#pause')?.hidden===false,pointerLockDenied:document.querySelector('#pause')?.textContent.includes('Muslås'),
+      paused:document.querySelector('#pause')?.hidden===false,pointerLockDenied:document.querySelector('#pause')?.textContent.includes('Mouse capture failed'),
       focused:document.hasFocus(),locked:!!document.pointerLockElement,focusEvents:window.__pilotFocus
     })).catch(()=>({closed:true}));
     console.error('Browser state',JSON.stringify(state));

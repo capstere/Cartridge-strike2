@@ -22,14 +22,18 @@ async function play(touch) {
    await page.addInitScript(()=>localStorage.setItem('cartridge-settings',JSON.stringify({
      mode:'endless',graphics:'low',mobileAutoFire:false,autoReload:false,wanderers:false,firefight:false,loadout:'cr4'
    })));
-   await page.goto(server.url+'/fps/?test',{waitUntil:'domcontentloaded'});
+   await page.goto(server.url+'/fps/?test'+(process.env.LIVE_SEQUENCE?'&realtime':''),{waitUntil:'domcontentloaded'});
+   await page.locator('[data-go=play]:visible').click();
+   await page.locator('[data-go=solo]:visible').click();
+   await page.locator('#lb-mode-seg [data-value=endless]').click();
    await page.waitForFunction(()=>window.__fps && !document.querySelector('#start').disabled);
    await page.locator('#start').click();
    await page.waitForFunction(()=>window.__fps?.game?.player && document.getElementById('cs-loading')?.hidden);
    if(await page.locator('#resume').isVisible())await page.locator('#resume').click();
+   assert.equal(await page.evaluate(()=>__fps.game.state.mode),'endless');
    if(!touch)await page.waitForFunction(()=>document.pointerLockElement?.id==='game');
-   await page.evaluate(()=>{
-     const f=window.__fps;f.stopFrameLoop();
+   await page.evaluate(live=>{
+     const f=window.__fps;if(!live)f.stopFrameLoop();
      const g=f.game;
      for(const other of g.actors)if(other!==g.player)other.bot=null;
      g.state.zombies=[];g.state.wanderers=[];g.state.phase='active';
@@ -39,7 +43,19 @@ async function play(touch) {
      g.emit=(kind,actor,detail)=>{const e=emit(kind,actor,detail);if(kind==='shot' && actor===g.player)rushEvidence.shots.push(e.time);return e;};
      const play=f.audio.play.bind(f.audio);
      f.audio.play=event=>{if(event?.type==='shot' && event.actorId===g.player.id)rushEvidence.audio.push(event.time);return play(event);};
-   });
+   },!!process.env.LIVE_SEQUENCE);
+   if(process.env.LIVE_SEQUENCE){
+     assert(touch,'live sequence uses touch');
+     const {captureLiveSequence}=await import('./handling-sequence-probe.mjs');
+     await captureLiveSequence(page,out);
+     return;
+   }
+   if(process.env.FLASH_CAPTURE){
+     assert(touch,'flash capture uses touch controls');
+     const {captureFlashOverlap}=await import('./handling-overlap-probe.mjs');
+     await captureFlashOverlap(page,out);
+     return;
+   }
    if(process.env.FAMILY_CAPTURE){
      assert(!touch,'family capture uses desktop controls');
      const {captureHandlingFamilies}=await import('./handling-family-probe.mjs');

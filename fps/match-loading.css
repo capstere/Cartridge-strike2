@@ -79,3 +79,15 @@ html.cs-loading-open #loading{visibility:hidden}
 /* The launch dialog presents boot errors. Keep a live-match fatal error visible. */
 html.cs-flow-ready #menu:not([hidden]) ~ #fatal{display:none}
 #cs-loading.is-out{pointer-events:none}
+
+/* Use the approved map's actual scene preview during its load. */
+#cs-loading.csl-floor5 {
+  background-image: linear-gradient(90deg,#08121cee 7%,#0a1522bd 50%,#17243481), url('../assets/fps/maps/floor5-prepared.jpg');
+  background-size: cover;
+  background-position: center;
+}
+html[data-cs-map-art] #cs-loading {
+  background-image: linear-gradient(90deg,#08121cee 7%,#0a1522bd 50%,#17243481), var(--cs-load-art);
+  background-size: cover;
+  background-position: center;
+}

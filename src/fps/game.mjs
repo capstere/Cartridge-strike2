@@ -1,3 +1,4 @@
+import {purchaseReasons} from './game-english.mjs';
 import {resetRush,interruptRush,rushReady,queueShot,takeReadyShot} from './rush.mjs';
 import {moveActor,moveBody} from './movement.mjs';
 import {rejoinNavigation} from './body-recovery.mjs';
@@ -105,7 +106,7 @@ export class Game {
       const id = `${side}-${i}`, isPlayer = this.localPlayerId === undefined ? side === team && i === 0 : id === this.localPlayerId;
       const controllerType = this.controllers ? this.controllers.get(id) ?? 'unoccupied' : isPlayer && !this.autoplay ? 'human' : 'bot';
       if (this.config.networkSlice && controllerType !== 'human') continue;
-      this.actors.push({ id: `${side}-${i}`, name: isPlayer ? 'Du' : `${side === 'analysts' ? 'A' : 'C'}-${String(i + 1).padStart(2, '0')}`, team: side, index: i, isPlayer, controllerType,
+      this.actors.push({ id: `${side}-${i}`, name: isPlayer ? 'You' : `${side === 'analysts' ? 'A' : 'C'}-${String(i + 1).padStart(2, '0')}`, team: side, index: i, isPlayer, controllerType,
         money: this.config.startMoney, kills: 0, deaths: 0, alive: false, x: 0, y: 0, z: 0, radius: this.config.radius, height: this.config.standingHeight });
     }
     this.beginRound(); return this;
@@ -131,7 +132,7 @@ export class Game {
       actor.cartridge=null;actor.waitTriggerRelease=false;resetRush(actor);
       actor.bot = actor.controllerType === 'bot' ? new BotController(this, actor) : null;
     }
-    s.hostages = (this.config.networkSlice && this.config.mode !== 'classic' ? [] : this.world.anchors.hostages).map((p, i) => ({ ...point(p), id: `hostage-${i}`, name: `Gisslan ${i + 1}`, height: 1.6, radius: this.config.radius, vy: 0, onGround: true, rescued: false, escortId: null, path: [], pathAt: 0, distanceWalked: 0 }));
+    s.hostages = (this.config.networkSlice && this.config.mode !== 'classic' ? [] : this.world.anchors.hostages).map((p, i) => ({ ...point(p), id: `hostage-${i}`, name: `Hostage ${i + 1}`, height: 1.6, radius: this.config.radius, vy: 0, onGround: true, rescued: false, escortId: null, path: [], pathAt: 0, distanceWalked: 0 }));
     const carrier = this.actors.find(a => a.team === 'counterAnalysts');
     s.bomb = { status: carrier?'carried':'dropped', carrierId: carrier?.id??null, ...point(carrier??this.world.anchors.bomb), deadline: Infinity, nextBeep: Infinity };
     for (const actor of this.actors) if (actor.bot) actor.bot.shop();
@@ -242,18 +243,18 @@ export class Game {
   moveBody(actor, dx, dy, dz) { return moveBody(this, actor, dx, dy, dz); }
   inBuyZone(actor = this.player) { return this.world.anchors[actor.team].some(p => distance(actor, p) <= this.config.buyRadius); }
   buy(id, actor = this.player) {
-    const reject = reason => ({ ok: false, reason });
-    if (this.config.networkSlice && (this.config.mode!=='classic' || !['smg','ar47','cr4','shotgun','sniper','bazooka','armor','he'].includes(id))) return reject('Utrustningen kan inte köpas i detta läge.');
+    const reject = reasonId => ({ ok: false, reasonId, reason: purchaseReasons[reasonId] });
+    if (this.config.networkSlice && (this.config.mode!=='classic' || !['smg','ar47','cr4','shotgun','sniper','bazooka','armor','he'].includes(id))) return reject('unavailableInMode');
     const w = WEAPONS[id];
-    if (!w || !w.cost) return reject('Utrustningen kan inte köpas.');
-    if(this.config.networkSlice&&!actor?.alive)return reject('Du kan köpa när du spelar nästa runda.');
-    if (!actor?.alive || (this.phase !== 'buy' && !(isEndless(this)&&this.phase==='active'))) return reject('Köp är endast öppet under köptiden.');
-    if (!isEndless(this)&&!this.inBuyZone(actor)) return reject('Gå till lagets köpzon.');
-    if (w.team && w.team !== actor.team) return reject('Vapnet tillhör det andra laget.');
-    if (!isEndless(this)&&actor.money < w.cost) return reject('För lite krediter.');
-    if (w.slot === 'grenade' && actor.inventory[id] >= w.limit) return reject('Granatfacket är fullt.');
-    if (w.slot === 'armor' && actor.armor >= 100) return reject('Rustningen är redan full.');
-    if (w.slot === 'primary' && actor.inventory.primary?.id === id) return reject('Du har redan detta vapen.');
+    if (!w || !w.cost) return reject('unavailable');
+    if(this.config.networkSlice&&!actor?.alive)return reject('nextRound');
+    if (!actor?.alive || (this.phase !== 'buy' && !(isEndless(this)&&this.phase==='active'))) return reject('buyTime');
+    if (!isEndless(this)&&!this.inBuyZone(actor)) return reject('buyZone');
+    if (w.team && w.team !== actor.team) return reject('wrongTeam');
+    if (!isEndless(this)&&actor.money < w.cost) return reject('credits');
+    if (w.slot === 'grenade' && actor.inventory[id] >= w.limit) return reject('grenadeFull');
+    if (w.slot === 'armor' && actor.armor >= 100) return reject('armorFull');
+    if (w.slot === 'primary' && actor.inventory.primary?.id === id) return reject('alreadyOwned');
     if(!isEndless(this))actor.money -= w.cost;
     if (w.slot === 'grenade') actor.inventory[id]++;
     else if (w.slot === 'armor') actor.armor = 100;
@@ -540,11 +541,11 @@ export class Game {
   }
   prompt(actor = this.player) {
     if(this.config.networkSlice && this.config.mode!=='classic')return '';
-    if (!actor?.alive) return 'Utslagen · följ en levande lagkamrat';
-    if (this.phase === 'buy') return 'B · köp utrustning';
+    if (!actor?.alive) return 'Eliminated · spectate a surviving teammate';
+    if (this.phase === 'buy') return 'B · Buy equipment';
     const action = this.interaction(actor);
     if (!action) return '';
-    return { plant: 'Håll E · plantera i '+missionRoomName(this.world), defuse: 'Håll E · desarmera', pickupBomb: 'E · ta upp uppdragsbomb', escort: action.target.escortId ? 'E · stoppa eskort' : 'E · starta eskort', pickupWeapon: `E · ta upp ${WEAPONS[action.target.item?.id]?.name ?? 'vapen'}` }[action.type];
+    return { plant: 'Hold E · Plant in '+missionRoomName(this.world), defuse: 'Hold E · Defuse', pickupBomb: 'E · Pick up bomb', escort: action.target.escortId ? 'E · Stop escort' : 'E · Start escort', pickupWeapon: `E · Pick up ${WEAPONS[action.target.item?.id]?.name ?? 'weapon'}` }[action.type];
   }
   interact(actor, input) {
     if(this.config.networkSlice && this.config.mode!=='classic')return;

@@ -69097,7 +69097,7 @@
         "t": 0.2916949,
         "side": 1,
         "y": 1.5,
-        "title": "SERVICE / REPRO"
+        "title": "PRINT ROOM SERVICE"
       },
       {
         "id": "ENV-067",
@@ -69107,7 +69107,7 @@
         "t": 0.2297297,
         "side": 1,
         "y": 1.5,
-        "title": "SERVICE / ENHET 27"
+        "title": "SERVICE / UNIT 27"
       },
       {
         "id": "ENV-068",
@@ -69117,7 +69117,7 @@
         "t": 0.4892858,
         "side": 1,
         "y": 1.5,
-        "title": "KALIBRERAD · K-04"
+        "title": "CALIBRATED · K-04"
       },
       {
         "id": "ENV-069",
@@ -69127,7 +69127,7 @@
         "t": 0.4029537,
         "side": -1,
         "y": 1.54,
-        "title": "VECKANS FIKA"
+        "title": "WEEKLY COFFEE BREAK"
       },
       {
         "id": "ENV-070",
@@ -69137,7 +69137,7 @@
         "t": 0.7047917,
         "side": 1,
         "y": 1.54,
-        "title": "STÄDRONDER"
+        "title": "CLEANING ROUNDS"
       },
       {
         "id": "ENV-071",
@@ -69147,7 +69147,7 @@
         "t": 0.2142857,
         "side": 1,
         "y": 1.54,
-        "title": "STÄDSCHEMA"
+        "title": "CLEANING SCHEDULE"
       },
       {
         "id": "ENV-072",

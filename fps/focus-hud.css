@@ -145,3 +145,8 @@ html[data-hud=full] #mobile-controls #mobile-utilities .mobile-button{
  html[data-hud=clean] #radio-caption{bottom:322px;max-width:calc(100vw - 32px)}
  html[data-hud=clean] #grenade-preview-note{bottom:204px;max-width:240px}
 }
+
+/* World effects sit beneath the persistent tactical HUD in both layouts. */
+html #flash-overlay,html #smoke-overlay,html #damage-overlay{z-index:2}
+html.hud-low-ammo #hud #ammo{color:#ffad94}
+html.hud-low-ammo #hud #reload-text{color:#ffd9b9}

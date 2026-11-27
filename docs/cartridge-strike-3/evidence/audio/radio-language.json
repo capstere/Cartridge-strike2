@@ -1,0 +1,30 @@
+{
+  "action-backup.ogg": {
+    "unconstrained": "the backup",
+    "commands": "need backup"
+  },
+  "action-cover.ogg": {
+    "unconstrained": "oh really",
+    "commands": "cover me"
+  },
+  "action-death.ogg": {
+    "unconstrained": "two",
+    "commands": "move out"
+  },
+  "action-fallback.ogg": {
+    "unconstrained": "all the",
+    "commands": "fall back"
+  },
+  "action-go.ogg": {
+    "unconstrained": "go go go",
+    "commands": "go go go"
+  },
+  "action-incoming.ogg": {
+    "unconstrained": "in",
+    "commands": "incoming"
+  },
+  "action-together.ogg": {
+    "unconstrained": "stick together the",
+    "commands": "stick together team"
+  }
+}

@@ -90,6 +90,11 @@
       "sha256": "4b597d658d0ae101f0a030fbeea5fc3a4292ab85f017470a8254a8e7959cbd69"
     },
     {
+      "path": "assets/fps/audio/ffsl-f_bolt-1.mp3",
+      "bytes": 10677,
+      "sha256": "635008c87f50c646af2a511b1ae556f8cbd4ac9686d53eca4375c015b653f10e"
+    },
+    {
       "path": "assets/fps/audio/ffsl-f_charge_rifle-1.mp3",
       "bytes": 4965,
       "sha256": "7e7afbc429f8e026260bd9987d17bfd5f6efcd96aad102bc62a6328b92185e96"
@@ -143,6 +148,11 @@
       "path": "assets/fps/audio/ffsl-f_pickup-2.mp3",
       "bytes": 4197,
       "sha256": "7617847fe8574cf324650659e1c291d3df3bcb34c487d66f51f478ac4c204d7d"
+    },
+    {
+      "path": "assets/fps/audio/ffsl-f_pump-1.mp3",
+      "bytes": 8349,
+      "sha256": "af8f885f28b4495af355d0f18fd689d187925b2625d07aaef83ea0b7ff94c77a"
     },
     {
       "path": "assets/fps/audio/ffsl-f_shell-1.mp3",
@@ -265,6 +275,11 @@
       "sha256": "740798c14fa1031b9bc961a990ef4b51d3e75b10c50fc4a4296434d61da03b6f"
     },
     {
+      "path": "assets/fps/audio/riposte-f_pin.mp3",
+      "bytes": 4221,
+      "sha256": "31f3580fc61fa6e76e948edf0847a74dfc8b56de7fe406c6794dc0121b5df81a"
+    },
+    {
       "path": "assets/fps/audio/riposte-f_throw-1.mp3",
       "bytes": 3981,
       "sha256": "c66d3cb60e956769618f3e51a722403938558baba3ff40b4c26f6a30334c38bd"
@@ -275,9 +290,69 @@
       "sha256": "83903cae0a6ff3fc38d15335c756dececdca3b438bd4543194d159f0f24416bd"
     },
     {
+      "path": "assets/fps/audio/riposte-g_ak_near-2.mp3",
+      "bytes": 12117,
+      "sha256": "b8081a76776188c7432e1f44530c5896c47ef0f49c2907da489c6d86e7b6672e"
+    },
+    {
       "path": "assets/fps/audio/riposte-g_ak_pov-1.mp3",
       "bytes": 13341,
       "sha256": "ad71df1ab06a9f861b1b21e0e4ac8d21b67555a276b440c4c9973a941c3cd8a2"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_ak_pov-2.mp3",
+      "bytes": 12549,
+      "sha256": "50c0abb0a91c72705e1913eac04c0c61b21c7255aa6ce0b26438678e690e5c5a"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_far_pistol-1.mp3",
+      "bytes": 15381,
+      "sha256": "bd87b4322b00a06805ea95075553848bb3b1ce0fa106a383540363b3b5d9d5b9"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_far_pistol-2.mp3",
+      "bytes": 13989,
+      "sha256": "2836ff3b6baf74e79a8a9e92eabbf59311a18695a0acd0a32cb1dc88acbac805"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_far_rifle-1.mp3",
+      "bytes": 14565,
+      "sha256": "616d4f43ad6cf1ad5bdb2b518de781d1f9dcbe0ed6e587bc47cd739cb4245795"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_far_rifle-2.mp3",
+      "bytes": 17589,
+      "sha256": "e7c4b354400ea9056be179e57a5c46528c7066fc79a0622bae4fa9eb586a8186"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_far_shotgun-1.mp3",
+      "bytes": 12333,
+      "sha256": "150391ded714fbf41f516c814d81629527a6cb066b54dd4f68d93d31a8251ca8"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_far_shotgun-2.mp3",
+      "bytes": 14733,
+      "sha256": "499aeecf7bdaf92f33cd3c90b118ff8f5655d530b5d414d0fcbb4e854d9b06aa"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_far_smg-1.mp3",
+      "bytes": 11229,
+      "sha256": "aade0caa0b0e16b95f02cc3cc3cda836d8388215ab2d49e33ee5178fda9a050e"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_far_smg-2.mp3",
+      "bytes": 9597,
+      "sha256": "50afb3c209a648c1524fe5b803762606fc73a2ea768c1acc2374d0d479429258"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_far_sniper-1.mp3",
+      "bytes": 17301,
+      "sha256": "ffe4b3a986333685380d3c2ab20fd23aa86fc161db660b7154fa1588fd189afd"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_far_sniper-2.mp3",
+      "bytes": 12333,
+      "sha256": "0bf2a81f6eaa2019c948d4823fbda35e57166081a26de3023cd71aa132c81997"
     },
     {
       "path": "assets/fps/audio/riposte-g_glock_near-1.mp3",
@@ -285,9 +360,19 @@
       "sha256": "4b464f68eafe8fe7d973ef8e718735740a1d47dcba814bd31061fcc8bfa40d70"
     },
     {
+      "path": "assets/fps/audio/riposte-g_glock_near-2.mp3",
+      "bytes": 8781,
+      "sha256": "164b336f4d98ee007ed823aae67a27e4c8251170ac6a7988b7c502fa070237a7"
+    },
+    {
       "path": "assets/fps/audio/riposte-g_glock_pov-1.mp3",
       "bytes": 9213,
       "sha256": "e23a810637a60a827e1b4cca2787dbaa53435bfcdedacf07776208c8e8766938"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_glock_pov-2.mp3",
+      "bytes": 7437,
+      "sha256": "57238190ff0c016e3616abfa18472b1f0c27c35979526bb13fc86e25a0d62efc"
     },
     {
       "path": "assets/fps/audio/riposte-g_pistol_near-1.mp3",
@@ -295,9 +380,19 @@
       "sha256": "1a64cb02ecde5c7303682dd3b13db828a9653d142d80bf77c984cc5efea04c73"
     },
     {
+      "path": "assets/fps/audio/riposte-g_pistol_near-2.mp3",
+      "bytes": 13653,
+      "sha256": "5f576cb4a1cbc81293993d0b2d508aff99bae2565fa78099917bd4a300064ec0"
+    },
+    {
       "path": "assets/fps/audio/riposte-g_pistol_pov-1.mp3",
       "bytes": 14277,
       "sha256": "1a06b8dfdb7f988d374b4cc7ade8d5e2668d372495acc183f372a4c18812f76d"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_pistol_pov-2.mp3",
+      "bytes": 12501,
+      "sha256": "a793ad6deb4b789a6ad064308f9cdd1edf67af6c7da0106c82febc0e3c40cbd3"
     },
     {
       "path": "assets/fps/audio/riposte-g_rifle_near-1.mp3",
@@ -305,9 +400,19 @@
       "sha256": "018f9e05f8d3cce83cbf6c198b519ac96657c195916302554a8a6c4a7c6dd19b"
     },
     {
+      "path": "assets/fps/audio/riposte-g_rifle_near-2.mp3",
+      "bytes": 12333,
+      "sha256": "4eb621ab36cb778e99e79b1cc5f2adb124804b58356f139cc1cc199475d2e481"
+    },
+    {
       "path": "assets/fps/audio/riposte-g_rifle_pov-1.mp3",
       "bytes": 14709,
       "sha256": "9664c864ccb245a197b5e6648c07e19a24a1570a1b96eb06c3d03759172037c8"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_rifle_pov-2.mp3",
+      "bytes": 13725,
+      "sha256": "155b46ce216600b164bd1b629b285f7f710d05be9d98c15e8f3e5cb8993dd595"
     },
     {
       "path": "assets/fps/audio/riposte-g_shotgun_near-1.mp3",
@@ -315,9 +420,19 @@
       "sha256": "052485d780558975e085b1a161ecb2f39111a83565108ba21485ae92023937b5"
     },
     {
+      "path": "assets/fps/audio/riposte-g_shotgun_near-2.mp3",
+      "bytes": 13101,
+      "sha256": "578feb1861ad416335876e6e81e4a4e8cd652d0b95257362ddb84a2056023ba9"
+    },
+    {
       "path": "assets/fps/audio/riposte-g_shotgun_pov-1.mp3",
       "bytes": 13437,
       "sha256": "189606cada57b5146a6a710cf3e07b59374b7d84f467c32d82316858e45390d3"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_shotgun_pov-2.mp3",
+      "bytes": 13821,
+      "sha256": "8cebc136f8a91714011ae30dc4a7276e9217c18e1eb24e6bd1885fa72fc00aa5"
     },
     {
       "path": "assets/fps/audio/riposte-g_smg_near-1.mp3",
@@ -325,9 +440,19 @@
       "sha256": "853e5dee2cc35ba7e0e8cdc2d8c23a55d47eeb5a8188992e58fdd7ccf23bf60f"
     },
     {
+      "path": "assets/fps/audio/riposte-g_smg_near-2.mp3",
+      "bytes": 8517,
+      "sha256": "517e87d29b553904112646899d4a10dc43baeadeffc3b276971491d6f977ef20"
+    },
+    {
       "path": "assets/fps/audio/riposte-g_smg_pov-1.mp3",
       "bytes": 10581,
       "sha256": "61c52c3d4d99106598f9cd0fdae87651976b3e0b62b7b86a27881d104ddf3a6e"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_smg_pov-2.mp3",
+      "bytes": 10773,
+      "sha256": "bbbdf12860f40e2b6a63c2df40d915b8c1bea6d2ff8aa140c6d7c9a31ce87a25"
     },
     {
       "path": "assets/fps/audio/riposte-g_sniper_near-1.mp3",
@@ -335,9 +460,19 @@
       "sha256": "f5e878aab4a37750ba67073e8cee11cdb3ed8b7de3250d74602a4374281ea153"
     },
     {
+      "path": "assets/fps/audio/riposte-g_sniper_near-2.mp3",
+      "bytes": 13221,
+      "sha256": "57c628661db4f1103217d82705e9850df8bfcedc397306025a9b01d4aabc0805"
+    },
+    {
       "path": "assets/fps/audio/riposte-g_sniper_pov-1.mp3",
       "bytes": 13293,
       "sha256": "708dcaffda71978780ced2480b8a5c8df7e8261b15352f288fde90ac52a035f6"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_sniper_pov-2.mp3",
+      "bytes": 13149,
+      "sha256": "ff5447ff804f02abb2924d224b8fb25a5ac082ac6627104ccf22a4e19f2ba53c"
     },
     {
       "path": "assets/fps/audio/riposte-i_concrete-1.mp3",
@@ -641,8 +776,8 @@
     },
     {
       "path": "credits.html",
-      "bytes": 13997,
-      "sha256": "3f9d910f81665171eea1dc06a4498b55190a83495bcddab79ef1d03d9a43b666"
+      "bytes": 14927,
+      "sha256": "44ce2553c95d1b05732a81bf1e36f74dc5e4137e35549930af7455abd1ac665a"
     },
     {
       "path": "docs/fps-furniture-library.md",
@@ -651,28 +786,28 @@
     },
     {
       "path": "fps/focus-hud.css",
-      "bytes": 13139,
-      "sha256": "b06322afb2f3db6f703c1bf24867067c6718c9e6eb4789554337eed88c0baede"
+      "bytes": 13384,
+      "sha256": "0b05cb3ead557bda3e8abae0e58c86f32c070ca058571584d05eb67517b23596"
     },
     {
       "path": "fps/hud.css",
-      "bytes": 35692,
-      "sha256": "d5d1e7a2e80b0bb564897088ae4228d21fc905804edfcb094e21f75b1e76324d"
+      "bytes": 35685,
+      "sha256": "d8d9266c2d52b78668101aaa41f0a4f7ce46486c46c9a27b52350b80ff56a0e9"
     },
     {
       "path": "fps/index.html",
-      "bytes": 14527,
-      "sha256": "4330aeae56695692dd5f84b7ef9d751f451e695c04c80668a7a7797a96e09a55"
+      "bytes": 19892,
+      "sha256": "c1c9991ed743acd4eeba1b07510357dbf2ac77c1d29a1250fb14cba67ca06e19"
     },
     {
       "path": "fps/lobby.css",
-      "bytes": 16963,
-      "sha256": "575883783883f770b3fe86fa9afe9848a13db99e4da03ade8257001941c63d8e"
+      "bytes": 16964,
+      "sha256": "b6ca510c27caf6f46d63317c27ea5c0328338418c7dc01f346b4b09248d08283"
     },
     {
       "path": "fps/match-loading.css",
-      "bytes": 7093,
-      "sha256": "821006084c9cbc6b7df5631e6fea51e1a674977b7d6be0440fed8e2221cded00"
+      "bytes": 7569,
+      "sha256": "70e7868ad4ce6e541a95ab3650feddeb5a10b458d253b3150b978552204565fc"
     },
     {
       "path": "fps/menu-modern.css",
@@ -683,6 +818,11 @@
       "path": "fps/network.css",
       "bytes": 5127,
       "sha256": "6cc21ddee0ae89be20b6e5aead891abcd426683a2abf699bda4b5a7beb5a4a08"
+    },
+    {
+      "path": "fps/routes.css",
+      "bytes": 9724,
+      "sha256": "8fb100ab89cf23efb6d6a9f2a96a65f3c442f5964bfec1f56cbd306d9017683d"
     },
     {
       "path": "fps/style.css",
@@ -716,8 +856,8 @@
     },
     {
       "path": "furniture-editor/build/environment-art.mjs",
-      "bytes": 9461,
-      "sha256": "f951d33f7f70adbafe861a7e52f5193614b81ad5be7d8a7ed829c785c74c1928"
+      "bytes": 10427,
+      "sha256": "44d985bbda38b213976e0969aa7d8dfde839480be9f6b2cd87ca2440f0f1b407"
     },
     {
       "path": "furniture-editor/build/environment-layout.mjs",
@@ -1841,8 +1981,8 @@
     },
     {
       "path": "index.html",
-      "bytes": 1414,
-      "sha256": "ac3d4f921bd73f7234393ce437306e465f3da5020eebf1b82b80730dc9e5e5a7"
+      "bytes": 1360,
+      "sha256": "8b8f074937db55776dbf390875469c65852f33f304f55307d57e4e1eef491696"
     },
     {
       "path": "levels/compact-arena.json",
@@ -1851,8 +1991,8 @@
     },
     {
       "path": "levels/floor5-prepared.json",
-      "bytes": 1761561,
-      "sha256": "89283f437623457a10da37be29a282a41591f202270051ba940549ba01b4b050"
+      "bytes": 1761580,
+      "sha256": "1dd0ec97a14f5a4cab6448e9a8f4b5da091b71a3caa63b575ef58ef1426b9ef0"
     },
     {
       "path": "levels/manifest.json",
@@ -1866,8 +2006,8 @@
     },
     {
       "path": "licenses/action-audio.txt",
-      "bytes": 432,
-      "sha256": "709141fb65b5a3113523f5ef4e1f0a1cd262136f159e4e37801084c918e26b9d"
+      "bytes": 431,
+      "sha256": "28b5daea1b866cbefbc193f4682cdef4a8ef884b6a8f761b9ebe5f9419ace5ec"
     },
     {
       "path": "licenses/ambientcg-CC0-1.0.txt",
@@ -1950,9 +2090,14 @@
       "sha256": "a3d27b3ca5ce32341fa9f96f01169b521b1657c05d1860c45d1e53a6258e9e8b"
     },
     {
+      "path": "shared/multiplayer/access-english.mjs",
+      "bytes": 6056,
+      "sha256": "b6f7f7e7765645a97a5a94b48b2b75ba09953558500137ae31929df70d6a2d01"
+    },
+    {
       "path": "shared/multiplayer/build.mjs",
       "bytes": 660,
-      "sha256": "f959d590ff9774b651e5d0065f9e5640589f218f8a827c60cb647d8772a7eee0"
+      "sha256": "8f2e945d006812c7f3dc46ddf24fde781c1820868b434981b9eb375d54ec06dc"
     },
     {
       "path": "shared/multiplayer/collision-contract.mjs",
@@ -1972,7 +2117,7 @@
     {
       "path": "shared/multiplayer/map-build.mjs",
       "bytes": 1215,
-      "sha256": "36ab72abfe9d2d4528c2ab840b0908419b748c8c0eba285e6f3e5757dcb9f208"
+      "sha256": "3d43dd2ef1780cb0c875f59e25cc776362ea3ebab7cb3710c37be4a125f24708"
     },
     {
       "path": "shared/multiplayer/maps.mjs",
@@ -1986,8 +2131,8 @@
     },
     {
       "path": "shared/multiplayer/rules.mjs",
-      "bytes": 3672,
-      "sha256": "cb7709c3bdf04136e25a8e4675ca792995dd22eb4a0d0b9e4373f0134cfdc626"
+      "bytes": 4646,
+      "sha256": "09f3cdcce051b5921174c8239e06d2cae141f3519a8b7debad5a03e39373b737"
     },
     {
       "path": "shared/multiplayer/world.mjs",
@@ -2007,7 +2152,7 @@
     {
       "path": "src/fps/action-audio.mjs",
       "bytes": 3348,
-      "sha256": "a4e23a6a145aadafb609d657bfe4fa937d0183e49cc701158145baedc733eded"
+      "sha256": "3955b75febd145dcd4c7720a3754da7411ca1fe48f60ad0de40c5a60c70f1cf8"
     },
     {
       "path": "src/fps/action-models.mjs",
@@ -2016,13 +2161,13 @@
     },
     {
       "path": "src/fps/action-rules.mjs",
-      "bytes": 13423,
-      "sha256": "52f4fd3167eebf8eb551adc4c716cf8a501d4f4b62506f6c7af6de0821fde59a"
+      "bytes": 13402,
+      "sha256": "77330ec9c4f9c4484e97fae10ff7a23371a0e12c397113fb00881e71d6b5acd5"
     },
     {
       "path": "src/fps/action-visuals.mjs",
-      "bytes": 9990,
-      "sha256": "ce20465b81e12fcb0b333068e4ed42dd1da55a34373afb819c48bbf01811eda0"
+      "bytes": 11305,
+      "sha256": "6f6557b095b8ba1050f20e6408f579633381468317bf3457aa5de709cbd5fab6"
     },
     {
       "path": "src/fps/actor-occlusion.mjs",
@@ -2036,13 +2181,13 @@
     },
     {
       "path": "src/fps/app.mjs",
-      "bytes": 55074,
-      "sha256": "3d45100fb10e87f7abe3945014a9aee10462b54d6a720b3711c32d4a436b5238"
+      "bytes": 57029,
+      "sha256": "4e7a33307f3035e1d3988fe24f02e7db61fa122980ff4570763959a14073bf76"
     },
     {
       "path": "src/fps/audio.mjs",
-      "bytes": 17606,
-      "sha256": "a98eb805ea8787c9ae8b106af2f84644ffdd262ca5f57b928c385c1605371bc4"
+      "bytes": 17788,
+      "sha256": "24327e8b8ea30ed85cc65ccdffdb8f12588958de68d39efd357487b9ab7b6f4a"
     },
     {
       "path": "src/fps/authored-hand-data.mjs",
@@ -2086,33 +2231,33 @@
     },
     {
       "path": "src/fps/character-footwear.mjs",
-      "bytes": 6783,
-      "sha256": "0dbd0294b8282894e3d052e045143ced954472fbcaa463529afb379c755b30db"
+      "bytes": 6870,
+      "sha256": "5717b308032b2d9f3cc41558be21e3a794cb85a1ec45f71f51db238edde81cf0"
     },
     {
       "path": "src/fps/character-library.mjs",
-      "bytes": 24906,
-      "sha256": "b8c68a1e8d97f00a63cad5514fe0621ccb05dab9123417cedef11ac63a1dfa0f"
+      "bytes": 24911,
+      "sha256": "fa781546832f92e6441d043dfa4573d52316a514961d5f40929f9edac2867aca"
     },
     {
       "path": "src/fps/character-overrides.mjs",
-      "bytes": 3817,
-      "sha256": "44914746c8c597113b5ed7f86b52da588f2af76136302206ce0477a8af30bbad"
+      "bytes": 3917,
+      "sha256": "9671354cc40c84a8ae6ca7fea658fe70df9f37e52941c9caa102622e5d604f78"
     },
     {
       "path": "src/fps/character-roles.mjs",
-      "bytes": 2663,
-      "sha256": "73f61dcbf5c2304044d4ecb99b4d58c8103cf1b1be3a96728eb345daf1cb20dd"
+      "bytes": 2669,
+      "sha256": "40ecc1163b7ce45404545b1764bf21d4f78819de02413b2de3d0b1f43cb21bd5"
     },
     {
       "path": "src/fps/character-runtime-contract.mjs",
-      "bytes": 7873,
-      "sha256": "45024debc0793bcf2905b3aecc1f424135f59746036299d22b11a4f1faf01bb9"
+      "bytes": 8302,
+      "sha256": "2aedd66fc9e63d3cecd593bbd3d108c2461419be1c22ddbc73832c29b34688d0"
     },
     {
       "path": "src/fps/character-selection.mjs",
-      "bytes": 3344,
-      "sha256": "9631e751ccbc32a75df488e3ab41501ff4023133c25470a265029d8327f56204"
+      "bytes": 3492,
+      "sha256": "0f08800d3fdec4488b7c402be221ed3ec4583315890a644ea3f26232baf03503"
     },
     {
       "path": "src/fps/combat-audio.mjs",
@@ -2121,13 +2266,13 @@
     },
     {
       "path": "src/fps/combat-flow.mjs",
-      "bytes": 8280,
-      "sha256": "57a98323afcf34e024d363b63c02b1c3109c673eeedf62928eb9c72e892fd866"
+      "bytes": 8293,
+      "sha256": "63723f262539b9a463ab4f138ba8b336cdd045299746d1c4f59b70a85b403c51"
     },
     {
       "path": "src/fps/combat-hud.mjs",
-      "bytes": 5310,
-      "sha256": "85647f03adf4e9de562f4390d8d4b8818cff30468862946c4d20f3ed89bf5335"
+      "bytes": 5266,
+      "sha256": "2691e0bdec87107b0d246e23cbfce549bb4aa7c55c8757ccf3ff597536956028"
     },
     {
       "path": "src/fps/combat-visuals.mjs",
@@ -2136,13 +2281,13 @@
     },
     {
       "path": "src/fps/config.mjs",
-      "bytes": 5737,
-      "sha256": "8ee08b6809385cdab44fdb58235e3089ac5dc8c686e0db2e54dbc9dcbffefe89"
+      "bytes": 5758,
+      "sha256": "fe4937bd6ed0c02b638945bedca454d2fc935ef753cae3e4de9a2725bb3f6c0f"
     },
     {
       "path": "src/fps/control-deployment.mjs",
-      "bytes": 1878,
-      "sha256": "4c96540a060739261fef709d0d68170e0009f03fd003c8315fea8c230c5b0f33"
+      "bytes": 1877,
+      "sha256": "f978895444102b5bfad07aef504581d66eae5133034105d400dd43a2e77f5f79"
     },
     {
       "path": "src/fps/decor.mjs",
@@ -2166,13 +2311,18 @@
     },
     {
       "path": "src/fps/dwarf-rig.mjs",
-      "bytes": 7695,
-      "sha256": "6c0c087558b4a1f03b49543b6453d80b768d9ffa4d1434e341bd7af77083788f"
+      "bytes": 7701,
+      "sha256": "172e28b8c513ee0c899c790000881229b9459165cc2721f923883a360a05a01b"
     },
     {
       "path": "src/fps/effects.mjs",
-      "bytes": 9005,
-      "sha256": "ab2e836a9470113ce16e6db31cedb4aee0700efc3638c8523d9a1306d21d3324"
+      "bytes": 10301,
+      "sha256": "3496bae6cdb260987add13a4c05014f3c74da8d431a4301371e3ff9399aeecf3"
+    },
+    {
+      "path": "src/fps/english-ui.mjs",
+      "bytes": 990,
+      "sha256": "be82656efc73768bc977a4b9351939f961efc80d347b1b491192e99328186072"
     },
     {
       "path": "src/fps/facility-assets.mjs",
@@ -2206,8 +2356,8 @@
     },
     {
       "path": "src/fps/focus-hud.mjs",
-      "bytes": 8396,
-      "sha256": "323962b0f7ef91320958cc5a482b18cfb8d7153f90425a739da92e32e18020d2"
+      "bytes": 8500,
+      "sha256": "c3e84a38f4e77e799aa75f03080b6906ff1ed7742d2cc67bbc5a84d8321391d1"
     },
     {
       "path": "src/fps/frame-time-window.mjs",
@@ -2216,8 +2366,8 @@
     },
     {
       "path": "src/fps/frosted-door.mjs",
-      "bytes": 2089,
-      "sha256": "9ee89fe8b932d729bf52807f5bdfe5bb43d659b33683f6d6ea5220decbe70699"
+      "bytes": 2105,
+      "sha256": "eb1c68604af02703cbbc0696dcf83b0367a907965351c4856103e4e98fe30bec"
     },
     {
       "path": "src/fps/fullscreen.mjs",
@@ -2230,9 +2380,14 @@
       "sha256": "6e66d4814ee2952197e65a9331383bc6281f346fb3993d651482b7b308ef743e"
     },
     {
+      "path": "src/fps/game-english.mjs",
+      "bytes": 1247,
+      "sha256": "3339e7c1b8856ec9d89c0b88d97479e376c0aabb3ec575721fe63e74539a2c0a"
+    },
+    {
       "path": "src/fps/game.mjs",
-      "bytes": 46804,
-      "sha256": "2ec86c4f579d6e368e5710ed0e6808af5c367261d41cea89ea2b7cef854e9f84"
+      "bytes": 46682,
+      "sha256": "8e6bda9e9f63a8c75a6992cbfa26205742d398d455e2e9613fc44afa6a04da88"
     },
     {
       "path": "src/fps/gamepad-controls.mjs",
@@ -2246,8 +2401,8 @@
     },
     {
       "path": "src/fps/grenade-assist.mjs",
-      "bytes": 7122,
-      "sha256": "434271c2af383c620a40eba9a268139c32450d40050922a4b833b4c6e40cb427"
+      "bytes": 7125,
+      "sha256": "235c4054f0108744e99dce4f8b25c0f4481247729d790c427eae01c302f55147"
     },
     {
       "path": "src/fps/grenade-physics.mjs",
@@ -2266,18 +2421,18 @@
     },
     {
       "path": "src/fps/hud-shell.mjs",
-      "bytes": 7012,
-      "sha256": "7b127c9a081034af6703d2a7b3a1ed8a99dd424ce4c01e74be37c8acb327f282"
+      "bytes": 6978,
+      "sha256": "1995b7b423fa1a4df21b433a5ce17639182320d69cce32c9e62741df69f7d6f9"
     },
     {
       "path": "src/fps/level-adapter.mjs",
-      "bytes": 5175,
-      "sha256": "c7a3bc2ea1b628472562aa9ff3e05a02e2a4a970dd6ec475a43933e4473a86d5"
+      "bytes": 5185,
+      "sha256": "91a37aaa506e92da9763d7a4da4622d5839e40f5d79d7ec5eccabac112bbda23"
     },
     {
       "path": "src/fps/living-floor-art.mjs",
-      "bytes": 8450,
-      "sha256": "e9a938aaccc9f944dc145baf112338254520e61a7e1056560ab65aba3633c185"
+      "bytes": 8407,
+      "sha256": "47eb28b8b7057b7cf716afcf00470b422324afde70e039cd5c68fccf710f0f21"
     },
     {
       "path": "src/fps/living-floor-plan.mjs",
@@ -2291,13 +2446,13 @@
     },
     {
       "path": "src/fps/lobby-stage.mjs",
-      "bytes": 8335,
-      "sha256": "504983a8c22dcc9dcf6efd076d282466121b0e1741fd3ab8a1a2775ece8c9f21"
+      "bytes": 8613,
+      "sha256": "bdeb5dc20dedb14d5cda7dc63e5ae629e8a62247cf0c0ae2aa0c281f0c1be0ad"
     },
     {
       "path": "src/fps/match-flow.mjs",
-      "bytes": 12135,
-      "sha256": "06af703ff82722094c77ae604f736fc87c5225b2f8ad66815b351ffe940471be"
+      "bytes": 12402,
+      "sha256": "8a98d930c361a988e59a01abace83f3bc9376d19af9d6b5dcb1c4d31a0e5b505"
     },
     {
       "path": "src/fps/materials.mjs",
@@ -2305,19 +2460,24 @@
       "sha256": "5a286f41dfd8a299873101aeccb1c4e35f4246197504f320a5a0c7a0fc9f4c0b"
     },
     {
+      "path": "src/fps/menu-navigation.mjs",
+      "bytes": 10919,
+      "sha256": "1c793fc95db520af343dc423af661d4cb30b84989ea7723f87fc9cf7532a519a"
+    },
+    {
       "path": "src/fps/minimap-cache.mjs",
-      "bytes": 13559,
-      "sha256": "86c60957aa7a388b3ddcf5601f0e99a373a98bebc18b7e7c7a331a42f329a1bc"
+      "bytes": 13558,
+      "sha256": "587b44fd944aa4c52e6df281e5f77dc8414c36d0a193487daa5085494df8523b"
     },
     {
       "path": "src/fps/mobile-controls.mjs",
-      "bytes": 8075,
-      "sha256": "bc7f834a9e0d5610b92811f2ee277f305d1749f8736654423d4a93ca7707f8cc"
+      "bytes": 8959,
+      "sha256": "107735a0fb86b331916b8bdefc48840b7b7749b49403ffeb96c4bf5631cddf64"
     },
     {
       "path": "src/fps/model-primitives.mjs",
-      "bytes": 50838,
-      "sha256": "1a8f084a8da726868cb40cfe001e529077f33e2a46c7e9daaf5d37ab7737842f"
+      "bytes": 50888,
+      "sha256": "a22ce58e113ca5bb5ac471fd0e3b11bddcfce68d87a5c7106e006374e80af80c"
     },
     {
       "path": "src/fps/models.mjs",
@@ -2336,23 +2496,23 @@
     },
     {
       "path": "src/fps/network/connection.mjs",
-      "bytes": 2562,
-      "sha256": "df1804168f06c3b768acae6ee100e9b5d41e722818a877c636ca27b1c3693235"
+      "bytes": 2463,
+      "sha256": "3389db75c38de0c8a7c37ee109e454fa59d3150ce5b1c9149e758e8337b13dd4"
     },
     {
       "path": "src/fps/network/menu.mjs",
-      "bytes": 7206,
-      "sha256": "cb3acb7e19959774fe0081e26264c13d164ec6f068e12955aac7c4e07c903302"
+      "bytes": 6919,
+      "sha256": "dc6237828b437da8c9c39f27d000664e9b0206031f8743329271a57584a09422"
     },
     {
       "path": "src/fps/network/room-ui.mjs",
-      "bytes": 17528,
-      "sha256": "b77d5285f56596b8923655e082f34a301559ef24b47aa01b8ad3fe1ae9f71871"
+      "bytes": 17032,
+      "sha256": "ec4b602b07943b2f9086cc2ebf83fc429b8d4c14e4389b8ccc0d6b9c4fb6842d"
     },
     {
       "path": "src/fps/network/session.mjs",
-      "bytes": 38151,
-      "sha256": "e1dc618726318342b2dd8486646aee65390626d7b34e14e055edfd626de84a17"
+      "bytes": 39707,
+      "sha256": "9b6adb7bc53001d29867e1a7feab6f6b52f5c4e4a9dc9be8de75245e98c85b9b"
     },
     {
       "path": "src/fps/physics.mjs",
@@ -2361,8 +2521,8 @@
     },
     {
       "path": "src/fps/player-names.mjs",
-      "bytes": 1840,
-      "sha256": "c08a16ad1b96f1ad1cb6788aaa3c3eba014de32d507cae13a59eb95358ce2e12"
+      "bytes": 1842,
+      "sha256": "bd539a2978407fed0bb01ede00458d0f9a34ddc205db55356424131ab8421e13"
     },
     {
       "path": "src/fps/presentation-hands.mjs",
@@ -2381,13 +2541,13 @@
     },
     {
       "path": "src/fps/private-character-store.mjs",
-      "bytes": 5992,
-      "sha256": "5bc1f07e467661d07052e698830f5fb086823a90d7c65b0da069f835de02d913"
+      "bytes": 7170,
+      "sha256": "79935c5d1f06ee1557d794c04faeaf106bdd03d63ca31ed360e2813fe4f2ec1b"
     },
     {
       "path": "src/fps/project-batches.mjs",
-      "bytes": 7883,
-      "sha256": "e9bde640846824c471d379e975d38328163b29084f86fea3372d2795b3e1f626"
+      "bytes": 7879,
+      "sha256": "9832c7e04a8c3e297afdcd02cf9bc5bfbb6e67fb7ac3da374913eb8aad7d21e2"
     },
     {
       "path": "src/fps/project-visibility.mjs",
@@ -2396,8 +2556,8 @@
     },
     {
       "path": "src/fps/reload-foley.mjs",
-      "bytes": 3748,
-      "sha256": "8f000ffa4c7e39137118b1bb2e7520d1adadf7977b6d37bf6e49c7417780e421"
+      "bytes": 6740,
+      "sha256": "678b3ce33024c3ff954317a983c93b306b0f4d27e2e1b6386db93870c1a7271b"
     },
     {
       "path": "src/fps/render-budget.mjs",
@@ -2406,8 +2566,8 @@
     },
     {
       "path": "src/fps/render-engine.mjs",
-      "bytes": 33904,
-      "sha256": "a3fdc11442df81c72b88e784767dfcc4d4e708b279cef9963a52ee6af00656e0"
+      "bytes": 33897,
+      "sha256": "5cb5c25c1305e3263374b3d6dbff3260b0085830f059f6b6f8ef781482b2dc27"
     },
     {
       "path": "src/fps/render.mjs",
@@ -2416,8 +2576,8 @@
     },
     {
       "path": "src/fps/riposte-audio.mjs",
-      "bytes": 3077,
-      "sha256": "3569cc2b5641979b99fa67a106846f1e2c589cff5fee6ebe320a235720436c9d"
+      "bytes": 4427,
+      "sha256": "838290f994f0810a0b92d9ed3be861ae570e5f6fc57f72ebea9f36b5b893c723"
     },
     {
       "path": "src/fps/riposte-fps-math.mjs",
@@ -2460,19 +2620,34 @@
       "sha256": "13775c7d55f62dd86b0c0c674634a9cac2f1d39694d6729b2a527f5ed484f4ec"
     },
     {
+      "path": "src/fps/shot-audio.mjs",
+      "bytes": 2226,
+      "sha256": "fc2bc853d0c54195463986d399e4676b3e141ed1766de790f91a107a5e8a0bd3"
+    },
+    {
+      "path": "src/fps/shot-timing.mjs",
+      "bytes": 1392,
+      "sha256": "34aa3ec1c5b87f737cad9a7f53bea5385e00edcbedcb913ac717041cf744b0dc"
+    },
+    {
       "path": "src/fps/skin-sampler.mjs",
       "bytes": 1470,
       "sha256": "b20472d1a08fddd41a3a9be798a84a44bc3082f2c1cdd1b8d95453db2422cfc4"
     },
     {
       "path": "src/fps/skinned-clone.mjs",
-      "bytes": 1063,
-      "sha256": "3b62dcad7b8dde734d23942e8e199d0aad76ef3022470b34d0338dfa65ab6709"
+      "bytes": 1076,
+      "sha256": "bc0222ad85adfd7b06e5c4a284f851043f64cbd448232a2599d0812db55ae0a7"
     },
     {
       "path": "src/fps/smoke-detectors.mjs",
       "bytes": 2316,
       "sha256": "185ede947f2f8e4dcf010af756cf63494277f9d1cfde0161508d449b5a294a5e"
+    },
+    {
+      "path": "src/fps/solo-maps.mjs",
+      "bytes": 3725,
+      "sha256": "87647801cc4e9602e6ef4e9d1f1a75f7db59ff211a192a353231486e8759b694"
     },
     {
       "path": "src/fps/start-elevators.mjs",
@@ -2511,13 +2686,13 @@
     },
     {
       "path": "src/fps/tactical-controls.mjs",
-      "bytes": 8677,
-      "sha256": "ed5f521c1726f173f7d7d27a629f0d12b31da45650f64830a17b047d93ecf773"
+      "bytes": 8628,
+      "sha256": "ad22c76b7f5e05c65e17220026740d6d4a6490711c035dba243f5214b92356b2"
     },
     {
       "path": "src/fps/tactical-map.mjs",
-      "bytes": 3532,
-      "sha256": "1339964627c320e3f79c752a52113b4ba07c539f2054ae68be3d83578e1e5fda"
+      "bytes": 3535,
+      "sha256": "9081108a843f782d72b8abfdc6e92d3e6ee16adf020869493ac81594d9f5d5b9"
     },
     {
       "path": "src/fps/tactical-rules.mjs",
@@ -2541,8 +2716,8 @@
     },
     {
       "path": "src/fps/view-character-appearance.mjs",
-      "bytes": 6714,
-      "sha256": "ec8344e97ff12b61fe4bd84badf6bec30b9a86fb18a6a99d50cd329f165f35c9"
+      "bytes": 6687,
+      "sha256": "de4bc7b70efbc5a8f420830fbf384ead6d8fc54838c8d7a2489ef57bd419e17e"
     },
     {
       "path": "src/fps/view-surface.mjs",
@@ -2591,13 +2766,13 @@
     },
     {
       "path": "ui/cs-mobile.css",
-      "bytes": 4917,
-      "sha256": "f29adb1cb5f460d2e29b3ba53eb48e2e412a4c5c5f05653abe37fe9e16fcc4a3"
+      "bytes": 4941,
+      "sha256": "6848839111ef0fbf134196d0579f6bd6c4a979f76aba5c0dfcd0fed070cdc24c"
     },
     {
       "path": "ui/cs-mobile.mjs",
-      "bytes": 1260,
-      "sha256": "2b71892dbe7ba393d7d4a03d1007fd32e1c91214c21b6859d6c93c02715b5309"
+      "bytes": 1458,
+      "sha256": "37170d81aba6a6b8db7d3249f02db58f10e281b07ccf4bb69c033de13474d747"
     },
     {
       "path": "ui/cs-theme.css",
@@ -2660,7 +2835,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 59053104,
+  "bytes": 59439528,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

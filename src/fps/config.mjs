@@ -4,20 +4,20 @@ export const DEFAULT_DIFFICULTY = 'casual';
 // Only enemy behaviour and enemy damage to the human differ. Health, player
 // weapon damage, economy, geography and every objective timer remain shared.
 export const DIFFICULTIES = Object.freeze({
-  casual: Object.freeze({ id: 'casual', name: 'Casual', description: 'Rekommenderat. Långsammare reaktion, korta salvor och 55 % skada från fiendebotar mot dig.',
+  casual: Object.freeze({ id: 'casual', name: 'Casual', description: 'Recommended. Enemies react more slowly, fire short bursts and deal 55% damage to you.',
     reactionMin: .9, reactionMax: 1.2, turnSpeed: 2.5, initialAimError: .17, steadyAimError: .035, settleTime: 2,
     distanceErrorScale: 18, movingAimPenalty: .32, hurtAimPenalty: 2.4, hurtRecovery: 1.1,
     burstMin: 2, burstMax: 3, pauseMin: .75, pauseMax: 1.15, reacquireGrace: .65, humanAttackers: 2, humanDamage: .55 }),
-  normal: Object.freeze({ id: 'normal', name: 'Normal', description: 'Snabbare reaktion och tätare salvor. Normal skada mot dig.',
+  normal: Object.freeze({ id: 'normal', name: 'Normal', description: 'Enemies react faster, fire more often and deal full damage.',
     reactionMin: .48, reactionMax: .7, turnSpeed: 4.5, initialAimError: .10, steadyAimError: .023, settleTime: 1.15,
     distanceErrorScale: 28, movingAimPenalty: .22, hurtAimPenalty: 1.5, hurtRecovery: .8,
     burstMin: 3, burstMax: 5, pauseMin: .35, pauseMax: .6, reacquireGrace: .75, humanAttackers: 3, humanDamage: 1 }),
-  hard: Object.freeze({ id: 'hard', name: 'Hard', description: 'Snabb reaktion, bättre sikte och längre salvor. Normal skada; samma siktregler.',
+  hard: Object.freeze({ id: 'hard', name: 'Hard', description: 'Enemies react quickly, aim more accurately and fire longer bursts. Full damage and normal visibility rules apply.',
     reactionMin: .23, reactionMax: .38, turnSpeed: 7.5, initialAimError: .065, steadyAimError: .015, settleTime: .65,
     distanceErrorScale: 40, movingAimPenalty: .14, hurtAimPenalty: .9, hurtRecovery: .6,
     burstMin: 4, burstMax: 7, pauseMin: .18, pauseMax: .35, reacquireGrace: .85, humanAttackers: 5, humanDamage: 1 }),
 });
-export const TEAMMATE_DIFFICULTY = Object.freeze({ ...DIFFICULTIES.normal, id: 'teammate', name: 'Lagkamrat',
+export const TEAMMATE_DIFFICULTY = Object.freeze({ ...DIFFICULTIES.normal, id: 'teammate', name: 'Teammate',
   reactionMin: .32, reactionMax: .32, turnSpeed: 6, initialAimError: .06, steadyAimError: .018, settleTime: .6,
   burstMin: 4, burstMax: 6, pauseMin: .18, pauseMax: .35, humanDamage: 1 });
 export const CONFIG = Object.freeze({
@@ -47,12 +47,12 @@ export const WEAPONS = Object.freeze({
   shotgun: { ...primary, id: 'shotgun', name: 'Breach Shotgun', cost: 1800, magazine: 8, reserve: 32, damage: 13, pellets: 8, interval: .85, reload: 2.6, range: 30, spread: .055, movingSpread: .075, automatic: false },
   sniper: { ...primary, id: 'sniper', name: 'Scout Rifle', cost: 4750, magazine: 5, reserve: 25, damage: 105, interval: 1.25, reload: 2.9, range: 130, spread: .001, movingSpread: .095, automatic: false },
   bazooka: { ...primary, id: 'bazooka', name: 'Rocket Launcher', cost: 3600, magazine: 1, reserve: 5, damage: 150, interval: 1.1, reload: 2.8, range: 88, spread: 0, movingSpread: 0, automatic: false, recoil: .06, projectile: true },
-  knife: { id: 'knife', name: 'Kniv', slot: 'knife', cost: 0, damage: 45, range: 1.65, interval: .6, pellets: 1, spread: 0, movingSpread: 0, recoil: .035 },
+  knife: { id: 'knife', name: 'Knife', slot: 'knife', cost: 0, damage: 45, range: 1.65, interval: .6, pellets: 1, spread: 0, movingSpread: 0, recoil: .035 },
   smoke: { id: 'smoke', name: 'Smoke Cartridge', slot: 'grenade', cost: 300, limit: 1, interval: .6 },
   flash: { id: 'flash', name: 'Flash Cartridge', slot: 'grenade', cost: 200, limit: 2, interval: .6 },
   he: { id: 'he', name: 'HE Cartridge', slot: 'grenade', cost: 300, limit: 1, interval: .6 },
-  bomb: { id: 'bomb', name: 'Uppdragsbomb', slot: 'bomb', cost: 0 },
-  armor: { id: 'armor', name: 'Kroppsrustning', slot: 'armor', cost: 650 },
+  bomb: { id: 'bomb', name: 'Mission bomb', slot: 'bomb', cost: 0 },
+  armor: { id: 'armor', name: 'Body armor', slot: 'armor', cost: 650 },
 });
 
 export const PRIORITY = Object.freeze({ detonation: 0, defuse: 1, rescue: 2, elimination: 3, draw: 3, timeout: 4 });

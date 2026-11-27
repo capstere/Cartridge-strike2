@@ -36,7 +36,7 @@ export function makeFittedFootwear({root,bones,meshes,side,soleMaterial,upperMat
  const foot=bones.get('foot_'+side),calf=bones.get('calf_'+side);
  const trousers=meshes.find(m=>m.isSkinnedMesh&&m.material?.name==='trousers-fabric');
  const original=meshes.find(m=>m.isSkinnedMesh&&m.material?.name==='boots-leather');
- if(!foot||!calf||!trousers||!original)throw Error('Skons fotben eller byxslut saknas.');
+ if(!foot||!calf||!trousers||!original)throw Error('The shoe is missing its foot bone or trouser cuff.');
  root.updateWorldMatrix(true,true);
  const inverse=new T.Matrix4().copy(root.matrixWorld).invert(),ankle=foot.getWorldPosition(new T.Vector3()).applyMatrix4(inverse);
  const rootSpace=mesh=>new T.Matrix4().multiplyMatrices(inverse,mesh.matrixWorld);
@@ -45,7 +45,7 @@ export function makeFittedFootwear({root,bones,meshes,side,soleMaterial,upperMat
   v.fromBufferAttribute(p,i).applyMatrix4(transform);
   if(Math.sign(v.x)===Math.sign(ankle.x)&&v.y<ankle.y+.25)points.push(v.clone());
  }
- if(!points.length)throw Error('Kunde inte mäta byxans ankelöppning.');
+ if(!points.length)throw Error('The ankle opening of the trousers could not be measured.');
  const low=Math.min(...points.map(p=>p.y)),cuff=new T.Box3();
  for(const point of points)if(point.y<=low+.035)cuff.expandByPoint(point);
  let floor=Infinity;const oldPosition=original.geometry.attributes.position,oldTransform=rootSpace(original);
@@ -54,7 +54,7 @@ export function makeFittedFootwear({root,bones,meshes,side,soleMaterial,upperMat
   if(Math.sign(v.x)===Math.sign(ankle.x))floor=Math.min(floor,v.y);
  }
  const center=cuff.getCenter(new T.Vector3()),size=cuff.getSize(new T.Vector3());
- if(!Number.isFinite(floor)||size.x<=0||size.z<=0)throw Error('Ogiltiga fotmått.');
+ if(!Number.isFinite(floor)||size.x<=0||size.z<=0)throw Error('The foot dimensions are invalid.');
  // Measure the real trouser cross-section; a bounding-box ellipse can protrude
  // through the narrower female cuff even when its centre looks correct.
  const contour=Array.from({length:p.count},(_,i)=>new T.Vector3().fromBufferAttribute(p,i).applyMatrix4(transform));
@@ -70,13 +70,13 @@ export function makeFittedFootwear({root,bones,meshes,side,soleMaterial,upperMat
   });
   if(ring.every(Boolean)){collar=ring;break;}
  }
- if(!collar)throw Error('Skons krage kunde inte passas in under byxslutet.');
+ if(!collar)throw Error('The shoe collar could not be fitted under the trouser cuff.');
  const origin=new T.Vector3(ankle.x,floor-.008,ankle.z+.023),geometry=makeFootwear();
  const sole=new T.Mesh(geometry.sole,soleMaterial);sole.name='boot-sole-'+side;
  sole.position.copy(origin);root.add(sole);root.updateWorldMatrix(true,true);foot.attach(sole);
  const upperGeometry=geometry.upper,positions=upperGeometry.attributes.position,joints=[],weights=[];
  const footIndex=trousers.skeleton.bones.indexOf(foot),calfIndex=trousers.skeleton.bones.indexOf(calf);
- if(footIndex<0||calfIndex<0)throw Error('Skons ben saknas i källskelettet.');
+ if(footIndex<0||calfIndex<0)throw Error('The source skeleton is missing the bones required for the shoe.');
  for(let i=0;i<positions.count;i++){
   const y=positions.getY(i),t=T.MathUtils.smoothstep(y,.079,.184),blend=T.MathUtils.smoothstep(y,.057,.143);
   const top=i<outline.length*6?collar[i%outline.length]:topCenter;

@@ -1,5 +1,5 @@
 import {createDoors} from '../src/fps/doors.mjs';
-import {INTERPOLATION_MS,REWIND_MS,RTT_FRESH_MS} from '../shared/multiplayer/rules.mjs';
+import {INTERPOLATION_MS,REWIND_MS,RTT_FRESH_MS,SHOT_TICK_MARGIN_MS} from '../shared/multiplayer/rules.mjs';
 
 const residentPose=['x','y','z','height','yaw'];
 
@@ -46,7 +46,7 @@ export class LagCompensation {
     if(stamp<(seat.lastShotStamp||0))return this.reject('regressed');
     // Bind the framework's render stamp to the acknowledged simulation tick.
     // Neither a client clock nor a chosen tick alone can select hit history.
-    if(anchor===undefined||stamp<anchor-INTERPOLATION_MS-75||stamp>anchor+75)return this.reject('tick/stamp mismatch');
+    if(anchor===undefined||stamp<anchor-INTERPOLATION_MS-SHOT_TICK_MARGIN_MS||stamp>anchor+SHOT_TICK_MARGIN_MS)return this.reject('tick/stamp mismatch');
     // Server-originated nonce RTT samples constrain forged render delays too.
     // Allow one patch and scheduler/jitter margin; the absolute cap still wins.
     if(!Number.isFinite(seat.rtt)||!Number.isFinite(seat.rttAt)||now-seat.rttAt>RTT_FRESH_MS){

@@ -1,24 +1,51 @@
-export function networkEndpoint(endpoint=globalThis.location?.origin,origin=globalThis.location?.origin) {
-  let url;try{url=new URL(endpoint);}catch{throw Error('Öppna spelet från Pi-serverns fullständiga adress.');}
-  if(!['http:','https:'].includes(url.protocol)||url.origin!==origin||url.username||url.password||url.pathname!=='/'||url.search||url.hash)
-    throw Error('Spel och server måste ha samma adress. Öppna samma speladress på båda enheterna.');
+import {accessText as en} from '../../../shared/multiplayer/access-english.mjs';
+
+export class MapLoadError extends Error {
+  constructor(mapName) {
+    super(en.mapLoadFailed(mapName));
+  }
+}
+
+export function networkEndpoint(endpoint = globalThis.location?.origin, origin = globalThis.location?.origin) {
+  let url;
+  try {
+    url = new URL(endpoint);
+  } catch {
+    throw new Error(en.invalidEndpoint);
+  }
+  if (!['http:', 'https:'].includes(url.protocol) || url.origin !== origin ||
+      url.username || url.password || url.pathname !== '/' || url.search || url.hash) {
+    throw new Error(en.sameOrigin);
+  }
   return url.origin;
 }
+
+// Some Colyseus versions send only the server's reason string. Classify that
+// transport input here so the UI never derives a recovery action from its label.
+export function connectionFailure(error) {
+  if (error instanceof MapLoadError) return {id: 'mapLoadFailed', message: error.message, recovery: 'retry'};
+  const reason = String(error?.message || error || '');
+  const code = Number(error?.code);
+  let id;
+  if (/join cancelled/i.test(reason)) id = 'joinCancelled';
+  else if (/incorrect family room password/i.test(reason)) id = 'wrongFamilyPassword';
+  else if (/family room .*closed/i.test(reason)) id = 'familyClosed';
+  else if (/family room .*unavailable/i.test(reason)) id = 'familyUnavailable';
+  else if (/incorrect private|AUTH_FAILED/i.test(reason)) id = 'wrongRoomCode';
+  else if (code === 401 || /pilot invite|pilot access|invitation required/i.test(reason)) id = 'pilotExpired';
+  else if (/team is full/i.test(reason)) id = 'teamFull';
+  else if (/full|locked/i.test(reason)) id = 'roomFull';
+  else if (/not found|not defined|invalid room id|does not exist/i.test(reason)) id = 'roomMissing';
+  else if (/incompatible|mismatch|version/i.test(reason)) id = 'outdated';
+  else if (code === 429 || /too many|room limit/i.test(reason)) id = 'busy';
+  else if (/private code|invalid room options/i.test(reason)) id = 'invalidOptions';
+  else if (code === 403 || /origin|host/i.test(reason)) id = 'originDenied';
+  else if (/fetch|network|ECONN|timeout|ready|aborted/i.test(reason)) id = 'unreachable';
+  else id = 'failed';
+  return {id, message: en[id], recovery: id === 'pilotExpired' ? 'signIn' : 'retry'};
+}
+
 export function connectionMessage(error) {
-  const message=String(error?.message||error||'');
-  if(/Join cancelled/i.test(message))return 'Anslutningen avbröts.';
-  if(/Incorrect family room password/i.test(message))return 'Fel lösenord till familjerummet. Kontrollera lösenordet du fick.';
-  if(/family room .*closed/i.test(message))return 'Öppna den fasta länken till familjerummet igen.';
-  if(/family room .*unavailable/i.test(message))return 'Familjerummet är tillfälligt otillgängligt. Försök igen om en stund.';
-  if(/Incorrect private|AUTH_FAILED/.test(message))return 'Fel privat rumskod. Kontrollera koden med den andra spelaren.';
-  if(/team is full/i.test(message))return 'Laget är fullt (5 spelare). Välj det andra laget eller automatisk lagfördelning.';
-  if(/full|locked/i.test(message))return 'Rummet är fullt (10 spelare). Vänta tills någon lämnar.';
-  if(/not found|not defined|invalid room|does not exist/i.test(message))return 'Rummet finns inte längre. Kontrollera rums-ID eller skapa ett nytt rum.';
-  if(/Incompatible|mismatch|version/i.test(message))return 'Klient och server har olika version. Ladda om sidan på båda enheterna efter serveruppdateringen.';
-  if(error?.code===429||/Too many|room limit/i.test(message))return 'För många anslutningsförsök eller rum. Vänta en stund och försök igen.';
-  if(/private code|Invalid room options/i.test(message))return 'Använd en kod med 6–64 bokstäver, siffror eller bindestreck och ett kort namn.';
-  if(error?.code===401||/pilot invite|pilot access|invitation required/i.test(message))return 'Din serverinbjudan har gått ut. Ladda om sidan och ange inbjudningskoden igen.';
-  if(error?.code===403||/Origin|Host/.test(message))return 'Servern avvisade adressen. Öppna spelet direkt från den delade serveradressen.';
-  if(/fetch|network|ECONN|timeout|ready|aborted/i.test(message))return 'Ingen kontakt med servern. Kontrollera uppkopplingen, serveradressen och att tjänsten körs. Försök sedan igen.';
-  return message||'Anslutningen misslyckades. Försök igen.';
+  const failure = connectionFailure(error);
+  return failure.id === 'failed' && typeof error === 'string' ? en.disconnected : failure.message;
 }

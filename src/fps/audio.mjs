@@ -104,24 +104,26 @@ export class AudioSystem {
     this.lastSimTime = simTime;
     this.updateListener(listener);
     this.updateAmbient(listener);
-    for (const event of events) {
-      if (!event || typeof event !== 'object') continue;
-      if (this.seen.has(event) || (event.id != null && this.ids.has(event.id))) {
-        this.stats.duplicates++; continue;
-      }
-      this.seen.add(event);
-      if (event.id != null) {
-        this.ids.add(event.id);
-        if (this.ids.size > 4096) this.ids.delete(this.ids.values().next().value);
-      }
-      // Never replay accumulated pre-unlock, focus-loss or previous-round sound.
-      if (Number.isFinite(event.time) && (event.time < simTime - .4 || event.time > simTime + .1)) {
-        this.stats.stale++; continue;
-      }
-      if (!this.context || this.context.state !== 'running' || !this.listener || this.volume === 0) continue;
-      if (this.active.size >= 96) { this.stats.dropped++; continue; }
-      this.play(event);
+    for (const event of events) this.handleEvent(event, simTime);
+  }
+
+  handleEvent(event, simTime) {
+    if (!event || typeof event !== 'object') return;
+    if (this.seen.has(event) || (event.id != null && this.ids.has(event.id))) {
+      this.stats.duplicates++; return;
     }
+    this.seen.add(event);
+    if (event.id != null) {
+      this.ids.add(event.id);
+      if (this.ids.size > 4096) this.ids.delete(this.ids.values().next().value);
+    }
+    // Never replay accumulated pre-unlock, focus-loss or previous-round sound.
+    if (Number.isFinite(event.time) && (event.time < simTime - .4 || event.time > simTime + .1)) {
+      this.stats.stale++; return;
+    }
+    if (!this.context || this.context.state !== 'running' || !this.listener || this.volume === 0) return;
+    if (this.active.size >= 96) { this.stats.dropped++; return; }
+    this.play(event);
   }
 
   /** Quiet, local room tone; never enters AI hearing or the match random sequence. */
@@ -195,7 +197,7 @@ export class AudioSystem {
     return { gain, nodes, when: ctx.currentTime + delay };
   }
 
-  track(source, channel, duration) {
+  track(source, channel, duration, offset = 0) {
     const item = { source, nodes: channel.nodes };
     this.active.add(item);
     source.onended = () => {
@@ -203,7 +205,8 @@ export class AudioSystem {
       source.disconnect();
       for (const node of item.nodes) node.disconnect();
     };
-    source.start(channel.when);
+    if (offset) source.start(channel.when, offset);
+    else source.start(channel.when);
     source.stop(channel.when + duration);
   }
 
@@ -278,6 +281,7 @@ export class AudioSystem {
       case 'rustle': this.noise(sound, .18, event.mode === 'sneak' ? .015 : .075, 7800); break;
       case 'jump': this.sample('impactSoft_medium_000', sound, .17, 1.4); this.noise(sound, .09, .05, 1400); break;
       case 'land': this.sample('impactSoft_medium_000', sound, .45, .85); break;
+      case 'cartridge-latch': this.sample('impactMetal_light_001', sound, .14, 1.7); break;
       case 'throw': this.noise(sound, .14, .22, 5000); this.sample('impactMetal_light_001', sound, .12, 2); break;
       case 'bounce': this.sample('impactMetal_light_000', sound, .28 * clamp(event.energy ?? 1, .2, 1), varied * 1.4); break;
       case 'smoke': this.noise(sound, 1.4, .25, 3400); this.sample('impactGeneric_light_000', sound, .18, .8); break;
