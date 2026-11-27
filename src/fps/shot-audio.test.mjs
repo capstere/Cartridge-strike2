@@ -48,3 +48,13 @@ test('all shipped takes are byte-identical to the cataloged donor recordings',()
     assert.equal(createHash('sha256').update(shipped).digest('hex'),f.sha256);
   }
 });
+
+test('the cartridge latch ships the credited Riposte cut of Grenade pin pull by CGEffex',()=>{
+  const root=new URL('../../',import.meta.url);
+  const shipped=readFileSync(new URL('assets/fps/audio/riposte-f_pin.mp3',root));
+  const donor=readFileSync(new URL('frontline/source/assets/sfx/foley/f_pin.mp3',root));
+  const credits=readFileSync(new URL('credits.html',root),'utf8');
+  assert.deepEqual(shipped,donor);
+  assert.match(credits,/Grenade pin pull by CGEffex/);
+  assert(credits.includes('https://creativecommons.org/licenses/by/4.0/'));
+});

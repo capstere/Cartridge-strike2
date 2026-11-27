@@ -4,6 +4,8 @@ Cartridge-Strike 3 uses two original Riposte takes per bank. A local shot starts
 
 The first take is available through the game's regular audio unlock. Three decoders share that initial queue. The second take loads on first use of that bank in a single serial queue. An event that used a fallback can never be replayed by a completed decode. The 24 additional MP3 files total 304,728 bytes. All 38 shot takes match the original donor files. [Asset hashes and license IDs](donor-takes.json)
 
+The cartridge latch reuses Riposte’s processed `f_pin.mp3` from `05-audio.js` and the marker in `08-player.js`. One confirmed `cartridge-latch` event from the handling package owns the cue. CGEffex’s CC BY 4.0 attribution, edits and source are included in the in-game credits. The shipped clip and the donor both have Git blob ID `854046f05784b331a701a8960063bf96f84efda9` (4,221 bytes).
+
 ## Pi Chromium signal measurement
 
 The native Pi browser rendered the actual decoded MP3s through the game's shot selection, tracking and spatial Web Audio graph at 48 kHz. Each second shot used the other recorded take. The onset is the first sample above 3% of that signal’s peak. At 48 m, pausing before arrival gave an all-zero output buffer and zero retained sources. This measures the browser mixer. Physical speaker onset and touch-to-display latency require device measurements. [Recorded samples and timestamps](pi-offline-pcm.json)
@@ -17,4 +19,4 @@ The native Pi browser rendered the actual decoded MP3s through the game's shot s
 | P9 | 8 | 23.32 | 30.67 |
 | P9 | 48 | 139.94 | 147.62 |
 
-Run `node --test src/fps/shot-audio.test.mjs`. Serve the checkout on loopback and run `FPS_TEST_ORIGIN=http://127.0.0.1:8765 node tools/spatial-audio-browser.mjs`. Set `CHROMIUM_PATH=/usr/bin/chromium` for the Pi browser. The offline render, reset and asset identity checks also run in the FPS regression workflow. Captured build `1fb2f6b227eaf166bca0d0dee294d46fef3bcc7a342a728336812fd75a854a8b` used protocol 15.
+Run `node --test src/fps/shot-audio.test.mjs`. Serve the checkout on loopback and run `FPS_TEST_ORIGIN=http://127.0.0.1:8765 node tools/spatial-audio-browser.mjs`. Set `CHROMIUM_PATH=/usr/bin/chromium` for the Pi browser. The offline render, reset and asset identity checks also run in the FPS regression workflow. The combined English and acoustic run used protocol 15 build `ff13002dba01f90bfe2bd221dd267df792c422a9699f98869f7f64b32f90963c` with 562 allowlisted files. Native Chromium 156 rendered one latch source with its first PCM onset at 5.71 ms after the gameplay marker, at 48 kHz. A combined protocol-16 session is needed to bind that measurement to the actual hold animation.

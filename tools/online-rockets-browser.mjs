@@ -40,7 +40,7 @@ async function create(desktop,mobile,mode){
   await mobile.locator('#network-room').fill(room.roomId);
   await mobile.locator('[data-create=false]').tap();
   await mobile.locator('#room-ready').waitFor();
-  assert.match(await mobile.locator('#room-friendly-fire-status').textContent(),/Av/);
+  assert.equal(await mobile.locator('#room-friendly-fire-status').textContent(),'Friendly fire · Off');
   assert(await mobile.locator('#room-friendly-fire-label').isHidden());
   const difficulty=desktop.locator('#room-bot-difficulty');
   assert.equal(await difficulty.inputValue(),'normal');
@@ -52,7 +52,7 @@ async function create(desktop,mobile,mode){
   await difficulty.selectOption('normal');
   await until(async()=>/Normal/.test(await mobile.locator('#room-bot-difficulty-status').textContent()),'default restored for rocket scenario');
   await desktop.locator('#room-friendly-fire').selectOption('on');
-  await until(async()=>/På/.test(await mobile.locator('#room-friendly-fire-status').textContent()),'owner setting replicated to touch');
+  await until(async()=>(await mobile.locator('#room-friendly-fire-status').textContent())==='Friendly fire · On','owner setting replicated to touch');
   if(mode==='tdm')await mobile.locator('#room-primary').selectOption('bazooka');
   await mobile.locator('#room-ready').tap();
   await desktop.locator('#room-ready').click();
@@ -130,12 +130,20 @@ async function mapControls(desktop,mobile,room){
     await until(async()=>(await read(page)).open,'the map becomes visible');
     const state=await read(page);
     assert(state.right+4<=state.aimLeft && state.events==='none','map stays outside aim and lets touch through');
-    assert.match(state.legend,/Pil · Du.*Punkt · Laget/);
-    assert.equal(state.legend.includes('Bombplats'),classic);
+    assert.match(state.legend,/Arrow · You.*Dot · Team/);
+    assert.equal(state.legend.includes('Bomb site'),classic);
     assert(state.cache<=2);
     return state;
   };
   const touch=async()=>{
+    const controls = await mobile.evaluate(() => ({
+      initialized: __fps.mobile.enabled,
+      attached: Boolean(document.getElementById('mobile-more')),
+      open: __fps.modal, visible: __fps.mobile.visible, alive: __fps.game.player?.alive,
+      primaryCoarse: matchMedia('(pointer: coarse)').matches,
+      anyCoarse: matchMedia('(any-pointer: coarse)').matches, touchPoints: navigator.maxTouchPoints,
+    }));
+    assert(controls.initialized && controls.attached, 'touch utility controls must exist after ordinary mobile boot: '+JSON.stringify(controls));
     await mobile.locator('#mobile-more').tap();
     await mobile.locator('[data-utility=karta]').tap();
   };
@@ -179,8 +187,8 @@ async function mapControls(desktop,mobile,room){
   if(await desktop.locator('#resume').isVisible())await resumeDesktop(desktop);
   assert.equal(await desktop.evaluate(()=>document.pointerLockElement?.id),'game');
   if(classic){
-    await desktop.waitForFunction(()=>document.querySelector('#bomb-status').textContent.includes('Stoppa'));
-    await mobile.waitForFunction(()=>document.querySelector('#bomb-status').textContent.includes('gisslan')||document.querySelector('#bomb-status').textContent.includes('North Laboratory'));
+    await desktop.waitForFunction(()=>document.querySelector('#bomb-status').textContent.includes('Prevent the plant and the rescue'));
+    await mobile.waitForFunction(()=>document.querySelector('#bomb-status').textContent.includes('hostages')||document.querySelector('#bomb-status').textContent.includes('North Laboratory'));
   }
   console.log('PASS tactical map',room.state.mode,JSON.stringify({desktop:await read(desktop),touch:await read(mobile)}));
 }
@@ -205,7 +213,7 @@ async function radioControls(desktop,mobile,mode,shooter){
       assert.equal(await desktop.evaluate(()=>!!__fps.input(0).fire),false,'radio blocks a mouse trigger');
     }finally{await desktop.mouse.up();}
     await desktop.keyboard.press('1');
-    await desktop.locator('#radio-caption').filter({hasText:'Håll ihop'}).waitFor();
+    await desktop.locator('#radio-caption').filter({hasText:'Group up'}).waitFor();
     await desktop.waitForFunction(()=>window.playedTeamVoice===1);
     assert.equal(await desktop.evaluate(()=>document.pointerLockElement?.id),'game');
     assert.equal(await mobile.evaluate(()=>__fps.network.teamSignal),null,'opposing touch client sees no Classic radio');
@@ -348,6 +356,9 @@ try{
       phase:__fps.network?.room?.state.phase,resultAt:__fps.network?.resultsAt,visible:!document.hidden},
     actor:__fps.game.player&&{x:__fps.game.player.x,z:__fps.game.player.z,yaw:__fps.game.player.yaw,weapon:__fps.game.player.weapon},
     rocket:window.rocketEvidence&&{models:[...rocketEvidence.visible],events:rocketEvidence.events.map(e=>[e.type,e.rocketId]),sound:rocketEvidence.sounds},
+    controls:{enabled:__fps.mobile?.enabled,visible:__fps.mobile?.visible,alive:__fps.game.player?.alive,
+      more:document.getElementById('mobile-more')?.outerHTML,primaryCoarse:matchMedia('(pointer: coarse)').matches,
+      anyCoarse:matchMedia('(any-pointer: coarse)').matches,touchPoints:navigator.maxTouchPoints},
     fatal:document.querySelector('#fatal pre')?.textContent})).catch(()=>null));
   throw error;
 }finally{for(const b of browsers)await b.close();await local.close();}

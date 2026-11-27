@@ -141,9 +141,17 @@
       "errors": []
     }
   ],
+  "latch": {
+    "latch": true,
+    "sources": 1,
+    "firstPcmMs": 5.708333333333333,
+    "peak": 0.26511749625205994,
+    "errors": []
+  },
   "cancelled": {
     "cancelled": true,
     "silence": true,
     "remaining": 0
-  }
+  },
+  "runtimeBuild": "ff13002dba01f90bfe2bd221dd267df792c422a9699f98869f7f64b32f90963c"
 }

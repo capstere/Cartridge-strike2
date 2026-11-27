@@ -29,7 +29,7 @@ async function openOriginal(browser, mobile, mode = 'classic') {
       return Promise.resolve();
     };
   });
-  await page.goto(ORIGIN + '/fps/?test&realtime', { waitUntil: 'domcontentloaded', timeout: 60000 });
+  await page.goto(ORIGIN + '/fps/?screen=solo&test&realtime', { waitUntil: 'domcontentloaded', timeout: 60000 });
   await page.waitForFunction(() => {
     const fatal = document.getElementById('fatal');
     return !!globalThis.__fps || !!fatal && !fatal.hidden;

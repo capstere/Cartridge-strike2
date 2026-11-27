@@ -2,6 +2,7 @@ import {createHash, createHmac, randomBytes, timingSafeEqual} from 'node:crypto'
 import {readFile} from 'node:fs/promises';
 import {isAbsolute} from 'node:path';
 import {isIP} from 'node:net';
+import {accessText as en} from '../shared/multiplayer/access-english.mjs';
 import {FAMILY_ROOM_ALIAS} from '../shared/multiplayer/family-room.mjs';
 
 const COOKIE = '__Host-cs2_pilot';
@@ -120,17 +121,25 @@ export function showInvite(res, wrong = false, room, family = false) {
     'Content-Type': 'text/html; charset=utf-8',
     'Content-Security-Policy': "default-src 'none'; script-src 'nonce-" + nonce + "'; style-src 'unsafe-inline'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'",
   });
-  res.end(`<!doctype html><html lang="sv"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cartridge-Strike 2 · Internetpilot</title><style>
-*{box-sizing:border-box}body{margin:0;min-height:100svh;display:grid;place-items:center;background:#161b1b;color:#edf2e8;font:1rem system-ui}
-main{width:min(100%,26rem);padding:2rem}h1{font-size:2rem}input,button{width:100%;padding:.8rem;font:inherit;margin-top:.5rem}
-input{color:inherit;background:#232c2c;border:1px solid #94a6a0}button{background:#efbf64;color:#161b1b;border:0;font-weight:bold;cursor:pointer}
-.show-code{display:flex;align-items:center;gap:.5rem;margin-top:.75rem}.show-code input{width:auto;margin:0}small{display:block;margin-top:.75rem}
-</style><main><h1>${family ? FAMILY_ROOM_ALIAS : 'Cartridge-Strike 2'}</h1><p>Öppna ${family ? 'familjerummet' : 'Floor 5'} med inbjudningskoden från serverns ägare.</p>
-${wrong ? '<p role="alert">Fel inbjudningskod. Försök igen.</p>' : ''}<form method="post" action="/pilot/session">
-${destination}<label>Inbjudningskod<input id="pilot-invite" type="password" name="invite" maxlength="160" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" aria-describedby="invite-help" required></label>
-<label class="show-code"><input id="show-invite" type="checkbox">Visa kod</label>
-<small id="invite-help">${family ? 'Ange serverns inbjudningskod här. Familjerummets lösenord anges i nästa steg.' : 'Klistra in enbart inbjudningskoden. Din privata rumskod väljer du i nästa steg.'}</small>
-<button type="submit">Öppna lobbyn</button></form></main>
+  res.end(`<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cartridge-Strike 3 · Private multiplayer</title><style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100svh;display:grid;place-items:center;padding:clamp(16px,4vw,40px);
+  background:linear-gradient(125deg,#10181d,#202f33 58%,#182023);color:#edf2ee;font:1rem/1.45 system-ui,sans-serif}
+main{width:min(100%,28rem);padding:clamp(20px,5vw,38px);background:#122026;border:1px solid #56696d;border-top:4px solid #e7b560}
+h1{margin:0 0 .4em;font-size:clamp(1.8rem,7vw,2.6rem);line-height:1.08;letter-spacing:-.03em}
+p{margin:0 0 1.25rem;color:#cedad9}label{display:block;font-weight:600}
+input,button{width:100%;min-height:44px;padding:.7rem .85rem;font:inherit;border-radius:3px}
+input{margin:.35rem 0;color:#fff;background:#0d181c;border:1px solid #8b9ea0}
+button{margin-top:1.15rem;background:#f0bf67;color:#192127;border:1px solid #f7ce89;font-weight:750;cursor:pointer}
+:is(input,button):focus-visible{outline:3px solid #a5e4fa;outline-offset:3px}
+.show-code{display:flex;align-items:center;gap:.6rem;min-height:44px;font-weight:400}.show-code input{width:1.15rem;height:1.15rem;min-height:0}
+small{display:block;color:#bdcccb}p[role=alert]{padding:.65rem .8rem;border-left:3px solid #f0bf67;background:#302c22;color:#ffdfaa}
+</style><main aria-labelledby="entry-title"><h1 id="entry-title">${family ? FAMILY_ROOM_ALIAS : en.gameTitle}</h1><p>${en.pilotIntro}</p>
+${wrong ? `<p role="alert">${en.wrongInvite}</p>` : ''}<form method="post" action="/pilot/session">
+${destination}<label>${en.inviteLabel}<input id="pilot-invite" type="password" name="invite" maxlength="160" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" aria-describedby="invite-help" required></label>
+<label class="show-code"><input id="show-invite" type="checkbox">${en.showInvite}</label>
+<small id="invite-help">${family ? en.familyInviteHelp : en.pilotInviteHelp}</small>
+<button type="submit">${en.enterLobby}</button></form></main>
 <script nonce="${nonce}">document.getElementById('show-invite').addEventListener('change',event=>{document.getElementById('pilot-invite').type=event.target.checked?'text':'password';});</script></html>`);
 }

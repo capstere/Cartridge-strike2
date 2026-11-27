@@ -3,12 +3,12 @@ import * as THREE from '../../vendor/three/three.module.js';
 import { GRENADE_TYPES, grenadeThreat } from './grenade-physics.mjs';
 
 const COLORS = {he:0xffb16e, flash:0xffe6a0, smoke:0x87e5cc};
-const NAMES = {he:'HE', flash:'FLASH', smoke:'RÖK'};
+const NAMES = {he:'HE', flash:'FLASH', smoke:'SMOKE'};
 const MAX_POINTS = 602;
 
 export function grenadeSettingsMarkup(settings) {
-  return `<label class="setting">Visa granatens kastbana <input type="checkbox" data-setting="grenadeGuide" aria-label="Visa granatens kastbana" ${settings.grenadeGuide!==false?'checked':''}></label>`+
-    `<label class="setting">Varning för granater <input type="checkbox" data-setting="grenadeWarning" aria-label="Varning för granater" ${settings.grenadeWarning!==false?'checked':''}></label>`;
+  return `<label class="setting">Show grenade trajectory <input type="checkbox" data-setting="grenadeGuide" aria-label="Show grenade trajectory" ${settings.grenadeGuide!==false?'checked':''}></label>`+
+    `<label class="setting">Grenade warnings <input type="checkbox" data-setting="grenadeWarning" aria-label="Grenade warnings" ${settings.grenadeWarning!==false?'checked':''}></label>`;
 }
 
 /** Presentation only. The shared physics module owns the prediction.
@@ -78,7 +78,7 @@ export class GrenadeAssist {
         this.danger.dataset.kind=this.threat.type;
         this.danger.classList.toggle('urgent',left<.6);
         this.arrow.style.transform=`rotate(${this.threat.angle}rad)`;
-        this.text(this.dangerTitle,this.threat.type==='he'?'GRANAT NÄRA':'FLASH NÄRA');
+        this.text(this.dangerTitle,this.threat.type==='he'?'GRENADE NEARBY':'FLASH NEARBY');
         this.text(this.dangerDetail,`${this.threat.distance.toFixed(1)} m · ${left.toFixed(1)} s`);
       }
     }
@@ -97,8 +97,8 @@ export class GrenadeAssist {
     this.material.color.setHex(COLORS[p.weapon]);this.markerMaterial.color.setHex(COLORS[p.weapon]);
     this.marker.position.set(result.endpoint.x,result.endpoint.y,result.endpoint.z);
     const range=Math.hypot(result.endpoint.x-p.x,result.endpoint.z-p.z);
-    this.text(this.noteTitle,`KASTBANA · ${NAMES[p.weapon]} · ${range.toFixed(1)} m`);
-    this.text(this.noteDetail,'Ringen visar beräknad detonation');
+    this.text(this.noteTitle,`TRAJECTORY · ${NAMES[p.weapon]} · ${range.toFixed(1)} m`);
+    this.text(this.noteDetail,'Ring shows the predicted detonation');
   }
 
   text(node,value){if(node.textContent!==value)node.textContent=value;}

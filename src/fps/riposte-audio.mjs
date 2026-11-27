@@ -7,6 +7,7 @@ import {shotTiming} from './shot-timing.mjs';
 export const RIPOSTE_AUDIO_FILES = Object.freeze([
   ...firstShotTakes.map(take => 'armes/'+take+'.mp3'),
   ...['flesh','metal','concrete','glass','wood'].map(s => `impacts/i_${s}-1.mp3`),
+  'foley/f_pin.mp3',
   ...['dry','draw','knife','knife_hit','throw','pickup'].map(s => `foley/f_${s}-1.mp3`),
 ]);
 
@@ -74,6 +75,7 @@ export class AudioSystem extends ExistingAudio {
       name=`impacts/i_${surface}-1.mp3`;gain=.28;
     }else if(e.type==='empty'){name='foley/f_dry-1.mp3';gain=.4;}
     else if(e.type==='switch'){name='foley/f_draw-1.mp3';gain=.3;}
+    else if(e.type==='cartridge-latch'){name='foley/f_pin.mp3';gain=.28;}
     else if(e.type==='throw'){name='foley/f_throw-1.mp3';gain=.35;}
     else if(e.type==='pickup'){name='foley/f_pickup-1.mp3';gain=.35;}
     const buffer=name&&this.reuseBuffers.get(name);

@@ -279,6 +279,7 @@ export class AudioSystem {
       case 'rustle': this.noise(sound, .18, event.mode === 'sneak' ? .015 : .075, 7800); break;
       case 'jump': this.sample('impactSoft_medium_000', sound, .17, 1.4); this.noise(sound, .09, .05, 1400); break;
       case 'land': this.sample('impactSoft_medium_000', sound, .45, .85); break;
+      case 'cartridge-latch': this.sample('impactMetal_light_001', sound, .14, 1.7); break;
       case 'throw': this.noise(sound, .14, .22, 5000); this.sample('impactMetal_light_001', sound, .12, 2); break;
       case 'bounce': this.sample('impactMetal_light_000', sound, .28 * clamp(event.energy ?? 1, .2, 1), varied * 1.4); break;
       case 'smoke': this.noise(sound, 1.4, .25, 3400); this.sample('impactGeneric_light_000', sound, .18, .8); break;

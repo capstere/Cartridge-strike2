@@ -51,7 +51,7 @@ async function open(name, touch = false) {
   page.on('pageerror', error => browserErrors.push(error.name));
   await page.goto(landing, {waitUntil:'domcontentloaded'});
   const client = {name, touch, viewport, page, context};
-  await page.getByLabel('Inbjudningskod', {exact:true}).fill(fixture.invite);
+  await page.getByLabel('Server invite code', {exact:true}).fill(fixture.invite);
   await press(client, page.locator('button[type=submit]'));
   return client;
 }
@@ -59,7 +59,7 @@ async function enter(client) {
   await client.page.locator('#network-name').fill(client.name);
   await client.page.locator('#network-code').fill(fixture.familyPassword);
   await press(client, client.page.locator('[data-create=false]'));
-  await control(client, 'title').filter({hasText:'Väntrum'}).waitFor();
+  await control(client, 'title').filter({hasText:'Lobby'}).waitFor();
   await until(() => seat(client)?.ready && seat(client)?.connected, client.name + ' loaded the server-selected map', 90000);
   assert(!new URL(client.page.url()).searchParams.has('test'), 'Use the normal rendered online entry');
   assert(await client.page.locator('#fatal').isHidden());
@@ -93,7 +93,7 @@ async function switchMap(client, id, viewers) {
 async function screenshot(client, filename, settings) {
   const {page, viewport} = client;
   assert.deepEqual(page.viewportSize(), viewport);
-  assert(await page.getByRole('dialog', {name:'Vrid skärmen'}).isHidden());
+  assert(await page.getByRole('dialog', {name:'Rotate your screen'}).isHidden());
   for (const field of settings) {
     const widget = control(client, field);
     await widget.scrollIntoViewIfNeeded();
@@ -148,7 +148,7 @@ try {
     }
   });
   await until(() => room().state.zombiesEnabled && room().state.dancemanEnabled, 'Both rapid resident changes survive');
-  await control(mobile, 'residents-status').filter({hasText:/Zombies på.*Dansmannen på/}).waitFor();
+  await control(mobile, 'residents-status').filter({hasText:/Zombies On.*Danceman On/}).waitFor();
   mark('Asymmetric bot counts, Team Deathmatch limits and rapid independent resident changes replicate');
 
   await select(desktop, 'mode', 'classic');
@@ -205,7 +205,7 @@ try {
   await fixture.restart();
   await mobile.page.goto(landing, {waitUntil:'domcontentloaded'});
   // Restart creates a new pilot cookie issuer while retaining the same invite.
-  const invite = mobile.page.getByLabel('Inbjudningskod', {exact:true});
+  const invite = mobile.page.getByLabel('Server invite code', {exact:true});
   await invite.fill(fixture.invite);
   await press(mobile, mobile.page.locator('button[type=submit]'));
   await enter(mobile);

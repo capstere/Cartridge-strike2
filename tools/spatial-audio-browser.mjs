@@ -45,6 +45,18 @@ try {
       runs.push({weapon,distance,bank:key,starts,firstPcmMs:index*1000/rate,peak,secondPeak,errors:audio.errors});
       await audio.dispose();
     }
+    // The handling timeline emits one latch marker at the authored pull time.
+    // Render that event through the same loader and positional channel as play.
+    const latch = new AudioSystem(null,{volume:1});
+    const latchContext = new OfflineAudioContext(1,24000,48000);
+    latch.context=latchContext; latch.master=latchContext.createGain(); latch.master.connect(latchContext.destination);
+    latch.listener={x:0,y:0,z:0}; latch.listenerId='self';
+    await latch.loadTake('foley/f_pin.mp3');
+    latch.play({type:'cartridge-latch',actorId:'self',x:0,y:0,z:0});
+    const latchBuffer=await latchContext.startRendering(), samples=latchBuffer.getChannelData(0);
+    const peak=samples.reduce((p,v)=>Math.max(p,Math.abs(v)),0);
+    runs.push({latch:true,sources:latch.reuseStats.played,firstPcmMs:samples.findIndex(v=>Math.abs(v)>.03*peak)/48,peak,errors:latch.errors});
+    await latch.dispose();
     // Pause must cancel the future arrival of a remotely scheduled shot.
     const audio=new AudioSystem(null,{}), ctx=new OfflineAudioContext(1,24000,48000);
     audio.context=ctx;audio.master=ctx.createGain();audio.master.connect(ctx.destination);
@@ -58,7 +70,10 @@ try {
     runs.push({cancelled:true,silence,remaining:audio.active.size});
     return runs;
   });
-  const cancelled=rows.pop();
+  const cancelled=rows.pop(), latch=rows.pop();
+  assert.deepEqual(latch.errors,[]);
+  assert.equal(latch.sources,1);
+  assert(latch.peak>0 && latch.firstPcmMs>=0 && latch.firstPcmMs<120);
   assert.deepEqual(cancelled,{cancelled:true,silence:true,remaining:0});
   for(const {distance,bank,starts,firstPcmMs,peak,secondPeak,errors} of rows){
     assert.deepEqual(errors,[]);
@@ -68,7 +83,7 @@ try {
     assert(peak>0 && secondPeak>0);
     assert(firstPcmMs>=expected*1000-1 && firstPcmMs<expected*1000+40);
   }
-  const receipt={browser:browser.version(),sampleRate:48000,rows,cancelled};
+  const receipt={browser:browser.version(),sampleRate:48000,rows,latch,cancelled};
   if(process.env.CS3_AUDIO_RESULT)await writeFile(process.env.CS3_AUDIO_RESULT,JSON.stringify(receipt,null,2)+'\n');
   console.log(JSON.stringify(receipt));
 }finally{await browser.close();}

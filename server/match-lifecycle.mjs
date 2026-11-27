@@ -124,8 +124,8 @@ export class MatchLifecycle {
       s.lastBotDifficultySerial=m.serial;
       state.botDifficulty=m.botDifficulty;
     }else if(m.kind==='start'&&state.phase==='waiting'){
-      if(state.ownerId!==client.sessionId)throw Error('Bara rumsägaren kan starta matchen.');
-      if(!this.eligible())throw Error('Alla anslutna spelare måste vara redo, med minst en spelare i varje lag.');
+      if(state.ownerId!==client.sessionId)throw Error('Only the room host can start the match.');
+      if(!this.eligible())throw Error('Both teams need a player, and all connected players must be ready.');
       this.resetActors();state.phase='countdown';this.deadline=this.now+this.settings.countdownSeconds*1000;
     }else if(m.kind==='rematch'&&state.phase==='results'){
       state.matchId++;state.phase='waiting';state.winner=state.reason=state.results='';state.resultsAtMs=0;
