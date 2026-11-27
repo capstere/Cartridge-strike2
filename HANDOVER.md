@@ -1,8 +1,8 @@
 # Cartridge-Strike 3 development
 
-Jesper approved the program and gated release. Preparation merged in PR #47 at `5364240599164c0aee278bb0ac2a35d662c3a818`. Check out `develop/cartridge-strike-3`, then read the [execution handover](docs/cartridge-strike-3/CODEX_HANDOVER.md) and [current task status](docs/cartridge-strike-3/PROJECT_STATUS.md). CS3-00 passed independent verification. Resume the open feature branches and read the latest measurements before changing performance-sensitive code. The historical CS2 recovery receipts follow below.
+Jesper authorized dependency-ordered CS3 development and release after CS3-12. Preparation [PR #47](https://github.com/capstere/Cartridge-strike2/pull/47) and the private recovery and baseline package are verified. The Pi continues to serve its measured CS2 release.
 
-Follow the [active development checkpoints](docs/cartridge-strike-3/PROJECT_STATUS.md#development-checkpoints-on-november-27) for the open feature PR, Rush review, map verification and exact resume branches.
+On `develop/cartridge-strike-3`, [Rush #49](https://github.com/capstere/Cartridge-strike2/pull/49), [private access #48](https://github.com/capstere/Cartridge-strike2/pull/48), [English menus and Solo #50](https://github.com/capstere/Cartridge-strike2/pull/50) and [positional firearm audio #51](https://github.com/capstere/Cartridge-strike2/pull/51) are merged. Resume the [first-person countdown #54](https://github.com/capstere/Cartridge-strike2/pull/54), [handling and V6 #53](https://github.com/capstere/Cartridge-strike2/pull/53) and [Meltem and map qualification #52](https://github.com/capstere/Cartridge-strike2/pull/52). Use the [execution handover](docs/cartridge-strike-3/CODEX_HANDOVER.md) and [current status](docs/cartridge-strike-3/PROJECT_STATUS.md) for package gates, native receipts and next checks. The original CS2 recovery records follow.
 
 ---
 

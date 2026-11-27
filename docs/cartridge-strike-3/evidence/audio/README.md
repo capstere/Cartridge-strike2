@@ -27,6 +27,12 @@ Run `node --test src/fps/shot-audio.test.mjs`. Serve the checkout on loopback an
 
 All six shipped radio commands matched the English captions in `src/fps/action-rules.mjs` when decoded against the same English command vocabulary. A blind general-English model independently recognized “go go go” and most of “stick together team”, and misheard several short, filtered phrases. The death sound is a vocal effect and is excluded from the command count. On the matched Pi, run `python3 docs/cartridge-strike-3/evidence/audio/read-radio.py .` with FFmpeg, PocketSphinx 0.8 and its US English acoustic model installed. [Decoded output and controls](radio-language.json)
 
+## Two rendered multiplayer seats
+
+In [the hosted gameplay job](https://github.com/capstere/Cartridge-strike2/actions/runs/46010492473/job/140544449000), both browsers entered through the ordinary equipment lobby. The shooter selected a P9. Each accepted trigger started one POV recording immediately and consumed one round, with the same action ID on the second seat. At 8.15 m the observer used the near recording with a scheduled delay of 23.76 ms. At 48.05 m it used the distant pistol recording with a delay of 140.10 ms. Both distances and the actual recorded buffers came from the running game. [Per-seat timings and ammunition](hosted-room.json)
+
+The next animation callback after dispatch varied from 7.5 to 351.7 ms across the four observations. That callback is separate from the frame in which the sound was dispatched. The test establishes Web Audio scheduling and action identity. The CS3-02 motion recording and CS3-11 performance pass cover the presented frames and frame pacing.
+
 ## Flash hearing
 
 V6 shows a bright world flash while the direction pad, map and status remain readable. Its audio track contains a decaying band around 3.11 kHz. The local game reuses the distance and obstruction response in Riposte’s `flashBang` and the gain, filter and ringing envelopes in `sfxFlashBang`. Within 13 metres the effect weakens with distance, halves behind cover and recovers over the listener’s individual exposure time. The local oscillation sweeps from 3.15 to 3.05 kHz. Reduced Flash, enabled by default, lowers the transient and shortens and attenuates the ringing and world filtering. The existing pause, round-reset and disposal paths clear the effect. Solo supports these flash grenades. The current private TDM and Classic rules supply HE cartridges.

@@ -1,0 +1,79 @@
+{
+  "pullRequest": 51,
+  "revision": "a0bf1a49035b4925495456126abd86754e25c123",
+  "build": "4c40a6cfe973fc4d481c488da5f5aa4f92da7aed81e3f9c32e94fa2fd84fe4bf",
+  "provider": "GitHub Actions",
+  "run": 46010492473,
+  "job": 140544449000,
+  "scenario": "Normal local equipment journey with two separately rendered room clients, desktop shooter and emulated-touch observer. Distances are measured from each listener. Web Audio scheduling and the next requestAnimationFrame callback are observed in each seat’s own clock.",
+  "results": [
+    {
+      "label": "near",
+      "id": "analysts-0:2:1:3",
+      "own": {
+        "id": "analysts-0:2:1:3",
+        "actor": "analysts-0",
+        "take": "armes/g_glock_pov-1.mp3",
+        "distance": 1.58,
+        "delay": 0,
+        "predicted": true,
+        "tick": null,
+        "contextTime": 45.242666666666665,
+        "scheduled": 45.242666666666665,
+        "eventTime": 31.066666666666183,
+        "dispatch": 55726.29999999999,
+        "frame": 55758.79999999999
+      },
+      "remote": {
+        "id": "analysts-0:2:1:3",
+        "actor": "analysts-0",
+        "take": "armes/g_glock_near-1.mp3",
+        "distance": 8.148684902524154,
+        "delay": 0.023757098841176827,
+        "predicted": false,
+        "tick": 2689,
+        "contextTime": 31.184,
+        "scheduled": 31.207757098841178,
+        "eventTime": 31.11666666666618,
+        "dispatch": 52204.5,
+        "frame": 52556.19999999995
+      },
+      "ammoBefore": 20,
+      "ammoAfter": 19
+    },
+    {
+      "label": "far",
+      "id": "analysts-0:2:1:4",
+      "own": {
+        "id": "analysts-0:2:1:4",
+        "actor": "analysts-0",
+        "take": "armes/g_glock_pov-2.mp3",
+        "distance": 1.58,
+        "delay": 0,
+        "predicted": true,
+        "tick": null,
+        "contextTime": 46.27733333333333,
+        "scheduled": 46.27733333333333,
+        "eventTime": 32.01559999999946,
+        "dispatch": 56760.5,
+        "frame": 56817.09999999998
+      },
+      "remote": {
+        "id": "analysts-0:2:1:4",
+        "actor": "analysts-0",
+        "take": "armes/g_far_pistol-1.mp3",
+        "distance": 48.05401571832645,
+        "delay": 0.14009917119045667,
+        "predicted": false,
+        "tick": 2752,
+        "contextTime": 32.266666666666666,
+        "scheduled": 32.40676583785712,
+        "eventTime": 32.166666666666124,
+        "dispatch": 53290.19999999995,
+        "frame": 53297.69999999995
+      },
+      "ammoBefore": 19,
+      "ammoAfter": 18
+    }
+  ]
+}
