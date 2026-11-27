@@ -2,6 +2,8 @@
 
 The CS3 development program is in [docs/cartridge-strike-3/README.md](docs/cartridge-strike-3/README.md). Start with [CODEX_HANDOVER](docs/cartridge-strike-3/CODEX_HANDOVER.md) and [PROJECT_STATUS](docs/cartridge-strike-3/PROJECT_STATUS.md). English is mandatory. Do not begin CS3 implementation or deployment until explicit preparation approval. Backup branch is backup/cs2-2026-11-27-239b15b at 239b15b01040c2b0a1fd394f3be158cfb006d82a. Actual Pi backup and deployment verification are pending CS3-00. Preserve historical CS2 handover below exactly; its production receipts are historical, not current live checks.
 
+The pre-implementation review of [all uploaded media](docs/cartridge-strike-3/RECORDING_REVIEW.md), [source and reuse](docs/cartridge-strike-3/SOURCE_REVIEW.md) and [English UI](docs/cartridge-strike-3/UI_UX_SPECIFICATION.md) is recorded in [project status](docs/cartridge-strike-3/PROJECT_STATUS.md). The next package is CS3-00 after owner approval.
+
 ---
 
 # Cartridge-Strike 2 handover

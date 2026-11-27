@@ -10,10 +10,10 @@
       "title": "Baseline, backup, architecture",
       "owner": "performance + reference-integration + lead",
       "dependsOn": [],
-      "files": "All runtime paths read-only; deploy/online/README.md, tools/*, build-info.json, shared/multiplayer/*",
-      "scope": "Pin actual Pi release, verify private backup/restore; compare stock CS2 and reference; inventory source/runtime imports, baseline metrics; agree contracts and language keys; run existing CI commands. No production changes.",
+      "files": "Read-only runtime and deployment inspection. Lead owns baseline, backup receipts and versioned contract designs in development evidence.",
+      "scope": "Recheck live/recovery identity and privately rehearse restore. Compare playable CS2 and vendored Frontline. Record source hashes, steady and worst-case measurements, input/action, map, inventory, access and English contracts. Inventory release files versus browser allowlist and Pages publishing root.",
       "tests": "Existing tests; reproducible scenarios; exact SHA, sanitized backup receipt and review of contract",
-      "exit": "Baseline verified or explicit blocker; contract decisions written before dependent work.",
+      "exit": "Verified backup/isolated restore, comparable baselines and signed-off interface designs. A missing prerequisite is BLOCKED and keeps dependents pending.",
       "status": "NOT_STARTED"
     },
     {
@@ -23,23 +23,23 @@
       "dependsOn": [
         "CS3-00"
       ],
-      "files": "fps/*, ui/*, app.mjs integration via lead, lobby-stage.mjs, match-flow.mjs; reference 09e-menus, 09w-fond, 09f-news",
+      "files": "Frontend owns fps/, ui/ and the English catalog, lead coordinates root entry/credits, app and match-flow. Backend owns pre-auth form/error keys. Follow 09e-menus and 09ea-liste.",
       "scope": "Design system; en catalog; main/Play/Solo/With Friends, options, map cards, roster, countdown, news; real solo and private lobby actions; placeholder routes explicitly disabled pending 03/04/09/10.",
-      "tests": "mobile-smoke, match-flow-browser, network-lobby-browser; screenshots per UI spec, en string coverage",
+      "tests": "IMG_8150, 8158, 8160–8162 and 8164, V1 countdown, English guest Pages and denied/authorized Pi routes. Provide class-picker navigation for later class/wardrobe owners. Exercise real loading, Classic buy success/failure and re-login after translation.",
       "exit": "Menu→match→results real flows; stable back/resize/focus.",
       "status": "NOT_STARTED"
     },
     {
       "id": "CS3-02",
       "title": "FPS feel, movement, Rush and combat audio",
-      "owner": "gameplay + audio",
+      "owner": "gameplay (lead writer), audio, mobile-input, multiplayer-backend",
       "dependsOn": [
         "CS3-00"
       ],
       "files": "movement.mjs, game.mjs via lead, models.mjs, presentation-*, strike-kit-*, reload-foley.mjs, shared input/protocol + server schema via multiplayer; ref 06-weapons, 06c-models, 07c-controller, 08-player, 06d-reload, 05a-sfx",
-      "scope": "CR4/P9 sprint/slide/ADS/reload vertical slice then all held objects. Normalize sprint input, shared movement and timing, authoritative prediction; event IDs, sounds and FX fixes.",
-      "tests": "view-arms-capture, recoil-autofire, reload-foley-browser, network-delay, online-equipment; video and latency/CPU",
-      "exit": "All weapons transition without clipping or simulation divergence; actual Rush shown.",
+      "scope": "First prove CR4 and P9 hip → Rush → release/ADS/short fire in both normal input paths and under reconciliation. Extend to slide, reload/inspect/switch, grenade hold/return and remaining held models. Preserve manual/auto-fire and saved bindings.",
+      "tests": "RECORDING_REVIEW V2/V4/V6, input tick → legal shot → ammo/FX, near/far A/V onset, pause/cancel. Use view-arms-capture, recoil-autofire, online-equipment and the sprint-reload reticle fixture.",
+      "exit": "Readable camera and grips, distinct supported poses, no lost tap or duplicate shot/foley. Fixed-step client/server/offline trace and synchronized video per weapon family.",
       "status": "NOT_STARTED"
     },
     {
@@ -48,6 +48,7 @@
       "owner": "gameplay + graphics-assets",
       "dependsOn": [
         "CS3-00",
+        "CS3-01",
         "CS3-02"
       ],
       "files": "character-runtime-contract.mjs, character-actors.mjs, character-library.mjs, models.mjs adapter, view-character-appearance.mjs; frontend mounts wardrobe; ref 06ac-loco, 06g-body, 06h-ragdoll, 09u-tenues",
@@ -66,7 +67,7 @@
       ],
       "files": "server/access.mjs,pilot-access.mjs,local-server.mjs,family-room.mjs, network/session.mjs, new account modules; frontend mounts profile; ref 09j-compte UI only",
       "scope": "Scoped remembered sessions, invite link/QR/short code, migration, optional accounts/recovery/stats storage, secure public listing behind off-by-default flag.",
-      "tests": "network-family-browser, network-pilot-browser, security/expiry/revoke/replay tests, migration/restore",
+      "tests": "network-family-browser, network-pilot-browser, security/expiry/revoke/replay tests, migration/restore. Verify guest Pages flow separately from Pi pilot proof, room proof and account identity.",
       "exit": "Two-client old and new access, private credentials protected, real persistent accounts.",
       "status": "NOT_STARTED"
     },
@@ -80,7 +81,7 @@
       ],
       "files": "game.mjs, config.mjs, new pure streak module, movement, server/network-room.mjs/network-schema.mjs, shared protocol, session, combat-hud/minimap; ref 08b-killstreaks",
       "scope": "Implement dedicated spec 3/5/8 and 15/15/8; shared pure transitions, kill attribution, authoritative command and own radar, HUD/action binding, audio.",
-      "tests": "state tests, malicious requests, two-client online, offline parity, delayed projectiles, exact durations",
+      "tests": "state tests, invalid input cases, two-client online, offline parity, delayed projectiles, exact durations. Split-screen observer/recipient check on a fresh join and reconnect, including mixed assist/kill/headshot signals.",
       "exit": "All bonus rules proven, no unauthorized activation/stacking; UI confirmed.",
       "status": "NOT_STARTED"
     },
@@ -94,8 +95,8 @@
         "CS3-05"
       ],
       "files": "mobile-controls.mjs,tactical-controls.mjs,ui/cs-mobile.mjs, HUD and shared input; ref 09q,09qb,09qc,09qd,08a-binds,09r-pwa",
-      "scope": "Customizable layout, safe areas, opacity/size, profile import/export, normalized multi-pointer input, sprint/slide/bonus, gamepad and PWA.",
-      "tests": "mobile-input-ownership, mobile-reliability-browser, online-autofire-browser; physical device matrix",
+      "scope": "Finish saved fixed/floating layouts, auto/on/off touch UI, stick-threshold or Run button, look while firing, tap/hold ADS, optional double-tap and fire-on-release, sprint+crouch, manual throw, bonuses, gamepad and PWA.",
+      "tests": "Replay V2/V4/V6 and IMG_8153–8157 profiles, three pointers, HUD and cancel/rotation; mobile-input-ownership, mobile-reliability-browser and online-autofire-browser. Record hardware/emulation separately.",
       "exit": "Simultaneous controls, rotation, no stuck input, no key conflicts; physical status explicit.",
       "status": "NOT_STARTED"
     },
@@ -109,7 +110,7 @@
       "files": "levels/*, level-adapter.mjs, world.mjs, shared maps/collision/map-build, render/materials/props, audio registry; ref 02-map,02a-kit,02c-materials,02z-load,09a-loading,04b-physprops,05c-ambiance",
       "scope": "Baseline visual pass, reference map adapter and Meltem or lower-risk pilot; validated additional maps, all nine assessed, environment FX and ambience; LOD/disposal.",
       "tests": "build-network --check, compact-arena/owner-door-traversal tests, multimap-browser/recovery, asset-memory and complete matches",
-      "exit": "Original maps preserved, each added map validated collision/nav/spawn/lifecycle and performance.",
+      "exit": "Original maps preserved. All nine have a source ID, capability assessment and explicit disposition. Each offered map passes versioned collision/nav/void, mode eligibility, spawn, lifecycle and measured budget.",
       "status": "NOT_STARTED"
     },
     {
@@ -139,7 +140,7 @@
       "files": "config.mjs, action-rules, class/weapon registry, server/classic-round.mjs, models adapters, profile storage; ref 06p-accessoires,06q-camos,06r-arsenal,09n-armurerie,09o-vitrine",
       "scope": "Presets/custom slots, primary/secondary/equipment/attachments/optics/camos, derived stats, real preview, server validation and Classic purchases; persistence.",
       "tests": "online-classic/equipment, illegal loadout tests, preview lifecycle, profile restart",
-      "exit": "No purchase bypass, correct stats and saved real loadouts.",
+      "exit": "No purchase bypass, correct stats and saved real loadouts. Use an explicitly seeded entitlement fixture for locked/unlocked states until CS3-10 supplies earned progression.",
       "status": "NOT_STARTED"
     },
     {
@@ -155,7 +156,7 @@
       ],
       "files": "game.mjs mode interfaces, match-lifecycle, session, combat-hud/match-flow, account storage; ref 09b-killcam,09i-modes,09l-fin,09y-decompte,06r-arsenal,06s-defis",
       "scope": "Bounded filtered killcam/final replay, spectator, scoreboard/results, FFA and Domination, server XP/challenges/unlocks; preserve existing modes.",
-      "tests": "match-lifecycle-browser, online-match/classic, replay, FFA/domination win rules, trusted XP idempotency",
+      "tests": "match-lifecycle-browser, online-match/classic, replay, FFA/domination win rules, trusted XP idempotency. V5 killer card → scoped replay → legal respawn or Classic spectator, skip/timeout/disconnect and clean local HUD; V6 assist, kill and headshot credit exactly once.",
       "exit": "Real replays, new modes verified, no information leaks or double rewards.",
       "status": "NOT_STARTED"
     },
@@ -175,7 +176,7 @@
       "files": "registries, manifests, validation/import/thumbnail tools, docs; extend existing runtime contracts",
       "scope": "Consolidate versioned registries, examples, migration, validated additions for character/rig/weapon/attachment/map/mode/bonus/audio/outfit/bot/theme/progression; no parallel editor.",
       "tests": "schema negative/positive tests, import sample and runtime smoke, build reproducibility",
-      "exit": "Adding example content without unrelated gameplay edits.",
+      "exit": "Adding example content without unrelated gameplay edits. New registries reference the already exercised interfaces and include a build/allowlist closure check.",
       "status": "NOT_STARTED"
     },
     {
@@ -197,9 +198,13 @@
       ],
       "files": "all reviewed integration, deployment tools and release manifest",
       "scope": "Full acceptance, hardware/physical status, security, before-after, backup restore rehearsal, stage exact SHA; release on idle Pi via existing process only after authorized gates.",
-      "tests": "all CI, server tests, rendered two-client HTTPS/WSS, long soak, migration rollback rehearsal",
+      "tests": "all CI, server tests, rendered two-client HTTPS/WSS, long soak, migration rollback rehearsal. All 16 screenshot states and all five recording scenarios, English journey sweep, reference-free distribution inventory, authenticated/unauthenticated HTTP and mixed-version reconnect, clean cached and cold clients on both surfaces.",
       "exit": "Independent reviewer evidence, no silent scope gaps, production verified or CS2 remains active.",
       "status": "NOT_STARTED"
     }
-  ]
+  ],
+  "reviewedMain": "1a9dc3f10605a7ccd2c28fef354b25bcd4418c1b",
+  "reviewedPreparation": "b387b4dc51872eeb333336c09f2480c1997321bf",
+  "referenceSourceTree": "d7661a36d439a246464b0d1c060b5f19715ac7ea",
+  "prerequisiteState": "VERIFIED"
 }

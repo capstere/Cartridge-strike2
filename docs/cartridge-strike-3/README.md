@@ -8,9 +8,11 @@ The existing repository and https://cs2.capstere.com remain the release destinat
 | --- | --- |
 | [MASTER_PLAN](MASTER_PLAN.md) | Owner requirements and scope |
 | [CURRENT_STATE_AUDIT](CURRENT_STATE_AUDIT.md) | Pinned evidence and limitations |
+| [SOURCE_REVIEW](SOURCE_REVIEW.md) | Vendored source, nine map factories, rights and reusable test fixtures |
+| [RECORDING_REVIEW](RECORDING_REVIEW.md) | All five recording archives, timestamped motion and audio, reproducible sampling |
 | [RIPOSTE_INTEGRATION_MATRIX](RIPOSTE_INTEGRATION_MATRIX.md) | Source symbols and target contracts |
 | [ARCHITECTURE](ARCHITECTURE.md) | Authority, boundaries and versioning |
-| [UI_UX_SPECIFICATION](UI_UX_SPECIFICATION.md) | Ten screenshots, English UI and flows |
+| [UI_UX_SPECIFICATION](UI_UX_SPECIFICATION.md) | All 16 uploaded screenshots, English verification and player journeys |
 | [GAMEPLAY_SPECIFICATION](GAMEPLAY_SPECIFICATION.md) | Rush, movement, animation, combat |
 | [KILLSTREAK_SPECIFICATION](KILLSTREAK_SPECIFICATION.md) | Bonus rules and state machine |
 | [MULTIPLAYER_AND_ACCOUNTS](MULTIPLAYER_AND_ACCOUNTS.md) | Access, accounts and lifecycle |

@@ -1,7 +1,7 @@
 # Backup and rollback
 
 ## GitHub baseline — verified
-- main: 239b15b01040c2b0a1fd394f3be158cfb006d82a
+- Recoverable CS2 baseline: 239b15b01040c2b0a1fd394f3be158cfb006d82a
 - tree: 55f0c61077b49c0cd4b0f16cf8864fb24bcee3c3
 - backup branch: backup/cs2-2026-11-27-239b15b, verified via branch listing at the exact SHA, not protected. Do not advance/delete it. Optionally create local annotated tag and independently store Git bundle on Pi before implementation; do not claim immutable remote tag.
 - preparation branch: prepare/cartridge-strike-3. No game code or deployment modification in preparation.
@@ -16,4 +16,10 @@ Historical HANDOVER reports live revision 8307e91118dba4fdca964012d2b0c247a40221
 5. On failure stop candidate safely after room drain, use sudo cs2-online rollback with verified prior release. Restore compatible private settings/DB snapshot if schema cannot roll back; never overwrite post-release user data without explicit recovery plan (export/replay compatible deltas or preserve snapshot). Verify health AND gameplay via two clients through HTTPS/WSS, legacy family link and restored settings. Do not change unrelated DNS or original service.
 6. If failure before release, retain CS2 active, keep branch/evidence and diagnose. Production activation only after approved implementation, full tests and rollback readiness.
 
-Browser localStorage/IndexedDB migration: preserve old key/version copy where feasible, do not delete private saved characters/maps; validate copy before switching, recovery/export route. Account data remains outside repo/releases. No Pi access in preparation; Codex must complete and verify backup before any production change.
+Browser localStorage/IndexedDB migration: preserve old key/version copy where feasible, do not delete private saved characters/maps; validate copy before switching, recovery/export route. Account data remains outside repo/releases. The preparation review did not exercise production recovery. Verify the private restore before any production change.
+
+## Audit the distribution boundary before staging CS3
+
+The reviewed main adds 112,852,683 bytes of PNG and ZIP blobs. None are listed in the CS2 build-info runtime files. deploy/pilot/stage-release.sh archives the whole Git tree and copies it into the versioned release. server/local-server.mjs separately enforces publicFiles for HTTP. Being absent from the HTTP allowlist therefore says nothing about disk usage or the contents of a Pages publication. Read-only HEAD checks returned HTTP 200 for /fps/, /IMG_8150.PNG and the unsuffixed recording ZIP on the existing Pages site. The deployed site currently serves those two reference files. Determine the publishing configuration in CS3-00. Before CS3-12, inspect an isolated staged artifact and Pages output, exclude review media from both game distributions, and check cold network requests, SW cache entries, local disk footprint and representative asset URLs. Keep owner uploads in Git history. Build/validation dependencies such as shared furniture modules and import metadata still need to be available to the build.
+
+deploy/online/manage.py's backup covers configuration, links and service files. Its rollback activates the previous release. Rehearse the **separate** family settings and future account data restore in isolated state. Store the working restore and post-snapshot write handling in a private runbook and publish a sanitized result only.
