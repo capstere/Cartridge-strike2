@@ -156,3 +156,19 @@ html.hud-low-ammo #hud #reload-text{color:#ffd9b9}
 html #mobile-controls [data-mobile-stick].active.rushing{border-color:#e5b642!important}
 html #mobile-controls [data-mobile-stick].active.rushing [data-mobile-nub]{background:#edbf4d!important;border-color:#ffda7e!important}
 html #mobile-controls .mobile-stick[data-mobile-stick].active.rushing::after{border-style:dashed}
+
+/* The compact ammo plate only fits the weapon and magazine. Keep its action
+   prompt above the interaction row, visible against either world or flash. */
+@media (orientation:landscape) and (max-height:520px){
+  html.touch-fps[data-hud=clean] #hud #reload-text:not(:empty){
+    position:fixed;top:68%;left:50%;transform:translate(-50%,-50%);
+    width:max-content;max-width:38vw;padding:3px 8px;text-align:center;
+    line-height:1.2;font-size:11px!important;font-weight:700;
+    color:#ffd9b9!important;background:#080b0fe8;pointer-events:none;
+  }
+  html.touch-fps[data-hud=clean].hud-map-open:not(.network-session-ui) #hud .map-panel{
+    top:max(64px,calc(env(safe-area-inset-top) + 56px))!important;
+    left:max(12px,env(safe-area-inset-left))!important;
+    max-width:min(36vw,340px)!important;
+  }
+}

@@ -183,11 +183,11 @@ test('interrupting a cartridge with a rifle switch needs a fresh trigger on the 
    assert.equal(a.waitTriggerRelease,true);
    const ammo=a.inventory.primary.ammo;
    for(let i=0;i<7;i++){
-     send(host,{fire:true,fireId:++fireId,holdThrow:true,fireEdge:false});await delay(60);
+     send(host,{fire:true,fireId:++fireId,holdThrow:false,fireEdge:false});await delay(60);
    }
    assert.equal(a.inventory.primary.ammo,ammo);assert.equal(a.pendingShot,null);
    send(host,{fire:false,holdThrow:false,fireId});await until(()=>!a.waitTriggerRelease,'trigger released');
-   send(host,{fire:true,holdThrow:true,fireId:++fireId,fireEdge:true});
+   send(host,{fire:true,holdThrow:false,fireId:++fireId,fireEdge:true});
    await until(()=>a.inventory.primary.ammo===ammo-1,'a new physical press may fire');
    send(host,{fire:false,holdThrow:false,fireId});
  }

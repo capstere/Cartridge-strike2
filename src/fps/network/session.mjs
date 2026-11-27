@@ -463,6 +463,9 @@ export class NetworkSession {
     if(this.closed||this.connectionState==='reconnecting'||!this.predict||!this.prediction)return;
     const steps=Math.min(6,this.predict.tick(now)),state=this.room.state,self=state.actors.get(this.localPlayerId);
     if(!self)return;
+    const weapon=Object.hasOwn(WEAPONS,self.weapon)?WEAPONS[self.weapon]:null;
+    const throwing=self.weapon==='he';
+    const stocked=throwing?self.he>0:self.ammo>0 || self.weapon==='knife';
     const stale=performance.now()-this.lastPatch>1000;
     if(this.enabled && !stale && self.alive && state.phase==='active' && (state.mode!=='classic'||state.roundPhase==='active')){
       if(controls.crouchEdge)this.crouchEdge=true;
@@ -473,19 +476,18 @@ export class NetworkSession {
       const data=this.input.data;
       Object.assign(data,{lifeId:self.lifeId,controlEpoch:self.controlEpoch,sampleTick:state.tick,fireId:this.fireId,reloadId:this.reloadId,
         forward:controls.forward||0,strafe:controls.strafe||0,yaw:wrapYaw(controls.yaw??self.yaw),pitch:controls.pitch??self.pitch,
-        holdThrow:!!controls.fire && !controls.autoFire,jump:!!controls.jump,crouch:!!controls.crouch,crouchEdge:!!this.crouchEdge,sneak:!!controls.sneak,sprint:!!controls.sprint,
-        fireEdge:!!this.firePress,shotYaw:wrapYaw(this.firePress?.yaw??0),shotPitch:this.firePress?.pitch??0,interact:!!controls.interact,aim:!!controls.aim,fire:!!controls.fire});
+        holdThrow:throwing && stocked && !!controls.fire && !controls.autoFire,jump:!!controls.jump,crouch:!!controls.crouch,crouchEdge:!!this.crouchEdge,sneak:!!controls.sneak,sprint:!!controls.sprint,
+        fireEdge:!!weapon && !!this.firePress,shotYaw:wrapYaw(this.firePress?.yaw??0),shotPitch:this.firePress?.pitch??0,interact:!!controls.interact,aim:!!controls.aim,fire:!!weapon && !!controls.fire});
       const time=this.prediction.world.game.state.time;
-      const weapon=WEAPONS[self.weapon],throwing=self.weapon==='he';
-      const shotReady=(!self.handling?.waitTriggerRelease || data.fireEdge) && !self.handling?.cartridgeStart && (state.mode!=='classic'||state.roundPhase==='active')&&time+1e-8>=Math.max(this.nextCosmetic,self.nextShot)&&
-        (self.ammo>0||self.weapon==='knife'||throwing&&self.he>0)&&!self.reloadUntil;
+      const shotReady=!!weapon && (!self.handling?.waitTriggerRelease || data.fireEdge) && !self.handling?.cartridgeStart && (state.mode!=='classic'||state.roundPhase==='active')&&time+1e-8>=Math.max(this.nextCosmetic,self.nextShot)&&
+        stocked && !self.reloadUntil;
       const actor=this.prediction.world.actor,shouldered=rushReady(actor);
       if(data.fireEdge)data.fire=true;
       if(controls.autoFire && !data.fireEdge){
         // Auto-trigger is local input intent, never a new server privilege.
         // Semi-auto weapons need a real release between ordinary fire frames;
         // generate it per fixed input step, including render catch-up batches.
-        const eligible=['primary','pistol','knife'].includes(weapon.slot)&&!weapon.projectile;
+        const eligible=!!weapon && ['primary','pistol','knife'].includes(weapon.slot)&&!weapon.projectile;
         data.fire=data.fire&&eligible&&(weapon.automatic||(!this.trigger&&shotReady));
       }
       const manualPress=data.fireEdge || (!this.trigger && data.fire && !controls.autoFire);

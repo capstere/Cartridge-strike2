@@ -45,9 +45,8 @@ async function play(touch) {
      f.audio.play=event=>{if(event?.type==='shot' && event.actorId===g.player.id)rushEvidence.audio.push(event.time);return play(event);};
    },!!process.env.LIVE_SEQUENCE);
    if(process.env.LIVE_SEQUENCE){
-     assert(touch,'live sequence uses touch');
      const {captureLiveSequence}=await import('./handling-sequence-probe.mjs');
-     await captureLiveSequence(page,out);
+     await captureLiveSequence(page,out,touch);
      return;
    }
    if(process.env.FLASH_CAPTURE){

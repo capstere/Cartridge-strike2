@@ -5,10 +5,10 @@ import {mkdirSync,writeFileSync} from 'node:fs';
 import {join} from 'node:path';
 import {setTimeout as delay} from 'node:timers/promises';
 
-export async function captureLiveSequence(page,out){
+export async function captureLiveSequence(page,out,touch){
   const cdp=await page.context().newCDPSession(page);
   const send=(type,touchPoints)=>cdp.send('Input.dispatchTouchEvent',{type,touchPoints});
-  const dir=join(out,'sequence');mkdirSync(dir,{recursive:true});
+  const dir=join(out,touch?'sequence':'keyboard-sequence');mkdirSync(dir,{recursive:true});
   const frames=[];
   cdp.on('Page.screencastFrame',({sessionId,data,metadata})=>{
     const file='frame-'+String(frames.length).padStart(4,'0')+'.jpg';
@@ -24,7 +24,9 @@ export async function captureLiveSequence(page,out){
       p.inventory.primary=g.weaponItem('cr4');p.inventory.primary.ammo=7;g.select('cr4');
       f.step({yaw:Math.PI,pitch:0},1/60);
     });
-    await page.locator('#mobile-more').tap();await page.getByRole('button',{name:'Toggle tactical map'}).tap();
+    if(touch){
+      await page.locator('#mobile-more').tap();await page.getByRole('button',{name:'Toggle tactical map'}).tap();
+    }else await page.keyboard.press('m');
     await page.waitForFunction(()=>__fps.audio.context?.state==='running' && __fps.audio.reuseBuffers.size>14);
     const audioStart=await page.evaluate(async()=>{
       const f=__fps,sys=f.audio,dest=sys.context.createMediaStreamDestination();
@@ -57,24 +59,36 @@ export async function captureLiveSequence(page,out){
       return started;
     });
     await cdp.send('Page.startScreencast',{format:'jpeg',quality:76,maxWidth:633,maxHeight:293,everyNthFrame:1});
-    const b=await page.locator('[data-mobile-stick-zone]').boundingBox(),button=await page.locator('[data-mobile-action=fire]').boundingBox();
-    const stick={x:b.x+b.width*.43,y:b.y+b.height*.65,id:1},outer={...stick,y:stick.y-75};
-    const fire={x:button.x+button.width/2,y:button.y+button.height/2,id:2};
-    const startRush=async()=>{await send('touchStart',[stick]);await send('touchMove',[outer]);};
+    let stick,outer,fire;
+    if(touch){
+      const b=await page.locator('[data-mobile-stick-zone]').boundingBox(),button=await page.locator('[data-mobile-action=fire]').boundingBox();
+      stick={x:b.x+b.width*.43,y:b.y+b.height*.65,id:1};outer={...stick,y:stick.y-75};
+      fire={x:button.x+button.width/2,y:button.y+button.height/2,id:2};
+    }
+    const startRush=async()=>{
+      if(touch){await send('touchStart',[stick]);await send('touchMove',[outer]);}
+      else{await page.keyboard.down('w');await page.keyboard.down('x');}
+    };
+    const stopRush=async()=>{
+      if(touch)await send('touchEnd',[]);
+      else{await page.keyboard.up('w');await page.keyboard.up('x');}
+    };
     await delay(420);await startRush();
     await page.waitForFunction(()=>__fps.game.player.rushWeight>.85);await delay(450);
-    await send('touchStart',[outer,fire]);await send('touchEnd',[]);
-    await page.waitForFunction(()=>__fps.game.item().ammo===6 && document.getElementById('reload-text').textContent==='RELOAD');
+    if(touch)await send('touchStart',[outer,fire]);
+    else{await page.mouse.down();await page.mouse.up();}
+    await stopRush();
+    await page.waitForFunction(touch=>__fps.game.item().ammo===6 && document.getElementById('reload-text').textContent===(touch?'RELOAD':'R · RELOAD'),touch);
     await page.evaluate(()=>{
       const g=__fps.game,p=g.player,other=g.actors.find(a=>a!==p&&a.alive);
-      Object.assign(other,{x:p.x,z:p.z+1.3,y:0,yaw:Math.PI,pitch:-1.45,weapon:'flash',lastWeapon:'knife',nextShot:0});
+      Object.assign(other,{x:p.x+1,z:p.z+1.3,y:0,yaw:Math.PI,pitch:-1.45,weapon:'flash',lastWeapon:'knife',nextShot:0});
       other.inventory.flash=1;
       if(!g.fire(other,true))throw Error('Incoming flash was not launched');
     });
     await page.waitForFunction(()=>!document.getElementById('grenade-danger').hidden);
     await page.waitForFunction(()=>Number(document.getElementById('flash-overlay').style.opacity)>.3);
-    await startRush();await page.waitForFunction(()=>__fps.game.player.rushWeight>.7);await delay(240);await send('touchEnd',[]);
-    await page.locator('[data-mobile-action=reload]').tap();
+    await startRush();await page.waitForFunction(()=>__fps.game.player.rushWeight>.7);await delay(240);await stopRush();
+    if(touch)await page.locator('[data-mobile-action=reload]').tap();else await page.keyboard.press('r');
     await page.waitForFunction(()=>__fps.game.item().ammo===30);await delay(320);
     const audio=await page.evaluate(()=>handlingCapture.stop());await cdp.send('Page.stopScreencast');
     writeFileSync(join(dir,'game-audio.webm'),Buffer.from(audio.data,'base64'));
@@ -87,12 +101,12 @@ export async function captureLiveSequence(page,out){
     for(let i=0;i<active.length;i++){
       const previous=i===0?audioStart:active[i].stamp;
       const until=active[i+1]?.stamp??(audio.epoch+audio.frames.at(-1)[0])/1000;
-      manifest+="file '"+active[i].file+"'\nduration "+Math.max(.001,until-previous).toFixed(5)+'\n';
+      manifest+="file '"+active[i].file+"'\noption framerate 1000\nduration "+Math.max(.001,until-previous).toFixed(5)+'\n';
     }
-    manifest+="file '"+active.at(-1).file+"'\n";
+    manifest+="file '"+active.at(-1).file+"'\noption framerate 1000\n";
     writeFileSync(join(dir,'frames.ffconcat'),manifest);
     writeFileSync(join(dir,'timeline.json'),JSON.stringify({audioStart,epoch:audio.epoch,
       submitted:active,frames:audio.frames,audio:audio.audio},null,2));
-    console.log('Recorded real-time native touch sequence',active.length,'compositor frames');
+    console.log('Recorded real-time native '+(touch?'touch':'keyboard and mouse')+' sequence',active.length,'compositor frames');
   }finally{await cdp.detach();}
 }

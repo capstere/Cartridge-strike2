@@ -35,6 +35,23 @@ test('a whole confirmed flight between paints presents one model before the impa
   assert.deepEqual(game.state.projectiles,[]);
 });
 
+test('a lethal flight between paints holds only its victim’s current view until impact',()=>{
+  const {visuals,game}=visualScene();
+  const victim=game.player={id:'analysts-0',lifeId:7,alive:false};
+  const kill={type:'kill',rocketId:impact.rocketId,actorId:victim.id,lifeId:7};
+  visuals.events([launch,impact],game);
+  assert.equal(visuals.finishingFlightFor(victim),false);
+  visuals.events([kill],game);
+  assert(visuals.finishingFlightFor(victim));
+  for(const actor of [{...victim,id:'ally'},{...victim,lifeId:8},{...victim,alive:true}])
+    assert.equal(visuals.finishingFlightFor(actor),false);
+  visuals.updateRockets(game.state,10.4);
+  assert(visuals.finishingFlightFor(victim),'first frame shows the actual approach');
+  visuals.updateRockets(game.state,10.5);
+  assert.equal(visuals.finishingFlightFor(victim),false,'the next frame may select a living teammate');
+  assert.equal(victim.alive,false);
+});
+
 test('a flight already displayed from a server snapshot explodes without a replay',()=>{
   const {visuals,game}=visualScene();
   visuals.events([launch],game);

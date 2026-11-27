@@ -283,6 +283,10 @@ export class NetworkRoom extends Room {
           latest={input,frame:f,stamp:buffer.renderTime};
           crouchEdge ||= !!input.crouchEdge;
           const freshPress=f.fireEdge && f.fireId>seat.lastFire;
+          // On a restored firearm, its ordinary fire level still represents
+          // the same finger. Only a release or a new physical edge clears the
+          // cartridge interlock, including between ordered SDK patches.
+          if(seat.actor.waitTriggerRelease && f.fire)input.holdThrow=true;
           if(!input.holdThrow || freshPress)seat.actor.waitTriggerRelease=false;
           if(!seat.actor.waitTriggerRelease && f.fire && f.fireId>seat.lastFire && (WEAPONS[seat.actor.weapon].automatic || !seat.trigger || f.fireEdge)){
             shot ??= {yaw:f.fireEdge?f.shotYaw:f.yaw,pitch:f.fireEdge?f.shotPitch:f.pitch,sampleTick:f.sampleTick,

@@ -8,13 +8,15 @@ import {WEAPONS} from '../src/fps/config.mjs';
 export async function captureHandlingFamilies(page,out){
   const report=[];
   await page.waitForFunction(()=>['bolt-1','pump-1','charge_rifle-1','charge_rifle-2'].every(id=>__fps.audio.reloadFoley.buffers.has(id)));
+  await page.waitForFunction(()=>__fps.audio.recordedFoley.size===3 && __fps.audio.reuseBuffers.size>=22);
   await page.evaluate(()=>{
     const f=__fps,system=f.audio,track=system.track.bind(system);
     window.familyVoices=[];
-    const mechanical=new Map([...system.reloadFoley.buffers].map(([name,buffer])=>[buffer,name]));
+    const mechanical=new Map([...system.reloadFoley.buffers,...system.recordedFoley].map(([name,buffer])=>[buffer,name]));
     system.track=(source,channel,duration,offset)=>{
       const result=track(source,channel,duration,offset);
-      const take=mechanical.get(source.buffer);
+      // The second near/POV take can finish decoding during the sequence.
+      const take=mechanical.get(source.buffer) || [...system.reuseBuffers].find(([,buffer])=>buffer===source.buffer)?.[0];
       if(take)familyVoices.push({take,time:f.game.state.time,weapon:f.game.player.weapon,
         contextTime:system.context.currentTime,scheduled:channel.when,duration});
       return result;
@@ -81,6 +83,12 @@ export async function captureHandlingFamilies(page,out){
     const cycle={cr4:['charge_rifle-2',1],ar47:['charge_rifle-1',1],smg:['charge_rifle-1',1],
       sniper:['bolt-1',2],shotgun:['pump-1',2]}[id];
     if(cycle)assert.equal(voices.filter(v=>v.take===cycle[0]).length,cycle[1],id+' actual mechanical sources');
+    if(id==='p9'||id==='p12'){
+      assert.equal(voices.filter(v=>v.take==='p9:out:0').length,2);
+      assert.equal(voices.filter(v=>v.take==='p9:in:0').length,1);
+      assert.equal(voices.filter(v=>v.take==='p9:action:0').length,1);
+    }
+    if(id!=='bazooka')assert.equal(voices.filter(v=>v.take.startsWith('armes/')).length,2,id+' two actual POV takes');
     report.push({id,ready,early,motion,interrupted,action,finished,voices});
     writeFileSync(join(out,'families.json'),JSON.stringify(report,null,2));
     console.log(id,'normal keyboard/mouse handling passed');
