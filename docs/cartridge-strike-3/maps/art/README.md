@@ -28,7 +28,7 @@ The atlas is 80,880 bytes with SHA-256 `79ee402e3c9735f698db635da120089cad53b55f
 
 From three metres in front of the waterfront stall, the restored board reads **KIOSK**. Its teal face, pale lettering and worn frame are visible from a normal standing position. This capture used the same Pi and graphics settings. The HUD shows Waterfront after the normal spawn-protection timer elapsed. [Original kiosk](kiosk/before.jpg) · [Restored kiosk](kiosk/after.jpg)
 
-Draw calls rose from 502 to 504. The paired 90-frame samples measured 20.5 ms at the median in both runs and 24.6 / 37.1 ms at p95. Actors advanced independently until the fixed-view capture in each match. The higher p95 here illustrates the limits of attributing individual frame spikes to a single material. [Original kiosk receipt](kiosk/before.json) · [Restored kiosk receipt](kiosk/after.json)
+Draw calls rose from 502 to 504. The paired 90-frame samples measured 20.5 ms at the median in both runs and 24.6 / 37.1 ms at p95. Actors advanced independently until the fixed-view capture in each match. The integrated map budget check should repeat matched captures at both sight lines to investigate the 12.5 ms kiosk p95 increase alongside the 0.6 ms reduction at the tavern. [Original kiosk receipt](kiosk/before.json) · [Restored kiosk receipt](kiosk/after.json)
 
 ## Reproduction
 

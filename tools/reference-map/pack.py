@@ -1,4 +1,4 @@
-"""Pack native Meltem export into a deterministic LevelProject and indexed render batches."""
+"""Compile a reviewed original map into a deterministic LevelProject and indexed render batches."""
 import base64
 import gzip
 import json
@@ -12,7 +12,14 @@ import numpy as np
 raw, target = map(Path,sys.argv[1:3])
 # This compiler writes packaged derivative inputs in target. Native captures stay in raw.
 source=json.loads(gzip.decompress((raw/'map.json.gz').read_bytes()))
-geometry=target/'assets/fps/maps/meltem'
+map_id=source.get('sourceId','meltem')
+profiles={
+    'meltem':('Meltem',(0,3,7,11,14)),
+    'embruns':('Kervénec Harbor',(0,3,5,8,11)),
+    'tephra':('Tephra',(0,3,7,11,14)),
+}
+name,spawn_indices=profiles[map_id]
+geometry=target/'assets/fps/maps'/map_id
 geometry.mkdir(parents=True,exist_ok=True)
 # Keep material grouping small while preserving the donor's linear per-vertex
 # tint/occlusion and original UVs. Fine detail is separately selectable at load.
@@ -20,7 +27,10 @@ surface={
     'chaux':'plaster','ashlar':'stone','drystone':'stone','rock':'stone',
     'paintwood':'wood','timber':'wood','wood':'wood','boards':'wood','shutter':'wood',
     'ground':'ground','glass':'glass','window':'glass',
-    'signs4':'signs','decals4':'decals'
+    'signs4':'signs','decals4':'decals','cyfol':'cyfol','cyflag':'cyflag',
+    'signs3':'signs','decals3':'decals','screen':'portScreen','lavaTp':'lava',
+    'signs5':'signs','decals5':'decals','screenTp':'tephraScreen','ash':'ground','basalt':'basalt',
+    'moss':'moss','panel':'panel','wetstone':'stone','stone':'stone','plaster':'plaster'
 }
 groups={}
 for i,g in enumerate(source['renderGroups']):
@@ -37,24 +47,30 @@ for i,g in enumerate(source['renderGroups']):
     cell=np.floor(centre/24).astype('int32')
     cell=np.clip(cell,-5,5)
     material=surface.get(g['material'],'color')
-    if material in ('signs','decals'):
+    sway=None
+    if material in ('cyflag','cyfol'):
+        if not a.get('sway'):raise ValueError('Missing source flexibility. Re-export with the pinned donor probe.')
+        sway=arr('sway').flatten()
+        if material=='cyflag':cell[:]=0
+        else:cell=np.floor(centre/48).astype('int32').clip(-5,5)
+    if material in ('signs','decals','portScreen','tephraScreen'):
         # Only 274 triangles. One map-wide batch per material keeps the number
         # of low-tier draw calls bounded. Reuse the source V orientation.
         cell[:]=0
         uv=uv.copy()
-        uv[:,0]=uv[:,0]*.5 + (.5 if material=='decals' else 0)
+        uv[:,0]=uv[:,0]*.5 + (.5 if material in ('decals','portScreen') else 0)
     chunks,assignment=np.unique(cell,axis=0,return_inverse=True)
     for ci,(cx,cz) in enumerate(chunks):
         used,local=np.unique(indices[assignment==ci],return_inverse=True)
         key=(int(g['detail']>=2),material,int(cx),int(cz))
-        groups.setdefault(key,[]).append((pos[used],normal[used],uv[used],colors[used],local.astype('<u4')))
+        groups.setdefault(key,[]).append((pos[used],normal[used],uv[used],colors[used],local.astype('<u4'),sway[used] if sway is not None else None))
 def write_batches(level):
     blob=bytearray();rows=[]
     for (detail,material,cx,cz),parts in sorted(groups.items()):
         if detail!=level:continue
         pos,norm,uv,col=[np.concatenate([a[k] for a in parts]) for k in range(4)]
         start=0;idx=[]
-        for p,_,_,_,indices in parts:
+        for p,_,_,_,indices,_ in parts:
             idx.append(indices+start);start+=len(p)
         indices=np.concatenate(idx)
         # Per-axis quantization keeps even tiny trim accurate, with no seam
@@ -68,6 +84,9 @@ def write_batches(level):
                  min=minimum.tolist(),span=span.tolist(),offset=len(blob))
         for buf in [packed,norm,col,uv,indices.astype('<u4' if wide else '<u2')]:
             blob.extend(buf.tobytes())
+        if parts[0][5] is not None:
+            row['sway']=True
+            blob.extend(np.concatenate([part[5] for part in parts]).astype('<f2').tobytes())
         rows.append(row)
     header=json.dumps(dict(version=1,groups=rows),separators=(',',':')).encode()
     data=struct.pack('<I',len(header))+header+blob
@@ -79,14 +98,23 @@ write_batches(1)
 # All gameplay data lives in the edition-checked public LevelProject. JSON
 # numeric representation uses exact source float values for the physical model.
 spec={k:source[k] for k in ('bounds','solids','ramps','water','holes','nav','rayProps','zones','poi')}
-spec.update(version=1,sourceId='meltem')
+spec.update(version=1,sourceId=map_id)
+# Public callouts at the same named structures must match the English sign atlas.
+sector_labels={
+    'embruns':{'Fish market':'Fish Auction','Fish packing':'Fish Dispatch','Ice factory':'Ice Works','Café de la Marine':'Harbor Café'},
+    'tephra':{'Pump station':'Pump Station 2','Labs':'Laboratory','Core store':'Core Archive','Control room':'Control Room'},
+}
+for row in spec['zones']:
+    row[0]=sector_labels.get(map_id,{}).get(row[0],row[0])
+
+if source.get('groundMaterials'):spec['groundMaterials']=source['groundMaterials']
 spawns=[]
 for t,team in enumerate(('analysts','counterAnalysts')):
-    for i,n in enumerate((0,3,7,11,14)):
+    for i,n in enumerate(spawn_indices):
         x,z=source['spawns'][t][n]
         spawns.append(dict(id='SP-'+('C' if t else 'A')+'-'+str(i+1).zfill(2),team=team,index=i,x=x,z=z,yaw=3.141592653589793 if t else 0))
 project=json.loads(Path('levels/compact-arena.json').read_text())
-project.update(createdAt='2026-11-27T00:00:00.000Z',projectId='lvl-meltem',name='Meltem',
+project.update(createdAt='2026-11-27T00:00:00.000Z',projectId='lvl-'+map_id,name=name,
                ground=dict(bounds=source['bounds'],wallHeightDefault=2.85,floors=[],tape=[]),
                intent=dict(runtimeLighting='neutral-daylight',supportedModes=['endless','tdm']),validation={},agentBrief={},navHints=[])
 project['gameplay'].update(spawns=spawns,objectives=dict(hostages=[],rescue=None,bomb=None))
@@ -96,16 +124,26 @@ project['assets']={k:[] for k in project['assets']}
 project.pop('surfaceColors',None);project.pop('surfaceMaterials',None)
 project['referenceMap']=spec
 (target/'levels').mkdir(parents=True,exist_ok=True)
-(target/'levels/meltem.json').write_text(json.dumps(project,separators=(',',':'),ensure_ascii=False)+'\n',encoding='utf-8')
+(target/'levels'/(map_id+'.json')).write_text(json.dumps(project,separators=(',',':'),ensure_ascii=False)+'\n',encoding='utf-8')
 
 # Package the approved source media used by this renderer profile.
 from PIL import Image
 import shutil
-for name in ("plaster","stone","pavers"):
+for name in {"meltem":("plaster","stone","pavers"),"embruns":(),"tephra":("ash",)}[map_id]:
     image=Image.open(Path("frontline/source/assets/tex")/name/"map.webp").convert("RGB")
     image.thumbnail((512,512),Image.Resampling.LANCZOS)
     image.save(geometry/(name+".webp"),quality=80,method=4)
-shutil.copyfile("frontline/source/assets/sfx/amb_meltem/a_bed.mp3",geometry/"sea.mp3")
-shutil.copyfile("frontline/source/assets/maps/meltem.webp",geometry.parent/"meltem.webp")
+if map_id=='meltem':
+    shutil.copyfile("frontline/source/assets/sfx/amb_meltem/a_bed.mp3",geometry/"sea.mp3")
+shutil.copyfile(Path("frontline/source/assets/maps")/(map_id+".webp"),geometry.parent/(map_id+".webp"))
 
-subprocess.run(['node', str(Path(__file__).with_name('signs.mjs')), str(geometry/'signs.webp')], check=True)
+if map_id=='meltem':
+    subprocess.run(['node', str(Path(__file__).with_name('signs.mjs')), str(geometry/'signs.webp')], check=True)
+else:
+    subprocess.run(['node',str(Path(__file__).with_name('candidate-signs.mjs')),map_id,str(geometry/'signs.webp')],check=True)
+
+for key in {'meltem':('cyfol','cyflag'),'embruns':(),'tephra':('lava','basalt','moss','panel')}[map_id]:
+    image=Image.open(raw/(key+'.png')).convert('RGBA' if key=='cyfol' else 'RGB')
+    image.thumbnail((512,512),Image.Resampling.LANCZOS)
+    image.save(geometry/(key+'.webp'),quality=86,method=4)
+subprocess.run(['node',str(Path(__file__).with_name('pack-environment.cjs')),str(raw),str(target),map_id],check=True)

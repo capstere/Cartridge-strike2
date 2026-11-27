@@ -1,0 +1,345 @@
+{
+  "capture": {
+    "revision": "88d9893f0ce854fe5e4316a48d1209c20987d2ed",
+    "stages": [
+      {
+        "name": "source",
+        "start": "2026-11-27T15:05:37.935117+00:00",
+        "end": "2026-11-27T15:08:38.666003+00:00",
+        "exit": 0
+      },
+      {
+        "name": "package-meltem",
+        "start": "2026-11-27T15:08:38.666450+00:00",
+        "end": "2026-11-27T15:08:42.263653+00:00",
+        "exit": 0
+      },
+      {
+        "name": "package-embruns",
+        "start": "2026-11-27T15:08:42.264049+00:00",
+        "end": "2026-11-27T15:08:44.192540+00:00",
+        "exit": 0
+      },
+      {
+        "name": "package-tephra",
+        "start": "2026-11-27T15:08:44.192947+00:00",
+        "end": "2026-11-27T15:08:45.264642+00:00",
+        "exit": 0
+      }
+    ],
+    "success": true
+  },
+  "upstream": "31ca050d8ce59f4885c01a3237f68cdf186c9b60",
+  "sourceHtmlBlob": "8edb16dadf2c81c0e6009888a283734da1b72316",
+  "sourceHtmlSHA256": "db596cdfeb2a6b061343e0c5e2d8445d8e95619bf1a9b6ca10a8ff4025f55401",
+  "runtimeEngine": {
+    "donor": 147,
+    "target": 180
+  },
+  "maps": {
+    "meltem": {
+      "factories": {
+        "02yf-meltem": {
+          "file": "frontline/source/src/02yf-meltem.js",
+          "blob": "16f541c40afc96afc238d59a3985b615014ac4d4"
+        },
+        "02yb-cyclades": {
+          "file": "frontline/source/src/02yb-cyclades.js",
+          "blob": "ed36786a3e36eaf292b8d51b064fa8648b72da73"
+        },
+        "02yc-cyclades-bati": {
+          "file": "frontline/source/src/02yc-cyclades-bati.js",
+          "blob": "0103737b7b4876ca68cd803d2a11601b2522bf49"
+        },
+        "02yd-cyclades-edifices": {
+          "file": "frontline/source/src/02yd-cyclades-edifices.js",
+          "blob": "37293bbf7225c6f0efdc72685472a23ccd61aab6"
+        },
+        "02ye-cyclades-deco": {
+          "file": "frontline/source/src/02ye-cyclades-deco.js",
+          "blob": "ecb10ce67a4112ddbbd5b5b40a2119e4889b8f58"
+        }
+      },
+      "layer": {
+        "base": {
+          "groups": 302,
+          "triangles": 291400
+        },
+        "detail": {
+          "groups": 33,
+          "triangles": 29702
+        }
+      },
+      "volumes": 791,
+      "navNodes": 5376,
+      "navEdges": 31642,
+      "patrol": 76,
+      "environment": {
+        "geometryGzipSHA256": "61725a58597853df21c3a8d92d0b1ac10ab2ac61d31c3f4915292aa993fcd6e4",
+        "fabrics": 12,
+        "sails": 2,
+        "boats": 22,
+        "ponds": 8,
+        "waves": 8,
+        "vents": 0,
+        "far": 460,
+        "photograph": {
+          "source": "frontline/source/assets/sky/kloofendal_48d_lo.webp",
+          "blob": "0ba41b7efaf7a8a5823f193e1320fb1322d653e7",
+          "sha256": "6d09f73ad40ecb0cf19f628ee2bb69b2acf6b0311b0f7ee5280936bf548c98e7",
+          "license": "CC0 1.0, Poly Haven"
+        }
+      },
+      "assets": [
+        {
+          "file": "levels/meltem.json",
+          "bytes": 774660,
+          "sha256": "c25fcc797cc6f96e79e144c14a00332e65745ea7b8c835d21df6a5e2617b818f"
+        },
+        {
+          "file": "assets/fps/maps/meltem.webp",
+          "bytes": 243352,
+          "sha256": "b8615c919c93e004394f67afc84cfa8c48473c90348b5aebbc37ab4144daa3db"
+        },
+        {
+          "file": "assets/fps/maps/meltem/base.bin.gz",
+          "bytes": 2824199,
+          "sha256": "e78cf0ab3c54cf96d26dde134983ae2be4c37cd12041db301332e3bf7f270290"
+        },
+        {
+          "file": "assets/fps/maps/meltem/cyflag.webp",
+          "bytes": 2030,
+          "sha256": "488ff5055047a1833a34229b2a41ddee2d3e27675f748873bff27122a49549b1"
+        },
+        {
+          "file": "assets/fps/maps/meltem/cyfol.webp",
+          "bytes": 177824,
+          "sha256": "0d5516df30dff189bf4f53e06cb3cc430a397123907a475d6db851a14665f0da"
+        },
+        {
+          "file": "assets/fps/maps/meltem/detail.bin.gz",
+          "bytes": 246408,
+          "sha256": "9794c7aee0856763000321a09964826d3708adc65ba941c3421607a9006cb051"
+        },
+        {
+          "file": "assets/fps/maps/meltem/environment.json.gz",
+          "bytes": 768833,
+          "sha256": "61725a58597853df21c3a8d92d0b1ac10ab2ac61d31c3f4915292aa993fcd6e4"
+        },
+        {
+          "file": "assets/fps/maps/meltem/pavers.webp",
+          "bytes": 47794,
+          "sha256": "3bc8b1579f917d3b469ac4e850ab005e45552b8fdc205799532078741003406a"
+        },
+        {
+          "file": "assets/fps/maps/meltem/plaster.webp",
+          "bytes": 77812,
+          "sha256": "e9b6465c3b897e949f80cc65256539d31acfb52550a6845a06b8695e38faa28b"
+        },
+        {
+          "file": "assets/fps/maps/meltem/sea.mp3",
+          "bytes": 273285,
+          "sha256": "fc419be87608483c6e4ded692697b37d8bf1e0c9e66b7fc47cba841f22fbfc43"
+        },
+        {
+          "file": "assets/fps/maps/meltem/signs.webp",
+          "bytes": 80880,
+          "sha256": "79ee402e3c9735f698db635da120089cad53b55f45fbde4094842bb6f81470dd"
+        },
+        {
+          "file": "assets/fps/maps/meltem/sky.webp",
+          "bytes": 45252,
+          "sha256": "6d09f73ad40ecb0cf19f628ee2bb69b2acf6b0311b0f7ee5280936bf548c98e7"
+        },
+        {
+          "file": "assets/fps/maps/meltem/stone.webp",
+          "bytes": 54260,
+          "sha256": "5260b748c03bd10ee2f9817f24fe258318d2f27844c97f5449cbc303adb9907a"
+        }
+      ]
+    },
+    "embruns": {
+      "factories": {
+        "02u-embruns": {
+          "file": "frontline/source/src/02u-embruns.js",
+          "blob": "6d87b9a4ffa273045edf65dad853c4bddd03d9a8"
+        },
+        "02l-port": {
+          "file": "frontline/source/src/02l-port.js",
+          "blob": "a996fb0d9a47d3a1eb6fb485b9d92699c015357d"
+        }
+      },
+      "layer": {
+        "base": {
+          "groups": 305,
+          "triangles": 502749
+        },
+        "detail": {
+          "groups": 21,
+          "triangles": 30804
+        }
+      },
+      "volumes": 1656,
+      "navNodes": 6420,
+      "navEdges": 38610,
+      "patrol": 35,
+      "environment": {
+        "geometryGzipSHA256": "cc4068056f86a52f7964c128e2d52e468ec6f0c3b9eb03466e1c86d4a5fb70b0",
+        "fabrics": 6,
+        "sails": 0,
+        "boats": 14,
+        "ponds": 17,
+        "waves": 8,
+        "vents": 0,
+        "far": 460,
+        "photograph": {
+          "source": "frontline/source/assets/sky/kloofendal_misty_morning_lo.webp",
+          "blob": "77b834a53961bb96840cffdbcb1e58f4cad92c63",
+          "sha256": "0d80d18eb4c2e314c27c0ec895f7fa8c8d569bb4a0a63c1cd10671176eaf7583",
+          "license": "CC0 1.0, Poly Haven"
+        }
+      },
+      "assets": [
+        {
+          "file": "levels/embruns.json",
+          "bytes": 1458128,
+          "sha256": "b38f94b347eba2ef922380982024e49efb399268eabb7add9cbcc8c6977964d3"
+        },
+        {
+          "file": "assets/fps/maps/embruns.webp",
+          "bytes": 104908,
+          "sha256": "d178f95e2d72ff940eaf0efc29012f88fdbd3299f0c4c4c19371bd1014fd5d97"
+        },
+        {
+          "file": "assets/fps/maps/embruns/base.bin.gz",
+          "bytes": 4547242,
+          "sha256": "2768ec110440e126784e20f6aad1b38f12d69272a7fa2a88a50b97be3afb5a68"
+        },
+        {
+          "file": "assets/fps/maps/embruns/detail.bin.gz",
+          "bytes": 262738,
+          "sha256": "e9660001a7aa5c3cf06369d59971b3edff7ce8095f8be0f9b8ec6d54c69a6e34"
+        },
+        {
+          "file": "assets/fps/maps/embruns/environment.json.gz",
+          "bytes": 353724,
+          "sha256": "cc4068056f86a52f7964c128e2d52e468ec6f0c3b9eb03466e1c86d4a5fb70b0"
+        },
+        {
+          "file": "assets/fps/maps/embruns/signs.webp",
+          "bytes": 183712,
+          "sha256": "f993b2c989278d17d336cdec9a7e0c095b986c81c1363de4f380edae0fba95af"
+        },
+        {
+          "file": "assets/fps/maps/embruns/sky.webp",
+          "bytes": 10132,
+          "sha256": "0d80d18eb4c2e314c27c0ec895f7fa8c8d569bb4a0a63c1cd10671176eaf7583"
+        }
+      ]
+    },
+    "tephra": {
+      "factories": {
+        "02yh-tephra": {
+          "file": "frontline/source/src/02yh-tephra.js",
+          "blob": "d4bd2b3b8f477f8244a82f909111bb19ff35e4a7"
+        },
+        "02yg-tephra-kit": {
+          "file": "frontline/source/src/02yg-tephra-kit.js",
+          "blob": "b394efcfc19d1bf4feb85153976a6c590b8a60bf"
+        }
+      },
+      "layer": {
+        "base": {
+          "groups": 222,
+          "triangles": 112492
+        },
+        "detail": {
+          "groups": 8,
+          "triangles": 8024
+        }
+      },
+      "volumes": 716,
+      "navNodes": 8855,
+      "navEdges": 57160,
+      "patrol": 23,
+      "environment": {
+        "geometryGzipSHA256": "58a9a4b9a406e463c885678de236905b9828a617fe7ecfcd900a3e8567ce8d8a",
+        "fabrics": 0,
+        "sails": 0,
+        "boats": 0,
+        "ponds": 0,
+        "waves": 0,
+        "vents": 9,
+        "far": 560,
+        "photograph": {
+          "source": "frontline/source/assets/sky/wasteland_feu_lo.webp",
+          "blob": "a12e5468f9fcaa3b9f64aa3d0ac2c52ade951a17",
+          "sha256": "c0ea9a9df7e3f3f708d04590b0f417de6d801e2cbb41194ac77813dfbafa8d7d",
+          "license": "CC0 1.0, Poly Haven"
+        }
+      },
+      "assets": [
+        {
+          "file": "levels/tephra.json",
+          "bytes": 1233818,
+          "sha256": "d393ca328b0907db8687557fb4b00d35dbfc7af2adc18e0741e2ee5ec7c90f1b"
+        },
+        {
+          "file": "assets/fps/maps/tephra.webp",
+          "bytes": 63140,
+          "sha256": "2c9b2ec4f7e62a1b267d7e7a00c0b7a59a7bafc045e9d6e172a206d3ce57f03b"
+        },
+        {
+          "file": "assets/fps/maps/tephra/ash.webp",
+          "bytes": 24692,
+          "sha256": "03945d04830fa59d3c92ecb17204f2fa53ce921e6238b0edfca0479586f70547"
+        },
+        {
+          "file": "assets/fps/maps/tephra/basalt.webp",
+          "bytes": 14560,
+          "sha256": "75d0a17ecb925a605eb3309f516281372d5ce4df734eb28fec71b5a9e3d3c07f"
+        },
+        {
+          "file": "assets/fps/maps/tephra/base.bin.gz",
+          "bytes": 1130892,
+          "sha256": "911d48ea709986c322fce99bae5bf4d7eaa7ac3b8fe5893d854920a5eee24921"
+        },
+        {
+          "file": "assets/fps/maps/tephra/detail.bin.gz",
+          "bytes": 59462,
+          "sha256": "dfcff33bf462304fb8ee230c2854f63ac458ab830311a4575926a6fd9d3fceb9"
+        },
+        {
+          "file": "assets/fps/maps/tephra/environment.json.gz",
+          "bytes": 845,
+          "sha256": "58a9a4b9a406e463c885678de236905b9828a617fe7ecfcd900a3e8567ce8d8a"
+        },
+        {
+          "file": "assets/fps/maps/tephra/lava.webp",
+          "bytes": 30542,
+          "sha256": "bbe678421fe9fb30ab7af22b358df2e65fbad790892e85d4cb31fcb317e7aa28"
+        },
+        {
+          "file": "assets/fps/maps/tephra/moss.webp",
+          "bytes": 39770,
+          "sha256": "9b69b937a7dfa4ad5fafea45cc8e53df8c4bdbd48d0602a4c14d79d1404b6284"
+        },
+        {
+          "file": "assets/fps/maps/tephra/panel.webp",
+          "bytes": 1566,
+          "sha256": "7ba0a12112ddaed370fd5928b5de36a395b2ac40451c4b43a1e25a9f9b9de725"
+        },
+        {
+          "file": "assets/fps/maps/tephra/signs.webp",
+          "bytes": 198486,
+          "sha256": "1cf6d830a4f72892d9132452e352d1706ce77035066c29391eaf65132f087de3"
+        },
+        {
+          "file": "assets/fps/maps/tephra/sky.webp",
+          "bytes": 15328,
+          "sha256": "c0ea9a9df7e3f3f708d04590b0f417de6d801e2cbb41194ac77813dfbafa8d7d"
+        }
+      ]
+    }
+  }
+}

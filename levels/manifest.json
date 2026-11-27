@@ -26,6 +26,26 @@
       ],
       "preview": "assets/fps/maps/meltem.webp",
       "rights": "Riposte MIT map factory and credited CC0 reference media"
+    },
+    {
+      "id": "embruns",
+      "name": "Kervénec Harbor",
+      "file": "levels/embruns.json",
+      "modes": [
+        "endless"
+      ],
+      "preview": "assets/fps/maps/embruns.webp",
+      "rights": "Riposte MIT map factory and credited CC0 reference media"
+    },
+    {
+      "id": "tephra",
+      "name": "Tephra",
+      "file": "levels/tephra.json",
+      "modes": [
+        "endless"
+      ],
+      "preview": "assets/fps/maps/tephra.webp",
+      "rights": "Riposte MIT map factory and credited CC0 reference media"
     }
   ],
   "defaultLevel": "floor5-prepared"

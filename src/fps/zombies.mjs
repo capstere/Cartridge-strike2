@@ -174,7 +174,7 @@ function move(g,z,dt){
   if(walked>.0005){
     z.yaw=Math.atan2(x-z.x,zz-z.z);z.wait=0;z.stalledAt=null;z.stepDistance+=walked;
     if(z.stepDistance>.8){
-      z.stepDistance=0;g.emit('step',z,{mode:speed>1?'run':'sneak',surface:g.world.materialAt(z.x,z.z)});
+      z.stepDistance=0;g.emit('step',z,{mode:speed>1?'run':'sneak',surface:g.world.materialAt(z.x,z.z,z.y)});
     }
   }
   else {
@@ -188,7 +188,7 @@ function tickOne(g,z,dt){
   const t=g.state.time; z.bodyTime=t;z.height=bodyHeight(z,t);
   if(z.behavior==='attack' && t>=z.impactAt){
     z.impactAt=Infinity;const a=g.actors.find(o=>o.id===z.attackId);
-    g.emit('zombie-stomp',z,{surface:g.world.materialAt(z.x,z.z)});
+    g.emit('zombie-stomp',z,{surface:g.world.materialAt(z.x,z.z,z.y)});
     if(inReach(g,z,a))g.pendingDamage.push({source:z,target:a,amount:12,kind:'stomp'});
     z.nextAttack=t+3;
   }

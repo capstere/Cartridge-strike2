@@ -48,7 +48,7 @@ Run from the repository root on the Pi, with the heavy slot reserved. Supply an 
 
 ```sh
 scratch=$(mktemp -d)
-WAYLAND_DISPLAY=wayland-0 node tools/reference-map/export.cjs "$scratch"
+WAYLAND_DISPLAY=wayland-0 node tools/reference-map/export.cjs "$scratch" --environment
 OPENBLAS_NUM_THREADS=1 python3 tools/reference-map/pack.py "$scratch" .
 ```
 
@@ -109,3 +109,28 @@ On protocol-15 revision `3a65284`, the ten-return repeat kept one game, network 
 The renderer now disposes uploaded geometry, materials and textures from the outgoing world, first-person scene and warmed weapons before discarding its WebGL renderer. Three.js r180 installs per-renderer callbacks on these resources. The CPU-side buffers and original character templates continue to serve the next map. A four-switch native repeat at `bb88b38` found 78 live canvases, zero detached game canvases, two Three renderers, two WebGL contexts, 69 programs and 130 shaders at both same-map visits and after a 53-second parked control. The JavaScript heap was 37.59 and 37.45 MiB on those visits and 37.14 MiB at the end of the control. All 272 portable root tests passed with server dependencies physically absent. [Short repeat and portable test receipt](meltem-retention-four.json)
 
 The integrated native repeat on `7ead5ac` completed the ordinary English menu in desktop and touch browser profiles. Each entered both Floor 5 Classic and Meltem Endless, checked the unsupported Classic bookmark and Random selection, and returned through the menus. A separate native V3D TLS room then ran a complete match with nine authority bots, twenty map switches and a 186.47-second same-room parked control. Both stages exited successfully under a bounded user service. At Meltem visits 2, 10 and 20 and after parking, Chromium retained 78 canvases, zero detached game canvases, two WebGL contexts, 59 program objects and 110 shader objects. The collected heap measured 37.13, 36.72, 36.88 and 36.12 MiB respectively. The room rejected a corrupted LevelProject, recovered on the saved map and released all seats. The active match measured a 33.1 ms client p95 frame interval and 5.23 ms authority p95 execution time. [Timings, per-switch resources, control and normal-menu receipts](meltem-integrated-native.json) · [Desktop Endless match](meltem-english-desktop-match.jpg) · [Touch setup](meltem-english-touch-setup.jpg)
+
+## Native source exports and target candidates
+
+The protected native export executed Meltem, Kervénec Harbor and Tephra on the pinned Riposte frontend. It completed at 15:08:45 UTC on November 27. The three LevelProjects use the original solids, ramps, layered graph, rest-position geometry and English sectors. Both new maps pass the shared world’s ten spawn fit checks and 25 opposing-team routes. Their normal-match and resource gates are open until their own receipts are recorded. [Original-to-package hashes and counts](source-to-package.json)
+
+| Map | Low architecture | Separately loaded fine geometry | Environment captured |
+|---|---:|---:|---|
+| Meltem | 302 batches, 291,400 triangles | 33 batches, 29,702 triangles | 12 sheets, 2 mills, 22 floating boats, 8 ponds, 8 wave bands and the original photographic sky |
+| Kervénec Harbor | 305 batches, 502,749 triangles | 21 batches, 30,804 triangles | 6 sheets, 14 boats, 17 ponds, 8 wave bands and the original misty harbor sky |
+| Tephra | 222 batches, 112,492 triangles | 8 batches, 8,024 triangles | 9 geothermal vents, an authored night sky, lava, ash, sparks and roof masking |
+
+Riposte’s r147 map builders, cloth constraints, water parameters and texture painters execute during export. The r180 target decodes indexed geometry directly and uses the fixed donor cloth samples with GPU interpolation. Its separate environment group owns its meshes, shaders, textures and teardown. The shore distance field, authored wave bands, boat position, draft and hull geometry come from the original water controller. The target’s volcanic particles use the donor’s vents and sampled roof mask. The photographic sky files are byte-identical to the low-resolution source. The audio and material provenance is recorded separately. [Factory and media hashes](source-to-package.json) [Coastal recordings](audio/takes.json)
+
+The decoded source UVs and packed half-float target UVs select the same painted cell for every board, decal and electronic display. Kervénec’s two auction displays retain all four emissive triangles in decal cell 4. Tephra retains all 244 console triangles in sign cells 6 and 7. Kervénec’s English sector names match the Fish Auction, Fish Dispatch, Ice Works and Harbor Café signage. The volcanic map uses the same Laboratory, Core Archive, Pump Station 2 and Control Room labels as its signs. [Kervénec target cells](art/candidates/embruns-packed-signs.json) [Tephra target cells](art/candidates/tephra-packed-signs.json)
+
+### First integrated native runs
+
+On revision `419d403`, both candidate maps completed a 45-second scored TDM through normal TLS family admission with one rendered player and nine authoritative bots. Both returned to the waiting room, switched to Floor 5 and back, rejected a damaged map, recovered and released every seat. Node naturally drained after each browser and authority closed. These captures establish two outstanding presentation requirements.
+
+| Candidate | Pi GPU frame interval p50 / p95 / p99 | Authority step p50 / p95 / p99 | Measured art and audio |
+|---|---|---|---|
+| Kervénec Harbor | 44.3 / 84.9 / 101.9 ms | 2.05 / 14.77 / 29.93 ms | 561 median draws, 640,017 median triangles, 14 moving boats, six cloth sheets, 17 basins, eight wave bands. Nine simultaneous voices, 14,464,328 decoded bytes and zero decoder errors. |
+| Tephra | 21.1 / 33.7 / 50.7 ms | 1.25 / 5.77 / 10.31 ms | 469 median draws, 293,172 median triangles, geothermal steam, 700 low-tier ash/ember points, ceiling masking and the photographic night sky. |
+
+Kervénec needs fewer low-tier submissions and triangles to meet responsive play. Its shaded buildings also need the original diffuse-light calibration. Tephra’s ground routes become too dark in the first target frames. Restore the source lamp field, emissive fixtures, illuminated windows and volcano plume, then repeat the same route. Both maps remain release candidates. [Native unit](candidates/first-native/unit.json) [Harbor match and timing](candidates/first-native/embruns.json) [Harbor frame](candidates/first-native/embruns-game.jpg) [Volcanic match and timing](candidates/first-native/tephra.json) [Volcanic frame](candidates/first-native/tephra-game.jpg)

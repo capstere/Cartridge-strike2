@@ -1,0 +1,48 @@
+{
+  "map": "tephra",
+  "sha256": "1cf6d830a4f72892d9132452e352d1706ce77035066c29391eaf65132f087de3",
+  "alphaPixels": {
+    "transparent": 309527,
+    "partial": 115406,
+    "opaque": 164891
+  },
+  "sourceMaterials": {
+    "signs5": {
+      "samples": "signs",
+      "groups": 6,
+      "triangles": 22,
+      "trianglesPerCell": {
+        "0": 4,
+        "1": 4,
+        "2": 4,
+        "3": 4,
+        "4": 2,
+        "5": 4
+      }
+    },
+    "decals5": {
+      "samples": "decals",
+      "groups": 6,
+      "triangles": 32,
+      "trianglesPerCell": {
+        "0": 4,
+        "1": 4,
+        "2": 2,
+        "3": 2,
+        "5": 4,
+        "6": 4,
+        "7": 4,
+        "10": 8
+      }
+    },
+    "screenTp": {
+      "samples": "signs",
+      "groups": 4,
+      "triangles": 244,
+      "trianglesPerCell": {
+        "6": 212,
+        "7": 32
+      }
+    }
+  }
+}

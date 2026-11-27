@@ -19,19 +19,22 @@ const cases = {
   desktop: {actors:10, bots:9, family:true, video:true},
   mobile: {actors:2, bots:0, mobile:true},
   four: {actors:4, bots:0},
-  meltem: {actors:10, bots:9, family:true, reference:true},
-  meltemTouch: {actors:2, bots:0, mobile:true, reference:true},
+  ...Object.fromEntries(['meltem','embruns','tephra'].flatMap(id=>[
+    [id,{actors:10,bots:9,family:true,reference:id}],
+    [id+'Touch',{actors:2,bots:0,mobile:true,reference:id}]
+  ])),
   floor: {actors:10, bots:9, family:true, floor:true},
 };
 const name = process.env.FPS_MAP_CASE || 'desktop';
 const profileHeap=process.env.FPS_MAP_HEAP_PROFILE==='1';
+const audible=process.env.FPS_MAP_AUDIO==='1';
 const tour = name==='four' && process.env.FPS_MAP_TOUR==='1';
 const spec = cases[name];
 // A pair switches the same family room to Floor 5 and then back to the selected map.
 const switchPairs = Number(process.env.FPS_MAP_SWITCH_PAIRS ?? 2);
 assert(Number.isSafeInteger(switchPairs) && switchPairs>=1, 'Use a positive number of map switch pairs');
 assert(spec, 'Unknown map browser scenario');
-const floor = 'floor5-prepared', arena = 'compact-arena', map = spec.reference ? 'meltem' : spec.floor ? floor : arena;
+const floor = 'floor5-prepared', arena = 'compact-arena', map = spec.reference || (spec.floor ? floor : arena);
 const out = process.env.FPS_MAP_OUT || 'test-results/multiplayer-maps';
 await mkdir(out, {recursive:true});
 const fixture = await startPilotFixture({familyRoom:true, host:'127.0.0.1',
@@ -75,10 +78,26 @@ function stats(raw) {
 
 // No test query, camera replacement, simulated rendering, or edits to actor state.
 // Observe completed Three.js frames, resource ownership and world identity.
-async function observe() {
+async function observe(withAudio) {
   const path = performance.getEntriesByType('resource').find(r=>new URL(r.name).pathname.endsWith('/src/fps/render.mjs'))?.name;
   const {Renderer} = await import(path || '/src/fps/render.mjs?v=floor5-environment-1');
   const observed = window.mapProbe = {frames:[], collecting:false, renderers:[], gameCanvases:[], last:null};
+  if(withAudio){
+    const loaded=performance.getEntriesByType('resource').find(r=>new URL(r.name).pathname.endsWith('/src/fps/coastal-ambience.mjs'));
+    const {CoastalAmbience}=await import(loaded?.name||'/src/fps/coastal-ambience.mjs');
+    const sample=observed.audio={peakVoices:0,peakBytes:0,closed:[]};
+    const update=CoastalAmbience.prototype.update,dispose=CoastalAmbience.prototype.dispose;
+    CoastalAmbience.prototype.update=function(...args){
+      const value=update.apply(this,args);
+      sample.map=this.mapId;sample.peakVoices=Math.max(sample.peakVoices,this.voices.size);
+      sample.peakBytes=Math.max(sample.peakBytes,this.bytes);sample.decodeErrors=[...this.loadErrors];
+      return value;
+    };
+    CoastalAmbience.prototype.dispose=function(){
+      try{return dispose.call(this);}
+      finally{sample.closed.push({id:this.mapId,bytes:this.bytes,voices:this.voices.size,banks:this.banks.size});}
+    };
+  }
   const draw = Renderer.prototype.render, dispose = Renderer.prototype.dispose;
   Renderer.prototype.render = function(...args) {
     const started = performance.now();
@@ -296,14 +315,18 @@ try {
   const viewport=spec.mobile ? {width:915,height:412} : {width:1024,height:576};
   const context=await browser.newContext({...spec.mobile&&devices['Pixel 7'],viewport,screen:viewport,deviceScaleFactor:1,ignoreHTTPSErrors:true});
   result.browser=browser.version(); result.viewport=viewport;
-  await context.addInitScript(()=>localStorage.setItem('cartridge-settings',JSON.stringify({graphics:'low',volume:0,mobileAutoFire:false})));
-  page=await context.newPage(); page.setDefaultTimeout(90000); page.on('pageerror',err=>errors.push(err.message));
+  await context.addInitScript(volume=>localStorage.setItem('cartridge-settings',JSON.stringify({graphics:'low',volume,mobileAutoFire:false})),audible ? .45 : 0);
+  page=await context.newPage();
+  page.on('console',message=>{
+    if(message.type()==='error'&&/shader error|WebGLProgram:|GL_INVALID/i.test(message.text()))errors.push(message.text());
+  });
+  page.setDefaultTimeout(90000); page.on('pageerror',err=>errors.push(err.message));
   const entry=spec.family?'/room/JESPERS-ROOM':'/';
   await page.goto(fixture.origin+entry,{waitUntil:'domcontentloaded'});
   await page.locator('[name=invite]').fill(fixture.invite);
   const login=performance.now(); await page.locator('button[type=submit]').click();
   await page.locator('#network-code').waitFor(); result.signInToFormMs=Math.round(performance.now()-login);
-  await page.evaluate(observe);
+  await page.evaluate(observe,audible);
   if(profileHeap)await page.evaluate(installRetentionProbe);
   assert.equal(await page.evaluate(()=>typeof window.__fps),'undefined');
   await page.locator('#network-name').fill('Map Tester');
@@ -344,8 +367,13 @@ try {
         groups:architecture.length, triangles:architecture.reduce((n,mesh)=>n+mesh.geometry.index.count/3,0),
         projectId:renderer.world.project.projectId};
     });
-    assert.deepEqual(result.sourceGeometry,{inScene:true,groups:295,triangles:291400,projectId:'lvl-meltem'},
-      'The selected room must render the compiled Meltem architecture');
+    const expected={meltem:[302,291400],embruns:[305,502749],tephra:[222,112492]}[map];
+    assert.deepEqual(result.sourceGeometry,{inScene:true,groups:expected[0],triangles:expected[1],projectId:'lvl-'+map},
+      'The selected room must render its measured original architecture');
+    if(process.env.FPS_MAP_ENVIRONMENT==='1'){
+      const {verifyEnvironment}=await import('./reference-map/verify-environment.mjs');
+      result.environment=await verifyEnvironment(page,out,map);
+    }
   }
   await page.screenshot({path:join(out,name+'-game.jpg'), quality:86});
   if(spec.video || tour) {
@@ -455,6 +483,13 @@ try {
   await page.locator('#room-leave').click(); await page.locator('#network-code').waitFor();
   for(const p of peers) await p.pages()[0].evaluate(()=>mapPeerRoom.leave());
   await until(()=>fixture.authority.rooms.size===0,'All sockets and simulation released');
+  if(audible&&['meltem','embruns'].includes(map)){
+    result.audio=await page.evaluate(()=>mapProbe.audio);
+    assert.equal(result.audio.map,map);assert.ok(result.audio.peakBytes>0&&result.audio.peakVoices>0);
+    assert.deepEqual(result.audio.decodeErrors,[]);
+    assert.ok(result.audio.closed.length>0);
+    for(const owner of result.audio.closed)assert.deepEqual(owner,{id:map,bytes:0,voices:0,banks:0});
+  }
   assert.deepEqual(errors,[]);
   await browser.close();browser=null;
   if(footage) result.video=await encode(footage);
