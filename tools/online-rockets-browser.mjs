@@ -12,8 +12,10 @@ async function until(check,label,timeout=25000){
   while(!await check()){assert(performance.now()<end,label);await delay(40);}
 }
 async function launch(touch){
+  const args=['--use-angle='+(process.env.FPS_NETWORK_ANGLE||'swiftshader'),'--disable-renderer-backgrounding','--disable-background-timer-throttling','--disable-backgrounding-occluded-windows'];
+  if(process.env.WAYLAND_DISPLAY)args.push('--ozone-platform=wayland');
   const browser=await chromium.launch({channel:'chromium',executablePath:process.env.CHROMIUM_PATH||undefined,
-    args:['--use-angle='+(process.env.FPS_NETWORK_ANGLE||'swiftshader'),'--disable-renderer-backgrounding','--disable-background-timer-throttling']});
+    headless:process.env.FPS_NETWORK_HEADED!=='1',args});
   browsers.push(browser);
   const page=await browser.newPage({viewport:touch?{width:844,height:390}:{width:820,height:480},deviceScaleFactor:.5,isMobile:touch,hasTouch:touch});
   pages.push(page);page.setDefaultTimeout(85000);page.on('pageerror',e=>errors.push(e.message));
@@ -81,12 +83,23 @@ async function pointDesktop(page,actor){
     return Math.abs(Math.atan2(Math.sin(yaw),Math.cos(yaw)))<.02&&Math.abs(pitch)<.02;
   }),'desktop and authority face down the lane');
 }
-async function observe(p){
-  await p.evaluate(()=>{
-    const {renderer,audio}=__fps;
-    const seen=window.rocketEvidence={visible:new Set(),sounds:[],events:[]};
+async function observe(p,target){
+  await p.evaluate(({id,lifeId})=>{
+    const {renderer,audio,network}=__fps;
+    window.rocketEvidence?.unsubscribe?.();
+    const seen=window.rocketEvidence={visible:new Set(),sounds:[],events:[],deaths:[],impacts:[]};
+    const room=network.room;
+    const snapshot=state=>{
+      const actor=state.actors.get(id);
+      if(actor?.lifeId===lifeId && actor.hp===0 && !actor.alive && !seen.deaths.length){
+        seen.deaths.push([id,lifeId,actor.hp,actor.alive]);
+      }
+    };
+    room.onStateChange(snapshot);
+    seen.unsubscribe=()=>room.onStateChange.remove(snapshot);
     if(!window.observeRocketFrames){
       const render=renderer.render.bind(renderer),events=renderer.events.bind(renderer),play=audio.play.bind(audio);
+      const visuals=renderer.actionVisuals,explode=visuals.explode.bind(visuals);
       renderer.render=(...args)=>{
         render(...args);
         for(const [id,m] of renderer.actionVisuals.rockets){
@@ -94,12 +107,19 @@ async function observe(p){
           if(m.visible&&Math.abs(q.x)<1&&Math.abs(q.y)<1&&Math.abs(q.z)<1)window.rocketEvidence.visible.add(id);
         }
       };
-      renderer.events=(batch,...args)=>{window.rocketEvidence.events.push(...batch.filter(e=>e.type.startsWith('rocket-')));return events(batch,...args);};
-      audio.play=(e,...args)=>{if(e.type.startsWith('rocket-'))window.rocketEvidence.sounds.push(e.type);return play(e,...args);};
+      visuals.explode=(e,t)=>{
+        window.rocketEvidence.impacts.push({id:e.rocketId,visibleBefore:window.rocketEvidence.visible.has(e.rocketId)});
+        return explode(e,t);
+      };
+      renderer.events=(batch,...args)=>{window.rocketEvidence.events.push(...batch.filter(e=>e.rocketId));return events(batch,...args);};
+      audio.play=(e,...args)=>{
+        const before=audio.active.size,result=play(e,...args);
+        if(e.type.startsWith('rocket-'))window.rocketEvidence.sounds.push({type:e.type,id:e.rocketId,voices:audio.active.size-before});
+        return result;
+      };
       window.observeRocketFrames=true;
     }
-    return seen.visible.size;
-  });
+  },{id:target.id,lifeId:target.lifeId});
 }
 async function fireTouch(page){
   const cdp=await page.context().newCDPSession(page);
@@ -267,7 +287,7 @@ async function cycle(desktop,mobile,mode){
   Object.assign(right,{x:22.8,z:-20,y:0,yaw:Math.PI,pitch:0,spawnProtectedUntil:0});
   for(const [p,actor] of [[desktop,left],[mobile,right]]){
     await until(()=>p.evaluate(z=>Math.abs(__fps.game.player.z-z)<.08,actor.z),'authoritative spectator and firing position');
-    await observe(p);
+    await observe(p,target);
   }
   await mobile.locator('#resume').tap();
   await resumeDesktop(desktop);
@@ -277,27 +297,31 @@ async function cycle(desktop,mobile,mode){
   else {await desktop.mouse.down();release=()=>desktop.mouse.up();}
   try{await until(()=>!target.alive,'authority resolves rocket hit');}finally{await release();}
   await until(async()=>{
-    const updated=await Promise.all(peers.map(p=>p.evaluate(id=>{
-      const evidence=window.rocketEvidence,actor=__fps.network.room.state.actors.get(id);
-      return actor?.alive===false&&evidence.events.some(e=>e.type==='rocket-explosion')
-        &&evidence.sounds.includes('rocket-explosion');
-    },target.id)));
+    const updated=await Promise.all(peers.map(p=>p.evaluate(()=>{
+      const e=window.rocketEvidence;
+      return e.deaths.length && e.impacts.length && e.sounds.some(s=>s.type==='rocket-explosion');
+    })));
     return updated.every(Boolean);
   },'both renderers consume the authoritative hit and explosion');
-  const evidence=peers.map(p=>p.evaluate(()=>{
-    const e=window.rocketEvidence,s=__fps.network.room.state;
-    return {meshes:[...e.visible],events:e.events,sound:e.sounds,life:[...s.actors.values()].map(a=>[a.id,a.hp,a.alive])};
-  }));
-  const [a,b]=await Promise.all(evidence);
+  const [a,b]=await Promise.all(peers.map(p=>p.evaluate(()=>{
+    const e=window.rocketEvidence;
+    return {meshes:[...e.visible],events:e.events,sounds:e.sounds,deaths:e.deaths,impacts:e.impacts};
+  })));
   const explosions=a.events.filter(e=>e.type==='rocket-explosion');
   assert.equal(explosions.length,1);
   const id=explosions[0].rocketId;
   for(const e of [a,b]){
     assert(e.meshes.includes(id),'rocket in the camera view before impact');
-    assert.equal(e.events.filter(v=>v.rocketId===id&&v.type==='rocket-explosion').length,1);
-    assert.equal(e.sound.filter(v=>v==='rocket-launch').length,1);
-    assert.equal(e.sound.filter(v=>v==='rocket-explosion').length,1);
-    assert.deepEqual(e.life.find(v=>v[0]===target.id),[target.id,0,false]);
+    assert.deepEqual(e.impacts,[{id,visibleBefore:true}]);
+    for(const type of ['rocket-launch','rocket-explosion']){
+      assert.equal(e.events.filter(v=>v.rocketId===id&&v.type===type).length,1);
+      const sounds=e.sounds.filter(v=>v.id===id&&v.type===type);
+      assert.equal(sounds.length,1);
+      assert(sounds[0].voices>0,type+' scheduled audible sources');
+    }
+    const kill=e.events.find(v=>v.type==='kill'&&v.rocketId===id&&v.actorId===target.id);
+    assert(kill,'the same rocket eliminated the expected target');
+    assert.deepEqual(e.deaths,[[target.id,kill.lifeId,0,false]]);
   }
   assert.equal(shooter.inventory.primary.ammo,0);
   if(mode==='tdm')await mobile.locator('[data-mobile-action=reload]').tap();
@@ -311,7 +335,7 @@ async function cycle(desktop,mobile,mode){
     Object.assign(right,{x:22.8,z:-20,y:0,yaw:Math.PI,pitch:0,spawnProtectedUntil:0});
     for(const [p,actor] of [[desktop,left],[mobile,right]]){
       await until(()=>p.evaluate(z=>Math.abs(__fps.game.player.z-z)<.08,actor.z),'match point position');
-      await observe(p);
+      await observe(p,target);
     }
     game.state.score[shooter.team]=room.state.scoreTarget-1;
     await mobile.locator('#resume').tap();
@@ -332,7 +356,7 @@ async function cycle(desktop,mobile,mode){
       await until(()=>p.evaluate(()=>{
         const session=__fps.network;
         return session.room.state.phase==='results'&&session.view.state.time>session.room.state.time+.35
-          &&rocketEvidence.events.some(e=>e.type==='rocket-explosion')&&rocketEvidence.sounds.includes('rocket-explosion');
+          &&rocketEvidence.events.some(e=>e.type==='rocket-explosion')&&rocketEvidence.sounds.some(s=>s.type==='rocket-explosion'&&s.voices>0);
       }),'deciding impact persists through result patches');
       assert.deepEqual(attemptedRematches,[],'release of the deciding touch fire triggers no rematch');
       await p.locator('#room-leave').click();
@@ -355,7 +379,7 @@ try{
     rendererClock:{time:__fps.game.state.time,roomTime:__fps.network?.room?.state.time,
       phase:__fps.network?.room?.state.phase,resultAt:__fps.network?.resultsAt,visible:!document.hidden},
     actor:__fps.game.player&&{x:__fps.game.player.x,z:__fps.game.player.z,yaw:__fps.game.player.yaw,weapon:__fps.game.player.weapon},
-    rocket:window.rocketEvidence&&{models:[...rocketEvidence.visible],events:rocketEvidence.events.map(e=>[e.type,e.rocketId]),sound:rocketEvidence.sounds},
+    rocket:window.rocketEvidence&&{models:[...rocketEvidence.visible],events:rocketEvidence.events.map(e=>[e.type,e.rocketId]),sound:rocketEvidence.sounds,hits:rocketEvidence.deaths,impacts:rocketEvidence.impacts,audio:{state:__fps.audio.context?.state,volume:__fps.audio.volume,stats:__fps.audio.stats}},
     controls:{enabled:__fps.mobile?.enabled,visible:__fps.mobile?.visible,alive:__fps.game.player?.alive,
       more:document.getElementById('mobile-more')?.outerHTML,primaryCoarse:matchMedia('(pointer: coarse)').matches,
       anyCoarse:matchMedia('(any-pointer: coarse)').matches,touchPoints:navigator.maxTouchPoints},

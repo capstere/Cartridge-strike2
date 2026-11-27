@@ -3,6 +3,7 @@ import {setTimeout as delay} from 'node:timers/promises';
 import {chromium} from '../frontline/source/tools/dev/node_modules/playwright-core/index.mjs';
 import '../server/register-shared.mjs';
 const {createLocalServer}=await import('../server/local-server.mjs');
+import {verifyRoomAudio} from './network-audio-observer.mjs';
 import {glassCrossing} from './network-glass-fixture.mjs';
 import {resumeDesktop} from './network-browser-resume.mjs';
 
@@ -18,7 +19,7 @@ async function lobby(mobile){
   browsers.push(browser);
   const page=await browser.newPage({viewport:mobile?{width:844,height:390}:{width:820,height:480},deviceScaleFactor:.5,isMobile:mobile,hasTouch:mobile});
   pages.push(page);page.on('pageerror',e=>errors.push(e.message));
-  await page.addInitScript(()=>localStorage.setItem('cartridge-settings',JSON.stringify({graphics:'low',volume:0})));
+  await page.addInitScript(()=>localStorage.setItem('cartridge-settings',JSON.stringify({graphics:'low',volume:.08})));
   await page.goto(local.url+'/fps/?network=local');
   await page.waitForFunction(()=>document.querySelector('#network-code')||!document.querySelector('#fatal').hidden,null,{timeout:90000});
   assert(await page.locator('#fatal').isHidden(),await page.locator('#fatal').textContent());
@@ -101,6 +102,7 @@ try{
   assert.match(await note.textContent(),/next respawn/);
   await mobile.locator('[data-item=cr4]').tap();await until(()=>guest.loadout==='cr4','mobile team rifle queued');
   await mobile.locator('#return-buy').tap();assert.equal(guest.weapon,'smg');assert.equal(guest.inventory.he,0);
+  await verifyRoomAudio({desktop,mobile,room,host,guest,until});
   for(const p of [desktop,mobile])assert(await p.locator('#fatal').isHidden());
   assert.deepEqual(errors,[]);
   console.log('PASS two rendered clients, eight BotControllers, desktop ADS/glass/equipment and simultaneous mobile movement/ADS/fire/HE.');

@@ -41,9 +41,9 @@ function actorView(s,localId){
 
 /** A Game-shaped presentation only. Never advances Game combat/rules locally. */
 export class NetworkSession {
-  constructor(world,{loadWorld,onLoading=()=>{},onDisconnect=()=>{},onConnection=()=>{},onMatch=()=>{}}={}){
+  constructor(world,{loadWorld,onLoading=()=>{},onRocketAudio,onDisconnect=()=>{},onConnection=()=>{},onMatch=()=>{}}={}){
     this.loadWorld=loadWorld;this.onLoading=onLoading;this.worldRevision=0;
-    this.onMatch=onMatch;this.matchId=0;this.matchPhase='';this.world=world;this.onDisconnect=onDisconnect;this.onConnection=onConnection;this.connectionState='connecting';this.controlEpoch=0;this.closed=false;this.enabled=true;
+    this.onRocketAudio=onRocketAudio;this.onMatch=onMatch;this.matchId=0;this.matchPhase='';this.world=world;this.onDisconnect=onDisconnect;this.onConnection=onConnection;this.connectionState='connecting';this.controlEpoch=0;this.closed=false;this.enabled=true;
     this.events=[];this.seenEvent=0;this.predictedShots=new Map();this.actionTimes=new Map();this.remote=new Map();this.residents=new Map();this.projectiles=new Map();this.unsub=[];
     this.fireId=0;this.reloadId=0;this.trigger=false;this.nextCosmetic=0;this.lifeId=0;this.lastPatch=0;
     this.metrics={sent:0,replays:0,adopts:0,resets:0,cosmeticShots:0,confirmedShots:0,suppressedShots:0,corrections:[],adoptionDistance:[],shotLatency:[],hitLatency:[],maxPending:0,reconnects:0};
@@ -448,7 +448,13 @@ export class NetworkSession {
       }
       if(event.type==='hit'&&event.sourceId===this.localPlayerId){const sent=this.actionTimes?.get(event.actionId);
         if(sent!==undefined){this.metrics.hitLatency.push(performance.now()-sent);if(this.metrics.hitLatency.length>512)this.metrics.hitLatency.shift();}}
-      if(this.enabled||rocketEffect&&['active','results'].includes(this.room.state.phase))this.events.push(event);
+      if(this.enabled||rocketEffect&&['active','results'].includes(this.room.state.phase)){
+        // Authoritative sound arrives after its snapshot. A slow renderer may skip the entire flight.
+        if((event.type==='rocket-launch'||event.type==='rocket-explosion') && this.onRocketAudio?.(event,this.room.state.time)){
+          event={...event,audioPresented:true};
+        }
+        this.events.push(event);
+      }
     }
     this.events=this.events.slice(-128);
   }

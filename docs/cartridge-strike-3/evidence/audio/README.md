@@ -6,6 +6,8 @@ The first take is available through the game's regular audio unlock. Three decod
 
 The cartridge latch reuses Riposte’s processed `f_pin.mp3` from `05-audio.js` and the marker in `08-player.js`. One confirmed `cartridge-latch` event from the handling package owns the cue. CGEffex’s CC BY 4.0 attribution, edits and source are included in the in-game credits. The shipped clip and the donor both have Git blob ID `854046f05784b331a701a8960063bf96f84efda9` (4,221 bytes).
 
+The Scout bolt and shotgun pump recordings reuse the byte-identical CC0 FFSL edits cataloged as `f_bolt-1` and `f_pump-1` (10,677 and 8,349 bytes). The handling integration owns the animation markers and cancellation.
+
 ## Pi Chromium signal measurement
 
 The native Pi browser rendered the actual decoded MP3s through the game's shot selection, tracking and spatial Web Audio graph at 48 kHz. Each second shot used the other recorded take. The onset is the first sample above 3% of that signal’s peak. At 48 m, pausing before arrival gave an all-zero output buffer and zero retained sources. This measures the browser mixer. Physical speaker onset and touch-to-display latency require device measurements. [Recorded samples and timestamps](pi-offline-pcm.json)
@@ -20,3 +22,7 @@ The native Pi browser rendered the actual decoded MP3s through the game's shot s
 | P9 | 48 | 139.94 | 147.62 |
 
 Run `node --test src/fps/shot-audio.test.mjs`. Serve the checkout on loopback and run `FPS_TEST_ORIGIN=http://127.0.0.1:8765 node tools/spatial-audio-browser.mjs`. Set `CHROMIUM_PATH=/usr/bin/chromium` for the Pi browser. The offline render, reset and asset identity checks also run in the FPS regression workflow. The combined English and acoustic run used protocol 15 build `ff13002dba01f90bfe2bd221dd267df792c422a9699f98869f7f64b32f90963c` with 562 allowlisted files. Native Chromium 156 rendered one latch source with its first PCM onset at 5.71 ms after the gameplay marker, at 48 kHz. A combined protocol-16 session is needed to bind that measurement to the actual hold animation.
+
+## Radio language
+
+All six shipped radio commands matched the English captions in `src/fps/action-rules.mjs` when decoded against the same English command vocabulary. A blind general-English model independently recognized “go go go” and most of “stick together team”, and misheard several short, filtered phrases. The death sound is a vocal effect and is excluded from the command count. On the matched Pi, run `python3 docs/cartridge-strike-3/evidence/audio/read-radio.py .` with FFmpeg, PocketSphinx 0.8 and its US English acoustic model installed. [Decoded output and controls](radio-language.json)

@@ -12,7 +12,9 @@ if (output) await mkdir(output, {recursive:true});
 const browser = await chromium.launch({
   headless: process.env.FPS_NETWORK_HEADED !== '1',
   executablePath: native,
-  args: native ? ['--ozone-platform=wayland','--use-angle=gl-egl','--disable-dev-shm-usage'] : [],
+  channel: native ? undefined : 'chromium',
+  args: native ? ['--ozone-platform=wayland','--use-angle=gl-egl','--disable-dev-shm-usage'] :
+    ['--enable-unsafe-swiftshader','--disable-dev-shm-usage','--disable-background-timer-throttling','--disable-renderer-backgrounding'],
 });
 const evidence = [];
 async function run(input) {
@@ -23,6 +25,8 @@ async function run(input) {
   page.setDefaultTimeout(65000);
   const errors = [];
   const startedAt = new Date().toISOString();
+  const progress = action => console.log(`[${new Date().toISOString()}] ${input} ${action}`);
+  progress('opening the normal root');
   page.on('pageerror', err => errors.push(err.message));
   await context.addInitScript(() => {
     if (!localStorage.getItem('cartridge-settings')) localStorage.setItem('cartridge-settings', JSON.stringify({graphics:'low',volume:0}));
@@ -38,6 +42,7 @@ async function run(input) {
     await page.goto(origin+'/',{waitUntil:'domcontentloaded',timeout:120000});
     await page.waitForURL('**/fps/');
     await page.locator('#home-title').waitFor();
+    progress('Main ready');
     await page.getByRole('link',{name:'Credits'}).waitFor();
     assert.equal(await page.locator('html').getAttribute('lang'),'en');
     assert.equal(await route(),'main');
@@ -62,6 +67,7 @@ async function run(input) {
     await go('news'); await page.getByRole('heading',{name:'New match menus'}).waitFor(); await snap('news');
     await back(); await page.locator('#home-title').waitFor();
     await page.locator('#lobby-stage.is-ready').waitFor({state:'attached',timeout:120000});
+    progress('menu, settings and keyboard focus checked');
     await snap('main');
     if (touch) await page.setViewportSize({width:844,height:390});
     await go('play'); await snap('play');
@@ -79,9 +85,11 @@ async function run(input) {
     assert.equal(await page.locator('#roster-counter').textContent(),'You + 4 bots');
     await snap('solo');
     async function playMatch(label, picture) {
+      progress('entering '+picture);
       await press(page.locator('#start'));
       await page.locator('#hud').waitFor({timeout:120000});
       await page.locator('#cs-loading').waitFor({state:'hidden',timeout:120000});
+      progress(picture+' playable');
       if (!touch && !(await page.locator('#pause').isHidden())) await press(page.locator('#resume'));
       assert.match(await page.locator('#round-label').textContent(), label);
       await snap(picture);
@@ -131,6 +139,7 @@ async function run(input) {
     throw error;
   } finally {
     await context.close();
+    progress('browser context closed');
   }
 }
 try {

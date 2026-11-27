@@ -58,3 +58,13 @@ test('the cartridge latch ships the credited Riposte cut of Grenade pin pull by 
   assert.match(credits,/Grenade pin pull by CGEffex/);
   assert(credits.includes('https://creativecommons.org/licenses/by/4.0/'));
 });
+
+test('the Scout bolt and shotgun pump match the credited CC0 donor cuts',()=>{
+  const root=new URL('../../',import.meta.url);
+  for(const id of ['f_bolt-1','f_pump-1']){
+    const shipped=readFileSync(new URL('assets/fps/audio/ffsl-'+id+'.mp3',root));
+    const donor=readFileSync(new URL('frontline/source/assets/sfx/foley/'+id+'.mp3',root));
+    assert.deepEqual(shipped,donor);
+  }
+  assert.match(readFileSync(new URL('credits.html',root),'utf8'),/Free Firearm Sound Library/);
+});

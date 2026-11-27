@@ -54,7 +54,7 @@ function puffMap(){
 export class ActionVisuals{
  constructor(scene,world){
   this.scene=scene;this.world=world;this.root=new T.Group();this.root.name='action-presentation';scene.add(this.root);
-  this.templates=Array.from({length:5},(_,i)=>dwarfTemplate(i));this.dwarfs=new Map();this.rockets=new Map();this.particles=[];this.time=-1;this.lastTrail=-1;
+  this.templates=Array.from({length:5},(_,i)=>dwarfTemplate(i));this.dwarfs=new Map();this.rockets=new Map();this.unseenLaunches=new Map();this.shortFlights=[];this.particles=[];this.time=-1;this.lastTrail=-1;
   this.map=puffMap();this.puffMaterial=new T.MeshBasicMaterial({map:this.map,transparent:true,opacity:.7,depthWrite:false});
   this.puffs=new T.InstancedMesh(new T.PlaneGeometry(1,1),this.puffMaterial,128);this.puffs.frustumCulled=false;this.puffs.count=0;this.root.add(this.puffs);
   this.light=new T.PointLight(0xffb65c,0,9,2);this.root.add(this.light);this.lightUntil=-1;
@@ -64,24 +64,37 @@ export class ActionVisuals{
  particle(p,time,{size=.2,duration=.6,velocity=[0,.4,0],colour=0xb5b3a5}={}){this.particles.push({x:p.x,y:p.y,z:p.z,born:time,duration,size,velocity,colour});if(this.particles.length>128)this.particles.shift();}
  events(events,game){
   for(const e of events){
+   if(e.type==='rocket-launch' && game.config.networkSlice && !this.rockets.has(e.rocketId)){
+    this.unseenLaunches.set(e.rocketId,e);
+    if(this.unseenLaunches.size>24)this.unseenLaunches.delete(this.unseenLaunches.keys().next().value);
+   }
    if(e.type==='rocket-explosion'){
-    // A short authoritative flight may begin and end between two snapshots.
-    // Finish its trail from the last rendered position (or last server step).
-    const start=this.rockets.get(e.rocketId)?.position??e.flightFrom;
-    if(start){
-     const length=Math.hypot(e.x-start.x,e.y-start.y,e.z-start.z);
-     const count=Math.min(6,Math.ceil(length/.35));
-     for(let i=0;i<count;i++){
-      const offset=(i+1)/(count+1);
-      this.particle({x:start.x+(e.x-start.x)*offset,y:start.y+(e.y-start.y)*offset,z:start.z+(e.z-start.z)*offset},
-       game.state.time,{size:.09,duration:.25,velocity:[0,.12,0],colour:0xb7b8ae});
-     }
-    }
-    this.light.position.set(e.x,e.y,e.z);this.lightUntil=game.state.time+.32;
-    for(let i=0;i<24;i++){const a=i*2.3999;this.particle(e,game.state.time,{size:.22+i%4*.14,duration:.6+i%5*.16,velocity:[Math.cos(a)*(1+i%3),.5+Math.sin(i)*1.2,Math.sin(a)*(1+i%3)],colour:i<7?0xffa341:0x6a706e});}
+    const launch=this.unseenLaunches.get(e.rocketId);
+    this.unseenLaunches.delete(e.rocketId);
+    if(launch && e.flightFrom){
+     // Both network messages may arrive between two paints. Present one confirmed
+     // position on the actual flight, then its impact on the following paint.
+     this.shortFlights.push({launch,impact:e,presented:false});
+    }else this.explode(e,game.state.time);
    }
    if(e.type==='impact'&&e.surface!=='carpet')for(let i=0;i<3;i++)this.particle(e,game.state.time,{size:.035,duration:.15+i*.035,velocity:[Math.sin(i*7)*1.2,.8+i*.3,Math.cos(i*7)*1.2],colour:0xf3cf8e});
   }
+ }
+ explode(e,time){
+  // A short authoritative flight may begin and end between two snapshots.
+  // Finish its trail from the last rendered position (or last server step).
+  const start=this.rockets.get(e.rocketId)?.position??e.flightFrom;
+  if(start){
+   const length=Math.hypot(e.x-start.x,e.y-start.y,e.z-start.z);
+   const count=Math.min(6,Math.ceil(length/.35));
+   for(let i=0;i<count;i++){
+    const offset=(i+1)/(count+1);
+    this.particle({x:start.x+(e.x-start.x)*offset,y:start.y+(e.y-start.y)*offset,z:start.z+(e.z-start.z)*offset},
+     time,{size:.09,duration:.25,velocity:[0,.12,0],colour:0xb7b8ae});
+   }
+  }
+  this.light.position.set(e.x,e.y,e.z);this.lightUntil=time+.32;
+  for(let i=0;i<24;i++){const a=i*2.3999;this.particle(e,time,{size:.22+i%4*.14,duration:.6+i%5*.16,velocity:[Math.cos(a)*(1+i%3),.5+Math.sin(i)*1.2,Math.sin(a)*(1+i%3)],colour:i<7?0xffa341:0x6a706e});}
  }
  update(game,camera){
   const s=game.state,t=s.time;if(t<this.time)this.clear();this.time=t;
@@ -99,20 +112,43 @@ export class ActionVisuals{
    model.userData.torso.position.y=moving?Math.abs(wave)*.012:Math.sin(t*1.6+a.variant)*.004;
   }
   for(const[id,m]of this.dwarfs)if(!ids.has(id)){this.disposeDwarf(m);this.dwarfs.delete(id);}
-  const rocketIds=new Set();
-  for(const r of s.projectiles||[]){
-   rocketIds.add(r.id);let mesh=this.rockets.get(r.id);if(!mesh){mesh=new T.Mesh(this.rocketGeometry,this.rocketMaterial);this.root.add(mesh);this.rockets.set(r.id,mesh);}
-   mesh.position.set(r.x,r.y,r.z);mesh.quaternion.setFromUnitVectors(up,new T.Vector3(r.vx,r.vy,r.vz).normalize());
-   if(t-this.lastTrail>.035)this.particle(r,t,{size:.12,duration:.65,velocity:[0,.18,0],colour:0xb7b8ae});
-  }
-  if(t-this.lastTrail>.035)this.lastTrail=t;
-  for(const[id,m]of this.rockets)if(!rocketIds.has(id)){this.root.remove(m);this.rockets.delete(id);}
+  this.updateRockets(s,t);
   this.particles=this.particles.filter(p=>t-p.born<p.duration);
   let i=0;for(const p of this.particles){const age=t-p.born,f=age/p.duration;this.position.set(p.x+p.velocity[0]*age,p.y+p.velocity[1]*age,p.z+p.velocity[2]*age);const size=p.size*(1+f*1.9)*(1-f*.75);this.scale.setScalar(Math.max(0,size));this.matrix.compose(this.position,camera.quaternion,this.scale);this.puffs.setMatrixAt(i,this.matrix);this.colour.setHex(p.colour).multiplyScalar(1-f*.65);this.puffs.setColorAt(i++,this.colour);}
   this.puffs.count=i;this.puffs.instanceMatrix.needsUpdate=true;if(this.puffs.instanceColor)this.puffs.instanceColor.needsUpdate=true;
   this.light.intensity=Math.max(0,(this.lightUntil-t)/.32)*13;
  }
+ updateRockets(s,t){
+  const rocketIds=new Set();
+  const flights=s.projectiles||[];
+  this.shortFlights=this.shortFlights.filter(flight=>{
+   if(flight.presented){this.explode(flight.impact,t);return false;}
+   const {launch,impact}=flight;
+   this.showRocket(impact.rocketId,(launch.x+impact.x)/2,(launch.y+impact.y)/2,(launch.z+impact.z)/2,
+    impact.x-launch.x,impact.y-launch.y,impact.z-launch.z);
+   rocketIds.add(impact.rocketId);
+   flight.presented=true;
+   return true;
+  });
+  for(const r of flights){
+   this.unseenLaunches.delete(r.id);
+   rocketIds.add(r.id);
+   this.showRocket(r.id,r.x,r.y,r.z,r.vx,r.vy,r.vz);
+   if(t-this.lastTrail>.035)this.particle(r,t,{size:.12,duration:.65,velocity:[0,.18,0],colour:0xb7b8ae});
+  }
+  if(t-this.lastTrail>.035)this.lastTrail=t;
+  for(const[id,m]of this.rockets)if(!rocketIds.has(id)){this.root.remove(m);this.rockets.delete(id);}
+ }
+ showRocket(id,x,y,z,vx,vy,vz){
+  let mesh=this.rockets.get(id);
+  if(!mesh){
+   mesh=new T.Mesh(this.rocketGeometry,this.rocketMaterial);
+   this.root.add(mesh);this.rockets.set(id,mesh);
+  }
+  mesh.position.set(x,y,z);
+  mesh.quaternion.setFromUnitVectors(up,this.position.set(vx,vy,vz).normalize());
+ }
  disposeDwarf(model){model.removeFromParent();const a=model.userData.roleAvatar;if(a){a.mixer.stopAllAction();a.mixer.uncacheRoot(a.root);a.root.traverse(n=>{if(n.isSkinnedMesh)n.skeleton.dispose();});for(const m of a.materials.values())m.dispose();}}
- clear(){for(const m of this.rockets.values())this.root.remove(m);this.rockets.clear();for(const m of this.dwarfs.values())this.disposeDwarf(m);this.dwarfs.clear();this.particles=[];this.puffs.count=0;this.light.intensity=0;this.lightUntil=-1;}
+ clear(){for(const m of this.rockets.values())this.root.remove(m);this.rockets.clear();this.unseenLaunches.clear();this.shortFlights=[];for(const m of this.dwarfs.values())this.disposeDwarf(m);this.dwarfs.clear();this.particles=[];this.puffs.count=0;this.light.intensity=0;this.lightUntil=-1;}
  dispose(){this.clear();this.root.removeFromParent();const geos=new Set(),mats=new Set();for(const t of this.templates)t.traverse(o=>{if(o.isMesh){geos.add(o.geometry);mats.add(o.material);}});geos.forEach(g=>g.dispose());mats.forEach(m=>m.dispose());this.map.dispose();this.puffMaterial.dispose();this.puffs.geometry.dispose();this.puffs.dispose();this.rocketGeometry.dispose();this.rocketMaterial.dispose();}
 }

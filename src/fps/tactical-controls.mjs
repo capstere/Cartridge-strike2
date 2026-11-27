@@ -16,7 +16,7 @@ export class TacticalControls {
     this.scope.setAttribute('aria-hidden', 'true');
     this.scope.innerHTML = '<div class="precision-lens"><i></i><b></b><span>PRECISION</span></div>';
     document.body.append(this.scope);
-    if (mobile.enabled && mobile.root) {
+    if ((mobile.touchCapable ?? mobile.enabled) && mobile.root) {
       this.button = document.createElement('button');
       this.button.type = 'button'; this.button.className = 'mobile-button mobile-aim';
       this.button.dataset.tacticalAim = ''; this.button.textContent = 'AIM';
