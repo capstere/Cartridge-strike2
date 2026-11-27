@@ -32,19 +32,29 @@ export function referenceRays(spec,terrain){
       best=t;hit={distance:t,id,material,normal:{x:nx,y:ny,z:nz}};
     };
     if(dy<-.000001){
-      let t=-oy/dy,material='ground',normal={x:0,y:1,z:0};
-      const x=ox+dx*t,z=oz+dz*t;
-      if(t>0&&t<best){
-        const hole=spec.holes.find(h=>(x-h.x)**2+(z-h.z)**2<h.r*h.r);
-        if(hole){
-          const px=x-hole.x,pz=z-hole.z,a=dx*dx+dz*dz,b=2*(px*dx+pz*dz),c=px*px+pz*pz-hole.r**2;
-          const wall=a>1e-9?(-b+Math.sqrt(Math.max(0,b*b-4*a*c)))/(2*a):Infinity;
-          const bottom=hole.y/dy;
-          if(wall<bottom){t+=wall;material=hole.wall;normal={x:-(px+dx*wall)/hole.r,y:0,z:-(pz+dz*wall)/hole.r};}
-          else{t+=bottom;material=hole.m;}
-        }else if(terrain.lowerSurface(x,z)<0){t=(spec.water.y-oy)/dy;material='water';}
-        save(t,'ground',material,normal.x,normal.y,normal.z);
+      const ground=-oy/dy;
+      if(ground>=0&&ground<best&&terrain.lowerSurface(ox+dx*ground,oz+dz*ground)===0)
+        save(ground,'ground','ground',0,1,0);
+      const sea=(spec.water.y-oy)/dy;
+      if(sea>=0&&sea<best&&terrain.lowerSurface(ox+dx*sea,oz+dz*sea)===spec.water.floor)
+        save(sea,'ground','water',0,1,0);
+    }
+    // The well is an open cylinder with an inward-facing wall and a bottom.
+    // Projectiles already below its rim never cross the y=0 ground plane again.
+    if(oy<=0||dy<0)for(const hole of spec.holes){
+      const px=ox-hole.x,pz=oz-hole.z,radialSpeed=dx*dx+dz*dz;
+      if(dy<-.000001){
+        const t=(hole.y-oy)/dy;
+        if(t>=0&&t<best&&(px+dx*t)**2+(pz+dz*t)**2<=hole.r**2)
+          save(t,'well-bottom',hole.m,0,1,0);
       }
+      if(radialSpeed<1e-12)continue;
+      const projection=px*dx+pz*dz,offset=px*px+pz*pz-hole.r*hole.r;
+      const discriminant=projection*projection-radialSpeed*offset;
+      if(discriminant<0)continue;
+      const t=(-projection+Math.sqrt(discriminant))/radialSpeed,y=oy+dy*t;
+      if(t>=0&&t<best&&y>=hole.y&&y<=0)
+        save(t,'well-wall',hole.wall,-(px+dx*t)/hole.r,0,-(pz+dz*t)/hole.r);
     }
     for(const b of crossedBoxes(ox,oz,dx,dz,best)){
       if(b.noRay)continue;

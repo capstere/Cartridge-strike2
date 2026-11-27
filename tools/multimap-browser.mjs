@@ -10,6 +10,7 @@ import {setTimeout as delay} from 'node:timers/promises';
 import {chromium, devices} from '../frontline/source/tools/dev/node_modules/playwright-core/index.mjs';
 import {startPilotFixture} from './network-pilot-fixture.mjs';
 import {resumeDesktop} from './network-browser-resume.mjs';
+import {countLivePrototypes,installRetentionProbe,parkedControl,readRetained,writeRetainedProfile} from './multimap-heap.mjs';
 import {CONTRACT} from '../shared/multiplayer/build.mjs';
 
 const cases = {
@@ -21,6 +22,7 @@ const cases = {
   floor: {actors:10, bots:9, family:true, floor:true},
 };
 const name = process.env.FPS_MAP_CASE || 'desktop';
+const profileHeap=process.env.FPS_MAP_HEAP_PROFILE==='1';
 const tour = name==='four' && process.env.FPS_MAP_TOUR==='1';
 const spec = cases[name];
 // A pair switches the same family room to Floor 5 and then back to the selected map.
@@ -287,7 +289,9 @@ try {
   await page.locator('[name=invite]').fill(fixture.invite);
   const login=performance.now(); await page.locator('button[type=submit]').click();
   await page.locator('#network-code').waitFor(); result.signInToFormMs=Math.round(performance.now()-login);
-  await page.evaluate(observe); assert.equal(await page.evaluate(()=>typeof window.__fps),'undefined');
+  await page.evaluate(observe);
+  if(profileHeap)await page.evaluate(installRetentionProbe);
+  assert.equal(await page.evaluate(()=>typeof window.__fps),'undefined');
   await page.locator('#network-name').fill('Mapptest');
   await page.locator('#network-code').fill(spec.family ? fixture.familyPassword : code);
   if(!spec.family) await page.locator('#network-fill-bots').uncheck();
@@ -369,17 +373,24 @@ try {
   if(!spec.floor) await acknowledge(map);
   if(spec.video || (spec.reference && spec.family)) {
     result.transitions=[];
-    for(let turn=0;turn<2*switchPairs;turn++) {
-      const id=turn%2 ? map : floor;
-      mark('switch '+id); const ms=await selectMap(id);
-      const cdp=await context.newCDPSession(page);
-      let heapUsedBytes;
-      try {
-        await cdp.send('HeapProfiler.collectGarbage');
-        heapUsedBytes=(await cdp.send('Runtime.getHeapUsage')).usedSize;
-      } finally {await cdp.detach();}
-      result.transitions.push({id,ms,heapUsedBytes,...await renderedResources()});
-    }
+    const cdp=await context.newCDPSession(page), switchesStarted=performance.now();
+    try {
+      if(profileHeap)await cdp.send('HeapProfiler.startSampling',{samplingInterval:32768});
+      for(let turn=0;turn<2*switchPairs;turn++) {
+        const id=turn%2 ? map : floor;
+        mark('switch '+id); const ms=await selectMap(id);
+        result.transitions.push({id,ms,...await readRetained(cdp,page),...await renderedResources()});
+        if(profileHeap && id===map && [2,2*Math.ceil(switchPairs/2),2*switchPairs].includes(turn+1)){
+          result.transitions.at(-1).livePrototypes=await countLivePrototypes(cdp);
+          await writeRetainedProfile(cdp,out,turn+1);
+        }
+      }
+      if(profileHeap) {
+        mark('park on '+map+' for the same interval as all switches');
+        result.parked=await parkedControl(cdp,page,out,Math.round(performance.now()-switchesStarted));
+        await cdp.send('HeapProfiler.stopSampling');
+      }
+    } finally {await cdp.detach();}
     for(const row of result.transitions) {
       assert.equal(row.liveOwners,1,'Only the current renderer stays live');
       assert.equal(row.reachableOwners,1,'Previous renderers were collected');

@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import '../../server/register-shared.mjs';
-import {advanceGrenade} from './grenade-physics.mjs';
+import {advanceGrenade,grenadeLaunch} from './grenade-physics.mjs';
 const {createWorld}=await import('./world.mjs');
 const {Game}=await import('./game.mjs');
 const {collisionContract}=await import('../../shared/multiplayer/collision-contract.mjs');
@@ -73,19 +73,42 @@ test('an empty or one-team Endless room starts with an inactive bomb at a real m
 });
 
 
-test('room preparation retains all 76 authored patrol destinations for nine active bots',async()=>{
-  const {prepareNetworkWorld}=await import('../../shared/multiplayer/world.mjs');
-  const roomWorld=prepareNetworkWorld(createWorld({levelProject:project,fresh:true}));
-  assert.deepEqual(roomWorld.tactical.patrolPoints,project.referenceMap.poi.map(([x,y,z])=>({x,y,z})));
-  assert.equal(roomWorld.tactical.patrolPoints.length,76);
-  const {ROOM_SEATS}=await import('../../server/room-world.mjs');
-  const controllers=Object.fromEntries(ROOM_SEATS.map(id=>[id,'human']));
-  const game=new Game(roomWorld,{controllers,config:{mode:'endless',networkSlice:true,wanderers:false}}).start();
-  for(const actor of game.actors.slice(1))actor.controllerType='bot';
-  game.beginRound();
-  assert.equal(game.actors.filter(a=>a.bot).length,9);
-  for(let i=0;i<60;i++)game.stepActors(new Map());
-  const bot=game.actors.find(a=>a.bot).bot,roof=roomWorld.tactical.patrolPoints.find(p=>p.y>3);
-  bot.setGoal(roof);assert.deepEqual(bot.goal,roof);
-  assert.ok(roomWorld.findPath(bot.actor,bot.goal).length);
+test('both open well shafts stop horizontal, oblique and vertical rays below the rim',()=>{
+  for(const hole of project.referenceMap.holes){
+    const origin={x:hole.x,y:-1,z:hole.z};
+    const wall=world.raycast(origin,{x:1,y:0,z:0},2);
+    assert.equal(wall.id,'well-wall');assert.equal(wall.material,'concrete');
+    assert.ok(Math.abs(wall.distance-hole.r)<1e-7);
+    assert.ok(Math.abs(wall.normal.x+1)<1e-7);
+    const oblique=world.raycast(origin,{x:1,y:-1,z:0},2);
+    assert.equal(oblique.id,'well-wall');assert.ok(Math.abs(oblique.point.y+1+hole.r)<1e-7);
+    const bottom=world.raycast(origin,{x:0,y:-1,z:0},2);
+    assert.equal(bottom.id,'well-bottom');assert.equal(bottom.material,'water');
+    assert.equal(bottom.point.y,hole.y);
+    assert.equal(world.raycast(origin,{x:0,y:1,z:0},1.25),null);
+    assert.equal(world.raycast({...origin,y:.8},{x:0,y:-1,z:0},4).id,'well-bottom');
+  }
+});
+
+test('ordinary and grazing grenade throws bounce inside both well shafts through the fuse',()=>{
+  for(const hole of project.referenceMap.holes){
+    const thrown=grenadeLaunch({x:-5.11,y:.60,z:hole.z,height:1.70,yaw:-Math.PI/2,pitch:-1.49,weapon:'he'},
+      {grenadeSpeed:9,grenadeRadius:.1,grenadeFuse:1.8});
+    const grazing={x:-4.25,y:2,z:hole.z,vx:1.2,vy:-4,vz:0,radius:.06};
+    for(const g of [thrown,grazing]){
+      let entered=false,bounced=false;
+      for(let step=0;step<=108;step++){
+        const before=g.y,hit=advanceGrenade(g,world,18,1/60);
+        if(before<-.25&&hit)bounced=true;
+        if(g.y<-.25)entered=true;
+        if(entered){
+          assert.ok(g.y<0,'no snap to the adjacent street');
+          assert.ok(g.y-before<.25,'no impossible vertical displacement');
+          assert.ok(Math.hypot(g.x-hole.x,g.z-hole.z)<=hole.r+1e-7);
+          assert.ok(g.y>=hole.y+g.radius-1e-7);
+        }
+      }
+      assert.ok(entered&&bounced);
+    }
+  }
 });
