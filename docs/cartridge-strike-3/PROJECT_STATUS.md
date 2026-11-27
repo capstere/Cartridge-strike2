@@ -1,17 +1,17 @@
 # Persistent project status
 
-**Development approved. CS3-00 in progress.** Jesper authorized the complete program and gated production release. [PR #47](https://github.com/capstere/Cartridge-strike2/pull/47) merged at `5364240599164c0aee278bb0ac2a35d662c3a818` after [all eight jobs](https://github.com/capstere/Cartridge-strike2/actions/runs/45976270665) passed on `f1f363963cd082c6cc1b0f6289c3f9b616064e83`. The reviewed draft head and merge preserve the CS2 game runtime. Development and its evidence live on the integration branch `develop/cartridge-strike-3`. The Pi remains on its verified CS2 release.
+**CS3-00 verified. English navigation, Rush and map integration are in progress.** Jesper authorized the complete program and gated production release. [PR #47](https://github.com/capstere/Cartridge-strike2/pull/47) merged at `5364240599164c0aee278bb0ac2a35d662c3a818` after [all eight jobs](https://github.com/capstere/Cartridge-strike2/actions/runs/45976270665) passed on `f1f363963cd082c6cc1b0f6289c3f9b616064e83`. The reviewed draft head and merge preserve the CS2 game runtime. Development and its evidence live on the integration branch `develop/cartridge-strike-3`. The Pi remains on its verified CS2 release.
 
 | ID | State | Next action |
 | --- | --- | --- |
-| CS3-00 | IN_PROGRESS | Private recovery passed independent review. Finish and review matched performance evidence. |
-| CS3-01 | NOT_STARTED | Wait for CS3-00 |
-| CS3-02 | NOT_STARTED | Wait for CS3-00 |
+| CS3-00 | VERIFIED | Independent recovery, architecture and performance review passed. See [measurements](baseline/performance/README.md) and [recovery](baseline/recovery.json). |
+| CS3-01 | IN_PROGRESS | Build the normal-entry English menu and the playable Solo and With Friends routes. Branch `cs3/01-english-frontend`. |
+| CS3-02 | IN_PROGRESS | Integrate the CR4/P9 fixed-step Rush, recovery and input-edge vertical slice. Branch `cs3/02-rush`. |
 | CS3-03 | NOT_STARTED | Wait for CS3-00, CS3-01, CS3-02 |
 | CS3-04 | NOT_STARTED | Wait for CS3-00, CS3-01 |
 | CS3-05 | NOT_STARTED | Wait for CS3-00, CS3-02 |
 | CS3-06 | NOT_STARTED | Wait for CS3-01, CS3-02, CS3-05 |
-| CS3-07 | NOT_STARTED | Wait for CS3-00 |
+| CS3-07 | IN_PROGRESS | Prove the reference-map adapter and collision, navigation, presentation and budget for the first candidate. Branch `cs3/07-reference-maps`. |
 | CS3-08 | NOT_STARTED | Wait for CS3-00, CS3-02, CS3-07 |
 | CS3-09 | NOT_STARTED | Wait for CS3-01, CS3-03, CS3-04 |
 | CS3-10 | NOT_STARTED | Wait for CS3-04, CS3-05, CS3-07, CS3-08, CS3-09 |
@@ -33,11 +33,15 @@ The approved preparation head and merge share the CS2 runtime. The [production i
 | `npm run build --prefix server -- --check` | 107 compatibility sources, protocol 14 |
 | `node --experimental-vm-modules docs/cartridge-strike-3/baseline/runtime-inventory.mjs` | Five script entry points, 166 statically imported modules, 230 editor dependencies, 59,025,743 manifest bytes |
 
-The [private backup and public verification](baseline/recovery.json) passed. Its 17,155 regular files and 28 links matched the independent restore, including four release directories. Two clients played both the restored active authority and the live authority. Two peers also read the earlier authority's supported family settings. Services, release identity and private state matched after the live test. The copy resides on the production disk. Matched performance measurements are running. The reviewer has verified source hashes, runtime identity, tests and the static inventory. The death-carry, durable reward key, legacy level and input replay contracts incorporate the review findings.
+The [private backup and public verification](baseline/recovery.json) passed. Its 17,155 regular files and 28 links matched the independent restore, including four release directories. Two clients played both the restored active authority and the live authority. Two peers also read the earlier authority's supported family settings. Services, release identity and private state matched after the live test. The copy resides on the production disk. The reviewer verified source hashes, runtime identity, tests and the static inventory. The death-carry, durable reward key, legacy level and input replay contracts incorporate the review findings.
 
 Eleven sampled dependencies matched build-info SHA-256 byte for byte on both Pages and the authenticated production Pi, including all four dynamic imports from app.mjs, the browser SDK, CSS, level, audio and a furniture GLB. The private server returned 401 for a guest request to the session module. Representative screenshot and ZIP HEAD requests returned 200 on Pages and 404 on the authenticated Pi. [Distribution requests](baseline/distribution.json).
 
-The [performance checkpoint](baseline/performance/README.md) includes all twelve accepted offline client runs. The three 90-second loopback authority runs and one delayed window have also passed. A two-seat Compact Arena match used one rendered touch client and one SDK peer, including a real reconnect and match end. The Pi measured a desktop Floor 5 frame median between 71.8 and 73.0 ms over three runs. Against eight bots, two SDK clients confirmed 268 shots in the initial zero-delay window. The 5,403 ticks cost 5.19 ms at p95, 18.99 ms at p99 and 86.03 ms at worst. There were 63 work ticks over 16.67 ms. [Current scenario status](baseline/performance/progress.json) and [server results](baseline/performance/network.json).
+The [performance baseline](baseline/performance/README.md) contains 12 native EGL runs on the Pi and six independent 90-second authority windows. Median frame intervals ranged from 71.8–73.0 ms in Floor 5 desktop and 63.8–70.1 ms with emulated touch. The reference Khamsin ranges were 47.2–49.4 ms and 43.2–43.7 ms. These worlds have different geometry and actors. Compare future builds against the same game's scene. Three loopback and three 100 ms injected-RTT server runs recorded p95 input-to-shot-confirmation ranges of 58.04–62.96 ms and 172.99–175.74 ms. The worst measured tick was 105.53 ms. Navigation ran during the slowest tick of each run. Use the per-scenario repeat envelopes when measuring a change.
+
+The [two-seat mobile match](baseline/performance/online-mobile.json) used one rendered touch client and one SDK peer, confirmed movement and shooting, rejoined the correct map and ended by time. The [lifecycle suite](baseline/performance/lifecycle.json) completed four warmups and twenty measured returns using the original assertions, including real background/foreground transitions, resource stability and one retained game. [Scenario status](baseline/performance/progress.json) and [server results](baseline/performance/network.json). All seven recorded test revisions have the same gameplay, reference and test-tool trees as the preparation merge. The Pi supplied both input profiles. Physical iPhone and Android timing and an off-device recovery remain unmeasured.
+
+Independent reviewer decision on November 27: CS3-00 VERIFIED. The reviewer checked both recovery copies, six source blob identities, twelve client traces, six distinct authority windows, the rendered-touch reconnect and all twenty measured lifecycle returns. The lead verified source directory equality across the recorded revisions and checked the dependency manifest. CS3-01, CS3-02 and CS3-07 are eligible and assigned. Runtime performance evidence on other devices belongs to the field and release checks.
 
 ## Historical pre-implementation review on November 27
 

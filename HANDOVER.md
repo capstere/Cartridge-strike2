@@ -1,6 +1,6 @@
 # Cartridge-Strike 3 development
 
-Jesper approved the program and gated release. Preparation merged in PR #47 at `5364240599164c0aee278bb0ac2a35d662c3a818`. Check out `develop/cartridge-strike-3`, then read the [execution handover](docs/cartridge-strike-3/CODEX_HANDOVER.md) and [current task status](docs/cartridge-strike-3/PROJECT_STATUS.md). CS3-00 owns private restore, current performance baselines and architecture verification. The historical CS2 recovery receipts follow below.
+Jesper approved the program and gated release. Preparation merged in PR #47 at `5364240599164c0aee278bb0ac2a35d662c3a818`. Check out `develop/cartridge-strike-3`, then read the [execution handover](docs/cartridge-strike-3/CODEX_HANDOVER.md) and [current task status](docs/cartridge-strike-3/PROJECT_STATUS.md). CS3-00 passed independent verification. Resume the open feature branches and read the latest measurements before changing performance-sensitive code. The historical CS2 recovery receipts follow below.
 
 ---
 

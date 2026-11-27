@@ -87,5 +87,25 @@
     "repeat": 1,
     "status": "incomplete",
     "reason": "Process terminated by SIGTERM while loading the second desktop repeat. It produced no measurements or JSON and the cause remains unverified. A fresh isolated context supplied two remaining repeats."
+  },
+  {
+    "kind": "fps",
+    "profile": "lifecycle",
+    "status": "incomplete",
+    "attempts": 2,
+    "reason": "Using the upstream raw Chromium bootstrap and a private wrapper selecting system Wayland/EGL timed out at DOMContentLoaded after 30 s. Both attempts ended before a match, including one with external host resolution disabled. A later raw, headed launch reached the live page with the navigation timeout extended, no proxy and first-run/keychain flags. The contribution of each launcher change was not isolated."
+  },
+  {
+    "kind": "fps",
+    "profile": "lifecycle",
+    "status": "incomplete",
+    "attempts": 3,
+    "reason": "Managed browser runs reached play, but the covered game tab remained visible, focused and unpaused in the first tab-switch assertion. The default context, background flags and an explicit focus-emulation reset were tried; Chromium still reported visible, focused and unpaused. No cycles were counted."
+  },
+  {
+    "kind": "fps",
+    "profile": "lifecycle",
+    "status": "incomplete",
+    "reason": "Raw headless Chromium with the Pi EGL request navigated with genuine tab visibility but the game reported that WebGL 2 could not start. The private browser was stopped before collecting cycles."
   }
 ]

@@ -1,5 +1,5 @@
 {
-  "complete": false,
+  "complete": true,
   "acceptedClientRepeats": {
     "cs2Desktop": 3,
     "cs2Touch": 3,
@@ -8,13 +8,11 @@
   },
   "acceptedAuthorityRepeats": {
     "loopback": 3,
-    "injected100ms": 1
+    "injected100ms": 3
   },
-  "pending": [
-    "20-cycle lifecycle",
-    "two additional 100 ms authority repeats"
-  ],
+  "pending": [],
   "excluded": "excluded.json",
   "physicalPhones": "UNMEASURED",
-  "onlineMobile": "PASS"
+  "onlineMobile": "PASS",
+  "lifecycle": "PASS"
 }

@@ -74,7 +74,7 @@ def server(file):
     for j in obj["results"]:
         m=j["measured"]; room=m["rooms"][0]; memory=m["memory"];clean=j["cleanup"]
         result.append({"case":file.stem,"git":j["git"],"completedAt":j["completedAt"],"environment":j["environment"],"humanSDKSeats":j["count"],"bots":room["ai"],"residents":room["residents"],"rttSettingMs":j["rttMs"],"jitterMs":j["jitterMs"],
-            "status":j["status"],"pacer":"60 Hz","elapsedSeconds":rounded(m["elapsedSeconds"]),"releaseBuild":j["contract"].get("buildHash"),"protocol":j["contract"].get("protocolVersion"),
+            "status":j["status"],"pacer":"60 Hz","loss":j["loss"],"roomTransportCountersAtEnd":room["metrics"],"elapsedSeconds":rounded(m["elapsedSeconds"]),"releaseBuild":j["contract"].get("buildHash"),"protocol":j["contract"].get("protocolVersion"),
             "tickMs":m["wholeRun"]["tick"],"intervalMs":m["wholeRun"]["interval"],"simulationMs":m["costMs"]["simulation"],
             "findPathCallMs":m["objectiveCosts"]["findPath"],"slowestTickObserved":m["slow"][0] if m["slow"] else None,"eventLoopMs":m["eventLoopMs"],"bytesOutPerClientS":rounded(j["perPlayerOutboundBytesPerSecond"]),
             "bytesInPerClientS":rounded(m["inBytes"]/m["elapsedSeconds"]/j["count"]),"nTicks":m["updates"],
@@ -89,6 +89,11 @@ if __name__=="__main__":
     results=[browser(f) for f in sorted(inp.glob("*-*-*.json")) if f.name.split("-")[0] in ("fps","frontline")]
     (dst/"client.json").write_text(json.dumps(results,indent=2)+"\n")
     network=[row for f in sorted(inp.glob("server-*.json")) for row in server(f)]
+    revision_file=inp/"network-worktree-revisions.json"
+    corrections=json.loads(revision_file.read_text()) if revision_file.exists() else {}
+    for row in network:
+        row["worktreeRevisionAtStart"]=corrections.get(row["case"],row["git"])
+        row["revisionSource"]="local worktree reflog and timed run sequence" if row["case"] in corrections else "harness invocation"
     if network:(dst/"network.json").write_text(json.dumps(network,indent=2)+"\n")
 
     mobile=inp/"online-mobile"/"mobile.json"
@@ -112,6 +117,7 @@ if __name__=="__main__":
         summary={**meta,"warmupCycles":len(raw)-len(measured),"measuredCycles":len(measured),"status":"PASS",
             "retainedGames":extent(lambda r:r["retained"]),"audioContexts":extent(lambda r:r["contexts"]),
             "webAudioNodes":extent(lambda r:r["audioNodes"]),"domListeners":extent(lambda r:r["dom"]["jsEventListeners"]),
+            "domDocuments":extent(lambda r:r["dom"]["documents"]),"domNodes":extent(lambda r:r["dom"]["nodes"]),
             "residentInstances":extent(lambda r:r["instances"]),"liveOrAmbientVoices":extent(lambda r:r["voices"]+r["ambient"]),
             "rafOwners":sorted({tuple(r["pending"]) for r in measured}),
             "endpointGpuByMode":{mode:next(r["gpu"] for r in reversed(measured) if r["mode"]==mode) for mode in ("classic","endless")}}

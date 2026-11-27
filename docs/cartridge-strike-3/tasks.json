@@ -14,7 +14,17 @@
       "scope": "Recheck live/recovery identity and privately rehearse restore. Compare playable CS2 and vendored Frontline. Record source hashes, steady and worst-case measurements, input/action, map, inventory, access and English contracts. Inventory release files versus browser allowlist and Pages publishing root.",
       "tests": "Existing tests; reproducible scenarios; exact SHA, sanitized backup receipt and review of contract",
       "exit": "Verified backup/isolated restore, comparable baselines and signed-off interface designs. A missing prerequisite is BLOCKED and keeps dependents pending.",
-      "status": "IN_PROGRESS"
+      "status": "VERIFIED",
+      "evidence": [
+        "baseline/identity.json",
+        "baseline/recovery.json",
+        "baseline/distribution.json",
+        "baseline/contracts.md",
+        "baseline/performance/README.md",
+        "baseline/performance/progress.json"
+      ],
+      "runtimeRevision": "5364240599164c0aee278bb0ac2a35d662c3a818",
+      "reviewer": "Independent project reviewer"
     },
     {
       "id": "CS3-01",
@@ -27,7 +37,8 @@
       "scope": "Design system; en catalog; main/Play/Solo/With Friends, options, map cards, roster, countdown, news; real solo and private lobby actions; placeholder routes explicitly disabled pending 03/04/09/10.",
       "tests": "IMG_8150, 8158, 8160–8162 and 8164, V1 countdown, English guest Pages and denied/authorized Pi routes. Provide class-picker navigation for later class/wardrobe owners. Exercise real loading, Classic buy success/failure and re-login after translation.",
       "exit": "Menu→match→results real flows; stable back/resize/focus.",
-      "status": "NOT_STARTED"
+      "status": "IN_PROGRESS",
+      "branch": "cs3/01-english-frontend"
     },
     {
       "id": "CS3-02",
@@ -40,7 +51,8 @@
       "scope": "First prove CR4 and P9 hip → Rush → release/ADS/short fire in both normal input paths and under reconciliation. Extend to slide, reload/inspect/switch, grenade hold/return and remaining held models. Preserve manual/auto-fire and saved bindings.",
       "tests": "RECORDING_REVIEW V2/V4/V6, input tick → legal shot → ammo/FX, near/far A/V onset, pause/cancel. Use view-arms-capture, recoil-autofire, online-equipment and the sprint-reload reticle fixture.",
       "exit": "Readable camera and grips, distinct supported poses, no lost tap or duplicate shot/foley. Fixed-step client/server/offline trace and synchronized video per weapon family.",
-      "status": "NOT_STARTED"
+      "status": "IN_PROGRESS",
+      "branch": "cs3/02-rush"
     },
     {
       "id": "CS3-03",
@@ -111,7 +123,8 @@
       "scope": "Baseline visual pass, reference map adapter and Meltem or lower-risk pilot; validated additional maps, all nine assessed, environment FX and ambience; LOD/disposal.",
       "tests": "build-network --check, compact-arena/owner-door-traversal tests, multimap-browser/recovery, asset-memory and complete matches",
       "exit": "Original maps preserved. All nine have a source ID, capability assessment and explicit disposition. Each offered map passes versioned collision/nav/void, mode eligibility, spawn, lifecycle and measured budget.",
-      "status": "NOT_STARTED"
+      "status": "IN_PROGRESS",
+      "branch": "cs3/07-reference-maps"
     },
     {
       "id": "CS3-08",
