@@ -10,7 +10,7 @@ import * as THREE from '../../vendor/three/three.module.js';
 import { makeWeapon as primitiveWeapon, makeActor as primitiveActor,
   animateWeapon as primitiveWeaponAnimation, animateActor as primitiveActorAnimation,
   disposeWeaponResources as disposePrimitiveWeapons, animateCorpse as primitiveCorpse } from './model-primitives.mjs';
-import {refitViewArms} from './presentation-hands.mjs';
+import {refitViewArms,releasePistolSupport} from './presentation-hands.mjs';
 import { createViewMotion, viewMotion, strideSample, solveLeg, clamp } from './presentation-motion.mjs';
 
 export function makeWeapon(id='p9',options={}) {
@@ -27,6 +27,30 @@ export function animateWeapon(model,actor,time,dt,options={}) {
     const offset=viewMotion(state,actor,time,{weapon:model.userData.id,shotAt:options.shotAt,reducedMotion:options.reducedMotion});
     model.position.x+=offset.position[0];model.position.y+=offset.position[1];model.position.z+=offset.position[2];
     model.rotation.x+=offset.rotation[0];model.rotation.y+=offset.rotation[1];model.rotation.z+=offset.rotation[2];
+    // Riposte 5.6.1 06-weapons VM_SPRINT and 06c-models pistolRunPose.
+    // Copyright (c) 2026 BenDBSS, MIT (licenses/riposte-MIT.txt).
+    const gait=actor.rushWeight || 0,phase=(actor.distanceWalked || 0)*4.4;
+    const handling=pose.reloading || actor.action || options.inspecting ||
+      time-(options.switchAt ?? -Infinity)<.26 || time-(options.throwAt ?? -Infinity)<.48;
+    const rush=gait*(handling ? .08 : 1)*(1-(actor.aimAmount || 0));
+    if(rush>.001){
+      const stride=Math.cos(phase),bounce=Math.sin(2*phase);
+      const pistol=['p9','p12'].includes(model.userData.id);
+      if(pistol){
+        model.position.x+=(.035+.008*stride)*rush;
+        model.position.y+=(-.115+.016*bounce)*rush;
+        model.position.z+=(.095+.030*stride)*rush;
+        model.rotation.x-=.38*rush;model.rotation.y-=.25*rush;model.rotation.z-=.24*rush;
+        releasePistolSupport(model,rush,stride,bounce);
+      }else{
+        model.position.x+=(.01+.012*stride)*rush;model.position.y+=(-.04+.012*bounce)*rush;
+        model.position.z+=(-.04+.01*bounce)*rush;
+        model.rotation.x+=(-.50+.04*bounce)*rush;
+        model.rotation.y+=(.65+.05*stride)*rush;model.rotation.z+=(.70+.10*Math.sin(phase))*rush;
+      }
+    }
+    const wall=(options.nearWall || 0)*(1-rush)*(1-(actor.aimAmount || 0));
+    model.rotation.x+=wall*.75;model.position.z+=wall*.12;
     refitViewArms(model);
     model.updateMatrixWorld(true);
     // Muzzle effect follows the final pose. Bullet/hitscan origin stays owned by Game.

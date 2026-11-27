@@ -110,6 +110,6 @@ test('coalesced reliable burst retains a short fire press and its aim without ex
   await until(()=>target.hp<hp,'the short press uses its own orientation');
   assert.equal(shooter.inventory.primary.ammo,29,'the batch fires once');
   assert(r.metrics.coalesced>=7);assert.equal(buffer.size,0);
-  assert.equal(shooter.yaw,Math.PI,'release cannot substitute an arbitrary shot orientation');
+  assert.equal(shooter.yaw,0,'the latest look survives while the shot uses its separately retained aim');
  }finally{r.fixedTick=original;}
 });
