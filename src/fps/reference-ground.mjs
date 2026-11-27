@@ -52,6 +52,6 @@ export async function referenceGround({id,bytes,material,own,disposed}){
           diffuseColor.rgb*=c0.rgb*mix(vec3(1.),groundDirt,sp.a)*bw.x+c1.rgb*bw.y+c2.rgb*bw.z+c3.rgb*bw.w;
         }`);
   };
-  material.customProgramCacheKey=()=>'reference-ground-v1';
+  material.customProgramCacheKey=()=>id+'-reference-ground-v2';
   material.needsUpdate=true;
 }

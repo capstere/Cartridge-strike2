@@ -9,7 +9,7 @@ export const RIPOSTE_AUDIO_FILES = Object.freeze([
   ...Object.values(deployClips),
   ...firstShotTakes.map(take => 'armes/'+take+'.mp3'),
   ...['flesh','metal','concrete','glass','wood'].map(s => `impacts/i_${s}-1.mp3`),
-  'foley/f_pin.mp3',
+  'foley/f_pin.mp3','foley/s_slide_soft.mp3',
   ...['dry','draw','knife','knife_hit','throw','pickup'].map(s => `foley/f_${s}-1.mp3`),
 ]);
 
@@ -88,6 +88,13 @@ export class AudioSystem extends ExistingAudio {
       gain=shot.gain;
       delay=shot.delay;
     } else if(e.type==='shot'&&e.weapon==='knife'){name='foley/f_knife-1.mp3';gain=.35;}
+    else if(e.type==='slide'){
+      const position=e.position || e;
+      const remote=e.actorId!==this.listenerId;
+      if(remote && Math.hypot(position.x-this.listener.x,position.y-this.listener.y,position.z-this.listener.z)>30)return;
+      // Riposte deliberately uses the same dirt / sand / grass scrape on hard floors.
+      name='foley/s_slide_soft.mp3';gain=.5;
+    }
     else if(e.type==='damage'){name=e.weapon==='knife'?'foley/f_knife_hit-1.mp3':'impacts/i_flesh-1.mp3';gain=.28;}
     else if(e.type==='impact'){
       const surface=/metal/.test(e.surface)?'metal':/glass|frost/.test(e.surface)?'glass':/wood/.test(e.surface)?'wood':'concrete';
@@ -102,9 +109,10 @@ export class AudioSystem extends ExistingAudio {
     if(this.active.size>=94){this.stats.dropped++;return;}
     const source=this.context.createBufferSource(),channel=this.channel(e,gain,delay);
     source.buffer=buffer;
+    if(e.type==='slide')source.playbackRate.value=.95+.01*((e.serial || e.eventId || 5)%11);
     source.connect(channel.gain);
     const offset=this.reuseOffsets.get(name)||0;
-    this.track(source,channel,buffer.duration-offset+.005,offset);
+    this.track(source,channel,(buffer.duration-offset)/(source.playbackRate?.value || 1)+.005,offset);
     this.reuseStats.played++;this.stats.played++;
     if(shot&&['p9','p12','cr4'].includes(e.weapon))this.kitStats.shots++;
   }

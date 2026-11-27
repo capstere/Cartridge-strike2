@@ -23,7 +23,8 @@ export async function verifyEnvironment(page,output,id){
       const sky=get('Photographic sky'), water=get('Harbor waves'), ash=get('Volcanic ash and embers'), steam=get('Geothermal steam');
       const fabrics=all('Wind-blown fabric'), boats=all('Moored boat'), mills=all('Windmill sails');
       const structure=r.referenceScene.root.getObjectByName('Indexed architecture');
-      const volume=structure.children.map(mesh=>r.renderer.properties.get(mesh.material).uniforms?.sourceLight?.value).find(Boolean);
+      const lightShader=structure.children.map(mesh=>r.renderer.properties.get(mesh.material).uniforms).find(u=>u?.sourceLight);
+      const volume=lightShader?.sourceLight.value;
       const ground=structure.children.map(mesh=>r.renderer.properties.get(mesh.material).uniforms).find(u=>u?.groundMask);
       let groundField;
       if(ground){
@@ -37,7 +38,7 @@ export async function verifyEnvironment(page,output,id){
       }
       const crater=sky.material.uniforms.uVolc?.value;
       return {draws:r.stats.drawCalls,skyWidth:sky.material.uniforms.skyImage.value.image.width,
-        groundField,bakedLight:volume&&[volume.image.width,volume.image.height,volume.image.depth],
+        groundField,shadowLift:lightShader?.sourceShadowLift?.value,bakedLight:volume&&[volume.image.width,volume.image.height,volume.image.depth],
         eruption:crater&&{azimuth:crater.x,radius:crater.y,elevation:crater.z,plume:sky.material.uniforms.uPlume.value.toArray()},
         weatherTime:(water||ash).material.uniforms.time.value,
         counts:{waveBands:water?.material.uniforms.waves.value.length||0,mills:mills.length,
@@ -75,6 +76,7 @@ export async function verifyEnvironment(page,output,id){
       assert.deepEqual(second.groundField.samples.map(pixel=>pixel.slice(0,3)),[[255,0,0],[0,255,0]]);
     }
     if(id==='tephra'){
+      assert.equal(second.shadowLift,.06);
       assert.deepEqual(second.canopy,[32,62]);assert.ok(second.steam>0);
       assert.ok(second.eruption.radius>0 && second.eruption.elevation>0);
       assert.deepEqual(second.eruption.plume,[.97,.15,1,1.7]);

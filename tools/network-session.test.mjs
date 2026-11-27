@@ -321,3 +321,32 @@ test('private team packets are scoped to current teammates, match and life',()=>
  session.expireTeamComms();
  assert.equal(session.view.teamPing,null);
 });
+
+test('one accepted slide sounds on room receipt and duplicate, past-life and paused events stay silent',()=>{
+ const {session,self,state}=triggerSession();
+ const heard=[];session.onCombatAudio=(event,serverTime)=>{heard.push([event.eventId,serverTime]);return true;};
+ Object.assign(state,{matchId:7,mode:'classic',round:2,residents:new Map()});
+ session.seenEvent=0;session.events=[];
+ const event={type:'slide',actorId:self.id,lifeId:self.lifeId,controlEpoch:self.controlEpoch,eventId:7,matchId:7,round:2,time:0};
+ session.receiveEvents([event,event]);
+ assert.deepEqual(heard,[[7,state.time]]);assert.equal(session.events.length,1);
+ assert(session.events[0].audioPresented,'a delayed next frame must not schedule another scrape');
+ session.receiveEvents([{...event,eventId:8,lifeId:self.lifeId+1},{...event,eventId:9,round:1},{...event,eventId:10,controlEpoch:self.controlEpoch+1}]);
+ session.enabled=false;session.receiveEvents([{...event,eventId:11}]);
+ session.connectionState='reconnecting';session.receiveEvents([{...event,eventId:12}]);
+ assert.equal(heard.length,1);
+});
+
+test('pause, immediate resume and reconnect discard queued movement in both client poses',()=>{
+ const {session,self}=triggerSession(),predicted=session.prediction.world.actor;
+ session.view.player={slideBuffer:.3};predicted.slideBuffer=.3;
+ session.room.send=()=>{};session.onConnection=()=>{};
+ session.prediction.reset=()=>{predicted.slideBuffer=.3;}; // a final pre-pause patch
+ session.setInputEnabled(false);
+ assert.equal(predicted.slideBuffer,0);assert.equal(session.view.player.slideBuffer,0);
+ session.setInputEnabled(true);assert.equal(predicted.slideBuffer,0);
+ self.handling={slideBuffer:.3};predicted.slideBuffer=.3;session.view.player.slideBuffer=.3;
+ session.clearTeamComms=()=>{};
+ try{session.beginReconnect();assert.equal(predicted.slideBuffer,0);assert.equal(session.view.player.slideBuffer,0);}
+ finally{clearTimeout(session.reconnectTimer);}
+});

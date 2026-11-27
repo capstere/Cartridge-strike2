@@ -21,6 +21,10 @@ export async function referenceLighting({id,folder,signal,materials,own,disposed
     lightInv:{value:new THREE.Vector3(1/(grid.step*grid.nx),1/(grid.step*grid.ny),1/(grid.step*grid.nz))},
     lightRange:{value:grid.range}
   };
+  // 01-core FinalShader applies GRADE_DEF.lift after gamma and contrast.
+  // The source eruption night keeps a .06 display-space floor on dark scenery.
+  // Preserve this on the existing draw; no extra scene target or post-process.
+  if(id==='tephra')uniforms.sourceShadowLift={value:.06};
   for(const material of Object.values(materials)){
     if(!material.isMeshLambertMaterial)continue;
     const previous=material.onBeforeCompile.bind(material);
@@ -36,7 +40,15 @@ export async function referenceLighting({id,folder,signal,materials,own,disposed
         vec3 lightUV=(sourceLightPosition-lightOrigin)*lightInv;
         vec4 lamp=texture(sourceLight,clamp(lightUV.xzy,0.,1.));
         reflectedLight.indirectDiffuse+=lamp.rgb*lamp.rgb*lightRange*diffuseColor.rgb;`);
+      if(id==='tephra')shader.fragmentShader=shader.fragmentShader
+        .replace('#include <common>','#include <common>\nuniform float sourceShadowLift;')
+        .replace('#include <fog_fragment>',`#include <fog_fragment>
+          vec3 unlit=1.-clamp(gl_FragColor.rgb,0.,1.);
+          gl_FragColor.rgb+=sourceShadowLift*unlit*unlit*unlit;`);
     };
+    // The same Three program cache spans the other authored maps.
+    if(material.customProgramCacheKey===THREE.Material.prototype.customProgramCacheKey)
+      material.customProgramCacheKey=()=>id+'-source-light-v2';
     material.needsUpdate=true;
   }
 }

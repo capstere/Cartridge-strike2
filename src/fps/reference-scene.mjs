@@ -73,7 +73,7 @@ export function referenceScene(scene,world,settings){
     applyReferenceWind(materials.cyfol,materials.cyflag,environment.time);
     materials.cyfol.alphaTest=.42;materials.cyflag.side=THREE.DoubleSide;
   }
-  let disposed=false,baseReady=false,fineBatch=null,architecture=null,activeTier=null,pendingTier=null,failedTier=null;
+  let disposed=false,baseReady=false,fineLoaded=false,fineFailed=false,fineBatch=null,architecture=null,activeTier=null,pendingTier=null,failedTier=null;
   const desiredTier=()=>id==='embruns'&&settings.graphics==='low'?'coarse':'base';
   function replaceArchitecture(tier){
     const request=readBatch(tier,abort.signal,folder).then(bytes=>{
@@ -92,9 +92,15 @@ export function referenceScene(scene,world,settings){
     referenceGround({id,bytes:readBatch('ground',abort.signal,folder),material:materials.ground,own:textures,disposed:()=>disposed})
   ]);
   function loadFine(){
-    if(!fineBatch)fineBatch=readBatch('detail',abort.signal,folder).then(bytes=>{
-      if(!disposed){unpack(bytes,materials,detail);freezeStaticTransforms(detail);}
-    });
+    if(!fineBatch){
+      fineBatch=readBatch('detail',abort.signal,folder).then(bytes=>{
+        if(disposed||settings.graphics==='low')return;
+        unpack(bytes,materials,detail);freezeStaticTransforms(detail);fineLoaded=true;
+      }).catch(error=>{
+        for(const mesh of detail.children)mesh.geometry.dispose();
+        detail.clear();fineFailed=true;throw error;
+      }).finally(()=>{fineBatch=null;});
+    }
     return fineBatch;
   }
   async function build(){
@@ -132,8 +138,13 @@ export function referenceScene(scene,world,settings){
     // Preserve the coarse architecture across all distances. Fine classes use
     // the donor's distance-driven hiding and are absent from the low profile.
     detail.visible=settings.graphics!=='low';
+    if(!detail.visible)fineFailed=false;
+    if(!detail.visible&&fineLoaded){
+      for(const mesh of detail.children)mesh.geometry.dispose();
+      detail.clear();fineLoaded=false;
+    }
     if(!detail.visible||!baseReady||disposed)return;
-    if(!fineBatch)loadFine().catch(error=>{if(!disposed)console.warn('Map fine detail unavailable.',error);});
+    if(!fineLoaded&&!fineFailed&&!fineBatch)loadFine().catch(error=>{if(!disposed)console.warn('Map fine detail unavailable.',error);});
     for(const m of detail.children){
       const sphere=m.geometry.boundingSphere;
       temporary.copy(camera.position).sub(sphere.center);

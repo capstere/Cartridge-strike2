@@ -1,4 +1,4 @@
-import {RUSH,SLIDE,endSlide,wantsRush,advanceRush} from './rush.mjs';
+import {RUSH,SLIDE,endSlide,beginBufferedSlide,wantsRush,advanceRush} from './rush.mjs';
 import {zombiePosition} from './zombie-poses.mjs';
 
 /** Shared capsule movement. Uses the existing world physics and body sweep.
@@ -13,21 +13,13 @@ export function moveActor(game, actor, input, dt, effects = true) {
   if (Number.isFinite(input.yaw)) actor.yaw = input.yaw;
   if (Number.isFinite(input.pitch)) actor.pitch = clamp(input.pitch, -1.49, 1.49);
   const time=game.state.time,runSpeed=game.config.runSpeed;
-  const crouchPress=input.crouchEdge || (input.crouch && !actor.crouchHeld);
-  actor.crouchHeld=!!input.crouch;
-  if(actor.slideUntil && time>=actor.slideUntil)endSlide(actor,time);
-  // A finger can release the stick in the same sample as the crouch edge.
-  // Previous resolved Rush velocity still owns the slide impulse.
-  if(crouchPress && actor.rushing && actor.onGround && (input.forward || 0)>=0 &&
-      !input.aim && !input.fire && !input.sneak && !actor.action && !actor.slideUntil &&
-      time>=(actor.slideReadyAt || 0) && actor.moving>runSpeed*.75){
-    actor.slideUntil=time+SLIDE.duration;
-    actor.slideSpeed=Math.min(runSpeed*RUSH.speed*SLIDE.maxRush,actor.moving*SLIDE.boost);
-  }
+  const started=beginBufferedSlide(actor,input,time,dt,runSpeed);
+  if(started && effects)game.emit('slide',actor,{surface:game.world.materialAt(actor.x,actor.z)});
   const sliding=actor.slideUntil>time;
   const slideJump=sliding && input.jump && !actor.jumpHeld && actor.onGround &&
     (!game.world.canStand || game.world.canStand(actor,game.config.standingHeight));
-  const crouching = !slideJump && (sliding || !!input.crouch);
+  const queuedRush=actor.slideBuffer>0 && input.sprint && input.forward>.3;
+  const crouching = !slideJump && (sliding || (!!input.crouch && !queuedRush));
   if (crouching) actor.height = game.config.crouchingHeight;
   else if (!game.world.canStand || game.world.canStand(actor, game.config.standingHeight)) actor.height = game.config.standingHeight;
   actor.crouching = actor.height < game.config.standingHeight;
@@ -39,6 +31,12 @@ export function moveActor(game, actor, input, dt, effects = true) {
   const speed = rush ? game.config.runSpeed*RUSH.speed : actor.crouching ? game.config.crouchSpeed : input.sneak ? game.config.sneakSpeed : actor.bot ? game.config.botSpeed : game.config.runSpeed;
   let dx = (-Math.sin(actor.yaw) * forward + Math.cos(actor.yaw) * strafe) * speed * dt;
   let dz = (-Math.cos(actor.yaw) * forward - Math.sin(actor.yaw) * strafe) * speed * dt;
+  if(actor.slideBuffer>0 && !actor.onGround && !magnitude){
+    // The donor retains horizontal velocity in the air (2.2/s damping).
+    // This lets a real late stick release reach the floor with its momentum.
+    const carried=actor.moving*Math.exp(-2.2*dt)*dt;
+    dx=actor.travelDirX*carried;dz=actor.travelDirZ*carried;
+  }
   if(sliding){
     if(magnitude>.15){
       const turn=Math.atan2(actor.travelDirX*dz-actor.travelDirZ*dx,actor.travelDirX*dx+actor.travelDirZ*dz);
@@ -64,7 +62,7 @@ export function moveActor(game, actor, input, dt, effects = true) {
   if (effects && !wasGrounded && actor.onGround) game.emit('land', actor, { surface: game.world.materialAt(actor.x, actor.z, actor.y) });
   const moved = distance(actor, before); actor.moving = moved / dt; actor.distanceWalked += moved;
   advanceRush(actor,rush,dt,game.config.runSpeed);
-  if(actor.rushing && moved>.001){
+  if((actor.rushing || (actor.slideBuffer>0 && !sliding)) && moved>.001){
     actor.travelDirX=(actor.x-before.x)/moved;actor.travelDirZ=(actor.z-before.z)/moved;
   }
   if(sliding){

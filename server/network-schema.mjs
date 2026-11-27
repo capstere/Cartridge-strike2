@@ -9,7 +9,7 @@ export const NetworkInput=schema({
 export const HandlingState=schema({
   ...Object.fromEntries(SLIDE_NUMBERS.map(k=>[k,t.float64()])),crouchHeld:t.boolean(),
   cartridgeStart:t.float64(),cartridgeRelease:t.float64(),cartridgeFuse:t.float64(),waitTriggerRelease:t.boolean()
-},'FPSHandlingV16');
+},'FPSHandlingV17');
 export const ActorState=schema({
   handling:HandlingState,
   ...Object.fromEntries(MOVEMENT_NUMBERS.map(k=>[k,t.float64()])),

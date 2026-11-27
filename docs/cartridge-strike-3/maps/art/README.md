@@ -46,3 +46,17 @@ CHROMIUM_PATH=/usr/bin/chromium FPS_NETWORK_HEADED=1 FPS_NETWORK_ANGLE=gl-egl \
 ```
 
 Set `FPS_SIGN_VIEW=kiosk` for the closer kiosk comparison.
+
+## Integrated waterfront with floating boats
+
+The native Pi 5 ran two separate Low/Endless matches on protocol 16 build `1bf4ae79d6ebeaeaf5e3d22fab38316d05c8e44af30958b7e257d1bd85eee735`. The exact map source was `23df514fabd35ad3b2ec4857887d3de03a53c31c`; the capture tool was `41acfea8bed77ec77a37d856599a726f6eeadd96`. The shots use the same player coordinates, 960 × 540 viewport and 816 × 459 framebuffer as the archived views. The kiosk has its teal board and English lettering. On the tavern wall the dark menu board appears to the right of the arch, while a rail and the pergola restrict the readable area of the higher sign. The earlier comparison frames show the blank surfaces and the pre-localization HUD. [Earlier tavern](before.jpg) · [Current tavern](indexed/tavern.jpg) · [Earlier kiosk](kiosk/before.jpg) · [Current kiosk](indexed/kiosk.jpg)
+
+| English atlas face | Original donor group and cell | World center in metres (x, y, z) | Pixels contributed in the live viewport |
+| --- | --- | --- | ---: |
+| Fish Tavern / Captain Michael | 132, sign cell 2 | −22.07, 3.09, 18.60 | 3,299 |
+| Menu | 137, decal cell 4 | −22.008, 1.45, 20.75 | 1,944 |
+| Kiosk | 132, sign cell 4 | −24.17, 2.82, 9.00 | 5,096 |
+
+The probe matched each quad to the original factory position and atlas UV cell, then drew the frozen world and weapon with and without just that quad. A pixel counted if any RGB channel changed by at least three. Restoring the two original triangle indices per face restored every compared pixel exactly. The two static architecture batches retain the original per-cell histogram for 88 opaque board triangles and 186 transparent decal triangles. Seventeen of Meltem’s 22 floating vessels each supply 24 more decal triangles. The probe verified each boat mesh’s anchor and UV cell counts against its exported source data. All 19 meshes share the single decoded 1024 × 512 atlas. A test that assumed only the static batches owned this texture failed once the marked boats became visible in the scene graph. [Tavern receipt](indexed/tavern.json) · [Kiosk receipt](indexed/kiosk.json)
+
+Chromium 156 on Broadcom V3D recorded 90 frame intervals at each view before the pixel comparisons. Tavern p50/p95/p99 were 22.0/39.0/41.4 ms and kiosk 23.1/34.3/40.3 ms. Both views retained 76 textures. These are fixed-view samples; the complete-match and map-switch measurements are separate.

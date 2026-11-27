@@ -1,3 +1,4 @@
+import {rememberedFamilyForm} from './test-helpers/remembered-family.mjs';
 // Rendered multiplayer play and measurements. Start in the repo root.
 // FPS_MAP_CASE=desktop|mobile|four|floor|meltem|meltemTouch node tools/multimap-browser.mjs
 import {verifyMapProcessExit} from './multimap-teardown.mjs';
@@ -14,6 +15,7 @@ import {startPilotFixture} from './network-pilot-fixture.mjs';
 import {enterTouchMatch, resumeDesktop, waitForActiveHud} from './network-browser-resume.mjs';
 import {countLivePrototypes,installRetentionProbe,parkedControl,readRetained,snapshotDetachedCanvases,writeRetainedProfile} from './multimap-heap.mjs';
 import {CONTRACT} from '../shared/multiplayer/build.mjs';
+import {waitForMeltemDeck} from './reference-map/geometry-census.mjs';
 
 const cases = {
   desktop: {actors:10, bots:9, family:true, video:true},
@@ -28,6 +30,7 @@ const cases = {
 const name = process.env.FPS_MAP_CASE || 'desktop';
 const profileHeap=process.env.FPS_MAP_HEAP_PROFILE==='1';
 const audible=process.env.FPS_MAP_AUDIO==='1';
+const traceGeometry=process.env.FPS_MAP_GEOMETRY_CENSUS==='1';
 const tour = name==='four' && process.env.FPS_MAP_TOUR==='1';
 const spec = cases[name];
 // A pair switches the same family room to Floor 5 and then back to the selected map.
@@ -35,6 +38,11 @@ const switchPairs = Number(process.env.FPS_MAP_SWITCH_PAIRS ?? 2);
 assert(Number.isSafeInteger(switchPairs) && switchPairs>=1, 'Use a positive number of map switch pairs');
 assert(spec, 'Unknown map browser scenario');
 const floor = 'floor5-prepared', arena = 'compact-arena', map = spec.reference || (spec.floor ? floor : arena);
+// A qualified full-catalog run returns to the same anchor at every comparison.
+const cycle=process.env.FPS_MAP_ALL_VARIANTS==='1'?[floor,'meltem','embruns','tephra']:[floor,map];
+assert(cycle.at(-1)===map&&2*switchPairs%cycle.length===0,'Use whole catalog cycles ending on the selected map.');
+const cycleCount=2*switchPairs/cycle.length;
+const checkpoints=new Set([cycle.length,cycle.length*Math.ceil(cycleCount/2),cycle.length*cycleCount]);
 const out = process.env.FPS_MAP_OUT || 'test-results/multiplayer-maps';
 await mkdir(out, {recursive:true});
 const fixture = await startPilotFixture({familyRoom:true, host:'127.0.0.1',
@@ -328,6 +336,10 @@ try {
   await page.locator('#network-code').waitFor(); result.signInToFormMs=Math.round(performance.now()-login);
   await page.evaluate(observe,audible);
   if(profileHeap)await page.evaluate(installRetentionProbe);
+  if(traceGeometry){
+    const {installGeometryCensus}=await import('./reference-map/geometry-census.mjs');
+    await page.evaluate(installGeometryCensus);
+  }
   assert.equal(await page.evaluate(()=>typeof window.__fps),'undefined');
   await page.locator('#network-name').fill('Map Tester');
   await page.locator('#network-code').fill(spec.family ? fixture.familyPassword : code);
@@ -427,10 +439,21 @@ try {
     try {
       if(profileHeap)await cdp.send('HeapProfiler.startSampling',{samplingInterval:32768});
       for(let turn=0;turn<2*switchPairs;turn++) {
-        const id=turn%2 ? map : floor;
+        const id=cycle[turn%cycle.length];
         mark('switch '+id); const ms=await selectMap(id);
-        result.transitions.push({id,ms,...await readRetained(cdp,page),...await renderedResources()});
-        if(profileHeap && id===map && [2,2*Math.ceil(switchPairs/2),2*switchPairs].includes(turn+1)){
+        if(traceGeometry&&id==='meltem'){
+          const frames=[await page.evaluate(()=>mapGeometryCensus())];
+          if(process.env.FPS_MAP_GEOMETRY_SETTLE==='1'){
+            for(const interval of [500,1500,3000]){
+              await page.waitForTimeout(interval);
+              frames.push(await page.evaluate(()=>mapGeometryCensus()));
+            }
+          }
+          await writeFile(join(out,'meltem-geometry-'+(turn+1)+'.json'),JSON.stringify(frames)+'\n');
+        }
+        const movingDeck=id==='meltem'?await waitForMeltemDeck(page):undefined;
+        result.transitions.push({id,ms,movingDeck,...await readRetained(cdp,page),...await renderedResources()});
+        if(profileHeap && id===map && checkpoints.has(turn+1)){
           const sample=result.transitions.at(-1);
           sample.livePrototypes=await countLivePrototypes(cdp);
           await writeFile(join(out,'heap-'+(turn+1)+'.json'),JSON.stringify(sample,null,2)+'\n');
@@ -469,18 +492,20 @@ try {
     await page.route(route,r=>r.fulfill({status:200,contentType:'application/json',body:'{}'}));
     try {
       await page.locator('#room-map').selectOption(floor);
-      await page.locator('#network-code').waitFor();
+      await rememberedFamilyForm(page);
       await page.locator('#network-status').filter({hasText:/mismatch|version/i}).waitFor();
       await until(()=>fixture.authority.rooms.size===0,'Failed map load released its seat');
       assert(await page.locator('#fatal').isHidden());
     } finally {await page.unroute(route);}
-    await page.locator('#network-code').fill(fixture.familyPassword);
+    await rememberedFamilyForm(page);
     await page.locator('[data-create=false]').click();
     await page.locator('#room-ready').waitFor(); room=[...fixture.authority.rooms][0];
     await acknowledge(floor);
     result.damagedMapRejected=true; result.retryMap=room.state.mapId;
   }
-  await page.locator('#room-leave').click(); await page.locator('#network-code').waitFor();
+  await page.locator('#room-leave').click();
+  if (spec.family) await rememberedFamilyForm(page);
+  else await page.locator('#network-code').waitFor();
   for(const p of peers) await p.pages()[0].evaluate(()=>mapPeerRoom.leave());
   await until(()=>fixture.authority.rooms.size===0,'All sockets and simulation released');
   if(audible&&spec.reference){

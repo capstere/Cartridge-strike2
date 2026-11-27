@@ -299,7 +299,7 @@ export class Game {
     const spent=WEAPONS[actor.weapon]?.slot==='grenade' && !inventory[actor.weapon];
     actor.pendingShot=null;
     actor.lastWeapon=spent ? [inventory.primary?.id,inventory.pistol?.id,'knife'].find(item=>item && item!==id) : actor.weapon;
-    actor.weapon = id; actor.reloadUntil = 0; actor.nextShot = Math.max(actor.nextShot, this.state.time + .22);
+    actor.weapon = id; actor.slideBuffer=0; actor.reloadUntil = 0; actor.nextShot = Math.max(actor.nextShot, this.state.time + .22);
     this.emit('switch', actor, { weapon: id }); return true;
   }
   reload(actor = this.player) {
@@ -307,7 +307,7 @@ export class Game {
     if (!actor?.alive || actor.reloadUntil || !['buy', 'active'].includes(this.phase)) return false;
     const item = this.item(actor), w = WEAPONS[actor.weapon];
     if (!item || !w.reload || item.ammo >= w.magazine || !item.reserve) return false;
-    actor.pendingShot=null; actor.reloadUntil = this.state.time + w.reload; this.emit('reload', actor, { weapon: actor.weapon, duration: w.reload }); return true;
+    actor.pendingShot=null; actor.slideBuffer=0; actor.reloadUntil = this.state.time + w.reload; this.emit('reload', actor, { weapon: actor.weapon, duration: w.reload }); return true;
   }
   completeReloadIfDue(actor) {
     if (!actor.reloadUntil || this.state.time + EPS < actor.reloadUntil) return;

@@ -21,6 +21,7 @@ export function prepareClassicRound(room,advanceEpoch=true){
     seat.actor.id=seat.id;
     seat.actor.lifeId=Math.max(seat.actor.lifeId,room.lives.get(seat.id)||0);
     game.actors.push(seat.actor);
+    room.accountMatch?.admit(seat);
     if(seat.connected)room.sim.controllers.bind(sid,seat.id);
   }
   room.fillVacancies(true);

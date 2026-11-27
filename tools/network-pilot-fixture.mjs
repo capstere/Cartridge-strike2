@@ -11,7 +11,7 @@ import '../server/register-shared.mjs';
 import {configFromEnv} from '../server/access.mjs';
 const {createLocalServer}=await import('../server/local-server.mjs');
 
-export async function startPilotFixture({testMatch, familyRoom=false, host='pilot.example.test', startAuthority=createLocalServer}={}){
+export async function startPilotFixture({testMatch, familyRoom=false, publicListing=false, host='pilot.example.test', startAuthority=createLocalServer}={}){
   const dir=await mkdtemp(join(tmpdir(),'cs2-pilot-tls-'));
   const certPath=join(dir,'cert.pem'),keyPath=join(dir,'key.pem');
   let edge,authority;
@@ -56,7 +56,7 @@ export async function startPilotFixture({testMatch, familyRoom=false, host='pilo
     const invite=randomBytes(32).toString('base64url');
     const familyPassword=familyRoom?randomBytes(24).toString('base64url'):undefined;
     const familyStateFile=familyRoom?join(dir,'family-settings.json'):undefined;
-    const config=configFromEnv({CS2_PUBLIC_ORIGIN:origin,CS2_PILOT_INVITE:invite,CS2_FAMILY_ROOM_PASSWORD:familyPassword,CS2_FAMILY_ROOM_STATE:familyStateFile});
+    const config=configFromEnv({CS2_PUBLIC_ORIGIN:origin,CS2_PILOT_INVITE:invite,CS2_FAMILY_ROOM_PASSWORD:familyPassword,CS2_FAMILY_ROOM_STATE:familyStateFile,CS3_PUBLIC_LISTING:publicListing?'1':'0'});
     const start=()=>startAuthority({...config,port:0,testMatch});
     authority=await start();
     return {origin,invite,familyPassword,close,get authority(){return authority;},
