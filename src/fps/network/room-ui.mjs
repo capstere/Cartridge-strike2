@@ -166,8 +166,8 @@ export function roomUi({leave,resume,activate}){
   return {hide(){root.hidden=true;session=null;rematchPointer=null;key='';$('room-link').hidden=true;shareHelp.hidden=true;},update(s){
     if(!s?.room)return;session=s;const state=s.room.state,self=state.actors.get(s.localPlayerId),waiting=state.phase==='waiting',result=state.phase==='results';
     if(!result)rematchPointer=null;
-    root.hidden=state.phase==='active';if(root.hidden)return;
-    $('room-title').textContent=result?(state.winner==='draw'?en.draw:en.winner(labels[state.winner])):state.phase==='countdown'?en.countdown(Math.ceil(state.remainingSeconds)):en.lobby;
+    root.hidden=state.phase==='active'||state.phase==='countdown';if(root.hidden)return;
+    $('room-title').textContent=result?(state.winner==='draw'?en.draw:en.winner(labels[state.winner])):en.lobby;
     const classic=state.mode==='classic';
     $('room-rules').textContent=classic?en.classicRules:en.tdmRules;
     const map=networkMap(state.mapId);

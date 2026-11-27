@@ -5,7 +5,7 @@ import '../server/register-shared.mjs';
 const {createLocalServer}=await import('../server/local-server.mjs');
 import {verifyRoomAudio} from './network-audio-observer.mjs';
 import {glassCrossing} from './network-glass-fixture.mjs';
-import {resumeDesktop} from './network-browser-resume.mjs';
+import {resumeDesktop, waitForActiveHud} from './network-browser-resume.mjs';
 
 const local=await createLocalServer({port:0,testMatch:{countdownSeconds:.15}});
 const browsers=[],pages=[],errors=[];
@@ -39,6 +39,8 @@ try{
   await desktop.locator('[data-create=true]').click();
   await desktop.locator('#room-primary').selectOption('ar47');
   await desktop.locator('#room-ready').click();await desktop.locator('#room-start').click();
+  await waitForActiveHud(desktop);
+  if(await desktop.locator('#pause').isHidden())await desktop.keyboard.press('Escape');
   await desktop.locator('#resume').waitFor();
   const room=[...local.rooms][0],game=room.sim.game,host=[...room.seats.values()][0].actor;
   assert.equal(room.bots.size,9);assert.equal(host.weapon,'ar47');

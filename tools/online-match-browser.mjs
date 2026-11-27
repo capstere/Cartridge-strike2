@@ -9,7 +9,7 @@ import {chromium} from '../frontline/source/tools/dev/node_modules/playwright-co
 import {CONTRACT} from '../shared/multiplayer/build.mjs';
 import {DEFAULT_MAP_ID} from '../shared/multiplayer/maps.mjs';
 import {startPilotFixture} from './network-pilot-fixture.mjs';
-import {resumeDesktop} from './network-browser-resume.mjs';
+import {enterTouchMatch, resumeDesktop, waitForActiveHud} from './network-browser-resume.mjs';
 const mapId=process.env.FPS_MATCH_MAP??DEFAULT_MAP_ID;
 const lanes={
  'floor5-prepared':{x:20,hostZ:-16,friendZ:-18},
@@ -43,7 +43,7 @@ async function roomRead(page){
 }
 async function readyAndStart(host,friend){
  await host.locator('#room-ready').click();await friend.locator('#room-ready').tap();await host.locator('#room-start').click();
- await host.locator('#resume').waitFor({state:'visible'});await friend.locator('#resume').tap();host.aimPoint=(await resumeDesktop(host)).point;
+ await waitForActiveHud(host);await enterTouchMatch(friend);host.aimPoint=(await resumeDesktop(host)).point;
 }
 try{
  const host=await open(false);
@@ -147,9 +147,15 @@ try{
  progress('time-limit result');
  const timed=JSON.parse((await readHost()).results);assert.equal(timed.winner,'analysts');assert.equal(timed.reason,'time');assert.equal(timed.score.analysts,1);
  progress('third match');
- r.match.settings.durationSeconds=2;r.state.durationSeconds=2;
  await friend.locator('#room-rematch').tap();await until(async()=> (await readHost()).phase==='waiting','third lobby');await readyAndStart(host,friend);
- await until(async()=> (await readHost()).phase==='results','time draw');const draw=JSON.parse((await readHost()).results);assert.equal(draw.winner,'draw');
+ // Start the measured two-second draw window after both browsers have entered.
+ // Foregrounding two real renderers can itself take longer than that window.
+ assert.equal((await readHost()).phase,'active');assert.equal((await readFriend()).phase,'active');
+ const drawDeadline=r.clock.elapsedTime+2000;
+ r.match.deadline=drawDeadline;
+ await until(async()=> (await readHost()).phase==='results','time draw');
+ assert(r.clock.elapsedTime>=drawDeadline,'the authority completed the full draw window');
+ const draw=JSON.parse((await readHost()).results);assert.equal(draw.winner,'draw');assert.equal(draw.reason,'time');
  await until(async()=> (await readFriend()).results===(await readHost()).results,'same draw on both clients');
  assert.equal(draw.matchId,score.matchId+2);assert.deepEqual(draw.score,{analysts:0,counterAnalysts:0});
  await host.locator('#room-leave').click();await until(async()=> (await readFriend()).players.length===1,'host departure');

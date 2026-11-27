@@ -189,6 +189,7 @@ const setStatus = t => { if (ui.status) ui.status.textContent = t; };
 function intercept(e) {
   if (!e.target.closest || !e.target.closest('#start')) return;
   e.preventDefault(); e.stopImmediatePropagation();
+  startBtn.dispatchEvent(new Event('cs-deploy-gesture'));
   const fullscreenRequested = !startBtn.disabled && !flow.active && fullscreen.start();
   flow.begin(fullscreenRequested);
 }
