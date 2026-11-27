@@ -1,4 +1,5 @@
 import http from 'node:http';
+import {randomBytes,randomUUID} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {readFile} from 'node:fs/promises';
 import express from 'express';
@@ -25,6 +26,7 @@ export async function createLocalServer(options={}) {
   const family=openFamilyRoom(config);
   let familyInstance, familyCreation;
   const active=new Set(),root=fileURLToPath(new URL('../',import.meta.url));
+  const accounts=config.accountDb?(await import('./account-access.mjs')).accountAccess(config,active):null;
   const manifest=JSON.parse(await readFile(new URL('../build-info.json',import.meta.url)));
   const publicFiles=new Set(manifest.files.map(f=>'/'+f.path));
 
@@ -32,11 +34,59 @@ export async function createLocalServer(options={}) {
     async onCreate(options){
       if(!this.familyRoom && active.size-Number(!!familyInstance)>=2)throw new ServerError(429,'Local server room limit reached.');
       active.add(this);
+      if(accounts)this.rememberedProof=randomBytes(32).toString('hex');
       // Trusted in-process fixtures only; never read match overrides from matchmaking.
       this.matchOptions=testMatch;
       try{await super.onCreate(options);}catch(e){active.delete(this);throw e;}
     }
-    onDispose(){super.onDispose();active.delete(this);}
+    acceptsCode(code){return !!this.rememberedProof&&code===this.rememberedProof||super.acceptsCode(code);}
+    onAuth(client,options){
+      if(accounts&&options.credential&&!options.credential.legacy&&!accounts.store.rooms(options.credential.device).includes(this.familyRoom?FAMILY_ROOM_ALIAS:this.roomId)){
+        throw new ServerError(403,'Room access has expired.');
+      }
+      return super.onAuth(client,options);
+    }
+    onJoin(client,options){
+      super.onJoin(client,options);
+      if(!accounts||!options.credential)return;
+      this.seats.get(client.sessionId).credential=options.credential;
+      if(options.credential.legacy)accounts.store.remember(options.credential.device,this.familyRoom?FAMILY_ROOM_ALIAS:this.roomId);
+    }
+    beginAccountMatch(){
+      if(accounts)this.accountMatch={id:randomUUID(),departed:new Map()};
+    }
+    snapshotAccount(seat){
+      const actor=seat?.actor,user=seat?.credential?.user;
+      if(!user||!seat.admitted||seat.pending||!actor)return;
+      return {user,kills:actor.kills,deaths:actor.deaths,team:actor.team};
+    }
+    onLeave(client){
+      const entry=this.accountMatch&&this.state.phase==='active'&&this.snapshotAccount(this.seats.get(client.sessionId));
+      if(entry)this.accountMatch.departed.set(entry.user,entry);
+      super.onLeave(client);
+    }
+    finishAccountMatch(winner){
+      if(!this.accountMatch)return;
+      const {id,departed}=this.accountMatch;
+      const players=new Map(departed);
+      // One account can receive at most one result, even with two browser tabs.
+      for(const seat of this.seats.values()){
+        const entry=this.snapshotAccount(seat);
+        if(entry&&!players.has(entry.user))players.set(entry.user,entry);
+      }
+      const results=[...players.values()].map(entry=>({...entry,win:entry.team===winner}));
+      const mode=this.state.mode,map=this.state.mapId;
+      const persist=()=>accounts.store.recordMatch(id,mode,map,results);
+      try{persist();}catch{
+        // The same immutable result can be retried without granting XP twice.
+        this.clock.setTimeout(()=>{try{persist();}catch{console.error('Account match result could not be saved.');}},1000);
+      }
+      this.accountMatch=null;
+    }
+    onDispose(){
+      super.onDispose();active.delete(this);
+      if(accounts&&!this.familyRoom)accounts.store.removeScope(this.roomId);
+    }
   }
   class LocalFamilyRoom extends LocalRoom {
     async onCreate(options) {
@@ -78,6 +128,7 @@ export async function createLocalServer(options={}) {
   }
   async function joinFamily(body, directId) {
     const options=family.reserveOptions(body);
+    if(body.credential)options.credential=body.credential;
     for(let attempt=0;attempt<2;attempt++){
       if(matchMaker.state===matchMaker.MatchMakerState.SHUTTING_DOWN)break;
       const roomId=directId || (await getFamilyInstance()).roomId;
@@ -105,7 +156,9 @@ export async function createLocalServer(options={}) {
     const onError=()=>socket.destroy();socket.once('error',onError);
     try{
       const access=await inspect(req,true);
-      const status=access.denied?.[0] || (pilot&&!access.authenticated?401:0) ||
+      const id=req.url.split('?')[0].split('/')[2],room=id&&accounts?.roomFor(id);
+      const scoped=!access.denied&&room&&accounts.context(req,access.origin).rooms.includes(room.familyRoom?FAMILY_ROOM_ALIAS:room.roomId);
+      const status=access.denied?.[0] || (pilot&&!access.authenticated&&!scoped?401:0) ||
         (pilot&&(!roomSocket.test(req.url)||!new URLSearchParams(req.url.split('?')[1]).has('sessionId'))?404:0) ||
         (transport.wss.clients.size>=32?429:0);
       if(socket.destroyed)return;
@@ -127,10 +180,16 @@ export async function createLocalServer(options={}) {
       const path=req.url.split('?')[0];
       const admission=path.startsWith('/matchmake/');
       const localHealth=pilot&&localMonitor(req,httpServer.address().port);
+      let ctx,pilotAuthorized=false;
       if(!localHealth){
         const access=await inspect(req,admission||!readMethod(req.method));
         if(access.denied)return rejectHttp(res,...access.denied);
         if(pilot){
+          pilotAuthorized=access.authenticated;
+          if(accounts){
+            ctx=accounts.context(req,access.origin);
+            if(await accounts.handle(req,res,path,ctx))return;
+          }
           if(req.method==='POST'&&req.url==='/pilot/session'){
             const denied=await pilot.login(req,res,access.origin,!!family);
             if(denied)rejectHttp(res,...denied);
@@ -139,14 +198,16 @@ export async function createLocalServer(options={}) {
           const familyLink=!!family&&path===FAMILY_ROOM_PATH;
           const entry=familyLink||path==='/'||path==='/fps/'||path==='/fps/index.html';
           const redirect=path==='/'||familyLink;
-          if(entry&&readMethod(req.method)&&(!access.authenticated||redirect)){
+          const scoped=!!ctx?.rooms.length;
+          if(entry&&readMethod(req.method)&&(!access.authenticated&&!scoped||redirect)){
             const query=new URL(req.url,'http://local').searchParams;
             const familyEntry=familyLink||!!family&&query.get('family')===FAMILY_ROOM_ALIAS;
             const room=query.get('room');
-            if(!access.authenticated)return showInvite(res,false,room,familyEntry);
+            if(!access.authenticated&&!scoped)return showInvite(res,false,room,familyEntry);
+            if(!access.authenticated&&scoped&&!room&&!familyEntry)return redirectLobby(res,ctx.rooms[0],ctx.rooms[0]===FAMILY_ROOM_ALIAS);
             return redirectLobby(res,room,familyEntry);
           }
-          if(!access.authenticated)return rejectHttp(res,401,'Pilot invite required.');
+          if(!access.authenticated&&!scoped)return rejectHttp(res,401,'Pilot invite required.');
           if(path==='/health')return rejectHttp(res,404,'Unknown route.');
         }
       }
@@ -157,10 +218,14 @@ export async function createLocalServer(options={}) {
         req.body=await readAdmission(req);
         const room=route?.[1]&&[...active].find(r=>r.roomId===route[1]);
         if(route?.[1]&&!room)return rejectHttp(res,404,'Private room not found.');
+        const scope=viaAlias||room?.familyRoom?FAMILY_ROOM_ALIAS:room?.roomId;
+        const remembered=ctx?.rooms.includes(scope)&&req.body.code==='';
+        if(ctx&&!pilotAuthorized&&!ctx.rooms.includes(scope))return rejectHttp(res,403,'This device has no access to that room.');
         if(viaAlias||room?.familyRoom){
-          if(!family.acceptsPassword(req.body.code))return rejectHttp(res,403,'Incorrect family room password.');
+          if(!remembered&&!family.acceptsPassword(req.body.code))return rejectHttp(res,403,'Incorrect family room password.');
           try{checkContract(req.body.contract,CONTRACT);}
           catch(error){return rejectHttp(res,409,error.message);}
+          if(ctx)req.body.credential=accounts.bind(ctx,res,!remembered);
           let reservation;
           try{reservation=await joinFamily(req.body,room?.roomId);}
           catch(error){
@@ -173,7 +238,11 @@ export async function createLocalServer(options={}) {
         }
         // Colyseus normally checks the room code after reserving a seat, at WS
         // JOIN. Check it here too to avoid spending seats on invalid invites.
-        if(room&&!room.acceptsCode(req.body.code))return rejectHttp(res,403,'Incorrect private room code.');
+        if(!remembered&&room&&!room.acceptsCode(req.body.code))return rejectHttp(res,403,'Incorrect private room code.');
+        if(ctx){
+          req.body.credential=accounts.bind(ctx,res,!remembered);
+          if(remembered)req.body.code=room.rememberedProof;
+        }
       }else{
         if(!readMethod(req.method))return rejectHttp(res,405,'Method not allowed.');
         if(req.headers['transfer-encoding']||Number(req.headers['content-length'])>0)return rejectHttp(res,400,'Unexpected request body.');
@@ -190,7 +259,7 @@ export async function createLocalServer(options={}) {
     httpServer.listen(port,host,()=>{policy=accessPolicy(config,httpServer.address().port);httpServer.off('error',reject);resolve();});
   });
   return {server,httpServer,transport,rooms:active,config,url:`http://${host}:${httpServer.address().port}`,
-    close:async()=>{await server.gracefullyShutdown(false);httpServer.closeIdleConnections();}};
+    close:async()=>{await server.gracefullyShutdown(false);httpServer.closeIdleConnections();accounts?.store.close();}};
 }
 if(process.argv[1]===fileURLToPath(import.meta.url)){
   const local=await createLocalServer(configFromEnv(process.env));
