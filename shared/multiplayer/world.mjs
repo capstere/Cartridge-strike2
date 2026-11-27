@@ -13,7 +13,8 @@ export function prepareNetworkWorld(world){
   if(world.project?.mode==='new-level'){
     // Online worlds have already been selected from the published map registry.
     for(const zone of [...world.data.rooms,...world.data.corridors])zone.publicName=zone.name;
-    world.tactical.patrolPoints=world.project.navHints.filter(hint=>hint.role==='patrol').map(hint=>{
+    // Reference factories supply full-height patrol points in their compiled world.
+    if(!world.referenceId)world.tactical.patrolPoints=world.project.navHints.filter(hint=>hint.role==='patrol').map(hint=>{
       const [x,z]=hint.points.at(-1);
       return {x,z};
     });

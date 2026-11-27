@@ -48,7 +48,8 @@ export function advanceGrenade(g, world, gravity, dt) {
     g.vy = (g.vy - 1.6 * dot * n.y) * .72;
     g.vz = (g.vz - 1.6 * dot * n.z) * .72;
   } else {g.x += displacement.x; g.y += displacement.y; g.z += displacement.z;}
-  if (g.y < g.radius) {g.y = g.radius; g.vy = Math.abs(g.vy) * .35; g.vx *= .82; g.vz *= .82;}
+  const floor = (world.lowerSurface?.(g.x,g.z) ?? 0) + g.radius;
+  if (g.y < floor) {g.y = floor; g.vy = Math.abs(g.vy) * .35; g.vx *= .82; g.vz *= .82;}
   return !!hit;
 }
 

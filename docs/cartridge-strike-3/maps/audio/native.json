@@ -1,0 +1,220 @@
+{
+  "browser": "156.0.8078.79",
+  "device": "Raspberry Pi 5",
+  "pcm": "Chromium, before device output",
+  "profiles": [
+    {
+      "coarse": false,
+      "rows": [
+        {
+          "mapId": "meltem",
+          "voices": 11,
+          "banks": 8,
+          "bytes": 16325124,
+          "takes": 13,
+          "rates": [
+            32000
+          ],
+          "fixed": 10,
+          "spotBanks": [
+            "a_gull",
+            "a_bell",
+            "a_goats",
+            "a_gust"
+          ],
+          "errors": [],
+          "maxSimultaneous": 14,
+          "afterMute": {
+            "voices": 0,
+            "banks": 0,
+            "bytes": 0
+          },
+          "afterImmediateExit": {
+            "voices": 0,
+            "banks": 0,
+            "bytes": 0
+          }
+        },
+        {
+          "mapId": "embruns",
+          "voices": 6,
+          "banks": 7,
+          "bytes": 14464328,
+          "takes": 13,
+          "rates": [
+            32000
+          ],
+          "fixed": 5,
+          "spotBanks": [
+            "a_gull",
+            "a_rigging",
+            "a_creak",
+            "a_buoybell",
+            "a_foghorn"
+          ],
+          "errors": [],
+          "maxSimultaneous": 9,
+          "afterMute": {
+            "voices": 0,
+            "banks": 0,
+            "bytes": 0
+          },
+          "afterImmediateExit": {
+            "voices": 0,
+            "banks": 0,
+            "bytes": 0
+          }
+        }
+      ],
+      "switch": {
+        "old": {
+          "voices": 0,
+          "banks": 0,
+          "bytes": 0
+        },
+        "current": {
+          "voices": 6,
+          "banks": 7,
+          "bytes": 14464328
+        },
+        "currentMap": "embruns",
+        "afterReset": {
+          "voices": 0,
+          "banks": 0,
+          "bytes": 0
+        }
+      }
+    },
+    {
+      "coarse": true,
+      "rows": [
+        {
+          "mapId": "meltem",
+          "voices": 11,
+          "banks": 8,
+          "bytes": 11667836,
+          "takes": 11,
+          "rates": [
+            24000
+          ],
+          "fixed": 10,
+          "spotBanks": [
+            "a_gull",
+            "a_bell",
+            "a_goats",
+            "a_gust"
+          ],
+          "errors": [],
+          "maxSimultaneous": 14,
+          "afterMute": {
+            "voices": 0,
+            "banks": 0,
+            "bytes": 0
+          },
+          "afterImmediateExit": {
+            "voices": 0,
+            "banks": 0,
+            "bytes": 0
+          }
+        },
+        {
+          "mapId": "embruns",
+          "voices": 6,
+          "banks": 7,
+          "bytes": 9752516,
+          "takes": 11,
+          "rates": [
+            24000
+          ],
+          "fixed": 5,
+          "spotBanks": [
+            "a_gull",
+            "a_rigging",
+            "a_creak",
+            "a_buoybell",
+            "a_foghorn"
+          ],
+          "errors": [],
+          "maxSimultaneous": 9,
+          "afterMute": {
+            "voices": 0,
+            "banks": 0,
+            "bytes": 0
+          },
+          "afterImmediateExit": {
+            "voices": 0,
+            "banks": 0,
+            "bytes": 0
+          }
+        }
+      ],
+      "switch": {
+        "old": {
+          "voices": 0,
+          "banks": 0,
+          "bytes": 0
+        },
+        "current": {
+          "voices": 6,
+          "banks": 7,
+          "bytes": 9752516
+        },
+        "currentMap": "embruns",
+        "afterReset": {
+          "voices": 0,
+          "banks": 0,
+          "bytes": 0
+        }
+      }
+    }
+  ],
+  "samples": [
+    {
+      "label": "waterfront",
+      "x": -33,
+      "z": 12,
+      "roof": null,
+      "rms": {
+        "bed": 0.029267906628136386,
+        "waveLeft": 8.779380058889899e-19,
+        "waveRight": 0.014337815705087282,
+        "mix": 0.03140125938458598
+      },
+      "decodedBytes": 16325124
+    },
+    {
+      "label": "inland",
+      "x": 20,
+      "z": 0,
+      "roof": null,
+      "rms": {
+        "bed": 0.004643444592065879,
+        "waveLeft": 0.0010585027281767839,
+        "waveRight": 0.00012169095939619183,
+        "mix": 0.0077861362031904115
+      },
+      "decodedBytes": 16325124
+    },
+    {
+      "label": "underQuayRoof",
+      "x": -27,
+      "z": 16,
+      "roof": "volume-431",
+      "rms": {
+        "bed": 0.015426236233655286,
+        "waveLeft": 0.00994633225943175,
+        "waveRight": 0.0037815893395533504,
+        "mix": 0.018869797818968997
+      },
+      "decodedBytes": 16325124
+    }
+  ],
+  "date": "2026-11-27T14:48:46.907966+00:00",
+  "base": "62d3ea0d490442f863616e9ae6d05584201b89e4",
+  "testedBlobs": {
+    "src/fps/audio.mjs": "6de2753da5a05919a0f3ae131ea0922b59201299",
+    "src/fps/coastal-ambience.mjs": "4a68acdfefac74b448f5b266817e34d0dbdce2f2",
+    "src/fps/coastal-recordings.mjs": "54448b080652e435ebbcd5f8df402b67efbdaf38",
+    "docs/cartridge-strike-3/maps/audio/native-probe.mjs": "a9f289ea549f4e19abc6a71a4c35672872cc4e1e"
+  }
+}

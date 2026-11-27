@@ -1,0 +1,499 @@
+{
+  "notes": "Original Riposte MP3 edits. Samples copied byte for byte. Original recordings are CC0 1.0. Paths preserve the donor source filenames.",
+  "sources": {
+    "fs-185225": {
+      "creator": "deleted_user_3277771",
+      "license": "CC0 1.0",
+      "url": "https://freesound.org/people/deleted_user_3277771/sounds/185225/"
+    },
+    "fs-690510": {
+      "creator": "CalebLopez",
+      "license": "CC0 1.0",
+      "url": "https://freesound.org/people/CalebLopez/sounds/690510/"
+    },
+    "fs-690512": {
+      "creator": "CalebLopez",
+      "license": "CC0 1.0",
+      "url": "https://freesound.org/people/CalebLopez/sounds/690512/"
+    },
+    "fs-153580": {
+      "creator": "Thejack288",
+      "license": "CC0 1.0",
+      "url": "https://freesound.org/people/Thejack288/sounds/153580/"
+    },
+    "fs-131925": {
+      "creator": "felix.blume",
+      "license": "CC0 1.0",
+      "url": "https://freesound.org/people/felix.blume/sounds/131925/"
+    },
+    "fs-462462": {
+      "creator": "Soojay",
+      "license": "CC0 1.0",
+      "url": "https://freesound.org/people/Soojay/sounds/462462/"
+    },
+    "fs-131924": {
+      "creator": "felix.blume",
+      "license": "CC0 1.0",
+      "url": "https://freesound.org/people/felix.blume/sounds/131924/"
+    },
+    "fs-457956": {
+      "creator": "dan.pugsley",
+      "license": "CC0 1.0",
+      "url": "https://freesound.org/people/dan.pugsley/sounds/457956/"
+    },
+    "amb-bsb": {
+      "creator": "Joseph Sardin (BigSoundBank)",
+      "license": "CC0 1.0",
+      "url": "https://bigsoundbank.com"
+    },
+    "amb-richardemoore": {
+      "creator": "richardemoore",
+      "license": "CC0 1.0",
+      "url": "https://freesound.org/people/richardemoore/sounds/260263/"
+    },
+    "amb-blume-herbe": {
+      "creator": "Félix Blume",
+      "license": "CC0 1.0",
+      "url": "https://freesound.org/people/felix.blume/sounds/146436/"
+    },
+    "amb-sojan": {
+      "creator": "Sojan",
+      "license": "CC0 1.0",
+      "url": "https://freesound.org/s/353233/"
+    },
+    "amb-craigsmith": {
+      "creator": "craigsmith",
+      "license": "CC0 1.0",
+      "url": "https://freesound.org/people/craigsmith/sounds/483355/"
+    },
+    "amb-dowd": {
+      "creator": "Elwood P. Dowd",
+      "license": "CC0 1.0",
+      "url": "https://commons.wikimedia.org/"
+    },
+    "amb-soojay": {
+      "creator": "Soojay",
+      "license": "CC0 1.0",
+      "url": "https://freesound.org/s/462462/"
+    },
+    "amb-squashy555": {
+      "creator": "squashy555",
+      "license": "CC0 1.0",
+      "url": "https://freesound.org/s/353416/"
+    },
+    "amb-genghisattenborough": {
+      "creator": "genghisattenborough",
+      "license": "CC0 1.0",
+      "url": "https://freesound.org/s/744592/"
+    },
+    "amb-kyles-goelands": {
+      "creator": "kyles",
+      "license": "CC0 1.0",
+      "url": "https://freesound.org/s/637813/"
+    },
+    "amb-kenney": {
+      "creator": "Kenney (www.kenney.nl)",
+      "license": "CC0 1.0",
+      "url": "https://github.com/series-ai/jam-ready-assets"
+    },
+    "amb-biofonik": {
+      "creator": "Biofonik",
+      "license": "CC0 1.0",
+      "url": "https://freesound.org/s/851906/"
+    }
+  },
+  "takes": [
+    {
+      "map": "meltem",
+      "take": "a_bed",
+      "donor": "frontline/source/assets/sfx/amb_meltem/a_bed.mp3",
+      "file": "assets/fps/maps/meltem/sea.mp3",
+      "bytes": 273285,
+      "sha256": "fc419be87608483c6e4ded692697b37d8bf1e0c9e66b7fc47cba841f22fbfc43",
+      "sources": [
+        {
+          "source": "fs-185225",
+          "originalFile": "freesound/185225.mp3"
+        },
+        {
+          "source": "fs-690510",
+          "originalFile": "freesound/690510.mp3"
+        },
+        {
+          "source": "fs-690512",
+          "originalFile": "freesound/690512.mp3"
+        }
+      ]
+    },
+    {
+      "map": "meltem",
+      "take": "a_bell",
+      "donor": "frontline/source/assets/sfx/amb_meltem/a_bell.mp3",
+      "file": "assets/fps/maps/meltem/audio/a_bell.mp3",
+      "bytes": 35541,
+      "sha256": "781e951872f2c5fbdc2ecc35d6454ec901a38035ddfd05ce0b3d16ed13075dc9",
+      "sources": [
+        {
+          "source": "fs-153580",
+          "originalFile": "freesound/153580.mp3"
+        }
+      ]
+    },
+    {
+      "map": "meltem",
+      "take": "a_cicadas",
+      "donor": "frontline/source/assets/sfx/amb_meltem/a_cicadas.mp3",
+      "file": "assets/fps/maps/meltem/audio/a_cicadas.mp3",
+      "bytes": 70497,
+      "sha256": "6343a9db39aa2e39ea72ffde1ee32e28abd65f75e45caa4199bdcffbc6c20c0f",
+      "sources": [
+        {
+          "source": "fs-690510",
+          "originalFile": "freesound/690510.mp3"
+        }
+      ]
+    },
+    {
+      "map": "meltem",
+      "take": "a_goats-1",
+      "donor": "frontline/source/assets/sfx/amb_meltem/a_goats-1.mp3",
+      "file": "assets/fps/maps/meltem/audio/a_goats-1.mp3",
+      "bytes": 34533,
+      "sha256": "e263d54779362219f03b53b2a2cd4e45dfe4e68ed939aacadc16cd1246c4e1f4",
+      "sources": [
+        {
+          "source": "fs-131925",
+          "originalFile": "freesound/131925.mp3"
+        }
+      ]
+    },
+    {
+      "map": "meltem",
+      "take": "a_goats-2",
+      "donor": "frontline/source/assets/sfx/amb_meltem/a_goats-2.mp3",
+      "file": "assets/fps/maps/meltem/audio/a_goats-2.mp3",
+      "bytes": 34425,
+      "sha256": "904e45afa457542aa4c2e9eb456c47ee52feb1a6835067680afb7d9eec9ffdf1",
+      "sources": [
+        {
+          "source": "fs-131925",
+          "originalFile": "freesound/131925.mp3"
+        }
+      ]
+    },
+    {
+      "map": "meltem",
+      "take": "a_gull-1",
+      "donor": "frontline/source/assets/sfx/amb_meltem/a_gull-1.mp3",
+      "file": "assets/fps/maps/meltem/audio/a_gull-1.mp3",
+      "bytes": 18945,
+      "sha256": "b0ecdaae8201703cf8f8720f192fe300d5489fcf5474a41a8908d82019456871",
+      "sources": [
+        {
+          "source": "fs-462462",
+          "originalFile": "freesound/462462.mp3"
+        }
+      ]
+    },
+    {
+      "map": "meltem",
+      "take": "a_gull-2",
+      "donor": "frontline/source/assets/sfx/amb_meltem/a_gull-2.mp3",
+      "file": "assets/fps/maps/meltem/audio/a_gull-2.mp3",
+      "bytes": 19089,
+      "sha256": "f6fe9ba96643ed39c2b318d25bdf3eef48dc5f12878c0cad4dcfd4ba6dfe4845",
+      "sources": [
+        {
+          "source": "fs-462462",
+          "originalFile": "freesound/462462.mp3"
+        }
+      ]
+    },
+    {
+      "map": "meltem",
+      "take": "a_gull-3",
+      "donor": "frontline/source/assets/sfx/amb_meltem/a_gull-3.mp3",
+      "file": "assets/fps/maps/meltem/audio/a_gull-3.mp3",
+      "bytes": 19377,
+      "sha256": "44e9c20f6b313340efa3a238f7f7e54ed5aa028f516e948e36645781f0c79573",
+      "sources": [
+        {
+          "source": "fs-462462",
+          "originalFile": "freesound/462462.mp3"
+        }
+      ]
+    },
+    {
+      "map": "meltem",
+      "take": "a_gull-4",
+      "donor": "frontline/source/assets/sfx/amb_meltem/a_gull-4.mp3",
+      "file": "assets/fps/maps/meltem/audio/a_gull-4.mp3",
+      "bytes": 18765,
+      "sha256": "f325d9a5d9fd91ace89e6a1023fa1e0399da3af6d8c2c7dc66e7b8f7dcdde190",
+      "sources": [
+        {
+          "source": "fs-462462",
+          "originalFile": "freesound/462462.mp3"
+        }
+      ]
+    },
+    {
+      "map": "meltem",
+      "take": "a_gust-1",
+      "donor": "frontline/source/assets/sfx/amb_meltem/a_gust-1.mp3",
+      "file": "assets/fps/maps/meltem/audio/a_gust-1.mp3",
+      "bytes": 18693,
+      "sha256": "68c4032e29f354043e3c24852d07fb3d7de169d75f5afc40c8233950067a668c",
+      "sources": [
+        {
+          "source": "fs-690512",
+          "originalFile": "freesound/690512.mp3"
+        }
+      ]
+    },
+    {
+      "map": "meltem",
+      "take": "a_gust-2",
+      "donor": "frontline/source/assets/sfx/amb_meltem/a_gust-2.mp3",
+      "file": "assets/fps/maps/meltem/audio/a_gust-2.mp3",
+      "bytes": 18729,
+      "sha256": "422cea76ab7450210402ff7e1d5f9ea21c3f2ac021a0fc9c9f049b59130efd65",
+      "sources": [
+        {
+          "source": "fs-690512",
+          "originalFile": "freesound/690512.mp3"
+        }
+      ]
+    },
+    {
+      "map": "meltem",
+      "take": "a_mill",
+      "donor": "frontline/source/assets/sfx/amb_meltem/a_mill.mp3",
+      "file": "assets/fps/maps/meltem/audio/a_mill.mp3",
+      "bytes": 106569,
+      "sha256": "3d016c2599f32a816131d0106949ad7508db60c76a92973083f18a64d0aaaedb",
+      "sources": [
+        {
+          "source": "fs-131924",
+          "originalFile": "freesound/131924.mp3"
+        }
+      ]
+    },
+    {
+      "map": "meltem",
+      "take": "a_waves",
+      "donor": "frontline/source/assets/sfx/amb_meltem/a_waves.mp3",
+      "file": "assets/fps/maps/meltem/audio/a_waves.mp3",
+      "bytes": 69561,
+      "sha256": "b1f3efce3996394cbac83880e7408c520415b79d139577ff71882d6130b4d56e",
+      "sources": [
+        {
+          "source": "fs-457956",
+          "originalFile": "freesound/457956.mp3"
+        }
+      ]
+    },
+    {
+      "map": "embruns",
+      "take": "a_bed",
+      "donor": "frontline/source/assets/sfx/amb_embruns/a_bed.mp3",
+      "file": "assets/fps/maps/embruns/audio/a_bed.mp3",
+      "bytes": 355941,
+      "sha256": "0881d007ecbac5881325c9c01fc4c75da8fc3f1ed6f62ce5c8cebc15055aa97f",
+      "sources": [
+        {
+          "source": "amb-bsb",
+          "originalFile": "moodygame/water-pontoon-1444-loop.ogg"
+        },
+        {
+          "source": "amb-richardemoore",
+          "originalFile": "tidewater/pier_lap.ogg"
+        },
+        {
+          "source": "amb-bsb",
+          "originalFile": "quiet-page/ocean.ogg"
+        },
+        {
+          "source": "amb-blume-herbe",
+          "originalFile": "stendhal/weather/wind.flac"
+        }
+      ]
+    },
+    {
+      "map": "embruns",
+      "take": "a_buoybell-1",
+      "donor": "frontline/source/assets/sfx/amb_embruns/a_buoybell-1.mp3",
+      "file": "assets/fps/maps/embruns/audio/a_buoybell-1.mp3",
+      "bytes": 26109,
+      "sha256": "874182102c21950008eee6d71ca290ccf71a2c8ebc7c14a3cebc9995388e94d1",
+      "sources": [
+        {
+          "source": "amb-sojan",
+          "originalFile": "moodygame/ship-bell-353233.ogg"
+        }
+      ]
+    },
+    {
+      "map": "embruns",
+      "take": "a_buoybell-2",
+      "donor": "frontline/source/assets/sfx/amb_embruns/a_buoybell-2.mp3",
+      "file": "assets/fps/maps/embruns/audio/a_buoybell-2.mp3",
+      "bytes": 26073,
+      "sha256": "5bea8a445cd285442b80240bd2dfa80720d9065809ca7edf9980c6fe49838fa2",
+      "sources": [
+        {
+          "source": "amb-sojan",
+          "originalFile": "moodygame/ship-bell-353233.ogg"
+        }
+      ]
+    },
+    {
+      "map": "embruns",
+      "take": "a_creak-1",
+      "donor": "frontline/source/assets/sfx/amb_embruns/a_creak-1.mp3",
+      "file": "assets/fps/maps/embruns/audio/a_creak-1.mp3",
+      "bytes": 18981,
+      "sha256": "201d0bfe105e27a744d484c13a3bfe6e4813d2eb1e649c5f05573081bf4a6b09",
+      "sources": [
+        {
+          "source": "amb-craigsmith",
+          "originalFile": "moodygame/ship-creak-483355-loop.ogg"
+        }
+      ]
+    },
+    {
+      "map": "embruns",
+      "take": "a_creak-2",
+      "donor": "frontline/source/assets/sfx/amb_embruns/a_creak-2.mp3",
+      "file": "assets/fps/maps/embruns/audio/a_creak-2.mp3",
+      "bytes": 26397,
+      "sha256": "f8b9257d68378df74978d4de24abcbc1eb2fff8f17ff960601082b51bdb3df81",
+      "sources": [
+        {
+          "source": "amb-craigsmith",
+          "originalFile": "moodygame/pulley-creak-438350.ogg"
+        }
+      ]
+    },
+    {
+      "map": "embruns",
+      "take": "a_foghorn",
+      "donor": "frontline/source/assets/sfx/amb_embruns/a_foghorn.mp3",
+      "file": "assets/fps/maps/embruns/audio/a_foghorn.mp3",
+      "bytes": 25209,
+      "sha256": "7e7b872b94ae3b463a28a53045806e6f946161eb183c5d6b4e3b3b02970c3341",
+      "sources": [
+        {
+          "source": "amb-dowd",
+          "originalFile": "hiddenharbours/foghorn.wav"
+        }
+      ]
+    },
+    {
+      "map": "embruns",
+      "take": "a_gull-1",
+      "donor": "frontline/source/assets/sfx/amb_embruns/a_gull-1.mp3",
+      "file": "assets/fps/maps/embruns/audio/a_gull-1.mp3",
+      "bytes": 28485,
+      "sha256": "afaf9ff3fc8605278469d5cd19a29ad2ad24cef5d711d3cc2dd7c892bb1e172d",
+      "sources": [
+        {
+          "source": "amb-soojay",
+          "originalFile": "antum/sounds_seagulls.flac"
+        }
+      ]
+    },
+    {
+      "map": "embruns",
+      "take": "a_gull-2",
+      "donor": "frontline/source/assets/sfx/amb_embruns/a_gull-2.mp3",
+      "file": "assets/fps/maps/embruns/audio/a_gull-2.mp3",
+      "bytes": 29781,
+      "sha256": "9bd983072b1d4f83ceddea58c835c65fe14de13d013e3eb14324a9e48c6cdeb8",
+      "sources": [
+        {
+          "source": "amb-squashy555",
+          "originalFile": "antum/sounds_seagull_01.flac"
+        }
+      ]
+    },
+    {
+      "map": "embruns",
+      "take": "a_gull-3",
+      "donor": "frontline/source/assets/sfx/amb_embruns/a_gull-3.mp3",
+      "file": "assets/fps/maps/embruns/audio/a_gull-3.mp3",
+      "bytes": 34605,
+      "sha256": "303aa80eda63c485a7c1f5e72cdf47ef6da2ffaf46965353ec74337a9c2d1686",
+      "sources": [
+        {
+          "source": "amb-genghisattenborough",
+          "originalFile": "abyssonata/gull/744592.mp3"
+        }
+      ]
+    },
+    {
+      "map": "embruns",
+      "take": "a_gull-4",
+      "donor": "frontline/source/assets/sfx/amb_embruns/a_gull-4.mp3",
+      "file": "assets/fps/maps/embruns/audio/a_gull-4.mp3",
+      "bytes": 34425,
+      "sha256": "f1288456ef6fbbd0053f596aac0fea4b4e700f906621dfd065379e77e1394d65",
+      "sources": [
+        {
+          "source": "amb-kyles-goelands",
+          "originalFile": "abyssonata/gull/637813.mp3"
+        }
+      ]
+    },
+    {
+      "map": "embruns",
+      "take": "a_rigging-1",
+      "donor": "frontline/source/assets/sfx/amb_embruns/a_rigging-1.mp3",
+      "file": "assets/fps/maps/embruns/audio/a_rigging-1.mp3",
+      "bytes": 16317,
+      "sha256": "ba31d691196ac9b3cf39e587860143ec64184f6753ffb6c98c806c5b0c675a20",
+      "sources": [
+        {
+          "source": "amb-kenney",
+          "originalFile": "kenney/kenney-impact-sounds/audio/Audio/impactMetal_light_000.ogg"
+        },
+        {
+          "source": "amb-bsb",
+          "originalFile": "moodygame/wind-masts-2443-loop.ogg"
+        }
+      ]
+    },
+    {
+      "map": "embruns",
+      "take": "a_rigging-2",
+      "donor": "frontline/source/assets/sfx/amb_embruns/a_rigging-2.mp3",
+      "file": "assets/fps/maps/embruns/audio/a_rigging-2.mp3",
+      "bytes": 16785,
+      "sha256": "c9b7c6ddc1da0af26ac70ac8b6ad15c51a5d1a5b27191793130c1dd36b0c4c04",
+      "sources": [
+        {
+          "source": "amb-kenney",
+          "originalFile": "kenney/kenney-impact-sounds/audio/Audio/impactMetal_light_000.ogg"
+        },
+        {
+          "source": "amb-bsb",
+          "originalFile": "moodygame/wind-masts-2443-loop.ogg"
+        }
+      ]
+    },
+    {
+      "map": "embruns",
+      "take": "a_waves",
+      "donor": "frontline/source/assets/sfx/amb_embruns/a_waves.mp3",
+      "file": "assets/fps/maps/embruns/audio/a_waves.mp3",
+      "bytes": 43101,
+      "sha256": "2e52f2e91746218e91e4179498dc510676671f63d095113d6e727fa891cb7d20",
+      "sources": [
+        {
+          "source": "amb-biofonik",
+          "originalFile": "moodygame/water-wall-851906-loop.ogg"
+        }
+      ]
+    }
+  ]
+}

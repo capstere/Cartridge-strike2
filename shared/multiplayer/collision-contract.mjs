@@ -7,6 +7,10 @@ const canonical=value=>Array.isArray(value)?value.map(canonical):value&&typeof v
   Object.fromEntries(Object.keys(value).sort().filter(k=>value[k]!==undefined&&typeof value[k]!=='function').map(k=>[k,canonical(value[k])])):typeof value==='number'?Number(value.toFixed(9)):value;
 export function collisionContract(world){
   const d=world.data;
+  if(world.referenceId){
+    const {version,sourceId,bounds,solids,ramps,holes,water,rayProps,nav}=world.project.referenceMap;
+    return JSON.stringify(canonical({version:2,sourceVersion:version,sourceId,bounds,solids,ramps,holes,water,rayProps,nav,anchors:world.anchors}));
+  }
   return JSON.stringify(canonical({version:1,boxes:world.staticBoxes,surfaces:world.description.surfaces,
     floorPolygons:d.floorPolygons,excludedRooms:d.excludedRooms,rooms:d.rooms,obstacles:d.obstacles,
     doors:d.doors,anchors:world.anchors}));

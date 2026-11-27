@@ -55,19 +55,19 @@ export function respawnPoint(g,a){
  const living=aliveBodies(g).filter(o=>o!==a);
  let best=null,bestScore=-Infinity;
  for(const p of candidates){
-  if(g.world.canOccupy&&!g.world.canOccupy(p.x,p.z,a.radius+.015,a.height,0))continue;
+  if(g.world.canOccupy&&!g.world.canOccupy(p.x,p.z,a.radius+.015,a.height,p.y??0))continue;
   if(living.some(o=>dist(o,p)<(o.radius||.2)+a.radius+.12))continue;
   if(p.frontline&&living.some(o=>o.team&&o.team!==a.team&&dist(o,p)<7))continue;
   const control=activeControl(g);
   let score=-dist(p,home)*.08-(control?dist(p,control)*.22:0);
   for(const e of living.filter(o=>o.team&&o.team!==a.team)){
    // Visibility cannot affect this score at 18 m or farther.
-   const d=dist(e,p),visible=d<18&&g.world.segmentClear({...p,y:1.4},eye(e),{vision:true});
+   const d=dist(e,p),visible=d<18&&g.world.segmentClear({...p,y:(p.y??0)+1.4},eye(e),{vision:true});
    score+=Math.min(d,22)*.025-(visible?Math.max(0,18-d)*1.1:0);
   }
   if(score>bestScore){best=p;bestScore=score;}
  }
- return best?{x:best.x,y:0,z:best.z,yaw:home.yaw??0}:null;
+ return best?{x:best.x,y:best.y??0,z:best.z,yaw:home.yaw??0}:null;
 }
 export function respawnActor(g,a){
  const p=respawnPoint(g,a);if(!p)return false; // retry next tick, never overlap another capsule
@@ -104,9 +104,9 @@ export function sendRadio(g,id,actor=g.player){
  const phrase=RADIO.find(p=>p.id===id),s=g.state;
  if(!phrase||!actor?.alive||s.paused||!['active','buy'].includes(s.phase)||s.time-s.radioAt<2)return false;
  s.radioAt=s.time;const origin=pos(actor),back=id==='fallback';
- let target={x:origin.x-Math.sin(actor.yaw)*(back?-4:6),y:0,z:origin.z-Math.cos(actor.yaw)*(back?-4:6)};
+ let target={x:origin.x-Math.sin(actor.yaw)*(back?-4:6),y:origin.y??0,z:origin.z-Math.cos(actor.yaw)*(back?-4:6)};
  if(!['go','incoming','fallback'].includes(id))target=origin;
- const node=g.world.navigation?.nearest(target);if(node)target={x:node.x,y:0,z:node.z};else target=origin;
+ const node=g.world.navigation?.nearest(target);if(node)target={x:node.x,y:node.y??0,z:node.z};else target=origin;
  s.orders[actor.team]={id,point:target,issuerId:actor.id,until:s.time+8};
  const event=g.emit('radio',actor,{command:id,text:phrase.text,global:true});
  s.radioLog.push({text:phrase.text,at:s.time,actor:actor.name});s.radioLog=s.radioLog.slice(-6);return event;
@@ -159,8 +159,9 @@ export function updateRockets(g,dt,rayActor){
    const d=rayActor(from,dir,a,travel);if(d!==null&&d<=travel){travel=d;hit=a;}
   }
   r.x+=dir.x*travel;r.y+=dir.y*travel;r.z+=dir.z*travel;
-  if(wall||hit||g.state.time>=r.until||r.y<.02){
-   const origin={x:r.x-dir.x*.10,y:Math.max(.08,r.y-dir.y*.10),z:r.z-dir.z*.10};
+  const floor=g.world.lowerSurface?.(r.x,r.z)??0;
+  if(wall||hit||g.state.time>=r.until||r.y<floor+.02){
+   const origin={x:r.x-dir.x*.10,y:Math.max(floor+.08,r.y-dir.y*.10),z:r.z-dir.z*.10};
    const owner=projectileOwner?projectileOwner.actor:g.actors.find(a=>a.id===r.ownerId),radius=4.6;
    const {ownerId,ownerLifeId,team}=projectileOwner??r,ownerName=projectileOwner?projectileOwner.ownerName:owner?.name;
    g.emit('rocket-explosion',null,{...origin,ownerId,team,radius,...(g.config.networkSlice?{rocketId:r.id,ownerLifeId,ownerName,flightFrom:from}:{})});
@@ -180,18 +181,18 @@ function initializeWanderers(g){
  if(!g.config.wanderers||!nodes.length)return;
  const start=g.world.navigation.nearest(g.world.anchors.analysts[0]);
  const roomNodes=new Map();
- for(const n of nodes){const room=g.world.roomAt(n.x,n.z);if(!room||roomNodes.has(room.id)||!g.world.canOccupy(n.x,n.z,.2,.86))continue;if(!g.world.findPath(start,n).length)continue;roomNodes.set(room.id,n);}
+ for(const n of nodes){const room=g.world.roomAt(n.x,n.z);if(!room||roomNodes.has(room.id)||!g.world.canOccupy(n.x,n.z,.2,.86,n.y??0))continue;if(!g.world.findPath(start,n).length)continue;roomNodes.set(room.id,n);}
  g.wanderNodes=[...roomNodes.values()];
  const points=[...g.wanderNodes];
  for(let i=0;i<Math.min(14,points.length);i++){
-  const p=points.splice(Math.floor(random()*points.length),1)[0];g.state.wanderers.push({id:`dwarf-${i}`,name:`Dwarf ${i+1}`,kind:'dwarf',hp:65,armor:0,alive:true,deaths:0,deathAt:null,respawnAt:null,spawn:{x:p.x,z:p.z},x:p.x,y:0,z:p.z,yaw:random()*6.28,height:.86,radius:.16,path:[],nextPlan:random()*4,moving:0,steps:0,variant:i%5});
+  const p=points.splice(Math.floor(random()*points.length),1)[0];g.state.wanderers.push({id:`dwarf-${i}`,name:`Dwarf ${i+1}`,kind:'dwarf',hp:65,armor:0,alive:true,deaths:0,deathAt:null,respawnAt:null,spawn:{x:p.x,y:p.y??0,z:p.z},x:p.x,y:p.y??0,z:p.z,yaw:random()*6.28,height:.86,radius:.16,path:[],nextPlan:random()*4,moving:0,steps:0,variant:i%5});
  }
 }
 function updateWanderers(g,dt){
  const rand=g.wanderRandom,s=g.state;if(!rand)return;
  for(const a of s.wanderers||[]){
   if(!a.alive){
-   if(isEndless(g)&&s.time>=a.respawnAt&&g.world.canOccupy(a.spawn.x,a.spawn.z,a.radius,a.height)&&!g.actors.some(o=>o.alive&&dist(o,a.spawn)<.6))Object.assign(a,a.spawn,{y:0,hp:65,alive:true,deathAt:null,respawnAt:null,path:[],nextPlan:s.time+1,moving:0,steps:0});
+   if(isEndless(g)&&s.time>=a.respawnAt&&g.world.canOccupy(a.spawn.x,a.spawn.z,a.radius,a.height,a.spawn.y??0)&&!g.actors.some(o=>o.alive&&dist(o,a.spawn)<.6))Object.assign(a,a.spawn,{y:a.spawn.y??0,hp:65,alive:true,deathAt:null,respawnAt:null,path:[],nextPlan:s.time+1,moving:0,steps:0});
    else continue;
   }
   if(!a.path.length&&s.time>=a.nextPlan){

@@ -1,0 +1,103 @@
+{
+  "scenario": "Normal FPS setup with ?level=meltem, select Endless, enter, walk, run, shoot, reload, return to lobby.",
+  "dateUtc": "2026-11-27T12:41:33.286Z",
+  "sourceCommit": "1e60ef4c461ec4359461a84d56a30bdd149c982a",
+  "recordedHead": "fa9424b2e2fd64da4ba2522a8456b6677c79d463",
+  "sourceNote": "The measured worktree contained the render-root fix subsequently committed in sourceCommit.",
+  "repetitions": 1,
+  "machine": "Raspberry Pi 5 Model B Rev 1.1",
+  "chromium": "156.0.8078.79",
+  "node": "v26.13.1",
+  "thermalC": [
+    44.65,
+    46.3
+  ],
+  "throttled": [
+    "throttled=0x0",
+    "throttled=0x0"
+  ],
+  "cache": "new browser context",
+  "startupMs": {
+    "menuVisible": 1486,
+    "startButton": 2632.600000023842,
+    "playable": 14510.399999976158
+  },
+  "identity": {
+    "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+    "buffer": [
+      493,
+      228
+    ],
+    "internalRenderBuffer": [
+      493,
+      228
+    ],
+    "viewport": [
+      844,
+      390
+    ],
+    "ratio": 0.5849999785423279,
+    "dpr": 0.6499999761581421,
+    "baseFov": 76,
+    "fov": 76,
+    "map": "lvl-meltem",
+    "mode": "endless",
+    "quality": "low",
+    "actors": 10,
+    "residents": 0,
+    "weapon": "ar47",
+    "phase": "active",
+    "shaderWarmupMs": 882.5
+  },
+  "frameIntervalMs": {
+    "n": 485,
+    "p50": 19.8,
+    "p95": 25.2,
+    "p99": 39,
+    "max": 153.7,
+    "over33": 6,
+    "over50": 1,
+    "over100": 1
+  },
+  "renderSubmissionMs": {
+    "n": 486,
+    "p50": 17,
+    "p95": 19.8,
+    "p99": 29.9,
+    "max": 148,
+    "over33": 4,
+    "over50": 1,
+    "over100": 1
+  },
+  "drawCalls": {
+    "p50": 512,
+    "p95": 579,
+    "max": 607
+  },
+  "submittedTriangles": {
+    "p50": 471579,
+    "p95": 513630,
+    "max": 519671
+  },
+  "transferredBytesAtEndOfPacing": 36222825,
+  "playerInput": {
+    "actionFrames": 205,
+    "elapsedMs": 5825.9,
+    "displacementM": 4.587,
+    "magazine": [
+      30,
+      29,
+      28,
+      27,
+      30
+    ],
+    "audioEvents": {
+      "step": 6,
+      "shot": 3
+    }
+  },
+  "returnedToLobby": true,
+  "pageErrors": [],
+  "fullObservationSha256": "8546f9f376d6f4adedea5091c1141ec6a76996bf2b5b39bd919fa397b88c0160",
+  "stillSha256": "198dbb02fd5a6b872dff385a7894312317f85bb29e9ac248f464d6f3db2695bf"
+}
