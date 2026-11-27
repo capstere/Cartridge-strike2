@@ -60,7 +60,12 @@ export function mountAccountProfile(root) {
     const view = element('div'), notice = element('p');
     notice.setAttribute('role','status');
     box.append(view, notice); root.append(box);
-    let data, busy = false;
+    let data, busy = false, followed = false;
+    const shared = /^#public-matches(?:\/([A-Za-z0-9_-]{1,32}))?$/.exec(location.hash);
+    function followShared() {
+      if (followed || !shared || !data?.user || !data.features?.publicMatches) return false;
+      followed = true; publicMatches(shared[1]); return true;
+    }
     const actions = (...controls) => {
       const row = element('div', undefined, 'account-actions'); row.append(...controls); return row;
     };
@@ -85,7 +90,7 @@ export function mountAccountProfile(root) {
           const code = result.recoveryCode;
           delete result.recoveryCode;
           showCode(code);
-        } else message(path.endsWith('/logout') ? 'Signed out on this device.' : 'Saved.');
+        } else if (!followShared()) message(path.endsWith('/logout') ? 'Signed out on this device.' : 'Saved.');
       } catch (error) { message(error.message || 'Connection unavailable. Try again.'); }
       finally { busy = false; if (submitted) submitted.disabled = false; }
     }
@@ -121,7 +126,7 @@ export function mountAccountProfile(root) {
         actions(button('Copy code',async () => {
           try { await navigator.clipboard.writeText(code); message('Recovery code copied.'); }
           catch { input.focus(); input.select(); message('Select and copy your recovery code.'); }
-        }),button('I saved my code',() => { render(); message(''); },true)));
+        }),button('I saved my code',() => { render(); followShared(); },true)));
       message(''); input.focus();
     }
     function remembered() {
@@ -143,16 +148,19 @@ export function mountAccountProfile(root) {
         view.append(actions(entry,forget));
       }
     }
-    function publicMatches() {
+    function publicMatches(requested) {
+      const target = typeof requested === 'string' ? requested : '';
       view.replaceChildren(element('h2','Public matches'),element('p','Join an available room hosted by another signed-in player.'));
       const list = element('div'), back = button('Back to profile',render);
-      view.append(list,actions(button('Refresh rooms',publicMatches),back));
+      view.append(list,actions(button('Refresh rooms',()=>publicMatches(target)),back));
       message('Loading available rooms…');
       accountRequest('/api/rooms/public').then(result => {
         if (!valid() || !list.isConnected) return;
         message('');
-        if (!result.rooms.length) list.append(element('p','No public rooms are accepting players.'));
-        for (const item of result.rooms) {
+        const rooms = target ? result.rooms.filter(item=>item.id===target) : result.rooms;
+        if (!rooms.length) list.append(element('p',target?'This public room is currently unavailable.':'No public rooms are accepting players.'));
+        if (target) list.append(button('Browse all public matches',publicMatches));
+        for (const item of rooms) {
           const summary = element('span',(knownMaps[item.map] || item.map)+' · '+(modes[item.mode] || item.mode)+' · '+item.players+'/'+item.capacity+' players');
           const enter = button('Join match',async () => {
             enter.disabled = true;
@@ -229,7 +237,7 @@ export function mountAccountProfile(root) {
       if (!valid()) return;
       if (!Array.isArray(value.rooms)) { unavailable('Online accounts are unavailable on this server.'); return; }
       data = value; render();
-      if (value.user && value.features?.publicMatches && location.hash === '#public-matches') publicMatches();
+      followShared();
     }).catch(error => { if (valid()) unavailable(error.message); });
   }
   return {open,reset};

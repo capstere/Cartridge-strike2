@@ -148,7 +148,17 @@ try {
   await dialog.getByRole('button',{name:'Make room private'}).waitFor();
   await dialog.getByRole('button',{name:'Close'}).click();
   await host.locator('#room-invite').waitFor({state:'hidden'});
-  await guest.goto(fixture.origin+'/profile');
+  await host.locator('.room-eyebrow').filter({hasText:'Public match'}).waitFor();
+  // Exercise the manual copy path to inspect the real link without using the OS clipboard or share sheet.
+  await host.evaluate(()=>{
+    Object.defineProperty(navigator,'share',{configurable:true,value:undefined});
+    Object.defineProperty(navigator,'clipboard',{configurable:true,value:undefined});
+  });
+  await host.getByRole('button',{name:'Share public match'}).click();
+  const publicLink=await host.locator('#room-link').inputValue();
+  assert(new URL(publicLink).origin===fixture.origin && /^#public-matches\/[A-Za-z0-9_-]+$/.test(new URL(publicLink).hash));
+  await host.getByText('Share this link with a friend.',{exact:false}).waitFor();
+  await guest.goto(publicLink);
   const guestAccount=guest.locator('[data-account-profile]');
   await guestAccount.getByRole('button',{name:'Create account',exact:true}).tap();
   const guestForm=guestAccount.locator('form:visible');
@@ -157,7 +167,7 @@ try {
   await guestForm.getByLabel('Password').fill(secret());
   await guestForm.getByRole('button',{name:'Create account'}).tap();
   await guestAccount.getByRole('button',{name:'I saved my code'}).tap();
-  await guestAccount.getByRole('button',{name:'Find a public match'}).tap();
+  await guestAccount.getByRole('heading',{name:'Public matches'}).waitFor();
   await guestAccount.getByRole('button',{name:'Join match'}).waitFor();
   assert.equal(await guestAccount.getByRole('button',{name:'Join match'}).count(),1,'only the published room is visible');
   await guestAccount.getByRole('button',{name:'Join match'}).tap();
@@ -165,6 +175,8 @@ try {
   await guest.locator('[data-create=false]').tap();
   await guest.locator('#room-ready').waitFor();
   await host.locator('#room-roster').getByText('Public touch player',{exact:false}).waitFor();
+  await guest.locator('.room-eyebrow').filter({hasText:'Public match'}).waitFor();
+  await guest.getByRole('button',{name:'Share public match'}).waitFor();
   await guest.locator('#room-public-tools').tap();
   const peerDialog=guest.getByRole('dialog');
   await peerDialog.locator('summary').filter({hasText:'Open match host'}).tap();
@@ -175,6 +187,9 @@ try {
   await screenshot(host,'public-match-controls');
   await dialog.getByRole('button',{name:'Make room private'}).click();
   await dialog.getByRole('button',{name:'List this room publicly'}).waitFor();
+  await dialog.getByRole('button',{name:'Close'}).click();
+  await host.locator('.room-eyebrow').filter({hasText:'Private room'}).waitFor();
+  await host.locator('#room-invite').waitFor();
   await guest.goto(fixture.origin+'/profile#public-matches');
   await guest.getByText('No public rooms are accepting players.').waitFor();
   report.scenarios.push('Signed-in host published an empty private room. Another account found and joined it, reported from the actual lobby, and could no longer find it after the host restored private access.');

@@ -120,6 +120,7 @@ export function roomUi({leave,resume,activate}){
   $('room-map').onchange=()=>session.matchCommand('settings',{mapId:$('room-map').value});
   const modeLabels={tdm:'Team Deathmatch',classic:'Classic'};
   const shareHelp=$('room-share-help'),normalShareHelp=shareHelp.textContent;
+  let shareContext='';
   const invitation=roomInvitation(root),moderation=roomModeration(root);
   const privateAccess=new URLSearchParams(location.search).get('network')==='internet';
   $('room-leave').onclick=()=>{moderation.update(null);invitation.update('');root.hidden=true;session=null;leave();};
@@ -168,8 +169,10 @@ export function roomUi({leave,resume,activate}){
   $('room-share').onclick=async()=>{
     const current=session;if(!current?.room)return;
     shareHelp.hidden=false;
-    const link=current.familyAlias?new URL(FAMILY_ROOM_PATH,location.origin):new URL(location.pathname,location.origin);
-    if(!current.familyAlias){
+    const publicRoom=moderation.isPublished();
+    const link=new URL(publicRoom?'/profile':current.familyAlias?FAMILY_ROOM_PATH:location.pathname,location.origin);
+    if(publicRoom) link.hash='public-matches/'+encodeURIComponent(current.room.roomId);
+    else if(!current.familyAlias){
       link.searchParams.set('network',new URLSearchParams(location.search).get('network')||'internet');
       link.searchParams.set('room',current.room.roomId);
     }
@@ -200,9 +203,15 @@ export function roomUi({leave,resume,activate}){
     $('room-map').value=map.id;$('room-map-label').hidden=!canEdit;
     $('room-mode').parentElement.hidden=!canEdit||map.modes.length<2;
     $('room-map').disabled=$('room-mode').disabled=!canEdit;
-    root.querySelector('.room-eyebrow').textContent=s.familyAlias?en.familyRoom:en.privateRoom;
+    const published=moderation.isPublished();
+    const nextShareContext=s.room.roomId+(published?'/public':'/private');
+    if(shareContext!==nextShareContext){
+      shareContext=nextShareContext;shareHelp.hidden=true;$('room-link').hidden=true;$('room-link').value='';
+    }
+    root.querySelector('.room-eyebrow').textContent=published?'Public match':s.familyAlias?en.familyRoom:en.privateRoom;
+    $('room-share').textContent=published?'Share public match':en.shareLink;
     $('room-identity').textContent=s.familyAlias||en.roomIdentity(s.room.roomId,state.matchId);
-    shareHelp.textContent=s.familyAlias?en.familyShareHelp:normalShareHelp;
+    shareHelp.textContent=published?'Share this link with a friend. Sign in to join while a seat is available.':s.familyAlias?en.familyShareHelp:normalShareHelp;
     if($('room-mode').value!==state.mode)$('room-mode').value=state.mode;
     $('room-tdm-minutes').parentElement.hidden=classic;
     $('room-tdm-kills').parentElement.hidden=classic;

@@ -88,8 +88,10 @@ export function roomModeration(roomRoot) {
   lobbyButton.onclick=open; pauseButton.onclick=open;
   return {
     allowsPrivateInvites:()=>publication==='private',
+    isPublished:()=>publication==='public',
     update(s) {
-      const available=s && document.documentElement.hasAttribute('data-public-rooms') && !s.familyAlias && s.connectionState==='connected';
+      const ready=s?.room?.state.actors.get(s.localPlayerId)?.ready;
+      const available=ready && document.documentElement.hasAttribute('data-public-rooms') && !s.familyAlias && s.connectionState==='connected';
       const next=available?s.room.roomId:'';
       const host=!!next && s.room.state.ownerId===s.room.sessionId;
       if (room===next && owner===host) return;
