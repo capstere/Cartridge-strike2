@@ -150,7 +150,14 @@ function nameWorld(){
  const h=world.anchors.hostages?.[0];
  if(missions[1])missions[1].replaceChildren(document.createTextNode(roomDisplayName(h&&world.roomAt(h.x,h.z))),document.createElement('br'),Object.assign(document.createElement('strong'),{textContent:'Eskortera / bevaka'}));
 }
+let firePress=null;
+function recordFirePress(){
+ if(!modal && !teamRadioOpen && game?.player?.alive && game.phase==='active'){
+   firePress ??= {yaw,pitch,weapon:game.player.weapon,life:game.player.lifeId,epoch:game.player.controlEpoch,round:game.state.round};
+ }
+}
 const mobile=new MobileControls({
+  onFirePress:recordFirePress,
   root:$('mobile-controls'),
   onLook(dx,dy){if(modal||teamRadioOpen||!game?.player?.alive)return;const k=settings.sensitivity*2.15*(tactical?.lookScale(true,yaw,pitch)??1);const before=pitch;yaw-=dx*k;pitch=Math.max(-1.49,Math.min(1.49,pitch-dy*k));recoil.counter(pitch-before);},
   onAction(action){
@@ -258,7 +265,7 @@ $(target).insertAdjacentHTML('beforeend',tactical.settingsMarkup()+grenadeSettin
 if(networkMode){for(const input of $(target).querySelectorAll('[data-setting]'))if(!['graphics','blood','sensitivity','volume','combatSounds','reducedMotion','reducedFlash','hudMode','radioVoice','mobileAutoFire'].includes(input.dataset.setting)){input.disabled=true;const label=input.closest('label');if(label)label.hidden=true;}for(const note of $(target).querySelectorAll('.setting-note'))note.hidden=!note.hasAttribute('data-mobile-fire-note');}
 $(target).querySelectorAll('[data-setting]').forEach(input=>input.oninput=()=>{settings[input.dataset.setting]=input.tagName==='SELECT'?input.value:input.type==='checkbox'?input.checked:Number(input.value);if(input.dataset.setting==='difficulty')game?.setDifficulty(settings.difficulty);if(input.dataset.setting==='mobileAutoFire'){mobile.setAutoFire(settings.mobileAutoFire);tactical.syncTrigger();resetAutoAim();}if(game&&!networkMode&&['friendlyFire','wanderers'].includes(input.dataset.setting))game.config[input.dataset.setting]=settings[input.dataset.setting];saveSettings();document.querySelectorAll('[data-difficulty-note]').forEach(n=>n.textContent=difficultyText());});}
 settingsPanel('menu-settings');settingsPanel('pause-settings');
-function clearInput(){keys.clear();fire=false;mobile.clear();tactical?.reset();grenadeAssist?.reset();focusHud?.reset();resetAutoAim();radioOpen=false;teamRadioOpen=false;teamRadioMenu.hidden=true;if($('radio-menu'))$('radio-menu').hidden=true;if(game?.player){game.player.fireHeld=false;game.player.interactHeld=false;game.player.action=null;}}
+function clearInput(){keys.clear();fire=false;firePress=null;mobile.clear();tactical?.reset();grenadeAssist?.reset();focusHud?.reset();resetAutoAim();radioOpen=false;teamRadioOpen=false;teamRadioMenu.hidden=true;if($('radio-menu'))$('radio-menu').hidden=true;if(game?.player){game.player.fireHeld=false;game.player.interactHeld=false;game.player.action=null;}}
 function unlockMouse(){if(document.pointerLockElement)document.exitPointerLock();}
 function requestMouse(){if(mobile.enabled)return;try{const result=$('game').requestPointerLock();result?.catch(()=>{showPause();$('pause').querySelector('p:not(.eyebrow)').textContent='Muslås kunde inte aktiveras. Öppna spelet i en separat webbläsarflik på datorn.';});}catch{showPause();}}
 function notify(text,duration=3){setText('notification',text);notificationUntil=(game?.state.time||0)+duration;}
@@ -415,7 +422,7 @@ function updateHud(){if(!game?.player)return;combatHud.update(game);const s=game
  if(board)scoreboard();minimap();setText('perf',`${renderer.stats.fps} FPS`);focusHud.update();
 }
 function input(dt=1/60){
- if(modal||teamRadioOpen||!game.player?.alive){resetAutoAim();return {};}
+ if(modal||teamRadioOpen||!game.player?.alive){firePress=null;resetAutoAim();return {};}
  yaw+=((keys.has('ArrowLeft')?1:0)-(keys.has('ArrowRight')?1:0))*1.7*dt;
  const touch=mobile.enabled?mobile.input():null;
  const f=(keys.has('KeyW')||keys.has('ArrowUp')?1:0)-(keys.has('KeyS')||keys.has('ArrowDown')?1:0);
@@ -432,7 +439,11 @@ function input(dt=1/60){
      autoFire=game.player.weapon!=='sniper'||(game.player.aimAmount>.9&&game.state.time-autoTargetSince>=.26);
    }else resetAutoAim();
  }else resetAutoAim();
+ const p=game.player,press=firePress;
+ firePress=null;
  return {
+   firePress:press?.weapon===p.weapon && press.life===p.lifeId && press.epoch===p.controlEpoch && press.round===game.state.round ? press : null,
+   sprint:keys.has('KeyX')||!!touch?.sprint,
    forward:Math.max(-1,Math.min(1,f+(touch?.forward||0))),
    strafe:Math.max(-1,Math.min(1,x+(touch?.strafe||0))),
    jump:keys.has('Space')||!!touch?.jump,
@@ -492,7 +503,7 @@ document.addEventListener('fullscreenchange',()=>{syncFullscreenToggle();if(mobi
 window.addEventListener('keydown',e=>{if(teamRadioKey(e))return;if(!modal&&['Tab','Space','Escape','ControlLeft','ControlRight'].includes(e.code))e.preventDefault();if(e.code==='Escape'){if(radioOpen){radioOpen=false;$('radio-menu').hidden=true;return;}if(modal==='buy')closeBuy();else if(!modal)showPause();return;}if(modal)return;if(!networkMode&&e.code==='KeyZ'&&game.player?.alive){radioOpen=!radioOpen;$('radio-menu').hidden=!radioOpen;return;}if(radioOpen&&/^Digit[1-6]$/.test(e.code)){const result=game.radio(RADIO[Number(e.code.slice(-1))-1]?.id);if(!result)notify('Radion är upptagen. Försök strax igen.');return;}if(!networkMode&&e.code==='Enter'&&!game.player?.alive&&!isEndless(game)){restartMatch();return;}if(e.code==='Tab'){board=true;$('scoreboard').hidden=false;scoreboard();return;}if(e.repeat)return;keys.add(e.code);if(e.code==='KeyB'){showBuy();return;}if(e.code==='KeyR')game.reload();if(e.code==='KeyQ')game.select('last');if(e.code==='KeyG')game.drop();if(/^Digit[1-5]$/.test(e.code))game.select(e.code.slice(-1));if(e.code==='KeyM'){toggleMap();return;}if(!game.player.alive&&['ArrowLeft','ArrowRight'].includes(e.code)){const count=game.actors.filter(a=>a.alive&&a.team===game.team).length;spectateIndex=(spectateIndex+(e.code==='ArrowLeft'?-1:1)+count)%Math.max(1,count);}});
 window.addEventListener('keyup',e=>{keys.delete(e.code);if(e.code==='Tab'){board=false;$('scoreboard').hidden=true;}});
 window.addEventListener('mousemove',e=>{if(document.pointerLockElement!==$('game')||modal||teamRadioOpen||!game.player?.alive)return;const k=settings.sensitivity*tactical.lookScale(false,yaw,pitch);yaw-=e.movementX*k;const before=pitch;pitch=Math.max(-1.49,Math.min(1.49,pitch-e.movementY*k));recoil.counter(pitch-before);});
-document.addEventListener('mousedown',e=>{if(e.target!==$('game')||e.button!==0||modal||teamRadioOpen)return;if(document.pointerLockElement!==$('game')){resume();return;}fire=true;});window.addEventListener('mouseup',e=>{if(e.button===0)fire=false;});window.addEventListener('contextmenu',e=>e.preventDefault());
+document.addEventListener('mousedown',e=>{if(e.target!==$('game')||e.button!==0||modal||teamRadioOpen)return;if(document.pointerLockElement!==$('game')){resume();return;}if(!fire)recordFirePress();fire=true;});window.addEventListener('mouseup',e=>{if(e.button===0)fire=false;});window.addEventListener('contextmenu',e=>e.preventDefault());
 document.addEventListener('pointerlockerror',()=>{if(!mobile.enabled&&!modal){showPause();$('pause').querySelector('p:not(.eyebrow)').textContent='Muslås kunde inte aktiveras. Tryck Fortsätt igen i en separat webbläsarflik.';}});
 window.addEventListener('offline',()=>networkSession?.interruptConnection());
 document.addEventListener('pointerlockchange',()=>{if(mobile.enabled)return;if(document.pointerLockElement=== $('game')&&modal){unlockMouse();return;}if(document.pointerLockElement!==$('game')){clearInput();if(!modal&&game.player?.alive)showPause();}});window.addEventListener('blur',()=>{clearInput();if(!modal)showPause();});document.addEventListener('visibilitychange',()=>{if(document.hidden){clearInput();if(!modal)showPause();}});

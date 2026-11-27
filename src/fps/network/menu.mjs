@@ -12,7 +12,13 @@ export function networkMenu(join,activate=()=>{},internet=false,cancel=()=>{}){
   for(const el of menu.querySelectorAll('.lb-left > .lb-block,.lb-launch,#character-picker,.mission-strip'))el.hidden=true;
   menu.querySelector('.eyebrow').textContent=internet?en.internetTitle:en.lanTitle;
   menu.querySelector('.lead').textContent=en.createHint;
-  const brief=menu.querySelectorAll('.lb-brief dd');brief[0].textContent='Floor 5 Laboratory';brief[1].textContent=en.privateTeams;brief[2].textContent=en.bothModes;
+  const headings=menu.querySelectorAll('.lb-brief dt');
+  headings[0].textContent=en.map;
+  headings[2].textContent=en.availableModes;
+  const brief=menu.querySelectorAll('.lb-brief dd');
+  brief[0].textContent=networkMap(DEFAULT_MAP_ID).name;
+  brief[1].textContent=en.privateTeams;
+  brief[2].textContent=en.bothModes;
   menu.querySelector('.local-network-link').hidden=true;
   const equipment=document.querySelector('[data-mobile-action="buy"]');
   equipment.textContent=en.loadoutShort;equipment.setAttribute('aria-label',en.chooseLoadout);
