@@ -165,7 +165,7 @@ try{
       await mobile.waitForFunction(()=>__fps.game.player.weapon==='he');
       // The frame may adopt the newly selected weapon after drawing the
       // controls. Wait for the next update to show the actual manual trigger.
-      await fire.filter({hasText:/^KASTA$/}).waitFor({state:'visible'});
+      await fire.filter({hasText:/^THROW$/}).waitFor({state:'visible'});
       const grenades=shooter.inventory.he;await delay(400);
       assert.equal(shooter.inventory.he,grenades,'grenade is never thrown automatically');
     }

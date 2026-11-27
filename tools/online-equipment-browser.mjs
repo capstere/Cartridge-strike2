@@ -79,7 +79,7 @@ try{
   finally{await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});}
   await mobile.locator('#mobile-more').tap();
   await mobile.locator('[data-mobile-action=grenade]').tap();await until(()=>guest.weapon==='he','touch grenade selected');
-  await until(()=>game.state.time>guest.nextShot,'throw ready');await until(async()=>await fire.textContent()==='KASTA','throw label');
+  await until(()=>game.state.time>guest.nextShot,'throw ready');await until(async()=>await fire.textContent()==='THROW','throw label');
   // A single hold must begin after the matching client snapshot has made the
   // selected grenade usable, including its predicted switch cooldown.
   await mobile.waitForFunction(()=>{
@@ -98,7 +98,7 @@ try{
   const note=mobile.locator('#buy-note'),shop=mobile.locator('#shop');
   const heading=await note.boundingBox(),choices=await shop.boundingBox();
   assert(heading.height>0&&heading.y+heading.height<=choices.y+1);
-  assert.match(await note.textContent(),/nästa respawn/);
+  assert.match(await note.textContent(),/next respawn/);
   await mobile.locator('[data-item=cr4]').tap();await until(()=>guest.loadout==='cr4','mobile team rifle queued');
   await mobile.locator('#return-buy').tap();assert.equal(guest.weapon,'smg');assert.equal(guest.inventory.he,0);
   for(const p of [desktop,mobile])assert(await p.locator('#fatal').isHidden());

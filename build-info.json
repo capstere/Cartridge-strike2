@@ -641,8 +641,8 @@
     },
     {
       "path": "credits.html",
-      "bytes": 13997,
-      "sha256": "3f9d910f81665171eea1dc06a4498b55190a83495bcddab79ef1d03d9a43b666"
+      "bytes": 13976,
+      "sha256": "4ae86125f7138e7b01aea9bd3e373fd39c3fb9d9d3cfa9fce8bb4f947c3e2ce4"
     },
     {
       "path": "docs/fps-furniture-library.md",
@@ -656,23 +656,23 @@
     },
     {
       "path": "fps/hud.css",
-      "bytes": 35692,
-      "sha256": "d5d1e7a2e80b0bb564897088ae4228d21fc905804edfcb094e21f75b1e76324d"
+      "bytes": 35685,
+      "sha256": "d8d9266c2d52b78668101aaa41f0a4f7ce46486c46c9a27b52350b80ff56a0e9"
     },
     {
       "path": "fps/index.html",
-      "bytes": 14527,
-      "sha256": "4330aeae56695692dd5f84b7ef9d751f451e695c04c80668a7a7797a96e09a55"
+      "bytes": 19892,
+      "sha256": "c1c9991ed743acd4eeba1b07510357dbf2ac77c1d29a1250fb14cba67ca06e19"
     },
     {
       "path": "fps/lobby.css",
-      "bytes": 16963,
-      "sha256": "575883783883f770b3fe86fa9afe9848a13db99e4da03ade8257001941c63d8e"
+      "bytes": 16964,
+      "sha256": "b6ca510c27caf6f46d63317c27ea5c0328338418c7dc01f346b4b09248d08283"
     },
     {
       "path": "fps/match-loading.css",
-      "bytes": 7093,
-      "sha256": "821006084c9cbc6b7df5631e6fea51e1a674977b7d6be0440fed8e2221cded00"
+      "bytes": 7569,
+      "sha256": "70e7868ad4ce6e541a95ab3650feddeb5a10b458d253b3150b978552204565fc"
     },
     {
       "path": "fps/menu-modern.css",
@@ -683,6 +683,11 @@
       "path": "fps/network.css",
       "bytes": 5741,
       "sha256": "3d575171846f7e7ce1710bac3d8049b80ff38b83d85fc8f77e1f3c067ea7e0d5"
+    },
+    {
+      "path": "fps/routes.css",
+      "bytes": 9724,
+      "sha256": "8fb100ab89cf23efb6d6a9f2a96a65f3c442f5964bfec1f56cbd306d9017683d"
     },
     {
       "path": "fps/style.css",
@@ -716,8 +721,8 @@
     },
     {
       "path": "furniture-editor/build/environment-art.mjs",
-      "bytes": 9461,
-      "sha256": "f951d33f7f70adbafe861a7e52f5193614b81ad5be7d8a7ed829c785c74c1928"
+      "bytes": 10427,
+      "sha256": "44d985bbda38b213976e0969aa7d8dfde839480be9f6b2cd87ca2440f0f1b407"
     },
     {
       "path": "furniture-editor/build/environment-layout.mjs",
@@ -1841,8 +1846,8 @@
     },
     {
       "path": "index.html",
-      "bytes": 1414,
-      "sha256": "ac3d4f921bd73f7234393ce437306e465f3da5020eebf1b82b80730dc9e5e5a7"
+      "bytes": 1360,
+      "sha256": "8b8f074937db55776dbf390875469c65852f33f304f55307d57e4e1eef491696"
     },
     {
       "path": "levels/compact-arena.json",
@@ -1851,8 +1856,8 @@
     },
     {
       "path": "levels/floor5-prepared.json",
-      "bytes": 1761561,
-      "sha256": "89283f437623457a10da37be29a282a41591f202270051ba940549ba01b4b050"
+      "bytes": 1761580,
+      "sha256": "1dd0ec97a14f5a4cab6448e9a8f4b5da091b71a3caa63b575ef58ef1426b9ef0"
     },
     {
       "path": "levels/manifest.json",
@@ -1957,7 +1962,7 @@
     {
       "path": "shared/multiplayer/build.mjs",
       "bytes": 660,
-      "sha256": "1f083e62a06d6278593740b1e4921f4ab1c705e4372ab400045e16a0fe962f8e"
+      "sha256": "c7376d4de252d43b91f06d93ace33fcb7f7f7697977e3d9444b5464776499ea1"
     },
     {
       "path": "shared/multiplayer/collision-contract.mjs",
@@ -1977,7 +1982,7 @@
     {
       "path": "shared/multiplayer/map-build.mjs",
       "bytes": 1215,
-      "sha256": "1d8e09724dc1a84ea3137475829c1f8a4af0e1ce5edafdc779315c130f04a206"
+      "sha256": "a9ebe8de54c751aa91b2aab9ef6c93287e5beba291b948a6d5987bbba27865ff"
     },
     {
       "path": "shared/multiplayer/maps.mjs",
@@ -2021,13 +2026,13 @@
     },
     {
       "path": "src/fps/action-rules.mjs",
-      "bytes": 13379,
-      "sha256": "e9b58098399160ff5e71eca629b3a4fb86bd5e713e466940a6655e85161290a1"
+      "bytes": 13358,
+      "sha256": "c9518134455e89adf0c59ff764a34de75209cda813f4e660d91ed3dd0807a382"
     },
     {
       "path": "src/fps/action-visuals.mjs",
-      "bytes": 9990,
-      "sha256": "ce20465b81e12fcb0b333068e4ed42dd1da55a34373afb819c48bbf01811eda0"
+      "bytes": 11305,
+      "sha256": "6f6557b095b8ba1050f20e6408f579633381468317bf3457aa5de709cbd5fab6"
     },
     {
       "path": "src/fps/actor-occlusion.mjs",
@@ -2041,13 +2046,13 @@
     },
     {
       "path": "src/fps/app.mjs",
-      "bytes": 54114,
-      "sha256": "c78d20635b5faf936f0e433946cdae1646b6065f7170736276a295eb79a4e175"
+      "bytes": 55561,
+      "sha256": "25e251d31ae88239e849237578fb63e31f0c68f1cd78b35cb5f2bde2c39e9d44"
     },
     {
       "path": "src/fps/audio.mjs",
-      "bytes": 17606,
-      "sha256": "a98eb805ea8787c9ae8b106af2f84644ffdd262ca5f57b928c385c1605371bc4"
+      "bytes": 17627,
+      "sha256": "f6be4b73803c9367c48c6c9f6f4a3f92522531637d54e1af80da561a0484b5a6"
     },
     {
       "path": "src/fps/authored-hand-data.mjs",
@@ -2091,33 +2096,33 @@
     },
     {
       "path": "src/fps/character-footwear.mjs",
-      "bytes": 6783,
-      "sha256": "0dbd0294b8282894e3d052e045143ced954472fbcaa463529afb379c755b30db"
+      "bytes": 6870,
+      "sha256": "5717b308032b2d9f3cc41558be21e3a794cb85a1ec45f71f51db238edde81cf0"
     },
     {
       "path": "src/fps/character-library.mjs",
-      "bytes": 24770,
-      "sha256": "a03b972c86747507488fa92ddb5b071ff52994e5b2672f10e7bab5a18888b830"
+      "bytes": 24775,
+      "sha256": "2b3caf1f83f9c2b6cc6913c81f8d6a442af34ed321b6e5a0ccfc6f3bd1ad7920"
     },
     {
       "path": "src/fps/character-overrides.mjs",
-      "bytes": 3817,
-      "sha256": "44914746c8c597113b5ed7f86b52da588f2af76136302206ce0477a8af30bbad"
+      "bytes": 3917,
+      "sha256": "9671354cc40c84a8ae6ca7fea658fe70df9f37e52941c9caa102622e5d604f78"
     },
     {
       "path": "src/fps/character-roles.mjs",
-      "bytes": 2663,
-      "sha256": "73f61dcbf5c2304044d4ecb99b4d58c8103cf1b1be3a96728eb345daf1cb20dd"
+      "bytes": 2669,
+      "sha256": "40ecc1163b7ce45404545b1764bf21d4f78819de02413b2de3d0b1f43cb21bd5"
     },
     {
       "path": "src/fps/character-runtime-contract.mjs",
-      "bytes": 7873,
-      "sha256": "45024debc0793bcf2905b3aecc1f424135f59746036299d22b11a4f1faf01bb9"
+      "bytes": 8302,
+      "sha256": "2aedd66fc9e63d3cecd593bbd3d108c2461419be1c22ddbc73832c29b34688d0"
     },
     {
       "path": "src/fps/character-selection.mjs",
-      "bytes": 3344,
-      "sha256": "9631e751ccbc32a75df488e3ab41501ff4023133c25470a265029d8327f56204"
+      "bytes": 3492,
+      "sha256": "0f08800d3fdec4488b7c402be221ed3ec4583315890a644ea3f26232baf03503"
     },
     {
       "path": "src/fps/combat-audio.mjs",
@@ -2126,13 +2131,13 @@
     },
     {
       "path": "src/fps/combat-flow.mjs",
-      "bytes": 8280,
-      "sha256": "57a98323afcf34e024d363b63c02b1c3109c673eeedf62928eb9c72e892fd866"
+      "bytes": 8293,
+      "sha256": "63723f262539b9a463ab4f138ba8b336cdd045299746d1c4f59b70a85b403c51"
     },
     {
       "path": "src/fps/combat-hud.mjs",
-      "bytes": 5310,
-      "sha256": "85647f03adf4e9de562f4390d8d4b8818cff30468862946c4d20f3ed89bf5335"
+      "bytes": 5266,
+      "sha256": "2691e0bdec87107b0d246e23cbfce549bb4aa7c55c8757ccf3ff597536956028"
     },
     {
       "path": "src/fps/combat-visuals.mjs",
@@ -2141,13 +2146,13 @@
     },
     {
       "path": "src/fps/config.mjs",
-      "bytes": 5737,
-      "sha256": "8ee08b6809385cdab44fdb58235e3089ac5dc8c686e0db2e54dbc9dcbffefe89"
+      "bytes": 5758,
+      "sha256": "fe4937bd6ed0c02b638945bedca454d2fc935ef753cae3e4de9a2725bb3f6c0f"
     },
     {
       "path": "src/fps/control-deployment.mjs",
-      "bytes": 1878,
-      "sha256": "4c96540a060739261fef709d0d68170e0009f03fd003c8315fea8c230c5b0f33"
+      "bytes": 1877,
+      "sha256": "f978895444102b5bfad07aef504581d66eae5133034105d400dd43a2e77f5f79"
     },
     {
       "path": "src/fps/decor.mjs",
@@ -2171,13 +2176,18 @@
     },
     {
       "path": "src/fps/dwarf-rig.mjs",
-      "bytes": 7695,
-      "sha256": "6c0c087558b4a1f03b49543b6453d80b768d9ffa4d1434e341bd7af77083788f"
+      "bytes": 7701,
+      "sha256": "172e28b8c513ee0c899c790000881229b9459165cc2721f923883a360a05a01b"
     },
     {
       "path": "src/fps/effects.mjs",
       "bytes": 9005,
       "sha256": "ab2e836a9470113ce16e6db31cedb4aee0700efc3638c8523d9a1306d21d3324"
+    },
+    {
+      "path": "src/fps/english-ui.mjs",
+      "bytes": 990,
+      "sha256": "be82656efc73768bc977a4b9351939f961efc80d347b1b491192e99328186072"
     },
     {
       "path": "src/fps/facility-assets.mjs",
@@ -2211,8 +2221,8 @@
     },
     {
       "path": "src/fps/focus-hud.mjs",
-      "bytes": 8307,
-      "sha256": "edf8a7511a99fc80264566ca3651d7dd717d18baf02c959670111ca264c883f8"
+      "bytes": 8265,
+      "sha256": "537f936e3cf6d5ac0c1abf2ffbc98ae56f9b23485ed04738cb752025a3e68ebf"
     },
     {
       "path": "src/fps/frame-time-window.mjs",
@@ -2221,8 +2231,8 @@
     },
     {
       "path": "src/fps/frosted-door.mjs",
-      "bytes": 2089,
-      "sha256": "9ee89fe8b932d729bf52807f5bdfe5bb43d659b33683f6d6ea5220decbe70699"
+      "bytes": 2105,
+      "sha256": "eb1c68604af02703cbbc0696dcf83b0367a907965351c4856103e4e98fe30bec"
     },
     {
       "path": "src/fps/fullscreen.mjs",
@@ -2235,9 +2245,14 @@
       "sha256": "6e66d4814ee2952197e65a9331383bc6281f346fb3993d651482b7b308ef743e"
     },
     {
+      "path": "src/fps/game-english.mjs",
+      "bytes": 1247,
+      "sha256": "3339e7c1b8856ec9d89c0b88d97479e376c0aabb3ec575721fe63e74539a2c0a"
+    },
+    {
       "path": "src/fps/game.mjs",
-      "bytes": 43443,
-      "sha256": "b6eece04f61e0a0fc6c53b76662c9bee9217685bd50bab840502865d4ea4829b"
+      "bytes": 43321,
+      "sha256": "a07c3d3c7dae0391405785ff6d777396cf8fec8c3f7927a988a8ee2339670743"
     },
     {
       "path": "src/fps/glass-visuals.mjs",
@@ -2246,8 +2261,8 @@
     },
     {
       "path": "src/fps/grenade-assist.mjs",
-      "bytes": 6641,
-      "sha256": "e35dd9374892f027d22b64c3ddbd13fd3c9630fc1766fbb8b03e9b8b05ffe973"
+      "bytes": 6639,
+      "sha256": "6827cf01e572c47f1b636213c5f9862851728624c26ff50b71f1557024386513"
     },
     {
       "path": "src/fps/grenade-physics.mjs",
@@ -2266,18 +2281,18 @@
     },
     {
       "path": "src/fps/hud-shell.mjs",
-      "bytes": 7012,
-      "sha256": "7b127c9a081034af6703d2a7b3a1ed8a99dd424ce4c01e74be37c8acb327f282"
+      "bytes": 6978,
+      "sha256": "1995b7b423fa1a4df21b433a5ce17639182320d69cce32c9e62741df69f7d6f9"
     },
     {
       "path": "src/fps/level-adapter.mjs",
-      "bytes": 5175,
-      "sha256": "c7a3bc2ea1b628472562aa9ff3e05a02e2a4a970dd6ec475a43933e4473a86d5"
+      "bytes": 5185,
+      "sha256": "91a37aaa506e92da9763d7a4da4622d5839e40f5d79d7ec5eccabac112bbda23"
     },
     {
       "path": "src/fps/living-floor-art.mjs",
-      "bytes": 8450,
-      "sha256": "e9a938aaccc9f944dc145baf112338254520e61a7e1056560ab65aba3633c185"
+      "bytes": 8407,
+      "sha256": "47eb28b8b7057b7cf716afcf00470b422324afde70e039cd5c68fccf710f0f21"
     },
     {
       "path": "src/fps/living-floor-plan.mjs",
@@ -2291,13 +2306,13 @@
     },
     {
       "path": "src/fps/lobby-stage.mjs",
-      "bytes": 8335,
-      "sha256": "504983a8c22dcc9dcf6efd076d282466121b0e1741fd3ab8a1a2775ece8c9f21"
+      "bytes": 8613,
+      "sha256": "bdeb5dc20dedb14d5cda7dc63e5ae629e8a62247cf0c0ae2aa0c281f0c1be0ad"
     },
     {
       "path": "src/fps/match-flow.mjs",
-      "bytes": 12135,
-      "sha256": "06af703ff82722094c77ae604f736fc87c5225b2f8ad66815b351ffe940471be"
+      "bytes": 12402,
+      "sha256": "8a98d930c361a988e59a01abace83f3bc9376d19af9d6b5dcb1c4d31a0e5b505"
     },
     {
       "path": "src/fps/materials.mjs",
@@ -2305,9 +2320,14 @@
       "sha256": "5a286f41dfd8a299873101aeccb1c4e35f4246197504f320a5a0c7a0fc9f4c0b"
     },
     {
+      "path": "src/fps/menu-navigation.mjs",
+      "bytes": 10919,
+      "sha256": "1c793fc95db520af343dc423af661d4cb30b84989ea7723f87fc9cf7532a519a"
+    },
+    {
       "path": "src/fps/minimap-cache.mjs",
-      "bytes": 13559,
-      "sha256": "86c60957aa7a388b3ddcf5601f0e99a373a98bebc18b7e7c7a331a42f329a1bc"
+      "bytes": 13558,
+      "sha256": "587b44fd944aa4c52e6df281e5f77dc8414c36d0a193487daa5085494df8523b"
     },
     {
       "path": "src/fps/mobile-controls.mjs",
@@ -2351,8 +2371,8 @@
     },
     {
       "path": "src/fps/network/session.mjs",
-      "bytes": 37660,
-      "sha256": "a7dfcdbf3c219c446c1152cfd0abc1ad51c2a1fe4ea6635f8c9d57c3e6a79674"
+      "bytes": 39165,
+      "sha256": "4f1c93155c4cc9eb082b89fbdfbc142b6a7de69d3087bd83cbe75ef8332fa373"
     },
     {
       "path": "src/fps/physics.mjs",
@@ -2361,8 +2381,8 @@
     },
     {
       "path": "src/fps/player-names.mjs",
-      "bytes": 1840,
-      "sha256": "c08a16ad1b96f1ad1cb6788aaa3c3eba014de32d507cae13a59eb95358ce2e12"
+      "bytes": 1842,
+      "sha256": "bd539a2978407fed0bb01ede00458d0f9a34ddc205db55356424131ab8421e13"
     },
     {
       "path": "src/fps/presentation-hands.mjs",
@@ -2381,13 +2401,13 @@
     },
     {
       "path": "src/fps/private-character-store.mjs",
-      "bytes": 5992,
-      "sha256": "5bc1f07e467661d07052e698830f5fb086823a90d7c65b0da069f835de02d913"
+      "bytes": 7170,
+      "sha256": "79935c5d1f06ee1557d794c04faeaf106bdd03d63ca31ed360e2813fe4f2ec1b"
     },
     {
       "path": "src/fps/project-batches.mjs",
-      "bytes": 7883,
-      "sha256": "e9bde640846824c471d379e975d38328163b29084f86fea3372d2795b3e1f626"
+      "bytes": 7879,
+      "sha256": "9832c7e04a8c3e297afdcd02cf9bc5bfbb6e67fb7ac3da374913eb8aad7d21e2"
     },
     {
       "path": "src/fps/project-visibility.mjs",
@@ -2406,8 +2426,8 @@
     },
     {
       "path": "src/fps/render-engine.mjs",
-      "bytes": 33875,
-      "sha256": "a3a6374099b13d2476079ca29160f16f577678e9980aea76dd405fd54242f572"
+      "bytes": 33868,
+      "sha256": "2f7a9f2f96903d2ba62e712fe3957c9760d9795e7fd71bd37e5697f440a58efe"
     },
     {
       "path": "src/fps/render.mjs",
@@ -2466,13 +2486,18 @@
     },
     {
       "path": "src/fps/skinned-clone.mjs",
-      "bytes": 1063,
-      "sha256": "3b62dcad7b8dde734d23942e8e199d0aad76ef3022470b34d0338dfa65ab6709"
+      "bytes": 1076,
+      "sha256": "bc0222ad85adfd7b06e5c4a284f851043f64cbd448232a2599d0812db55ae0a7"
     },
     {
       "path": "src/fps/smoke-detectors.mjs",
       "bytes": 2316,
       "sha256": "185ede947f2f8e4dcf010af756cf63494277f9d1cfde0161508d449b5a294a5e"
+    },
+    {
+      "path": "src/fps/solo-maps.mjs",
+      "bytes": 3725,
+      "sha256": "87647801cc4e9602e6ef4e9d1f1a75f7db59ff211a192a353231486e8759b694"
     },
     {
       "path": "src/fps/start-elevators.mjs",
@@ -2511,13 +2536,13 @@
     },
     {
       "path": "src/fps/tactical-controls.mjs",
-      "bytes": 8606,
-      "sha256": "e4e7bf72d8b28fd85bdfbdb9cdf5f123e217fcd008d371bea42c6b0f6c0346be"
+      "bytes": 8532,
+      "sha256": "695e77c27aa4ca3fb8c4c7170ee2543beda9c4b570ebe6635a0ddc39795d1b49"
     },
     {
       "path": "src/fps/tactical-map.mjs",
-      "bytes": 3532,
-      "sha256": "1339964627c320e3f79c752a52113b4ba07c539f2054ae68be3d83578e1e5fda"
+      "bytes": 3535,
+      "sha256": "9081108a843f782d72b8abfdc6e92d3e6ee16adf020869493ac81594d9f5d5b9"
     },
     {
       "path": "src/fps/tactical-rules.mjs",
@@ -2541,8 +2566,8 @@
     },
     {
       "path": "src/fps/view-character-appearance.mjs",
-      "bytes": 6714,
-      "sha256": "ec8344e97ff12b61fe4bd84badf6bec30b9a86fb18a6a99d50cd329f165f35c9"
+      "bytes": 6687,
+      "sha256": "de4bc7b70efbc5a8f420830fbf384ead6d8fc54838c8d7a2489ef57bd419e17e"
     },
     {
       "path": "src/fps/view-surface.mjs",
@@ -2591,13 +2616,13 @@
     },
     {
       "path": "ui/cs-mobile.css",
-      "bytes": 4917,
-      "sha256": "f29adb1cb5f460d2e29b3ba53eb48e2e412a4c5c5f05653abe37fe9e16fcc4a3"
+      "bytes": 4941,
+      "sha256": "6848839111ef0fbf134196d0579f6bd6c4a979f76aba5c0dfcd0fed070cdc24c"
     },
     {
       "path": "ui/cs-mobile.mjs",
-      "bytes": 1260,
-      "sha256": "2b71892dbe7ba393d7d4a03d1007fd32e1c91214c21b6859d6c93c02715b5309"
+      "bytes": 1458,
+      "sha256": "37170d81aba6a6b8db7d3249f02db58f10e281b07ccf4bb69c033de13474d747"
     },
     {
       "path": "ui/cs-theme.css",
@@ -2660,7 +2685,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 59041845,
+  "bytes": 59081865,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

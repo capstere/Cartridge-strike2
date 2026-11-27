@@ -81,7 +81,7 @@ try{
  await a.evaluate(()=>{window.__reloadHudSeen=new Promise(resolve=>{
   const element=document.querySelector('#reload-text');let timer;
   const finish=value=>{clearTimeout(timer);observer.disconnect();resolve(value);};
-  const observer=new MutationObserver(()=>{if(element.textContent.includes('Laddar om')&&!element.closest('[hidden]')&&element.getBoundingClientRect().height>0)finish(true);});
+  const observer=new MutationObserver(()=>{if(/^Reloading · \d+\.\d s$/.test(element.textContent)&&!element.closest('[hidden]')&&element.getBoundingClientRect().height>0)finish(true);});
   observer.observe(element,{childList:true,characterData:true,subtree:true});timer=setTimeout(()=>finish(false),15000);
  });});
  await a.keyboard.press('r');assert(await a.evaluate(()=>__reloadHudSeen),'real reload displays its HUD state');

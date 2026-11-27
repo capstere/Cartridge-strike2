@@ -34,7 +34,7 @@ export function levelProjectToWorldData(input){
  for(const cfg of cabins){
   const door=doors.find(d=>d.id===cfg.doorId);
   if(!door||door.doorType!=='elevator'||!floors.some(f=>f.id===cfg.floorId)||!floors.some(f=>f.id===cfg.lobbyId))
-   throw Error('Startkabinens dörr, golv eller hisshall saknas.');
+   throw Error('The starting elevator is missing its door, floor or lobby.');
   door.startElevator=true;door.lockedUntilImplemented=false;
  }
  const obstacles=[...scene.fixed,...scene.items.map(o=>({id:o.id,name:o.assetName||o.kind,

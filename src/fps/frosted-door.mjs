@@ -19,7 +19,7 @@ export function createWcDoorBadge(width){
  const canvas=document.createElement('canvas');
  canvas.width=canvas.height=192;
  const c=canvas.getContext('2d');
- if(!c)throw Error('2D canvas behövs för WC-skylten.');
+ if(!c)throw Error('A 2D canvas is required to draw the restroom sign.');
  c.clearRect(0,0,192,192);
  c.fillStyle='#f5f7f4';c.beginPath();c.arc(96,96,88,0,2*Math.PI);c.fill();
  c.strokeStyle='#727e85';c.lineWidth=8;c.stroke();

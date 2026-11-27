@@ -156,7 +156,7 @@ try{
     matchCycle={sameRoom:true,shippingDefaults:!!external,durationSeconds:before.duration,scoreTarget:before.scoreTarget,firstMatch:before.matchId,result,secondMatch:next.matchId,rematchFire:true};
   }
   await host.keyboard.press('Escape');await host.locator('#restart').click();
-  await friend.waitForFunction(()=>document.querySelector('#alive-a')?.textContent==='0 kvar');
+  await friend.waitForFunction(()=>document.querySelector('#alive-a')?.textContent==='0 alive');
   await friend.locator('[data-mobile-action=pause]').tap();await friend.locator('#restart').tap();
   assert.deepEqual(errors,[]);
   const report={status:'PASS',path:external?'public HTTPS':'loopback TLS',date:new Date().toISOString(),
@@ -172,7 +172,7 @@ try{
     const state=await page.evaluate(()=>({
       path:location.pathname,roomAssigned:!!document.querySelector('#network-room')?.value,
       fatal:document.querySelector('#fatal')?.hidden===false,loading:document.querySelector('#loading')?.hidden===false,
-      paused:document.querySelector('#pause')?.hidden===false,pointerLockDenied:document.querySelector('#pause')?.textContent.includes('Muslås'),
+      paused:document.querySelector('#pause')?.hidden===false,pointerLockDenied:document.querySelector('#pause')?.textContent.includes('Mouse capture failed'),
       focused:document.hasFocus(),locked:!!document.pointerLockElement,focusEvents:window.__pilotFocus
     })).catch(()=>({closed:true}));
     console.error('Browser state',JSON.stringify(state));

@@ -52,7 +52,7 @@ export async function loadCharacterLibrary(){
  })).then(async([male,female])=>{
   installCharacterTemplates(male.model,female.model,{male:male.bank,female:female.bank});
   await loadCharacterOverrides(templates);
- }).catch(e=>{pending=null;templates=null;throw new Error('Karaktärsmodellerna kunde inte laddas: '+e.message);});
+ }).catch(e=>{pending=null;templates=null;throw new Error('Character models could not be loaded. '+e.message);});
  return pending;
 }
 /** Separate from the studio's operator reference rig; fetched once for FPS use. */
@@ -62,7 +62,7 @@ export function installDefaultHostageTemplate(asset){
 export async function loadDefaultHostages(){
  if(hostagePending)return hostagePending;if(hostageTemplate)return;
  hostagePending=new GLTFLoader().loadAsync(new URL('../../'+BUSINESS_HOSTAGE_FILE,import.meta.url).href)
-  .then(installDefaultHostageTemplate).catch(e=>{hostagePending=null;throw new Error('Gisslanmodellen kunde inte laddas: '+e.message);});
+  .then(installDefaultHostageTemplate).catch(e=>{hostagePending=null;throw new Error('The hostage model could not be loaded. '+e.message);});
  return hostagePending;
 }
 const hash=id=>[...String(id)].reduce((n,c)=>(Math.imul(n,31)+c.charCodeAt(0))>>>0,7);
@@ -178,15 +178,15 @@ function createBusinessHostage(id){
 }
 /** Called only after local hash/source/GLB checks, for a rehearsal or menu selection. */
 export function installPrivateCharacter(asset){
- if(!templates)throw Error('Originalkaraktärerna måste laddas först.');
+ if(!templates)throw Error('Load the original characters first.');
  const original=templates.male.animations,clips=new Map(asset.animations.map(c=>[c.name,c]));
  const sameArray=(a,b)=>a.length===b.length&&a.every((v,i)=>v===b[i]);
  const sameClip=(a,b)=>b&&Math.abs(a.duration-b.duration)<1e-5&&a.tracks.length===b.tracks.length&&a.tracks.every(t=>{const u=b.tracks.find(v=>v.name===t.name);return u&&t.getInterpolation()===u.getInterpolation()&&sameArray(t.times,u.times)&&sameArray(t.values,u.values);});
- if(clips.size!==13||original.some(c=>!sameClip(c,clips.get(c.name))))throw Error('Provkaraktären saknar originalets oförändrade 13 animationsklipp.');
+ if(clips.size!==13||original.some(c=>!sameClip(c,clips.get(c.name))))throw Error('The character must include all 13 original animation clips without changes.');
  const bones=new Map();let meshes=0;asset.scene.traverse(o=>{if(o.isBone)bones.set(o.name,o);if(o.isMesh)meshes++;});
  const required=[];templates.male.scene.traverse(o=>{if(o.isBone)required.push(o.name);});
- if(bones.size!==65||required.some(n=>!bones.has(n))||meshes>32||!asset.scene.getObjectByName('boot-sole-l')||!asset.scene.getObjectByName('boot-sole-r'))throw Error('Provkaraktärens skelett eller skor är inkompatibla.');
- asset.scene.traverse(o=>{if(o.isMesh){const p=o.geometry.attributes.position;if(!p||Array.from(p.array).some(v=>!Number.isFinite(v)))throw Error('Provkaraktären har ogiltig geometri.');if(o.isSkinnedMesh&&o.skeleton.bones.some(b=>bones.get(b.name)!==b))throw Error('Provkaraktärens benkoppling är ogiltig.');}});
+ if(bones.size!==65||required.some(n=>!bones.has(n))||meshes>32||!asset.scene.getObjectByName('boot-sole-l')||!asset.scene.getObjectByName('boot-sole-r'))throw Error('The character has an incompatible skeleton or footwear.');
+ asset.scene.traverse(o=>{if(o.isMesh){const p=o.geometry.attributes.position;if(!p||Array.from(p.array).some(v=>!Number.isFinite(v)))throw Error('The character contains invalid geometry.');if(o.isSkinnedMesh&&o.skeleton.bones.some(b=>bones.get(b.name)!==b))throw Error('The character has invalid bone bindings.');}});
  const appearance=createPrivateViewAppearance(asset);privateViewAppearance?.dispose();privateViewAppearance=appearance;privateCharacter=asset;
 }
 export function setPrivateCharacterActors(ids){privateActorIds=new Set(ids);}

@@ -19,8 +19,8 @@ export class TacticalControls {
     if (mobile.enabled && mobile.root) {
       this.button = document.createElement('button');
       this.button.type = 'button'; this.button.className = 'mobile-button mobile-aim';
-      this.button.dataset.tacticalAim = ''; this.button.textContent = 'SIKTA';
-      this.button.setAttribute('aria-label', 'Växla siktesläge');
+      this.button.dataset.tacticalAim = ''; this.button.textContent = 'AIM';
+      this.button.setAttribute('aria-label', 'Toggle aim');
       this.button.setAttribute('aria-pressed', 'false');
       mobile.root.append(this.button);
       this.button.addEventListener('pointerdown', e => {
@@ -116,7 +116,7 @@ export class TacticalControls {
       this.button.hidden = !p || !p.alive || !canAim(p.weapon);
       this.button.classList.toggle('pressed', this.wanted);
       this.button.setAttribute('aria-pressed', String(this.wanted));
-      this.button.textContent = this.wanted ? 'SLÄPP' : 'SIKTA';
+      this.button.textContent = this.wanted ? 'RELEASE' : 'AIM';
     }
   }
 
@@ -128,9 +128,9 @@ export class TacticalControls {
     const manual = w?.slot === 'grenade' || !!w?.projectile;
     // Auto-fire must not make grenades/rocket launchers impossible to use.
     trigger.hidden = !!this.settings.mobileAutoFire && !manual;
-    const label = w?.slot === 'grenade' ? 'KASTA' : w?.projectile ? 'AVFYRA' : 'ELD';
+    const label = w?.slot === 'grenade' ? 'THROW' : w?.projectile ? 'LAUNCH' : 'FIRE';
     if (trigger.textContent !== label) trigger.textContent = label;
-    trigger.setAttribute('aria-label', label === 'KASTA' ? 'Kasta vald granat' : 'Skjut');
+    trigger.setAttribute('aria-label', label === 'THROW' ? 'Throw selected grenade' : 'Fire');
   }
 
   lookScale(touch, yaw, pitch) {
@@ -167,8 +167,8 @@ export class TacticalControls {
   }
 
   settingsMarkup() {
-    return `<label class="setting">Automatisk omladdning <input type="checkbox" data-setting="autoReload" aria-label="Automatisk omladdning" ${this.settings.autoReload ? 'checked' : ''}></label>` +
-      (this.mobile.enabled ? `<label class="setting">Mild sikteshjälp <input type="checkbox" data-setting="mobileAimAssist" aria-label="Mild sikteshjälp" ${this.settings.mobileAimAssist ? 'checked' : ''}></label><p class="setting-note">Saktar ned fingrets sikte nära synliga fiender. Flyttar aldrig siktet åt dig. Dubbeltryck till höger eller tryck SIKTA för zoom.</p>` :
-        '<p class="setting-note">Håll höger musknapp för siktesläge. F växlar läget. Sniper får kikarsikte.</p>');
+    return `<label class="setting">Auto-reload <input type="checkbox" data-setting="autoReload" aria-label="Auto-reload" ${this.settings.autoReload ? 'checked' : ''}></label>` +
+      (this.mobile.enabled ? `<label class="setting">Light aim assist <input type="checkbox" data-setting="mobileAimAssist" aria-label="Light aim assist" ${this.settings.mobileAimAssist ? 'checked' : ''}></label><p class="setting-note">Touch aim slows near visible enemies. Double-tap on the right or tap Aim to zoom.</p>` :
+        '<p class="setting-note">Hold the right mouse button to aim, or press F to toggle. The scout rifle has a scope.</p>');
   }
 }

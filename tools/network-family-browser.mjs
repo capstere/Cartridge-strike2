@@ -119,7 +119,7 @@ async function invite(client, wrongFirst = false) {
   const code = page.getByLabel('Family room password', {exact: true});
   await code.waitFor();
   console.log(client.id, 'family form visible');
-  assert(await page.getByRole('dialog', {name: 'Vrid skärmen'}).isHidden(), 'Portrait sign-in is directly accessible');
+  assert(await page.getByRole('dialog', {name: 'Rotate your screen'}).isHidden(), 'Portrait sign-in is directly accessible');
   const url = new URL(page.url());
   assert.equal(url.origin + url.pathname, fixture.origin + '/fps/');
   assert.deepEqual([...url.searchParams], [['network', 'internet'], ['family', alias]]);
@@ -179,7 +179,7 @@ async function enter(client, name, wrongFirst = false) {
   await password.fill(fixture.familyPassword);
   await press(client, submit);
   await page.locator('#room-title').filter({hasText: 'Lobby'}).waitFor();
-  assert(await page.getByRole('dialog', {name: 'Vrid skärmen'}).isHidden(), 'The waiting room is usable in portrait');
+  assert(await page.getByRole('dialog', {name: 'Rotate your screen'}).isHidden(), 'The waiting room is usable in portrait');
   assert.equal((await page.locator('#room-identity').innerText()).trim(), alias);
   await page.locator('#room-roster tr').filter({hasText: name}).waitFor();
   await snap(client, 'lobby', page.locator('#room-identity'));
@@ -241,7 +241,7 @@ try {
   await press(iphone, iphone.page.locator('#room-start'));
   for (const client of [iphone, android]) await client.page.locator('#resume').waitFor();
   const active = await waitForHealth(s => s.rooms === 1 && s.players === 2 && s.matches[0].phase === 'active' && s.matches[0].tick > 0, 'Real match began');
-  const rotate = iphone.page.getByRole('dialog', {name: 'Vrid skärmen'});
+  const rotate = iphone.page.getByRole('dialog', {name: 'Rotate your screen'});
   await iphone.page.setViewportSize({width: 390, height: 844});
   await rotate.waitFor();
   await snap(iphone, 'match-rotation', rotate);

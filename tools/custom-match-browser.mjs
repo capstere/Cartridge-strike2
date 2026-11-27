@@ -93,7 +93,7 @@ async function switchMap(client, id, viewers) {
 async function screenshot(client, filename, settings) {
   const {page, viewport} = client;
   assert.deepEqual(page.viewportSize(), viewport);
-  assert(await page.getByRole('dialog', {name:'Vrid skärmen'}).isHidden());
+  assert(await page.getByRole('dialog', {name:'Rotate your screen'}).isHidden());
   for (const field of settings) {
     const widget = control(client, field);
     await widget.scrollIntoViewIfNeeded();

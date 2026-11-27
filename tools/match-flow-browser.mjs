@@ -1,9 +1,17 @@
 // Serve the repo root and run this file with the same Playwright install as mobile-smoke.cjs.
 import assert from 'node:assert/strict';
+import {mkdir} from 'node:fs/promises';
+import {join} from 'node:path';
 import { chromium } from '../frontline/source/tools/dev/node_modules/playwright-core/index.mjs';
 
 const origin = process.env.FPS_TEST_ORIGIN || 'http://127.0.0.1:8765';
-const browser = await chromium.launch({ args: ['--no-sandbox', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
+const browser = await chromium.launch({
+  executablePath: process.env.CHROMIUM_PATH,
+  headless: process.env.FPS_NETWORK_HEADED !== '1',
+  args: process.env.FPS_NETWORK_HEADED === '1'
+    ? ['--ozone-platform=wayland','--use-angle=gl-egl','--disable-dev-shm-usage']
+    : ['--no-sandbox','--use-angle=swiftshader','--enable-unsafe-swiftshader'],
+});
 let page;
 try {
   page = await browser.newPage({ viewport: { width: 844, height: 390 }, hasTouch: true, isMobile: true });
@@ -58,14 +66,14 @@ try {
   await start.click();
   await retry.waitFor({ state: 'visible' });
   const timeout = await page.locator('#csl-err-text').textContent();
-  assert.match(timeout, /svarar inte/);
+  assert.match(timeout, /too long to load/);
   await pendingManifest.fulfill({ status: 503, body: 'Unavailable' });
   await page.waitForFunction(() => !document.getElementById('fatal').hidden);
   assert.equal(await page.locator('#csl-err-text').textContent(), timeout);
   await page.locator('#csl-back').click();
   assert.ok(await page.locator('#fatal').isHidden());
   await start.click();
-  assert.match(await page.locator('#csl-err-text').textContent(), /Banlistan/);
+  assert.match(await page.locator('#csl-err-text').textContent(), /map (list|manifest)/i);
   holdManifest = false;
   // Restore the production timeout for the successful boot on slower software GPUs.
   await page.evaluate(() => {
@@ -84,24 +92,56 @@ try {
   assert.ok(await page.evaluate(() => __csFlow.music.track.paused));
   await page.evaluate(() => __fps.showBuy());
   await page.locator('[data-item=armor]').tap();
-  assert.match(await page.locator('#buy-message').textContent(), /köpt/);
-  assert.equal(await page.locator('.cs-buy-detail h4').textContent(), 'Kroppsrustning');
+  assert.equal(await page.locator('#buy-message').getAttribute('data-outcome'), 'accepted');
+  assert.match(await page.locator('#buy-message').textContent(), /purchased|bought/i);
+  assert.match(await page.locator('.cs-buy-detail h4').textContent(), /^Body armor$/i);
+  const remaining = await page.locator('#buy-money').getAttribute('data-credits');
+  assert.equal(Number(remaining), 150);
+  await page.locator('[data-item=smg]').tap();
+  assert.equal(await page.locator('#buy-message').getAttribute('data-outcome'), 'denied');
+  assert.equal(await page.locator('#buy-money').getAttribute('data-credits'), remaining);
+  assert.match(await page.locator('#buy-message').textContent(), /funds|afford|credits|money/i);
   await page.locator('#return-buy').tap();
-  // Drive the real final-round transition without waiting for a full first-to-five match.
-  await page.evaluate(() => {
-    const g = __fps.game;
-    while (g.phase === 'buy') g.step(1 / 60);
-    g.state.score.analysts = g.config.matchWins - 1;
-    g.finishRound({ winner: 'analysts', reason: 'elimination' });
-    __fps.step({}, 0);
+  // Advance the simulation clock and deliver the final damage in each round.
+  // Round resolution, restarts, score and the result overlay use the ordinary game path.
+  const rounds=await page.evaluate(() => {
+    const g=__fps.game,dt=g.config.fixedStep;
+    for(let round=1;round<=g.config.matchWins;round++){
+      const maxSteps=Math.ceil((g.config.buyTime+g.config.resultTime+1)/dt);
+      for(let i=0;i<maxSteps && ['buy','result'].includes(g.phase);i++) g.step(dt);
+      if(g.phase!=='active' || g.state.round!==round) throw Error('Did not enter round '+round);
+      const attacker=g.actors.find(actor=>actor.team==='analysts');
+      for(const defender of g.actors.filter(actor=>actor.team==='counterAnalysts')) g.damage(defender,1000,attacker);
+      g.step(dt);
+    }
+    __fps.step({},0);
+    return g.state.history.map(result=>[result.round,result.winner,result.reason]);
   });
+  assert.deepEqual(rounds,Array.from({length:5},(_,i)=>[i+1,'analysts','elimination']));
   assert.ok(await page.locator('#match-end').isVisible());
+  assert.equal(await page.locator('#match-winner').textContent(), 'Analysts win');
+  assert.equal(await page.locator('#match-score').textContent(), '5 – 0 · 5 rounds');
+  assert.match(await page.locator('#new-match').textContent(), /return to lobby/i);
+  const evidence=process.env.CS3_MATCH_RESULT_EVIDENCE;
+  if(evidence){
+    await mkdir(evidence,{recursive:true});
+    await page.screenshot({path:join(evidence,'touch-solo-result.jpg'),type:'jpeg',quality:75,animations:'disabled'});
+  }
   await page.locator('#new-match').click();
   await page.evaluate(() => __fps.step({}, 0));
   assert.ok(await page.locator('#menu').isVisible());
   assert.ok(await page.locator('#match-end').isHidden());
+  await page.locator('#route-back').tap();
+  await page.locator('#play-title').waitFor();
+  await page.locator('[data-go=solo]:visible').tap();
+  await page.locator('#setup-title').waitFor();
+  await start.tap();
+  await page.locator('#hud').waitFor({timeout:120000});
+  await page.locator('#cs-loading').waitFor({state:'hidden',timeout:120000});
+  assert.match(await page.locator('#round-label').textContent(), /round 1/i);
+  assert.deepEqual(await page.evaluate(() => __fps.game.state.score), {analysts:0,counterAnalysts:0});
   assert.deepEqual(errors, []);
-  console.log('PASS: delayed launch, cancellation, duplicate Enter, timeout, late failure, retry, team, lobby audio and post-match return');
+  console.log('PASS: delayed launch, cancellation, duplicate Enter, timeout, late failure, retry, team, lobby audio, English match result, post-match return and repeat');
 } catch (error) {
   if (page && !page.isClosed()) {
     console.error(await page.evaluate(() => ({

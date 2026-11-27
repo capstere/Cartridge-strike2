@@ -104,24 +104,26 @@ export class AudioSystem {
     this.lastSimTime = simTime;
     this.updateListener(listener);
     this.updateAmbient(listener);
-    for (const event of events) {
-      if (!event || typeof event !== 'object') continue;
-      if (this.seen.has(event) || (event.id != null && this.ids.has(event.id))) {
-        this.stats.duplicates++; continue;
-      }
-      this.seen.add(event);
-      if (event.id != null) {
-        this.ids.add(event.id);
-        if (this.ids.size > 4096) this.ids.delete(this.ids.values().next().value);
-      }
-      // Never replay accumulated pre-unlock, focus-loss or previous-round sound.
-      if (Number.isFinite(event.time) && (event.time < simTime - .4 || event.time > simTime + .1)) {
-        this.stats.stale++; continue;
-      }
-      if (!this.context || this.context.state !== 'running' || !this.listener || this.volume === 0) continue;
-      if (this.active.size >= 96) { this.stats.dropped++; continue; }
-      this.play(event);
+    for (const event of events) this.handleEvent(event, simTime);
+  }
+
+  handleEvent(event, simTime) {
+    if (!event || typeof event !== 'object') return;
+    if (this.seen.has(event) || (event.id != null && this.ids.has(event.id))) {
+      this.stats.duplicates++; return;
     }
+    this.seen.add(event);
+    if (event.id != null) {
+      this.ids.add(event.id);
+      if (this.ids.size > 4096) this.ids.delete(this.ids.values().next().value);
+    }
+    // Never replay accumulated pre-unlock, focus-loss or previous-round sound.
+    if (Number.isFinite(event.time) && (event.time < simTime - .4 || event.time > simTime + .1)) {
+      this.stats.stale++; return;
+    }
+    if (!this.context || this.context.state !== 'running' || !this.listener || this.volume === 0) return;
+    if (this.active.size >= 96) { this.stats.dropped++; return; }
+    this.play(event);
   }
 
   /** Quiet, local room tone; never enters AI hearing or the match random sequence. */

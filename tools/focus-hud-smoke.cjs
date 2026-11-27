@@ -21,7 +21,7 @@ async function boot(browser,mobile){
    HTMLCanvasElement.prototype.requestPointerLock=function(){Object.defineProperty(document,'pointerLockElement',{configurable:true,get:()=>this});return Promise.resolve();};
    document.exitPointerLock=()=>Object.defineProperty(document,'pointerLockElement',{configurable:true,get:()=>null});
  });
- await page.goto(origin+'/fps/?test',{waitUntil:'domcontentloaded',timeout:60000});
+ await page.goto(origin+'/fps/?screen=solo&test',{waitUntil:'domcontentloaded',timeout:60000});
  await page.waitForFunction(()=>globalThis.__fps||!document.getElementById('fatal').hidden,null,{timeout:180000});
  assert.equal(await page.locator('#fatal').isVisible(),false);
  await page.evaluate(()=>{window.requestAnimationFrame=()=>0;});
@@ -85,7 +85,7 @@ async function inspectButtons(page, center=true){
    assert.ok(['he','flash','smoke'].includes(grenade), 'Actual grenade selected from drawer');
    assert.notEqual(grenade,original);
    assert.equal(await page.locator('#mobile-utilities').isVisible(),false);
-   assert.equal(await page.locator('[data-mobile-action=fire]').textContent(),'KASTA');
+   assert.equal(await page.locator('[data-mobile-action=fire]').textContent(),'THROW');
    assert.ok(await page.locator('[data-mobile-action=fire]').isVisible());
    const cdp=await context.newCDPSession(page),r=await page.locator('[data-mobile-action=fire]').boundingBox();
    const before=await page.evaluate(id=>__fps.game.player.inventory[id],grenade);

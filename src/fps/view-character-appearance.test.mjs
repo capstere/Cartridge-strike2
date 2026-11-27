@@ -25,9 +25,9 @@ test('reads linear skin, sRGB shirt and actual hand material without changing so
  p.dispose();p.dispose();assert.equal(disposed,4);
 });
 test('rejects missing or unsupported appearance data',()=>{
- assert.throws(()=>createPrivateViewAppearance({scene:new T.Group()}),/matchas/);
- const a=fixture();a.scene.children[0].geometry.deleteAttribute('color');assert.throws(()=>createPrivateViewAppearance(a),/underarmar/);
- const b=fixture();b.scene.children[1].material.map=new T.Texture();assert.throws(()=>createPrivateViewAppearance(b),/Texturmålade/);
+ assert.throws(()=>createPrivateViewAppearance({scene:new T.Group()}),/hand and sleeve materials could not be matched/);
+ const a=fixture();a.scene.children[0].geometry.deleteAttribute('color');assert.throws(()=>createPrivateViewAppearance(a),/bare forearms could not be matched/);
+ const b=fixture();b.scene.children[1].material.map=new T.Texture();assert.throws(()=>createPrivateViewAppearance(b),/Textured hands are unsupported/);
 });
 function transforms(model){const a=[];model.traverse(o=>a.push([o.name,...o.position.toArray(),...o.quaternion.toArray(),...o.scale.toArray()]));return a;}
 function weaponData(model){const a=[];model.userData.weapon.traverse(o=>{if(o.isMesh)a.push([o.material.uuid,Array.from(o.geometry.attributes.position.array)]);});return a;}
