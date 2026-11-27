@@ -1950,9 +1950,14 @@
       "sha256": "a3d27b3ca5ce32341fa9f96f01169b521b1657c05d1860c45d1e53a6258e9e8b"
     },
     {
+      "path": "shared/multiplayer/access-english.mjs",
+      "bytes": 5865,
+      "sha256": "8f451253499a9fce97c10b37dfb06da2565ba8f4e23ade96db4e5ab35221ac5e"
+    },
+    {
       "path": "shared/multiplayer/build.mjs",
       "bytes": 660,
-      "sha256": "03aef6789d1cce8f81bcf305b8fd4fd2a2cd73899720ab6e98f62cf158aa0418"
+      "sha256": "6f686482605422347d36e08e2015d844fc51cc9e89aafd138295301659411248"
     },
     {
       "path": "shared/multiplayer/collision-contract.mjs",
@@ -1972,7 +1977,7 @@
     {
       "path": "shared/multiplayer/map-build.mjs",
       "bytes": 1215,
-      "sha256": "0b64374c929e4fd3fa18fa5d3b23735047c1f9e5aded3e0f00919343284755b6"
+      "sha256": "b6a860e390ec3bbeeb93e295b4002999210dfa7427902ecdba8ab5b3addab8df"
     },
     {
       "path": "shared/multiplayer/maps.mjs",
@@ -2331,18 +2336,18 @@
     },
     {
       "path": "src/fps/network/connection.mjs",
-      "bytes": 2562,
-      "sha256": "df1804168f06c3b768acae6ee100e9b5d41e722818a877c636ca27b1c3693235"
+      "bytes": 2241,
+      "sha256": "af45e785980a1d6968ec7b4f5812a4b85c1a404e564382bb0bdda2b21ba4f3e2"
     },
     {
       "path": "src/fps/network/menu.mjs",
-      "bytes": 7206,
-      "sha256": "cb3acb7e19959774fe0081e26264c13d164ec6f068e12955aac7c4e07c903302"
+      "bytes": 6764,
+      "sha256": "fe39462c935d814e305470d67be26c2b5a482b22cdbed3aff760695b6ad1fffe"
     },
     {
       "path": "src/fps/network/room-ui.mjs",
-      "bytes": 17528,
-      "sha256": "b77d5285f56596b8923655e082f34a301559ef24b47aa01b8ad3fe1ae9f71871"
+      "bytes": 17032,
+      "sha256": "ec4b602b07943b2f9086cc2ebf83fc429b8d4c14e4389b8ccc0d6b9c4fb6842d"
     },
     {
       "path": "src/fps/network/session.mjs",
@@ -2650,7 +2655,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 59025743,
+  "bytes": 59030349,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

@@ -161,8 +161,9 @@ try{
  await until(()=>fixture.authority.rooms.size===0,'room cleanup');assert.deepEqual(errors,[]);
  // A session lost on server restart must offer a working login, not trap the player.
  await friend.context().clearCookies();await friend.locator('[data-create=true]').tap();
- await friend.getByText('Logga in igen',{exact:true}).waitFor({state:'visible'});
- await friend.getByText('Logga in igen',{exact:true}).tap();await friend.locator('[name=invite]').waitFor();
+ await friend.locator('#network-status[data-error-id=pilotExpired]').waitFor();
+ await friend.getByText('Sign in again',{exact:true}).waitFor({state:'visible'});
+ await friend.getByText('Sign in again',{exact:true}).tap();await friend.locator('[name=invite]').waitFor();
  await friend.locator('[name=invite]').fill(fixture.invite);await friend.locator('button[type=submit]').tap();
  await friend.locator('#network-name').waitFor();assert.equal(await friend.locator('#network-room').inputValue(),roomId);
  const result={status:'PASS',mapId,buildHash:CONTRACT.buildHash,browser:browsers[0].version(),bots:0,date:new Date().toISOString(),renderedClients:2,protocolOnlyClients:0,physicalDevices:false,transport:'HTTPS/WSS pinned loopback fixture',scoreResult,timeResult:timed,drawResult:draw,sharedRoomLogin:true,expiredLoginRecovery:true,bothMovementControls:true,touchFire:true,deathRespawn:true,sameRoomRematch:true,teamChange:true,ownerTransfer:true,cleanup:true};
