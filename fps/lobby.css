@@ -103,7 +103,7 @@
 .lb-start-a{font-size:30px;transition:transform .25s var(--lb-ease)}
 .lobby #start:hover:not(:disabled) .lb-start-a{transform:translateX(6px)}
 .lobby #start:disabled{background:#1d2533;color:#6c788a;box-shadow:none;opacity:1;cursor:progress}
-.lobby #start:disabled .lb-start-t::after{content:" · laddar";font-size:.5em;letter-spacing:.2em;color:#6c788a}
+.lobby #start:disabled .lb-start-t::after{content:" · loading";font-size:.5em;letter-spacing:.2em;color:#6c788a}
 
 /* Right column — operator plate + briefing */
 .lb-right{grid-column:3;grid-row:2/4;display:flex;flex-direction:column;justify-content:space-between;gap:24px;padding:clamp(24px,5vh,56px) clamp(20px,3vw,44px) 36px 0;min-height:0;overflow-y:auto}

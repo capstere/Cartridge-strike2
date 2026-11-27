@@ -11,8 +11,8 @@ function rotatePrompt() {
   const el = document.createElement('div');
   el.className = 'cs-rotate';
   el.setAttribute('role', 'dialog');
-  el.setAttribute('aria-label', 'Vrid skärmen');
-  el.innerHTML = '<div class="cs-rotate-phone" aria-hidden="true"></div><small>CARTRIDGE//STRIKE</small><strong>Vrid telefonen</strong><p>Spelet är anpassat för liggande läge. Vrid telefonen för bästa spelupplevelse.</p><button type="button">Fortsätt ändå</button>';
+  el.setAttribute('aria-label', 'Rotate your screen');
+  el.innerHTML = '<div class="cs-rotate-phone" aria-hidden="true"></div><small>CARTRIDGE//STRIKE</small><strong>Rotate your phone</strong><p>Landscape gives you more room to move and aim.</p><button type="button">Continue in portrait</button>';
   el.querySelector('button').addEventListener('click', () => {
     html.classList.add('cs-rotate-ok');
     try { sessionStorage.setItem('cs-rotate-ok', '1'); } catch {}
@@ -20,5 +20,11 @@ function rotatePrompt() {
   document.body.appendChild(el);
 }
 
-function init() { rotatePrompt(); }
+function init() {
+  rotatePrompt();
+  const menu = document.getElementById('menu');
+  const sync = () => html.classList.toggle('cs-in-match', menu.hidden);
+  new MutationObserver(sync).observe(menu, {attributes:true, attributeFilter:['hidden']});
+  sync();
+}
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
