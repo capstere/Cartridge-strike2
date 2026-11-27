@@ -96,3 +96,19 @@ test('shot foley discards stale markers across interruption, actor replacement a
     f.update(audio,1.16,2.3);assert.deepEqual(heard,[]);assert.equal(f.pending.size,0);
   }
 });
+
+test('a spectator ear or life change stops spatially placed mechanisms from the former viewpoint',()=>{
+  for(const change of [{id:'b'},{lifeId:8},{controlEpoch:4},{alive:false}]){
+    const actor={id:'scout',weapon:'sniper',alive:true,lifeId:1,controlEpoch:1,reloadUntil:0};
+    const ear={id:'a',alive:true,lifeId:7,controlEpoch:3},f=new ReloadFoley(),heard=[];
+    const audio={volume:1,context:{state:'running'},game:{actors:[actor],phase:'active',state:{round:1}}};
+    f.play=(a,p,cue)=>heard.push(cue.take);
+    f.update(audio,.99,1,[{type:'shot',actorId:'scout',weapon:'sniper',time:1,actionId:'shot1'}],ear);
+    let stopped=0;
+    f.voices.set('scout/action',{id:actor.id,source:{stop:()=>stopped++},weapon:'sniper',life:1,epoch:1,reloadUntil:0,round:1,until:1.9});
+    f.update(audio,1,1.04,[],{...ear});
+    assert.equal(stopped,0);assert.equal(f.pending.size,1);
+    f.update(audio,1.04,1.16,[],{...ear,...change});
+    assert.equal(stopped,1);assert.equal(f.pending.size,0);assert.deepEqual(heard,[]);
+  }
+});

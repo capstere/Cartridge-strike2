@@ -1,0 +1,222 @@
+{
+  "browser": "156.0.8078.79",
+  "sampleRate": 48000,
+  "rows": [
+    {
+      "weapon": "cr4",
+      "distance": 0,
+      "bank": "g_rifle_pov",
+      "starts": [
+        {
+          "name": "armes/g_rifle_pov-1.mp3",
+          "time": 0,
+          "offset": 0,
+          "channels": 1
+        },
+        {
+          "name": "armes/g_rifle_pov-2.mp3",
+          "time": 1,
+          "offset": 0,
+          "channels": 1
+        }
+      ],
+      "firstPcmMs": 0.3125,
+      "peak": 0.49536949396133423,
+      "secondPeak": 0.48679736256599426,
+      "errors": []
+    },
+    {
+      "weapon": "cr4",
+      "distance": 8,
+      "bank": "g_rifle_near",
+      "starts": [
+        {
+          "name": "armes/g_rifle_near-1.mp3",
+          "time": 0.023323615160349854,
+          "offset": 0,
+          "channels": 1
+        },
+        {
+          "name": "armes/g_rifle_near-2.mp3",
+          "time": 1.0233236151603498,
+          "offset": 0,
+          "channels": 1
+        }
+      ],
+      "firstPcmMs": 29.854166666666668,
+      "peak": 0.07531839609146118,
+      "secondPeak": 0.05992690101265907,
+      "errors": []
+    },
+    {
+      "weapon": "cr4",
+      "distance": 48,
+      "bank": "g_far_rifle",
+      "starts": [
+        {
+          "name": "armes/g_far_rifle-1.mp3",
+          "time": 0.13994169096209913,
+          "offset": 0,
+          "channels": 1
+        },
+        {
+          "name": "armes/g_far_rifle-2.mp3",
+          "time": 1.1399416909620992,
+          "offset": 0,
+          "channels": 1
+        }
+      ],
+      "firstPcmMs": 146.3125,
+      "peak": 0.01057555340230465,
+      "secondPeak": 0.01312237698584795,
+      "errors": []
+    },
+    {
+      "weapon": "p9",
+      "distance": 0,
+      "bank": "g_glock_pov",
+      "starts": [
+        {
+          "name": "armes/g_glock_pov-1.mp3",
+          "time": 0,
+          "offset": 0,
+          "channels": 1
+        },
+        {
+          "name": "armes/g_glock_pov-2.mp3",
+          "time": 1,
+          "offset": 0,
+          "channels": 1
+        }
+      ],
+      "firstPcmMs": 0.16666666666666666,
+      "peak": 0.5377821326255798,
+      "secondPeak": 0.5024547576904297,
+      "errors": []
+    },
+    {
+      "weapon": "p9",
+      "distance": 8,
+      "bank": "g_glock_near",
+      "starts": [
+        {
+          "name": "armes/g_glock_near-1.mp3",
+          "time": 0.023323615160349854,
+          "offset": 0,
+          "channels": 1
+        },
+        {
+          "name": "armes/g_glock_near-2.mp3",
+          "time": 1.0233236151603498,
+          "offset": 0,
+          "channels": 1
+        }
+      ],
+      "firstPcmMs": 30.666666666666668,
+      "peak": 0.08066393435001373,
+      "secondPeak": 0.08649513125419617,
+      "errors": []
+    },
+    {
+      "weapon": "p9",
+      "distance": 48,
+      "bank": "g_far_pistol",
+      "starts": [
+        {
+          "name": "armes/g_far_pistol-1.mp3",
+          "time": 0.13994169096209913,
+          "offset": 0,
+          "channels": 1
+        },
+        {
+          "name": "armes/g_far_pistol-2.mp3",
+          "time": 1.1399416909620992,
+          "offset": 0,
+          "channels": 1
+        }
+      ],
+      "firstPcmMs": 147.625,
+      "peak": 0.013913623988628387,
+      "secondPeak": 0.013254311867058277,
+      "errors": []
+    }
+  ],
+  "latch": {
+    "latch": true,
+    "sources": 1,
+    "firstPcmMs": 5.708333333333333,
+    "peak": 0.26511749625205994,
+    "errors": []
+  },
+  "flash": [
+    {
+      "label": "near",
+      "ringStarted": true,
+      "frequency": 3133.7099811676085,
+      "early": 0.008992367436399244,
+      "late": 0.0006171284615934629,
+      "tail": 0
+    },
+    {
+      "label": "reduced",
+      "ringStarted": true,
+      "frequency": 3104.227710339054,
+      "early": 0.0007171638155691895,
+      "late": 0,
+      "tail": 0
+    },
+    {
+      "label": "wall",
+      "ringStarted": true,
+      "frequency": 3122.359339050408,
+      "early": 0.002922553580883531,
+      "late": 0,
+      "tail": 0
+    },
+    {
+      "label": "far",
+      "ringStarted": false,
+      "frequency": 0,
+      "early": 0,
+      "late": 0,
+      "tail": 0
+    },
+    {
+      "label": "reset",
+      "ringStarted": true,
+      "frequency": 0,
+      "early": 0,
+      "late": 0,
+      "tail": 0
+    },
+    {
+      "label": "spectator",
+      "ringStarted": true,
+      "frequency": 0,
+      "early": 0,
+      "late": 0,
+      "tail": 0
+    },
+    {
+      "label": "newLife",
+      "ringStarted": true,
+      "frequency": 0,
+      "early": 0,
+      "late": 0,
+      "tail": 0
+    }
+  ],
+  "worldTone": {
+    "before": 0.12084997594796208,
+    "exposed": 0.00011476207426132876,
+    "recovered": 0.12084997594796208
+  },
+  "cancelled": {
+    "cancelled": true,
+    "silence": true,
+    "remaining": 0
+  },
+  "revision": "138dbbf4c1a9025658c2ba8bc3b0a0f2f78c4a0e",
+  "tree": "394a68834fcf2c727b406587d88436200247139b",
+  "device": "Raspberry Pi 5, local Chromium OfflineAudioContext before device output"
+}

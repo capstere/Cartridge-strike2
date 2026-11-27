@@ -28,6 +28,7 @@ export class ReloadFoley {
     this.buffers = new Map();
     this.voices = new Map();
     this.pending = new Map();
+    this.listener = null;
     this.seen = new Set();
   }
 
@@ -47,9 +48,17 @@ export class ReloadFoley {
     return this.loading;
   }
 
-  update(audio,previous,time,events=[]) {
-    const game=audio.game;
-    const audible=!!game && audio.volume>0 && audio.context?.state==='running' && !game.state.paused;
+  update(audio,previous,time,events=[],listener=null) {
+    const game=audio.game,ear=this.listener;
+    if(listener && (!ear || ear.id!==listener.id || ear.life!==listener.lifeId ||
+        ear.epoch!==listener.controlEpoch || ear.alive!==listener.alive)){
+      if(ear){
+        for(const voice of this.voices.values())voice.source.stop();
+        this.voices.clear();this.pending.clear();previous=time;
+      }
+      this.listener={id:listener.id,life:listener.lifeId,epoch:listener.controlEpoch,alive:listener.alive};
+    }
+    const audible=!!game && listener?.alive!==false && audio.volume>0 && audio.context?.state==='running' && !game.state.paused;
     for(const [key,voice] of this.voices){
       const actor=game?.actors.find(a=>a.id===voice.id);
       if(!audible || !actor?.alive || actor.weapon!==voice.weapon || actor.lifeId!==voice.life ||
@@ -113,7 +122,7 @@ export class ReloadFoley {
 
   reset(){
     // AudioSystem.reset stops all tracked Web Audio sources.
-    this.voices.clear();this.pending.clear();this.seen.clear();
+    this.voices.clear();this.pending.clear();this.seen.clear();this.listener=null;
   }
 
   play(audio,actor,cue,remaining) {

@@ -54,6 +54,8 @@ async function play(touch) {
      assert(touch,'flash capture uses touch controls');
      const {captureFlashOverlap}=await import('./handling-overlap-probe.mjs');
      await captureFlashOverlap(page,out);
+     const {captureCartridges}=await import('./handling-cartridge-probe.mjs');
+     await captureCartridges(page,out);
      return;
    }
    if(process.env.FAMILY_CAPTURE){
@@ -110,6 +112,13 @@ async function play(touch) {
      await capture(name+'-enter',!reduced);
      entry.push(...await steps(Math.ceil(.15*hz),hz));
      assert(entry.some(v=>v.weight>.8),name+' built Rush');
+     if(touch){
+       const stickColor=await page.evaluate(()=>{
+         const base=document.querySelector('[data-mobile-stick]'),nub=base.querySelector('[data-mobile-nub]');
+         return [getComputedStyle(nub).backgroundColor,getComputedStyle(base,'::after').borderTopStyle];
+       });
+       assert.deepEqual(stickColor,['rgb(237, 191, 77)','dashed'],name+' recorded gold thumb and outer arc');
+     }
      if(weapon==='p9')for(const sample of entry.filter(v=>v.weight>.87)){
        const [x,y]=sample.wristScreen;assert(x<-.16&&x>-.88&&y<-.45&&y>-.98,name+' visible free wrist '+sample.wristScreen);
      }
@@ -253,6 +262,7 @@ async function play(touch) {
 }
 try{
  browser=await chromium.launch({headless:false,executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',
-   args:['--no-sandbox','--ozone-platform=wayland','--use-angle=gl-egl','--disable-background-timer-throttling','--disable-renderer-backgrounding']});
+   args:['--no-sandbox','--ozone-platform=wayland','--use-angle=gl-egl','--disable-background-timer-throttling','--disable-renderer-backgrounding',
+      '--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE localhost, EXCLUDE 127.0.0.1']});
  for(const profile of profiles.length?profiles:['desktop','touch'])await play(profile==='touch');
 }finally{await browser?.close();await server.close();}

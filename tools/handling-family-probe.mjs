@@ -47,7 +47,9 @@ export async function captureHandlingFamilies(page,out){
     assert.equal(ready.weapon,id);
     await page.mouse.down();await page.mouse.up();
     const early=await sample(.067);
-    const motion=await sample(id==='sniper'?.40:id==='shotgun'?.25:0);
+    // At the 30 Hz sampling rate the released edge first renders one frame
+    // after input. Cross the modeled .44/.30 marker before counting its case.
+    const motion=await sample(id==='sniper'?.433:id==='shotgun'?.30:0);
     assert.equal(early.ammo,ready.ammo-1);
     const lateEject=id==='sniper'||id==='shotgun',noCasing=id==='bazooka';
     assert.equal(early.casings-ready.casings,lateEject||noCasing?0:1);

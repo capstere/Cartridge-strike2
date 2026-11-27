@@ -150,3 +150,9 @@ html[data-hud=full] #mobile-controls #mobile-utilities .mobile-button{
 html #flash-overlay,html #smoke-overlay,html #damage-overlay{z-index:2}
 html.hud-low-ammo #hud #ammo{color:#ffad94}
 html.hud-low-ammo #hud #reload-text{color:#ffd9b9}
+
+/* The donor's outer-stick Rush turns the thumb and base gold. The dashed
+   outer arc stays distinguishable from the solid base on either HUD. */
+html #mobile-controls [data-mobile-stick].active.rushing{border-color:#e5b642!important}
+html #mobile-controls [data-mobile-stick].active.rushing [data-mobile-nub]{background:#edbf4d!important;border-color:#ffda7e!important}
+html #mobile-controls .mobile-stick[data-mobile-stick].active.rushing::after{border-style:dashed}
