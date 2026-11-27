@@ -1,3 +1,4 @@
+import {stickRush} from './rush.mjs';
 // Dedicated dual-stick touchscreen controls for Cartridge Strike.
 // Shares the same Game input contract as keyboard/mouse; never requires Pointer Lock.
 export function isTouchDevice() {
@@ -11,12 +12,12 @@ const clamp = (x, lo, hi) => Math.max(lo, Math.min(hi, x));
 const HELD = new Set(['fire', 'jump', 'crouch', 'interact', 'sneak']);
 
 export class MobileControls {
-  constructor({ root, onLook, onAction }) {
+  constructor({ root, onLook, onAction, onFirePress }) {
     this.enabled = isTouchDevice();
     this.root = root;
     this.onLook = onLook;
     this.onAction = onAction;
-    this.state = { forward: 0, strafe: 0, fire: false, jump: false, crouch: false, interact: false, sneak: false };
+    this.state = { forward: 0, strafe: 0, fire: false, jump: false, crouch: false, interact: false, sneak: false, sprint:false };
     this.stickId = null;
     this.lookId = null;
     this.buttonPointers = new Map();
@@ -37,6 +38,8 @@ export class MobileControls {
       const distance = Math.hypot(dx, dy);
       const scale = distance > radius ? radius / distance : 1;
       nub.style.transform = 'translate(' + (dx * scale).toFixed(1) + 'px,' + (dy * scale).toFixed(1) + 'px)';
+      this.state.sprint=stickRush(this.state.sprint,distance/radius,distance ? -dy/distance : 0);
+      stick.classList.toggle('rushing',this.state.sprint);
       this.state.strafe = clamp(dx / radius, -1, 1);
       this.state.forward = clamp(-dy / radius, -1, 1);
     };
@@ -44,7 +47,8 @@ export class MobileControls {
       if (e.pointerId !== this.stickId) return;
       this.stickId = null;
       this.state.strafe = this.state.forward = 0;
-      stick.classList.remove('active');
+      this.state.sprint=false;
+      stick.classList.remove('active','rushing');
       nub.style.transform = '';
     };
     zone.addEventListener('pointerdown', e => {
@@ -104,6 +108,7 @@ export class MobileControls {
         if (this.buttonPointers.has(e.pointerId)) return;
         this.buttonPointers.set(e.pointerId, button);
         button.classList.add('pressed');
+        if(action==='fire' && !this.state.fire)onFirePress?.();
         if (HELD.has(action)) this.state[action] = true;
         else this.onAction(action);
         try { button.setPointerCapture(e.pointerId); } catch {}
@@ -140,7 +145,8 @@ export class MobileControls {
     this.clearActions();
     this.state.forward = this.state.strafe = 0;
     this.stickId = this.lookId = null;
-    if (this.stick) this.stick.classList.remove('active');
+    this.state.sprint=false;
+    if (this.stick) this.stick.classList.remove('active','rushing');
     if (this.nub) this.nub.style.transform = '';
   }
 
@@ -151,6 +157,7 @@ export class MobileControls {
     this.root.hidden = !show;
     this.root.classList.toggle('mobile-dead', !alive);
     if (!alive) {
+      this.clear();
       this.state.fire = this.state.jump = this.state.interact = this.state.crouch = this.state.sneak = false;
     }
   }

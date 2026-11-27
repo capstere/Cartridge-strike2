@@ -1,5 +1,9 @@
 {
-  "src/fps/movement.mjs": [],
+  "src/fps/rush.mjs": [],
+  "src/fps/movement.mjs": [
+    "src/fps/rush.mjs",
+    "src/fps/zombie-poses.mjs"
+  ],
   "src/fps/body-recovery.mjs": [],
   "src/fps/config.mjs": [],
   "src/fps/zombie-poses.mjs": [],
@@ -24,6 +28,7 @@
   ],
   "vendor/yuka/yuka.module.js": [],
   "src/fps/action-rules.mjs": [
+    "src/fps/rush.mjs",
     "src/fps/bots.mjs",
     "src/fps/combat-flow.mjs",
     "src/fps/config.mjs",
@@ -71,6 +76,7 @@
     "src/fps/config.mjs",
     "src/fps/grenade-physics.mjs",
     "src/fps/movement.mjs",
+    "src/fps/rush.mjs",
     "src/fps/player-names.mjs",
     "src/fps/tactical-rules.mjs",
     "src/fps/zombie-poses.mjs",
@@ -221,8 +227,28 @@
     "src/fps/living-floor-plan.mjs",
     "src/fps/navigation.mjs",
     "src/fps/physics.mjs",
+    "src/fps/reference-world.mjs",
     "src/fps/start-elevators.mjs",
     "src/fps/tactical-map.mjs",
     "src/world.js"
+  ],
+  "src/fps/reference-world.mjs": [
+    "src/fps/bot-tactics.mjs",
+    "src/fps/destructible-glass.mjs",
+    "src/fps/doors.mjs",
+    "src/fps/reference-navigation.mjs",
+    "src/fps/reference-rays.mjs",
+    "src/fps/reference-terrain.mjs"
+  ],
+  "src/fps/reference-navigation.mjs": [
+    "src/fps/physics.mjs",
+    "vendor/yuka/yuka.module.js"
+  ],
+  "src/fps/reference-rays.mjs": [
+    "src/fps/reference-prop-ray.mjs"
+  ],
+  "src/fps/reference-prop-ray.mjs": [],
+  "src/fps/reference-terrain.mjs": [
+    "src/fps/physics.mjs"
   ]
 }

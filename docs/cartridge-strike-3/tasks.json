@@ -38,7 +38,11 @@
       "tests": "IMG_8150, 8158, 8160–8162 and 8164, V1 countdown, English guest Pages and denied/authorized Pi routes. Provide class-picker navigation for later class/wardrobe owners. Exercise real loading, Classic buy success/failure and re-login after translation.",
       "exit": "Menu→match→results real flows; stable back/resize/focus.",
       "status": "IN_PROGRESS",
-      "branch": "cs3/01-english-frontend"
+      "branch": "cs3/01-runtime-english",
+      "pullRequests": [
+        48,
+        50
+      ]
     },
     {
       "id": "CS3-02",
@@ -52,7 +56,20 @@
       "tests": "RECORDING_REVIEW V2/V4/V6, input tick → legal shot → ammo/FX, near/far A/V onset, pause/cancel. Use view-arms-capture, recoil-autofire, online-equipment and the sprint-reload reticle fixture.",
       "exit": "Readable camera and grips, distinct supported poses, no lost tap or duplicate shot/foley. Fixed-step client/server/offline trace and synchronized video per weapon family.",
       "status": "IN_PROGRESS",
-      "branch": "cs3/02-rush"
+      "branch": "cs3/02-handling",
+      "pullRequests": [
+        49
+      ],
+      "mergedSlices": [
+        "1a0e1fab3ed2fe53f9764470039a89ebe5943598"
+      ],
+      "evidence": [
+        "evidence/rush/README.md"
+      ],
+      "workBranches": [
+        "cs3/02-handling",
+        "cs3/02-spatial-audio"
+      ]
     },
     {
       "id": "CS3-03",

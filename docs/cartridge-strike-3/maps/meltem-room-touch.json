@@ -1,0 +1,198 @@
+{
+  "scenario": "meltemTouch",
+  "map": "meltem",
+  "physicalPhone": false,
+  "transport": "TLS loopback",
+  "date": "2026-11-27T12:47:40.155Z",
+  "revision": "377595e0c4cc10cabc285702bdf3e777d00ed6ef",
+  "buildHash": "4a43404a2a30d316fd7e4827e99fd8396c3e46a1c69a5a6887cc69c0c21d46d9",
+  "manifestHash": "78ede297956d7417509c64145f5bd37b50ba76d054e88fd4d1528b0d9bb0cd2f",
+  "cpu": "Cortex-A76",
+  "arch": "arm64",
+  "os": "linux",
+  "node": "v26.13.0",
+  "model": "Raspberry Pi 5 Model B Rev 1.1",
+  "warmupMs": 3000,
+  "windowMs": 10000,
+  "scheduledSeconds": 45,
+  "scoreTarget": 150,
+  "args": [
+    "--use-angle=gl-egl",
+    "--ignore-gpu-blocklist",
+    "--enable-unsafe-swiftshader",
+    "--disable-renderer-backgrounding",
+    "--disable-background-timer-throttling",
+    "--disable-backgrounding-occluded-windows",
+    "--host-resolver-rules=MAP 127.0.0.1 127.0.0.1",
+    "--no-proxy-server",
+    "--ozone-platform=wayland"
+  ],
+  "renderedClients": 1,
+  "sdkPeers": 1,
+  "phaseLog": [
+    {
+      "step": "enter waiting room",
+      "elapsedMs": 6616
+    },
+    {
+      "step": "load meltem",
+      "elapsedMs": 26798
+    },
+    {
+      "step": "start match",
+      "elapsedMs": 34615
+    },
+    {
+      "step": "measure active game",
+      "elapsedMs": 40026
+    },
+    {
+      "step": "reconnect",
+      "elapsedMs": 50249
+    },
+    {
+      "step": "finish match",
+      "elapsedMs": 50554
+    },
+    {
+      "step": "complete",
+      "elapsedMs": 81843
+    }
+  ],
+  "browser": "156.0.8078.79",
+  "viewport": {
+    "width": 915,
+    "height": 412
+  },
+  "signInToFormMs": 5505,
+  "enterToWaitingMs": 20182,
+  "selectMapMs": 3022,
+  "players": {
+    "humanSlots": 2,
+    "bots": 0
+  },
+  "startToPlayableMs": 1641,
+  "controls": {
+    "distanceM": 0.71,
+    "ammoBefore": 30,
+    "ammoAfter": 28,
+    "team": "counterAnalysts"
+  },
+  "measurement": {
+    "client": {
+      "frameIntervalMs": {
+        "n": 567,
+        "min": 8.7,
+        "p50": 16.6,
+        "p95": 22.2,
+        "p99": 29.8,
+        "max": 126.6
+      },
+      "renderCpuMs": {
+        "n": 568,
+        "min": 4.8,
+        "p50": 6.8,
+        "p95": 10.2,
+        "p99": 20.9,
+        "max": 120.7
+      },
+      "draws": {
+        "n": 568,
+        "min": 245,
+        "p50": 245,
+        "p95": 245,
+        "p99": 247,
+        "max": 251
+      },
+      "triangles": {
+        "n": 568,
+        "min": 304674,
+        "p50": 304674,
+        "p95": 304674,
+        "p99": 305052,
+        "max": 305078
+      },
+      "pixelRatio": {
+        "n": 568,
+        "min": 0.78,
+        "p50": 0.78,
+        "p95": 0.78,
+        "p99": 0.78,
+        "max": 0.78
+      }
+    },
+    "server": {
+      "executionMs": {
+        "n": 605,
+        "min": 0.1,
+        "p50": 0.51,
+        "p95": 1.07,
+        "p99": 1.98,
+        "max": 6.86
+      },
+      "intervalMs": {
+        "n": 604,
+        "min": 0.29,
+        "p50": 16.18,
+        "p95": 19,
+        "p99": 32.29,
+        "max": 42.97
+      },
+      "executionOver33": 0,
+      "executionOver50": 0,
+      "intervalOver33": 2,
+      "rttMs": 0,
+      "tick": 2314
+    },
+    "resources": {
+      "projectId": "lvl-meltem",
+      "level": "Meltem",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        713,
+        321
+      ],
+      "quality": "low",
+      "geometries": 344,
+      "textures": 41,
+      "programs": 40,
+      "owners": 2,
+      "disposals": 1,
+      "reachableOwners": 2,
+      "liveOwners": 1
+    }
+  },
+  "sourceGeometry": {
+    "inScene": true,
+    "groups": 293,
+    "triangles": 291400,
+    "projectId": "lvl-meltem"
+  },
+  "reconnectMap": "meltem",
+  "completed": {
+    "matchId": 1,
+    "winner": "draw",
+    "reason": "time",
+    "score": {
+      "analysts": 0,
+      "counterAnalysts": 0
+    },
+    "players": [
+      {
+        "id": "counterAnalysts-0",
+        "name": "Mapptest",
+        "team": "counterAnalysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "analysts-0",
+        "name": "Spelare 2",
+        "team": "analysts",
+        "kills": 0,
+        "deaths": 0
+      }
+    ]
+  },
+  "status": "PASS"
+}

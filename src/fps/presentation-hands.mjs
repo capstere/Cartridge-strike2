@@ -135,6 +135,19 @@ export function poseViewHands(model, magazineAmount = 0, action = 0, shot = 0, r
 // rotates the gun and hands around the camera; the arm roots belong to the actor.
 const rightShoulder = new T.Vector3(.235,-.355,-.115);
 const leftShoulder = new T.Vector3(-.17,-.36,-.255);
+// The reference pistol runner's free wrist swings in camera space. Both
+// sleeves are refitted after the held weapon takes its final transform.
+export function releasePistolSupport(model,weight,stride,bounce) {
+  const {leftHand,handPose:state}=model.userData;
+  if(!state)return;
+  const mix=T.MathUtils.smoothstep(weight,.15,.85);
+  model.updateMatrix();
+  state.inverse.copy(model.matrix).invert();
+  state.position.set(-.20+.015*stride,-.43+.025*bounce,-.26+.10*stride).applyMatrix4(state.inverse);
+  leftHand.position.lerp(state.position,mix);
+  leftHand.quaternion.slerp(loosePalm,mix);
+  fingers(leftHand,.6,false);
+}
 export function refitViewArms(model) {
   const d = model.userData, state = d.handPose;
   if (!state) return;

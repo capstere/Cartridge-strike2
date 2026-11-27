@@ -10,6 +10,17 @@ const {parseProject}=await import('../../furniture-editor/build/level-project.mj
 const project=parseProject(await readFile(new URL('../../levels/meltem.json',import.meta.url),'utf8'));
 const world=createWorld({levelProject:project,fresh:true});
 
+test('the Meltem pilot is selectable only in its reviewed modes',async()=>{
+  const {DEFAULT_MAP_ID,networkMap}=await import('../../shared/multiplayer/maps.mjs');
+  const catalog=JSON.parse(await readFile(new URL('../../levels/manifest.json',import.meta.url),'utf8'));
+  const entry=catalog.levels.find(map=>map.id==='meltem'),online=networkMap('meltem');
+  assert.deepEqual(entry.modes,['endless']);assert.notEqual(entry.randomEligible,true);
+  assert.deepEqual(online.modes,['tdm']);assert.equal(online.residents,false);
+  assert.equal(entry.file,online.file);assert.equal(entry.preview,online.preview);
+  assert.equal(catalog.defaultLevel,DEFAULT_MAP_ID);
+  assert.ok(networkMap('compact-arena')&&networkMap(DEFAULT_MAP_ID));
+});
+
 test('Meltem retains all source collision volumes, layered routes and the ten reviewed spawn anchors',()=>{
   assert.equal(world.staticBoxes.length,791);
   assert.deepEqual(world.navigation.statistics,{nodes:5376,edges:31504,source:'Riposte layered walk graph'});

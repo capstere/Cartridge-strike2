@@ -1,3 +1,4 @@
+import {resetRush,rushReady,queueShot,takeReadyShot} from './rush.mjs';
 import {moveActor,moveBody} from './movement.mjs';
 import {rejoinNavigation} from './body-recovery.mjs';
 import {populateZombies,tickZombies,tickDance,reactZombie} from './zombies.mjs';
@@ -127,6 +128,7 @@ export class Game {
         lastStep: s.time, fireHeld: false, interactHeld: false, jumpHeld: false, lastWeapon: 'knife', hurtTime: -Infinity, hurtDirection: null, deathAt: null, deathCause: null, deathVariant: '',
         weapon: actor.inventory.primary?.id ?? actor.inventory.pistol?.id ?? 'knife',
       });
+      resetRush(actor);
       actor.bot = actor.controllerType === 'bot' ? new BotController(this, actor) : null;
     }
     s.hostages = (this.config.networkSlice && this.config.mode !== 'classic' ? [] : this.world.anchors.hostages).map((p, i) => ({ ...point(p), id: `hostage-${i}`, name: `Gisslan ${i + 1}`, height: 1.6, radius: this.config.radius, vy: 0, onGround: true, rescued: false, escortId: null, path: [], pathAt: 0, distanceWalked: 0 }));
@@ -150,11 +152,14 @@ export class Game {
   }
   weaponItem(id) { const w = WEAPONS[id]; return { id, ammo: w.magazine, reserve: w.reserve }; }
   item(actor = this.player) { const w = WEAPONS[actor.weapon]; return actor.inventory[w?.slot] ?? null; }
-  pause(value = true) { this.state.paused = Boolean(value); this.accumulator = 0; for (const a of this.actors) { a.fireHeld = false; a.interactHeld = false; a.jumpHeld = false; a.action = null; } }
+  pause(value = true) { this.state.paused = Boolean(value); this.accumulator = 0; this.firePress = null; for (const a of this.actors) { resetRush(a); a.fireHeld = false; a.interactHeld = false; a.jumpHeld = false; a.action = null; } }
   update(dt, input = {}) {
     if (this.state.paused || ['menu', 'match'].includes(this.phase)) return;
+    if (input.firePress && this.phase==='active') this.firePress ??= input.firePress;
     this.accumulator += Math.min(Math.max(0, dt), this.config.maxCatchUp);
-    while (this.accumulator + EPS >= this.config.fixedStep) { this.step(this.config.fixedStep, input); this.accumulator -= this.config.fixedStep; }
+    while (this.accumulator + EPS >= this.config.fixedStep) { this.step(this.config.fixedStep, this.firePress ? {...input,firePress:this.firePress} : input); this.firePress=null;
+      if(input.firePress)input={...input,firePress:null};
+      this.accumulator -= this.config.fixedStep; }
   }
   /** One externally clocked authoritative tick; never enters update's accumulator. */
   stepActors(inputsByActor = new Map()) { this.step(this.config.fixedStep, {}, inputsByActor); }
@@ -189,12 +194,21 @@ export class Game {
       actor.flash = actor.flashUntil > s.time ? actor.flashStrength * (actor.flashUntil - s.time) / (actor.flashUntil - actor.flashStart) : 0;
       this.completeReloadIfDue(actor);
       const controls = actor.bot ? actor.bot.update(dt) : actor.controllerType === 'human' ? (inputsByActor?.get(actor.id) ?? (actor.isPlayer && !inputsByActor ? input : {})) : {};
-      if(this.config.networkSlice && !actor.bot){
-        actor.aiming=!!controls.aim && canAim(actor.weapon) && !actor.reloadUntil && !actor.action;
-        actor.aimAmount=actor.aiming?advanceAim(actor.aimAmount||0,true,dt):0;
+      const press=controls.firePress || (controls.fire && !actor.fireHeld && !controls.autoFire);
+      if(!this.authorizeShot && press && !actor.reloadUntil && !actor.action && (controls.firePress || !rushReady(actor))) {
+        queueShot(actor,{yaw:press.yaw??controls.yaw??actor.yaw,pitch:press.pitch??controls.pitch??actor.pitch},s.time);
       }
       this.moveActor(actor, controls, dt);
-      if (controls.fire) this.fire(actor, this.config.networkSlice || !!controls.autoFire || !actor.fireHeld);
+      if(this.config.networkSlice && !actor.bot){
+        actor.aiming=!!controls.aim && rushReady(actor) && canAim(actor.weapon) && !actor.reloadUntil && !actor.action;
+        actor.aimAmount=actor.aiming?advanceAim(actor.aimAmount||0,true,dt):0;
+      }
+      const shot=takeReadyShot(actor,s.time);
+      if(shot) {
+        if(!this.authorizeShot || this.authorizeShot(actor,shot)) this.fire(actor,true,shot);
+      } else if(controls.fire && (!this.authorizeShot || actor.bot) && rushReady(actor)) {
+        this.fire(actor, this.config.networkSlice || !!controls.autoFire || !actor.fireHeld);
+      }
       actor.fireHeld = !!controls.fire;
       this.interact(actor, controls);
       actor.interactHeld = !!controls.interact;
@@ -250,14 +264,14 @@ export class Game {
     if (w.slot === 'grenade' && !inventory[id]) return false;
     if (['primary', 'pistol', 'knife'].includes(w.slot) && inventory[w.slot]?.id !== id) return false;
     if (actor.weapon === id) return true;
-    actor.lastWeapon = actor.weapon; actor.weapon = id; actor.reloadUntil = 0; actor.nextShot = Math.max(actor.nextShot, this.state.time + .22);
+    actor.pendingShot=null; actor.lastWeapon = actor.weapon; actor.weapon = id; actor.reloadUntil = 0; actor.nextShot = Math.max(actor.nextShot, this.state.time + .22);
     this.emit('switch', actor, { weapon: id }); return true;
   }
   reload(actor = this.player) {
     if (!actor?.alive || actor.reloadUntil || !['buy', 'active'].includes(this.phase)) return false;
     const item = this.item(actor), w = WEAPONS[actor.weapon];
     if (!item || !w.reload || item.ammo >= w.magazine || !item.reserve) return false;
-    actor.reloadUntil = this.state.time + w.reload; this.emit('reload', actor, { weapon: actor.weapon, duration: w.reload }); return true;
+    actor.pendingShot=null; actor.reloadUntil = this.state.time + w.reload; this.emit('reload', actor, { weapon: actor.weapon, duration: w.reload }); return true;
   }
   completeReloadIfDue(actor) {
     if (!actor.reloadUntil || this.state.time + EPS < actor.reloadUntil) return;
@@ -318,9 +332,9 @@ export class Game {
     return target;
   }
 
-  fire(actor = this.player, pressed = true) {
+  fire(actor = this.player, pressed = true, shot = actor) {
     const w = WEAPONS[actor.weapon];
-    if (this.phase !== 'active' || !actor.alive || actor.reloadUntil || this.state.time + EPS < actor.nextShot || actor.action) return false;
+    if (this.phase !== 'active' || !actor.alive || !rushReady(actor) || actor.reloadUntil || this.state.time + EPS < actor.nextShot || actor.action) return false;
     if (!w || w.slot === 'bomb' || (!w.automatic && !pressed && !actor.bot)) return false;
     actor.nextShot = this.state.time + w.interval;
     if (w.slot === 'grenade') return this.throwGrenade(actor, actor.weapon);
@@ -329,13 +343,13 @@ export class Game {
     if (w.slot !== 'knife') item.ammo--;
     const origin = eye(actor), spread = shotSpread(actor, w);
     actor.recoil += w.recoil;
-    this.emit('shot', actor, { weapon: actor.weapon, yaw: actor.yaw, pitch: actor.pitch, targetId: actor.bot?.target?.entity?.id,
+    this.emit('shot', actor, { weapon: actor.weapon, yaw: shot.yaw, pitch: shot.pitch, targetId: actor.bot?.target?.entity?.id,
       detectedAt: actor.bot?.target?.detectedAt, reactionAt: actor.bot?.target?.reactionAt });
     actor.spawnProtectedUntil=0;
     if (actor.bot) actor.bot.onShot();
-    if(w.projectile){launchRocket(this,actor,direction(actor.yaw,actor.pitch));return true;}
+    if(w.projectile){launchRocket(this,actor,direction(shot.yaw,shot.pitch));return true;}
     for (let i = 0; i < w.pellets; i++) {
-      const dir = direction(actor.yaw + (this.random() - .5) * spread, actor.pitch + (this.random() - .5) * spread);
+      const dir = direction(shot.yaw + (this.random() - .5) * spread, shot.pitch + (this.random() - .5) * spread);
       // The room may supply read-only historical hitboxes/collision context.
       // Weapon cadence, RNG, ammunition and deferred damage stay in this Game.
       const {wall,point:hitPoint,victim,head} = this.hitscanQuery
@@ -399,6 +413,7 @@ export class Game {
     this.emit('damage', target, detail); this.emit('hit', target, detail);
     if(target.kind==='zombie')reactZombie(this,target,kind,detail,owner&&!currentSource?undefined:source);
     if (target.hp > 0) return true;
+    if(target.controllerType)resetRush(target);
     target.alive = false; target.deaths++; target.action = null; target.reloadUntil = 0; target.deathAt = this.state.time;
     target.deathVariant = context.head && canAim(kind) && Object.hasOwn(TEAMS,target.team) ? 'headshot' : '';
     target.deathCause = { sourceId, sourceName, weapon: kind, point: { ...hitPoint }, direction: { ...incoming } };
@@ -562,7 +577,7 @@ export class Game {
       else if (result.winner) { reward = Math.min(this.config.maxLossMoney, this.config.lossMoney + this.config.lossIncrement * s.lossStreak[team]); s.lossStreak[team]++; }
       for (const a of this.actors.filter(actor => actor.team === team)) a.money = Math.min(this.config.maxMoney, a.money + reward);
     }
-    for (const a of this.actors) { a.action = null; a.reloadUntil = 0; a.flash = 0; a.flashUntil = 0; }
+    for (const a of this.actors) { resetRush(a); a.action = null; a.reloadUntil = 0; a.flash = 0; a.flashUntil = 0; }
     s.grenades = []; s.smokes = []; this.soundEvents = [];
     if (this.config.networkSlice) s.projectiles = [];
     s.bomb.status = result.reason === 'detonation' ? 'detonated' : result.reason === 'defuse' ? 'defused' : 'inactive';

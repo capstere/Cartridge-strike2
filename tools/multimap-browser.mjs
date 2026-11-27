@@ -1,5 +1,5 @@
 // Rendered multiplayer play and measurements. Start in the repo root.
-// FPS_MAP_CASE=desktop|mobile|four|floor node tools/multimap-browser.mjs
+// FPS_MAP_CASE=desktop|mobile|four|floor|meltem|meltemTouch node tools/multimap-browser.mjs
 import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
@@ -23,7 +23,7 @@ const cases = {
 const name = process.env.FPS_MAP_CASE || 'desktop';
 const tour = name==='four' && process.env.FPS_MAP_TOUR==='1';
 const spec = cases[name];
-// A pair switches the same family room to Floor 5 and then back to Compact.
+// A pair switches the same family room to Floor 5 and then back to the selected map.
 const switchPairs = Number(process.env.FPS_MAP_SWITCH_PAIRS ?? 2);
 assert(Number.isSafeInteger(switchPairs) && switchPairs>=1, 'Use a positive number of map switch pairs');
 assert(spec, 'Unknown map browser scenario');
@@ -373,8 +373,12 @@ try {
       const id=turn%2 ? map : floor;
       mark('switch '+id); const ms=await selectMap(id);
       const cdp=await context.newCDPSession(page);
-      try {await cdp.send('HeapProfiler.collectGarbage');} finally {await cdp.detach();}
-      result.transitions.push({id,ms,...await renderedResources()});
+      let heapUsedBytes;
+      try {
+        await cdp.send('HeapProfiler.collectGarbage');
+        heapUsedBytes=(await cdp.send('Runtime.getHeapUsage')).usedSize;
+      } finally {await cdp.detach();}
+      result.transitions.push({id,ms,heapUsedBytes,...await renderedResources()});
     }
     for(const row of result.transitions) {
       assert.equal(row.liveOwners,1,'Only the current renderer stays live');

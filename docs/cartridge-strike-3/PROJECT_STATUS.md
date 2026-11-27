@@ -5,8 +5,8 @@
 | ID | State | Next action |
 | --- | --- | --- |
 | CS3-00 | VERIFIED | Independent recovery, architecture and performance review passed. See [measurements](baseline/performance/README.md) and [recovery](baseline/recovery.json). |
-| CS3-01 | IN_PROGRESS | Build the normal-entry English menu and the playable Solo and With Friends routes. Branch `cs3/01-english-frontend`. |
-| CS3-02 | IN_PROGRESS | Integrate the CR4/P9 fixed-step Rush, recovery and input-edge vertical slice. Branch `cs3/02-rush`. |
+| CS3-01 | IN_PROGRESS | Verify the integrated English guest, Solo and With Friends routes in [PR #50](https://github.com/capstere/Cartridge-strike2/pull/50), after private entry [PR #48](https://github.com/capstere/Cartridge-strike2/pull/48). |
+| CS3-02 | IN_PROGRESS | CR4/P9 Rush merged in [PR #49](https://github.com/capstere/Cartridge-strike2/pull/49). Extend the remaining stances, equipment and combat sound on `cs3/02-handling` and `cs3/02-spatial-audio`. |
 | CS3-03 | NOT_STARTED | Wait for CS3-00, CS3-01, CS3-02 |
 | CS3-04 | NOT_STARTED | Wait for CS3-00, CS3-01 |
 | CS3-05 | NOT_STARTED | Wait for CS3-00, CS3-02 |
@@ -19,6 +19,22 @@
 | CS3-12 | NOT_STARTED | Wait for CS3-01, CS3-02, CS3-03, CS3-04, CS3-05, CS3-06, CS3-07, CS3-08, CS3-09, CS3-10, CS3-11 |
 
 Update tasks.json in sync with this document. Allowed states NOT_STARTED / IN_PROGRESS / BLOCKED / REVIEW / VERIFIED. For each task maintain exact SHA, actual changed files, reference symbols, commands/results, evidence, known gaps, next executable action. Before context compaction or reset save this state and the lead's decisions. Do not infer progress from task descriptions. Gate changes only with explicit owner approval and preparation PR review; record approval/PR/merge SHA. Do not begin implementation merely because preparation files are merged.
+
+## Development checkpoints on November 27
+
+| Package | Published work and observed behavior | Next verification |
+| --- | --- | --- |
+| CS3-01 | [Private access PR #48](https://github.com/capstere/Cartridge-strike2/pull/48) targets the integration branch. Independent review found incorrect room-code guidance and lost map-load recovery. The corrected browser fixture checks the exact English failure, releases the admitted seat, retries on the same page and reconnects across map changes. [English menu and twelve initial desktop/touch captures](https://github.com/capstere/Cartridge-strike2/tree/c12eabf170dcfa358bb1de827dc68ab0857fd858/docs/cartridge-strike-3/evidence/01-menu) include Main → Play → Solo → Floor 5, pause, and return in Swedish and French browser profiles. The capture record identifies the working-tree differences. | Check [all eight jobs at the corrected access head](https://github.com/capstere/Cartridge-strike2/actions/runs/46001094422). Exercise the integrated English HUD, ordinary private admission, map selection and typed Classic purchase confirmations on `cs3/01-runtime-english`. |
+| CS3-02 | [Rush implementation](https://github.com/capstere/Cartridge-strike2/tree/852939f061ff139bf25322a1670bbdf06718b2d7) carries a short tap and its aim through seven fixed simulation steps. Corrections preserve Reduced Motion and separate receipt-time input admission from release-time rewind. Eight local Pi Chromium CR4/P9 combinations used mouse/keyboard or emulated touch, 30 or 60 Hz configured steps, and full or reduced motion. | Retain reviewable keyframes and the delayed two-seat trace, run PR checks on the exact preserved tree, then extend the remaining CS3-02 behaviors. |
+| CS3-07 | [Meltem conversion](https://github.com/capstere/Cartridge-strike2/tree/ef3bfa3bf5472e24d6020282dab392fd38a6c45c) includes the extraction procedure, original texture/shore assets, geometry and layered navigation. The export reproduced 791 collision volumes, eight ramps, two wells, 5,376 nodes and 31,642 directed edges. The walk planner uses 31,504 of those edges. | Verify negative elevations and the live rendered map from ordinary Solo and private-room entry. Meltem supports Endless/TDM. Qualify each of the nine maps individually before adding it to Random. |
+
+[PR #49](https://github.com/capstere/Cartridge-strike2/pull/49) merged into development at `1a0e1fab3ed2fe53f9764470039a89ebe5943598` after independent review and [eight passing jobs](https://github.com/capstere/Cartridge-strike2/actions/runs/45989855234). The [Rush receipts](evidence/rush/README.md) record 116.67 ms of simulation recovery, one debit and one sound dispatch in all eight cases. The next handling check compares the weapon sights and reticle in actual rendered ADS. The spatial audio branch adapts the Riposte first-person, nearby and distant sample selection.
+
+The English private-room correction includes three exact summary rows and typed join failures. Its [CI run](https://github.com/capstere/Cartridge-strike2/actions/runs/46001094422) includes protocol 15 from the merged Rush slice. [PR #50](https://github.com/capstere/Cartridge-strike2/pull/50) incorporates independently scoped saved-character and world-signage work. Its original CI failed on obsolete text expectations and timed out after a passing Compact Arena match. The native rerun exited with zero active Node resources. Check the amended PR head and all eight jobs before accepting that change.
+
+Meltem reached real Solo play in 14.51 seconds on the native Pi 5 desktop. Its 485 frame intervals had a median of 19.8 ms and a 95th percentile of 25.2 ms on this run. The playthrough exposed and fixed the reference scene's warmup traversal. The hosted match and combined map build remain gates on offering the new map.
+
+The project lead owns the integration branch, contract rebuilds after merges, independent sign-off and production release. Work continues in dependency order. A feature-branch checkpoint does not advance a package gate.
 
 ## CS3-00 execution
 
