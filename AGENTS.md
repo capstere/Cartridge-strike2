@@ -1,3 +1,9 @@
+# Cartridge-Strike repository — CS3 review gate
+
+Read [CS3 program](docs/cartridge-strike-3/README.md), [CODEX_HANDOVER](docs/cartridge-strike-3/CODEX_HANDOVER.md) and [PROJECT_STATUS](docs/cartridge-strike-3/PROJECT_STATUS.md). CS3 preparation is REVIEW_REQUIRED. Do not execute implementation or deployment until explicit owner approval of the preparation. After approval the CS3 program supersedes the historical first-open-task rule for the CS3 assignment. English is mandatory for CS3 player-facing UI, server notices and new documentation. The existing CS2 instructions below remain valid for historical maintenance and recovery; do not silently change production. Keep one writer per shared file, maximum existing agent concurrency, one heavy Pi job.
+
+---
+
 # Working on Cartridge-Strike 2
 
 When Jesper asks the lead agent to read the repo and follow the handover, the lead agent opens [HANDOVER.md](HANDOVER.md) and carries out the first open task.
