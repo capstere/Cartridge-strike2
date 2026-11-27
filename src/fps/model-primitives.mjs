@@ -630,7 +630,7 @@ export function animateWeapon(model, actor, time, dt, { reducedMotion = false, s
     if (!d.presentationMotion) refitViewArms(model);
   }
   model.updateMatrixWorld(true);
-  return { muzzle: model.localToWorld(d.muzzle.clone()), reloading };
+  return { muzzle: model.localToWorld(d.muzzle.clone()), reloading, pitchKick:-shot*.065 };
 }
 
 export function animateActor(model, actor, time, dt, { cameraYaw = 0, shotAt = -Infinity } = {}) {

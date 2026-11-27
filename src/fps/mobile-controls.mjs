@@ -38,14 +38,15 @@ export class MobileControls {
       const distance = Math.hypot(dx, dy);
       const scale = distance > radius ? radius / distance : 1;
       nub.style.transform = 'translate(' + (dx * scale).toFixed(1) + 'px,' + (dy * scale).toFixed(1) + 'px)';
-      this.state.sprint=stickRush(this.state.sprint,distance/radius,distance ? -dy/distance : 0);
+      const forward=distance ? -dy/distance : 0;
+      this.state.sprint=(this.runButton && distance/radius>.4 && forward>.55) || stickRush(this.state.sprint,distance/radius,forward);
       stick.classList.toggle('rushing',this.state.sprint);
       this.state.strafe = clamp(dx / radius, -1, 1);
       this.state.forward = clamp(-dy / radius, -1, 1);
     };
     const endStick = e => {
       if (e.pointerId !== this.stickId) return;
-      this.stickId = null;
+      this.stickId = null;this.runButton=false;
       this.state.strafe = this.state.forward = 0;
       this.state.sprint=false;
       stick.classList.remove('active','rushing');
@@ -144,7 +145,7 @@ export class MobileControls {
   }
 
   clear() {
-    this.clearActions();
+    this.runButton=false;this.clearActions();
     this.state.forward = this.state.strafe = 0;
     this.stickId = this.lookId = null;
     this.state.sprint=false;

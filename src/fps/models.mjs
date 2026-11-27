@@ -21,14 +21,13 @@ const sightLines = {
   smg: [.122,-.380,.133,.030], shotgun: [.073,-.760,.073,0],
   sniper: [.165,-.425,.165,-.055]
 };
-function alignSights(model,amount,shotAge) {
+function alignSights(model,amount,pitchKick) {
   const line=sightLines[model.userData.id];
   if(!line || amount<=0)return;
   const [frontY,frontZ,rearY,rearZ]=line;
   const pitch=Math.atan((rearY-frontY)/(rearZ-frontZ));
   const aimY=rearZ*Math.sin(pitch)-rearY*Math.cos(pitch);
-  const kick=shotAge>=0 && shotAge<.18 ? Math.exp(-shotAge*28)*.035 : 0;
-  model.rotation.x+=(pitch-kick-model.rotation.x)*amount;
+  model.rotation.x+=(pitch+pitchKick-model.rotation.x)*amount;
   model.rotation.y*=1-amount;model.rotation.z*=1-amount;
   model.position.x*=1-amount;model.position.y+=(aimY-model.position.y)*amount;
 }
@@ -52,7 +51,16 @@ export function animateWeapon(model,actor,time,dt,options={}) {
     const gait=actor.rushWeight || 0,phase=(actor.distanceWalked || 0)*4.4;
     const handling=pose.reloading || actor.action || actor.cartridge || options.inspecting ||
       time-(options.switchAt ?? -Infinity)<.26 || time-(options.throwAt ?? -Infinity)<.48;
-    const rush=gait*(handling ? .08 : 1)*(1-(actor.aimAmount || 0));
+    // The locomotion clock keeps advancing during an action. Ease between the
+    // two poses instead of snapping the gun aside at either end of a reload.
+    const elapsed=time-(state.handlingAt ?? -Infinity),target=handling?1:0;
+    if(elapsed<0 || elapsed>.25 || state.poseActor!==actor.id || state.poseLife!==actor.lifeId){
+      state.handlingWeight=target;
+    }else{
+      state.handlingWeight=target+(state.handlingWeight-target)*Math.exp(-25*elapsed);
+    }
+    state.handlingAt=time;state.poseActor=actor.id;state.poseLife=actor.lifeId;
+    const rush=gait*(1-.92*state.handlingWeight)*(1-(actor.aimAmount || 0));
     if(rush>.001){
       const stride=options.reducedMotion?0:Math.cos(phase),bounce=options.reducedMotion?0:Math.sin(2*phase);
       const roll=options.reducedMotion?0:Math.sin(phase);
@@ -77,7 +85,7 @@ export function animateWeapon(model,actor,time,dt,options={}) {
     }
     const wall=(options.nearWall || 0)*(1-rush)*(1-(actor.aimAmount || 0));
     model.rotation.x+=wall*.75;model.position.z+=wall*.12;
-    if(!handling)alignSights(model,clamp(actor.aimAmount || 0),time-(options.shotAt ?? -Infinity));
+    alignSights(model,(1-state.handlingWeight)*clamp(actor.aimAmount || 0),pose.pitchKick+offset.rotation[0]);
     refitViewArms(model);
     model.updateMatrixWorld(true);
     // Muzzle effect follows the final pose. Bullet/hitscan origin stays owned by Game.

@@ -178,7 +178,7 @@ tactical=new TacticalControls({settings,mobile,getGame:()=>game,getModal:()=>mod
   isInteracting:()=>keys.has('KeyE')||mobile.state.interact,onAimChange:resetAutoAim});
 const combatHud=new CombatHUD(settings);
 focusHud=new FocusHud({
- settings,mobile,getGame:()=>game,getModal:()=>modal||teamRadioOpen,onMap:toggleMap,onStats:showPause,
+ settings,mobile,getGame:()=>game,getModal:()=>modal||teamRadioOpen,onMap:toggleMap,onStats:showPause,onInspect:()=>renderer?.requestInspect(game),
  onRadio:networkMode?toggleTeamRadio:null,networkMode
 });
 function selectTeamRadio(index){

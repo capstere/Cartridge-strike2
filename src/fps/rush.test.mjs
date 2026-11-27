@@ -147,6 +147,7 @@ test('cartridge quick release finishes the pull once, returns to the previous si
  const launched=events.find(e=>e.type==='throw');
  assert(Math.abs(game.state.grenades[0].deadline-launched.time-game.config.grenadeFuse)<1e-7);
  assert.equal(a.weapon,pistol);assert.equal(a.inventory.he,0);
+ assert(game.select('last'));assert.equal(a.weapon,a.inventory.primary.id);
 });
 
 test('only the HE fuse runs while held; switching cancels an unarmed cartridge and releases a live HE at its owner',()=>{

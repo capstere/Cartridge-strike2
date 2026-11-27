@@ -29,10 +29,17 @@ export const INTERPOLATION_MS = 100;
 // legitimate shots. Include its 100 ms display buffer plus scheduler margin.
 export const REWIND_MS = 500;
 export const ROOM_TYPE = 'private-fps';
-export const POSE_NUMBERS = ['x','y','z','yaw','pitch','height','vy','moving','distanceWalked','lastStep','rushWeight','rushResumeAt','slideUntil','slideReadyAt','slideSpeed','travelDirX','travelDirZ'];
-export const POSE_BOOLEANS = ['onGround','crouching','jumpHeld','rushing','crouchHeld'];
-export function copyPose(target, source) {
-  for(const key of [...POSE_NUMBERS,...POSE_BOOLEANS]) target[key]=source[key];
+export const MOVEMENT_NUMBERS=['x','y','z','yaw','pitch','height','vy','moving','distanceWalked','lastStep','rushWeight','rushResumeAt'];
+export const MOVEMENT_BOOLEANS=['onGround','crouching','jumpHeld','rushing'];
+export const SLIDE_NUMBERS=['slideUntil','slideReadyAt','slideSpeed','travelDirX','travelDirZ'];
+export const POSE_NUMBERS=[...MOVEMENT_NUMBERS,...SLIDE_NUMBERS];
+export const POSE_BOOLEANS=[...MOVEMENT_BOOLEANS,'crouchHeld'];
+export function copyPose(target,source){
+  for(const key of MOVEMENT_NUMBERS)target[key]=source[key];
+  for(const key of MOVEMENT_BOOLEANS)target[key]=source[key];
+  const from=source.handling || source,to=target.handling || target;
+  for(const key of SLIDE_NUMBERS)to[key]=from[key] || 0;
+  to.crouchHeld=!!from.crouchHeld;
 }
 export const configContract = () => ({config:NETWORK_CONFIG,classic:CLASSIC_NETWORK_CONFIG, weapons:Object.values(WEAPONS).filter(w=>['smg','ar47','cr4','sniper','shotgun','bazooka','p9','p12','knife','he'].includes(w.id)),
   world:'floor5-authoritative-doors-spawn-shutters-breakable-glass-v2',

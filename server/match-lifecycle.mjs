@@ -1,3 +1,4 @@
+import {resetRush} from '../src/fps/rush.mjs';
 import {BOT_DIFFICULTY_IDS,CLASSIC_NETWORK_CONFIG,MATCH_DEFAULTS,NETWORK_CONFIG,RECONNECT_SECONDS} from '../shared/multiplayer/rules.mjs';
 import {prepareNetworkWorld} from '../shared/multiplayer/world.mjs';
 import {onlinePrimaries,respawnActor} from '../src/fps/action-rules.mjs';
@@ -200,7 +201,8 @@ export class MatchLifecycle {
     const winner=forced||(score.analysts===score.counterAnalysts?'draw':score.analysts>score.counterAnalysts?'analysts':'counterAnalysts');
     Object.assign(this.state,{phase:'results',winner,reason,remainingSeconds:0,resultsAtMs:this.now,
       results:JSON.stringify({matchId:this.state.matchId,winner,reason,score:{...score},players:g.actors.map(a=>({id:a.id,name:a.name,team:a.team,kills:a.kills,deaths:a.deaths}))})});
-    g.state.paused=true;g.state.projectiles=[];
-    for(const [sid,seat] of r.seats){seat.enabled=false;r.inputs.get(sid).clear();}
+    g.state.paused=true;g.state.projectiles=[];g.state.grenades=[];
+    for(const actor of g.actors){resetRush(actor);actor.cartridge=null;actor.waitTriggerRelease=false;}
+    for(const [sid,seat] of r.seats){seat.enabled=false;seat.holdThrow=false;r.inputs.get(sid).clear();}
   }
 }

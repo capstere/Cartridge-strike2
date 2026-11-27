@@ -28,7 +28,7 @@ function headshotResultTime(room){
 }
 function actorView(s,localId){
   const a={id:s.id,name:s.name,team:s.team,index:Number(s.id.split('-').at(-1)),isPlayer:s.id===localId,controllerType:s.bot?'bot':'human',bot:null,
-    cartridge:s.cartridgeStart?{type:s.weapon,started:s.cartridgeStart,releaseAt:s.cartridgeRelease,deadline:s.cartridgeFuse}:null,
+    cartridge:s.handling?.cartridgeStart?{type:s.weapon,started:s.handling.cartridgeStart,releaseAt:s.handling.cartridgeRelease,deadline:s.handling.cartridgeFuse}:null,
     pending:!!s.pending,radius:NETWORK_CONFIG.radius,weapon:s.weapon,lastWeapon:s.lastWeapon,loadout:s.loadout,aimAmount:s.aimAmount,aiming:s.aiming,money:s.money,flash:0,action:s.actionType?{type:s.actionType,start:s.actionStart,duration:s.actionDuration}:null,
     inventory:{primary:s.primary?{id:s.primary,ammo:s.primaryAmmo,reserve:s.primaryReserve}:null,pistol:{id:s.pistol,ammo:s.pistolAmmo,reserve:s.pistolReserve},knife:{id:'knife',ammo:Infinity,reserve:0},smoke:0,flash:0,he:s.he}};
   copyPose(a,s);
@@ -453,7 +453,7 @@ export class NetworkSession {
         fireEdge:!!this.firePress,shotYaw:wrapYaw(this.firePress?.yaw??0),shotPitch:this.firePress?.pitch??0,interact:!!controls.interact,aim:!!controls.aim,fire:!!controls.fire});
       const time=this.prediction.world.game.state.time;
       const weapon=WEAPONS[self.weapon],throwing=self.weapon==='he';
-      const shotReady=!self.waitTriggerRelease && !self.cartridgeStart && (state.mode!=='classic'||state.roundPhase==='active')&&time+1e-8>=Math.max(this.nextCosmetic,self.nextShot)&&
+      const shotReady=!self.handling?.waitTriggerRelease && !self.handling?.cartridgeStart && (state.mode!=='classic'||state.roundPhase==='active')&&time+1e-8>=Math.max(this.nextCosmetic,self.nextShot)&&
         (self.ammo>0||self.weapon==='knife'||throwing&&self.he>0)&&!self.reloadUntil;
       const actor=this.prediction.world.actor,shouldered=rushReady(actor);
       if(data.fireEdge)data.fire=true;

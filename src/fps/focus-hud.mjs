@@ -11,8 +11,8 @@ export function focusHudSettings(settings) {
 
 /** Presentation only. Reuses existing controls/listeners and never changes Game. */
 export class FocusHud {
-  constructor({ settings, mobile, getGame, getModal, onMap, onStats, onRadio, networkMode = false }) {
-    Object.assign(this, { settings, mobile, getGame, getModal, onMap, onStats, onRadio, networkMode });
+  constructor({ settings, mobile, getGame, getModal, onMap, onStats, onRadio, onInspect, networkMode = false }) {
+    Object.assign(this, { settings, mobile, getGame, getModal, onMap, onStats, onRadio, onInspect, networkMode });
     this.settings.hudMode = normalizeHudMode(settings.hudMode);
     this.mode = null; this.expanded = false; this.game = null; this.weapon = null;
     this.inventoryUntil = 0; this.placements = [];
@@ -51,6 +51,8 @@ export class FocusHud {
       if (action !== 'sneak') button.addEventListener('pointerup', () => this.setExpanded(false));
     }
     const utilities = [['KARTA', 'Visa eller dölj taktisk karta', () => this.onMap()]];
+    utilities.push(['RUSH','Sprint on the next forward stick movement',()=>{this.mobile.runButton=true;}]);
+    if(this.onInspect)utilities.push(['INSPECT','Inspect held item',this.onInspect]);
     if (this.onRadio) utilities.push(['RADIO', 'Öppna lagradion', () => this.onRadio()]);
     utilities.push(['RESULTAT', 'Pausa och visa sessionsresultat', () => this.onStats()]);
     for (const [label, name, action] of utilities) {

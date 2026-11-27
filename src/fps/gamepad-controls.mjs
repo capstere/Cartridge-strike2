@@ -13,8 +13,9 @@ export class GamepadControls {
   }
   read(){
     // Sandboxed embeds may expose the API but prohibit access.
-    try{return this.sample(Array.from(navigator.getGamepads?.() || []).find(p=>p?.connected && p.mapping==='standard'));}
-    catch{return this.sample(null);}
+    let pads;
+    try{pads=navigator.getGamepads?.();}catch{return this.sample(null);}
+    return this.sample(Array.from(pads || []).find(p=>p?.connected && p.mapping==='standard'));
   }
   sample(pad){
     if(!pad){if(this.id!=null)this.clear();this.id=null;return null;}

@@ -12,7 +12,7 @@ const out=process.env.RUSH_OUTPUT || mkdtempSync(join(tmpdir(),'cs3-rush-'));
 const server=await createLocalServer({port:0}),profiles=process.argv.slice(2);
 console.log('Private capture directory',out);
 let browser;
-const records=[];
+const records=[],handling=[];
 async function play(touch) {
  const context=await browser.newContext({viewport:{width:844,height:390},deviceScaleFactor:.75,
    hasTouch:touch,isMobile:touch,locale:'en-US'});
@@ -48,11 +48,15 @@ async function play(touch) {
        const f=window.__fps,a=f.game.player,samples=[];
        for(let i=0;i<n;i++){
          f.step(null,1/hz);
-         const m=f.renderer.weaponModel;
-         samples.push({time:f.game.state.time,x:a.x,z:a.z,weight:a.rushWeight,aim:a.aimAmount,ammo:f.game.item().ammo,
+         const m=f.renderer.weaponModel,camera=f.renderer.viewCamera,v=m.position.clone();
+         const wristScreen=m.userData.leftHand.getWorldPosition(v).project(camera).toArray().slice(0,2);
+         const front=a.weapon==='cr4'?[0,.119,-.475]:[0,.090,-.174];
+         const sightScreen=m.localToWorld(v.set(...front)).project(camera).toArray().slice(0,2);
+         samples.push({time:f.game.state.time,x:a.x,z:a.z,weight:a.rushWeight,aim:a.aimAmount,ammo:f.game.item()?.ammo,wristScreen,sightScreen,
            pose:m.rotation.toArray().slice(0,3),wrist:m.userData.leftHand.position.toArray(),
            trigger:m.userData.rightHand.position.toArray(),reticle:document.getElementById('crosshair').style.opacity,
-           wall:f.renderer.wallAmount,steps:a.distanceWalked});
+           wall:f.renderer.wallAmount,steps:a.distanceWalked,slide:a.slideUntil>f.game.state.time,height:a.height,
+           moving:a.moving,weapon:a.weapon,cartridge:a.cartridge?{...a.cartridge}:null,grenades:f.game.state.grenades.length,stock:a.inventory.he});
        }
        return samples;
      },{n,hz});
@@ -84,6 +88,9 @@ async function play(touch) {
      await capture(name+'-enter',!reduced);
      entry.push(...await steps(Math.ceil(.15*hz),hz));
      assert(entry.some(v=>v.weight>.8),name+' built Rush');
+     if(weapon==='p9')for(const sample of entry.filter(v=>v.weight>.87)){
+       const [x,y]=sample.wristScreen;assert(x<-.16&&x>-.88&&y<-.45&&y>-.98,name+' visible free wrist '+sample.wristScreen);
+     }
      await capture(name+'-stride',true);
      if(touch){
        const b=await page.locator('[data-mobile-action=fire]').boundingBox();
@@ -105,6 +112,7 @@ async function play(touch) {
      }else await page.mouse.down({button:'right'});
      const ads=await steps(Math.ceil(.33*hz),hz);
      assert(ads.some(v=>v.aim>.8),name+' aimed from Rush');assert(ads.at(-1).weight<.1);
+     assert(Math.hypot(...ads.at(-1).sightScreen)<.045,name+' modeled sight met the reticle '+ads.at(-1).sightScreen);
      await capture(name+'-ads',!reduced);
      if(!touch)await page.mouse.up({button:'right'});
      await stopRush();
@@ -134,9 +142,53 @@ async function play(touch) {
      const events=await page.evaluate(()=>structuredClone(rushEvidence));
      assert.equal(events.shots.length,1);assert.equal(events.audio.length,1);
      records.push({name,hz,touch,reduced,weapon,before,entry,recovery,ready,ads,wall,events});
-     writeFileSync(join(out,'traces.json'),JSON.stringify({contract:CONTRACT,browser:browser.version(),records},null,2));
+     writeFileSync(join(out,'traces.json'),JSON.stringify({contract:CONTRACT,browser:browser.version(),records,handling},null,2));
      console.log(name,'passed',events.shots[0]);
    }
+   // One ordinary control sequence per device. The fixture changes only the
+   // starting lane and inventory. All movement and cartridge actions use input.
+   await page.evaluate(()=>{
+     const f=__fps,a=f.game.player;f.settings.reducedMotion=false;
+     Object.assign(a,{x:36.9236,y:0,z:14.27635,onGround:true,vy:0});
+     a.inventory.smoke=0;a.inventory.flash=0;a.inventory.he=1;f.game.select('p9');f.step({yaw:Math.PI,pitch:0},1/60);
+   });
+   const center=async selector=>{
+     const b=await page.locator(selector).boundingBox();assert(b,selector+' is reachable');
+     return {x:b.x+b.width/2,y:b.y+b.height/2};
+   };
+   let stick=null;
+   if(touch){
+     const b=await page.locator('[data-mobile-stick-zone]').boundingBox();
+     stick={x:b.x+b.width*.43,y:b.y+b.height*.65,id:1};
+     await touchEvent('touchStart',[stick]);stick={...stick,y:stick.y-76};await touchEvent('touchMove',[stick]);
+   }else{await page.keyboard.down('w');await page.keyboard.down('x');}
+   await steps(20,60);
+   if(touch){
+     const crouch={...await center('[data-mobile-action=crouch]'),id:2};
+     await touchEvent('touchStart',[stick,crouch]);await touchEvent('touchEnd',[stick]);
+   }else{await page.keyboard.down('Control');await page.keyboard.up('Control');}
+   const slide=await steps(9,60);
+   assert(slide.every(a=>a.slide) && slide[0].moving>6.51,profile+' real crouch tap slid');
+   await capture(profile+'-slide',true);
+   if(touch)await touchEvent('touchEnd',[]);else{await page.keyboard.up('w');await page.keyboard.up('x');}
+   await steps(45,60);
+   if(touch){
+     await page.locator('#mobile-more').tap();
+     await page.locator('[data-mobile-action=grenade]').tap();
+   }else await page.keyboard.press('4');
+   await steps(19,60);
+   const trigger=touch?{...await center('[data-mobile-action=fire]'),id:3}:null;
+   if(touch)await touchEvent('touchStart',[trigger]);else await page.mouse.down();
+   const hold=await steps(32,60);
+   assert(hold.at(-1).cartridge?.deadline>0 && hold.at(-1).stock===1 && hold.at(-1).grenades===0,profile+' actual manual hold');
+   await capture(profile+'-hold',true);
+   if(touch)await touchEvent('touchEnd',[]);else await page.mouse.up();
+   const cast=await steps(18,60);
+   assert(cast.at(-1).grenades===1 && cast.at(-1).stock===0 && cast.at(-1).weapon==='p9',profile+' release restored previous sidearm');
+   await capture(profile+'-return',true);
+   handling.push({profile,slide,hold,cast});
+   writeFileSync(join(out,'traces.json'),JSON.stringify({contract:CONTRACT,browser:browser.version(),records,handling},null,2));
+   console.log(profile,'actual slide and cartridge inputs passed');
    await cd?.detach();
  }finally{await context.close();}
 }

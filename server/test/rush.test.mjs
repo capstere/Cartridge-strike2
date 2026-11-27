@@ -119,3 +119,46 @@ test('only a valid admission may outlive a 500 ms history window during weapon r
  assert.equal(lag.metrics.live,1);
  assert.equal(lag.metrics.reasons['aged during recovery'],1);
 });
+
+test('a coalesced crouch tap and a held cartridge replicate to both seats; control loss drops a live fuse once',{timeout:18000},async t=>{
+ const local=await createLocalServer({testMatch:{continuous:true},port:0});
+ let host,peer;
+ t.after(async()=>{await Promise.allSettled([host?.leave(),peer?.leave()]);await local.close();});
+ const sdk=new Client(local.url,{headers:{Origin:local.url}});
+ host=await ready(await sdk.create('private-fps',options));
+ peer=await ready(await sdk.joinById(host.roomId,options));
+ const room=[...local.rooms][0],seat=room.seats.get(host.sessionId),actor=seat.actor;
+ const snapshots=()=>[own(host),peer.state.actors.get(actor.id)];
+ Object.assign(actor,{x:20,y:0,z:-18,onGround:true});
+ const sprint={forward:1,sprint:true,yaw:Math.PI};
+ const start=performance.now();
+ while(actor.rushWeight<.78){assert(performance.now()-start<2500);send(host,sprint);await delay(16);}
+ const fixed=room.fixedTick,queue=room.inputs.get(host.sessionId);
+ let coalesced=false;
+ room.fixedTick=function(){
+   if(!coalesced && queue.size<2)return;
+   fixed.call(this);coalesced=true;
+ };
+ try{
+   send(host,{...sprint,crouch:true,crouchEdge:true});send(host,{...sprint,crouch:false,crouchEdge:false});
+   await until(()=>snapshots().every(a=>a.crouching&&a.handling.slideUntil>0),'both peers observed the crouch tap after release');
+   assert.equal(snapshots()[0].handling.slideUntil,snapshots()[1].handling.slideUntil);
+ }finally{room.fixedTick=fixed;}
+ await until(()=>snapshots().every(a=>a.handling.slideUntil===0),'slide expires on both seats');
+ const epochs={lifeId:actor.lifeId,controlEpoch:seat.epoch};
+ host.send('select',{slot:'he',serial:1,...epochs});await until(()=>own(host).weapon==='he','normal selection');
+ await delay(270);
+ const received=[[],[]];
+ for(const [i,r] of [host,peer].entries())r.onMessage('events',batch=>received[i].push(...batch.filter(e=>e.actorId===actor.id && ['throw','cartridge-latch'].includes(e.type))));
+ send(host,{fire:true,fireEdge:true,holdThrow:true,fireId:1});
+ await until(()=>snapshots().every(a=>a.handling.cartridgeFuse>0),'both peers observe live held fuse');
+ assert.equal(room.sim.game.state.grenades.length,0);assert.equal(own(host).he,1);
+ const deadline=own(host).handling.cartridgeFuse;
+ host.send('controls',{enabled:false,...epochs});
+ await until(()=>received.every(events=>events.some(e=>e.type==='throw')),'both peers saw the drop');
+ const actionId=[actor.id,actor.lifeId,seat.epoch,1].join(':');
+ for(const events of received){assert.deepEqual(events.map(e=>e.type),['cartridge-latch','throw']);assert(events.every(e=>e.actionId===actionId));}
+ for(const r of [host,peer]){const a=r.state.actors.get(actor.id);assert.equal(a.he,0);assert.equal(a.handling.cartridgeStart,0);assert.equal([...r.state.grenades.values()][0].deadline,deadline);}
+ host.send('controls',{enabled:true,...epochs});send(host,{fireId:1,holdThrow:false});
+ await delay(75);assert.equal(received[1].length,2);assert.equal(room.metrics.invalid,0);
+});

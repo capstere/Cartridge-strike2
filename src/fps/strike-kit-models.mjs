@@ -155,6 +155,6 @@ export function animateKitWeapon(model,actor,time,dt,{shotAt=-Infinity,switchAt=
  if(!d.presentationMotion)refitViewArms(model);
  model.updateMatrixWorld(true);
  d.kitPose={progress:p,empty:d.emptyReload,reloading,magazineHidden:!d.magazine.visible};
- return {muzzle:model.localToWorld(d.muzzle.clone()),reloading};
+ return {muzzle:model.localToWorld(d.muzzle.clone()),reloading,pitchKick:-shot*(rifle?.025:.06)};
 }
 export function disposeKitModels(){for(const r of owned)r.dispose?.();owned.clear();palette=null;}

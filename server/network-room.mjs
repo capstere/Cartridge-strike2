@@ -10,7 +10,7 @@ import {projectClassic} from './classic-round.mjs';
 import {DEFAULT_NETWORK_BOT_DIFFICULTY,ROOM_CAPACITY,RECONNECT_SECONDS,copyPose,safeName} from '../shared/multiplayer/rules.mjs';
 import {checkContract,TEAM_COMMS_TYPE,validateNetworkInput,wireInput} from '../shared/multiplayer/protocol.mjs';
 import {CONTRACT,MAP_CONTRACTS} from '../shared/multiplayer/build.mjs';
-import {NetworkInput,ActorState,RoomState,GrenadeState,ResidentState,RocketState} from './network-schema.mjs';
+import {NetworkInput,ActorState,HandlingState,RoomState,GrenadeState,ResidentState,RocketState} from './network-schema.mjs';
 
 import {DOOR_FIELDS} from '../shared/multiplayer/world.mjs';
 
@@ -165,6 +165,7 @@ export class NetworkRoom extends Room {
   removeActor(actor){
     if(!actor)return;
     this.lives.set(actor.id,actor.lifeId);
+    this.sim.game.interruptCartridge(actor,false);
     actor.alive=false;
     const g=this.sim.game;
     this.releaseObjectives(actor,true);
@@ -317,7 +318,7 @@ export class NetworkRoom extends Room {
       const wire=eventsForPatch(events).map(e=>{
         const actor=this.state.actors.get(e.actorId)||this.state.residents.get(e.actorId);
         const source=this.state.actors.get(e.sourceId)||this.state.residents.get(e.sourceId);
-        return {...e,round:this.state.round,matchId:this.state.matchId,eventId:e.serial,tick:this.sim.tickNumber,lifeId:actor?.lifeId||0,sourceLifeId:source?.lifeId||0,controlEpoch:actor?.controlEpoch||0,sourceControlEpoch:source?.controlEpoch||0,
+        return {...e,round:this.state.round,matchId:this.state.matchId,eventId:e.serial,tick:this.sim.tickNumber,lifeId:e.lifeId??actor?.lifeId??0,sourceLifeId:source?.lifeId||0,controlEpoch:e.controlEpoch??actor?.controlEpoch??0,sourceControlEpoch:source?.controlEpoch||0,
           actionId:e.actionId||this.tickActions.get(e.sourceId||e.actorId)||''};
       });
       this.metrics.events+=wire.length;this.broadcast('events',wire,{afterNextPatch:true});
@@ -351,13 +352,15 @@ export class NetworkRoom extends Room {
     this.state.elevatorProgress=g.world.doors.elevators.progress;
     this.state.elevatorOpenAt=g.world.networkDynamics.elevatorOpenAt;
     for(const seat of this.participants())if(seat.ready){
-      const a=seat.actor,s=this.state.actors.get(a.id);copyPose(s,a);
+      const a=seat.actor,s=this.state.actors.get(a.id);
+      s.handling??=new HandlingState();copyPose(s,a);
+      Object.assign(s.handling,{cartridgeStart:a.cartridge?.started||0,cartridgeRelease:a.cartridge?.releaseAt||0,
+        cartridgeFuse:a.cartridge?.deadline||0,waitTriggerRelease:!!a.waitTriggerRelease});
       if(!a.alive&&!seat.diedAtMs)seat.diedAtMs=this.clock.elapsedTime;
       s.playerReady=seat.playerReady;s.connected=seat.connected;s.controlEpoch=seat.epoch;s.lifeStartedAt=seat.lifeStartedAt;s.diedAtMs=seat.diedAtMs;
       for(const k of ['lifeId','alive','hp','armor','kills','deaths','reloadUntil','nextShot','spawnProtectedUntil','recoil'])s[k]=a[k]??0;
       const {primary,pistol,he}=a.inventory;
       Object.assign(s,{ready:true,pending:!!seat.pending,bot:a.controllerType==='bot',money:a.money||0,actionType:a.action?.type||'',actionStart:a.action?.start||0,actionDuration:a.action?.duration||0,weapon:a.weapon,lastWeapon:a.lastWeapon,loadout:a.loadout||'smg',
-        cartridgeStart:a.cartridge?.started||0,cartridgeRelease:a.cartridge?.releaseAt||0,cartridgeFuse:a.cartridge?.deadline||0,waitTriggerRelease:!!a.waitTriggerRelease,
         aimAmount:a.aimAmount||0,aiming:!!a.aiming,primary:primary?.id||'',primaryAmmo:primary?.ammo||0,primaryReserve:primary?.reserve||0,
         pistol:pistol.id,pistolAmmo:pistol.ammo,pistolReserve:pistol.reserve,he});
       const item=g.item(a);s.ammo=Number.isFinite(item?.ammo)?item.ammo:0;s.reserve=item?.reserve||0;

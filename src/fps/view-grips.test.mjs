@@ -150,4 +150,25 @@ test('the authored sights converge on the reticle in ADS and the off hand stays 
     }
   }
 });
+test('the complete held-item set leaves the reticle clear at ready and through a Rush stride', () => {
+  const ray=new T.Raycaster(new T.Vector3(),new T.Vector3(0,0,-1),.01,5);
+  const items=Object.values(WEAPONS).filter(w=>w.slot!=='armor');
+  assert.equal(items.length,13);
+  for(const weapon of items){
+    const m=makeWeapon(weapon.id),a={id:'local',weapon:weapon.id,alive:true,onGround:true,reloadUntil:0};
+    for(const [t,weight,travel] of [[1,0,0],[2,1,0],[2.05,1,.35],[2.10,1,.7],[2.15,1,1.05],[2.20,1,1.4]]){
+      Object.assign(a,{rushWeight:weight,moving:6.5*weight,distanceWalked:travel});
+      animateWeapon(m,a,t,1/60);
+      assert.equal(ray.intersectObject(m,true).length,0,weapon.id+' obscures the central view at '+t);
+    }
+  }
+});
+test('inspection shows both flanks of the selected family and returns to ready in Reduced Motion',async()=>{
+  const {inspectPose,inspectDuration}=await import('./view-surface.mjs');
+  for(const weapon of ['p9','cr4','ar47','he','knife','bomb']){
+    const options={weapon,reducedMotion:true},left=inspectPose(.7,options),right=inspectPose(2,options);
+    assert(left.rotation[2]>0 && right.rotation[2]<0,weapon);
+    assert.deepEqual(inspectPose(inspectDuration(weapon),options).rotation,[0,0,0]);
+  }
+});
 test.after(disposeWeaponResources);

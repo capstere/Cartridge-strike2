@@ -141,12 +141,13 @@ export function releasePistolSupport(model,weight,stride,bounce) {
   const {leftHand,handPose:state}=model.userData;
   if(!state)return;
   const mix=T.MathUtils.smoothstep(weight,.15,.85);
+  if(!mix)return;
   model.updateMatrix();
   state.inverse.copy(model.matrix).invert();
   state.position.set(-.225+.015*stride,-.179+.017*bounce,-.434+.043*stride).applyMatrix4(state.inverse);
   leftHand.position.lerp(state.position,mix);
   leftHand.quaternion.slerp(loosePalm,mix);
-  fingers(leftHand,.6,false);
+  fingers(leftHand,T.MathUtils.lerp(state.grips[1].curl,.6,mix),false);
 }
 export function refitViewArms(model) {
   const d = model.userData, state = d.handPose;

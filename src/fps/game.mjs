@@ -278,7 +278,10 @@ export class Game {
     if (['primary', 'pistol', 'knife'].includes(w.slot) && inventory[w.slot]?.id !== id) return false;
     if (actor.weapon === id) return true;
     this.interruptCartridge(actor,false);
-    actor.pendingShot=null; actor.lastWeapon = actor.weapon; actor.weapon = id; actor.reloadUntil = 0; actor.nextShot = Math.max(actor.nextShot, this.state.time + .22);
+    const spent=WEAPONS[actor.weapon]?.slot==='grenade' && !inventory[actor.weapon];
+    actor.pendingShot=null;
+    actor.lastWeapon=spent ? [inventory.primary?.id,inventory.pistol?.id,'knife'].find(item=>item && item!==id) : actor.weapon;
+    actor.weapon = id; actor.reloadUntil = 0; actor.nextShot = Math.max(actor.nextShot, this.state.time + .22);
     this.emit('switch', actor, { weapon: id }); return true;
   }
   reload(actor = this.player) {
@@ -455,7 +458,7 @@ export class Game {
   updateCartridge(actor,held) {
     const c=actor.cartridge;if(!c)return;
     const now=this.state.time,armed=c.started+CARTRIDGE.pull;
-    if(!c.latched && now+EPS>=c.started+CARTRIDGE.pin){c.latched=true;this.emit('cartridge-latch',actor,{grenade:c.type,actionId:c.actionId});}
+    if(!c.latched && now+EPS>=c.started+CARTRIDGE.pin){c.latched=true;this.emit('cartridge-latch',actor,{grenade:c.type,lifeId:actor.lifeId,controlEpoch:actor.controlEpoch,actionId:c.actionId});}
     if(!held && !c.releaseAt)c.releaseAt=Math.max(now,armed)+CARTRIDGE.release;
     if(!c.releaseAt && !c.deadline && c.type==='he' && now+EPS>=armed)c.deadline=armed+this.config.grenadeFuse;
     const expired=c.deadline && now+EPS>=c.deadline;
@@ -479,7 +482,7 @@ export class Game {
     if(held?.deadline)grenade.deadline=held.deadline;
     if(drop)Object.assign(grenade,{vx:0,vy:0,vz:0,y:actor.y+actor.height*.55});
     this.state.grenades.push(grenade);
-    this.emit('throw',actor,{grenade:type,dropped:drop,actionId:held?.actionId||''});
+    this.emit('throw',actor,{grenade:type,dropped:drop,lifeId:actor.lifeId,controlEpoch:actor.controlEpoch,actionId:held?.actionId||''});
     if(restore){
       const previous=actor.lastWeapon;
       if(!['primary','pistol','knife'].includes(WEAPONS[previous]?.slot) || !this.select(previous,actor))
