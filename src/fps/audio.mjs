@@ -85,6 +85,7 @@ export class AudioSystem {
     if (!this.context || !listener) return;
     this.listener = point(listener.position || listener);
     this.listenerId = listener.id ?? listener.actorId;
+    this.listenerAlive = listener.alive !== false;
     const yaw = Number(listener.yaw) || 0, pitch = Number(listener.pitch) || 0;
     const forward = listener.forward || { x: -Math.sin(yaw) * Math.cos(pitch), y: Math.sin(pitch), z: -Math.cos(yaw) * Math.cos(pitch) };
     const l = this.context.listener, t = this.context.currentTime;
@@ -166,13 +167,69 @@ export class AudioSystem {
     filter.type='lowpass';filter.frequency.value=cutoff;
     panner.panningModel='HRTF';panner.distanceModel='inverse';panner.refDistance=4;panner.maxDistance=30;panner.rolloffFactor=1;
     panner.positionX.value=position.x;panner.positionY.value=position.y;panner.positionZ.value=position.z;
-    source.connect(filter).connect(gain).connect(panner).connect(this.master);source.start();
+    source.connect(filter).connect(gain).connect(panner).connect(this.worldOutput());source.start();
     this.ambient.push({source,gain,filter,position,volume,cutoff,nodes:[gain,filter,panner]});
   }
 
   stopAmbient(){
     for(const item of this.ambient){try{item.source.stop();}catch{}item.source.disconnect();for(const node of item.nodes)node.disconnect();}
     this.ambient.length=0;this.ambientRoom=null;
+  }
+
+  worldOutput() {
+    if (!this.worldFilter) {
+      this.worldFilter = this.context.createBiquadFilter();
+      this.worldFilter.type = 'lowpass';
+      this.worldFilter.frequency.value = 20000;
+      this.worldFilter.Q.value = .707;
+      this.worldGain = this.context.createGain();
+      this.worldFilter.connect(this.worldGain).connect(this.master);
+    }
+    return this.worldFilter;
+  }
+
+  // Riposte flashBang / sfxFlashBang. The listener's hearing uses distance and
+  // cover independently of facing. The V6 capture supplies the ringing band.
+  flashHearing(event) {
+    if (!this.listener || this.listenerAlive === false) return;
+    const source = point(event.position || event), ear = this.listener;
+    const distance = Math.hypot(source.x-ear.x, source.y-ear.y, source.z-ear.z);
+    if (distance >= 13) return;
+    const step = clamp((distance-2)/11, 0, 1);
+    const clear = this.world?.segmentClear?.(ear, source, {vision:false}) !== false;
+    const exposure = (1-step*step*(3-2*step)) * (clear ? 1 : .5);
+    if (exposure <= .05) return;
+    const reduced = this.settings.reducedFlash !== false;
+    const strength = exposure * .85 * (reduced ? .2 : 1);
+    const duration = (.5 + 2.4*exposure) * (reduced ? .35 : 1);
+    const ctx = this.context, now = ctx.currentTime, start = now + .04;
+    this.worldOutput();
+    const cutoff = this.worldFilter.frequency, gain = this.worldGain.gain;
+    const exposedCutoff = 4000 + (260-4000)*exposure;
+    const low = reduced ? 20000 + (exposedCutoff-20000)*.2 : exposedCutoff;
+    for (const param of [cutoff,gain]) {
+      const current = param.value;
+      param.cancelScheduledValues(now);
+      param.setValueAtTime(current,now);
+    }
+    cutoff.linearRampToValueAtTime(low,now+.03);
+    cutoff.setValueAtTime(low,now+duration*.6);
+    cutoff.exponentialRampToValueAtTime(20000,now+duration);
+    gain.linearRampToValueAtTime(1-.6*strength,now+.03);
+    gain.linearRampToValueAtTime(1,now+duration);
+
+    if (this.flashVoice) this.flashVoice.stop(now);
+    const voice = ctx.createOscillator();
+    const envelope = ctx.createGain();
+    voice.type = 'sine';
+    voice.frequency.setValueAtTime(3150,start);
+    voice.frequency.exponentialRampToValueAtTime(3050,start+duration);
+    envelope.gain.setValueAtTime(.0001,start);
+    envelope.gain.exponentialRampToValueAtTime(.035*strength,start+.03);
+    envelope.gain.exponentialRampToValueAtTime(.0001,start+duration);
+    voice.connect(envelope).connect(this.master);
+    this.flashVoice = voice;
+    this.track(voice,{when:start,nodes:[envelope]},duration+.02);
   }
 
   channel(event, volume = 1, delay = 0) {
@@ -191,7 +248,7 @@ export class AudioSystem {
       panner.panningModel = 'HRTF'; panner.distanceModel = 'inverse';
       panner.refDistance = 2.5; panner.maxDistance = 55; panner.rolloffFactor = 1.45;
       panner.positionX.value = position.x; panner.positionY.value = position.y; panner.positionZ.value = position.z;
-      filter.connect(panner).connect(this.master); nodes.push(panner);
+      filter.connect(panner).connect(this.worldOutput()); nodes.push(panner);
     } else filter.connect(this.master);
     if (!clear) this.stats.occluded++;
     return { gain, nodes, when: ctx.currentTime + delay };
@@ -202,6 +259,7 @@ export class AudioSystem {
     this.active.add(item);
     source.onended = () => {
       this.active.delete(item);
+      if (this.flashVoice === source) this.flashVoice = null;
       source.disconnect();
       for (const node of item.nodes) node.disconnect();
     };
@@ -285,7 +343,13 @@ export class AudioSystem {
       case 'throw': this.noise(sound, .14, .22, 5000); this.sample('impactMetal_light_001', sound, .12, 2); break;
       case 'bounce': this.sample('impactMetal_light_000', sound, .28 * clamp(event.energy ?? 1, .2, 1), varied * 1.4); break;
       case 'smoke': this.noise(sound, 1.4, .25, 3400); this.sample('impactGeneric_light_000', sound, .18, .8); break;
-      case 'flash': this.sample('laserSmall_000', sound, .22, 1.5, 0, .35); this.noise(sound, .13, .36, 5600); break;
+      case 'flash': {
+        const scale = this.settings.reducedFlash !== false ? .45 : 1;
+        this.sample('laserSmall_000',sound,.22*scale,1.5,0,.35);
+        this.noise(sound,.13,.36*scale,5600);
+        this.flashHearing(sound);
+        break;
+      }
       case 'he': this.sample('explosionCrunch_000', sound, .8, .9, 0, 1.8); this.sample('lowFrequency_explosion_000', sound, .65, 1, 0, 1.8); break;
       case 'plant': this.sample('computerNoise_000', sound, .1, 1.3, 0, .5); this.tone(sound, 520, .08, .13); break;
       case 'beep': this.tone(sound, 1250, .09, .25); break;
@@ -309,6 +373,14 @@ export class AudioSystem {
   /** Stop all tails and future scheduled reload/result notes. No setTimeouts survive a reset. */
   reset() {
     this.generation++;
+    this.flashVoice = null;
+    if (this.worldFilter) {
+      const time = this.context.currentTime;
+      this.worldFilter.frequency.cancelScheduledValues(time);
+      this.worldFilter.frequency.setValueAtTime(20000,time);
+      this.worldGain.gain.cancelScheduledValues(time);
+      this.worldGain.gain.setValueAtTime(1,time);
+    }
     this.stopAmbient();
     for (const item of this.active) {
       item.source.onended = null;
@@ -322,6 +394,7 @@ export class AudioSystem {
   async dispose() {
     this.reset(); this.disposed = true;
     this.buffers.clear(); this.ambientBuffer=null;
+    this.worldFilter?.disconnect(); this.worldGain?.disconnect();
     if (this.context && this.context.state !== 'closed') await this.context.close();
   }
 }

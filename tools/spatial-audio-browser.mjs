@@ -57,6 +57,31 @@ try {
     const peak=samples.reduce((p,v)=>Math.max(p,Math.abs(v)),0);
     runs.push({latch:true,sources:latch.reuseStats.played,firstPcmMs:samples.findIndex(v=>Math.abs(v)>.03*peak)/48,peak,errors:latch.errors});
     await latch.dispose();
+    // Render the whole flash event, then measure after its short blast has ended.
+    const flash = [];
+    for (const [label,distance,clear,reduced] of [
+      ['near',2,true,false],['reduced',2,true,true],['wall',2,false,false],['far',20,true,false],['reset',2,true,false]
+    ]) {
+      const audio=new AudioSystem({segmentClear:()=>clear},{volume:1,reducedFlash:reduced});
+      const rate=48000,ctx=new OfflineAudioContext(1,rate*4,rate);
+      audio.context=ctx; audio.master=ctx.createGain(); audio.master.connect(ctx.destination);
+      audio.updateListener({id:'self',x:0,y:0,z:0});
+      audio.play({type:'flash',x:0,y:0,z:-distance});
+      const ringStarted=!!audio.flashVoice;
+      if(label==='reset')audio.reset();
+      const data=(await ctx.startRendering()).getChannelData(0);
+      const rms=(start,end)=>{
+        const slice=data.subarray(Math.round(rate*start),Math.round(rate*end));
+        return Math.sqrt(slice.reduce((sum,value)=>sum+value*value,0)/slice.length);
+      };
+      const crossings=[];
+      for(let i=Math.round(.45*rate);i<Math.round(.55*rate);i++)
+        if(data[i]<0 && data[i+1]>=0)crossings.push(i);
+      const frequency=crossings.length>1 ? rate*(crossings.length-1)/(crossings.at(-1)-crossings[0]) : 0;
+      flash.push({label,ringStarted,frequency,early:rms(.45,.55),late:rms(1.8,1.9),tail:rms(3.6,3.8)});
+      await audio.dispose();
+    }
+    runs.push({flash});
     // Pause must cancel the future arrival of a remotely scheduled shot.
     const audio=new AudioSystem(null,{}), ctx=new OfflineAudioContext(1,24000,48000);
     audio.context=ctx;audio.master=ctx.createGain();audio.master.connect(ctx.destination);
@@ -70,7 +95,14 @@ try {
     runs.push({cancelled:true,silence,remaining:audio.active.size});
     return runs;
   });
-  const cancelled=rows.pop(), latch=rows.pop();
+  const cancelled=rows.pop(), {flash}=rows.pop(), latch=rows.pop();
+  const [near,reduced,wall,far,reset]=flash;
+  assert(near.ringStarted && near.frequency>3050 && near.frequency<3160);
+  assert(near.early>near.late && near.late>0 && near.tail===0);
+  assert(reduced.early>0 && reduced.early<near.early*.3 && reduced.late===0);
+  assert(wall.early>reduced.early && wall.early<near.early);
+  assert(!far.ringStarted && far.early===0);
+  assert(reset.ringStarted && reset.early===0 && reset.tail===0);
   assert.deepEqual(latch.errors,[]);
   assert.equal(latch.sources,1);
   assert(latch.peak>0 && latch.firstPcmMs>=0 && latch.firstPcmMs<120);
@@ -83,7 +115,7 @@ try {
     assert(peak>0 && secondPeak>0);
     assert(firstPcmMs>=expected*1000-1 && firstPcmMs<expected*1000+40);
   }
-  const receipt={browser:browser.version(),sampleRate:48000,rows,latch,cancelled};
+  const receipt={browser:browser.version(),sampleRate:48000,rows,latch,flash,cancelled};
   if(process.env.CS3_AUDIO_RESULT)await writeFile(process.env.CS3_AUDIO_RESULT,JSON.stringify(receipt,null,2)+'\n');
   console.log(JSON.stringify(receipt));
 }finally{await browser.close();}
