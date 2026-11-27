@@ -161,6 +161,10 @@
       "branch": "cs3/07-reference-maps",
       "pullRequests": [
         52
+      ],
+      "workBranches": [
+        "cs3/07-reference-maps",
+        "cs3/07-meltem-art"
       ]
     },
     {
