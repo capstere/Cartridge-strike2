@@ -1,0 +1,107 @@
+{
+  "status": "PASS",
+  "date": "2026-11-27",
+  "revision": "2bc33f3660967e1e6d90ddf883c1e65f5030b72d",
+  "tree": "d01a215bd7ea98896cec6769466829ba52dc309c",
+  "buildHash": "fba695c52dbb78092c56923655d7610d78655f04172238eb485925c77c1cbe29",
+  "hardware": "Raspberry Pi 5",
+  "renderer": "Chromium 156.0.8078.79, EGL, Wayland, headed",
+  "transport": "loopback, two rendered Chromium processes",
+  "displays": [
+    {
+      "input": "mouse and keyboard",
+      "cssViewport": [
+        820,
+        480
+      ]
+    },
+    {
+      "input": "emulated touch",
+      "cssViewport": [
+        844,
+        390
+      ]
+    }
+  ],
+  "deviceScaleFactor": 0.5,
+  "graphics": "low",
+  "physicalTouchDevice": false,
+  "firstAttempt": {
+    "exitCode": 143,
+    "termination": "SIGTERM",
+    "lastCompletedStage": "TDM team radio controls",
+    "assertionFailure": false
+  },
+  "retry": {
+    "startedAt": "2026-11-27T13:25:46.098382Z",
+    "endedAt": "2026-11-27T13:27:52.268001Z",
+    "durationSeconds": 126.17,
+    "exitCode": 0,
+    "completed": {
+      "tdm": {
+        "mapObservations": {
+          "desktop": {
+            "open": false,
+            "legend": "Arrow \u00b7 You    Dot \u00b7 Team",
+            "locked": true,
+            "right": 176,
+            "aimLeft": 398,
+            "events": "none",
+            "draws": 100,
+            "skips": 229,
+            "builds": 2,
+            "cache": 2
+          },
+          "touch": {
+            "open": false,
+            "legend": "Arrow \u00b7 You    Dot \u00b7 Team",
+            "locked": false,
+            "right": 0,
+            "aimLeft": 410,
+            "events": "none",
+            "draws": 41,
+            "skips": 117,
+            "builds": 1,
+            "cache": 1
+          }
+        },
+        "assertions": [
+          "team radio controls tdm",
+          "tdm room setting, menu, same rendered rocket, explosion, sound and hit on both clients"
+        ]
+      },
+      "classic": {
+        "mapObservations": {
+          "desktop": {
+            "open": false,
+            "legend": "Arrow \u00b7 You    Dot \u00b7 Team    B \u00b7 Bomb site    H \u00b7 Hostages    R \u00b7 Rescue zone",
+            "locked": true,
+            "right": 176,
+            "aimLeft": 398,
+            "events": "none",
+            "draws": 313,
+            "skips": 323,
+            "builds": 4,
+            "cache": 2
+          },
+          "touch": {
+            "open": false,
+            "legend": "Arrow \u00b7 You    Dot \u00b7 Team    B \u00b7 Bomb site    H \u00b7 Hostages    R \u00b7 Rescue zone",
+            "locked": false,
+            "right": 0,
+            "aimLeft": 410,
+            "events": "none",
+            "draws": 86,
+            "skips": 372,
+            "builds": 2,
+            "cache": 1
+          }
+        },
+        "assertions": [
+          "team radio controls classic",
+          "classic room setting, menu, same rendered rocket, explosion, sound and hit on both clients"
+        ]
+      }
+    }
+  }
+}

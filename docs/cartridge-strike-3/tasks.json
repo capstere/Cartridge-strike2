@@ -38,16 +38,18 @@
       "tests": "IMG_8150, 8158, 8160–8162 and 8164, V1 countdown, English guest Pages and denied/authorized Pi routes. Provide class-picker navigation for later class/wardrobe owners. Exercise real loading, Classic buy success/failure and re-login after translation.",
       "exit": "Menu→match→results real flows; stable back/resize/focus.",
       "status": "IN_PROGRESS",
-      "branch": "cs3/01-runtime-english",
+      "branch": "cs3/01-countdown",
       "pullRequests": [
         48,
         50
       ],
       "mergedSlices": [
-        "65a6f06385a3fa8944ed605ebdd4680522f70588"
+        "65a6f06385a3fa8944ed605ebdd4680522f70588",
+        "e6a56c2159fed23fac576abe068dece4fce98207"
       ],
       "evidence": [
-        "evidence/01-private-entry.md"
+        "evidence/01-private-entry.md",
+        "evidence/01-menu/README.md"
       ],
       "workBranches": [
         "cs3/01-runtime-english",

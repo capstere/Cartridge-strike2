@@ -23,6 +23,19 @@ At 12:52 UTC native Pi Chromium ran the touch match-flow test on clean commit `3
 
 The same journey purchased armor, verified the remaining 150 credits, and attempted an unaffordable weapon. The denial preserved the balance. The dedicated network session regression applies old and duplicate acknowledgments before and after a valid receipt and across round, match, life, control-epoch and reconnect changes. The online Classic browser exercises actual server replies through the visible buy panel. [Solo flow](../../../../tools/match-flow-browser.mjs) · [Network receipt test](../../../../tools/network-session.test.mjs) · [Online Classic](../../../../tools/online-classic-browser.mjs)
 
+## Desktop and touch rocket presentation
+
+On 27 November 2026, two separate Chromium processes used native EGL on the Raspberry Pi and joined an isolated local room on clean revision `2bc33f3660967e1e6d90ddf883c1e65f5030b72d`. The touch guest fired in TDM and the desktop host bought and fired the launcher in Classic. The test verified that each client saw the same projectile inside the camera view before the visible impact, started Web Audio sources for exactly one launch and one explosion, and observed zero health on the eliminated actor’s correct life. The server confirmed the ammunition debit and reload. A second TDM shot ended the match and the deciding touch release left the result visible. [Two-client receipt](rocket-browser-receipt.json) · [Browser assertions](../../../../tools/online-rockets-browser.mjs)
+
+The first process ended with SIGTERM after TDM map and radio checks. That attempt had no assertion result. A bounded retry completed both modes in 126.17 seconds at 13:27:52 UTC. Both browsers closed and Node exited with status 0. The touch client used emulated controls. Web Audio verification counted scheduled voices; physical speaker levels require a device check.
+
+From the isolated repository root, with the server and Playwright dependencies installed, run this as the sole Pi browser job.
+
+```sh
+WAYLAND_DISPLAY=wayland-0 CHROMIUM_PATH=/usr/bin/chromium FPS_NETWORK_HEADED=1 \
+FPS_NETWORK_ANGLE=gl-egl node tools/online-rockets-browser.mjs
+```
+
 ## Repeat on the integration revision
 
 Serve an isolated checkout with `python3 -m http.server 8765 --bind 127.0.0.1`. Run the capture as the single active Pi browser job. Use a directory outside the game for the resulting images and JSON.

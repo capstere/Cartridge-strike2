@@ -5,7 +5,7 @@
 | ID | State | Next action |
 | --- | --- | --- |
 | CS3-00 | VERIFIED | Independent recovery, architecture and performance review passed. See [measurements](baseline/performance/README.md) and [recovery](baseline/recovery.json). |
-| CS3-01 | IN_PROGRESS | Verify the integrated English guest, Solo and With Friends routes in [PR #50](https://github.com/capstere/Cartridge-strike2/pull/50), following the verified private entry merge in [PR #48](https://github.com/capstere/Cartridge-strike2/pull/48). |
+| CS3-01 | IN_PROGRESS | Verify the V1 countdown in Solo and private multiplayer on `cs3/01-countdown`. [PR #48](https://github.com/capstere/Cartridge-strike2/pull/48) and [PR #50](https://github.com/capstere/Cartridge-strike2/pull/50) have merged. |
 | CS3-02 | IN_PROGRESS | CR4/P9 Rush merged in [PR #49](https://github.com/capstere/Cartridge-strike2/pull/49). Extend the remaining stances, equipment and combat sound on `cs3/02-handling` and `cs3/02-spatial-audio`. |
 | CS3-03 | NOT_STARTED | Wait for CS3-00, CS3-01, CS3-02 |
 | CS3-04 | NOT_STARTED | Wait for CS3-00, CS3-01 |
@@ -49,6 +49,14 @@ The access and menu builds separately exposed the same lost manual input under c
 | CS3-07 | [Map PR #52](https://github.com/capstere/Cartridge-strike2/pull/52) on `3f505a5` fixes the grenade sweep against both well walls, keeps all 76 donor patrol goals for authority bots and separates the server test from the portable unit suite. A real nine-bot match finished 1–1, with server p95 6.08 ms and client frame p95 34.0 ms. Twenty map swaps retained one detached canvas per swap. The matched 173-second parked lobby held its canvas count flat. Dispatching disposal on the outgoing world, first-person scene and warmed weapon models released the retained canvases in a four-switch native repeat. At switches two and four, both Three renderers and both WebGL contexts persisted as expected, with zero detached game canvases, 69 programs and 130 shaders. The 20-switch repeat with a matched parked interval remains the gate. Use the integrated Solo resolver for Endless, unsupported Classic, and Random eligibility. |
 
 The project lead owns the integration branch, contract rebuilds after merges, independent sign-off and production release. Work continues in dependency order. A feature-branch checkpoint does not advance a package gate.
+
+### English menu integration and open native measurements
+
+[PR #50](https://github.com/capstere/Cartridge-strike2/pull/50) merged at `e6a56c2159fed23fac576abe068dece4fce98207` after independent review and [eight passing jobs](https://github.com/capstere/Cartridge-strike2/actions/runs/46006779347) on `3b3aba9a8e0a9487b751ba060bf238d4227be2e4`. Its [rendered evidence](evidence/01-menu/README.md) includes two-client rocket visibility and audio, English desktop and touch play, the Classic result, and a new match from the same profile. CS3-01 still needs the V1 countdown, late join, input and remaining HUD/world-text checks on `cs3/01-countdown`.
+
+[PR #51](https://github.com/capstere/Cartridge-strike2/pull/51) at `a0bf1a49035b4925495456126abd86754e25c123` incorporates the English runtime, hybrid touch input, two CC0 mechanism clips and recorded English radio verification. The protocol 15 build `4c40a6cfe973fc4d481c488da5f5aa4f92da7aed81e3f9c32e94fa2fd84fe4bf` passed the 564-file manifest and nine focused checks. On the Pi the first two live-room acoustic attempts reached the existing pane-shooting fixture and failed before acoustic sampling. The final native trace showed both participants on life three and the host looking away from the pane. Keep the full glass and equipment assertions and correct the setup before repeating the near/far room capture. PR #53 incorporates this audio revision for protocol 16.
+
+Meltem's fixed 20-switch run retained zero detached game canvases, 78 total canvases and stable GL counts in all three same-map snapshots. Post-GC heap samples were 37.37, 36.95 and 37.09 MiB. The process ended with SIGTERM during the final parked interval, so that endpoint has no receipt. Repeat the equal-duration control in a bounded user service, preserving each completed sample. Include the ordinary English map selector and unsupported-mode and Random checks on the integrated map revision. The earlier four-switch and matched parked run passed.
 
 ## CS3-00 execution
 
