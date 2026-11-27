@@ -79,6 +79,9 @@ function magazineContact(d) {
 const slideContact = contact(new T.Vector3(-.016,.049,.018), slidePalm);
 const boltContact = contact(new T.Vector3(.037,.035,-.033), leverPalm, leverPinch);
 
+const rifleLever = contact(new T.Vector3(.060,.035,-.071), leverPalm, leverPinch);
+const scoutKnob = contact(new T.Vector3(.081,-.004,.028), leverPalm, leverPinch);
+
 function copyGrip(hand, grip) {
   hand.position.copy(grip.position);
   hand.quaternion.copy(grip.rotation);
@@ -117,9 +120,13 @@ export function poseViewHands(model, magazineAmount = 0, action = 0, shot = 0, r
   // The pump and the shell are separate animated objects in the shotgun model.
   if (d.pump) leftHand.position.add(d.pump.position);
   if (magazineAmount && state.magazine) follow(leftHand, d.magazine, state.magazine, magazineAmount, state, -.044);
-  if (action) {
-    if (d.id === 'cr4') follow(rightHand, d.slide, boltContact, action, state, .037);
-    else follow(leftHand, d.slide, slideContact, action, state, -.060);
+  const pistolAction=d.id==='p9' || d.id==='p12';
+  if(action){
+    if(pistolAction)follow(leftHand,d.slide,slideContact,action,state,-.060);
+    else{
+      const socket=d.id==='sniper'?scoutKnob:d.id==='cr4'?boltContact:rifleLever;
+      follow(rightHand,d.slide,socket,action,state,.037);
+    }
   }
   const offhandRelease = state.grips === cartridge ? throwAmount : 0;
   if (offhandRelease) {
@@ -128,7 +135,7 @@ export function poseViewHands(model, magazineAmount = 0, action = 0, shot = 0, r
   }
   const loadCurl = d.id === 'shotgun' ? .93 : d.id === 'bazooka' ? .71 : .99;
   fingers(leftHand, T.MathUtils.lerp(left.curl, loadCurl, magazineAmount) - release * .24 - offhandRelease * .25, false, 0, d.id === 'shotgun' ? magazineAmount : 0);
-  fingers(rightHand, right.curl - (d.id === 'cr4' ? action * .28 : 0), state.hasTrigger, shot);
+  fingers(rightHand, right.curl - (pistolAction ? 0 : action * .28), state.hasTrigger, shot);
 }
 
 // Both shoulders live in first-person camera space. An inspection, swap or reload

@@ -9,6 +9,16 @@ const EPS = 1e-8;
 export const CARTRIDGE=Object.freeze({pin:.24,pull:.42,release:.12,return:.38});
 
 
+// When the held fuse wins the next fixed launch tick, no outward flight exists.
+export function cartridgeFlightFuse(actor,time,config){
+  const c=actor.cartridge;
+  if(!c?.deadline)return config.grenadeFuse;
+  const release=c.releaseAt || time+CARTRIDGE.release;
+  const steps=Math.max(0,Math.ceil((release-time-EPS)/config.fixedStep));
+  const remaining=c.deadline-(time+steps*config.fixedStep);
+  return remaining>EPS ? remaining : null;
+}
+
 export function grenadeLaunch(actor, config, time = 0, type = actor.weapon) {
   const pitch = actor.pitch + .15, cp = Math.cos(pitch);
   return {

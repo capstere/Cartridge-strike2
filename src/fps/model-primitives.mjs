@@ -2,7 +2,7 @@ import {CARTRIDGE} from './grenade-physics.mjs';
 import { createThrowableCartridge, disposeThrowableCartridges } from './throwable-cartridge.mjs';
 import {buildBazookaParts} from './action-models.mjs';
 import {fitPresentationHands, poseViewHands, refitViewArms, disposePresentationHands} from './presentation-hands.mjs';
-import {envelope} from './strike-kit-timing.mjs';
+import {envelope, reloadIsEmpty} from './strike-kit-timing.mjs';
 // Original Cartridge Strike models. No Valve art or downloaded character assets.
 // All dimensions are metres; cosmetic meshes never participate in gameplay RNG,
 // collision, aim, ammunition or timers. Three.js r180 provides bevels and merging.
@@ -213,9 +213,16 @@ function trigger(parent, z, y, p) {
   tube(parent, [[0, y - .003, z - .008], [0, y - .030, z - .016], [0, y - .038, z - .004]], .0045, p.steel);
 }
 function sight(parent, z, y, p, back = false, height = .024) {
-  bevel(parent, 0, y, z, back ? .046 : .020, height, .018, p.black, .002);
-  if (back) for (const side of [-1, 1]) bevel(parent, side * .013, y + .004, z + .01, .005, .005, .002, p.paint, .0005);
-  else bevel(parent, 0, y + .006, z + .01, .004, .007, .002, p.paint, .0005);
+  if(back){
+    bevel(parent,0,y-height*.38,z,.046,height*.24,.018,p.black,.001);
+    for(const side of [-1,1]){
+      bevel(parent,side*.015,y,z,.015,height,.018,p.black,.002);
+      bevel(parent,side*.013,y+.004,z+.01,.005,.005,.002,p.paint,.0005);
+    }
+  }else{
+    bevel(parent,0,y,z,.020,height,.018,p.black,.002);
+    bevel(parent,0,y+.006,z+.01,.004,.007,.002,p.paint,.0005);
+  }
 }
 
 function pistol(root, id, p, {refined=false}={}) {
@@ -277,7 +284,9 @@ function rifle(root, id, p) {
       bevel(body, 0, .020, -.397, .071, .073, .202, p.wood, .008);
       cylinder(body, [0, .091, -.27], [0, .091, -.52], .017, .013, p.black);
       for (let i = 0; i < 4; i++) bevel(body, 0, .054, -.35 - i * .03, .073, .005, .007, p.black, .001);
-      sight(body, -.65, .086, p); sight(body, -.22, .11, p, true);
+      bevel(body,0,.073,-.65,.019,.04,.023,p.black,.002);
+      bevel(body,0,.097,-.22,.040,.035,.021,p.black,.002);
+      sight(body, -.65, .098, p); sight(body, -.22, .122, p, true);
     }
     if (pump) {
       cylinder(body, [0, .003, -.24], [0, .003, -.716], .018, .018, p.black, 12);
@@ -576,16 +585,22 @@ function mechanisms(model, actor, time, shotAt) {
   const d = model.userData, spec = WEAPONS[d.id], duration = spec?.reload || 1;
   const reloading = actor.reloadUntil > time, progress = reloading ? clamp(1 - (actor.reloadUntil - time) / duration) : 0;
   const reach = reloading ? pulse(progress, .05, .33, .88) : 0;
+  if(reloading && d.reloadToken!==actor.reloadUntil){
+    d.reloadToken=actor.reloadUntil;d.emptyReload=reloadIsEmpty(actor,d.id);
+  }
+  if(!reloading)d.reloadToken=0;
+  const empty=reloading && d.emptyReload;
   if (d.magazine) {
     d.magazine.position.copy(d.magazineHome);
     const pull = reloading ? pulse(progress, .13, .39, .78) : 0;
     if(d.id==='bazooka'){
       d.magazine.position.z+=pull*.47;d.magazine.position.y-=pull*.06;d.magazine.visible=reloading;
     } else if (d.id === 'shotgun') {
-      const cycle = (progress * 4) % 1;
+      const finalShell=empty && progress>=.75;
+      const cycle=finalShell?clamp((progress-.75)/.165):(progress*4)%1;
       d.magazine.position.y -= reloading ? Math.sin(cycle * Math.PI) * .14 : 0;
       d.magazine.position.x -= reloading ? Math.sin(cycle * Math.PI) * .06 : 0;
-      d.magazine.visible = reloading;
+      d.magazine.visible = reloading && (!empty || progress<.915);
     } else {
       d.magazine.position.y -= pull * .23; d.magazine.position.x -= pull * .055;
       d.magazine.rotation.z = pull * -.25; d.magazine.rotation.x = pull * -.14;
@@ -593,13 +608,39 @@ function mechanisms(model, actor, time, shotAt) {
     }
   }
   const shotAge = time - shotAt, shot = shotAge >= 0 && shotAge < .18 ? Math.exp(-shotAge * 28) : 0;
-  if (d.slide) { d.slide.position.copy(d.slideHome); d.slide.position.z += shot * .035; }
-  if (d.pump) d.pump.position.z = shotAge >= .08 && shotAge < .55 ? Math.sin((shotAge - .08) / .47 * Math.PI) * .080 : 0;
-  return { progress, reloading, reach, shot };
+  let handAction=0;
+  if(d.slide){
+    d.slide.position.copy(d.slideHome);d.slide.rotation.z=0;
+    if(d.id==='sniper'){
+      // Riposte 06d BOLT_CYCLE and SNIPER_E. The same shot or reload clock
+      // drives the part and its right-hand contact. CS owns the ammo deadline.
+      if(reloading){
+        const phase=progress*3.4;
+        if(empty){
+          handAction=envelope(phase,2.15,2.36,2.72,3.0);
+          d.slide.rotation.z=1.2*envelope(phase,2.2,2.36,2.72,2.84);
+          d.slide.position.z+=.09*envelope(phase,2.36,2.48,2.48,2.60);
+        }
+      }else if(shotAge>=0 && shotAge<.93){
+        handAction=envelope(shotAge,.02,.16,.70,.90);
+        d.slide.rotation.z=1.2*envelope(shotAge,.10,.24,.70,.80);
+        d.slide.position.z+=.092*envelope(shotAge,.24,.44,.52,.60);
+      }
+    }else{
+      handAction=empty && (d.id==='ar47' || d.id==='smg')?envelope(progress,.76,.83,.88,.96):0;
+      d.slide.position.z+=shot*.035+handAction*.040;
+    }
+  }
+  if(d.pump){
+    const firing=shotAge>=.08 && shotAge<.55?Math.sin((shotAge-.08)/.47*Math.PI):0;
+    const finishing=empty?envelope(progress,.92,.955,.96,1):0;
+    d.pump.position.z=.08*Math.max(firing,finishing);
+  }
+  return {progress,reloading,reach,shot,handAction,empty};
 }
 
 export function animateWeapon(model, actor, time, dt, { reducedMotion = false, shotAt = -Infinity, switchAt = -Infinity, throwAt = -Infinity, swingAt = -Infinity, recoil = 0 } = {}) {
-  const d = model.userData, { progress, reloading, reach, shot } = mechanisms(model, actor, time, shotAt);
+  const d = model.userData, { progress, reloading, reach, shot, handAction, empty } = mechanisms(model, actor, time, shotAt);
   const speed = clamp((actor.moving || 0) / 4.2), stride = (actor.distanceWalked || time * speed * 3) * 8;
   const bob = reducedMotion ? 0 : Math.sin(stride) * .005 * speed;
   const idle = reducedMotion ? 0 : Math.sin(time * 1.7) * .0013;
@@ -624,9 +665,9 @@ export function animateWeapon(model, actor, time, dt, { reducedMotion = false, s
   if (actor.action) { model.position.y -= .12; model.rotation.x -= .25; }
   if (d.viewmodel) {
     const shell = d.id === 'shotgun';
-    const hold = reloading ? (shell ? envelope(progress, 0, .095, .91, 1) : envelope(progress, .015, .15, .78, .92)) : 0;
+    const hold = reloading ? (shell ? envelope(progress, 0, .095, .91, empty?.94:1) : envelope(progress, .015, .15, .78, .92)) : 0;
     const release = !shell && d.id !== 'bazooka' ? envelope(progress, .42, .46, .51, .56) : 0;
-    poseViewHands(model, hold, 0, shot, release, Math.max(throwing,pull));
+    poseViewHands(model, hold, handAction, shot, release, Math.max(throwing,pull));
     if (!d.presentationMotion) refitViewArms(model);
   }
   model.updateMatrixWorld(true);

@@ -107,7 +107,7 @@ test('one crouch tap while rushing starts a grounded steerable slide and replay 
  const {game,a}=fixture(),sprint={forward:1,sprint:true};
  run(game,sprint,24);
  const speed=a.moving;
- game.update(dt/3,{...sprint,crouchEdge:true});game.update(dt*2/3,sprint);
+ game.update(dt/3,{...sprint,crouchEdge:true});game.update(dt*2/3,{});
  assert(a.slideUntil>game.state.time);assert(a.crouching);assert(!a.rushing);assert(a.moving>speed);
  const predicted={...a};copyPose(predicted,a);
  const replay={world:game.world,config:game.config,actors:[predicted],hostages:[],state:{time:game.state.time,zombies:[]}};
@@ -190,4 +190,37 @@ test('standard gamepad analog travel, L3 sprint, crouch edge, trigger hysteresis
  pad.buttons[7].value=.14;assert(!input.sample(pad).fire);
  input.clear();assert.equal(input.sample(pad),null);
  pad.buttons[1].pressed=false;assert(input.sample(pad));
+});
+
+test('switching away during an early or cooked cartridge hold requires releasing before the returning rifle can fire',()=>{
+ for(const ticks of [10,39]){
+   const {game,a}=fixture();a.inventory.he=1;game.select('he');run(game,{},16);
+   run(game,{fire:true},ticks);assert(a.cartridge);const ammo=a.inventory.primary.ammo;
+   assert(game.select('cr4'));const held=run(game,{fire:true},40);
+   assert.equal(a.inventory.primary.ammo,ammo);assert(!held.some(e=>e.type==='shot' && e.actorId===a.id));
+   run(game,{},1);run(game,{fire:true},1);assert.equal(a.inventory.primary.ammo,ammo-1);
+ }
+});
+
+test('a cooked HE guide suppresses flight if its fuse expires before the attainable release tick',async()=>{
+ const {cartridgeFlightFuse,predictGrenade}=await import('./grenade-physics.mjs');
+ const {game,a}=fixture(),time=5,config=game.config;
+ a.weapon='he';a.cartridge={started:3,releaseAt:0,deadline:time+.12};
+ assert.equal(cartridgeFlightFuse(a,time,config),null,'no outward path during the final release interval');
+ a.cartridge.deadline=time+.125;
+ assert.equal(cartridgeFlightFuse(a,time,config),null,'fixed tick reaches expiry before release');
+ a.cartridge.releaseAt=time+.05;const fuse=cartridgeFlightFuse(a,time,config);
+ assert(Math.abs(fuse-.075)<1e-8,'already releasing can still launch');
+ a.cartridge=null;
+ const ordinary=predictGrenade(a,config,game.world);
+ assert.deepEqual(predictGrenade(a,{...config,grenadeFuse:cartridgeFlightFuse(a,time,config)},game.world).endpoint,ordinary.endpoint);
+});
+
+test('closing controls cannot renew a slide boost within the same life',()=>{
+ const {game,a}=fixture(),sprint={forward:1,sprint:true};
+ run(game,sprint,12);run(game,{...sprint,crouchEdge:true},1);
+ assert(a.slideUntil>game.state.time);game.pause(true);game.pause(false);
+ assert.equal(a.slideUntil,0);assert(a.slideReadyAt>game.state.time);
+ run(game,sprint,2);run(game,{...sprint,crouchEdge:true},1);
+ assert.equal(a.slideUntil,0);
 });

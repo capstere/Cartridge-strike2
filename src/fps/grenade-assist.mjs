@@ -1,6 +1,6 @@
 import { TrajectoryCache } from './trajectory-cache.mjs';
 import * as THREE from '../../vendor/three/three.module.js';
-import { CARTRIDGE, GRENADE_TYPES, grenadeThreat } from './grenade-physics.mjs';
+import { cartridgeFlightFuse, GRENADE_TYPES, grenadeThreat } from './grenade-physics.mjs';
 
 const COLORS = {he:0xffb16e, flash:0xffe6a0, smoke:0x87e5cc};
 const NAMES = {he:'HE', flash:'FLASH', smoke:'RÃ–K'};
@@ -53,16 +53,20 @@ export class GrenadeAssist {
     if (this.game!==game) {this.reset();this.game=game;}
     const time=game.state.time;
     const previewOn=this.settings.grenadeGuide!==false && GRENADE_TYPES.includes(p.weapon) && p.inventory[p.weapon]>0 && !p.action && p.flash<.8;
+    const fuse=previewOn ? cartridgeFlightFuse(p,time,game.config) : null;
     if (!previewOn) {
       this.group.visible=false;this.note.hidden=true;this.preview=null;this.weapon=null;this.predictionCache.clear();
+    } else if(fuse===null){
+      this.group.visible=false;this.note.hidden=false;this.preview=null;this.predictionCache.clear();
+      this.text(this.noteTitle,NAMES[p.weapon]+' · DETONATION IN HAND');
+      this.text(this.noteDetail,Math.max(0,p.cartridge.deadline-time).toFixed(1)+' s');
     } else {
       // At most 12.5 predictions/s. A weapon change is shown immediately.
       if (!this.preview || this.weapon!==p.weapon || time<this.pathAt || time-this.pathAt>=.08) {
         if(time<this.pathAt)this.predictionCache.clear();
         this.pathAt=time;this.weapon=p.weapon;
         const previous=this.preview;
-        const release=p.cartridge?.releaseAt || time+CARTRIDGE.release;
-        const config=p.cartridge?.deadline ? {...game.config,grenadeFuse:Math.max(0,p.cartridge.deadline-release)} : game.config;
+        const config=fuse===game.config.grenadeFuse?game.config:{...game.config,grenadeFuse:fuse};
         this.preview=this.predictionCache.read(p,config,game.world);
         if (this.preview && this.preview!==previous) this.drawPreview(p);
       }

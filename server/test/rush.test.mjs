@@ -140,7 +140,7 @@ test('a coalesced crouch tap and a held cartridge replicate to both seats; contr
    fixed.call(this);coalesced=true;
  };
  try{
-   send(host,{...sprint,crouch:true,crouchEdge:true});send(host,{...sprint,crouch:false,crouchEdge:false});
+   send(host,{...sprint,crouch:true,crouchEdge:true});send(host,{crouch:false,crouchEdge:false});
    await until(()=>snapshots().every(a=>a.crouching&&a.handling.slideUntil>0),'both peers observed the crouch tap after release');
    assert.equal(snapshots()[0].handling.slideUntil,snapshots()[1].handling.slideUntil);
  }finally{room.fixedTick=fixed;}
@@ -161,4 +161,34 @@ test('a coalesced crouch tap and a held cartridge replicate to both seats; contr
  for(const r of [host,peer]){const a=r.state.actors.get(actor.id);assert.equal(a.he,0);assert.equal(a.handling.cartridgeStart,0);assert.equal([...r.state.grenades.values()][0].deadline,deadline);}
  host.send('controls',{enabled:true,...epochs});send(host,{fireId:1,holdThrow:false});
  await delay(75);assert.equal(received[1].length,2);assert.equal(room.metrics.invalid,0);
+});
+
+test('interrupting a cartridge with a rifle switch needs a fresh trigger on the authority',{timeout:15000},async t=>{
+ const local=await createLocalServer({testMatch:{continuous:true},port:0});
+ let host;
+ t.after(async()=>{await host?.leave();await local.close();});
+ const sdk=new Client(local.url,{headers:{Origin:local.url}});
+ host=await ready(await sdk.create('private-fps',options));
+ const room=[...local.rooms][0],seat=room.seats.get(host.sessionId),a=seat.actor;
+ await until(()=>Number.isFinite(seat.rttAt),'fresh rewind clock');
+ a.inventory.primary=room.sim.game.weaponItem('cr4');
+ let serial=0,fireId=0;
+ const select=slot=>host.send('select',{slot,serial:++serial,lifeId:a.lifeId,controlEpoch:seat.epoch});
+ for(const cook of [false,true]){
+   a.inventory.he=1;
+   select('he');await until(()=>own(host).weapon==='he','select cartridge');await delay(255);
+   send(host,{fire:true,fireId:++fireId,holdThrow:true,fireEdge:true});
+   await until(()=>a.cartridge && (!cook||a.cartridge.deadline>0),'cook or early pull');
+   select('primary');await until(()=>own(host).weapon==='cr4','select rifle without a trigger release');
+   assert.equal(a.waitTriggerRelease,true);
+   const ammo=a.inventory.primary.ammo;
+   for(let i=0;i<7;i++){
+     send(host,{fire:true,fireId:++fireId,holdThrow:true,fireEdge:false});await delay(60);
+   }
+   assert.equal(a.inventory.primary.ammo,ammo);assert.equal(a.pendingShot,null);
+   send(host,{fire:false,holdThrow:false,fireId});await until(()=>!a.waitTriggerRelease,'trigger released');
+   send(host,{fire:true,holdThrow:true,fireId:++fireId,fireEdge:true});
+   await until(()=>a.inventory.primary.ammo===ammo-1,'a new physical press may fire');
+   send(host,{fire:false,holdThrow:false,fireId});
+ }
 });

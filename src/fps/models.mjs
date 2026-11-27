@@ -15,10 +15,13 @@ import {refitViewArms,releasePistolSupport} from './presentation-hands.mjs';
 import { createViewMotion, viewMotion, strideSample, solveLeg, clamp } from './presentation-motion.mjs';
 
 // Front/rear marker coordinates on the authored meshes, in viewmodel space.
+// Additional camera-space drop at full Rush, fitted to the different mesh spans.
+// V4 at 2.417-3.250 s shows only the upper tip moving along the lower edge.
+const rushDrop={cr4:.26,ar47:.23,smg:.25,shotgun:.20,sniper:.28,bazooka:.26};
 const sightLines = {
   p9: [.090,-.174,.089,.037], p12: [.090,-.174,.089,.037],
-  cr4: [.119,-.475,.119,.023], ar47: [.092,-.640,.114,-.210],
-  smg: [.122,-.380,.133,.030], shotgun: [.073,-.760,.073,0],
+  cr4: [.119,-.475,.119,.023], ar47: [.104,-.640,.126,-.210],
+  smg: [.122,-.380,.133,.030], shotgun: [.073,-.760,.100,.070],
   sniper: [.165,-.425,.165,-.055]
 };
 function alignSights(model,amount,pitchKick) {
@@ -72,7 +75,7 @@ export function animateWeapon(model,actor,time,dt,options={}) {
         model.rotation.x-=.38*rush;model.rotation.y-=.25*rush;model.rotation.z-=.24*rush;
         releasePistolSupport(model,rush,stride,bounce);
       }else if(WEAPONS[model.userData.id]?.slot==='primary'){
-        model.position.x+=(.01+.012*stride)*rush;model.position.y+=(-.04+.012*bounce)*rush;
+        model.position.x+=(.01+.012*stride)*rush;model.position.y+=(-.04-rushDrop[model.userData.id]+.012*bounce)*rush;
         model.position.z+=(-.04+.01*bounce)*rush;
         model.rotation.x+=(-.50+.04*bounce)*rush;
         model.rotation.y+=(.65+.05*stride)*rush;model.rotation.z+=(.70+.10*roll)*rush;

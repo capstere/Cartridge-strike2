@@ -82,7 +82,7 @@ export class FocusHud {
     this.reset(); this.mode = mode;
     document.documentElement.dataset.hud = mode;
     if (this.more) {
-      this.more.hidden = mode !== 'clean' && !this.networkMode;
+      this.more.hidden = false;
       // Move actual controls, not clones, preserving multi-pointer capture and
       // existing buy/throw/hold listeners. Full mode restores exact DOM positions.
       for (const { button, marker } of this.placements) {
@@ -98,7 +98,7 @@ export class FocusHud {
 
   setExpanded(value) {
     const g = this.getGame();
-    const next = !!value && (this.mode === 'clean' || this.networkMode) && !!g?.player?.alive && !this.getModal();
+    const next = !!value && !!g?.player?.alive && !this.getModal();
     if (!this.drawer) return;
     if (this.expanded !== next && !this.networkMode) this.mobile.clear();
     this.expanded = next; this.drawer.hidden = !next;
@@ -144,7 +144,7 @@ export class FocusHud {
       }
     }
     if (!this.mobile.enabled) return;
-    this.more.hidden = (!this.networkMode && this.mode !== 'clean') || !p.alive;
+    this.more.hidden = !p.alive;
     const firearm = ['primary', 'pistol'].includes(w?.slot);
     this.contextButton('reload', firearm && (p.reloadUntil || (item && item.ammo < w.magazine)));
     let interact = !!p.action || this.mobile.state.interact;

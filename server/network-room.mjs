@@ -1,4 +1,4 @@
-import {queueShot,resetRush} from '../src/fps/rush.mjs';
+import {queueShot,interruptRush} from '../src/fps/rush.mjs';
 import {Room,ServerError} from '@colyseus/core';
 import {createHash,timingSafeEqual,randomBytes} from 'node:crypto';
 import {MAP_LOAD_MS,ROOM_SEATS as seats,installRoomSimulation,prepareRoomSimulation} from './room-world.mjs';
@@ -91,7 +91,7 @@ export class NetworkRoom extends Room {
       if(!seat?.ready||!seat.connected||seat.client!==client||message?.lifeId!==seat.actor.lifeId||
         (message.controlEpoch??0)!==seat.epoch||typeof message.enabled!=='boolean')return;
       if(seat.enabled===message.enabled)return;
-      this.sim.game.interruptCartridge(seat.actor);seat.holdThrow=false;seat.actor.waitTriggerRelease=false;resetRush(seat.actor);seat.enabled=message.enabled;seat.interactUntil=0;seat.actor.action=null;seat.aim=false;seat.trigger=false;seat.actor.aimAmount=0;this.inputs.get(client.sessionId).clear();
+      this.sim.game.interruptCartridge(seat.actor);seat.holdThrow=false;seat.actor.waitTriggerRelease=false;interruptRush(seat.actor,this.sim.game.state.time);seat.enabled=message.enabled;seat.interactUntil=0;seat.actor.action=null;seat.aim=false;seat.trigger=false;seat.actor.aimAmount=0;this.inputs.get(client.sessionId).clear();
       if(!seat.enabled)this.teamComms.prune();
     });
     this.onMessage('select',(client,m)=>{
@@ -278,7 +278,9 @@ export class NetworkRoom extends Room {
           seat.lastSampleTick=f.sampleTick;
           latest={input,frame:f,stamp:buffer.renderTime};
           crouchEdge ||= !!input.crouchEdge;
-          if(f.fire && f.fireId>seat.lastFire && (WEAPONS[seat.actor.weapon].automatic || !seat.trigger || f.fireEdge)){
+          const freshPress=f.fireEdge && f.fireId>seat.lastFire;
+          if(!input.holdThrow || freshPress)seat.actor.waitTriggerRelease=false;
+          if(!seat.actor.waitTriggerRelease && f.fire && f.fireId>seat.lastFire && (WEAPONS[seat.actor.weapon].automatic || !seat.trigger || f.fireEdge)){
             shot ??= {yaw:f.fireEdge?f.shotYaw:f.yaw,pitch:f.fireEdge?f.shotPitch:f.pitch,sampleTick:f.sampleTick,
               stamp:latest.stamp,fireId:f.fireId,lifeId:f.lifeId,epoch:f.controlEpoch,sessionId:client.sessionId};
           }
@@ -390,7 +392,7 @@ export class NetworkRoom extends Room {
     const seat=this.seats.get(client.sessionId);if(!seat||seat.client!==client)return;
     if(!seat.ready)this.state.actors.get(seat.waitId).connected=false;
     this.releaseObjectives(seat.actor,false);seat.interactUntil=0;
-    seat.enabled=false;seat.aim=seat.trigger=false;if(seat.actor){this.sim.game.interruptCartridge(seat.actor);seat.holdThrow=false;seat.actor.waitTriggerRelease=false;seat.actor.aimAmount=0;resetRush(seat.actor);}seat.connected=false;seat.playerReady=false;this.inputs.get(client.sessionId).clear();
+    seat.enabled=false;seat.aim=seat.trigger=false;if(seat.actor){this.sim.game.interruptCartridge(seat.actor);seat.holdThrow=false;seat.actor.waitTriggerRelease=false;seat.actor.aimAmount=0;interruptRush(seat.actor,this.sim.game.state.time);}seat.connected=false;seat.playerReady=false;this.inputs.get(client.sessionId).clear();
     this.sim.controllers.unbind(client.sessionId);this.metrics.drops++;this.project();
     // Protocol violations, payload limits and server shutdown never reserve a seat.
     if(seat.admitted&&!seat.revoked&&[1000,1001,1005,1006].includes(code))this.allowReconnection(client,RECONNECT_SECONDS).catch(()=>{});

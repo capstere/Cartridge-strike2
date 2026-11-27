@@ -14,6 +14,12 @@ export function resetRush(actor) {
   Object.assign(actor,{rushing:false,rushWeight:0,rushResumeAt:0,pendingShot:null,crouchHeld:false,slideUntil:0,slideReadyAt:0,slideSpeed:0,travelDirX:0,travelDirZ:0});
 }
 
+export function interruptRush(actor,time){
+  const cooldown=Math.max(actor.slideReadyAt || 0,actor.slideUntil>time?time+SLIDE.cooldown:0);
+  resetRush(actor);
+  actor.slideReadyAt=cooldown;
+}
+
 export function rushReady(actor) { return (actor.rushWeight || 0) <= RUSH.ready; }
 
 export function stickRush(wasRunning, distance, forward) {

@@ -16,7 +16,9 @@ export function moveActor(game, actor, input, dt, effects = true) {
   const crouchPress=input.crouchEdge || (input.crouch && !actor.crouchHeld);
   actor.crouchHeld=!!input.crouch;
   if(actor.slideUntil && time>=actor.slideUntil)endSlide(actor,time);
-  if(crouchPress && actor.rushing && actor.onGround && input.sprint && input.forward>.3 &&
+  // A finger can release the stick in the same sample as the crouch edge.
+  // Previous resolved Rush velocity still owns the slide impulse.
+  if(crouchPress && actor.rushing && actor.onGround && (input.forward || 0)>=0 &&
       !input.aim && !input.fire && !input.sneak && !actor.action && !actor.slideUntil &&
       time>=(actor.slideReadyAt || 0) && actor.moving>runSpeed*.75){
     actor.slideUntil=time+SLIDE.duration;

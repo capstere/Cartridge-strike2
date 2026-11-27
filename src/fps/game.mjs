@@ -1,4 +1,4 @@
-import {resetRush,rushReady,queueShot,takeReadyShot} from './rush.mjs';
+import {resetRush,interruptRush,rushReady,queueShot,takeReadyShot} from './rush.mjs';
 import {moveActor,moveBody} from './movement.mjs';
 import {rejoinNavigation} from './body-recovery.mjs';
 import {populateZombies,tickZombies,tickDance,reactZombie} from './zombies.mjs';
@@ -151,7 +151,7 @@ export class Game {
   }
   weaponItem(id) { const w = WEAPONS[id]; return { id, ammo: w.magazine, reserve: w.reserve }; }
   item(actor = this.player) { const w = WEAPONS[actor.weapon]; return actor.inventory[w?.slot] ?? null; }
-  pause(value = true) { this.state.paused = Boolean(value); this.accumulator = 0; this.firePress = null; this.crouchEdge=false; for (const a of this.actors) { this.interruptCartridge(a);resetRush(a);a.waitTriggerRelease=false; a.fireHeld = false; a.interactHeld = false; a.jumpHeld = false; a.action = null; } }
+  pause(value = true) { this.state.paused = Boolean(value); this.accumulator = 0; this.firePress = null; this.crouchEdge=false; for (const a of this.actors) { this.interruptCartridge(a);interruptRush(a,this.state.time);a.waitTriggerRelease=false; a.fireHeld = false; a.interactHeld = false; a.jumpHeld = false; a.action = null; } }
   update(dt, input = {}) {
     if (this.state.paused || ['menu', 'match'].includes(this.phase)) return;
     if(input.crouchEdge && this.phase==='active')this.crouchEdge=true;
@@ -195,7 +195,7 @@ export class Game {
       this.completeReloadIfDue(actor);
       const controls = actor.bot ? actor.bot.update(dt) : actor.controllerType === 'human' ? (inputsByActor?.get(actor.id) ?? (actor.isPlayer && !inputsByActor ? input : {})) : {};
       const held=controls.holdThrow ?? (!!controls.fire && !controls.autoFire);
-      if(!held)actor.waitTriggerRelease=false;
+      if(!held || controls.firePress)actor.waitTriggerRelease=false;
       const press=controls.firePress || (controls.fire && !actor.fireHeld && !controls.autoFire);
       if(!actor.waitTriggerRelease && !this.authorizeShot && press && !actor.reloadUntil && !actor.action && (controls.firePress || !rushReady(actor))) {
         queueShot(actor,{yaw:press.yaw??controls.yaw??actor.yaw,pitch:press.pitch??controls.pitch??actor.pitch},s.time);
@@ -470,6 +470,7 @@ export class Game {
   interruptCartridge(actor,restore=true){
     const c=actor.cartridge;if(!c)return;
     actor.cartridge=null;
+    if(!c.releaseAt)actor.waitTriggerRelease=true;
     if(c.deadline)this.throwGrenade(actor,c.type,{held:c,drop:true,restore});
   }
   throwGrenade(actor, type, {held=null,drop=false,restore=true,inHand=false}={}) {

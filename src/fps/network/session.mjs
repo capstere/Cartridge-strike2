@@ -453,7 +453,7 @@ export class NetworkSession {
         fireEdge:!!this.firePress,shotYaw:wrapYaw(this.firePress?.yaw??0),shotPitch:this.firePress?.pitch??0,interact:!!controls.interact,aim:!!controls.aim,fire:!!controls.fire});
       const time=this.prediction.world.game.state.time;
       const weapon=WEAPONS[self.weapon],throwing=self.weapon==='he';
-      const shotReady=!self.handling?.waitTriggerRelease && !self.handling?.cartridgeStart && (state.mode!=='classic'||state.roundPhase==='active')&&time+1e-8>=Math.max(this.nextCosmetic,self.nextShot)&&
+      const shotReady=(!self.handling?.waitTriggerRelease || data.fireEdge) && !self.handling?.cartridgeStart && (state.mode!=='classic'||state.roundPhase==='active')&&time+1e-8>=Math.max(this.nextCosmetic,self.nextShot)&&
         (self.ammo>0||self.weapon==='knife'||throwing&&self.he>0)&&!self.reloadUntil;
       const actor=this.prediction.world.actor,shouldered=rushReady(actor);
       if(data.fireEdge)data.fire=true;

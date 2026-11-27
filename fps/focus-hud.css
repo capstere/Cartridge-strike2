@@ -81,7 +81,18 @@ html[data-hud=clean] #mobile-controls .mobile-stick{box-shadow:none;opacity:.2}
 html[data-hud=clean] #mobile-controls .mobile-stick.active{opacity:.8}
 #mobile-utilities{position:absolute;left:max(12px,env(safe-area-inset-left));top:calc(max(12px,env(safe-area-inset-top)) + 52px);padding:8px;display:grid;grid-template-columns:repeat(2,72px);gap:8px;background:#0e222af5;border:1px solid #59757c;border-radius:8px;pointer-events:auto;z-index:6;max-height:calc(100dvh - 82px);overflow-y:auto;touch-action:pan-y}
 html[data-hud=clean] #mobile-controls #mobile-utilities .mobile-button{position:static;inset:auto;width:72px;height:48px;min-height:48px;border-radius:6px;font-size:11px;transform:none}
-html[data-hud=clean] #mobile-controls.mobile-dead #mobile-more{display:none}
+html[data-hud=full] #mobile-controls{
+  --full-buy-left:max(3%,calc(env(safe-area-inset-left,0px) + 12px))
+}
+html[data-hud=full] #mobile-controls .mobile-buy{left:var(--full-buy-left)}
+html[data-hud=full] #mobile-controls .mobile-more{
+  top:max(12px,env(safe-area-inset-top));left:calc(var(--full-buy-left) + 60px);
+  bottom:auto;right:auto;width:52px;height:44px;min-height:44px;transform:none
+}
+html[data-hud=full] #mobile-controls #mobile-utilities .mobile-button{
+  position:static;inset:auto;width:72px;height:48px;transform:none
+}
+#mobile-controls.mobile-dead #mobile-more{display:none}
 @media(pointer:coarse){
  html[data-hud=clean] #hud .top-hud{top:max(12px,env(safe-area-inset-top));margin:0;transform:translateX(-50%);gap:2px;max-width:calc(100vw - 152px)}
  html[data-hud=clean] .score{min-width:64px;gap:6px;padding:4px 7px}

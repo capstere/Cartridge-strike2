@@ -40,6 +40,12 @@ async function play(touch) {
      const play=f.audio.play.bind(f.audio);
      f.audio.play=event=>{if(event?.type==='shot' && event.actorId===g.player.id)rushEvidence.audio.push(event.time);return play(event);};
    });
+   if(process.env.FAMILY_CAPTURE){
+     assert(!touch,'family capture uses desktop controls');
+     const {captureHandlingFamilies}=await import('./handling-family-probe.mjs');
+     await captureHandlingFamilies(page,out);
+     return;
+   }
    const cd=touch?await context.newCDPSession(page):null;
    const touchEvent=(type,touchPoints)=>cd.send('Input.dispatchTouchEvent',{type,touchPoints});
    const capture=async(label,format)=>{if(format)await page.screenshot({path:join(out,label+'.png'),timeout:15000});};
@@ -62,7 +68,7 @@ async function play(touch) {
      },{n,hz});
    }
    const profile=touch?'touch':'desktop';
-   for(const [weapon,hz,reduced] of [['cr4',60,false],['p9',30,false],['cr4',30,true],['p9',60,true]]){
+   for(const [weapon,hz,reduced] of (process.env.HANDLING_ONLY?[]:[['cr4',60,false],['p9',30,false],['cr4',30,true],['p9',60,true]])){
      const name=[profile,weapon,hz,reduced?'reduced':'full'].join('-');
      await page.evaluate(({weapon,reduced})=>{
        const f=window.__fps,g=f.game,a=g.player;
@@ -90,6 +96,23 @@ async function play(touch) {
      assert(entry.some(v=>v.weight>.8),name+' built Rush');
      if(weapon==='p9')for(const sample of entry.filter(v=>v.weight>.87)){
        const [x,y]=sample.wristScreen;assert(x<-.16&&x>-.88&&y<-.45&&y>-.98,name+' visible free wrist '+sample.wristScreen);
+     }
+     if(weapon==='cr4'){
+       const top=await page.evaluate(()=>{
+         const f=__fps,m=f.renderer.weaponModel,v=m.position.clone(),camera=f.renderer.viewCamera;
+         let highest=-Infinity;
+         m.userData.weapon.traverse(object=>{
+           if(!object.isMesh)return;
+           const points=object.geometry.attributes.position;
+           for(let i=0;i<points.count;i++){
+             v.fromBufferAttribute(points,i).applyMatrix4(object.matrixWorld).project(camera);
+             if(Math.abs(v.x)<=1 && Math.abs(v.z)<=1)highest=Math.max(highest,v.y);
+           }
+         });
+         return (1-highest)/2;
+       });
+       entry.at(-1).weaponTopFraction=top;
+       assert(top>.84 && top<1,name+' full Rush leaves a visible tip at the lower edge '+top);
      }
      await capture(name+'-stride',true);
      if(touch){
@@ -156,19 +179,21 @@ async function play(touch) {
      const b=await page.locator(selector).boundingBox();assert(b,selector+' is reachable');
      return {x:b.x+b.width/2,y:b.y+b.height/2};
    };
+   await steps(22,60);
    let stick=null;
    if(touch){
      const b=await page.locator('[data-mobile-stick-zone]').boundingBox();
      stick={x:b.x+b.width*.43,y:b.y+b.height*.65,id:1};
      await touchEvent('touchStart',[stick]);stick={...stick,y:stick.y-76};await touchEvent('touchMove',[stick]);
    }else{await page.keyboard.down('w');await page.keyboard.down('x');}
-   await steps(20,60);
+   const running=await steps(20,60);
    if(touch){
      const crouch={...await center('[data-mobile-action=crouch]'),id:2};
      await touchEvent('touchStart',[stick,crouch]);await touchEvent('touchEnd',[stick]);
    }else{await page.keyboard.down('Control');await page.keyboard.up('Control');}
+   const inputState=await page.evaluate(()=>({touch:{...__fps.mobile.state},press:__fps.mobile.crouchEdge,modal:__fps.modal}));
    const slide=await steps(9,60);
-   assert(slide.every(a=>a.slide) && slide[0].moving>6.51,profile+' real crouch tap slid');
+   assert(slide.every(a=>a.slide) && slide[0].moving>6.51,profile+' real crouch tap slid '+JSON.stringify({before:running.at(-1),first:slide[0],last:slide.at(-1),inputState}));
    await capture(profile+'-slide',true);
    if(touch)await touchEvent('touchEnd',[]);else{await page.keyboard.up('w');await page.keyboard.up('x');}
    await steps(45,60);
@@ -186,6 +211,24 @@ async function play(touch) {
    const cast=await steps(18,60);
    assert(cast.at(-1).grenades===1 && cast.at(-1).stock===0 && cast.at(-1).weapon==='p9',profile+' release restored previous sidearm');
    await capture(profile+'-return',true);
+   if(touch){
+     await page.locator('[data-mobile-action=pause]').tap();
+     await page.locator('#pause [data-setting=hudMode]').selectOption('full');
+     await page.locator('#resume').tap();await steps(3,60);
+     await page.locator('#mobile-more').tap();await page.locator('[data-utility=inspect]').tap();await steps(5,60);
+     assert(await page.evaluate(()=>__fps.renderer.inspectUntil>__fps.game.state.time),'Full Solo inspect via touch');
+     const neighbors=await page.evaluate(()=>['#mobile-more','[data-mobile-action=buy]','[data-mobile-action=pause]'].map(selector=>{
+       const el=document.querySelector(selector),r=el.getBoundingClientRect();
+       return document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)===el;
+     }));
+     assert(neighbors.every(Boolean),'More, Buy and Pause each have an independent target in Full Solo');
+     await page.locator('#mobile-more').tap();await page.locator('[data-utility=rush]').tap();
+     const b=await page.locator('[data-mobile-stick-zone]').boundingBox();
+     let pos={x:b.x+b.width*.43,y:b.y+b.height*.65,id:1};await touchEvent('touchStart',[pos]);
+     pos={...pos,y:pos.y-38};await touchEvent('touchMove',[pos]);
+     const assisted=await steps(12,60);assert(assisted.at(-1).weight>.3,'Full Solo Rush via utility and inner stick');
+     await touchEvent('touchEnd',[]);await capture('touch-full-solo',true);
+   }
    handling.push({profile,slide,hold,cast});
    writeFileSync(join(out,'traces.json'),JSON.stringify({contract:CONTRACT,browser:browser.version(),records,handling},null,2));
    console.log(profile,'actual slide and cartridge inputs passed');

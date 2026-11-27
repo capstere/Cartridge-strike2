@@ -68,7 +68,11 @@ function pistol(root,id,m){
  }
  box(slide,.0236,.057,-.058,.0025,.023,.042,m.inset,.001);
  box(slide,.025,.049,-.056,.0018,.008,.034,m.edge,.0007);
- for(const z of[-.183,.027]){box(slide,0,.087,z,z<0?.012:.039,.014,.016,m.black,.0015);if(z>0)box(slide,0,.092,z+.001,.012,.009,.018,m.inset,.001);}
+ box(slide,0,.087,-.183,.012,.014,.016,m.black,.0015);
+ // Open the rear marker between the paired dots. The camera can actually
+ // see the front mark at full ADS, including with a narrow render viewport.
+ box(slide,0,.081,.027,.039,.004,.016,m.black,.001);
+ for(const x of[-.013,.013])box(slide,x,.087,.027,.013,.014,.016,m.black,.0015);
  box(slide,0,.090,-.174,.004,.004,.002,m.accent,.0005);
  for(const x of[-.013,.013])box(slide,x,.089,.037,.004,.004,.002,m.accent,.0005);
  cyl(body,[0,.047,-.12],[0,.047,-.207],.012,.012,m.edge);muzzle(body,-.214,.047,.012,m);
@@ -140,7 +144,7 @@ export function animateKitWeapon(model,actor,time,dt,{shotAt=-Infinity,switchAt=
  if(!reloading)d.reloadToken=0;
  const pose=reloadPose(p,{empty:d.emptyReload,rifle});
  const shotAge=time-shotAt,shot=shotAge>=0&&shotAge<.18?Math.exp(-shotAge*30):0;
- const swap=1-smooth((time-switchAt)/.30),speed=Math.min(1,(actor.moving||0)/4.2),stride=(actor.distanceWalked||0)*8;
+ const swap=Number.isFinite(switchAt)?1-smooth((time-switchAt)/.30):0,speed=Math.min(1,(actor.moving||0)/4.2),stride=(actor.distanceWalked||0)*8;
  model.position.set(rifle?.205:.17,(rifle?-.17:-.14)-swap*.23,rifle?-.64:-.54);
  model.rotation.set(-shot*(rifle?.025:.06)+swap*.40,.12,0);
  model.position.z+=shot*.022+recoil*.20;
