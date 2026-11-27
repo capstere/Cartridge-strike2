@@ -276,6 +276,7 @@ export class MinimapCache {
       }
     } else {
       for (const [p,label,color] of [[world.anchors.bomb,'B','#e9ae67'],[world.anchors.rescue,'R','#7ce4cd'],[world.anchors.hostages[0],'H','#ccebdc']]) {
+        if (!p) continue;
         ctx.font='bold 11px sans-serif';ctx.fillStyle=color;
         ctx.fillText(label,xof(p.x)-3,zof(p.z)-4);
       }

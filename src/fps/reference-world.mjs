@@ -10,7 +10,7 @@ function validate(spec){
   const finite=(v,limit)=>Number.isFinite(v)&&Math.abs(v)<=limit;
   const bounded=(list,limit)=>Array.isArray(list)&&list.length<=limit;
   if(spec?.version!==1||spec.sourceId!=='meltem'||!spec.bounds||!bounded(spec.solids,10000)||
-    !bounded(spec.ramps,200)||!bounded(spec.holes,100)||!bounded(spec.zones,400)||!bounded(spec.rayProps,2000))fail();
+    !bounded(spec.ramps,200)||!bounded(spec.holes,100)||!bounded(spec.poi,500)||!bounded(spec.zones,400)||!bounded(spec.rayProps,2000))fail();
   for(const b of spec.solids)if(!Array.isArray(b)||b.length!==11||b.slice(0,6).some(v=>!finite(v,5000))||
     b[0]>b[1]||b[2]>b[3]||b[4]>b[5]||typeof b[6]!=='string')fail();
   for(const axis of ['x','z'])if(!finite(spec.bounds[axis+'0'],1000)||!finite(spec.bounds[axis+'1'],1000)||
@@ -27,6 +27,7 @@ function validate(spec){
   for(const h of spec.holes)if(![h.x,h.z,h.y,h.r].every(v=>finite(v,1500))||h.r<=0)fail();
   const w=spec.water;if(!w||!finite(w.y,100)||!finite(w.floor,100)||w.floor>w.y||!bounded(w.land,30)||
     ![w.box,...w.land].every(b=>Array.isArray(b)&&b.length===4&&b.every(v=>finite(v,11000))&&b[0]<=b[1]&&b[2]<=b[3]))fail();
+  for(const p of spec.poi)if(!Array.isArray(p)||p.length<3||p.slice(0,3).some(v=>!finite(v,1500)))fail();
   for(const row of spec.zones)if(!Array.isArray(row)||row.length!==5||typeof row[0]!=='string'||
     row[0].length>100||row.slice(1).some(v=>!finite(v,1500)))fail();
   for(const b of spec.rayProps)if(!b.p||![b.p.x,b.p.y,b.p.z,b.rad].every(v=>finite(v,1500))||
@@ -37,8 +38,8 @@ export function createReferenceWorld(project){
   const spec=project.referenceMap;validate(spec);
   const terrain=createReferenceTerrain(spec),navigation=referenceNavigation(spec.nav,terrain);
   const bounds=spec.bounds,footprint=rectangle(bounds.x0,bounds.x1,bounds.z0,bounds.z1);
-  const rooms=spec.zones.map(([name,x0,x1,z0,z1],i)=>({id:'M-'+i,name,status:'included',surface:'stone',polygon:rectangle(x0,x1,z0,z1)}));
-  const outside={id:'M-0-all',name:'Meltem',status:'included',surface:'stone',polygon:footprint};
+  const rooms=spec.zones.map(([name,x0,x1,z0,z1],i)=>({id:'M-'+i,name,publicName:name,status:'included',surface:'stone',polygon:rectangle(x0,x1,z0,z1)}));
+  const outside={id:'M-0-all',name:'Meltem',publicName:'Meltem',status:'included',surface:'stone',polygon:footprint};
   const data={__custom:true,rooms,corridors:[outside],walls:[],doors:[],obstacles:[],routes:[],targets:[],excludedRooms:[],floorPolygons:[footprint],ground:project.ground};
   const description={boxes:[],surfaces:[],labels:[],furnishings:[],floorPolygons:[footprint]};
   // Draw the ground-level silhouettes from the same authoritative solids.

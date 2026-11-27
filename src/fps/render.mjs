@@ -173,7 +173,8 @@ export class Renderer extends EngineRenderer {
       this.scene.add(this.worldWeaponWarmup);
       if(this.neutralLighting){
        const maps=new Set();
-       this.projectFurniture.traverse(node=>{for(const material of [].concat(node.material||[]))for(const value of Object.values(material))if(value?.isTexture)maps.add(value);});
+       const mapGeometry=this.referenceScene?.root??this.projectFurniture;
+       mapGeometry.traverse(node=>{for(const material of [].concat(node.material||[]))for(const value of Object.values(material))if(value?.isTexture)maps.add(value);});
        for(const map of maps)this.renderer.initTexture(map);
        await this.renderer.compileAsync(this.scene,this.camera);
       }else if(!this.settings.mobile){

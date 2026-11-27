@@ -2,7 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import '../../server/register-shared.mjs';
+import {advanceGrenade} from './grenade-physics.mjs';
 const {createWorld}=await import('./world.mjs');
+const {Game}=await import('./game.mjs');
 const {collisionContract}=await import('../../shared/multiplayer/collision-contract.mjs');
 const {parseProject}=await import('../../furniture-editor/build/level-project.mjs');
 const project=parseProject(await readFile(new URL('../../levels/meltem.json',import.meta.url),'utf8'));
@@ -44,5 +46,17 @@ test('pier, sea and wells use distinct floor and ray heights',()=>{
   assert.ok(Math.abs(world.raycast({x:-34,y:2,z:10},ray,20).point.y+.9)<1e-5);
   const well=world.raycast({x:-4.2,y:.8,z:38.8},ray,10);
   assert.equal(well.material,'water');assert.ok(Math.abs(well.point.y+2.4)<1e-5);
+  const grenade={x:-4.2,y:-.5,z:38.8,vx:0,vy:0,vz:0,radius:.06};
+  advanceGrenade(grenade,world,9.81,1/60);assert.ok(grenade.y<-.5);
   assert.equal(world.scopeAllowed(-60,0),false);
+});
+
+test('an empty or one-team Endless room starts with an inactive bomb at a real map anchor',()=>{
+  for(const controllers of [{},{'analysts-0':'human'}]){
+    const game=new Game(world,{controllers,config:{mode:'endless',networkSlice:true,wanderers:false}}).start();
+    assert.equal(game.actors.length,Object.keys(controllers).length);
+    assert.equal(game.bomb.status,'inactive');
+    const anchor=world.anchors.counterAnalysts[0];
+    assert.deepEqual([game.bomb.x,game.bomb.y,game.bomb.z],[anchor.x,anchor.y,anchor.z]);
+  }
 });

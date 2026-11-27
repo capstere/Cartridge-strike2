@@ -157,8 +157,9 @@ export function updateRockets(g,dt,rayActor){
    const d=rayActor(from,dir,a,travel);if(d!==null&&d<=travel){travel=d;hit=a;}
   }
   r.x+=dir.x*travel;r.y+=dir.y*travel;r.z+=dir.z*travel;
-  if(wall||hit||g.state.time>=r.until||r.y<.02){
-   const origin={x:r.x-dir.x*.10,y:Math.max(.08,r.y-dir.y*.10),z:r.z-dir.z*.10};
+  const floor=g.world.lowerSurface?.(r.x,r.z)??0;
+  if(wall||hit||g.state.time>=r.until||r.y<floor+.02){
+   const origin={x:r.x-dir.x*.10,y:Math.max(floor+.08,r.y-dir.y*.10),z:r.z-dir.z*.10};
    const owner=projectileOwner?projectileOwner.actor:g.actors.find(a=>a.id===r.ownerId),radius=4.6;
    const {ownerId,ownerLifeId,team}=projectileOwner??r,ownerName=projectileOwner?projectileOwner.ownerName:owner?.name;
    g.emit('rocket-explosion',null,{...origin,ownerId,team,radius,...(g.config.networkSlice?{rocketId:r.id,ownerLifeId,ownerName,flightFrom:from}:{})});

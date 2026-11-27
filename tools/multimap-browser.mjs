@@ -318,6 +318,17 @@ try {
   mark('measure active game');
   result.measurement=await sample();
   assert(result.measurement.client.draws.min>0);
+  if(spec.reference) {
+    result.sourceGeometry=await page.evaluate(()=>{
+      const renderer=window.mapProbe.last.deref(), root=renderer.referenceScene?.root;
+      const architecture=root?.children.filter(mesh=>mesh.geometry?.index && mesh.geometry.hasAttribute('color')) || [];
+      return {inScene:!!root && root.parent===renderer.scene,
+        groups:architecture.length, triangles:architecture.reduce((n,mesh)=>n+mesh.geometry.index.count/3,0),
+        projectId:renderer.world.project.projectId};
+    });
+    assert.deepEqual(result.sourceGeometry,{inScene:true,groups:293,triangles:291400,projectId:'lvl-meltem'},
+      'The selected room must render the compiled Meltem architecture');
+  }
   await page.screenshot({path:join(out,name+'-game.jpg'), quality:86});
   if(spec.video || tour) {
     mark('record gameplay');

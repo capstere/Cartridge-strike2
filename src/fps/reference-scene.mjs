@@ -48,7 +48,13 @@ export function referenceScene(scene,world,settings){
   const sea=new THREE.Mesh(new THREE.PlaneGeometry(240,260),seaMaterial);
   sea.rotation.x=-Math.PI/2;sea.position.set(-150,water.y,0);root.add(sea);
   scene.background=new THREE.Color(0x9ec6ed);scene.fog=new THREE.FogExp2(0xb6cfe1,.003);
-  let disposed=false;
+  let disposed=false,baseReady=false,fineBatch=null;
+  function loadFine(){
+    if(!fineBatch)fineBatch=readBatch('detail',abort.signal).then(bytes=>{
+      if(!disposed)unpack(bytes,materials,detail);
+    });
+    return fineBatch;
+  }
   async function build(){
     const loader=new THREE.TextureLoader();
     await Promise.all(Object.entries(textureFiles).map(async([k,f])=>{
@@ -59,11 +65,15 @@ export function referenceScene(scene,world,settings){
     }));
     if(disposed)return;
     const base=await readBatch('base',abort.signal);if(disposed)return;unpack(base,materials,root);
-    if(settings.graphics!=='low'){const fine=await readBatch('detail',abort.signal);if(!disposed)unpack(fine,materials,detail);}
+    if(settings.graphics!=='low')await loadFine();
+    baseReady=true;
   }
   function update(camera){
     // Preserve the coarse architecture across all distances. Fine classes use
     // the donor's distance-driven hiding and are absent from the low profile.
+    detail.visible=settings.graphics!=='low';
+    if(!detail.visible||!baseReady||disposed)return;
+    if(!fineBatch)loadFine().catch(error=>{if(!disposed)console.warn('Meltem fine detail unavailable.',error);});
     for(const m of detail.children){
       const sphere=m.geometry.boundingSphere;
       temporary.copy(camera.position).sub(sphere.center);

@@ -63,7 +63,8 @@ async function run(ctx,base,i,version,cacheWarm){
   const capture=()=>page.evaluate(()=>performance.now());
   const mark=async(s)=>{row.startup[s]=await capture();console.log(kind,profile,i,s,Math.round(row.startup[s]));};
   page.setDefaultTimeout(140000);
-  page.on('pageerror',e=>row.errors.push(e.message.slice(0,200)));
+  page.on('pageerror',e=>{row.errors.push(e.message.slice(0,200));if(level)console.error(e.stack);});
+  if(level)page.on('console',message=>{if(message.type()==='error')console.error(message.text().slice(0,500));});
   try{
     await page.goto(base+'/'+kind+'/'+(level?'?level='+level:''),{waitUntil:'domcontentloaded',timeout:120000});
     const menu=page.locator(cs2?'#start':'#scr-main [data-go=play]');
@@ -81,7 +82,13 @@ async function run(ctx,base,i,version,cacheWarm){
       if(await mode.isVisible())await mode.click();
       await page.waitForFunction(()=>!document.querySelector('#start').disabled);
       await mark('startButton');await menu.click();
-      await page.waitForFunction(()=>!document.querySelector('#hud').hidden&&document.getElementById('cs-loading')?.hidden);
+      await page.waitForFunction(()=>{
+        const fatal=document.querySelector('#fatal');
+        if(fatal&&!fatal.hidden)throw Error(fatal.innerText);
+        const load=document.querySelector('#cs-loading.is-error');
+        if(load&&!load.hidden)throw Error(load.innerText);
+        return !document.querySelector('#hud').hidden&&document.getElementById('cs-loading')?.hidden;
+      });
       if(await page.locator('#resume').isVisible())await page.locator('#resume').click();
     }else{
       await menu.click();await page.locator('#playGrid button').filter({hasText:/solo/i}).first().click();

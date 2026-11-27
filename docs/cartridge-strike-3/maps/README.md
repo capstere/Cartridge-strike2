@@ -31,3 +31,15 @@ OPENBLAS_NUM_THREADS=1 python3 tools/reference-map/pack.py "$scratch" .
 ```
 
 Material diffuse maps are 512-pixel resamples of the original CC0 sources. The bundled shoreline recording retains its original audio bytes, source attribution and shore-distance/filter curve. Fine geometry uses separate loading and distance culling. Map disposal removes the scene subtree, aborts pending geometry loads, releases GPU buffers/materials/textures, stops the shoreline stream and disconnects its audio graph. [Source credits and asset inventory](meltem-assets.json)
+
+## Raspberry Pi gameplay observation
+
+The normal setup page accepted `?level=meltem`, opened Endless and reached an active round with ten actors. The player moved 4.59 m, fired three times, reloaded and returned to the lobby. On the Raspberry Pi 5, Chromium used Broadcom V3D at 493 × 228 internal resolution in the low desktop profile. A ten-second sample recorded 485 frame intervals, with a median of 19.8 ms, p95 of 25.2 ms and a maximum of 153.7 ms. One interval exceeded 100 ms. The playable scene took 14.51 s from navigation in a new browser context. This is one desktop run. The capture shows the map branch before the English frontend integration. [Measured inputs and results](meltem-solo.json) · [In-game frame](meltem-solo.jpg)
+
+The first normal Solo and room entries exposed a shader-warmup crash before the first playable frame. The renderer was traversing the generated furniture group while preparing the reference map. It now prepares the reference map’s own scene root. The real room fixture checks the 293 indexed architecture groups and 291,400 base triangles in the active rendered scene. Reproduce a desktop capture with the existing benchmark.
+
+```sh
+scratch=$(mktemp -d)
+WAYLAND_DISPLAY=wayland-0 CS3_BENCH_LEVEL=meltem CS3_BENCH_OUT="$scratch" \
+  node docs/cartridge-strike-3/baseline/performance/compare.cjs fps desktop 1 1
+```

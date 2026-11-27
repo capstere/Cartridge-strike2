@@ -6,7 +6,6 @@ import {SpatialIndex} from './physics.mjs';
 const STEP = .45;
 const clamp = (v,lo,hi) => Math.max(lo,Math.min(hi,v));
 const inside = (x,z,b) => x>=b[0] && x<=b[1] && z>=b[2] && z<=b[3];
-const project = (v,lo,hi) => clamp(v,lo,hi);
 function rampY(r,x,z){
   const t=r.axis==='x'?(x-r.x0)/(r.x1-r.x0):(z-r.z0)/(r.z1-r.z0);
   return r.h0+(r.h1-r.h0)*clamp(t,0,1);
@@ -51,7 +50,7 @@ export function createReferenceTerrain(spec){
   function obstacles(x,z,y,r,height,resolve){
     let changed=false;
     const push=(x0,x1,z0,z1)=>{
-      const dx=x-project(x,x0,x1),dz=z-project(z,z0,z1),d2=dx*dx+dz*dz;
+      const dx=x-clamp(x,x0,x1),dz=z-clamp(z,z0,z1),d2=dx*dx+dz*dz;
       if(d2>=r*r-1e-10)return;
       changed=true;
       if(!resolve)return;
