@@ -6,7 +6,7 @@ import {seededRandom} from '../config.mjs';
 import {moveActor} from '../movement.mjs';
 import {multiplayerMapAnchors} from '../minimap-cache.mjs';
 import {TEAM_COMMS_TYPE,TEAM_COMMS_COMMANDS,TEAM_COMMS_RATE_MS} from '../../../shared/multiplayer/protocol.mjs';
-import {CLASSIC_NETWORK_CONFIG,NETWORK_CONFIG,ROOM_TYPE,ROOM_CAPACITY,RECONNECT_SECONDS,INTERPOLATION_MS,copyPose,wrapYaw} from '../../../shared/multiplayer/rules.mjs';
+import {CLASSIC_NETWORK_CONFIG,NETWORK_CONFIG,ROOM_TYPE,ROOM_CAPACITY,RECONNECT_SECONDS,reliableRoomInput,INTERPOLATION_MS,copyPose,wrapYaw} from '../../../shared/multiplayer/rules.mjs';
 import {CONTRACT,MAP_CONTRACTS} from '../../../shared/multiplayer/build.mjs';
 import {FAMILY_ROOM_ALIAS} from '../../../shared/multiplayer/family-room.mjs';
 
@@ -187,7 +187,7 @@ export class NetworkSession {
     if(this.closed)throw Error(this.problem||'Room closed during loading.');
     this.localPlayerId=[...room.state.actors.values()].find(a=>a.sessionId===room.sessionId).id;
     this.view.localPlayerId=this.localPlayerId;this.view.team=this.localPlayerId.split('-')[0];
-    this.input=room.input({mode:'reliable'});
+    this.input=reliableRoomInput(room);
     if(this.input.stepSeconds!==NETWORK_CONFIG.fixedStep)throw Error('Incompatible simulation step.');
     this.predict=Predict.get(room,{mode:'lerp',delay:INTERPOLATION_MS});
     this.snapshot();
