@@ -116,7 +116,7 @@ try{
   console.log('Host created a private room');
   roomId=await host.locator('#network-room').inputValue();assert(roomId);
   await submit(friend,'Pilot friend',roomId,'incorrect-'+roomCode);
-  await friend.locator('#network-status').filter({hasText:'Fel privat'}).waitFor();
+  await friend.locator('#network-status').filter({hasText:'Incorrect private room code'}).waitFor();
   await submit(friend,'Pilot friend',roomId);await friend.locator('#room-ready').waitFor({state:'visible'});
   await host.locator('#room-ready').click();await friend.locator('#room-ready').tap();await host.locator('#room-start').click();
   await host.locator('#resume').waitFor({state:'visible'});await friend.locator('#resume').tap();
