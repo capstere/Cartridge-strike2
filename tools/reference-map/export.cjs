@@ -5,8 +5,10 @@ const {createHash}=require('node:crypto'),{gzipSync}=require('node:zlib');
 const {execFileSync}=require('node:child_process');
 const probe=require('./donor-probe.cjs');
 const environment=require('./environment-probe.cjs');
+const lighting=require('./lighting-probe.cjs');
 const root=process.cwd(),output=path.resolve(process.argv[2]||'');
 const assess=process.argv.includes('--assess'),withEnvironment=process.argv.includes('--environment');
+const lightingOnly=process.argv.includes('--lighting-only');
 const requestedMaps=(process.argv.find(arg=>arg.startsWith('--maps='))?.slice(7)||
   process.argv.find(arg=>arg.startsWith('--map='))?.slice(6)||'meltem').split(',');
 if(!requestedMaps.every(id=>['meltem','embruns','tephra'].includes(id)))throw Error('Unsupported target map export.');
@@ -16,7 +18,7 @@ const {chromium}=require(path.join(root,'frontline/source/tools/dev/node_modules
 const donor=path.join(root,'frontline/index.html'),original=fs.readFileSync(donor,'utf8');
 const marker='function finalizeWorld(){';
 if(original.split(marker).length!==2)throw Error('Review the changed donor finalizeWorld hook.');
-const instrumented=original.replace(marker,`(${probe.install})();window.readSourceEnvironment=${environment.capture};${marker}(${probe.capture})(${assess});`);
+const instrumented=original.replace(marker,`(${probe.install})();window.readSourceEnvironment=${environment.capture};window.readSourceLighting=${lighting.capture};${marker}(${probe.capture})(${assess||lightingOnly});`);
 const inline=html=>[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].find(m=>m[1].includes(marker))[1];
 const hash=script=>createHash('sha256').update(script).digest('base64');
 const oldDigest='sha256-'+hash(inline(original));
@@ -87,6 +89,15 @@ async function run(){
       console.log('Exporting original factory',id);
       const loaded=await page.evaluate(id=>startReferenceExport(id),id);
       if(loaded!==id)throw Error('Requested '+id+' but loaded '+loaded);
+      if(lightingOnly){
+        const grid=await page.evaluate(()=>readSourceLighting());
+        if(grid.id!==id||grid.maximum<=0||grid.maximum>grid.range)throw Error('Review original irradiance for '+id);
+        const packed=gzipSync(JSON.stringify(grid));
+        fs.writeFileSync(path.join(destination,'lighting.json.gz'),packed);
+        console.log(id,'baked light',grid.source,'target grid',grid.nx,grid.nz,grid.ny,packed.length,'bytes');
+        continue;
+      }
+
       if(withEnvironment)await saveEnvironment(page,id,destination);
       const result=await page.evaluate(()=>readReferenceMap());
       fs.writeFileSync(path.join(destination,'map.json.gz'),gzipSync(JSON.stringify(result)));

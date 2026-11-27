@@ -6,6 +6,7 @@ import {relative,sep} from 'node:path';
 import '../server/register-shared.mjs';
 import {collisionContract} from '../shared/multiplayer/collision-contract.mjs';
 import {coastalRecordings,coastalClipPath} from '../src/fps/coastal-recordings.mjs';
+import {tephraRecordings} from '../src/fps/tephra-ambience.mjs';
 import {shotTakes} from '../src/fps/shot-audio.mjs';
 import {CONFIG} from '../src/fps/config.mjs';
 import {DEFAULT_MAP_ID,NETWORK_MAPS} from '../shared/multiplayer/maps.mjs';
@@ -21,8 +22,8 @@ const knockdownFiles=['src/fps/character-actors.mjs','src/fps/character-library.
 const coastalAudio=Object.entries(coastalRecordings).flatMap(([id,takes])=>Object.keys(takes).map(take=>coastalClipPath(id,take)));
 const mapAssets={
   meltem:['plaster.webp','stone.webp','pavers.webp','cyfol.webp','cyflag.webp'],
-  embruns:[],
-  tephra:['ash.webp','basalt.webp','lava.webp','moss.webp','panel.webp']
+  embruns:['coarse.bin.gz','lighting.json.gz'],
+  tephra:['lighting.json.gz','ash.webp','basalt.webp','lava.webp','moss.webp','panel.webp']
 };
 const mappedFiles=Object.entries(mapAssets).flatMap(([id,surfaces])=>[
   'assets/fps/maps/'+id+'.webp',
@@ -30,8 +31,10 @@ const mappedFiles=Object.entries(mapAssets).flatMap(([id,surfaces])=>[
 ]);
 const referenceRuntime=['src/fps/reference-world.mjs','src/fps/reference-terrain.mjs','src/fps/reference-rays.mjs',
   'src/fps/reference-prop-ray.mjs','src/fps/reference-navigation.mjs','src/fps/reference-scene.mjs',
-  'src/fps/coastal-ambience.mjs','src/fps/coastal-recordings.mjs',...coastalAudio,
-  'src/fps/reference-environment.mjs','src/fps/reference-volcano.mjs',...mappedFiles];
+  'src/fps/coastal-ambience.mjs','src/fps/coastal-recordings.mjs','src/fps/tephra-ambience.mjs',...coastalAudio,
+  ...Object.keys(tephraRecordings).map(take=>coastalClipPath('tephra',take)),
+  'credits.html','licenses/riposte-MIT.txt',
+  'src/fps/reference-environment.mjs','src/fps/reference-volcano.mjs','src/fps/reference-eruption.mjs','src/fps/reference-lighting.mjs',...mappedFiles];
 const accessCatalog='shared/multiplayer/access-english.mjs';
 const deploymentFiles=['src/fps/deployment-countdown.mjs',
   ...['ui_tick','r_beep-1','st_start'].map(name=>'assets/fps/audio/riposte-'+name+'.mp3')];

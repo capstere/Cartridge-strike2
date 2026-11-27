@@ -177,6 +177,10 @@
         "detail": {
           "groups": 21,
           "triangles": 30804
+        },
+        "coarse": {
+          "groups": 149,
+          "triangles": 238376
         }
       },
       "volumes": 1656,
@@ -211,9 +215,79 @@
           "sha256": "d178f95e2d72ff940eaf0efc29012f88fdbd3299f0c4c4c19371bd1014fd5d97"
         },
         {
+          "file": "assets/fps/maps/embruns/audio/a_bed.mp3",
+          "bytes": 355941,
+          "sha256": "0881d007ecbac5881325c9c01fc4c75da8fc3f1ed6f62ce5c8cebc15055aa97f"
+        },
+        {
+          "file": "assets/fps/maps/embruns/audio/a_buoybell-1.mp3",
+          "bytes": 26109,
+          "sha256": "874182102c21950008eee6d71ca290ccf71a2c8ebc7c14a3cebc9995388e94d1"
+        },
+        {
+          "file": "assets/fps/maps/embruns/audio/a_buoybell-2.mp3",
+          "bytes": 26073,
+          "sha256": "5bea8a445cd285442b80240bd2dfa80720d9065809ca7edf9980c6fe49838fa2"
+        },
+        {
+          "file": "assets/fps/maps/embruns/audio/a_creak-1.mp3",
+          "bytes": 18981,
+          "sha256": "201d0bfe105e27a744d484c13a3bfe6e4813d2eb1e649c5f05573081bf4a6b09"
+        },
+        {
+          "file": "assets/fps/maps/embruns/audio/a_creak-2.mp3",
+          "bytes": 26397,
+          "sha256": "f8b9257d68378df74978d4de24abcbc1eb2fff8f17ff960601082b51bdb3df81"
+        },
+        {
+          "file": "assets/fps/maps/embruns/audio/a_foghorn.mp3",
+          "bytes": 25209,
+          "sha256": "7e7b872b94ae3b463a28a53045806e6f946161eb183c5d6b4e3b3b02970c3341"
+        },
+        {
+          "file": "assets/fps/maps/embruns/audio/a_gull-1.mp3",
+          "bytes": 28485,
+          "sha256": "afaf9ff3fc8605278469d5cd19a29ad2ad24cef5d711d3cc2dd7c892bb1e172d"
+        },
+        {
+          "file": "assets/fps/maps/embruns/audio/a_gull-2.mp3",
+          "bytes": 29781,
+          "sha256": "9bd983072b1d4f83ceddea58c835c65fe14de13d013e3eb14324a9e48c6cdeb8"
+        },
+        {
+          "file": "assets/fps/maps/embruns/audio/a_gull-3.mp3",
+          "bytes": 34605,
+          "sha256": "303aa80eda63c485a7c1f5e72cdf47ef6da2ffaf46965353ec74337a9c2d1686"
+        },
+        {
+          "file": "assets/fps/maps/embruns/audio/a_gull-4.mp3",
+          "bytes": 34425,
+          "sha256": "f1288456ef6fbbd0053f596aac0fea4b4e700f906621dfd065379e77e1394d65"
+        },
+        {
+          "file": "assets/fps/maps/embruns/audio/a_rigging-1.mp3",
+          "bytes": 16317,
+          "sha256": "ba31d691196ac9b3cf39e587860143ec64184f6753ffb6c98c806c5b0c675a20"
+        },
+        {
+          "file": "assets/fps/maps/embruns/audio/a_rigging-2.mp3",
+          "bytes": 16785,
+          "sha256": "c9b7c6ddc1da0af26ac70ac8b6ad15c51a5d1a5b27191793130c1dd36b0c4c04"
+        },
+        {
+          "file": "assets/fps/maps/embruns/audio/a_waves.mp3",
+          "bytes": 43101,
+          "sha256": "2e52f2e91746218e91e4179498dc510676671f63d095113d6e727fa891cb7d20"
+        },
+        {
           "file": "assets/fps/maps/embruns/base.bin.gz",
           "bytes": 4547242,
           "sha256": "2768ec110440e126784e20f6aad1b38f12d69272a7fa2a88a50b97be3afb5a68"
+        },
+        {
+          "file": "assets/fps/maps/embruns/coarse.bin.gz",
+          "bytes": 2507974,
+          "sha256": "8ce58435f48604002cc854de5cf93f95c6a76b7885043ec7232d7b3da7feb276"
         },
         {
           "file": "assets/fps/maps/embruns/detail.bin.gz",
@@ -226,6 +300,11 @@
           "sha256": "cc4068056f86a52f7964c128e2d52e468ec6f0c3b9eb03466e1c86d4a5fb70b0"
         },
         {
+          "file": "assets/fps/maps/embruns/lighting.json.gz",
+          "bytes": 85278,
+          "sha256": "d999c9d531ff8294a2be0366e8baca6028d8a27d15b6708f773bede49d112d11"
+        },
+        {
           "file": "assets/fps/maps/embruns/signs.webp",
           "bytes": 183712,
           "sha256": "f993b2c989278d17d336cdec9a7e0c095b986c81c1363de4f380edae0fba95af"
@@ -235,7 +314,29 @@
           "bytes": 10132,
           "sha256": "0d80d18eb4c2e314c27c0ec895f7fa8c8d569bb4a0a63c1cd10671176eaf7583"
         }
-      ]
+      ],
+      "bakedLighting": {
+        "version": 1,
+        "id": "embruns",
+        "x": -60,
+        "z": -64,
+        "step": 1.5,
+        "nx": 70,
+        "nz": 86,
+        "ny": 12,
+        "range": 8,
+        "maximum": 5.010958316725728,
+        "lit": 5319,
+        "source": {
+          "nx": 208,
+          "nz": 256,
+          "ny": 36,
+          "nyL": 18,
+          "step": 0.5,
+          "lights": 23,
+          "lampGain": 4.8
+        }
+      }
     },
     "tephra": {
       "factories": {
@@ -250,7 +351,7 @@
       },
       "layer": {
         "base": {
-          "groups": 222,
+          "groups": 265,
           "triangles": 112492
         },
         "detail": {
@@ -295,14 +396,64 @@
           "sha256": "03945d04830fa59d3c92ecb17204f2fa53ce921e6238b0edfca0479586f70547"
         },
         {
+          "file": "assets/fps/maps/tephra/audio/a_bed.mp3",
+          "bytes": 276381,
+          "sha256": "7f38316e458e8ec12d1ba762704d1e96858d05a07d60681cbf6c93edd405e6c6"
+        },
+        {
+          "file": "assets/fps/maps/tephra/audio/a_boom-1.mp3",
+          "bytes": 50445,
+          "sha256": "2abc955868f68573562a10ae66f7401f9cb4afe3590ffaf9d802c98fca3c5dc7"
+        },
+        {
+          "file": "assets/fps/maps/tephra/audio/a_boom-2.mp3",
+          "bytes": 46629,
+          "sha256": "98550a8b7c9067ba570d5941bf2ca660f686ae70befbc5fe665c2f6f6def329c"
+        },
+        {
+          "file": "assets/fps/maps/tephra/audio/a_bubble.mp3",
+          "bytes": 51453,
+          "sha256": "18cfd181a8714572711cd453be54fb24107e1289b1e48fd577cb1fd1e8cfe2de"
+        },
+        {
+          "file": "assets/fps/maps/tephra/audio/a_gust-1.mp3",
+          "bytes": 17721,
+          "sha256": "c88e26e64ce4975e37d003d6ee9521a8bc58eee762931689b210f88974735bb3"
+        },
+        {
+          "file": "assets/fps/maps/tephra/audio/a_gust-2.mp3",
+          "bytes": 17289,
+          "sha256": "a800ab85a7cf32c2965d3b148ff1a90da6abeda95f941ce0202af5edde8aa1de"
+        },
+        {
+          "file": "assets/fps/maps/tephra/audio/a_hum.mp3",
+          "bytes": 52893,
+          "sha256": "c754f537d562064713f97552e860548c42bf52d3a7ffab2a1b12df409d76d24f"
+        },
+        {
+          "file": "assets/fps/maps/tephra/audio/a_steam.mp3",
+          "bytes": 72225,
+          "sha256": "c91228210320ad101dbe6eeb2c88ead3dad29b5a068ea4243945adf5ce64e6f2"
+        },
+        {
+          "file": "assets/fps/maps/tephra/audio/a_thunder-1.mp3",
+          "bytes": 24813,
+          "sha256": "2acd96a1220b80401425d66ac6c6e3e83ebfcba8854f8d58a6fa9402c260ab94"
+        },
+        {
+          "file": "assets/fps/maps/tephra/audio/a_thunder-2.mp3",
+          "bytes": 24813,
+          "sha256": "0c25d78d586521cfdb80cd58c47baad52ba691257309c495f15307900bc51ded"
+        },
+        {
           "file": "assets/fps/maps/tephra/basalt.webp",
           "bytes": 14560,
           "sha256": "75d0a17ecb925a605eb3309f516281372d5ce4df734eb28fec71b5a9e3d3c07f"
         },
         {
           "file": "assets/fps/maps/tephra/base.bin.gz",
-          "bytes": 1130892,
-          "sha256": "911d48ea709986c322fce99bae5bf4d7eaa7ac3b8fe5893d854920a5eee24921"
+          "bytes": 1128828,
+          "sha256": "a170bdd335cc9a7b4493b4af62f6bd803713bf610c39604d85c2fbf6aad47431"
         },
         {
           "file": "assets/fps/maps/tephra/detail.bin.gz",
@@ -318,6 +469,11 @@
           "file": "assets/fps/maps/tephra/lava.webp",
           "bytes": 30542,
           "sha256": "bbe678421fe9fb30ab7af22b358df2e65fbad790892e85d4cb31fcb317e7aa28"
+        },
+        {
+          "file": "assets/fps/maps/tephra/lighting.json.gz",
+          "bytes": 52553,
+          "sha256": "cf1010db14280f64bd3d726b62607a88402efcea1cec422a5995244399a06745"
         },
         {
           "file": "assets/fps/maps/tephra/moss.webp",
@@ -339,7 +495,53 @@
           "bytes": 15328,
           "sha256": "c0ea9a9df7e3f3f708d04590b0f417de6d801e2cbb41194ac77813dfbafa8d7d"
         }
-      ]
+      ],
+      "bakedLighting": {
+        "version": 1,
+        "id": "tephra",
+        "x": -48,
+        "z": -78,
+        "step": 1.5,
+        "nx": 64,
+        "nz": 104,
+        "ny": 12,
+        "range": 8,
+        "maximum": 6.419036179467854,
+        "lit": 2451,
+        "source": {
+          "nx": 192,
+          "nz": 312,
+          "ny": 36,
+          "nyL": 18,
+          "step": 0.5,
+          "lights": 4,
+          "lampGain": 6.4
+        }
+      }
     }
+  },
+  "originalLightCapture": {
+    "revision": "eb1f0e3f8b53a468b75b283a7ca00caa6eb8254b",
+    "stages": [
+      {
+        "stage": "lights",
+        "start": "2026-11-27T15:32:16.141831+00:00",
+        "end": "2026-11-27T15:33:55.444859+00:00",
+        "exit": 0
+      },
+      {
+        "stage": "embruns",
+        "start": "2026-11-27T15:33:55.445282+00:00",
+        "end": "2026-11-27T15:33:59.166178+00:00",
+        "exit": 0
+      },
+      {
+        "stage": "tephra",
+        "start": "2026-11-27T15:33:59.166568+00:00",
+        "end": "2026-11-27T15:33:59.795313+00:00",
+        "exit": 0
+      }
+    ],
+    "success": true
   }
 }

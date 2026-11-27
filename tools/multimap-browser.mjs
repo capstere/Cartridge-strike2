@@ -362,12 +362,12 @@ try {
   if(spec.reference) {
     result.sourceGeometry=await page.evaluate(()=>{
       const renderer=window.mapProbe.last.deref(), root=renderer.referenceScene?.root;
-      const architecture=root?.children.filter(mesh=>mesh.geometry?.index && mesh.geometry.hasAttribute('color')) || [];
+      const architecture=root?.getObjectByName('Indexed architecture')?.children.filter(mesh=>mesh.geometry?.index && mesh.geometry.hasAttribute('color')) || [];
       return {inScene:!!root && root.parent===renderer.scene,
         groups:architecture.length, triangles:architecture.reduce((n,mesh)=>n+mesh.geometry.index.count/3,0),
         projectId:renderer.world.project.projectId};
     });
-    const expected={meltem:[302,291400],embruns:[305,502749],tephra:[222,112492]}[map];
+    const expected={meltem:[302,291400],embruns:[149,238376],tephra:[265,112492]}[map];
     assert.deepEqual(result.sourceGeometry,{inScene:true,groups:expected[0],triangles:expected[1],projectId:'lvl-'+map},
       'The selected room must render its measured original architecture');
     if(process.env.FPS_MAP_ENVIRONMENT==='1'){
@@ -483,7 +483,7 @@ try {
   await page.locator('#room-leave').click(); await page.locator('#network-code').waitFor();
   for(const p of peers) await p.pages()[0].evaluate(()=>mapPeerRoom.leave());
   await until(()=>fixture.authority.rooms.size===0,'All sockets and simulation released');
-  if(audible&&['meltem','embruns'].includes(map)){
+  if(audible&&spec.reference){
     result.audio=await page.evaluate(()=>mapProbe.audio);
     assert.equal(result.audio.map,map);assert.ok(result.audio.peakBytes>0&&result.audio.peakVoices>0);
     assert.deepEqual(result.audio.decodeErrors,[]);

@@ -2,7 +2,7 @@
 // in the MIT Riposte source. Both particle fields use one draw each.
 import * as THREE from '../../vendor/three/three.module.js';
 
-export function referenceVolcano(spec,root,settings,clock,own) {
+export function referenceVolcano(spec,root,settings,clock,own,onLightning) {
   // Presentation-only sequence independent of actors, damage and authority.
   let seed=7117;
   function random() {
@@ -87,7 +87,10 @@ export function referenceVolcano(spec,root,settings,clock,own) {
   return (camera,t)=>{
     pointScale.value=globalThis.innerHeight*.5/Math.tan(camera.fov*Math.PI/360);
     const dt=last?Math.min(.1,Math.max(0,t-last)):0;last=t;next-=dt;
-    if(next<=0){next=3+random()*8;age=0;double=random()<.5;}
+    if(next<=0){
+      next=3+random()*8;age=0;double=random()<.5;
+      onLightning?.(1.5+random()*2.5);
+    }
     if(age<0||settings.reducedMotion)return 0;
     age+=dt;
     if(age>.5){age=-1;return 0;}

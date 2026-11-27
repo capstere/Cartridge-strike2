@@ -284,6 +284,16 @@ jobs:
         env:
           FPS_MAP_CASE: meltemTouch
         run: node --import ./tools/multimap-teardown.mjs --import ./server/register-shared.mjs tools/multimap-browser.mjs
+      - name: Play and reconnect on the real harbor map with touch controls and sound
+        env:
+          FPS_MAP_CASE: embrunsTouch
+          FPS_MAP_AUDIO: "1"
+        run: node --import ./tools/multimap-teardown.mjs --import ./server/register-shared.mjs tools/multimap-browser.mjs
+      - name: Play and reconnect on the real volcanic map with touch controls and sound
+        env:
+          FPS_MAP_CASE: tephraTouch
+          FPS_MAP_AUDIO: "1"
+        run: node --import ./tools/multimap-teardown.mjs --import ./server/register-shared.mjs tools/multimap-browser.mjs
       - name: Verify custom match settings in desktop and mobile family lobbies
         run: node tools/custom-match-browser.mjs
       - uses: actions/upload-artifact@v4

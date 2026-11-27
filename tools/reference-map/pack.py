@@ -8,6 +8,7 @@ import subprocess
 import sys
 
 import numpy as np
+from coarse import reduce_vertices
 
 raw, target = map(Path,sys.argv[1:3])
 # This compiler writes packaged derivative inputs in target. Native captures stay in raw.
@@ -30,9 +31,12 @@ surface={
     'signs4':'signs','decals4':'decals','cyfol':'cyfol','cyflag':'cyflag',
     'signs3':'signs','decals3':'decals','screen':'portScreen','lavaTp':'lava',
     'signs5':'signs','decals5':'decals','screenTp':'tephraScreen','ash':'ground','basalt':'basalt',
-    'moss':'moss','panel':'panel','wetstone':'stone','stone':'stone','plaster':'plaster'
+    'moss':'moss','panel':'panel','glassLit':'litGlass','lampTp':'litFixture','ceil':'ceiling','ceilc':'ceilingConcrete','wetstone':'stone','stone':'stone','plaster':'plaster'
 }
+if map_id!='tephra':
+    for key in ('glassLit','lampTp','ceil','ceilc'):surface.pop(key,None)
 groups={}
+coarse_groups={}
 for i,g in enumerate(source['renderGroups']):
     if not g['indices']:continue
     a=json.loads(gzip.decompress((raw/('group-'+str(i)+'.json.gz')).read_bytes()))
@@ -64,14 +68,23 @@ for i,g in enumerate(source['renderGroups']):
         used,local=np.unique(indices[assignment==ci],return_inverse=True)
         key=(int(g['detail']>=2),material,int(cx),int(cz))
         groups.setdefault(key,[]).append((pos[used],normal[used],uv[used],colors[used],local.astype('<u4'),sway[used] if sway is not None else None))
-def write_batches(level):
+    if map_id=='embruns' and g['detail']<2:
+        coarse_cells=np.floor(centre/48).astype('int32').clip(-3,3)
+        if material in ('signs','decals','portScreen'):coarse_cells[:]=0
+        chunks,assignment=np.unique(coarse_cells,axis=0,return_inverse=True)
+        for ci,(cx,cz) in enumerate(chunks):
+            used,local=np.unique(indices[assignment==ci],return_inverse=True)
+            parts=reduce_vertices(g['material'],pos[used],normal[used],uv[used],colors[used],local.reshape(-1,3))
+            if parts[4].size:
+                coarse_groups.setdefault((0,material,int(cx),int(cz)),[]).append((*parts,None))
+def write_batches(level,collection=groups,suffix=None):
     blob=bytearray();rows=[]
-    for (detail,material,cx,cz),parts in sorted(groups.items()):
+    for (detail,material,cx,cz),parts in sorted(collection.items()):
         if detail!=level:continue
         pos,norm,uv,col=[np.concatenate([a[k] for a in parts]) for k in range(4)]
         start=0;idx=[]
         for p,_,_,_,indices,_ in parts:
-            idx.append(indices+start);start+=len(p)
+            idx.append(indices.ravel()+start);start+=len(p)
         indices=np.concatenate(idx)
         # Per-axis quantization keeps even tiny trim accurate, with no seam
         # accumulation. Decode back into world metres once on load.
@@ -90,11 +103,13 @@ def write_batches(level):
         rows.append(row)
     header=json.dumps(dict(version=1,groups=rows),separators=(',',':')).encode()
     data=struct.pack('<I',len(header))+header+blob
-    suffix='detail' if level else 'base'
+    suffix=suffix or ('detail' if level else 'base')
     (geometry/(suffix+'.bin.gz')).write_bytes(gzip.compress(data,compresslevel=6,mtime=0))
     print(suffix,len(rows),'batches',sum(r['indices'] for r in rows)//3,'triangles',len(data),'uncompressed bytes')
 write_batches(0)
 write_batches(1)
+if coarse_groups:write_batches(0,coarse_groups,'coarse')
+if '--mesh-only' in sys.argv[3:]:sys.exit(0)
 # All gameplay data lives in the edition-checked public LevelProject. JSON
 # numeric representation uses exact source float values for the physical model.
 spec={k:source[k] for k in ('bounds','solids','ramps','water','holes','nav','rayProps','zones','poi')}
@@ -133,6 +148,13 @@ for name in {"meltem":("plaster","stone","pavers"),"embruns":(),"tephra":("ash",
     image=Image.open(Path("frontline/source/assets/tex")/name/"map.webp").convert("RGB")
     image.thumbnail((512,512),Image.Resampling.LANCZOS)
     image.save(geometry/(name+".webp"),quality=80,method=4)
+if map_id in ('embruns','tephra'):
+    light_source=next((Path(arg.split('=',1)[1])/map_id/'lighting.json.gz' for arg in sys.argv[3:] if arg.startswith('--light-dir=')),raw/'lighting.json.gz')
+    lamp=json.loads(gzip.decompress(light_source.read_bytes()))
+    count=lamp['nx']*lamp['nz']*lamp['ny']
+    if lamp['version']!=1 or lamp['id']!=map_id or not (0<count<=500000) or len(base64.b64decode(lamp['rgba']))!=count*4:
+        raise ValueError('Map light capture differs from its original source geometry.')
+    shutil.copyfile(light_source,geometry/'lighting.json.gz')
 if map_id=='meltem':
     shutil.copyfile("frontline/source/assets/sfx/amb_meltem/a_bed.mp3",geometry/"sea.mp3")
 shutil.copyfile(Path("frontline/source/assets/maps")/(map_id+".webp"),geometry.parent/(map_id+".webp"))

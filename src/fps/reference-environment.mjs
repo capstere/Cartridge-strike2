@@ -2,6 +2,7 @@
 // and material/cloth factories. See the source trace and rights inventory.
 import * as THREE from '../../vendor/three/three.module.js';
 import {referenceVolcano} from './reference-volcano.mjs';
+import {eruptionShader} from './reference-eruption.mjs';
 
 function typed(encoded, ArrayType) {
   const binary = atob(encoded);
@@ -214,16 +215,20 @@ function boats(spec,sea,root,materials,plain){
   };
 }
 
-function skyDome(texture,spec,root,own,horizon) {
+function skyDome(texture,spec,root,own,horizon,volcano,clock,light) {
   texture.wrapS=THREE.RepeatWrapping;texture.generateMipmaps=false;texture.minFilter=THREE.LinearFilter;
   const material=new THREE.ShaderMaterial({
-    uniforms:{skyImage:{value:texture},horizon:{value:horizon},flash:{value:0},rot:{value:spec.rot||0},gain:{value:spec.gain||1}},
+    uniforms:{skyImage:{value:texture},horizon:{value:horizon},uTime:clock,
+      ...(volcano?{uVolc:{value:new THREE.Vector3()},uPlume:{value:new THREE.Vector4(.97,.15,1,1.7)},
+        uErupt:{value:new THREE.Vector4(1,1,0,0)},sunDir:{value:new THREE.Vector3(...light.sun).normalize()}}:{}),rot:{value:spec.rot||0},gain:{value:spec.gain||1}},
     side:THREE.BackSide,depthWrite:false,
     vertexShader:`varying vec3 dir;void main(){dir=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
-    fragmentShader:`uniform sampler2D skyImage;uniform vec3 horizon;uniform float rot,gain,flash;varying vec3 dir;void main(){
+    fragmentShader:`uniform sampler2D skyImage;uniform vec3 horizon;uniform float rot,gain;varying vec3 dir;
+      ${volcano?eruptionShader:''}
+      void main(){
       vec3 d=normalize(dir);vec2 uv=vec2(fract(atan(d.z,d.x)*.15915494+.5+rot),asin(clamp(d.y,0.,1.))*.63661977);
       vec3 photo=pow(texture2D(skyImage,uv).rgb,vec3(2.2))*gain;
-      photo+=vec3(.40,.30,.20)*flash*pow(max(0.,-d.x),4.)*smoothstep(.05,.4,d.y);
+      ${volcano?'if(d.y>-.01){photo=plume(photo,d,d.y);photo=fountain(photo,d,d.y);}':''}
       gl_FragColor=vec4(mix(horizon,photo,smoothstep(-.005,.035,d.y)),1.);
       #include <tonemapping_fragment>
       #include <colorspace_fragment>
@@ -235,10 +240,10 @@ function skyDome(texture,spec,root,own,horizon) {
   return sphere;
 }
 
-export function createReferenceEnvironment({id,scene,root,settings,materials,signal,folder}) {
+export function createReferenceEnvironment({id,scene,root,settings,materials,signal,folder,onLightning}) {
   const group=new THREE.Group();group.name='Map environment';root.add(group);
   const own=[],phase={value:0},clock={value:0};
-  let sky=null,mills=[],bobBoats=null,volcanic=null,far=0,disposed=false;
+  let sky=null,mills=[],bobBoats=null,volcanic=null,crater=null,far=0,disposed=false;
   async function build(){
     const response=await fetch(new URL('environment.json.gz',folder),{signal});
     if(!response.ok)throw Error('Map environment could not be loaded.');
@@ -250,10 +255,12 @@ export function createReferenceEnvironment({id,scene,root,settings,materials,sig
     if(data.version!==1||data.id!==id)throw Error('Unsupported map environment.');
     scene.fog=new THREE.FogExp2(new THREE.Color(...data.fog.color),data.fog.density);
     far=data.far;
+    // The r147 donor uses the default legacy punctual/ambient normalization.
+    // Its Lambert irradiance includes PI; r180 switched to physical light units.
     const ambient=scene.children.find(child=>child.isHemisphereLight);
-    if(ambient){ambient.color.setHex(data.light.hemi[0]);ambient.groundColor.setHex(data.light.hemi[1]);ambient.intensity=data.light.hemi[2];}
+    if(ambient){ambient.color.setHex(data.light.hemi[0]);ambient.groundColor.setHex(data.light.hemi[1]);ambient.intensity=Math.PI*data.light.hemi[2];}
     const sun=scene.children.find(child=>child.isDirectionalLight);
-    if(sun){sun.color.setHex(data.light.sunColor);sun.intensity=data.light.sunIntensity;sun.position.fromArray(data.light.sun).normalize();}
+    if(sun){sun.color.setHex(data.light.sunColor);sun.intensity=Math.PI*data.light.sunIntensity;sun.position.fromArray(data.light.sun).normalize();}
     const solid=new THREE.MeshLambertMaterial({vertexColors:true});
     const cloth=breezeMaterial(phase);
     own.push(solid,cloth);
@@ -264,11 +271,15 @@ export function createReferenceEnvironment({id,scene,root,settings,materials,sig
       bobBoats=boats(data.floats,data.sea,group,materials,solid);
     }
     ponds(data.ponds,group,clock,own);
-    if(data.volcano)volcanic=referenceVolcano(data.volcano,group,settings,clock,own);
+    if(data.volcano){
+      volcanic=referenceVolcano(data.volcano,group,settings,clock,own,onLightning);
+      const v=data.volcano.crater;
+      crater={x:v.x,z:v.z,radius:v.rc,height:v.s0*v.L*(1-Math.exp(-(Math.hypot(v.x,v.z)-v.rc)/v.L))};
+    }
     if(data.sky){
       const texture=await new THREE.TextureLoader().loadAsync(new URL('sky.webp',folder).href);
       if(disposed){texture.dispose();return;}
-      sky=skyDome(texture,data.sky,group,own,scene.fog.color);
+      sky=skyDome(texture,data.sky,group,own,scene.fog.color,data.volcano,clock,data.light);
     }
   }
   function update(camera){
@@ -278,7 +289,12 @@ export function createReferenceEnvironment({id,scene,root,settings,materials,sig
     bobBoats?.(t,camera);
     if(materials.lava?.map)materials.lava.map.offset.y=1-(t*.012)%1;
     const flash=volcanic?.(camera,t)||0;
-    if(sky)sky.material.uniforms.flash.value=flash;
+    if(sky&&crater){
+      const dx=crater.x-camera.position.x,dz=crater.z-camera.position.z,dy=crater.height-camera.position.y;
+      const distance=Math.hypot(dx,dz,dy),uniforms=sky.material.uniforms;
+      uniforms.uVolc.value.set(Math.atan2(dz,dx),crater.radius/distance,dy/distance);
+      uniforms.uErupt.value.z=flash;uniforms.uErupt.value.w=Math.floor(t/15);
+    }
     for(const m of mills)m.group.rotation.x=m.phase+m.speed*(.8*t-(.2/.21)*Math.cos(t*.21+m.phase));
     if(sky){sky.position.copy(camera.position);sky.scale.setScalar(camera.far*.9);}
   }

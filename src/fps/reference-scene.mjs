@@ -1,5 +1,8 @@
 import {createReferenceEnvironment,applyReferenceWind} from './reference-environment.mjs';
 import * as THREE from '../../vendor/three/three.module.js';
+import {referenceLighting} from './reference-lighting.mjs';
+import {emitTephraLightning} from './tephra-ambience.mjs';
+import {freezeStaticTransforms} from './render-engine.mjs?v=6.1.2';
 
 const commonTextures={cyfol:'cyfol.webp',cyflag:'cyflag.webp',plaster:'plaster.webp',stone:'stone.webp',ground:'pavers.webp',wood:'../../materials/riposte/timber/map.webp',signs:'signs.webp'};
 const temporary=new THREE.Vector3();
@@ -59,15 +62,36 @@ export function referenceScene(scene,world,settings){
   const screen=id==='embruns'?'portScreen':id==='tephra'?'tephraScreen':null;
   if(screen)materials[screen]=new THREE.MeshBasicMaterial(id==='embruns'?{color:new THREE.Color(1.8,1.8,1.8)}:{vertexColors:true});
   if(id==='tephra')materials.lava=new THREE.MeshBasicMaterial({color:new THREE.Color(3.4,3.4,3.4),vertexColors:true});
-  const environment=createReferenceEnvironment({id,scene,root,settings,materials,signal:abort.signal,folder});
+  if(id==='tephra'){
+    const emitters={litGlass:[.55,.62,.66],litFixture:[1.6,1.5,1.3],ceiling:[.075,.075,.072],ceilingConcrete:[.05,.05,.048]};
+    for(const [key,rgb] of Object.entries(emitters))
+      materials[key]=new THREE.MeshLambertMaterial({vertexColors:true,emissive:new THREE.Color(...rgb)});
+  }
+  const environment=createReferenceEnvironment({id,scene,root,settings,materials,signal:abort.signal,folder,
+    onLightning:delay=>emitTephraLightning(world,delay)});
   if(id==='meltem'){
     applyReferenceWind(materials.cyfol,materials.cyflag,environment.time);
     materials.cyfol.alphaTest=.42;materials.cyflag.side=THREE.DoubleSide;
   }
-  let disposed=false,baseReady=false,fineBatch=null;
+  let disposed=false,baseReady=false,fineBatch=null,architecture=null,activeTier=null,pendingTier=null,failedTier=null;
+  const desiredTier=()=>id==='embruns'&&settings.graphics==='low'?'coarse':'base';
+  function replaceArchitecture(tier){
+    const request=readBatch(tier,abort.signal,folder).then(bytes=>{
+      if(disposed||tier!==desiredTier())return;
+      const next=new THREE.Group();next.name='Indexed architecture';
+      try{unpack(bytes,materials,next);}catch(error){next.traverse(o=>o.geometry?.dispose());throw error;}
+      root.add(next);freezeStaticTransforms(next);
+      if(architecture){architecture.removeFromParent();architecture.traverse(o=>o.geometry?.dispose());}
+      architecture=next;activeTier=tier;
+    }).finally(()=>{if(pendingTier?.request===request)pendingTier=null;});
+    pendingTier={tier,request};return request;
+  }
+
+  const lightReady=id==='meltem'?null:referenceLighting({id,folder,signal:abort.signal,
+    materials,own:textures,disposed:()=>disposed});
   function loadFine(){
     if(!fineBatch)fineBatch=readBatch('detail',abort.signal,folder).then(bytes=>{
-      if(!disposed)unpack(bytes,materials,detail);
+      if(!disposed){unpack(bytes,materials,detail);freezeStaticTransforms(detail);}
     });
     return fineBatch;
   }
@@ -90,12 +114,19 @@ export function referenceScene(scene,world,settings){
       texture.anisotropy=settings.graphics==='low'?1:2;textures.push(texture);materials[k].map=texture;materials[k].needsUpdate=true;
     }));
     if(disposed)return;
-    const base=await readBatch('base',abort.signal,folder);if(disposed)return;unpack(base,materials,root);
+    while(!disposed&&activeTier!==desiredTier())await replaceArchitecture(desiredTier());
+    if(disposed)return;
     if(settings.graphics!=='low')await loadFine();
     baseReady=true;
   }
   function update(camera){
     environment.update(camera);
+    const target=desiredTier();
+    if(failedTier&&target!==failedTier)failedTier=null;
+    if(baseReady&&activeTier!==target&&pendingTier?.tier!==target&&failedTier!==target)
+      replaceArchitecture(target).catch(error=>{
+        if(!disposed){failedTier=target;console.warn('Map quality adjustment unavailable.',error);}
+      });
     // Preserve the coarse architecture across all distances. Fine classes use
     // the donor's distance-driven hiding and are absent from the low profile.
     detail.visible=settings.graphics!=='low';
@@ -114,5 +145,5 @@ export function referenceScene(scene,world,settings){
     for(const m of Object.values(materials))m.dispose();
     for(const tex of textures)tex.dispose();textures.length=0;
   }
-  return {root,update,dispose,ready:Promise.all([build(),environment.ready]).catch(e=>{if(!disposed){dispose();throw e;}})};
+  return {root,update,dispose,ready:Promise.all([build(),environment.ready,lightReady]).catch(e=>{if(!disposed){dispose();throw e;}})};
 }

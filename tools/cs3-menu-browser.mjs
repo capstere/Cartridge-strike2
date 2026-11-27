@@ -130,7 +130,8 @@ async function run(input) {
       await snap('random-endless-setup');
       await page.goto(unsupported.href,{waitUntil:'domcontentloaded'});
       await page.locator('#solo-map-notice').waitFor();
-      assert.match(await page.locator('#solo-map-notice').textContent(),/Meltem.*does not support.*Floor 5/i);
+      const notice=await page.locator('#solo-map-notice').textContent();
+      assert.ok(notice.startsWith(name));assert.match(notice,/does not support.*Floor 5/i);
       assert.equal(new URL(page.url()).searchParams.get('level'),'floor5-prepared');
     }
     await back(); await page.locator('#play-title').waitFor();

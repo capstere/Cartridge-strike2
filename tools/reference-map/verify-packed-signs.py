@@ -7,14 +7,15 @@ import json
 import struct
 import sys
 
-folder, source_receipt = map(Path, sys.argv[1:])
+folder, source_receipt = map(Path, sys.argv[1:3])
+files = sys.argv[3:] or ('base.bin.gz','detail.bin.gz')
 source = json.loads(source_receipt.read_text())
 bind = {'signs3':'signs', 'signs5':'signs', 'decals3':'decals', 'decals5':'decals',
         'screen':'portScreen', 'screenTp':'tephraScreen'}
 expected = {bind[k]: row for k,row in source['sourceMaterials'].items()}
 observed = {key:Counter() for key in expected}
 hashes = {}
-for name in ('base.bin.gz','detail.bin.gz'):
+for name in files:
     data = (folder/name).read_bytes()
     hashes[name] = hashlib.sha256(data).hexdigest()
     blob = gzip.decompress(data)

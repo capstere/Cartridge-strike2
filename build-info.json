@@ -600,6 +600,11 @@
       "sha256": "2768ec110440e126784e20f6aad1b38f12d69272a7fa2a88a50b97be3afb5a68"
     },
     {
+      "path": "assets/fps/maps/embruns/coarse.bin.gz",
+      "bytes": 2507974,
+      "sha256": "8ce58435f48604002cc854de5cf93f95c6a76b7885043ec7232d7b3da7feb276"
+    },
+    {
       "path": "assets/fps/maps/embruns/detail.bin.gz",
       "bytes": 262738,
       "sha256": "e9660001a7aa5c3cf06369d59971b3edff7ce8095f8be0f9b8ec6d54c69a6e34"
@@ -608,6 +613,11 @@
       "path": "assets/fps/maps/embruns/environment.json.gz",
       "bytes": 353724,
       "sha256": "cc4068056f86a52f7964c128e2d52e468ec6f0c3b9eb03466e1c86d4a5fb70b0"
+    },
+    {
+      "path": "assets/fps/maps/embruns/lighting.json.gz",
+      "bytes": 85278,
+      "sha256": "d999c9d531ff8294a2be0366e8baca6028d8a27d15b6708f773bede49d112d11"
     },
     {
       "path": "assets/fps/maps/embruns/signs.webp",
@@ -755,14 +765,64 @@
       "sha256": "03945d04830fa59d3c92ecb17204f2fa53ce921e6238b0edfca0479586f70547"
     },
     {
+      "path": "assets/fps/maps/tephra/audio/a_bed.mp3",
+      "bytes": 276381,
+      "sha256": "7f38316e458e8ec12d1ba762704d1e96858d05a07d60681cbf6c93edd405e6c6"
+    },
+    {
+      "path": "assets/fps/maps/tephra/audio/a_boom-1.mp3",
+      "bytes": 50445,
+      "sha256": "2abc955868f68573562a10ae66f7401f9cb4afe3590ffaf9d802c98fca3c5dc7"
+    },
+    {
+      "path": "assets/fps/maps/tephra/audio/a_boom-2.mp3",
+      "bytes": 46629,
+      "sha256": "98550a8b7c9067ba570d5941bf2ca660f686ae70befbc5fe665c2f6f6def329c"
+    },
+    {
+      "path": "assets/fps/maps/tephra/audio/a_bubble.mp3",
+      "bytes": 51453,
+      "sha256": "18cfd181a8714572711cd453be54fb24107e1289b1e48fd577cb1fd1e8cfe2de"
+    },
+    {
+      "path": "assets/fps/maps/tephra/audio/a_gust-1.mp3",
+      "bytes": 17721,
+      "sha256": "c88e26e64ce4975e37d003d6ee9521a8bc58eee762931689b210f88974735bb3"
+    },
+    {
+      "path": "assets/fps/maps/tephra/audio/a_gust-2.mp3",
+      "bytes": 17289,
+      "sha256": "a800ab85a7cf32c2965d3b148ff1a90da6abeda95f941ce0202af5edde8aa1de"
+    },
+    {
+      "path": "assets/fps/maps/tephra/audio/a_hum.mp3",
+      "bytes": 52893,
+      "sha256": "c754f537d562064713f97552e860548c42bf52d3a7ffab2a1b12df409d76d24f"
+    },
+    {
+      "path": "assets/fps/maps/tephra/audio/a_steam.mp3",
+      "bytes": 72225,
+      "sha256": "c91228210320ad101dbe6eeb2c88ead3dad29b5a068ea4243945adf5ce64e6f2"
+    },
+    {
+      "path": "assets/fps/maps/tephra/audio/a_thunder-1.mp3",
+      "bytes": 24813,
+      "sha256": "2acd96a1220b80401425d66ac6c6e3e83ebfcba8854f8d58a6fa9402c260ab94"
+    },
+    {
+      "path": "assets/fps/maps/tephra/audio/a_thunder-2.mp3",
+      "bytes": 24813,
+      "sha256": "0c25d78d586521cfdb80cd58c47baad52ba691257309c495f15307900bc51ded"
+    },
+    {
       "path": "assets/fps/maps/tephra/basalt.webp",
       "bytes": 14560,
       "sha256": "75d0a17ecb925a605eb3309f516281372d5ce4df734eb28fec71b5a9e3d3c07f"
     },
     {
       "path": "assets/fps/maps/tephra/base.bin.gz",
-      "bytes": 1130892,
-      "sha256": "911d48ea709986c322fce99bae5bf4d7eaa7ac3b8fe5893d854920a5eee24921"
+      "bytes": 1128828,
+      "sha256": "a170bdd335cc9a7b4493b4af62f6bd803713bf610c39604d85c2fbf6aad47431"
     },
     {
       "path": "assets/fps/maps/tephra/detail.bin.gz",
@@ -778,6 +838,11 @@
       "path": "assets/fps/maps/tephra/lava.webp",
       "bytes": 30542,
       "sha256": "bbe678421fe9fb30ab7af22b358df2e65fbad790892e85d4cb31fcb317e7aa28"
+    },
+    {
+      "path": "assets/fps/maps/tephra/lighting.json.gz",
+      "bytes": 52553,
+      "sha256": "cf1010db14280f64bd3d726b62607a88402efcea1cec422a5995244399a06745"
     },
     {
       "path": "assets/fps/maps/tephra/moss.webp",
@@ -1061,8 +1126,8 @@
     },
     {
       "path": "credits.html",
-      "bytes": 15898,
-      "sha256": "5d9ad1809b322133879bc97bafcd1f2fee90f93702795670fdb11b7493dd5ce7"
+      "bytes": 16718,
+      "sha256": "23f3477aadcf0c613a33fb62829ffa0d8ab650fb366a922f8c9d2100af8c3740"
     },
     {
       "path": "docs/fps-furniture-library.md",
@@ -2397,7 +2462,7 @@
     {
       "path": "shared/multiplayer/build.mjs",
       "bytes": 660,
-      "sha256": "5c74df087771722ef755907b40b88c5f305b61dfa5775576e2258ec987b2dfad"
+      "sha256": "5e14f5c757343512b15e76a34b5ddf6904b9663fd84e8bae4f6c1741b788d853"
     },
     {
       "path": "shared/multiplayer/collision-contract.mjs",
@@ -2417,7 +2482,7 @@
     {
       "path": "shared/multiplayer/map-build.mjs",
       "bytes": 2831,
-      "sha256": "04863ee432e69831047c36c3f62303014a7db04907cc09207ff161469820a12f"
+      "sha256": "ac84a688e70c632f7f38b138e8ff3057f8d6ac54448e455a1627f130fa088fd7"
     },
     {
       "path": "shared/multiplayer/maps.mjs",
@@ -2561,8 +2626,8 @@
     },
     {
       "path": "src/fps/coastal-ambience.mjs",
-      "bytes": 10225,
-      "sha256": "21952a124525557d25e32ab358e58a92462f02e8c7f0c0054ca4467d71b839ea"
+      "bytes": 10838,
+      "sha256": "3214abefc4fa7ae34ca3f5e1364ad3c421356bf540b3453d41a82573302d8b3b"
     },
     {
       "path": "src/fps/coastal-recordings.mjs",
@@ -2866,8 +2931,18 @@
     },
     {
       "path": "src/fps/reference-environment.mjs",
-      "bytes": 17342,
-      "sha256": "8fe0768201921efbb9a9c0063027dc1fb565f2e38858234f05405004807c731d"
+      "bytes": 18390,
+      "sha256": "107261780988f2becf529e28be9f676772708e0c0d9e3f45fe461dc802930583"
+    },
+    {
+      "path": "src/fps/reference-eruption.mjs",
+      "bytes": 3636,
+      "sha256": "bd9a080ae252430410fc3ad60bd966bad6c6579fac218a0264a09ea70874af85"
+    },
+    {
+      "path": "src/fps/reference-lighting.mjs",
+      "bytes": 2485,
+      "sha256": "5cb6fc0292e9e09265ae1efd7593960538fabae370b35e27f4f2ea1d0f11b7f6"
     },
     {
       "path": "src/fps/reference-navigation.mjs",
@@ -2886,8 +2961,8 @@
     },
     {
       "path": "src/fps/reference-scene.mjs",
-      "bytes": 6959,
-      "sha256": "3a4f12ed6ecc080dae8da2d056a455f27427eb0e4d2dd99baa1420674f17800f"
+      "bytes": 8843,
+      "sha256": "69a04bfd85430be4bd4a6e6f7201bfe14c70a47fbc70e49733444fa1d2fbc40b"
     },
     {
       "path": "src/fps/reference-terrain.mjs",
@@ -2896,8 +2971,8 @@
     },
     {
       "path": "src/fps/reference-volcano.mjs",
-      "bytes": 5530,
-      "sha256": "5ef10a68a481aee18f56aafb8301f17163b3e17f162b42049118ca1c59ba64ee"
+      "bytes": 5593,
+      "sha256": "91c6750ca77ed8b962e6517f78bcac3ca1de71c6008ae97e38a6db5da541ea24"
     },
     {
       "path": "src/fps/reference-world.mjs",
@@ -3050,6 +3125,11 @@
       "sha256": "daede0e5a7748f5eb845036a82d5a2ec9cc7e236cfa55723a737f683145c59ca"
     },
     {
+      "path": "src/fps/tephra-ambience.mjs",
+      "bytes": 1930,
+      "sha256": "d4c28810659c93996d437c82728919521bea2d58072faa2300e3d3ba3a52b054"
+    },
+    {
       "path": "src/fps/throwable-cartridge.mjs",
       "bytes": 9936,
       "sha256": "4e1ae695145b153337f3a7e3bc4955cb9397ca8577b0eddd6cefac80abdeb5d0"
@@ -3185,7 +3265,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 76015728,
+  "bytes": 79306610,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

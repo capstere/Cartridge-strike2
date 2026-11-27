@@ -1,0 +1,177 @@
+{
+  "pack": "amb_tephra",
+  "notes": "Riposte MP3 edits copied byte for byte from the original pack. All seven source recordings use CC0 1.0.",
+  "sources": {
+    "fs-176589": {
+      "creator": "Hendrik",
+      "license": "CC0 1.0",
+      "url": "https://freesound.org/people/Hendrik/sounds/176589/"
+    },
+    "fs-135193": {
+      "creator": "felix.blume",
+      "license": "CC0 1.0",
+      "url": "https://freesound.org/people/felix.blume/sounds/135193/"
+    },
+    "fs-415608": {
+      "creator": "RTB45",
+      "license": "CC0 1.0",
+      "url": "https://freesound.org/people/RTB45/sounds/415608/"
+    },
+    "fs-112296": {
+      "creator": "slugzilla",
+      "license": "CC0 1.0",
+      "url": "https://freesound.org/people/slugzilla/sounds/112296/"
+    },
+    "fs-144559": {
+      "creator": "kiefspoon",
+      "license": "CC0 1.0",
+      "url": "https://freesound.org/people/kiefspoon/sounds/144559/"
+    },
+    "fs-829623": {
+      "creator": "Nox_Sound",
+      "license": "CC0 1.0",
+      "url": "https://freesound.org/people/Nox_Sound/sounds/829623/"
+    },
+    "fs-127140": {
+      "creator": "klangfabrik",
+      "license": "CC0 1.0",
+      "url": "https://freesound.org/people/klangfabrik/sounds/127140/"
+    }
+  },
+  "takes": [
+    {
+      "take": "a_bed",
+      "donor": "frontline/source/assets/sfx/amb_tephra/a_bed.mp3",
+      "file": "assets/fps/maps/tephra/audio/a_bed.mp3",
+      "bytes": 276381,
+      "sha256": "7f38316e458e8ec12d1ba762704d1e96858d05a07d60681cbf6c93edd405e6c6",
+      "sources": [
+        {
+          "source": "fs-176589",
+          "originalFile": "freesound/176589.mp3"
+        },
+        {
+          "source": "fs-135193",
+          "originalFile": "freesound/135193.mp3"
+        }
+      ]
+    },
+    {
+      "take": "a_boom-1",
+      "donor": "frontline/source/assets/sfx/amb_tephra/a_boom-1.mp3",
+      "file": "assets/fps/maps/tephra/audio/a_boom-1.mp3",
+      "bytes": 50445,
+      "sha256": "2abc955868f68573562a10ae66f7401f9cb4afe3590ffaf9d802c98fca3c5dc7",
+      "sources": [
+        {
+          "source": "fs-176589",
+          "originalFile": "freesound/176589.mp3"
+        }
+      ]
+    },
+    {
+      "take": "a_boom-2",
+      "donor": "frontline/source/assets/sfx/amb_tephra/a_boom-2.mp3",
+      "file": "assets/fps/maps/tephra/audio/a_boom-2.mp3",
+      "bytes": 46629,
+      "sha256": "98550a8b7c9067ba570d5941bf2ca660f686ae70befbc5fe665c2f6f6def329c",
+      "sources": [
+        {
+          "source": "fs-176589",
+          "originalFile": "freesound/176589.mp3"
+        }
+      ]
+    },
+    {
+      "take": "a_bubble",
+      "donor": "frontline/source/assets/sfx/amb_tephra/a_bubble.mp3",
+      "file": "assets/fps/maps/tephra/audio/a_bubble.mp3",
+      "bytes": 51453,
+      "sha256": "18cfd181a8714572711cd453be54fb24107e1289b1e48fd577cb1fd1e8cfe2de",
+      "sources": [
+        {
+          "source": "fs-415608",
+          "originalFile": "freesound/415608.mp3"
+        }
+      ]
+    },
+    {
+      "take": "a_gust-1",
+      "donor": "frontline/source/assets/sfx/amb_tephra/a_gust-1.mp3",
+      "file": "assets/fps/maps/tephra/audio/a_gust-1.mp3",
+      "bytes": 17721,
+      "sha256": "c88e26e64ce4975e37d003d6ee9521a8bc58eee762931689b210f88974735bb3",
+      "sources": [
+        {
+          "source": "fs-112296",
+          "originalFile": "freesound/112296.mp3"
+        }
+      ]
+    },
+    {
+      "take": "a_gust-2",
+      "donor": "frontline/source/assets/sfx/amb_tephra/a_gust-2.mp3",
+      "file": "assets/fps/maps/tephra/audio/a_gust-2.mp3",
+      "bytes": 17289,
+      "sha256": "a800ab85a7cf32c2965d3b148ff1a90da6abeda95f941ce0202af5edde8aa1de",
+      "sources": [
+        {
+          "source": "fs-112296",
+          "originalFile": "freesound/112296.mp3"
+        }
+      ]
+    },
+    {
+      "take": "a_hum",
+      "donor": "frontline/source/assets/sfx/amb_tephra/a_hum.mp3",
+      "file": "assets/fps/maps/tephra/audio/a_hum.mp3",
+      "bytes": 52893,
+      "sha256": "c754f537d562064713f97552e860548c42bf52d3a7ffab2a1b12df409d76d24f",
+      "sources": [
+        {
+          "source": "fs-144559",
+          "originalFile": "freesound/144559.mp3"
+        }
+      ]
+    },
+    {
+      "take": "a_steam",
+      "donor": "frontline/source/assets/sfx/amb_tephra/a_steam.mp3",
+      "file": "assets/fps/maps/tephra/audio/a_steam.mp3",
+      "bytes": 72225,
+      "sha256": "c91228210320ad101dbe6eeb2c88ead3dad29b5a068ea4243945adf5ce64e6f2",
+      "sources": [
+        {
+          "source": "fs-829623",
+          "originalFile": "freesound/829623.mp3"
+        }
+      ]
+    },
+    {
+      "take": "a_thunder-1",
+      "donor": "frontline/source/assets/sfx/amb_tephra/a_thunder-1.mp3",
+      "file": "assets/fps/maps/tephra/audio/a_thunder-1.mp3",
+      "bytes": 24813,
+      "sha256": "2acd96a1220b80401425d66ac6c6e3e83ebfcba8854f8d58a6fa9402c260ab94",
+      "sources": [
+        {
+          "source": "fs-127140",
+          "originalFile": "freesound/127140.mp3"
+        }
+      ]
+    },
+    {
+      "take": "a_thunder-2",
+      "donor": "frontline/source/assets/sfx/amb_tephra/a_thunder-2.mp3",
+      "file": "assets/fps/maps/tephra/audio/a_thunder-2.mp3",
+      "bytes": 24813,
+      "sha256": "0c25d78d586521cfdb80cd58c47baad52ba691257309c495f15307900bc51ded",
+      "sources": [
+        {
+          "source": "fs-127140",
+          "originalFile": "freesound/127140.mp3"
+        }
+      ]
+    }
+  ]
+}

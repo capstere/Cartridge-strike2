@@ -1,0 +1,108 @@
+{
+  "browser": "156.0.8078.79",
+  "device": "Raspberry Pi 5",
+  "pcm": [
+    {
+      "label": "fumarole",
+      "x": -18,
+      "z": 5,
+      "roof": null,
+      "bedRms": 0.04627092065557045,
+      "bubbleRms": 0.006546209727607918,
+      "firstFlash": 5.033333333333333,
+      "scheduledDelay": 3.1281808697385713,
+      "firstAudibleThunder": 3.1283541666666665,
+      "peak": 0.21011127531528473,
+      "take": "a_thunder-1"
+    },
+    {
+      "label": "laboratory",
+      "x": -10,
+      "z": -15,
+      "roof": "volume-324",
+      "bedRms": 0.026952263962715325,
+      "bubbleRms": 0.0007359583705043981,
+      "firstFlash": 5.033333333333333,
+      "scheduledDelay": 3.1281808697385713,
+      "firstAudibleThunder": 3.1283541666666665,
+      "peak": 0.21251405775547028,
+      "take": "a_thunder-1"
+    },
+    {
+      "label": "beforeReturn",
+      "x": -18,
+      "z": 5,
+      "roof": null,
+      "bedRms": 0,
+      "bubbleRms": 0,
+      "firstFlash": 5.033333333333333,
+      "scheduledDelay": 3.1281808697385713,
+      "firstAudibleThunder": null,
+      "peak": 0,
+      "take": "a_thunder-1"
+    }
+  ],
+  "overlay": false,
+  "profiles": [
+    {
+      "coarse": false,
+      "bytes": 16193224,
+      "voices": 8,
+      "banks": 7,
+      "takes": 10,
+      "rates": [
+        32000
+      ],
+      "fixed": 7,
+      "errors": [],
+      "spots": [
+        "a_boom",
+        "a_gust"
+      ],
+      "thunder": [
+        "a_thunder-1",
+        "a_thunder-2"
+      ],
+      "afterReset": {
+        "bytes": 0,
+        "voices": 0,
+        "banks": 0
+      },
+      "afterImmediateReturn": {
+        "bytes": 0,
+        "voices": 0,
+        "banks": 0
+      }
+    },
+    {
+      "coarse": true,
+      "bytes": 12144916,
+      "voices": 8,
+      "banks": 7,
+      "takes": 10,
+      "rates": [
+        24000
+      ],
+      "fixed": 7,
+      "errors": [],
+      "spots": [
+        "a_boom",
+        "a_gust"
+      ],
+      "thunder": [
+        "a_thunder-2",
+        "a_thunder-1"
+      ],
+      "afterReset": {
+        "bytes": 0,
+        "voices": 0,
+        "banks": 0
+      },
+      "afterImmediateReturn": {
+        "bytes": 0,
+        "voices": 0,
+        "banks": 0
+      }
+    }
+  ]
+}
