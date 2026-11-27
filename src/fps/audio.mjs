@@ -195,7 +195,7 @@ export class AudioSystem {
     return { gain, nodes, when: ctx.currentTime + delay };
   }
 
-  track(source, channel, duration) {
+  track(source, channel, duration, offset = 0) {
     const item = { source, nodes: channel.nodes };
     this.active.add(item);
     source.onended = () => {
@@ -203,7 +203,8 @@ export class AudioSystem {
       source.disconnect();
       for (const node of item.nodes) node.disconnect();
     };
-    source.start(channel.when);
+    if (offset) source.start(channel.when, offset);
+    else source.start(channel.when);
     source.stop(channel.when + duration);
   }
 

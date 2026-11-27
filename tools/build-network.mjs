@@ -5,6 +5,7 @@ import {fileURLToPath} from 'node:url';
 import {relative,sep} from 'node:path';
 import '../server/register-shared.mjs';
 import {collisionContract} from '../shared/multiplayer/collision-contract.mjs';
+import {shotTakes} from '../src/fps/shot-audio.mjs';
 import {CONFIG} from '../src/fps/config.mjs';
 import {DEFAULT_MAP_ID,NETWORK_MAPS} from '../shared/multiplayer/maps.mjs';
 import {configContract,PROTOCOL_VERSION} from '../shared/multiplayer/rules.mjs';
@@ -16,7 +17,9 @@ const knockdownFiles=['src/fps/character-actors.mjs','src/fps/character-library.
   'src/fps/actor-occlusion.mjs','src/fps/headshot-pose.mjs',
   'assets/animations/headshot-male.animation.glb','assets/animations/headshot-female.animation.glb'];
 const rushPresentation=['src/fps/mobile-controls.mjs','src/fps/presentation-hands.mjs'];
-const paths=[...Object.keys(graph),...rushPresentation,'shared/multiplayer/rules.mjs','shared/multiplayer/protocol.mjs','server/network-schema.mjs','server/network-room.mjs','server/team-comms.mjs','server/lag-compensation.mjs','server/match-lifecycle.mjs','server/classic-round.mjs','server/headless.mjs','shared/multiplayer/input.mjs','src/fps/app.mjs','src/fps/tactical-controls.mjs','src/fps/render-engine.mjs','src/fps/render.mjs','src/fps/minimap-cache.mjs','src/fps/hud-shell.mjs','src/fps/zombie-visuals.mjs','src/fps/floor-audio.mjs','fps/network.css','src/fps/lobby-stage.mjs','src/fps/network/menu.mjs','src/fps/network/session.mjs','src/fps/network/room-ui.mjs','shared/multiplayer/world.mjs','shared/multiplayer/collision-contract.mjs','shared/sha256.mjs','src/fps/network/connection.mjs','server/access.mjs','server/pilot-access.mjs','server/local-server.mjs',
+const shotAudioFiles=['src/fps/audio.mjs','src/fps/riposte-audio.mjs','src/fps/shot-audio.mjs','src/fps/shot-timing.mjs',
+  ...shotTakes.map(take=>'assets/fps/audio/riposte-'+take+'.mp3')];
+const paths=[...shotAudioFiles,...Object.keys(graph),...rushPresentation,'shared/multiplayer/rules.mjs','shared/multiplayer/protocol.mjs','server/network-schema.mjs','server/network-room.mjs','server/team-comms.mjs','server/lag-compensation.mjs','server/match-lifecycle.mjs','server/classic-round.mjs','server/headless.mjs','shared/multiplayer/input.mjs','src/fps/app.mjs','src/fps/tactical-controls.mjs','src/fps/render-engine.mjs','src/fps/render.mjs','src/fps/minimap-cache.mjs','src/fps/hud-shell.mjs','src/fps/zombie-visuals.mjs','src/fps/floor-audio.mjs','fps/network.css','src/fps/lobby-stage.mjs','src/fps/network/menu.mjs','src/fps/network/session.mjs','src/fps/network/room-ui.mjs','shared/multiplayer/world.mjs','shared/multiplayer/collision-contract.mjs','shared/sha256.mjs','src/fps/network/connection.mjs','server/access.mjs','server/pilot-access.mjs','server/local-server.mjs',
   'server/room-world.mjs','server/family-room.mjs','server/match-preferences.mjs','shared/multiplayer/maps.mjs','shared/multiplayer/family-room.mjs','ui/cs-mobile.mjs','ui/cs-mobile.css',...knockdownFiles].sort();
 const sources=await Promise.all(paths.map(async path=>[path,hash(await read(path))]));
 const {loadHeadlessWorld}=await import('../server/headless.mjs');
@@ -43,7 +46,7 @@ const files={
 // Only resolved, shipped map dependencies are added to the runtime allowlist.
 const {LIBRARY_MAP}=await import('../furniture-editor/library/catalog.mjs');
 const info=JSON.parse(await read('build-info.json'));
-const runtime=new Set([...info.files.map(f=>f.path),...Object.keys(files),...knockdownFiles,...rushPresentation,'src/fps/rush.mjs','shared/multiplayer/maps.mjs',
+const runtime=new Set([...info.files.map(f=>f.path),...shotAudioFiles,...Object.keys(files),...knockdownFiles,...rushPresentation,'src/fps/rush.mjs','shared/multiplayer/maps.mjs',
   ...NETWORK_MAPS.flatMap(map=>[map.file,map.preview]),
   'shared/multiplayer/world.mjs','shared/multiplayer/collision-contract.mjs','shared/sha256.mjs','src/fps/network/connection.mjs','src/fps/network/room-ui.mjs','shared/multiplayer/family-room.mjs']);
 for(const world of worlds){
