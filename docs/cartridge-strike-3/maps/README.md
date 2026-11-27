@@ -10,9 +10,31 @@ The Meltem pilot runs the original Cyclades factory and compiles its output into
 | floreal | 02v-floreal.js | Held. Hortus adds glass/greenhouse sight lines, gardens and dense foliage. Validate projectile materials, transparency and mobile overdraw. |
 | meltem | 02yf-meltem.js | Pilot. A deterministic 72 × 96 m village, mirrored spawns, quay, pier, under-roof routes, terraces, eight ramps and two wells. TDM/Endless use the donor spawn positions and original scale. Classic lacks bomb and hostage objectives. |
 | tephra | 02yh-tephra.js | Held. Volcanic industrial structures, differences in elevation, hot surfaces and emissive effects need their own traversal and low-quality measurements. |
-| stratus | 02yj-stratus.js | Held. Islands have open edges, void falls, suspension bridges and required jump links. Requires authoritative void death, respawn, client correction and reliable bot jump timing. |
+| stratus | 02yj-stratus.js | Held. All sampled spawn/POI routes have a walk connection; the original also exposes jump links. Open edges and native void falls still require authoritative death, respawn and prediction. |
 | simoun | 02yl-simoun.js | Held. Dunes, sampled relief, circular confinement, pools and well holes require the source terrain and ray solver. |
 | lotissement | 02yn-french-dream.js | Held. French Dream includes furnished houses and garages, construction floors, climbable roofs, parked vehicles and mirrored residential lanes. Test indoor/outdoor transitions and upper floors. |
+
+## Measured donor factories
+
+The survey executed each original map factory at pinned upstream `31ca050d8ce59f4885c01a3237f68cdf186c9b60`. It sampled the completed multi-level directed navigation graph, each team’s actual spawn lookup, factory materials, lighting, local wind, cloth, water shapes and configured sound beds. The prefab totals are measured before GPU finalization releases those CPU buffers. GPU culling and render submissions are verified separately in matched gameplay. [Full factory results, original HTML and file digests](source-capabilities.json)
+
+| Factory | Walk-connected opposing spawn pairs | POIs reachable from every spawn | Static triangles + resting prop triangles | Sea / wading pools / visible pond meshes | Other requirements |
+| --- | ---: | ---: | ---: | --- | --- |
+| meltem | 450/450 | 76/76 | 259,138 + 61,964 | 1 / 0 / 8 | Pilot. Wells, sail rotors, cloth, foliage, flags and port sound. |
+| sable | 288/288 | 32/32 | 624,296 + 110,806 | 0 / 0 / 4 | Flat collision and walking fit. The souk also owns 43 simulated cloth groups and four fountain/pond surfaces; verify cover, fountains, fabric and frame budget. |
+| givre | 288/288 | 40/40 | 602,040 + 38,783 | 0 / 0 / 0 | Walk-compatible station. Needs snow cover and falling flakes tied to indoor clearance, platform transitions and winter audio. |
+| embruns | 288/288 | 35/35 | 425,669 + 107,884 | 1 / 0 / 17 | Next compatible coastal candidate. Original three-rectangle shore, harbor floor, ramped trawler route, deck materials and foghorn. |
+| floreal | 648/648 | 81/81 | 377,797 + 18,776 | 0 / 6 / 11 | Walk-compatible. Six wading pools need polygonal water support; transparent greenhouses, vegetation, koi and waterfalls have separate rendering costs. |
+| tephra | 450/450 | 23/23 | 120,516 + 0 | 0 / 0 / 0 | Second low-static-cost candidate. Source ash, lava, vapor, lightning and English-rendered industrial signage need target evidence. |
+| stratus | 450/450 | 22/22 | 220,233 + 0 | 0 / 0 / 0 | Void and suspension bridges require falling, recovery and bot-boundary fixtures even though the source exposes a walk route between every sampled spawn pair. |
+| simoun | 450/450 | 39/39 | 410,770 + 92,366 | 0 / 1 / 3 | Source ring, sampled dune relief, central wading pool and timed sandstorm require authority and client support. |
+| lotissement | 450/450 | 44/44 | 158,812 + 28,662 | 0 / 2 / 2 | Walk-compatible cul-de-sac. Two wading pools, furnished multi-storey rooms, roof access and local grass effects need paired fixtures. |
+
+Original navigation reachability establishes a candidate for target testing. Admission still requires target collision and human/bot traversal, mode eligibility, actual rendered matches and disposal. The survey runs independently of the target server and renderer.
+
+```sh
+WAYLAND_DISPLAY=wayland-0 node tools/reference-map/export.cjs "$scratch" --assess --environment
+```
 
 ## Deterministic production inputs
 

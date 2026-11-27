@@ -56,5 +56,15 @@ exports.capture=function readSourceEnvironment(){
     deep:W.U.uWDeep.value.toArray(),shallow:W.U.uWShallow.value.toArray(),
     foam:W.U.uWFoamC.value.toArray(),sun:W.U.uWSunD.value.toArray(),sunColor:W.U.uWSunC.value.toArray()
   }:null;
-  return {version:1,id:CURMAP.id,sky,fog:{color:atmo.fog,density:atmo.fogD},fabrics,mills,sea};
+  // canvasOnce frees the original GPU-uploaded canvas, so execute the exact
+  // factories afresh, retaining their authored UV orientation and alpha.
+  const atlas={};
+  if(CURMAP.id==='meltem'){
+    for(const [id,factory] of Object.entries({cyflag:cyFlagTex,cyfol:cyFloraAtlas})){
+      const texture=factory().map,canvas=texture.image;
+      atlas[id]={image:canvas.toDataURL('image/png').split(',')[1],flipY:texture.flipY};
+      texture.dispose();
+    }
+  }
+  return {version:1,id:CURMAP.id,sky,fog:{color:atmo.fog,density:atmo.fogD},fabrics,mills,sea,atlas};
 };

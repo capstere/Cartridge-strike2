@@ -1,0 +1,1276 @@
+{
+  "upstream": "31ca050d8ce59f4885c01a3237f68cdf186c9b60",
+  "checkout": "c58b82d12a8ab54a5587f188829c6a69ee09b7ef",
+  "tree": "ccc2ddbfc8d111854ee5423f868e4150503def69",
+  "html": {
+    "path": "frontline/index.html",
+    "gitBlob": "8edb16dadf2c81c0e6009888a283734da1b72316",
+    "sha256": "db596cdfeb2a6b061343e0c5e2d8445d8e95619bf1a9b6ca10a8ff4025f55401"
+  },
+  "instrumentedHtmlSha256": "d1102c7c5ba18569631ea1ac0048a93386d63106dcf530237ee0e931bb679341",
+  "browser": "156.0.8078.79",
+  "geometryScope": "Indexed static WORLD buffers before finalizeWorld and rest-pose prefab triangles expanded per body. Runtime draw calls depend on the camera, quality and culling.",
+  "maps": [
+    {
+      "id": "meltem",
+      "bounds": {
+        "x0": -42,
+        "x1": 30,
+        "z0": -48,
+        "z1": 48
+      },
+      "spawns": [
+        15,
+        15
+      ],
+      "volumes": 791,
+      "ramps": 8,
+      "holes": 2,
+      "bridges": 0,
+      "spawnRoutes": {
+        "oppositePairs": 450,
+        "reachablePairs": 450,
+        "unresolvedSpawns": 0,
+        "authoredPoi": 76,
+        "poiReachableFromEverySpawn": 76
+      },
+      "spawnSurfaces": [
+        "concrete",
+        "dirt"
+      ],
+      "seaEnabled": true,
+      "pools": 0,
+      "visualPonds": 8,
+      "circularConfinement": false,
+      "void": false,
+      "relief": false,
+      "altitude": [
+        0,
+        6.900000095367432
+      ],
+      "environment": {
+        "fog": {
+          "color": [
+            0.62,
+            0.76,
+            0.9
+          ],
+          "density": 0.0021,
+          "height": [
+            26,
+            0
+          ]
+        },
+        "wind": [
+          0.8,
+          0.6,
+          1.2857142857142856
+        ],
+        "movingFoliageMaterials": [
+          "cyfol"
+        ],
+        "fabricGroups": 12,
+        "fabricTriangles": 4908,
+        "snowfall": 0,
+        "snowCover": null,
+        "ashCover": null,
+        "sandstorm": false,
+        "lightning": false,
+        "ashFall": false,
+        "steam": false,
+        "windmills": true,
+        "waterfalls": false,
+        "photographicSky": "kloofendal_48d",
+        "ambience": {
+          "pack": "amb_meltem",
+          "bedGain": 0.55,
+          "spots": [
+            "a_gull",
+            "a_bell",
+            "a_goats",
+            "a_gust"
+          ],
+          "fixedLoops": true,
+          "fountainGain": 0
+        }
+      },
+      "navigationNodes": 5376,
+      "navigationEdges": 31642,
+      "edgesByTraversal": {
+        "0": 31504,
+        "3": 138
+      },
+      "props": 250,
+      "breakableProps": 148,
+      "rayProps": 250,
+      "breakableRayProps": 148,
+      "geometry": {
+        "staticGroups": 275,
+        "staticTriangles": 259138,
+        "staticMaterials": [
+          "ashlar",
+          "boards",
+          "burlap",
+          "canvas",
+          "chaux",
+          "cloth",
+          "concrete",
+          "cyflag",
+          "cyfol",
+          "dark",
+          "decals4",
+          "dirt",
+          "drystone",
+          "glass",
+          "ground",
+          "hull",
+          "lamp",
+          "lampOff",
+          "paint",
+          "paintwood",
+          "plaster",
+          "plastic",
+          "rock",
+          "rust",
+          "shutter",
+          "signs4",
+          "slab",
+          "steel",
+          "tiles",
+          "timber",
+          "wetstone",
+          "window",
+          "wood"
+        ],
+        "restPropTriangles": 61964
+      },
+      "factory": {
+        "path": "frontline/source/src/02yf-meltem.js",
+        "gitBlob": "16f541c40afc96afc238d59a3985b615014ac4d4",
+        "sha256": "04504a6f645029155d6ffa755a470f446ad132a1fe19262cc9f397acc8668c35"
+      }
+    },
+    {
+      "id": "sable",
+      "bounds": {
+        "x0": -36,
+        "x1": 36,
+        "z0": -50,
+        "z1": 50
+      },
+      "spawns": [
+        12,
+        12
+      ],
+      "volumes": 1026,
+      "ramps": 4,
+      "holes": 0,
+      "bridges": 0,
+      "spawnRoutes": {
+        "oppositePairs": 288,
+        "reachablePairs": 288,
+        "unresolvedSpawns": 0,
+        "authoredPoi": 32,
+        "poiReachableFromEverySpawn": 32
+      },
+      "spawnSurfaces": [
+        "dirt"
+      ],
+      "seaEnabled": false,
+      "pools": 0,
+      "visualPonds": 4,
+      "circularConfinement": false,
+      "void": false,
+      "relief": false,
+      "altitude": [
+        0,
+        8.600000381469727
+      ],
+      "environment": {
+        "fog": {
+          "color": [
+            0.3,
+            0.27,
+            0.4
+          ],
+          "density": 0.009,
+          "height": [
+            26,
+            0
+          ]
+        },
+        "wind": [
+          0.8,
+          0.6,
+          0.7142857142857143
+        ],
+        "movingFoliageMaterials": [
+          "foliage"
+        ],
+        "fabricGroups": 43,
+        "fabricTriangles": 28840,
+        "snowfall": 0,
+        "snowCover": null,
+        "ashCover": null,
+        "sandstorm": false,
+        "lightning": false,
+        "ashFall": false,
+        "steam": false,
+        "windmills": false,
+        "waterfalls": false,
+        "photographicSky": "qwantani_dusk_2",
+        "ambience": {
+          "pack": "amb_sable",
+          "bedGain": 0.4,
+          "spots": [
+            "a_gust",
+            "a_dog",
+            "a_donkey",
+            "a_rooster",
+            "a_dove",
+            "a_cloth"
+          ],
+          "fixedLoops": false,
+          "fountainGain": 0.35
+        }
+      },
+      "navigationNodes": 7683,
+      "navigationEdges": 48484,
+      "edgesByTraversal": {
+        "0": 48380,
+        "3": 104
+      },
+      "props": 581,
+      "breakableProps": 57,
+      "rayProps": 581,
+      "breakableRayProps": 57,
+      "geometry": {
+        "staticGroups": 697,
+        "staticTriangles": 624296,
+        "staticMaterials": [
+          "ashlar",
+          "brick",
+          "canvas",
+          "cardboard",
+          "carglass",
+          "carglassD",
+          "carpaint",
+          "concrete",
+          "corrugated",
+          "crate",
+          "dark",
+          "decals",
+          "dirt",
+          "farfacade",
+          "foliage",
+          "glass",
+          "gravel",
+          "ground",
+          "lamp",
+          "lampCool",
+          "lampOff",
+          "lattice",
+          "paint",
+          "paintwood",
+          "palmbark",
+          "plaster",
+          "plaster2",
+          "plastic",
+          "rollshutter",
+          "rooftiles",
+          "rubber",
+          "rubble",
+          "rug",
+          "sand",
+          "shutter",
+          "signs",
+          "steel",
+          "stone",
+          "tiles",
+          "timber",
+          "window",
+          "wood"
+        ],
+        "restPropTriangles": 110806
+      },
+      "factory": {
+        "path": "frontline/source/src/02s-sable.js",
+        "gitBlob": "81c49d64d2d0299912101fcc972e1878aefcf695",
+        "sha256": "589265cb6acd028d0db85733fd86fc93e64f4649290805b5eed866b0d08afc73"
+      }
+    },
+    {
+      "id": "givre",
+      "bounds": {
+        "x0": -24,
+        "x1": 24,
+        "z0": -48,
+        "z1": 48
+      },
+      "spawns": [
+        12,
+        12
+      ],
+      "volumes": 891,
+      "ramps": 6,
+      "holes": 0,
+      "bridges": 0,
+      "spawnRoutes": {
+        "oppositePairs": 288,
+        "reachablePairs": 288,
+        "unresolvedSpawns": 0,
+        "authoredPoi": 40,
+        "poiReachableFromEverySpawn": 40
+      },
+      "spawnSurfaces": [
+        "snow"
+      ],
+      "seaEnabled": false,
+      "pools": 0,
+      "visualPonds": 0,
+      "circularConfinement": false,
+      "void": false,
+      "relief": false,
+      "altitude": [
+        0,
+        10.798681259155273
+      ],
+      "environment": {
+        "fog": {
+          "color": [
+            0.1,
+            0.13,
+            0.22
+          ],
+          "density": 0.009,
+          "height": [
+            26,
+            0
+          ]
+        },
+        "wind": [
+          0.8,
+          0.6,
+          1.0714285714285714
+        ],
+        "movingFoliageMaterials": [
+          "conifer"
+        ],
+        "fabricGroups": 8,
+        "fabricTriangles": 8912,
+        "snowfall": 0.6,
+        "snowCover": {
+          "top": 1,
+          "foot": 0.85,
+          "color": [
+            0.88,
+            0.9,
+            0.95
+          ]
+        },
+        "ashCover": null,
+        "sandstorm": false,
+        "lightning": false,
+        "ashFall": false,
+        "steam": false,
+        "windmills": false,
+        "waterfalls": false,
+        "photographicSky": "kloppenheim_02",
+        "ambience": {
+          "pack": "amb_givre",
+          "bedGain": 0.42,
+          "spots": [
+            "a_gust",
+            "a_bell",
+            "a_crow",
+            "a_creak",
+            "a_snowfall"
+          ],
+          "fixedLoops": false,
+          "fountainGain": 0
+        }
+      },
+      "navigationNodes": 4972,
+      "navigationEdges": 29374,
+      "edgesByTraversal": {
+        "0": 29280,
+        "3": 94
+      },
+      "props": 313,
+      "breakableProps": 179,
+      "rayProps": 313,
+      "breakableRayProps": 179,
+      "geometry": {
+        "staticGroups": 422,
+        "staticTriangles": 602040,
+        "staticMaterials": [
+          "ashlar",
+          "bark",
+          "boards",
+          "bulb",
+          "canvas",
+          "carglass",
+          "carpaint",
+          "concrete",
+          "conifer",
+          "corrugated",
+          "crate",
+          "dark",
+          "decals2",
+          "dirt",
+          "glass",
+          "glassLit",
+          "gravel",
+          "ground",
+          "ice",
+          "lamp",
+          "lampOff",
+          "logend",
+          "paint",
+          "paintwood",
+          "pavers",
+          "plaster",
+          "plastic",
+          "rock",
+          "rubber",
+          "rug",
+          "rust",
+          "shutter",
+          "signs2",
+          "slate",
+          "snowmat",
+          "steel",
+          "stone",
+          "tiles",
+          "timber",
+          "window",
+          "wood"
+        ],
+        "restPropTriangles": 38783
+      },
+      "factory": {
+        "path": "frontline/source/src/02t-givre.js",
+        "gitBlob": "05983cd79794706ed31aa9a1f1536435aafb0d85",
+        "sha256": "fd247d0a763e18170bbf872831fe4ec802d62b8e87b785676b0d5b4e46e4f5e5"
+      }
+    },
+    {
+      "id": "embruns",
+      "bounds": {
+        "x0": -44,
+        "x1": 28,
+        "z0": -48,
+        "z1": 48
+      },
+      "spawns": [
+        12,
+        12
+      ],
+      "volumes": 1656,
+      "ramps": 10,
+      "holes": 0,
+      "bridges": 0,
+      "spawnRoutes": {
+        "oppositePairs": 288,
+        "reachablePairs": 288,
+        "unresolvedSpawns": 0,
+        "authoredPoi": 35,
+        "poiReachableFromEverySpawn": 35
+      },
+      "spawnSurfaces": [
+        "concrete",
+        "wood"
+      ],
+      "seaEnabled": true,
+      "pools": 0,
+      "visualPonds": 17,
+      "circularConfinement": false,
+      "void": false,
+      "relief": false,
+      "altitude": [
+        0,
+        10
+      ],
+      "environment": {
+        "fog": {
+          "color": [
+            0.6,
+            0.64,
+            0.68
+          ],
+          "density": 0.006,
+          "height": [
+            10,
+            0
+          ]
+        },
+        "wind": [
+          0.8,
+          0.6,
+          1
+        ],
+        "movingFoliageMaterials": [],
+        "fabricGroups": 6,
+        "fabricTriangles": 2532,
+        "snowfall": 0,
+        "snowCover": null,
+        "ashCover": null,
+        "sandstorm": false,
+        "lightning": false,
+        "ashFall": false,
+        "steam": false,
+        "windmills": false,
+        "waterfalls": false,
+        "photographicSky": "kloofendal_misty_morning",
+        "ambience": {
+          "pack": "amb_embruns",
+          "bedGain": 0.45,
+          "spots": [
+            "a_gull",
+            "a_rigging",
+            "a_creak",
+            "a_buoybell",
+            "a_foghorn"
+          ],
+          "fixedLoops": true,
+          "fountainGain": 0
+        }
+      },
+      "navigationNodes": 6420,
+      "navigationEdges": 38610,
+      "edgesByTraversal": {
+        "0": 38302,
+        "1": 28,
+        "2": 88,
+        "3": 192
+      },
+      "props": 1436,
+      "breakableProps": 83,
+      "rayProps": 1436,
+      "breakableRayProps": 83,
+      "geometry": {
+        "staticGroups": 416,
+        "staticTriangles": 425669,
+        "staticMaterials": [
+          "ashlar",
+          "boards",
+          "bulb",
+          "canvas",
+          "carglass",
+          "carpaint",
+          "concrete",
+          "corrugated",
+          "crate",
+          "crushedice",
+          "dark",
+          "decals",
+          "decals3",
+          "glass",
+          "gravel",
+          "ground",
+          "hull",
+          "lamp",
+          "lampOff",
+          "paint",
+          "paintwood",
+          "plaster",
+          "plastic",
+          "resin",
+          "rock",
+          "rollshutter",
+          "rooftiles",
+          "rubber",
+          "rust",
+          "screen",
+          "shutter",
+          "signs3",
+          "slate",
+          "steel",
+          "stone",
+          "timber",
+          "wetstone",
+          "window",
+          "wood"
+        ],
+        "restPropTriangles": 107884
+      },
+      "factory": {
+        "path": "frontline/source/src/02u-embruns.js",
+        "gitBlob": "6d87b9a4ffa273045edf65dad853c4bddd03d9a8",
+        "sha256": "eaa036dfcf0ea5580333e57809f98f14ff25f314932a04598b60822c1b5ed39a"
+      }
+    },
+    {
+      "id": "floreal",
+      "bounds": {
+        "x0": -38,
+        "x1": 38,
+        "z0": -50,
+        "z1": 50
+      },
+      "spawns": [
+        18,
+        18
+      ],
+      "volumes": 998,
+      "ramps": 13,
+      "holes": 0,
+      "bridges": 0,
+      "spawnRoutes": {
+        "oppositePairs": 648,
+        "reachablePairs": 648,
+        "unresolvedSpawns": 0,
+        "authoredPoi": 81,
+        "poiReachableFromEverySpawn": 81
+      },
+      "spawnSurfaces": [
+        "concrete",
+        "grass",
+        "gravel"
+      ],
+      "seaEnabled": false,
+      "pools": 6,
+      "visualPonds": 11,
+      "circularConfinement": false,
+      "void": false,
+      "relief": false,
+      "altitude": [
+        -0.5,
+        10.865622520446777
+      ],
+      "environment": {
+        "fog": {
+          "color": [
+            0.74,
+            0.82,
+            0.8
+          ],
+          "density": 0.0046,
+          "height": [
+            26,
+            0
+          ]
+        },
+        "wind": [
+          0.6,
+          0.8,
+          0.857142857142857
+        ],
+        "movingFoliageMaterials": [],
+        "fabricGroups": 0,
+        "fabricTriangles": 0,
+        "snowfall": 0,
+        "snowCover": null,
+        "ashCover": null,
+        "sandstorm": false,
+        "lightning": false,
+        "ashFall": false,
+        "steam": false,
+        "windmills": false,
+        "waterfalls": true,
+        "photographicSky": "sunflowers",
+        "ambience": {
+          "pack": "amb_floreal",
+          "bedGain": 0.4,
+          "spots": [
+            "a_bird"
+          ],
+          "fixedLoops": true,
+          "fountainGain": 0.3
+        }
+      },
+      "navigationNodes": 6725,
+      "navigationEdges": 40013,
+      "edgesByTraversal": {
+        "0": 39726,
+        "3": 287
+      },
+      "props": 88,
+      "breakableProps": 64,
+      "rayProps": 88,
+      "breakableRayProps": 64,
+      "geometry": {
+        "staticGroups": 319,
+        "staticTriangles": 377797,
+        "staticMaterials": [
+          "ashlar",
+          "bark",
+          "cane",
+          "canvas",
+          "concrete",
+          "corrugated",
+          "farfacade",
+          "flagstone",
+          "glass",
+          "glassT",
+          "gravelpath",
+          "ground",
+          "haussmann",
+          "haussrdc",
+          "hedge",
+          "lamp",
+          "lampOff",
+          "leafA",
+          "leafB",
+          "mulch",
+          "paint",
+          "paintwood",
+          "pave",
+          "plaster",
+          "plastic",
+          "rocaille",
+          "rooftiles",
+          "rubber",
+          "slate",
+          "steel",
+          "stone",
+          "tiles",
+          "timber",
+          "wood"
+        ],
+        "restPropTriangles": 18776
+      },
+      "factory": {
+        "path": "frontline/source/src/02v-floreal.js",
+        "gitBlob": "7ade40a710642c777a827adafa3a00abf7e522fd",
+        "sha256": "1577e2ef24b02b21fbb2469fb664fd31d9951adafffc96e8c17d7cf358affbb3"
+      }
+    },
+    {
+      "id": "tephra",
+      "bounds": {
+        "x0": -32,
+        "x1": 32,
+        "z0": -62,
+        "z1": 62
+      },
+      "spawns": [
+        15,
+        15
+      ],
+      "volumes": 716,
+      "ramps": 4,
+      "holes": 0,
+      "bridges": 0,
+      "spawnRoutes": {
+        "oppositePairs": 450,
+        "reachablePairs": 450,
+        "unresolvedSpawns": 0,
+        "authoredPoi": 23,
+        "poiReachableFromEverySpawn": 23
+      },
+      "spawnSurfaces": [
+        "concrete"
+      ],
+      "seaEnabled": false,
+      "pools": 0,
+      "visualPonds": 0,
+      "circularConfinement": false,
+      "void": false,
+      "relief": false,
+      "altitude": [
+        0,
+        11
+      ],
+      "environment": {
+        "fog": {
+          "color": [
+            0.12,
+            0.05,
+            0.04
+          ],
+          "density": 0.0062,
+          "height": [
+            0,
+            0
+          ]
+        },
+        "wind": [
+          0.8,
+          0.6,
+          1.4285714285714286
+        ],
+        "movingFoliageMaterials": [],
+        "fabricGroups": 0,
+        "fabricTriangles": 0,
+        "snowfall": 0,
+        "snowCover": null,
+        "ashCover": {
+          "top": 0.55,
+          "foot": 0.5,
+          "color": [
+            0.34,
+            0.32,
+            0.31
+          ]
+        },
+        "sandstorm": false,
+        "lightning": true,
+        "ashFall": true,
+        "steam": true,
+        "windmills": false,
+        "waterfalls": false,
+        "photographicSky": "wasteland_feu",
+        "ambience": {
+          "pack": "amb_tephra",
+          "bedGain": 0.5,
+          "spots": [
+            "a_boom",
+            "a_gust"
+          ],
+          "fixedLoops": true,
+          "fountainGain": 0
+        }
+      },
+      "navigationNodes": 8855,
+      "navigationEdges": 57160,
+      "edgesByTraversal": {
+        "0": 56944,
+        "3": 216
+      },
+      "props": 0,
+      "breakableProps": 0,
+      "rayProps": 0,
+      "breakableRayProps": 0,
+      "geometry": {
+        "staticGroups": 219,
+        "staticTriangles": 120516,
+        "staticMaterials": [
+          "basalt",
+          "canvas",
+          "carglass",
+          "carpaint",
+          "ceil",
+          "ceilc",
+          "concrete",
+          "corrugated",
+          "crate",
+          "dark",
+          "decals5",
+          "glass",
+          "glassLit",
+          "grating",
+          "ground",
+          "jacket",
+          "lamp",
+          "lampOff",
+          "lampTp",
+          "lavaTp",
+          "moss",
+          "paint",
+          "panel",
+          "plastic",
+          "rollshutter",
+          "rubber",
+          "rust",
+          "screenTp",
+          "signs5",
+          "steel",
+          "sulfur",
+          "vinyl"
+        ],
+        "restPropTriangles": 0
+      },
+      "factory": {
+        "path": "frontline/source/src/02yh-tephra.js",
+        "gitBlob": "d4bd2b3b8f477f8244a82f909111bb19ff35e4a7",
+        "sha256": "d1c953a4cfaf693887516f5c4c39be22d3da1b4e239c005a726103136b0e1ca1"
+      }
+    },
+    {
+      "id": "stratus",
+      "bounds": {
+        "x0": -41,
+        "x1": 41,
+        "z0": -59,
+        "z1": 59
+      },
+      "spawns": [
+        15,
+        15
+      ],
+      "volumes": 1191,
+      "ramps": 8,
+      "holes": 0,
+      "bridges": 22,
+      "spawnRoutes": {
+        "oppositePairs": 450,
+        "reachablePairs": 450,
+        "unresolvedSpawns": 0,
+        "authoredPoi": 22,
+        "poiReachableFromEverySpawn": 22
+      },
+      "spawnSurfaces": [
+        "dirt",
+        "grass"
+      ],
+      "seaEnabled": false,
+      "pools": 0,
+      "visualPonds": 0,
+      "circularConfinement": false,
+      "void": true,
+      "relief": false,
+      "altitude": [
+        -0.3135032057762146,
+        9.850000381469727
+      ],
+      "environment": {
+        "fog": {
+          "color": [
+            0.6,
+            0.5,
+            0.6
+          ],
+          "density": 0.0024,
+          "height": [
+            26,
+            0
+          ]
+        },
+        "wind": [
+          0.8211092467307137,
+          -0.5707710617518376,
+          1.2857142857142856
+        ],
+        "movingFoliageMaterials": [],
+        "fabricGroups": 8,
+        "fabricTriangles": 4096,
+        "snowfall": 0,
+        "snowCover": null,
+        "ashCover": null,
+        "sandstorm": false,
+        "lightning": false,
+        "ashFall": false,
+        "steam": false,
+        "windmills": false,
+        "waterfalls": false,
+        "photographicSky": "qwantani_dawn",
+        "ambience": {
+          "pack": "amb_stratus",
+          "bedGain": 0.5,
+          "spots": [
+            "a_gust",
+            "a_creak",
+            "a_bird",
+            "a_flap"
+          ],
+          "fixedLoops": false,
+          "fountainGain": 0
+        }
+      },
+      "navigationNodes": 3662,
+      "navigationEdges": 21991,
+      "edgesByTraversal": {
+        "0": 21888,
+        "2": 51,
+        "3": 52
+      },
+      "props": 0,
+      "breakableProps": 0,
+      "rayProps": 0,
+      "breakableRayProps": 0,
+      "geometry": {
+        "staticGroups": 127,
+        "staticTriangles": 220233,
+        "staticMaterials": [
+          "ashlar",
+          "bark",
+          "canvas",
+          "crate",
+          "crystalSt",
+          "ground",
+          "leafB",
+          "net",
+          "rope",
+          "steel",
+          "stone",
+          "strata",
+          "timber",
+          "wood"
+        ],
+        "restPropTriangles": 0
+      },
+      "factory": {
+        "path": "frontline/source/src/02yj-stratus.js",
+        "gitBlob": "654000e75ff4b17fa5d416e3750dc700dc3a6a65",
+        "sha256": "2a62e6aa4bd6699c4721064b66b98bc26fd49dc5e715327f04ab6e6bbe2fb704"
+      }
+    },
+    {
+      "id": "simoun",
+      "bounds": {
+        "x0": -82,
+        "x1": 82,
+        "z0": -82,
+        "z1": 82
+      },
+      "spawns": [
+        15,
+        15
+      ],
+      "volumes": 2769,
+      "ramps": 4,
+      "holes": 2,
+      "bridges": 0,
+      "spawnRoutes": {
+        "oppositePairs": 450,
+        "reachablePairs": 450,
+        "unresolvedSpawns": 0,
+        "authoredPoi": 39,
+        "poiReachableFromEverySpawn": 39
+      },
+      "spawnSurfaces": [
+        "dirt"
+      ],
+      "seaEnabled": false,
+      "pools": 1,
+      "visualPonds": 3,
+      "circularConfinement": true,
+      "void": false,
+      "relief": true,
+      "altitude": [
+        0.6000000238418579,
+        11.743232727050781
+      ],
+      "environment": {
+        "fog": {
+          "color": [
+            0.78,
+            0.69,
+            0.6
+          ],
+          "density": 0.0026,
+          "height": [
+            26,
+            0
+          ]
+        },
+        "wind": [
+          0.8,
+          0.6,
+          1
+        ],
+        "movingFoliageMaterials": [
+          "cyfol",
+          "foliage",
+          "stem"
+        ],
+        "fabricGroups": 33,
+        "fabricTriangles": 32688,
+        "snowfall": 0,
+        "snowCover": null,
+        "ashCover": null,
+        "sandstorm": true,
+        "lightning": false,
+        "ashFall": false,
+        "steam": false,
+        "windmills": false,
+        "waterfalls": false,
+        "photographicSky": "quarry_01",
+        "ambience": {
+          "pack": "amb_sable",
+          "bedGain": 0.5,
+          "spots": [
+            "a_gust",
+            "a_dove",
+            "a_cloth"
+          ],
+          "fixedLoops": false,
+          "fountainGain": 0.2
+        }
+      },
+      "navigationNodes": 14439,
+      "navigationEdges": 94959,
+      "edgesByTraversal": {
+        "0": 93984,
+        "1": 25,
+        "2": 782,
+        "3": 168
+      },
+      "props": 406,
+      "breakableProps": 12,
+      "rayProps": 406,
+      "breakableRayProps": 12,
+      "geometry": {
+        "staticGroups": 427,
+        "staticTriangles": 410770,
+        "staticMaterials": [
+          "adobe",
+          "burlap",
+          "cabin",
+          "canvas",
+          "carglass",
+          "carglassD",
+          "charred",
+          "corrugated",
+          "crate",
+          "cyfol",
+          "dark",
+          "dirt",
+          "drystone",
+          "foliage",
+          "glass",
+          "glassAir",
+          "gres",
+          "ground",
+          "hull",
+          "lampOff",
+          "paint",
+          "palmbark",
+          "pise",
+          "plastic",
+          "rubber",
+          "rug",
+          "steel",
+          "stem",
+          "stone",
+          "timber",
+          "wood"
+        ],
+        "restPropTriangles": 92366
+      },
+      "factory": {
+        "path": "frontline/source/src/02yl-simoun.js",
+        "gitBlob": "c78ec6bab7ba870aa1f1f3e1d65f3374bc5c19f5",
+        "sha256": "0296d9e13d3a0a3f57666f3ce6a1a61191350160d25658c7d364fb10af17007e"
+      }
+    },
+    {
+      "id": "lotissement",
+      "bounds": {
+        "x0": -36,
+        "x1": 36,
+        "z0": -41,
+        "z1": 41
+      },
+      "spawns": [
+        15,
+        15
+      ],
+      "volumes": 1045,
+      "ramps": 8,
+      "holes": 0,
+      "bridges": 0,
+      "spawnRoutes": {
+        "oppositePairs": 450,
+        "reachablePairs": 450,
+        "unresolvedSpawns": 0,
+        "authoredPoi": 44,
+        "poiReachableFromEverySpawn": 44
+      },
+      "spawnSurfaces": [
+        "grass",
+        "gravel"
+      ],
+      "seaEnabled": false,
+      "pools": 2,
+      "visualPonds": 2,
+      "circularConfinement": false,
+      "void": false,
+      "relief": false,
+      "altitude": [
+        0,
+        10
+      ],
+      "environment": {
+        "fog": {
+          "color": [
+            0.74,
+            0.76,
+            0.78
+          ],
+          "density": 0.006,
+          "height": [
+            24,
+            0
+          ]
+        },
+        "wind": [
+          0.7071067811865476,
+          0.7071067811865476,
+          0.7142857142857143
+        ],
+        "movingFoliageMaterials": [],
+        "fabricGroups": 14,
+        "fabricTriangles": 5712,
+        "snowfall": 0,
+        "snowCover": null,
+        "ashCover": null,
+        "sandstorm": false,
+        "lightning": false,
+        "ashFall": false,
+        "steam": false,
+        "windmills": false,
+        "waterfalls": false,
+        "photographicSky": "kloofendal_48d",
+        "ambience": {
+          "pack": "amb_floreal",
+          "bedGain": 0.35,
+          "spots": [
+            "a_bird"
+          ],
+          "fixedLoops": false,
+          "fountainGain": 0
+        }
+      },
+      "navigationNodes": 5333,
+      "navigationEdges": 27578,
+      "edgesByTraversal": {
+        "0": 27460,
+        "2": 8,
+        "3": 110
+      },
+      "props": 99,
+      "breakableProps": 20,
+      "rayProps": 99,
+      "breakableRayProps": 20,
+      "geometry": {
+        "staticGroups": 247,
+        "staticTriangles": 158812,
+        "staticMaterials": [
+          "ashlar",
+          "asphalt",
+          "bark",
+          "canvas",
+          "carglass",
+          "carpaint",
+          "concrete",
+          "corrugated",
+          "crepi",
+          "dark",
+          "dirt",
+          "glass",
+          "glassT",
+          "ground",
+          "hedge",
+          "lamp",
+          "lampOff",
+          "lattice",
+          "leafB",
+          "paint",
+          "paintwood",
+          "parpaing",
+          "peinture",
+          "plastic",
+          "rollshutter",
+          "rooftiles",
+          "rubber",
+          "rubble",
+          "rug",
+          "signs5",
+          "slate",
+          "steel",
+          "timber",
+          "window",
+          "wood"
+        ],
+        "restPropTriangles": 28662
+      },
+      "factory": {
+        "path": "frontline/source/src/02yn-french-dream.js",
+        "gitBlob": "a6a290c1b70c5c4810c9d36436514a4d8563a6a3",
+        "sha256": "24bfb3356d44837d83b9a535f1cdb5bda9e004ea69c3e7a5cb8d8a267a2b1ec3"
+      }
+    }
+  ]
+}

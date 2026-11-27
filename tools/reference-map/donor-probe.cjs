@@ -29,8 +29,7 @@ exports.install=function installReferenceProbe(){
     const definition=CURMAP.def,atmo=definition.atmo,sound=definition.sound;
     const update=definition.update?.toString()||'';
     const staticGeometry=window.sourceMapGeometry;
-    let restPropTriangles=0;
-    for(const body of bodies)for(const part of body.V.pf.parts.values())restPropTriangles+=part.g.ni/3;
+
     return {
       id:CURMAP.id,bounds:CURMAP.def.bounds,spawns:SPAWNS.map(team=>team.length),
       volumes:COL.length,ramps:RAMPS.length,holes:HOLES.length,bridges:BRIDGES.length,
@@ -57,7 +56,7 @@ exports.install=function installReferenceProbe(){
       rayProps:bodies.filter(body=>body.d.ray).length,
       breakableRayProps:bodies.filter(body=>body.d.ray&&body.d.brk).length,
       geometry:{staticGroups:staticGeometry.groups,staticTriangles:staticGeometry.triangles,
-        staticMaterials:staticGeometry.materials,restPropTriangles}
+        staticMaterials:staticGeometry.materials,restPropTriangles:staticGeometry.restPropTriangles}
     };
   };
   window.readReferenceMap=()=>({
@@ -75,7 +74,13 @@ exports.install=function installReferenceProbe(){
 };
 exports.capture=function captureStaticGeometry(surveyOnly){
   const sourceGroups=Array.from(WORLD.bufs.values()).filter(group=>group.g.ni>0);
-  window.sourceMapGeometry={
+  // propsFinalize releases the prefab after GPU buffers have been built.
+  let restPropTriangles=0;
+  for(const body of PHYS.bodies){
+    if(!body.origin||body.pooled)continue;
+    for(const part of body.V.pf.parts.values())restPropTriangles+=part.g.ni/3;
+  }
+  window.sourceMapGeometry={restPropTriangles,
     groups:sourceGroups.length,triangles:sourceGroups.reduce((n,group)=>n+group.g.ni/3,0),
     materials:[...new Set(sourceGroups.map(group=>group.mat))].sort()
   };
@@ -101,5 +106,5 @@ exports.group=function readGeometryGroup(i){
     return btoa(text);
   }
   return {position:base64(g.P,g.nv*3),normal:base64(g.N,g.nv*3),uv:base64(g.U,g.nv*2),
-    color:base64(g.C,g.nv*3),ao:base64(g.A,g.nv),index:base64(g.I,g.ni)};
+    color:base64(g.C,g.nv*3),ao:base64(g.A,g.nv),index:base64(g.I,g.ni),sway:g.S?base64(g.S,g.nv):null};
 };

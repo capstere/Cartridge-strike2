@@ -31,6 +31,11 @@ const server=http.createServer((req,res)=>{
 async function saveEnvironment(page,id){
   const data=await page.evaluate(()=>readSourceEnvironment());
   if(data.id!==id)throw Error('Environment belongs to '+data.id);
+  for(const [key,atlas] of Object.entries(data.atlas)){
+    if(!['cyfol','cyflag'].includes(key)||atlas.flipY)throw Error('Review the changed Cyclades atlas orientation.');
+    fs.writeFileSync(path.join(output,key+'.png'),Buffer.from(atlas.image,'base64'));
+  }
+  delete data.atlas;
   const bytes=gzipSync(JSON.stringify(data));
   fs.writeFileSync(path.join(output,id+'-environment.json.gz'),bytes);
   console.log(id,'environment:',data.fabrics.length,'fabrics,',data.mills.length,'mills,',bytes.length,'bytes');
@@ -60,15 +65,16 @@ async function run(){
         geometryScope:'Indexed static WORLD buffers before finalizeWorld and rest-pose prefab triangles expanded per body. Runtime draw calls depend on the camera, quality and culling.',
         maps:[]};
       for(const [id,factory] of Object.entries(files)){
+        console.log('Building original factory',id);
         const actual=await page.evaluate(id=>startReferenceExport(id),id);
         if(actual!==id)throw Error('Requested '+id+' but the donor loaded '+actual);
         const row=await page.evaluate(()=>readReferenceCapabilities());
-        if(withEnvironment&&id==='meltem')await saveEnvironment(page,id);
         if(!row.navigationNodes || !row.volumes || !row.geometry.staticGroups || row.spawns.some(team=>!team))
           throw Error('Incomplete factory output for '+id);
         row.factory=sourceFile('frontline/source/src/'+factory+'.js');
         report.maps.push(row);
         fs.writeFileSync(path.join(output,'map-capabilities.json'),JSON.stringify(report,null,2)+'\n');
+        if(withEnvironment&&id==='meltem')await saveEnvironment(page,id);
         console.log(id,row.volumes,'volumes,',row.navigationNodes,'nodes,',row.geometry.staticTriangles,'static triangles');
       }
       return;
