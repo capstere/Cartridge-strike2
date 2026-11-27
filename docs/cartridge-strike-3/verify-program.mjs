@@ -43,6 +43,7 @@ console.log(JSON.stringify({
   packages: tasks.size,
   verified: manifest.tasks.filter(task => task.status === 'VERIFIED').map(task => task.id),
   inProgress: manifest.tasks.filter(task => task.status === 'IN_PROGRESS').map(task => task.id),
+  inReview: manifest.tasks.filter(task => task.status === 'REVIEW').map(task => task.id),
   ready: ready.map(task => task.id),
   blocked: manifest.tasks.filter(task => task.status === 'BLOCKED').map(task => task.id),
 }));
