@@ -25,6 +25,27 @@ export const MATCH_DEFAULTS = Object.freeze({durationSeconds:MATCH_PREFERENCES.t
 export const RTT_FRESH_MS = 4000;
 export const RECONNECT_SECONDS = 15;
 export const INTERPOLATION_MS = 100;
+export const SHOT_TICK_MARGIN_MS = 75;
+
+// The SDK advances its render clock between patches. A resumed tab or a
+// still-converging RTT estimate can describe a different instant from the
+// acknowledged tick. In that case send the ordinary input without a rewind
+// stamp so its shot uses current authoritative positions.
+export function reliableRoomInput(room) {
+  const clock = room.clock;
+  return room.input({
+    mode: 'reliable',
+    renderDelay: INTERPOLATION_MS,
+    allowRewind() {
+      const patch = clock.lastServerTime();
+      const render = clock.serverNow() - INTERPOLATION_MS - clock.smoothedRtt() / 2;
+      // Leave a simulation step for the time between the sampled tick and
+      // its serialized patch, plus rounding on either side of the wire.
+      const margin = SHOT_TICK_MARGIN_MS - Math.ceil(NETWORK_CONFIG.fixedStep * 1000) - 2;
+      return patch > 0 && render >= patch - INTERPOLATION_MS - margin && render <= patch + margin;
+    },
+  });
+}
 // The 250 ms ordered-jitter run measured ~310 ms SDK RTT; 400 ms rejected
 // legitimate shots. Include its 100 ms display buffer plus scheduler margin.
 export const REWIND_MS = 500;

@@ -16,6 +16,14 @@ export function initialScreen(url) {
   return 'main';
 }
 
+export function parentScreenURL(address, screen) {
+  const url = new URL(address);
+  url.searchParams.delete('screen');
+  const dest = screen === 'options' && initialScreen(url) === 'network' ? 'network' : parentRoute[screen] || 'main';
+  if (dest !== 'network') url.searchParams.set('screen', dest);
+  return url;
+}
+
 function mountMenu() {
   const menu = document.getElementById('menu');
   const query = new URLSearchParams(location.search);
@@ -68,11 +76,9 @@ function mountMenu() {
     if (history.state?.from && screen !== 'network') history.back();
     else if (screen === 'network') go('friends');
     else {
-      const dest = parentRoute[screen] || 'main';
-      const url = new URL(location.href);
-      url.searchParams.set('screen', dest);
+      const url = parentScreenURL(location.href, screen);
       history.replaceState({csMenu:true}, '', url);
-      show(dest);
+      show(initialScreen(url));
     }
   }
 

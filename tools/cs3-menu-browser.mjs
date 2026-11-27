@@ -112,6 +112,16 @@ async function run(input) {
     }
     await back(); await page.locator('#play-title').waitFor();
     await back(); await page.locator('#home-title').waitFor();
+    // A bookmark has no opener in the in-page history. Both Back and Escape
+    // must restore the private room, including the room on a subsequent reload.
+    const deepLink = new URL('/fps/?network=local&screen=options&room=private-test',origin);
+    await page.goto(deepLink.href,{waitUntil:'domcontentloaded'});
+    await page.waitForSelector('#menu[data-screen="options"]');
+    if (touch) await back(); else await page.keyboard.press('Escape');
+    await page.waitForSelector('#menu[data-screen="network"]');
+    assert.equal(new URL(page.url()).searchParams.get('room'),'private-test');
+    await page.reload({waitUntil:'domcontentloaded'});
+    await page.waitForSelector('#menu[data-screen="network"]');
     assert.deepEqual(errors,[]);
     assert.equal(await page.evaluate(() => typeof window.__fps), 'undefined');
     evidence.push({input,locale:touch?'fr-FR':'sv-SE',menuViewport:viewport,matchViewport:page.viewportSize(),maps:hasMeltem?['floor5-prepared','meltem']:['floor5-prepared'],startedAt,completedAt:new Date().toISOString()});

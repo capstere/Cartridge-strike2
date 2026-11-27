@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {initialScreen} from './menu-navigation.mjs';
+import {initialScreen, parentScreenURL} from './menu-navigation.mjs';
 import {selectedMapName} from './english-ui.mjs';
 
 const url = query => new URL('https://example.test/game/fps/' + query);
@@ -18,7 +18,14 @@ test('fresh visitors start at Main and established match links still open setup'
 test('private entry survives its options round trip', () => {
   for (const network of ['internet','local','lan']) {
     assert.equal(initialScreen(url('?network=' + network)), 'network');
-    assert.equal(initialScreen(url('?network=' + network + '&screen=options')), 'options');
+    const direct = url('?network=' + network + '&room=opaque-room&family=JESPERS-ROOM&screen=options');
+    assert.equal(initialScreen(direct), 'options');
+    const previous = parentScreenURL(direct, 'options');
+    assert.equal(initialScreen(previous), 'network');
+    assert.equal(previous.searchParams.has('screen'),false);
+    assert.equal(previous.searchParams.get('network'),network);
+    assert.equal(previous.searchParams.get('room'),'opaque-room');
+    assert.equal(previous.searchParams.get('family'),'JESPERS-ROOM');
   }
 });
 

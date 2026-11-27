@@ -48,6 +48,28 @@ test('bounded Colyseus hitbox rewind hits moving targets without changing live p
  assert(r.lag.tickTimes.size<=64);
 });
 
+
+test('manual shots use the live world when SDK render time disagrees with the acknowledged patch', {timeout:10000}, async t => {
+ const {r,g,a,shooter} = await setup(t);
+ const clock = a.clock, smoothedRtt = clock.smoothedRtt.bind(clock);
+ // A slow acknowledgement makes this genuine SDK's interpolated view older
+ // than its newest tick. A later render stall advances past that tick.
+ const serverNow = clock.serverNow.bind(clock);
+ t.after(() => { clock.smoothedRtt = smoothedRtt; clock.serverNow = serverNow; });
+ const ammo = g.item(shooter).ammo;
+ for (const id of [1,2]) {
+   clock.smoothedRtt = () => id === 1 ? 450 : 0;
+   clock.serverNow = () => clock.lastServerTime() + (id === 1 ? 0 : 230);
+   send(a, {fire:true, fireEdge:true, fireId:id});
+   await until(() => g.item(shooter).ammo === ammo-id, 'authority fired once against the live world');
+   send(a, {fire:false, fireEdge:false, fireId:id});
+   await delay(180);
+ }
+ assert.equal(r.lag.metrics.rejected,0);
+ assert.equal(r.lag.metrics.live,2);
+ assert.equal(g.item(shooter).ammo,ammo-2);
+});
+
 test('historical wall, door transitions and elevator shutters use the same collision instant',{timeout:10000},async t=>{
  const {r,g,shooter,target}=await setup(t),w=g.world;
  // Keep the actors away from doors so proximity updates cannot change the fixture.
