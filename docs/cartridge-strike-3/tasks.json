@@ -48,6 +48,10 @@
       ],
       "evidence": [
         "evidence/01-private-entry.md"
+      ],
+      "workBranches": [
+        "cs3/01-runtime-english",
+        "cs3/01-countdown"
       ]
     },
     {
