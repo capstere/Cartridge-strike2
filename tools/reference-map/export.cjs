@@ -4,6 +4,7 @@ const fs=require('node:fs'),path=require('node:path'),http=require('node:http');
 const {createHash}=require('node:crypto'),{gzipSync}=require('node:zlib');
 const probe=require('./donor-probe.cjs');
 const root=process.cwd(),output=path.resolve(process.argv[2]||'');
+const assess=process.argv.includes('--assess');
 if(!process.argv[2]||output.startsWith(root+path.sep)||output===root)throw Error('Supply a private output directory outside the checkout.');
 fs.mkdirSync(output,{mode:0o700,recursive:true});
 const {chromium}=require(path.join(root,'frontline/source/tools/dev/node_modules/playwright-core'));
@@ -34,6 +35,22 @@ async function run(){
     const page=await context.newPage();page.on('pageerror',e=>console.error(e.message));
     await page.goto('http://127.0.0.1:'+server.address().port+'/frontline/',{waitUntil:'domcontentloaded'});
     await page.waitForFunction(()=>typeof startReferenceExport==='function');
+    if(assess){
+      const {execFileSync}=require('node:child_process');
+      const report={source:'31ca050d8ce59f4885c01a3237f68cdf186c9b60',checkout:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),
+        browser:browser.version(),maps:[]};
+      for(const id of ['meltem','sable','givre','embruns','floreal','tephra','stratus','simoun','lotissement']){
+        const actual=await page.evaluate(id=>startReferenceExport(id),id);
+        if(actual!==id)throw Error('Requested '+id+' but the donor loaded '+actual);
+        const row=await page.evaluate(()=>readReferenceCapabilities());
+        if(!row.navigationNodes || !row.volumes || !row.meshGroups || row.spawns.some(team=>!team))
+          throw Error('Incomplete factory output for '+id);
+        report.maps.push(row);
+        fs.writeFileSync(path.join(output,'map-capabilities.json'),JSON.stringify(report,null,2)+'\n');
+        console.log(id,row.volumes,'volumes,',row.navigationNodes,'nodes,',row.triangles,'triangles');
+      }
+      return;
+    }
     await page.evaluate(()=>startReferenceExport());
     const result=await page.evaluate(()=>readReferenceMap());
     fs.writeFileSync(path.join(output,'map.json.gz'),gzipSync(JSON.stringify(result)));

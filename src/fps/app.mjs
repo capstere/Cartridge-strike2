@@ -173,6 +173,7 @@ function recordFirePress(){
 }
 const mobile=new MobileControls({
   onFirePress:recordFirePress,
+  onModeChange(touch) { settings.mobile = touch; clearInput(); },
   root:$('mobile-controls'),
   onLook(dx,dy){if(modal||teamRadioOpen||!game?.player?.alive)return;const k=settings.sensitivity*2.15*(tactical?.lookScale(true,yaw,pitch)??1);const before=pitch;yaw-=dx*k;pitch=Math.max(-1.49,Math.min(1.49,pitch-dy*k));recoil.counter(pitch-before);},
   onAction(action){
@@ -564,7 +565,7 @@ document.addEventListener('pointerlockchange',()=>{if(mobile.enabled)return;if(d
 function updateMode(){settings.mode=$('game-mode').value;$('loadout-row').hidden=settings.mode!=='endless';$('mode-description').textContent=settings.mode==='endless'?'Respawn in three seconds. Press B for a free loadout. Optional control zones bring teams together. Play as long as you like.':'Plant or defuse the bomb, rescue the hostages, or eliminate the opposing team. First to five rounds wins. One life per round.';saveSettings();}
 // A viewport rotation can cover the game with the portrait prompt without blur.
 // Freeze combat/audio and require an explicit resume after either orientation change.
-if(mobile.enabled)matchMedia('(orientation: portrait)').addEventListener('change',()=>{clearInput();if(!modal)showPause();});
+if(mobile.touchCapable)matchMedia('(orientation: portrait)').addEventListener('change',()=>{if(!mobile.enabled)return;clearInput();if(!modal)showPause();});
 $('game-mode').value=['classic','endless'].includes(settings.mode)?settings.mode:'classic';$('loadout').value=settings.loadout||'smg';$('game-mode').onchange=updateMode;$('loadout').onchange=()=>{settings.loadout=$('loadout').value;saveSettings();};
 $('radio-options').innerHTML=RADIO.map((r,i)=>`<div><kbd>${i+1}</kbd><span>${r.text}<small>${r.label}</small></span></div>`).join('');updateMode();
 

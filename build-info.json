@@ -90,6 +90,11 @@
       "sha256": "4b597d658d0ae101f0a030fbeea5fc3a4292ab85f017470a8254a8e7959cbd69"
     },
     {
+      "path": "assets/fps/audio/ffsl-f_bolt-1.mp3",
+      "bytes": 10677,
+      "sha256": "635008c87f50c646af2a511b1ae556f8cbd4ac9686d53eca4375c015b653f10e"
+    },
+    {
       "path": "assets/fps/audio/ffsl-f_charge_rifle-1.mp3",
       "bytes": 4965,
       "sha256": "7e7afbc429f8e026260bd9987d17bfd5f6efcd96aad102bc62a6328b92185e96"
@@ -143,6 +148,11 @@
       "path": "assets/fps/audio/ffsl-f_pickup-2.mp3",
       "bytes": 4197,
       "sha256": "7617847fe8574cf324650659e1c291d3df3bcb34c487d66f51f478ac4c204d7d"
+    },
+    {
+      "path": "assets/fps/audio/ffsl-f_pump-1.mp3",
+      "bytes": 8349,
+      "sha256": "af8f885f28b4495af355d0f18fd689d187925b2625d07aaef83ea0b7ff94c77a"
     },
     {
       "path": "assets/fps/audio/ffsl-f_shell-1.mp3",
@@ -265,6 +275,11 @@
       "sha256": "740798c14fa1031b9bc961a990ef4b51d3e75b10c50fc4a4296434d61da03b6f"
     },
     {
+      "path": "assets/fps/audio/riposte-f_pin.mp3",
+      "bytes": 4221,
+      "sha256": "31f3580fc61fa6e76e948edf0847a74dfc8b56de7fe406c6794dc0121b5df81a"
+    },
+    {
       "path": "assets/fps/audio/riposte-f_throw-1.mp3",
       "bytes": 3981,
       "sha256": "c66d3cb60e956769618f3e51a722403938558baba3ff40b4c26f6a30334c38bd"
@@ -275,9 +290,69 @@
       "sha256": "83903cae0a6ff3fc38d15335c756dececdca3b438bd4543194d159f0f24416bd"
     },
     {
+      "path": "assets/fps/audio/riposte-g_ak_near-2.mp3",
+      "bytes": 12117,
+      "sha256": "b8081a76776188c7432e1f44530c5896c47ef0f49c2907da489c6d86e7b6672e"
+    },
+    {
       "path": "assets/fps/audio/riposte-g_ak_pov-1.mp3",
       "bytes": 13341,
       "sha256": "ad71df1ab06a9f861b1b21e0e4ac8d21b67555a276b440c4c9973a941c3cd8a2"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_ak_pov-2.mp3",
+      "bytes": 12549,
+      "sha256": "50c0abb0a91c72705e1913eac04c0c61b21c7255aa6ce0b26438678e690e5c5a"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_far_pistol-1.mp3",
+      "bytes": 15381,
+      "sha256": "bd87b4322b00a06805ea95075553848bb3b1ce0fa106a383540363b3b5d9d5b9"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_far_pistol-2.mp3",
+      "bytes": 13989,
+      "sha256": "2836ff3b6baf74e79a8a9e92eabbf59311a18695a0acd0a32cb1dc88acbac805"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_far_rifle-1.mp3",
+      "bytes": 14565,
+      "sha256": "616d4f43ad6cf1ad5bdb2b518de781d1f9dcbe0ed6e587bc47cd739cb4245795"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_far_rifle-2.mp3",
+      "bytes": 17589,
+      "sha256": "e7c4b354400ea9056be179e57a5c46528c7066fc79a0622bae4fa9eb586a8186"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_far_shotgun-1.mp3",
+      "bytes": 12333,
+      "sha256": "150391ded714fbf41f516c814d81629527a6cb066b54dd4f68d93d31a8251ca8"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_far_shotgun-2.mp3",
+      "bytes": 14733,
+      "sha256": "499aeecf7bdaf92f33cd3c90b118ff8f5655d530b5d414d0fcbb4e854d9b06aa"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_far_smg-1.mp3",
+      "bytes": 11229,
+      "sha256": "aade0caa0b0e16b95f02cc3cc3cda836d8388215ab2d49e33ee5178fda9a050e"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_far_smg-2.mp3",
+      "bytes": 9597,
+      "sha256": "50afb3c209a648c1524fe5b803762606fc73a2ea768c1acc2374d0d479429258"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_far_sniper-1.mp3",
+      "bytes": 17301,
+      "sha256": "ffe4b3a986333685380d3c2ab20fd23aa86fc161db660b7154fa1588fd189afd"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_far_sniper-2.mp3",
+      "bytes": 12333,
+      "sha256": "0bf2a81f6eaa2019c948d4823fbda35e57166081a26de3023cd71aa132c81997"
     },
     {
       "path": "assets/fps/audio/riposte-g_glock_near-1.mp3",
@@ -285,9 +360,19 @@
       "sha256": "4b464f68eafe8fe7d973ef8e718735740a1d47dcba814bd31061fcc8bfa40d70"
     },
     {
+      "path": "assets/fps/audio/riposte-g_glock_near-2.mp3",
+      "bytes": 8781,
+      "sha256": "164b336f4d98ee007ed823aae67a27e4c8251170ac6a7988b7c502fa070237a7"
+    },
+    {
       "path": "assets/fps/audio/riposte-g_glock_pov-1.mp3",
       "bytes": 9213,
       "sha256": "e23a810637a60a827e1b4cca2787dbaa53435bfcdedacf07776208c8e8766938"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_glock_pov-2.mp3",
+      "bytes": 7437,
+      "sha256": "57238190ff0c016e3616abfa18472b1f0c27c35979526bb13fc86e25a0d62efc"
     },
     {
       "path": "assets/fps/audio/riposte-g_pistol_near-1.mp3",
@@ -295,9 +380,19 @@
       "sha256": "1a64cb02ecde5c7303682dd3b13db828a9653d142d80bf77c984cc5efea04c73"
     },
     {
+      "path": "assets/fps/audio/riposte-g_pistol_near-2.mp3",
+      "bytes": 13653,
+      "sha256": "5f576cb4a1cbc81293993d0b2d508aff99bae2565fa78099917bd4a300064ec0"
+    },
+    {
       "path": "assets/fps/audio/riposte-g_pistol_pov-1.mp3",
       "bytes": 14277,
       "sha256": "1a06b8dfdb7f988d374b4cc7ade8d5e2668d372495acc183f372a4c18812f76d"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_pistol_pov-2.mp3",
+      "bytes": 12501,
+      "sha256": "a793ad6deb4b789a6ad064308f9cdd1edf67af6c7da0106c82febc0e3c40cbd3"
     },
     {
       "path": "assets/fps/audio/riposte-g_rifle_near-1.mp3",
@@ -305,9 +400,19 @@
       "sha256": "018f9e05f8d3cce83cbf6c198b519ac96657c195916302554a8a6c4a7c6dd19b"
     },
     {
+      "path": "assets/fps/audio/riposte-g_rifle_near-2.mp3",
+      "bytes": 12333,
+      "sha256": "4eb621ab36cb778e99e79b1cc5f2adb124804b58356f139cc1cc199475d2e481"
+    },
+    {
       "path": "assets/fps/audio/riposte-g_rifle_pov-1.mp3",
       "bytes": 14709,
       "sha256": "9664c864ccb245a197b5e6648c07e19a24a1570a1b96eb06c3d03759172037c8"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_rifle_pov-2.mp3",
+      "bytes": 13725,
+      "sha256": "155b46ce216600b164bd1b629b285f7f710d05be9d98c15e8f3e5cb8993dd595"
     },
     {
       "path": "assets/fps/audio/riposte-g_shotgun_near-1.mp3",
@@ -315,9 +420,19 @@
       "sha256": "052485d780558975e085b1a161ecb2f39111a83565108ba21485ae92023937b5"
     },
     {
+      "path": "assets/fps/audio/riposte-g_shotgun_near-2.mp3",
+      "bytes": 13101,
+      "sha256": "578feb1861ad416335876e6e81e4a4e8cd652d0b95257362ddb84a2056023ba9"
+    },
+    {
       "path": "assets/fps/audio/riposte-g_shotgun_pov-1.mp3",
       "bytes": 13437,
       "sha256": "189606cada57b5146a6a710cf3e07b59374b7d84f467c32d82316858e45390d3"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_shotgun_pov-2.mp3",
+      "bytes": 13821,
+      "sha256": "8cebc136f8a91714011ae30dc4a7276e9217c18e1eb24e6bd1885fa72fc00aa5"
     },
     {
       "path": "assets/fps/audio/riposte-g_smg_near-1.mp3",
@@ -325,9 +440,19 @@
       "sha256": "853e5dee2cc35ba7e0e8cdc2d8c23a55d47eeb5a8188992e58fdd7ccf23bf60f"
     },
     {
+      "path": "assets/fps/audio/riposte-g_smg_near-2.mp3",
+      "bytes": 8517,
+      "sha256": "517e87d29b553904112646899d4a10dc43baeadeffc3b276971491d6f977ef20"
+    },
+    {
       "path": "assets/fps/audio/riposte-g_smg_pov-1.mp3",
       "bytes": 10581,
       "sha256": "61c52c3d4d99106598f9cd0fdae87651976b3e0b62b7b86a27881d104ddf3a6e"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_smg_pov-2.mp3",
+      "bytes": 10773,
+      "sha256": "bbbdf12860f40e2b6a63c2df40d915b8c1bea6d2ff8aa140c6d7c9a31ce87a25"
     },
     {
       "path": "assets/fps/audio/riposte-g_sniper_near-1.mp3",
@@ -335,9 +460,19 @@
       "sha256": "f5e878aab4a37750ba67073e8cee11cdb3ed8b7de3250d74602a4374281ea153"
     },
     {
+      "path": "assets/fps/audio/riposte-g_sniper_near-2.mp3",
+      "bytes": 13221,
+      "sha256": "57c628661db4f1103217d82705e9850df8bfcedc397306025a9b01d4aabc0805"
+    },
+    {
       "path": "assets/fps/audio/riposte-g_sniper_pov-1.mp3",
       "bytes": 13293,
       "sha256": "708dcaffda71978780ced2480b8a5c8df7e8261b15352f288fde90ac52a035f6"
+    },
+    {
+      "path": "assets/fps/audio/riposte-g_sniper_pov-2.mp3",
+      "bytes": 13149,
+      "sha256": "ff5447ff804f02abb2924d224b8fb25a5ac082ac6627104ccf22a4e19f2ba53c"
     },
     {
       "path": "assets/fps/audio/riposte-i_concrete-1.mp3",
@@ -676,8 +811,8 @@
     },
     {
       "path": "credits.html",
-      "bytes": 13976,
-      "sha256": "4ae86125f7138e7b01aea9bd3e373fd39c3fb9d9d3cfa9fce8bb4f947c3e2ce4"
+      "bytes": 14927,
+      "sha256": "44ce2553c95d1b05732a81bf1e36f74dc5e4137e35549930af7455abd1ac665a"
     },
     {
       "path": "docs/fps-furniture-library.md",
@@ -1911,8 +2046,8 @@
     },
     {
       "path": "licenses/action-audio.txt",
-      "bytes": 432,
-      "sha256": "709141fb65b5a3113523f5ef4e1f0a1cd262136f159e4e37801084c918e26b9d"
+      "bytes": 431,
+      "sha256": "28b5daea1b866cbefbc193f4682cdef4a8ef884b6a8f761b9ebe5f9419ace5ec"
     },
     {
       "path": "licenses/ambientcg-CC0-1.0.txt",
@@ -2002,7 +2137,7 @@
     {
       "path": "shared/multiplayer/build.mjs",
       "bytes": 660,
-      "sha256": "f15289099ccfc6756e1e762d33378e0888582e75240f28f4a8b90f2a7bc852fd"
+      "sha256": "1bcccc2d84d88a45876a5f8997a8f2071321a8c1efa1ec4321efb7309c7577e1"
     },
     {
       "path": "shared/multiplayer/collision-contract.mjs",
@@ -2022,7 +2157,7 @@
     {
       "path": "shared/multiplayer/map-build.mjs",
       "bytes": 1753,
-      "sha256": "8f1d06d454bcc59d8bd8495797d03e8a5185445e0dbde057d339e1023f2aa66e"
+      "sha256": "1e58610cd6e5e647bd4305692298636ddb70a2ed202edf61578cd898602c6b26"
     },
     {
       "path": "shared/multiplayer/maps.mjs",
@@ -2086,13 +2221,13 @@
     },
     {
       "path": "src/fps/app.mjs",
-      "bytes": 55561,
-      "sha256": "25e251d31ae88239e849237578fb63e31f0c68f1cd78b35cb5f2bde2c39e9d44"
+      "bytes": 55658,
+      "sha256": "a01bbe6681261ad7eaf8f88e9c0c8d278040b4b7d91a96164fb6af17bb5ba27b"
     },
     {
       "path": "src/fps/audio.mjs",
-      "bytes": 19282,
-      "sha256": "7e46b51c5b162f2e41c5ed6a45cb692f0dde4a1b4e6971ce03c7dd180ee74a41"
+      "bytes": 19443,
+      "sha256": "46dd890587f71fcbf33ec8ef9c96d6cb53ae6a8722ec16c90cb067ee8fa16762"
     },
     {
       "path": "src/fps/authored-hand-data.mjs",
@@ -2261,8 +2396,8 @@
     },
     {
       "path": "src/fps/focus-hud.mjs",
-      "bytes": 8265,
-      "sha256": "537f936e3cf6d5ac0c1abf2ffbc98ae56f9b23485ed04738cb752025a3e68ebf"
+      "bytes": 8288,
+      "sha256": "16930464f239ce4d443dfeae21d3ba2f059f5600c2e64ab650ab4ee60e241f50"
     },
     {
       "path": "src/fps/frame-time-window.mjs",
@@ -2371,8 +2506,8 @@
     },
     {
       "path": "src/fps/mobile-controls.mjs",
-      "bytes": 7780,
-      "sha256": "0077fe465e9088544318f11e824dc1a844d999b0671df36122dedf7564fee57a"
+      "bytes": 8664,
+      "sha256": "3a3ec5e33bf0e62be6e78906ecf04569bcfbedaa761dd77248d99bfb073259f6"
     },
     {
       "path": "src/fps/model-primitives.mjs",
@@ -2506,8 +2641,8 @@
     },
     {
       "path": "src/fps/riposte-audio.mjs",
-      "bytes": 3077,
-      "sha256": "3569cc2b5641979b99fa67a106846f1e2c589cff5fee6ebe320a235720436c9d"
+      "bytes": 4427,
+      "sha256": "838290f994f0810a0b92d9ed3be861ae570e5f6fc57f72ebea9f36b5b893c723"
     },
     {
       "path": "src/fps/riposte-fps-math.mjs",
@@ -2548,6 +2683,16 @@
       "path": "src/fps/rush.mjs",
       "bytes": 1954,
       "sha256": "f23db4e772e959281fac1e3d63bd9e30867f961e8509c7236ab2d933bf9e6628"
+    },
+    {
+      "path": "src/fps/shot-audio.mjs",
+      "bytes": 2226,
+      "sha256": "fc2bc853d0c54195463986d399e4676b3e141ed1766de790f91a107a5e8a0bd3"
+    },
+    {
+      "path": "src/fps/shot-timing.mjs",
+      "bytes": 1392,
+      "sha256": "34aa3ec1c5b87f737cad9a7f53bea5385e00edcbedcb913ac717041cf744b0dc"
     },
     {
       "path": "src/fps/skin-sampler.mjs",
@@ -2606,8 +2751,8 @@
     },
     {
       "path": "src/fps/tactical-controls.mjs",
-      "bytes": 8532,
-      "sha256": "695e77c27aa4ca3fb8c4c7170ee2543beda9c4b570ebe6635a0ddc39795d1b49"
+      "bytes": 8557,
+      "sha256": "48c832df6a59fba0a8c4e325255ae1141c250336a562b83dffa0c59504e78845"
     },
     {
       "path": "src/fps/tactical-map.mjs",
@@ -2755,7 +2900,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 63637570,
+  "bytes": 63972653,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

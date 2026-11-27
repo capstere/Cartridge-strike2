@@ -1,7 +1,24 @@
 // These functions are serialized into a private copy of the pinned donor page.
 // They execute in its lexical scope, using its original map and prefab factories.
 exports.install=function installReferenceProbe(){
-  window.startReferenceExport=()=>mapEnsure('meltem').then(()=>true);
+  window.startReferenceExport=(id='meltem')=>mapEnsure(id).then(()=>CURMAP.id);
+  window.readReferenceCapabilities=()=>{
+    const types={};
+    for(const kind of NAV.adjKind)types[kind]=(types[kind]||0)+1;
+    let lowest=Infinity,highest=-Infinity;
+    for(const y of NAV.ny){lowest=Math.min(lowest,y);highest=Math.max(highest,y);}
+    const bodies=PHYS.bodies.filter(body=>!body.pooled && body.origin);
+    const groups=window.exportBuffers;
+    return {
+      id:CURMAP.id,bounds:CURMAP.def.bounds,spawns:SPAWNS.map(team=>team.length),
+      volumes:COL.length,ramps:RAMPS.length,holes:HOLES.length,
+      water:WATER.on,void:VOID.on,relief:RELIEF.on,altitude:[lowest,highest],
+      navigationNodes:NAV.nx.length,navigationEdges:NAV.adj.length,edgesByTraversal:types,
+      props:bodies.length,breakableProps:bodies.filter(body=>body.d.brk).length,
+      rayProps:bodies.filter(body=>body.d.ray).length,meshGroups:groups.length,
+      triangles:groups.reduce((sum,group)=>sum+group.g.ni/3,0)
+    };
+  };
   window.readReferenceMap=()=>({
     bounds:CURMAP.def.bounds,spawns:SPAWNS,zones:ZONES,poi:POI,ramps:RAMPS,holes:HOLES,
     solids:COL.map(c=>[c.x0,c.x1,c.y0,c.y1,c.z0,c.z1,c.m,+!!c.ray,+!!c.noRay,+!!c.inv,+!!c.prop]),

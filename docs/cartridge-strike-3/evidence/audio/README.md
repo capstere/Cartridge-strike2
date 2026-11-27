@@ -1,0 +1,34 @@
+# First-person and spatial shot audio
+
+Cartridge-Strike 3 uses two original Riposte takes per bank. A local shot starts immediately. A remote shot uses the nearby recording below 40 m and the appropriate distant weapon family at 40 m or more. Its arrival delay follows the reference distance curve, capped at 0.5 s. The existing spatial panner, occlusion filter and volume controls own the final mix. A pause or round reset cancels scheduled arrivals.
+
+The first take is available through the game's regular audio unlock. Three decoders share that initial queue. The second take loads on first use of that bank in a single serial queue. An event that used a fallback can never be replayed by a completed decode. The 24 additional MP3 files total 304,728 bytes. All 38 shot takes match the original donor files. [Asset hashes and license IDs](donor-takes.json)
+
+The cartridge latch reuses Riposte’s processed `f_pin.mp3` from `05-audio.js` and the marker in `08-player.js`. One confirmed `cartridge-latch` event from the handling package owns the cue. CGEffex’s CC BY 4.0 attribution, edits and source are included in the in-game credits. The shipped clip and the donor both have Git blob ID `854046f05784b331a701a8960063bf96f84efda9` (4,221 bytes).
+
+The Scout bolt and shotgun pump recordings reuse the byte-identical CC0 FFSL edits cataloged as `f_bolt-1` and `f_pump-1` (10,677 and 8,349 bytes). The handling integration owns the animation markers and cancellation.
+
+## Pi Chromium signal measurement
+
+The native Pi browser rendered the actual decoded MP3s through the game's shot selection, tracking and spatial Web Audio graph at 48 kHz. Each second shot used the other recorded take. The onset is the first sample above 3% of that signal’s peak. At 48 m, pausing before arrival gave an all-zero output buffer and zero retained sources. This measures the browser mixer. Physical speaker onset and touch-to-display latency require device measurements. [Recorded samples and timestamps](pi-offline-pcm.json)
+
+| Weapon | Distance (m) | Scheduled arrival (ms) | Measured PCM onset (ms) |
+| --- | ---: | ---: | ---: |
+| CR4 | 0 | 0.00 | 0.31 |
+| CR4 | 8 | 23.32 | 29.85 |
+| CR4 | 48 | 139.94 | 146.31 |
+| P9 | 0 | 0.00 | 0.17 |
+| P9 | 8 | 23.32 | 30.67 |
+| P9 | 48 | 139.94 | 147.62 |
+
+Run `node --test src/fps/shot-audio.test.mjs`. Serve the checkout on loopback and run `FPS_TEST_ORIGIN=http://127.0.0.1:8765 node tools/spatial-audio-browser.mjs`. Set `CHROMIUM_PATH=/usr/bin/chromium` for the Pi browser. The offline render, reset and asset identity checks also run in the FPS regression workflow. The combined English and acoustic run used protocol 15 build `ff13002dba01f90bfe2bd221dd267df792c422a9699f98869f7f64b32f90963c` with 562 allowlisted files. Native Chromium 156 rendered one latch source with its first PCM onset at 5.71 ms after the gameplay marker, at 48 kHz. A combined protocol-16 session is needed to bind that measurement to the actual hold animation.
+
+## Radio language
+
+All six shipped radio commands matched the English captions in `src/fps/action-rules.mjs` when decoded against the same English command vocabulary. A blind general-English model independently recognized “go go go” and most of “stick together team”, and misheard several short, filtered phrases. The death sound is a vocal effect and is excluded from the command count. On the matched Pi, run `python3 docs/cartridge-strike-3/evidence/audio/read-radio.py .` with FFmpeg, PocketSphinx 0.8 and its US English acoustic model installed. [Decoded output and controls](radio-language.json)
+
+## Two rendered multiplayer seats
+
+In [the hosted gameplay job](https://github.com/capstere/Cartridge-strike2/actions/runs/46010492473/job/140544449000), both browsers entered through the ordinary equipment lobby. The shooter selected a P9. Each accepted trigger started one POV recording immediately and consumed one round, with the same action ID on the second seat. At 8.15 m the observer used the near recording with a scheduled delay of 23.76 ms. At 48.05 m it used the distant pistol recording with a delay of 140.10 ms. Both distances and the actual recorded buffers came from the running game. [Per-seat timings and ammunition](hosted-room.json)
+
+The next animation callback after dispatch varied from 7.5 to 351.7 ms across the four observations. That callback is separate from the frame in which the sound was dispatched. The test establishes Web Audio scheduling and action identity. The CS3-02 motion recording and CS3-11 performance pass cover the presented frames and frame pacing.

@@ -6,7 +6,7 @@
 | --- | --- | --- |
 | CS3-00 | VERIFIED | Independent recovery, architecture and performance review passed. See [measurements](baseline/performance/README.md) and [recovery](baseline/recovery.json). |
 | CS3-01 | IN_PROGRESS | Verify the V1 countdown in Solo and private multiplayer on `cs3/01-countdown`. [PR #48](https://github.com/capstere/Cartridge-strike2/pull/48) and [PR #50](https://github.com/capstere/Cartridge-strike2/pull/50) have merged. |
-| CS3-02 | IN_PROGRESS | CR4/P9 Rush merged in [PR #49](https://github.com/capstere/Cartridge-strike2/pull/49). Extend the remaining stances, equipment and combat sound on `cs3/02-handling` and `cs3/02-spatial-audio`. |
+| CS3-02 | IN_PROGRESS | CR4/P9 Rush and positional firearm audio merged in [PR #49](https://github.com/capstere/Cartridge-strike2/pull/49) and [PR #51](https://github.com/capstere/Cartridge-strike2/pull/51). Verify the remaining stances, family-specific mechanisms, V6 effects and matched motion on `cs3/02-handling`. |
 | CS3-03 | NOT_STARTED | Wait for CS3-00, CS3-01, CS3-02 |
 | CS3-04 | NOT_STARTED | Wait for CS3-00, CS3-01 |
 | CS3-05 | NOT_STARTED | Wait for CS3-00, CS3-02 |
@@ -57,6 +57,12 @@ The project lead owns the integration branch, contract rebuilds after merges, in
 [PR #51](https://github.com/capstere/Cartridge-strike2/pull/51) at `a0bf1a49035b4925495456126abd86754e25c123` incorporates the English runtime, hybrid touch input, two CC0 mechanism clips and recorded English radio verification. The protocol 15 build `4c40a6cfe973fc4d481c488da5f5aa4f92da7aed81e3f9c32e94fa2fd84fe4bf` passed the 564-file manifest and nine focused checks. On the Pi the first two live-room acoustic attempts reached the existing pane-shooting fixture and failed before acoustic sampling. The final native trace showed both participants on life three and the host looking away from the pane. Keep the full glass and equipment assertions and correct the setup before repeating the near/far room capture. PR #53 incorporates this audio revision for protocol 16.
 
 Meltem's fixed 20-switch run retained zero detached game canvases, 78 total canvases and stable GL counts in all three same-map snapshots. Post-GC heap samples were 37.37, 36.95 and 37.09 MiB. The process ended with SIGTERM during the final parked interval, so that endpoint has no receipt. Repeat the equal-duration control in a bounded user service, preserving each completed sample. Include the ordinary English map selector and unsupported-mode and Random checks on the integrated map revision. The earlier four-switch and matched parked run passed.
+
+### Positional audio integration
+
+The [audio PR](https://github.com/capstere/Cartridge-strike2/pull/51) merged into development at `6fda2c88a07cd7e27cdda616beaead230d7e76ce` after scoped independent acceptance and [eight passing checks](https://github.com/capstere/Cartridge-strike2/actions/runs/46010492473). The two-browser equipment scenario verified the same action and one round per trigger on both seats, immediate shooter audio, and near and far listener selection at the measured distance. [Receipts](evidence/audio/README.md)
+
+The [first-person countdown PR](https://github.com/capstere/Cartridge-strike2/pull/54) preserves the original Solo and room rules and the source’s focused countdown HUD. A cold Pi Solo run found ten seconds between the first audio cue and the first visible digit. On the corrected run, all six independently observed decoded source starts aligned within one millisecond of the corresponding HUD transitions. The ordinary private room, real background-tab return, all-six pairing on the integrated audio build, and the complete workflow remain open. Continue [handling PR #53](https://github.com/capstere/Cartridge-strike2/pull/53) at protocol 16 and [map PR #52](https://github.com/capstere/Cartridge-strike2/pull/52) with the original production recovery path intact.
 
 ## CS3-00 execution
 

@@ -4,7 +4,7 @@ export const CONTRACT = Object.freeze({
   "protocolVersion": 15,
   "protocolHash": "1f27f4d871f9ded137565609bf5eef6c8e94b0f296c386222b3d3c68952f7ea5",
   "configHash": "fdf889c558f03dbabb3c3d1e55430799e461cbf811a26eff43bc17b517094338",
-  "buildHash": "c25b901c3d3bf7c199fdf20cfbf2037df078d2119ff2b32c9254096304ae661b",
+  "buildHash": "c426a708be413827fe8a1b13f1c4e5e76df12e9fcfb447d8b4e59840990bf6ff",
   "tickRate": 60,
   "patchMs": 50,
   "mapId": "floor5-prepared",
