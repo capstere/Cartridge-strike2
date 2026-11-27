@@ -1,5 +1,6 @@
 // Screen history and keyboard focus adapted from Riposte 09e-menus uiGo/uiBack
 // and 09ea-liste lmStep. Copyright (c) 2026 BenDBSS. See licenses/riposte-MIT.txt.
+import {mountAccountProfile} from './account-profile.mjs';
 import {UI_EN, selectedMapName} from './english-ui.mjs';
 import {loadSoloManifest, resolveSoloSelection, soloCatalog, soloMapURL} from './solo-maps.mjs';
 import {FAMILY_ROOM_PATH} from '../../shared/multiplayer/family-room.mjs';
@@ -34,11 +35,14 @@ function mountMenu() {
   const settings = document.getElementById('mm-open-settings');
   const fullscreen = createFullscreenController(document);
   const fullscreenButton = document.getElementById('menu-fullscreen');
+  const profile = mountAccountProfile(menu.querySelector('[data-account-profile]'));
   let screen;
   settings.dataset.go = 'options';
 
   function show(name, focus = true, restore = '') {
+    if (screen === 'profile' && name !== screen) profile.reset();
     screen = name;
+    if (name === 'profile') profile.open();
     menu.dataset.screen = name;
     for (const panel of panels) panel.hidden = panel.dataset.panel !== name;
     for (const panel of setup) panel.hidden = name !== 'solo' && name !== 'network';
@@ -196,6 +200,7 @@ function mountMenu() {
   const production = location.hostname === 'cs2.capstere.com' || query.get('network') === 'internet';
   if (production) {
     for (const link of menu.querySelectorAll('[data-family-link]')) link.href = FAMILY_ROOM_PATH;
+    menu.querySelector('[data-join-code]').href = '/join';
     menu.querySelector('[data-private-link]').href = '?network=internet';
   }
   menu.querySelector('[data-lan-link]').hidden = !local;
@@ -222,6 +227,8 @@ function mountMenu() {
     event.preventDefault();
     buttons[(i + d + buttons.length) % buttons.length].focus();
   }, true);
+  addEventListener('pagehide',profile.reset);
+  addEventListener('pageshow', e => { if (e.persisted && screen === 'profile') profile.open(); });
   show(initialScreen(new URL(location.href)), false);
 }
 if (typeof document !== 'undefined') mountMenu();

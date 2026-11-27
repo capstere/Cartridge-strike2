@@ -57,9 +57,11 @@ export function accountAccess(config,active){
     return {origin,token,roomToken,device,rooms:store.rooms(device)};
   }
   function bind(ctx,res,legacy){
+    store.clean();
     const device=store.device(ctx.roomToken,ctx.origin);
     if(device.token!==ctx.roomToken)setCookie(res,roomCookie,device.token);
-    return {device:device.id,user:store.userFor(ctx.token,ctx.origin)?.id,legacy};
+    const user=store.userFor(ctx.token,ctx.origin);
+    return {device:device.id,user:user?.id,session:user?.session,legacy};
   }
   function roomFor(id){return [...active].find(r=>r.roomId===id||roomScope(r)===id);}
   function requireHost(ctx,id){
@@ -108,6 +110,7 @@ export function accountAccess(config,active){
     if(Object.keys(input).some(k=>!actions[action].includes(k)))fail(400,'Invalid request fields.');
     if(group==='room'){
       if(action==='exchange'){
+        store.clean();
         const {room,device}=store.exchange(input.code,ctx.origin,ctx.roomToken);
         setCookie(res,roomCookie,device.token);json(res,{room,destination:destination(room)});return true;
       }
@@ -133,5 +136,29 @@ export function accountAccess(config,active){
     json(res,{...store.profile(store.userFor(token,ctx.origin),ctx.rooms),...(result.recoveryCode?{recoveryCode:result.recoveryCode}:{})});
     return true;
   }
-  return {store,context,bind,handle,roomFor};
+  const pending=new Map();
+  let retry;
+  function flush(){
+    for(const [id,args] of pending){
+      try{store.recordMatch(...args);pending.delete(id);}catch{break;}
+    }
+    if(!pending.size){clearInterval(retry);retry=undefined;}
+  }
+  function recordMatch(...args){
+    if(!args[3].length)return;
+    try{store.recordMatch(...args);}catch{
+      if(pending.size>=64){console.error('Account storage is unavailable and the pending result queue is full.');return;}
+      pending.set(args[0],args);
+      if(!retry){
+        console.error('Account storage is unavailable. Completed results will retry.');
+        retry=setInterval(flush,5000);retry.unref();
+      }
+    }
+  }
+  function close(){
+    clearInterval(retry);flush();
+    if(pending.size)console.error('Account storage still has unsaved match results at shutdown.');
+    store.close();
+  }
+  return {store,context,bind,handle,roomFor,recordMatch,close};
 }

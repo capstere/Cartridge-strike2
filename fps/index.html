@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="match-loading.css?v=3">
   <script type="importmap">{"imports":{"three":"../vendor/three/three.module.js","three/addons/":"../vendor/three/addons/"}}</script>
   <link rel="stylesheet" href="network.css">
+  <link rel="stylesheet" href="account.css">
   <link rel="stylesheet" href="routes.css">
 <meta name="robots" content="noindex,nofollow">
 </head>
@@ -54,7 +55,8 @@
     <section class="route-panel sub-panel" data-panel="friends" aria-labelledby="friends-title" hidden>
       <h1 id="friends-title" tabindex="-1">With friends</h1>
       <div class="route-cards">
-        <a class="route-card image-floor" href="https://cs2.capstere.com/room/JESPERS-ROOM" data-family-link><strong>Family room</strong><span>Use the family invitation and room password.</span></a>
+        <a class="route-card image-floor" href="https://cs2.capstere.com/room/JESPERS-ROOM" data-family-link><strong>Family room</strong><span>Join with the family password or remembered access.</span></a>
+        <a class="route-card" href="https://cs2.capstere.com/join" data-join-code><strong>Invitation code</strong><span>Enter the single-use code from your host.</span></a>
         <a class="route-card image-arena" href="https://cs2.capstere.com/fps/?network=internet" data-private-link><strong>Private rooms</strong><span>Create a room or enter a friend’s room ID.</span></a>
         <a class="route-card" href="?network=local" data-lan-link><strong>LAN server</strong><span>Play on this local server.</span></a>
       </div>
@@ -69,8 +71,10 @@
       <button type="button" class="route-action" data-go="solo" data-focus="player-character">Choose operator →</button><p>Wardrobe challenges are unavailable in this build.</p></div>
     </section>
     <section class="route-panel sub-panel" data-panel="profile" aria-labelledby="profile-title" hidden>
-      <h1 id="profile-title" tabindex="-1">Player profile</h1><div class="route-details"><h2>Local guest</h2><p>Your control settings and saved characters stay in this browser. Joining a private room uses a separate room invitation and password.</p>
-      <button type="button" data-go="outfits" class="route-action">View operator →</button><p>Cross-device sign-in is unavailable in this build.</p></div>
+      <h1 id="profile-title" tabindex="-1">Player profile</h1>
+      <div data-account-profile></div>
+      <div class="route-details"><h2>Local operator</h2><p>Your control settings and saved characters stay in this browser.</p>
+      <button type="button" data-go="outfits" class="route-action">View operator →</button></div>
     </section>
     <section class="route-panel sub-panel" data-panel="news" aria-labelledby="news-title" hidden>
       <h1 id="news-title" tabindex="-1">What’s new</h1><article class="route-details"><time datetime="2026-11-27">November 27, 2026</time><h2>New match menus</h2>

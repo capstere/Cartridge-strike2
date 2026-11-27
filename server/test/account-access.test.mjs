@@ -113,3 +113,71 @@ test('two live private-room clients use old and new admission with isolated host
   assert.equal((await guest.send('/api/room/exchange',{code:issuedAgain.json().token})).status,403);
   assert.deepEqual((await host.send('/api/account')).json().rooms,[FAMILY_ROOM_ALIAS]);
 });
+
+test('private room codes, passwordless return and scoped link admission share normal Colyseus create and join routes',async t=>{
+  const dir=await mkdtemp(join(tmpdir(),'cs3-private-'));
+  const local=await createLocalServer({port:0,publicOrigin:origin,pilotInvite:randomBytes(32).toString('hex'),accountDb:join(dir,'accounts.sqlite')});
+  const sockets=[];
+  t.after(async()=>{for(const socket of sockets)if(socket.connection.isOpen)await socket.leave();await local.close();await rm(dir,{recursive:true,force:true});});
+  const host=browser(local.url),guest=browser(local.url);
+  await host.send('/pilot/session',new URLSearchParams({invite:local.config.pilotInvite}),{'Content-Type':'application/x-www-form-urlencoded'});
+  async function reserve(browser,path,body){
+    const reply=await browser.send(path,body);
+    assert.equal(reply.status,200);const client=new Client(local.url,{headers:browser.headers()});
+    const room=await client.consumeSeatReservation(reply.json());sockets.push(room);return ready(room);
+  }
+  const match=await reserve(host,'/matchmake/create/private-fps',options);
+  const direct='/matchmake/joinById/'+match.roomId;
+  assert.deepEqual((await host.send('/api/account')).json().rooms,[match.roomId]);
+  assert.equal((await host.send(direct,{...options,code:'incorrect-code'})).status,403);
+  const invite=await host.send('/api/room/invites',{room:match.roomId});
+  assert.equal(invite.status,200);
+  const joined=await guest.send('/api/room/exchange',{code:invite.json().token});
+  assert.equal(joined.status,200);assert.equal(joined.json().destination,'/fps/?network=internet&room='+match.roomId);
+  const peer=await reserve(guest,direct,{...options,name:'Invited player',code:''});
+  assert.equal(peer.roomId,match.roomId);
+  assert.equal((await guest.send('/api/room/forget',{room:match.roomId})).json().rooms.length,0);
+  await until(()=>!peer.connection.isOpen,'forget ends scoped connection');
+  assert.equal((await guest.send(direct,{...options,code:''})).status,401);
+  const returned=await reserve(host,direct,{...options,name:'Returning player',code:''});
+  assert.equal(returned.roomId,match.roomId);
+});
+
+test('concurrent room-local match one, rematch and sign-out resolve to distinct trusted account results',async t=>{
+  const dir=await mkdtemp(join(tmpdir(),'cs3-match-credit-'));
+  const local=await createLocalServer({port:0,publicOrigin:origin,pilotInvite:randomBytes(32).toString('hex'),
+    accountDb:join(dir,'accounts.sqlite'),testMatch:{countdownSeconds:.1,durationSeconds:.3}});
+  const host=browser(local.url),sockets=[];
+  t.after(async()=>{for(const socket of sockets)if(socket.connection.isOpen)await socket.leave();await local.close();await rm(dir,{recursive:true,force:true});});
+  await host.send('/pilot/session',new URLSearchParams({invite:local.config.pilotInvite}),{'Content-Type':'application/x-www-form-urlencoded'});
+  const password=randomBytes(24).toString('hex');
+  assert.equal((await host.send('/api/account/register',{username:'match_user',password})).status,200);
+  async function newMatch(){
+    const response=await host.send('/matchmake/create/private-fps',{...options,fillBots:true,analystsBots:1,counterAnalystsBots:1});
+    assert.equal(response.status,200);
+    const sdk=new Client(local.url,{headers:host.headers()});
+    const room=await sdk.consumeSeatReservation(response.json());sockets.push(room);return ready(room);
+  }
+  const match=(room,kind,extra={})=>room.send('match',{kind,matchId:room.state.matchId,controlEpoch:own(room).controlEpoch,...extra});
+  async function start(room){
+    match(room,'ready',{ready:true});
+    await until(()=>own(room)?.playerReady,'room participant is ready');
+    match(room,'start');
+  }
+  const a=await newMatch(),b=await newMatch();
+  assert.equal(a.state.matchId,1);assert.equal(b.state.matchId,1);assert.notEqual(a.roomId,b.roomId);
+  await Promise.all([start(a),start(b)]);
+  await until(()=>a.state.phase==='results'&&b.state.phase==='results','both real match instances finished');
+  assert.equal((await host.send('/api/account')).json().stats.matches,2);
+  match(a,'rematch');
+  await until(()=>a.state.matchId===2&&a.state.phase==='waiting','rematch instance created');
+  await start(a);
+  await until(()=>a.state.phase==='results','rematch was scored');
+  assert.equal((await host.send('/api/account')).json().stats.matches,3);
+  match(b,'rematch');
+  await until(()=>b.state.matchId===2&&b.state.phase==='waiting','second room reset');
+  assert.equal((await host.send('/api/account/logout',{})).status,200);
+  await start(b);await until(()=>b.state.phase==='results','guest can finish after account sign-out');
+  const again=await host.send('/api/account/login',{username:'match_user',password});
+  assert.equal(again.json().stats.matches,3);
+});

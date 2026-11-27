@@ -1,3 +1,4 @@
+import {roomInvitation} from './room-invitation.mjs';
 import {accessText as en} from '../../../shared/multiplayer/access-english.mjs';
 import {NETWORK_MAPS,networkMap} from '../../../shared/multiplayer/maps.mjs';
 import {onlinePrimaries} from '../action-rules.mjs';
@@ -52,8 +53,18 @@ export function roomUi({leave,resume,activate}){
     <div class="room-eyebrow">${en.privateRoom}</div>
     <header class="room-header">
       <h2 id="room-title">${en.lobby}</h2>
-      <div class="room-actions"><button id="room-share">${en.shareLink}</button><button id="room-leave">${en.leave}</button></div>
+      <div class="room-actions"><button type="button" id="room-invite" hidden aria-expanded="false" aria-controls="room-invitation">Invite a friend</button><button id="room-share">${en.shareLink}</button><button id="room-leave">${en.leave}</button></div>
     </header>
+    <section class="room-invitation" id="room-invitation" hidden aria-label="Private invitation">
+      <h3>Invite a friend</h3><p>Create one invitation for each player. A new invitation replaces the previous unused one.</p>
+      <button type="button" data-invite-create>Create invitation</button>
+      <div data-invite-output hidden><p>Invitation code <strong></strong> · Expires at <time></time></p>
+        <label>Invitation link <input type="text" readonly autocomplete="off"></label>
+        <button type="button" data-invite-share>Share or copy link</button></div>
+      <p role="status"></p><button type="button" data-invite-revoke>Revoke shared access</button>
+      <div data-invite-confirm hidden><p>Disconnect invited players and remove remembered invitation access for this room?</p>
+        <button type="button" data-cancel>Keep access</button><button type="button" data-confirm>Revoke access</button></div>
+    </section>
     <input id="room-link" readonly aria-label="${en.roomLink}" hidden>
     <p id="room-share-help" class="muted" hidden>${en.shareHelp}</p>
     <p id="room-identity" class="muted"></p>
@@ -108,7 +119,9 @@ export function roomUi({leave,resume,activate}){
   $('room-map').onchange=()=>session.matchCommand('settings',{mapId:$('room-map').value});
   const modeLabels={tdm:'Team Deathmatch',classic:'Classic'};
   const shareHelp=$('room-share-help'),normalShareHelp=shareHelp.textContent;
-  $('room-leave').onclick=()=>{root.hidden=true;session=null;leave();};
+  const invitation=roomInvitation(root);
+  const privateAccess=new URLSearchParams(location.search).get('network')==='internet';
+  $('room-leave').onclick=()=>{invitation.update('');root.hidden=true;session=null;leave();};
   $('room-ready').onclick=()=>{activate();const a=session.room.state.actors.get(session.localPlayerId);session.matchCommand('ready',{ready:!a.playerReady});};
   $('room-start').onclick=()=>{activate();session.matchCommand('start');};
   const rematch=$('room-rematch');
@@ -163,10 +176,10 @@ export function roomUi({leave,resume,activate}){
       await navigator.clipboard.writeText(link.href);if(session===current&&!current.closed)current.notice=en.linkCopied;
     }catch{if(session!==current||current.closed)return;$('room-link').hidden=false;$('room-link').value=link.href;$('room-link').focus();$('room-link').select();current.notice=en.copySelection;}
   };
-  return {hide(){root.hidden=true;session=null;rematchPointer=null;key='';$('room-link').hidden=true;shareHelp.hidden=true;},update(s){
+  return {hide(){invitation.update('');root.hidden=true;session=null;rematchPointer=null;key='';$('room-link').hidden=true;shareHelp.hidden=true;},update(s){
     if(!s?.room)return;session=s;const state=s.room.state,self=state.actors.get(s.localPlayerId),waiting=state.phase==='waiting',result=state.phase==='results';
     if(!result)rematchPointer=null;
-    root.hidden=state.phase==='active'||state.phase==='countdown';if(root.hidden)return;
+    root.hidden=state.phase==='active'||state.phase==='countdown';if(root.hidden){invitation.update('');return;}
     $('room-title').textContent=result?(state.winner==='draw'?en.draw:en.winner(labels[state.winner])):en.lobby;
     const classic=state.mode==='classic';
     $('room-rules').textContent=classic?en.classicRules:en.tdmRules;
@@ -174,6 +187,7 @@ export function roomUi({leave,resume,activate}){
     if(!map)return;
     const loading=s.worldRevision!==state.worldRevision||!self?.ready;
     const host=state.ownerId===s.room.sessionId,canEdit=waiting&&host&&!loading&&s.connectionState==='connected';
+    invitation.update(privateAccess&&canEdit?s.room.roomId:'');
     if($('room-map-preview').dataset.map!==map.id){
       $('room-map-preview').dataset.map=map.id;
       $('room-map-preview').src='../'+map.preview;

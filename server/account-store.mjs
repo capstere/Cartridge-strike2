@@ -1,6 +1,8 @@
 import {createHash,randomBytes,randomInt,randomUUID,scrypt,timingSafeEqual} from 'node:crypto';
 import {promisify} from 'node:util';
-import {closeSync,openSync,chmodSync} from 'node:fs';
+import {closeSync,openSync,fchmodSync,realpathSync,fstatSync,constants} from 'node:fs';
+import {basename,dirname,join} from 'node:path';
+import {fileURLToPath} from 'node:url';
 import {DatabaseSync} from 'node:sqlite';
 
 const derive=promisify(scrypt);
@@ -30,15 +32,28 @@ const schema=`
 
 export class AccountStore {
   constructor(path,{now=Date.now}={}) {
-    this.now=now;this.activeHashes=0;this.failures=new Map();this.nextCleanup=0;
-    if(path!==':memory:'){closeSync(openSync(path,'a',0o600));chmodSync(path,0o600);}
+    this.now=now;this.activeHashes=0;this.nextCleanup=0;
+    if(path!==':memory:'){
+      path=join(realpathSync(dirname(path)),basename(path));
+      if(path.startsWith(fileURLToPath(new URL('../',import.meta.url))))throw Error('Account data must stay outside the release.');
+      const fd=openSync(path,constants.O_CREAT|constants.O_RDWR|constants.O_NOFOLLOW,0o600);
+      try{if(!fstatSync(fd).isFile())throw Error('Account database must be a regular file.');fchmodSync(fd,0o600);}finally{closeSync(fd);}
+    }
     this.db=new DatabaseSync(path);
     try{
-      this.db.exec('PRAGMA foreign_keys=ON; PRAGMA busy_timeout=1500; PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL');
+      this.db.exec('PRAGMA trusted_schema=OFF; PRAGMA foreign_keys=ON; PRAGMA busy_timeout=250; PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL');
       this.transaction(()=>{
         const version=this.db.prepare('PRAGMA user_version').get().user_version;
-        if(!version)this.db.exec(schema);else if(version!==1)throw Error('Unsupported account database version.');
+        if(version>2)throw Error('Unsupported account database version.');
+        if(!version)this.db.exec(schema);
+        if(version<2)this.db.exec(`CREATE TABLE credential_attempts(name_hash TEXT PRIMARY KEY, failures INTEGER NOT NULL, until_ms INTEGER NOT NULL);
+          CREATE INDEX attempts_expiry ON credential_attempts(until_ms);
+          CREATE INDEX grants_invite ON grants(invite);
+          PRAGMA user_version=2;`);
       });
+      this.findUser=this.db.prepare('SELECT u.*,s.token AS session FROM users u JOIN sessions s ON s.user_id=u.id WHERE s.token=? AND s.origin=? AND s.expires>?');
+      this.findDevice=this.db.prepare('SELECT token FROM devices WHERE token=? AND origin=? AND expires>?');
+      this.findRooms=this.db.prepare('SELECT room FROM grants WHERE device=? AND expires>? ORDER BY room');
     }catch(error){this.db.close();throw error;}
   }
   transaction(fn){
@@ -51,16 +66,26 @@ export class AccountStore {
     this.nextCleanup=now+60000;
     this.transaction(()=>{
       for(const table of ['sessions','devices','grants'])this.db.prepare(`DELETE FROM ${table} WHERE expires<=?`).run(now);
+      this.db.prepare('DELETE FROM credential_attempts WHERE until_ms<=?').run(now);
       // A used invitation continues to identify its grants for host revocation.
       this.db.prepare('DELETE FROM invites WHERE expires<=? AND NOT EXISTS(SELECT 1 FROM grants WHERE invite=invites.id)').run(now);
     });
-    for(const [key,bucket] of this.failures)if(bucket.until<=now)this.failures.delete(key);
   }
   tryCredential(username){
-    this.clean();const key=digest(username),now=this.now();let bucket=this.failures.get(key);
-    if(!bucket||bucket.until<=now){if(this.failures.size>=2048)throw denied(429,'Too many attempts. Try again later.');this.failures.set(key,bucket={count:0,until:now+600000});}
-    if(++bucket.count>10)throw denied(429,'Too many attempts. Try again later.');
+    this.clean();
+    const key=digest(username),now=this.now();
+    this.transaction(()=>{
+      const bucket=this.db.prepare('SELECT failures,until_ms FROM credential_attempts WHERE name_hash=?').get(key);
+      if(bucket&&bucket.until_ms>now){
+        if(bucket.failures>=10)throw denied(429,'Too many attempts. Try again later.');
+        this.db.prepare('UPDATE credential_attempts SET failures=failures+1 WHERE name_hash=?').run(key);
+      }else{
+        if(!bucket&&this.db.prepare('SELECT count(*) AS n FROM credential_attempts').get().n>=2048)throw denied(429,'Too many attempts. Try again later.');
+        this.db.prepare('INSERT OR REPLACE INTO credential_attempts VALUES(?,1,?)').run(key,now+600000);
+      }
+    });
   }
+  clearAttempts(username){this.db.prepare('DELETE FROM credential_attempts WHERE name_hash=?').run(digest(username));}
   async passwordKey(password,salt){
     if(this.activeHashes>=2)throw denied(429,'The sign-in service is busy. Try again shortly.');
     this.activeHashes++;
@@ -74,12 +99,14 @@ export class AccountStore {
     if(!encoded||!verified)throw badLogin();
   }
   newSession(id,origin,previous){
+    // Retain the sixteen most recent successful device logins per account.
+    this.db.prepare('DELETE FROM sessions WHERE user_id=? AND rowid NOT IN (SELECT rowid FROM sessions WHERE user_id=? ORDER BY rowid DESC LIMIT 15)').run(id,id);
     if(previous)this.db.prepare('DELETE FROM sessions WHERE token=? AND origin=?').run(digest(previous),origin);
     const token=secret();this.db.prepare('INSERT INTO sessions VALUES(?,?,?,?)').run(digest(token),id,origin,this.now()+30*DAY);return token;
   }
   userFor(token,origin){
     if(!token)return;
-    return this.db.prepare('SELECT u.* FROM users u JOIN sessions s ON s.user_id=u.id WHERE s.token=? AND s.origin=? AND s.expires>?').get(digest(token),origin,this.now());
+    return this.findUser.get(digest(token),origin,this.now());
   }
   async register({username,displayName,password},origin,previous){
     username=normalized(username);
@@ -89,7 +116,7 @@ export class AccountStore {
     return this.transaction(()=>{
       const inserted=this.db.prepare('INSERT INTO users VALUES(?,?,?,?,?,?) ON CONFLICT(username) DO NOTHING').run(id,username,(displayName??username).trim(),encoded,digest(code),this.now());
       if(!inserted.changes)throw denied(409,'That username is unavailable.');
-      return {token:this.newSession(id,origin,previous),recoveryCode:code};
+      this.clearAttempts(username);return {token:this.newSession(id,origin,previous),recoveryCode:code};
     });
   }
   async login({username,password},origin,previous){
@@ -98,7 +125,7 @@ export class AccountStore {
     await this.verify(password,user?.password);
     return this.transaction(()=>{
       if(!this.db.prepare('SELECT 1 FROM users WHERE id=? AND password=?').get(user.id,user.password))throw badLogin();
-      this.failures.delete(digest(username));return {token:this.newSession(user.id,origin,previous)};
+      this.clearAttempts(username);return {token:this.newSession(user.id,origin,previous)};
     });
   }
   async recover({username,recoveryCode,newPassword},origin,previous){
@@ -109,7 +136,7 @@ export class AccountStore {
     return this.transaction(()=>{
       const changed=this.db.prepare('UPDATE users SET password=?,recovery=? WHERE id=? AND recovery=?').run(encoded,digest(code),user.id,user.recovery);
       if(!changed.changes)throw badLogin();
-      this.db.prepare('DELETE FROM sessions WHERE user_id=?').run(user.id);this.failures.delete(digest(username));
+      this.db.prepare('DELETE FROM sessions WHERE user_id=?').run(user.id);this.clearAttempts(username);
       return {token:this.newSession(user.id,origin,previous),recoveryCode:code};
     });
   }
@@ -118,7 +145,7 @@ export class AccountStore {
     const password=action==='password'?await this.hashPassword(input.newPassword):null;
     return this.transaction(()=>{
       const current=this.userFor(previous,origin);if(current?.id!==user.id||current.password!==user.password)throw badLogin();
-      this.failures.delete(digest(user.username));
+      this.clearAttempts(user.username);
       if(action==='delete'){this.db.prepare('DELETE FROM users WHERE id=?').run(user.id);return {token:null};}
       if(action==='recovery-code'){
         const code=randomBytes(20).toString('base64url');this.db.prepare('UPDATE users SET recovery=? WHERE id=?').run(digest(code),user.id);return {recoveryCode:code};
@@ -138,14 +165,14 @@ export class AccountStore {
   }
   deviceFor(token,origin){
     if(!token)return;
-    return this.db.prepare('SELECT token FROM devices WHERE token=? AND origin=? AND expires>?').get(digest(token),origin,this.now())?.token;
+    return this.findDevice.get(digest(token),origin,this.now())?.token;
   }
   device(token,origin){
     const existing=this.deviceFor(token,origin);if(existing)return {id:existing,token};
     const fresh=secret(),id=digest(fresh);
     this.db.prepare('INSERT INTO devices VALUES(?,?,?)').run(id,origin,this.now()+30*DAY);return {id,token:fresh};
   }
-  rooms(device){return device?this.db.prepare('SELECT room FROM grants WHERE device=? AND expires>? ORDER BY room').all(device,this.now()).map(g=>g.room):[];}
+  rooms(device){return device?this.findRooms.all(device,this.now()).map(g=>g.room):[];}
   remember(device,room,invite=null){
     this.db.prepare(`INSERT INTO grants VALUES(?,?,?,?) ON CONFLICT(device,room) DO UPDATE SET expires=excluded.expires,
       invite=CASE WHEN grants.invite IS NULL AND grants.expires>? THEN NULL ELSE excluded.invite END`).run(device,room,invite,this.now()+30*DAY,this.now());
@@ -177,9 +204,9 @@ export class AccountStore {
   }
   recordMatch(instance,mode,map,entries){
     this.transaction(()=>{
-      const insert=this.db.prepare('INSERT OR IGNORE INTO summaries SELECT ?,id,?,?,?,?,?,? FROM users WHERE id=?');
+      const insert=this.db.prepare('INSERT OR IGNORE INTO summaries SELECT ?,id,?,?,?,?,?,? FROM users WHERE id=? AND (? IS NULL OR EXISTS(SELECT 1 FROM sessions WHERE token=? AND user_id=users.id AND expires>?))');
       for(const e of entries){
-        if(!insert.run(instance,mode,map,this.now(),e.kills,e.deaths,Number(e.win),e.user).changes)continue;
+        if(!insert.run(instance,mode,map,this.now(),e.kills,e.deaths,Number(e.win),e.user,e.session??null,e.session??null,this.now()).changes)continue;
         const points=e.kills*10+(e.win?25:0);
         this.db.prepare('INSERT INTO rewards VALUES(?,?,?,?,?)').run(instance,'result',e.user,'match',points);
       }

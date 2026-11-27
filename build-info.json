@@ -791,13 +791,23 @@
     },
     {
       "path": "credits.html",
-      "bytes": 14927,
-      "sha256": "44ce2553c95d1b05732a81bf1e36f74dc5e4137e35549930af7455abd1ac665a"
+      "bytes": 15124,
+      "sha256": "280a7a077de2cf0e10e2a340d5c8dd584f67efa80ba0e92f877f8ed784cec89c"
     },
     {
       "path": "docs/fps-furniture-library.md",
       "bytes": 6572,
       "sha256": "533dce29d265607a9e3fd44df857fde3510a126887682e97ecb69dfcb0671954"
+    },
+    {
+      "path": "fps/account.css",
+      "bytes": 3072,
+      "sha256": "2e19fe883b866964fc47719fabea7e20c3f90161680a5885dc8b06a167af12e8"
+    },
+    {
+      "path": "fps/account.html",
+      "bytes": 706,
+      "sha256": "064cece18abd29d27501f17adafd84498cfce055e41489c8f036ad70392d8d6c"
     },
     {
       "path": "fps/focus-hud.css",
@@ -811,8 +821,8 @@
     },
     {
       "path": "fps/index.html",
-      "bytes": 20120,
-      "sha256": "303e8c76ffa7c979afe894afb8d0be824eaae00d2435cdfbd23e341726c24b06"
+      "bytes": 20268,
+      "sha256": "f835b9807204d5c3332e642ad51ba34980611cfcf585fb9e77d2634e16a6577c"
     },
     {
       "path": "fps/lobby.css",
@@ -2065,6 +2075,11 @@
       "sha256": "a2010f343487d3f7618affe54f789f5487602331c0a8d03f49e9a7c547cf0499"
     },
     {
+      "path": "licenses/qrcode-generator-MIT.txt",
+      "bytes": 1071,
+      "sha256": "3a850fa5f08101db6f40676c2786e10bd2cd5fff7b12ffdf1e0c434d4e49d90c"
+    },
+    {
       "path": "licenses/quaternius-characters-CC0.txt",
       "bytes": 1228,
       "sha256": "d9e4bfbcc178d8436267077762f740248f2a2f6573f0ad31eec5e468dd3aa722"
@@ -2112,7 +2127,7 @@
     {
       "path": "shared/multiplayer/build.mjs",
       "bytes": 660,
-      "sha256": "adf457c32414decc0439294af5eb6a664fe508b50d1835efceaca7f0f445b2d5"
+      "sha256": "ec9d8a2c8fb1f463ae1499f01e657b20c3794f27471b14adfaa15ba960757a7d"
     },
     {
       "path": "shared/multiplayer/collision-contract.mjs",
@@ -2132,7 +2147,7 @@
     {
       "path": "shared/multiplayer/map-build.mjs",
       "bytes": 1215,
-      "sha256": "060ff4d5bc568a2b89b23f9f503c59ccf837e4a1da96fff858ab862177f86363"
+      "sha256": "43f1c85391cce5e46ad4e8db4d542691b784909a5c7d2060ab798aeace2b5dc7"
     },
     {
       "path": "shared/multiplayer/maps.mjs",
@@ -2163,6 +2178,11 @@
       "path": "src/floor5-data.js",
       "bytes": 279976,
       "sha256": "5f1e306072124f997ef4049b72b86c9097dc731cce7dfdf1c5635ebff5ff3487"
+    },
+    {
+      "path": "src/fps/account-profile.mjs",
+      "bytes": 10445,
+      "sha256": "4080d12f71a24f8930e04bbf24783fdf4b4b11bac69c41542b4e9fbcf862e4d5"
     },
     {
       "path": "src/fps/action-audio.mjs",
@@ -2476,8 +2496,8 @@
     },
     {
       "path": "src/fps/menu-navigation.mjs",
-      "bytes": 10919,
-      "sha256": "1c793fc95db520af343dc423af661d4cb30b84989ea7723f87fc9cf7532a519a"
+      "bytes": 11377,
+      "sha256": "2a7f13c97c6100a861da31df6fe6d72a4a7088019ee6b8a9d43c1dfcc6df8eff"
     },
     {
       "path": "src/fps/minimap-cache.mjs",
@@ -2516,13 +2536,18 @@
     },
     {
       "path": "src/fps/network/menu.mjs",
-      "bytes": 6919,
-      "sha256": "dc6237828b437da8c9c39f27d000664e9b0206031f8743329271a57584a09422"
+      "bytes": 8467,
+      "sha256": "b8bf3555a440f650ade301709cfe6f9787f422446361a68c9a5262a1bee253b7"
+    },
+    {
+      "path": "src/fps/network/room-invitation.mjs",
+      "bytes": 4671,
+      "sha256": "6b8b357c816878fe63073fba9e9180ba89df711a95e7cc4f6a389f4b2454df6f"
     },
     {
       "path": "src/fps/network/room-ui.mjs",
-      "bytes": 16985,
-      "sha256": "24c67d8d76269ebba4c11553382278c90922cff171392cfc71e7ead7a72b323f"
+      "bytes": 18364,
+      "sha256": "7a8b7feaa941705eda4e93a4ce47cc2fd535bfa7e3dd6c8127db5100e62337af"
     },
     {
       "path": "src/fps/network/session.mjs",
@@ -2810,6 +2835,11 @@
       "sha256": "a90fc33418afa2b9cbf4768524b021135b965ecdf993457505bfae3ac44a8428"
     },
     {
+      "path": "vendor/qrcode-generator/qrcode.mjs",
+      "bytes": 51907,
+      "sha256": "ea91d7118a5395289170da848b7c6758b996163bfbccf312591ab65a4911b7c0"
+    },
+    {
       "path": "vendor/three/addons/geometries/RoundedBoxGeometry.js",
       "bytes": 6476,
       "sha256": "c1b7c9bd2cddff2e3f3a0723f618a3d364a47450e3d25771d21faed88410bec8"
@@ -2850,7 +2880,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 59448149,
+  "bytes": 59523751,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

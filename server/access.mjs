@@ -19,6 +19,8 @@ export function hostingConfig({lan=false,host,port=2567,publicOrigin,publicOrigi
   if(lan?!privateIPv4(host):host!=='127.0.0.1')throw Error(lan?
     'CS2_LAN_HOST must be the Pi\'s private IPv4 address (10.x, 172.16–31.x or 192.168.x); wildcard/public binds are disabled.':
     'Local mode binds only 127.0.0.1. Set CS2_LAN=1 and CS2_LAN_HOST explicitly to enable LAN.');
+  const pilot=pilotConfig({lan,publicOrigin,publicOriginFile,pilotInvite});
+  const family=familyRoomConfig({familyPassword,familyStateFile,pilotInvite});
   accountDb??=familyStateFile&&join(dirname(familyStateFile),'cs3-accounts.sqlite');
   if(accountDb!==undefined){
     const release=fileURLToPath(new URL('../',import.meta.url));
@@ -26,8 +28,7 @@ export function hostingConfig({lan=false,host,port=2567,publicOrigin,publicOrigi
        [familyStateFile,publicOriginFile].filter(Boolean).some(file=>resolve(file)===resolve(accountDb)))throw Error('Accounts require HTTPS pilot mode and a separate absolute database path outside the release.');
   }
   if(typeof publicListing!=='boolean'||publicListing&&!accountDb)throw Error('Public listing requires private account storage.');
-  return {lan,host,port,accountDb,publicListing,...pilotConfig({lan,publicOrigin,publicOriginFile,pilotInvite}),
-    ...familyRoomConfig({familyPassword,familyStateFile,pilotInvite})};
+  return {lan,host,port,accountDb,publicListing,...pilot,...family};
 }
 export function configFromEnv(env) {
   if(env.CS2_LAN!==undefined&&!['0','1'].includes(env.CS2_LAN))throw Error('CS2_LAN must be 0 or 1.');

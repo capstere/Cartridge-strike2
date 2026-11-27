@@ -58,7 +58,7 @@ export async function createLocalServer(options={}) {
     snapshotAccount(seat){
       const actor=seat?.actor,user=seat?.credential?.user;
       if(!user||!seat.admitted||seat.pending||!actor)return;
-      return {user,kills:actor.kills,deaths:actor.deaths,team:actor.team};
+      return {user,session:seat.credential.session,kills:actor.kills,deaths:actor.deaths,team:actor.team};
     }
     onLeave(client){
       const entry=this.accountMatch&&this.state.phase==='active'&&this.snapshotAccount(this.seats.get(client.sessionId));
@@ -75,12 +75,7 @@ export async function createLocalServer(options={}) {
         if(entry&&!players.has(entry.user))players.set(entry.user,entry);
       }
       const results=[...players.values()].map(entry=>({...entry,win:entry.team===winner}));
-      const mode=this.state.mode,map=this.state.mapId;
-      const persist=()=>accounts.store.recordMatch(id,mode,map,results);
-      try{persist();}catch{
-        // The same immutable result can be retried without granting XP twice.
-        this.clock.setTimeout(()=>{try{persist();}catch{console.error('Account match result could not be saved.');}},1000);
-      }
+      accounts.recordMatch(id,this.state.mode,this.state.mapId,results);
       this.accountMatch=null;
     }
     onDispose(){
@@ -186,7 +181,7 @@ export async function createLocalServer(options={}) {
         if(access.denied)return rejectHttp(res,...access.denied);
         if(pilot){
           pilotAuthorized=access.authenticated;
-          if(accounts){
+          if(accounts&&(admission||path==='/profile'||path==='/join'||path==='/fps/account.css'||path==='/src/fps/account-profile.mjs'||path.startsWith('/api/')||!pilotAuthorized)){
             ctx=accounts.context(req,access.origin);
             if(await accounts.handle(req,res,path,ctx))return;
           }
@@ -259,7 +254,7 @@ export async function createLocalServer(options={}) {
     httpServer.listen(port,host,()=>{policy=accessPolicy(config,httpServer.address().port);httpServer.off('error',reject);resolve();});
   });
   return {server,httpServer,transport,rooms:active,config,url:`http://${host}:${httpServer.address().port}`,
-    close:async()=>{await server.gracefullyShutdown(false);httpServer.closeIdleConnections();accounts?.store.close();}};
+    close:async()=>{await server.gracefullyShutdown(false);httpServer.closeIdleConnections();accounts?.close();}};
 }
 if(process.argv[1]===fileURLToPath(import.meta.url)){
   const local=await createLocalServer(configFromEnv(process.env));
