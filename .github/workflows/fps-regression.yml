@@ -2,7 +2,7 @@ name: FPS regression
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, develop/cartridge-strike-3]
   push:
     branches: [main]
   workflow_dispatch:
