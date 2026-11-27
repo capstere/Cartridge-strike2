@@ -1,5 +1,5 @@
 """Reduce private JSON to the scenario data needed for comparison; exclude room/session details."""
-import json, math, statistics
+import json, math
 from pathlib import Path
 import sys
 
@@ -90,3 +90,29 @@ if __name__=="__main__":
     (dst/"client.json").write_text(json.dumps(results,indent=2)+"\n")
     network=[row for f in sorted(inp.glob("server-*.json")) for row in server(f)]
     if network:(dst/"network.json").write_text(json.dumps(network,indent=2)+"\n")
+
+    mobile=inp/"online-mobile"/"mobile.json"
+    if mobile.exists():
+        m=json.loads(mobile.read_text())
+        if m["status"]!="PASS":raise ValueError("Local multiplayer touch flow failed")
+        keys=("scenario","map","physicalPhone","transport","date","revision","buildHash","browser","viewport","warmupMs","windowMs",
+              "renderedClients","sdkPeers","signInToFormMs","enterToWaitingMs","selectMapMs","startToPlayableMs","controls","measurement","reconnectMap","status")
+        summary={k:m[k] for k in keys}
+        summary["resultReason"]=m["completed"]["reason"]
+        summary["finalAuthorityRooms"]=0 # original harness asserts this before PASS
+        (dst/"online-mobile.json").write_text(json.dumps(summary,indent=2)+"\n")
+    lifecycle=inp/"lifecycle.json"
+    if lifecycle.exists():
+        raw=json.loads(lifecycle.read_text())
+        meta=json.loads(lifecycle.with_suffix(".meta.json").read_text())
+        measured=[r for r in raw if r["i"]>0]
+        def extent(key,rows=measured):
+            vals=[key(r) for r in rows]
+            return [min(vals),max(vals)]
+        summary={**meta,"warmupCycles":len(raw)-len(measured),"measuredCycles":len(measured),"status":"PASS",
+            "retainedGames":extent(lambda r:r["retained"]),"audioContexts":extent(lambda r:r["contexts"]),
+            "webAudioNodes":extent(lambda r:r["audioNodes"]),"domListeners":extent(lambda r:r["dom"]["jsEventListeners"]),
+            "residentInstances":extent(lambda r:r["instances"]),"liveOrAmbientVoices":extent(lambda r:r["voices"]+r["ambient"]),
+            "rafOwners":sorted({tuple(r["pending"]) for r in measured}),
+            "endpointGpuByMode":{mode:next(r["gpu"] for r in reversed(measured) if r["mode"]==mode) for mode in ("classic","endless")}}
+        (dst/"lifecycle.json").write_text(json.dumps(summary,indent=2)+"\n")

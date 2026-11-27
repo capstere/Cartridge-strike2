@@ -387,6 +387,780 @@
     "pageErrors": []
   },
   {
+    "game": "fps",
+    "input": "touch",
+    "repeat": 0,
+    "stamp": "2026-11-27T10:28:30.634Z",
+    "git": "3012a6378d75ead639d27e3ee5745b771f33f040",
+    "browser": "156.0.8078.79",
+    "device": "Raspberry Pi 5 Model B Rev 1.1",
+    "node": "v26.13.1",
+    "cache": "new browser context",
+    "temperatureC": [
+      45.2,
+      47.95
+    ],
+    "throttle": [
+      "throttled=0x0",
+      "throttled=0x0"
+    ],
+    "cpuFrequencyKHz": [
+      2400000,
+      2400000
+    ],
+    "load1m": [
+      0.29,
+      1.09
+    ],
+    "identity": {
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        493,
+        228
+      ],
+      "internalRenderBuffer": [
+        493,
+        228
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "ratio": 0.5849999785423279,
+      "dpr": 0.6499999761581421,
+      "baseFov": 76,
+      "fov": 76,
+      "map": "lvl-floor5-preppad-20261105",
+      "mode": "endless",
+      "quality": "low",
+      "actors": 10,
+      "residents": 4,
+      "weapon": "ar47",
+      "phase": "active",
+      "shaderWarmupMs": 0
+    },
+    "navigationToMenuVisibleMs": 1597.7,
+    "startButtonToControllableMs": 20128.7,
+    "navigationToControllableMs": 26732.8,
+    "startButtonToClassReadyMs": null,
+    "subresourceTransferBytesThroughPacingEnd": 47951602,
+    "navigationHtmlTransferBytes": 14827,
+    "postActionsHeap": {
+      "usedHeap": 227749353,
+      "totalHeap": 286815177
+    },
+    "metrics": {
+      "frameIntervalMs": {
+        "n": 157,
+        "p50": 63.8,
+        "p95": 78.3,
+        "p99": 109.6,
+        "max": 118,
+        "over33": 157,
+        "over50": 155,
+        "over100": 2
+      },
+      "renderSubmissionMs": {
+        "n": 158,
+        "p50": 55.3,
+        "p95": 60.7,
+        "p99": 69,
+        "max": 69.5,
+        "over33": 158,
+        "over50": 99,
+        "over100": 0
+      },
+      "drawCalls": {
+        "n": 158,
+        "p50": 1459,
+        "p95": 1545,
+        "p99": 1545,
+        "max": 1545
+      },
+      "triangles": {
+        "n": 158,
+        "p50": 776882,
+        "p95": 822392,
+        "p99": 822392,
+        "max": 822392
+      },
+      "ratio": {
+        "n": 158,
+        "p50": 0.455,
+        "p95": 0.585,
+        "p99": 0.585,
+        "max": 0.585
+      }
+    },
+    "actions": {
+      "observedRenderFrames": 134,
+      "sourceInputCount": 14,
+      "localAudioSourceStarts": 8,
+      "aliveSamples": 134,
+      "weapon": "ar47",
+      "magazineRange": [
+        27,
+        30
+      ],
+      "moveToFirstDisplacedRenderMs": 238.2,
+      "rushToFirstPoseAbove2PctMs": null,
+      "fireToFirstObservedReadyRenderMs": null,
+      "fireToFirstAmmoDropRenderMs": 298.7,
+      "fireToAudioCommandMs": 136.7,
+      "audioCommandMinusAmmoDropRenderMs": -162.0,
+      "reloadToFirstActiveRenderMs": 225.6,
+      "reloadToRefilledRenderMs": 2631.4,
+      "maxRushBlend": null,
+      "travelPathM": 4.59
+    },
+    "pageErrors": []
+  },
+  {
+    "game": "fps",
+    "input": "touch",
+    "repeat": 1,
+    "stamp": "2026-11-27T10:29:21.258Z",
+    "git": "3012a6378d75ead639d27e3ee5745b771f33f040",
+    "browser": "156.0.8078.79",
+    "device": "Raspberry Pi 5 Model B Rev 1.1",
+    "node": "v26.13.1",
+    "cache": "warm browser HTTP cache",
+    "temperatureC": [
+      49.05,
+      47.4
+    ],
+    "throttle": [
+      "throttled=0x0",
+      "throttled=0x0"
+    ],
+    "cpuFrequencyKHz": [
+      2400000,
+      2400000
+    ],
+    "load1m": [
+      1.09,
+      1.86
+    ],
+    "identity": {
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        493,
+        228
+      ],
+      "internalRenderBuffer": [
+        493,
+        228
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "ratio": 0.5849999785423279,
+      "dpr": 0.6499999761581421,
+      "baseFov": 76,
+      "fov": 76,
+      "map": "lvl-floor5-preppad-20261105",
+      "mode": "endless",
+      "quality": "low",
+      "actors": 10,
+      "residents": 4,
+      "weapon": "ar47",
+      "phase": "active",
+      "shaderWarmupMs": 0
+    },
+    "navigationToMenuVisibleMs": 1449.3,
+    "startButtonToControllableMs": 8230.7,
+    "navigationToControllableMs": 14111.3,
+    "startButtonToClassReadyMs": null,
+    "subresourceTransferBytesThroughPacingEnd": 10180922,
+    "navigationHtmlTransferBytes": 0,
+    "postActionsHeap": {
+      "usedHeap": 246373364,
+      "totalHeap": 304190092
+    },
+    "metrics": {
+      "frameIntervalMs": {
+        "n": 153,
+        "p50": 65.3,
+        "p95": 79.9,
+        "p99": 111,
+        "max": 111.4,
+        "over33": 153,
+        "over50": 153,
+        "over100": 2
+      },
+      "renderSubmissionMs": {
+        "n": 154,
+        "p50": 56.3,
+        "p95": 61,
+        "p99": 73.1,
+        "max": 73.6,
+        "over33": 154,
+        "over50": 108,
+        "over100": 0
+      },
+      "drawCalls": {
+        "n": 154,
+        "p50": 1521,
+        "p95": 1545,
+        "p99": 1545,
+        "max": 1545
+      },
+      "triangles": {
+        "n": 154,
+        "p50": 807664,
+        "p95": 822392,
+        "p99": 822392,
+        "max": 822392
+      },
+      "ratio": {
+        "n": 154,
+        "p50": 0.455,
+        "p95": 0.585,
+        "p99": 0.585,
+        "max": 0.585
+      }
+    },
+    "actions": {
+      "observedRenderFrames": 140,
+      "sourceInputCount": 14,
+      "localAudioSourceStarts": 10,
+      "aliveSamples": 140,
+      "weapon": "ar47",
+      "magazineRange": [
+        27,
+        30
+      ],
+      "moveToFirstDisplacedRenderMs": 248.9,
+      "rushToFirstPoseAbove2PctMs": null,
+      "fireToFirstObservedReadyRenderMs": null,
+      "fireToFirstAmmoDropRenderMs": 206.6,
+      "fireToAudioCommandMs": 141.0,
+      "audioCommandMinusAmmoDropRenderMs": -65.6,
+      "reloadToFirstActiveRenderMs": 207.8,
+      "reloadToRefilledRenderMs": 2593.0,
+      "maxRushBlend": null,
+      "travelPathM": 5.32
+    },
+    "pageErrors": []
+  },
+  {
+    "game": "fps",
+    "input": "touch",
+    "repeat": 2,
+    "stamp": "2026-11-27T10:29:58.284Z",
+    "git": "3012a6378d75ead639d27e3ee5745b771f33f040",
+    "browser": "156.0.8078.79",
+    "device": "Raspberry Pi 5 Model B Rev 1.1",
+    "node": "v26.13.1",
+    "cache": "warm browser HTTP cache",
+    "temperatureC": [
+      47.95,
+      48.5
+    ],
+    "throttle": [
+      "throttled=0x0",
+      "throttled=0x0"
+    ],
+    "cpuFrequencyKHz": [
+      2400000,
+      2400000
+    ],
+    "load1m": [
+      1.86,
+      2.34
+    ],
+    "identity": {
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        493,
+        228
+      ],
+      "internalRenderBuffer": [
+        493,
+        228
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "ratio": 0.5849999785423279,
+      "dpr": 0.6499999761581421,
+      "baseFov": 76,
+      "fov": 76,
+      "map": "lvl-floor5-preppad-20261105",
+      "mode": "endless",
+      "quality": "low",
+      "actors": 10,
+      "residents": 4,
+      "weapon": "ar47",
+      "phase": "active",
+      "shaderWarmupMs": 0
+    },
+    "navigationToMenuVisibleMs": 1358.6,
+    "startButtonToControllableMs": 7934.3,
+    "navigationToControllableMs": 14141.8,
+    "startButtonToClassReadyMs": null,
+    "subresourceTransferBytesThroughPacingEnd": 10180922,
+    "navigationHtmlTransferBytes": 0,
+    "postActionsHeap": {
+      "usedHeap": 266471420,
+      "totalHeap": 301894108
+    },
+    "metrics": {
+      "frameIntervalMs": {
+        "n": 141,
+        "p50": 70.1,
+        "p95": 83,
+        "p99": 108.6,
+        "max": 108.6,
+        "over33": 141,
+        "over50": 141,
+        "over100": 2
+      },
+      "renderSubmissionMs": {
+        "n": 142,
+        "p50": 59.8,
+        "p95": 65.5,
+        "p99": 75.4,
+        "max": 98.4,
+        "over33": 142,
+        "over50": 128,
+        "over100": 0
+      },
+      "drawCalls": {
+        "n": 142,
+        "p50": 1521,
+        "p95": 1545,
+        "p99": 1545,
+        "max": 1545
+      },
+      "triangles": {
+        "n": 142,
+        "p50": 807664,
+        "p95": 822392,
+        "p99": 822392,
+        "max": 822392
+      },
+      "ratio": {
+        "n": 142,
+        "p50": 0.455,
+        "p95": 0.585,
+        "p99": 0.585,
+        "max": 0.585
+      }
+    },
+    "actions": {
+      "observedRenderFrames": 131,
+      "sourceInputCount": 14,
+      "localAudioSourceStarts": 9,
+      "aliveSamples": 131,
+      "weapon": "ar47",
+      "magazineRange": [
+        27,
+        30
+      ],
+      "moveToFirstDisplacedRenderMs": 261.7,
+      "rushToFirstPoseAbove2PctMs": null,
+      "fireToFirstObservedReadyRenderMs": null,
+      "fireToFirstAmmoDropRenderMs": 227.7,
+      "fireToAudioCommandMs": 162.2,
+      "audioCommandMinusAmmoDropRenderMs": -65.5,
+      "reloadToFirstActiveRenderMs": 234.2,
+      "reloadToRefilledRenderMs": 2800.5,
+      "maxRushBlend": null,
+      "travelPathM": 5.36
+    },
+    "pageErrors": []
+  },
+  {
+    "game": "frontline",
+    "input": "desktop",
+    "repeat": 0,
+    "stamp": "2026-11-27T10:18:27.049Z",
+    "git": "f90b817d7ca919a264e631a7dcb7e25c96626470",
+    "browser": "156.0.8078.79",
+    "device": "Raspberry Pi 5 Model B Rev 1.1",
+    "node": "v26.13.1",
+    "cache": "new browser context",
+    "temperatureC": [
+      49.05,
+      51.8
+    ],
+    "throttle": [
+      "throttled=0x0",
+      "throttled=0x0"
+    ],
+    "cpuFrequencyKHz": [
+      2400000,
+      2400000
+    ],
+    "load1m": [
+      2.73,
+      2.28
+    ],
+    "identity": {
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        548,
+        253
+      ],
+      "internalRenderBuffer": [
+        549,
+        253
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "ratio": 0.6499999761581421,
+      "dpr": 0.6499999761581421,
+      "baseFov": 76,
+      "fov": 75.99679433244421,
+      "map": "sable",
+      "mode": "tdm",
+      "quality": "low",
+      "actors": 12,
+      "residents": null,
+      "weapon": "M4A1",
+      "phase": "playing",
+      "shaderWarmupMs": null
+    },
+    "navigationToMenuVisibleMs": 5863.7,
+    "startButtonToControllableMs": 66729.3,
+    "navigationToControllableMs": 73780.3,
+    "startButtonToClassReadyMs": 60060.4,
+    "subresourceTransferBytesThroughPacingEnd": 13752571,
+    "navigationHtmlTransferBytes": null,
+    "postActionsHeap": {
+      "usedHeap": 234918249,
+      "totalHeap": 251143837
+    },
+    "metrics": {
+      "frameIntervalMs": {
+        "n": 206,
+        "p50": 47.2,
+        "p95": 68.7,
+        "p99": 81.1,
+        "max": 143.9,
+        "over33": 193,
+        "over50": 74,
+        "over100": 1
+      },
+      "renderSubmissionMs": {
+        "n": 207,
+        "p50": 17,
+        "p95": 22.6,
+        "p99": 28.2,
+        "max": 31.2,
+        "over33": 0,
+        "over50": 0,
+        "over100": 0
+      },
+      "drawCalls": {
+        "n": 207,
+        "p50": 526,
+        "p95": 531,
+        "p99": 531,
+        "max": 535
+      },
+      "triangles": {
+        "n": 207,
+        "p50": 1768699,
+        "p95": 1780413,
+        "p99": 1788477,
+        "max": 1791547
+      },
+      "ratio": {
+        "n": 207,
+        "p50": 0.65,
+        "p95": 0.65,
+        "p99": 0.65,
+        "max": 0.65
+      }
+    },
+    "actions": {
+      "observedRenderFrames": 117,
+      "sourceInputCount": 10,
+      "localAudioSourceStarts": 2,
+      "aliveSamples": 117,
+      "weapon": "M4A1",
+      "magazineRange": [
+        28,
+        30
+      ],
+      "moveToFirstDisplacedRenderMs": 77.6,
+      "rushToFirstPoseAbove2PctMs": 40.2,
+      "fireToFirstObservedReadyRenderMs": 135,
+      "fireToFirstAmmoDropRenderMs": 135,
+      "fireToAudioCommandMs": 103,
+      "audioCommandMinusAmmoDropRenderMs": -32,
+      "reloadToFirstActiveRenderMs": 72.0,
+      "reloadToRefilledRenderMs": 2036.0,
+      "maxRushBlend": 1.01,
+      "travelPathM": 8.14
+    },
+    "pageErrors": []
+  },
+  {
+    "game": "frontline",
+    "input": "desktop",
+    "repeat": 1,
+    "stamp": "2026-11-27T10:30:41.513Z",
+    "git": "3012a6378d75ead639d27e3ee5745b771f33f040",
+    "browser": "156.0.8078.79",
+    "device": "Raspberry Pi 5 Model B Rev 1.1",
+    "node": "v26.13.1",
+    "cache": "new browser context",
+    "temperatureC": [
+      47.4,
+      49.6
+    ],
+    "throttle": [
+      "throttled=0x0",
+      "throttled=0x0"
+    ],
+    "cpuFrequencyKHz": [
+      2400000,
+      2400000
+    ],
+    "load1m": [
+      2.15,
+      2.26
+    ],
+    "identity": {
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        548,
+        253
+      ],
+      "internalRenderBuffer": [
+        549,
+        253
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "ratio": 0.6499999761581421,
+      "dpr": 0.6499999761581421,
+      "baseFov": 76,
+      "fov": 75.9950448334742,
+      "map": "sable",
+      "mode": "tdm",
+      "quality": "low",
+      "actors": 12,
+      "residents": null,
+      "weapon": "M4A1",
+      "phase": "playing",
+      "shaderWarmupMs": null
+    },
+    "navigationToMenuVisibleMs": 5800.9,
+    "startButtonToControllableMs": 67072.2,
+    "navigationToControllableMs": 74085,
+    "startButtonToClassReadyMs": 60508.7,
+    "subresourceTransferBytesThroughPacingEnd": 13752571,
+    "navigationHtmlTransferBytes": 2997576,
+    "postActionsHeap": {
+      "usedHeap": 241980324,
+      "totalHeap": 258560600
+    },
+    "metrics": {
+      "frameIntervalMs": {
+        "n": 201,
+        "p50": 47.5,
+        "p95": 67.4,
+        "p99": 99.8,
+        "max": 148.2,
+        "over33": 188,
+        "over50": 76,
+        "over100": 2
+      },
+      "renderSubmissionMs": {
+        "n": 202,
+        "p50": 17.3,
+        "p95": 25.7,
+        "p99": 29,
+        "max": 44.4,
+        "over33": 1,
+        "over50": 0,
+        "over100": 0
+      },
+      "drawCalls": {
+        "n": 202,
+        "p50": 527,
+        "p95": 531,
+        "p99": 531,
+        "max": 531
+      },
+      "triangles": {
+        "n": 202,
+        "p50": 1749665,
+        "p95": 1768029,
+        "p99": 1768029,
+        "max": 1768029
+      },
+      "ratio": {
+        "n": 202,
+        "p50": 0.65,
+        "p95": 0.65,
+        "p99": 0.65,
+        "max": 0.65
+      }
+    },
+    "actions": {
+      "observedRenderFrames": 117,
+      "sourceInputCount": 10,
+      "localAudioSourceStarts": 2,
+      "aliveSamples": 117,
+      "weapon": "M4A1",
+      "magazineRange": [
+        28,
+        30
+      ],
+      "moveToFirstDisplacedRenderMs": 78.7,
+      "rushToFirstPoseAbove2PctMs": 54.5,
+      "fireToFirstObservedReadyRenderMs": 206.7,
+      "fireToFirstAmmoDropRenderMs": 206.7,
+      "fireToAudioCommandMs": 163.9,
+      "audioCommandMinusAmmoDropRenderMs": -42.8,
+      "reloadToFirstActiveRenderMs": 30.8,
+      "reloadToRefilledRenderMs": 2062.0,
+      "maxRushBlend": 1.03,
+      "travelPathM": 8.14
+    },
+    "pageErrors": []
+  },
+  {
+    "game": "frontline",
+    "input": "desktop",
+    "repeat": 2,
+    "stamp": "2026-11-27T10:32:15.223Z",
+    "git": "3012a6378d75ead639d27e3ee5745b771f33f040",
+    "browser": "156.0.8078.79",
+    "device": "Raspberry Pi 5 Model B Rev 1.1",
+    "node": "v26.13.1",
+    "cache": "warm browser HTTP cache",
+    "temperatureC": [
+      49.6,
+      49.6
+    ],
+    "throttle": [
+      "throttled=0x0",
+      "throttled=0x0"
+    ],
+    "cpuFrequencyKHz": [
+      2400000,
+      2400000
+    ],
+    "load1m": [
+      2.26,
+      3.26
+    ],
+    "identity": {
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        548,
+        253
+      ],
+      "internalRenderBuffer": [
+        549,
+        253
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "ratio": 0.6499999761581421,
+      "dpr": 0.6499999761581421,
+      "baseFov": 76,
+      "fov": 75.99263965992341,
+      "map": "sable",
+      "mode": "tdm",
+      "quality": "low",
+      "actors": 12,
+      "residents": null,
+      "weapon": "M4A1",
+      "phase": "playing",
+      "shaderWarmupMs": null
+    },
+    "navigationToMenuVisibleMs": 4097.6,
+    "startButtonToControllableMs": 17212.1,
+    "navigationToControllableMs": 22403.8,
+    "startButtonToClassReadyMs": 11995.0,
+    "subresourceTransferBytesThroughPacingEnd": 1200,
+    "navigationHtmlTransferBytes": 0,
+    "postActionsHeap": {
+      "usedHeap": 256572481,
+      "totalHeap": 309706917
+    },
+    "metrics": {
+      "frameIntervalMs": {
+        "n": 193,
+        "p50": 49.4,
+        "p95": 76,
+        "p99": 127.2,
+        "max": 156.6,
+        "over33": 181,
+        "over50": 89,
+        "over100": 2
+      },
+      "renderSubmissionMs": {
+        "n": 194,
+        "p50": 17.4,
+        "p95": 25,
+        "p99": 40.2,
+        "max": 45.2,
+        "over33": 2,
+        "over50": 0,
+        "over100": 0
+      },
+      "drawCalls": {
+        "n": 194,
+        "p50": 534,
+        "p95": 535,
+        "p99": 535,
+        "max": 535
+      },
+      "triangles": {
+        "n": 194,
+        "p50": 1770167,
+        "p95": 1785963,
+        "p99": 1785965,
+        "max": 1785967
+      },
+      "ratio": {
+        "n": 194,
+        "p50": 0.65,
+        "p95": 0.65,
+        "p99": 0.65,
+        "max": 0.65
+      }
+    },
+    "actions": {
+      "observedRenderFrames": 109,
+      "sourceInputCount": 10,
+      "localAudioSourceStarts": 2,
+      "aliveSamples": 109,
+      "weapon": "M4A1",
+      "magazineRange": [
+        28,
+        30
+      ],
+      "moveToFirstDisplacedRenderMs": 62.1,
+      "rushToFirstPoseAbove2PctMs": 37.5,
+      "fireToFirstObservedReadyRenderMs": 192.3,
+      "fireToFirstAmmoDropRenderMs": 192.3,
+      "fireToAudioCommandMs": 159.5,
+      "audioCommandMinusAmmoDropRenderMs": -32.8,
+      "reloadToFirstActiveRenderMs": 44.8,
+      "reloadToRefilledRenderMs": 2032.1,
+      "maxRushBlend": 1.04,
+      "travelPathM": 8.0
+    },
+    "pageErrors": []
+  },
+  {
     "game": "frontline",
     "input": "touch",
     "repeat": 0,
@@ -770,135 +1544,6 @@
       "reloadToRefilledRenderMs": 2100.4,
       "maxRushBlend": 1.05,
       "travelPathM": 8.15
-    },
-    "pageErrors": []
-  },
-  {
-    "game": "frontline",
-    "input": "desktop",
-    "repeat": 0,
-    "stamp": "2026-11-27T10:18:27.049Z",
-    "git": "f90b817d7ca919a264e631a7dcb7e25c96626470",
-    "browser": "156.0.8078.79",
-    "device": "Raspberry Pi 5 Model B Rev 1.1",
-    "node": "v26.13.1",
-    "cache": "new browser context",
-    "temperatureC": [
-      49.05,
-      51.8
-    ],
-    "throttle": [
-      "throttled=0x0",
-      "throttled=0x0"
-    ],
-    "cpuFrequencyKHz": [
-      2400000,
-      2400000
-    ],
-    "load1m": [
-      2.73,
-      2.28
-    ],
-    "identity": {
-      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
-      "buffer": [
-        548,
-        253
-      ],
-      "internalRenderBuffer": [
-        549,
-        253
-      ],
-      "viewport": [
-        844,
-        390
-      ],
-      "ratio": 0.6499999761581421,
-      "dpr": 0.6499999761581421,
-      "baseFov": 76,
-      "fov": 75.99679433244421,
-      "map": "sable",
-      "mode": "tdm",
-      "quality": "low",
-      "actors": 12,
-      "residents": null,
-      "weapon": "M4A1",
-      "phase": "playing",
-      "shaderWarmupMs": null
-    },
-    "navigationToMenuVisibleMs": 5863.7,
-    "startButtonToControllableMs": 66729.3,
-    "navigationToControllableMs": 73780.3,
-    "startButtonToClassReadyMs": 60060.4,
-    "subresourceTransferBytesThroughPacingEnd": 13752571,
-    "navigationHtmlTransferBytes": null,
-    "postActionsHeap": {
-      "usedHeap": 234918249,
-      "totalHeap": 251143837
-    },
-    "metrics": {
-      "frameIntervalMs": {
-        "n": 206,
-        "p50": 47.2,
-        "p95": 68.7,
-        "p99": 81.1,
-        "max": 143.9,
-        "over33": 193,
-        "over50": 74,
-        "over100": 1
-      },
-      "renderSubmissionMs": {
-        "n": 207,
-        "p50": 17,
-        "p95": 22.6,
-        "p99": 28.2,
-        "max": 31.2,
-        "over33": 0,
-        "over50": 0,
-        "over100": 0
-      },
-      "drawCalls": {
-        "n": 207,
-        "p50": 526,
-        "p95": 531,
-        "p99": 531,
-        "max": 535
-      },
-      "triangles": {
-        "n": 207,
-        "p50": 1768699,
-        "p95": 1780413,
-        "p99": 1788477,
-        "max": 1791547
-      },
-      "ratio": {
-        "n": 207,
-        "p50": 0.65,
-        "p95": 0.65,
-        "p99": 0.65,
-        "max": 0.65
-      }
-    },
-    "actions": {
-      "observedRenderFrames": 117,
-      "sourceInputCount": 10,
-      "localAudioSourceStarts": 2,
-      "aliveSamples": 117,
-      "weapon": "M4A1",
-      "magazineRange": [
-        28,
-        30
-      ],
-      "moveToFirstDisplacedRenderMs": 77.6,
-      "rushToFirstPoseAbove2PctMs": 40.2,
-      "fireToFirstObservedReadyRenderMs": 135,
-      "fireToFirstAmmoDropRenderMs": 135,
-      "fireToAudioCommandMs": 103,
-      "audioCommandMinusAmmoDropRenderMs": -32,
-      "reloadToFirstActiveRenderMs": 72.0,
-      "reloadToRefilledRenderMs": 2036.0,
-      "maxRushBlend": 1.01,
-      "travelPathM": 8.14
     },
     "pageErrors": []
   }

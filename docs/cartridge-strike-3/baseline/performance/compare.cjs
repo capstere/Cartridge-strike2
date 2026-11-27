@@ -8,7 +8,7 @@ const {tmpdir}=require('node:os');
 const root=process.cwd(), output=process.env.CS3_BENCH_OUT||fs.mkdtempSync(path.join(tmpdir(),'cs3-comparison-'));
 console.log('Private raw result directory',output);
 const { chromium }=require(path.join(root,'frontline/source/tools/dev/node_modules/playwright-core'));
-const [kind,profile='desktop',repeats='3']=process.argv.slice(2);
+const [kind,profile='desktop',repeats='3',offset='0']=process.argv.slice(2);
 if(!['fps','frontline'].includes(kind)||!['desktop','touch'].includes(profile))throw Error('Usage: node compare.cjs fps|frontline desktop|touch [repeats]');
 const touch=profile==='touch', cs2=kind==='fps';
 const mime={'.html':'text/html','.mjs':'text/javascript','.js':'text/javascript','.json':'application/json','.css':'text/css','.ogg':'audio/ogg','.mp3':'audio/mpeg','.png':'image/png','.jpg':'image/jpeg','.webp':'image/webp','.wasm':'application/wasm','.svg':'image/svg+xml','.woff2':'font/woff2'};
@@ -55,9 +55,9 @@ async function controls(page){
   await reload.tap();
   await sleep(3200);await cd.detach();
 }
-async function run(ctx,base,i,version){
+async function run(ctx,base,i,version,cacheWarm){
   const page=await ctx.newPage();
-  const row={kind,profile,repeat:i,cache:i?'warm browser HTTP cache':'new browser context',version,stamp:new Date().toISOString(),before:environment(),errors:[],startup:{}};
+  const row={kind,profile,repeat:i,cache:cacheWarm?'warm browser HTTP cache':'new browser context',version,stamp:new Date().toISOString(),before:environment(),errors:[],startup:{}};
   const capture=()=>page.evaluate(()=>performance.now());
   const mark=async(s)=>{row.startup[s]=await capture();console.log(kind,profile,i,s,Math.round(row.startup[s]));};
   page.setDefaultTimeout(140000);
@@ -128,6 +128,6 @@ async function run(ctx,base,i,version){
       localStorage.setItem('dc_settings',JSON.stringify({quality:'low',sv:8,lang:'en',fov:76,eco:false,dynres:false,tcAuto:false}));
       localStorage.setItem('cartridge-settings',JSON.stringify({mode:'endless',graphics:'low',volume:.55,mobileAutoFire:false}));
     });
-    for(let i=0;i<Number(repeats);i++)await run(ctx,base,i,browser.version());
+    for(let i=0;i<Number(repeats);i++)await run(ctx,base,i+Number(offset),browser.version(),i>0);
   }finally{await ctx?.close();await browser?.close();server.closeAllConnections();server.close();}
 })().catch(err=>{console.error(err);process.exitCode=1;});

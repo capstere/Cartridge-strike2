@@ -1,8 +1,20 @@
 {
   "complete": false,
-  "acceptedClientRepeats": {"cs2Desktop": 3, "cs2Touch": 0, "frontlineDesktop": 1, "frontlineTouch": 3},
-  "acceptedAuthorityRepeats": {"loopback": 1, "injected100ms": 0},
-  "pending": ["remaining donor desktop repeats", "CS2 touch repeats with contextual Reload", "additional 90 s authority windows", "normal two-seat emulated touch match", "20-cycle lifecycle"],
+  "acceptedClientRepeats": {
+    "cs2Desktop": 3,
+    "cs2Touch": 3,
+    "frontlineDesktop": 3,
+    "frontlineTouch": 3
+  },
+  "acceptedAuthorityRepeats": {
+    "loopback": 3,
+    "injected100ms": 1
+  },
+  "pending": [
+    "20-cycle lifecycle",
+    "two additional 100 ms authority repeats"
+  ],
   "excluded": "excluded.json",
-  "physicalPhones": "UNMEASURED"
+  "physicalPhones": "UNMEASURED",
+  "onlineMobile": "PASS"
 }

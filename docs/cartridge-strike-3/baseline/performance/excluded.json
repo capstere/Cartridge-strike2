@@ -80,5 +80,12 @@
     "git": "f90b817d7ca919a264e631a7dcb7e25c96626470",
     "status": "excluded",
     "reason": "The initial 5 s warmup and 30 s measurement failed the existing composite active AI movement/combat assertion. The fixture did not emit the individual counts on this attempt. Retain every activity assertion and repeat with the established 90 s TDM workload."
+  },
+  {
+    "kind": "frontline",
+    "profile": "desktop",
+    "repeat": 1,
+    "status": "incomplete",
+    "reason": "Process terminated by SIGTERM while loading the second desktop repeat. It produced no measurements or JSON and the cause remains unverified. A fresh isolated context supplied two remaining repeats."
   }
 ]
