@@ -122,7 +122,10 @@
       "exit": "Two-client old and new access, private credentials protected, real persistent accounts.",
       "status": "IN_PROGRESS",
       "branch": "cs3/04-account-access",
-      "baseline": "adb3cdf6c7c0a8721cecc1db30602eea1fe200f6"
+      "baseline": "adb3cdf6c7c0a8721cecc1db30602eea1fe200f6",
+      "pullRequests": [
+        55
+      ]
     },
     {
       "id": "CS3-05",
@@ -165,13 +168,18 @@
       "tests": "build-network --check, compact-arena/owner-door-traversal tests, multimap-browser/recovery, asset-memory and complete matches",
       "exit": "Original maps preserved. All nine have a source ID, capability assessment and explicit disposition. Each offered map passes versioned collision/nav/void, mode eligibility, spawn, lifecycle and measured budget.",
       "status": "IN_PROGRESS",
-      "branch": "cs3/07-reference-maps",
+      "branch": "cs3/07-candidate-environments",
       "pullRequests": [
-        52
+        52,
+        56
       ],
       "workBranches": [
         "cs3/07-reference-maps",
-        "cs3/07-meltem-art"
+        "cs3/07-meltem-art",
+        "cs3/07-candidate-environments"
+      ],
+      "mergedSlices": [
+        "b7d303b44b147e671b033f6519e16abe4376ee0f"
       ]
     },
     {

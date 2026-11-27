@@ -155,6 +155,7 @@ if map_id in ('embruns','tephra'):
     if lamp['version']!=1 or lamp['id']!=map_id or not (0<count<=500000) or len(base64.b64decode(lamp['rgba']))!=count*4:
         raise ValueError('Map light capture differs from its original source geometry.')
     shutil.copyfile(light_source,geometry/'lighting.json.gz')
+    subprocess.run([sys.executable,Path(__file__).with_name('ground.py'),map_id,raw,geometry/'ground.bin.gz'],check=True)
 if map_id=='meltem':
     shutil.copyfile("frontline/source/assets/sfx/amb_meltem/a_bed.mp3",geometry/"sea.mp3")
 shutil.copyfile(Path("frontline/source/assets/maps")/(map_id+".webp"),geometry.parent/(map_id+".webp"))

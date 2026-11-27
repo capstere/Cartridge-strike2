@@ -33,7 +33,7 @@ export function prepareClassicRound(room,advanceEpoch=true){
     if(advanceEpoch)seat.epoch++;
     a.controlEpoch=seat.epoch;a.lifeId++;
     seat.lastSelect=seat.lastFire=seat.lastReload=seat.lastSampleTick=seat.lastShotStamp=0;
-    seat.trigger=seat.aim=seat.releaseInteract=false;seat.interactUntil=0;
+    seat.holdThrow=seat.trigger=seat.aim=seat.releaseInteract=false;seat.interactUntil=0;
     a.aimAmount=0;a.aiming=false;
     if(sid)room.inputs.get(sid).clear();
     seat.lifeStartedAt=room.clock.elapsedTime;seat.diedAtMs=0;

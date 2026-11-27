@@ -1,0 +1,47 @@
+{
+  "commit": "5f699e01fdd76d964765d801e9e44cfdfaee8fcb",
+  "workingTreeClean": true,
+  "browser": "156.0.8078.79",
+  "scenarios": [
+    {
+      "input": "desktop",
+      "locale": "sv-SE",
+      "menuViewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "matchViewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "maps": [
+        "floor5-prepared",
+        "meltem",
+        "embruns",
+        "tephra"
+      ],
+      "startedAt": "2026-11-27T15:57:28.512Z",
+      "completedAt": "2026-11-27T15:59:16.135Z"
+    },
+    {
+      "input": "touch",
+      "locale": "fr-FR",
+      "menuViewport": {
+        "width": 390,
+        "height": 844
+      },
+      "matchViewport": {
+        "width": 844,
+        "height": 390
+      },
+      "maps": [
+        "floor5-prepared",
+        "meltem",
+        "embruns",
+        "tephra"
+      ],
+      "startedAt": "2026-11-27T15:59:16.702Z",
+      "completedAt": "2026-11-27T16:00:31.823Z"
+    }
+  ]
+}

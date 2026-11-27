@@ -1,6 +1,7 @@
 import {createReferenceEnvironment,applyReferenceWind} from './reference-environment.mjs';
 import * as THREE from '../../vendor/three/three.module.js';
 import {referenceLighting} from './reference-lighting.mjs';
+import {referenceGround} from './reference-ground.mjs';
 import {emitTephraLightning} from './tephra-ambience.mjs';
 import {freezeStaticTransforms} from './render-engine.mjs?v=6.1.2';
 
@@ -38,7 +39,7 @@ function unpack(bytes,materials,root){
 }
 async function readBatch(name,signal,folder){
   const response=await fetch(new URL(name+'.bin.gz',folder),{signal});
-  if(!response.ok)throw Error('Map geometry could not be loaded.');
+  if(!response.ok)throw Error('Map data could not be loaded.');
   const body=await response.arrayBuffer(),header=new Uint8Array(body,0,2);
   if(header[0]!==31||header[1]!==139)return body; // already decoded by HTTP
   return new Response(new Blob([body]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();
@@ -49,13 +50,12 @@ export function referenceScene(scene,world,settings){
   const folder=new URL('../../assets/fps/maps/'+id+'/',import.meta.url);
   const textureFiles=id==='meltem'?commonTextures:{
     plaster:'../meltem/plaster.webp',stone:'../meltem/stone.webp',wood:commonTextures.wood,signs:'signs.webp',
-    ground:id==='tephra'?'ash.webp':'../meltem/pavers.webp',
     ...(id==='tephra'?{lava:'lava.webp',basalt:'basalt.webp',moss:'moss.webp',panel:'panel.webp'}:{})
   };
   const abort=new AbortController(),root=new THREE.Group(),detail=new THREE.Group();
   root.name=name;detail.name=name+' fine detail';root.add(detail);scene.add(root);
   const materials={},textures=[];
-  const palette={...(id==='meltem'?{cyfol:0xffffff,cyflag:0xffffff}:{}),...(id==='tephra'?{basalt:0xffffff,moss:0xffffff,panel:0xffffff}:{}),color:0xffffff,plaster:0xffffff,stone:0xffffff,wood:0xffffff,ground:0xdfd7c1,glass:0x82b2ce,signs:0xffffff,decals:0xffffff};
+  const palette={...(id==='meltem'?{cyfol:0xffffff,cyflag:0xffffff}:{}),...(id==='tephra'?{basalt:0xffffff,moss:0xffffff,panel:0xffffff}:{}),color:0xffffff,plaster:0xffffff,stone:0xffffff,wood:0xffffff,ground:id==='meltem'?0xdfd7c1:0xffffff,glass:0x82b2ce,signs:0xffffff,decals:0xffffff};
   for(const [k,color] of Object.entries(palette))materials[k]=new THREE.MeshLambertMaterial({color,vertexColors:true});
   materials.glass.transparent=true;materials.glass.opacity=.74;
   Object.assign(materials.decals,{transparent:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-4,polygonOffsetUnits:-4});
@@ -87,8 +87,10 @@ export function referenceScene(scene,world,settings){
     pendingTier={tier,request};return request;
   }
 
-  const lightReady=id==='meltem'?null:referenceLighting({id,folder,signal:abort.signal,
-    materials,own:textures,disposed:()=>disposed});
+  const lightReady=id==='meltem'?null:Promise.all([
+    referenceLighting({id,folder,signal:abort.signal,materials,own:textures,disposed:()=>disposed}),
+    referenceGround({id,bytes:readBatch('ground',abort.signal,folder),material:materials.ground,own:textures,disposed:()=>disposed})
+  ]);
   function loadFine(){
     if(!fineBatch)fineBatch=readBatch('detail',abort.signal,folder).then(bytes=>{
       if(!disposed){unpack(bytes,materials,detail);freezeStaticTransforms(detail);}

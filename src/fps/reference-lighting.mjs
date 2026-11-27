@@ -23,7 +23,9 @@ export async function referenceLighting({id,folder,signal,materials,own,disposed
   };
   for(const material of Object.values(materials)){
     if(!material.isMeshLambertMaterial)continue;
-    material.onBeforeCompile=shader=>{
+    const previous=material.onBeforeCompile.bind(material);
+    material.onBeforeCompile=(shader,renderer)=>{
+      previous(shader,renderer);
       Object.assign(shader.uniforms,uniforms);
       shader.vertexShader=shader.vertexShader.replace('#include <common>',
         '#include <common>\nvarying vec3 sourceLightPosition;').replace('#include <project_vertex>',

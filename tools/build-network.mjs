@@ -22,8 +22,8 @@ const knockdownFiles=['src/fps/character-actors.mjs','src/fps/character-library.
 const coastalAudio=Object.entries(coastalRecordings).flatMap(([id,takes])=>Object.keys(takes).map(take=>coastalClipPath(id,take)));
 const mapAssets={
   meltem:['plaster.webp','stone.webp','pavers.webp','cyfol.webp','cyflag.webp'],
-  embruns:['coarse.bin.gz','lighting.json.gz'],
-  tephra:['lighting.json.gz','ash.webp','basalt.webp','lava.webp','moss.webp','panel.webp']
+  embruns:['coarse.bin.gz','lighting.json.gz','ground.bin.gz'],
+  tephra:['ground.bin.gz','lighting.json.gz','ash.webp','basalt.webp','lava.webp','moss.webp','panel.webp']
 };
 const mappedFiles=Object.entries(mapAssets).flatMap(([id,surfaces])=>[
   'assets/fps/maps/'+id+'.webp',
@@ -34,12 +34,14 @@ const referenceRuntime=['src/fps/reference-world.mjs','src/fps/reference-terrain
   'src/fps/coastal-ambience.mjs','src/fps/coastal-recordings.mjs','src/fps/tephra-ambience.mjs',...coastalAudio,
   ...Object.keys(tephraRecordings).map(take=>coastalClipPath('tephra',take)),
   'credits.html','licenses/riposte-MIT.txt',
-  'src/fps/reference-environment.mjs','src/fps/reference-volcano.mjs','src/fps/reference-eruption.mjs','src/fps/reference-lighting.mjs',...mappedFiles];
+  'src/fps/reference-environment.mjs','src/fps/reference-volcano.mjs','src/fps/reference-eruption.mjs','src/fps/reference-lighting.mjs','src/fps/reference-ground.mjs',...mappedFiles];
 const accessCatalog='shared/multiplayer/access-english.mjs';
 const deploymentFiles=['src/fps/deployment-countdown.mjs',
   ...['ui_tick','r_beep-1','st_start'].map(name=>'assets/fps/audio/riposte-'+name+'.mp3')];
 const frontendFiles=[...deploymentFiles,'src/fps/game-english.mjs','src/fps/english-ui.mjs','src/fps/solo-maps.mjs','src/fps/menu-navigation.mjs','fps/routes.css','furniture-editor/build/environment-art.mjs'];
-const rushPresentation=['src/fps/mobile-controls.mjs','src/fps/presentation-hands.mjs'];
+const rushPresentation=['src/fps/mobile-controls.mjs','src/fps/gamepad-controls.mjs','src/fps/presentation-hands.mjs',
+  'src/fps/strike-kit-models.mjs','src/fps/model-primitives.mjs','src/fps/view-surface.mjs',
+  'src/fps/grenade-assist.mjs','src/fps/action-audio.mjs','src/fps/reload-foley.mjs','src/fps/effects.mjs','src/fps/focus-hud.mjs','fps/focus-hud.css'];
 const rocketPresentation=['src/fps/action-visuals.mjs','src/fps/audio.mjs'];
 const shotAudioFiles=['assets/fps/audio/ffsl-f_bolt-1.mp3','assets/fps/audio/ffsl-f_pump-1.mp3',
   'assets/fps/audio/riposte-f_pin.mp3','src/fps/audio.mjs','src/fps/riposte-audio.mjs','src/fps/shot-audio.mjs','src/fps/shot-timing.mjs',

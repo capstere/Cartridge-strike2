@@ -4,6 +4,10 @@ const $ = id => document.getElementById(id);
 const SECONDARY = ['buy', 'grenade', 'sneak', 'drop'];
 export const normalizeHudMode = value => value === 'full' ? 'full' : 'clean';
 
+export function isLowAmmo(weapon,item) {
+  return !!weapon?.magazine && item?.ammo<weapon.magazine && item.ammo<=Math.max(2,Math.floor(weapon.magazine*.2));
+}
+
 export function focusHudSettings(settings) {
   const mode = normalizeHudMode(settings.hudMode);
   return `<label class="setting">HUD layout <select data-setting="hudMode" aria-label="HUD layout"><option value="clean" ${mode === 'clean' ? 'selected' : ''}>Clean · recommended</option><option value="full" ${mode === 'full' ? 'selected' : ''}>Full · all panels</option></select></label><p class="setting-note">Clean shows health, ammo and objectives. Tap More for extra mobile controls. Full shows all panels.</p><p class="focus-session-summary" hidden></p>`;
@@ -11,8 +15,8 @@ export function focusHudSettings(settings) {
 
 /** Presentation only. Reuses existing controls/listeners and never changes Game. */
 export class FocusHud {
-  constructor({ settings, mobile, getGame, getModal, onMap, onStats, onRadio, networkMode = false }) {
-    Object.assign(this, { settings, mobile, getGame, getModal, onMap, onStats, onRadio, networkMode });
+  constructor({ settings, mobile, getGame, getModal, onMap, onStats, onRadio, onInspect, networkMode = false }) {
+    Object.assign(this, { settings, mobile, getGame, getModal, onMap, onStats, onRadio, onInspect, networkMode });
     this.settings.hudMode = normalizeHudMode(settings.hudMode);
     this.mode = null; this.expanded = false; this.game = null; this.weapon = null;
     this.inventoryUntil = 0; this.placements = [];
@@ -51,6 +55,8 @@ export class FocusHud {
       if (action !== 'sneak') button.addEventListener('pointerup', () => this.setExpanded(false));
     }
     const utilities = [['karta', 'MAP', 'Toggle tactical map', () => this.onMap()]];
+    utilities.push(['rush','RUSH','Sprint on the next forward stick movement',()=>{this.mobile.runButton=true;}]);
+    if(this.onInspect)utilities.push(['inspect','INSPECT','Inspect held item',this.onInspect]);
     if (this.onRadio) utilities.push(['radio', 'RADIO', 'Open team radio', () => this.onRadio()]);
     utilities.push(['resultat', 'STATS', 'Pause and view session stats', () => this.onStats()]);
     for (const [id, label, name, action] of utilities) {
@@ -80,7 +86,7 @@ export class FocusHud {
     this.reset(); this.mode = mode;
     document.documentElement.dataset.hud = mode;
     if (this.more) {
-      this.more.hidden = mode !== 'clean' && !this.networkMode;
+      this.more.hidden = false;
       // Move actual controls, not clones, preserving multi-pointer capture and
       // existing buy/throw/hold listeners. Full mode restores exact DOM positions.
       for (const { button, marker } of this.placements) {
@@ -96,7 +102,7 @@ export class FocusHud {
 
   setExpanded(value) {
     const g = this.getGame();
-    const next = !!value && (this.mode === 'clean' || this.networkMode) && !!g?.player?.alive && !this.getModal();
+    const next = !!value && !!g?.player?.alive && !this.getModal();
     if (!this.drawer) return;
     if (this.expanded !== next && !this.networkMode) this.mobile.clear();
     this.expanded = next; this.drawer.hidden = !next;
@@ -127,7 +133,7 @@ export class FocusHud {
     root.classList.toggle('hud-freeplay', g.config.mode === 'endless' && $('control-card').hidden);
     root.classList.toggle('hud-low-health', p.alive && p.hp <= 30);
     const w = WEAPONS[p.weapon], item = g.item(p);
-    root.classList.toggle('hud-low-ammo', !!w?.magazine && item?.ammo <= Math.max(2, Math.floor(w.magazine * .2)));
+    root.classList.toggle('hud-low-ammo', isLowAmmo(w,item));
     if (g !== this.game || p.weapon !== this.weapon) {
       this.game = g; this.weapon = p.weapon; this.inventoryUntil = g.state.time + 2;
     }
@@ -142,7 +148,7 @@ export class FocusHud {
       }
     }
     if (!this.mobile.enabled) return;
-    this.more.hidden = (!this.networkMode && this.mode !== 'clean') || !p.alive;
+    this.more.hidden = !p.alive;
     const firearm = ['primary', 'pistol'].includes(w?.slot);
     this.contextButton('reload', firearm && (p.reloadUntil || (item && item.ammo < w.magazine)));
     let interact = !!p.action || this.mobile.state.interact;

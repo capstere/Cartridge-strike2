@@ -119,3 +119,139 @@ test('only a valid admission may outlive a 500 ms history window during weapon r
  assert.equal(lag.metrics.live,1);
  assert.equal(lag.metrics.reasons['aged during recovery'],1);
 });
+
+test('a coalesced crouch tap and a held cartridge replicate to both seats; control loss drops a live fuse once',{timeout:18000},async t=>{
+ const local=await createLocalServer({testMatch:{continuous:true},port:0});
+ let host,peer;
+ t.after(async()=>{await Promise.allSettled([host?.leave(),peer?.leave()]);await local.close();});
+ const sdk=new Client(local.url,{headers:{Origin:local.url}});
+ host=await ready(await sdk.create('private-fps',options));
+ peer=await ready(await sdk.joinById(host.roomId,options));
+ const room=[...local.rooms][0],seat=room.seats.get(host.sessionId),actor=seat.actor;
+ const snapshots=()=>[own(host),peer.state.actors.get(actor.id)];
+ Object.assign(actor,{x:20,y:0,z:-18,onGround:true});
+ const sprint={forward:1,sprint:true,yaw:Math.PI};
+ const start=performance.now();
+ while(actor.rushWeight<.78){assert(performance.now()-start<2500);send(host,sprint);await delay(16);}
+ const fixed=room.fixedTick,queue=room.inputs.get(host.sessionId);
+ let coalesced=false;
+ room.fixedTick=function(){
+   if(!coalesced && queue.size<2)return;
+   fixed.call(this);coalesced=true;
+ };
+ try{
+   send(host,{...sprint,crouch:true,crouchEdge:true});send(host,{crouch:false,crouchEdge:false});
+   await until(()=>snapshots().every(a=>a.crouching&&a.handling.slideUntil>0),'both peers observed the crouch tap after release');
+   assert.equal(snapshots()[0].handling.slideUntil,snapshots()[1].handling.slideUntil);
+ }finally{room.fixedTick=fixed;}
+ await until(()=>snapshots().every(a=>a.handling.slideUntil===0),'slide expires on both seats');
+ const epochs={lifeId:actor.lifeId,controlEpoch:seat.epoch};
+ host.send('select',{slot:'he',serial:1,...epochs});await until(()=>own(host).weapon==='he','normal selection');
+ await delay(270);
+ const received=[[],[]];
+ for(const [i,r] of [host,peer].entries())r.onMessage('events',batch=>received[i].push(...batch.filter(e=>e.actorId===actor.id && ['throw','cartridge-latch'].includes(e.type))));
+ send(host,{fire:true,fireEdge:true,holdThrow:true,fireId:1});
+ await until(()=>snapshots().every(a=>a.handling.cartridgeFuse>0),'both peers observe live held fuse');
+ assert.equal(room.sim.game.state.grenades.length,0);assert.equal(own(host).he,1);
+ const deadline=own(host).handling.cartridgeFuse;
+ host.send('controls',{enabled:false,...epochs});
+ await until(()=>received.every(events=>events.some(e=>e.type==='throw')),'both peers saw the drop');
+ const actionId=[actor.id,actor.lifeId,seat.epoch,1].join(':');
+ for(const events of received){assert.deepEqual(events.map(e=>e.type),['cartridge-latch','throw']);assert(events.every(e=>e.actionId===actionId));}
+ for(const r of [host,peer]){const a=r.state.actors.get(actor.id);assert.equal(a.he,0);assert.equal(a.handling.cartridgeStart,0);assert.equal([...r.state.grenades.values()][0].deadline,deadline);}
+ host.send('controls',{enabled:true,...epochs});send(host,{fireId:1,holdThrow:false});
+ await delay(75);assert.equal(received[1].length,2);assert.equal(room.metrics.invalid,0);
+});
+
+test('interrupting a cartridge with a rifle switch needs a fresh trigger on the authority',{timeout:15000},async t=>{
+ const local=await createLocalServer({testMatch:{continuous:true},port:0});
+ let host;
+ t.after(async()=>{await host?.leave();await local.close();});
+ const sdk=new Client(local.url,{headers:{Origin:local.url}});
+ host=await ready(await sdk.create('private-fps',options));
+ const room=[...local.rooms][0],seat=room.seats.get(host.sessionId),a=seat.actor;
+ await until(()=>Number.isFinite(seat.rttAt),'fresh rewind clock');
+ a.inventory.primary=room.sim.game.weaponItem('cr4');
+ let serial=0,fireId=0;
+ const select=slot=>host.send('select',{slot,serial:++serial,lifeId:a.lifeId,controlEpoch:seat.epoch});
+ for(const cook of [false,true]){
+   a.inventory.he=1;
+   select('he');await until(()=>own(host).weapon==='he','select cartridge');await delay(255);
+   send(host,{fire:true,fireId:++fireId,holdThrow:true,fireEdge:true});
+   await until(()=>a.cartridge && (!cook||a.cartridge.deadline>0),'cook or early pull');
+   select('primary');await until(()=>own(host).weapon==='cr4','select rifle without a trigger release');
+   assert.equal(a.waitTriggerRelease,true);
+   const ammo=a.inventory.primary.ammo;
+   for(let i=0;i<7;i++){
+     send(host,{fire:true,fireId:++fireId,holdThrow:false,fireEdge:false});await delay(60);
+   }
+   assert.equal(a.inventory.primary.ammo,ammo);assert.equal(a.pendingShot,null);
+   send(host,{fire:false,holdThrow:false,fireId});await until(()=>!a.waitTriggerRelease,'trigger released');
+   send(host,{fire:true,holdThrow:false,fireId:++fireId,fireEdge:true});
+   await until(()=>a.inventory.primary.ammo===ammo-1,'a new physical press may fire');
+   send(host,{fire:false,holdThrow:false,fireId});
+ }
+});
+
+test('each firearm spends one authoritative round and both SDK seats see cancellation and empty reloads',{timeout:60000},async t=>{
+ const local=await createLocalServer({testMatch:{continuous:true},port:0});
+ let host,observer;
+ t.after(async()=>{await Promise.allSettled([host?.leave(),observer?.leave()]);await local.close();});
+ const client=new Client(local.url,{headers:{Origin:local.url}});
+ host=await ready(await client.create('private-fps',options));observer=await ready(await client.joinById(host.roomId,options));
+ const room=[...local.rooms][0],game=room.sim.game,seat=room.seats.get(host.sessionId),actor=seat.actor;
+ const peers=[host,observer],received=[[],[]],reloads=[[],[]],proof=[];
+ let selection=0,reloadId=0;
+ const both=check=>peers.every(peer=>check(peer.state.actors.get(actor.id)));
+ const select=slot=>host.send('select',{slot,serial:++selection,lifeId:actor.lifeId,controlEpoch:seat.epoch});
+ peers.forEach((peer,i)=>peer.onMessage('events',batch=>{
+   for(const event of batch)if(event.actorId===actor.id){
+     if(event.type==='shot')received[i].push(event);
+     if(event.type==='reload')reloads[i].push({weapon:event.weapon,eventId:event.eventId,time:event.time});
+   }
+ }));
+ await until(()=>Number.isFinite(seat.rttAt),'measured SDK clock');
+ const weapons=['p9','p12','cr4','ar47','smg','shotgun','sniper','bazooka'];
+ for(const [index,weapon] of weapons.entries()){
+   const slot=index<2?'pistol':'primary',fireId=index+1;
+   // The private-room loadout is the fixture. Selection, trigger and release all
+   // traverse the normal SDK/authority path, including real hit queries.
+   actor.inventory[slot]=game.weaponItem(weapon);
+   select(slot);
+   await until(()=>peers.every(peer=>peer.state.actors.get(actor.id).weapon===weapon),'both seats see '+weapon);
+   await until(()=>game.state.time>=actor.nextShot,weapon+' ready on authority');
+   const before=game.item(actor).ammo;
+   send(host,{fire:true,fireEdge:true,holdThrow:false,fireId,shotYaw:Math.PI,shotPitch:.3});
+   send(host,{fire:false,fireEdge:false,holdThrow:false,fireId});
+   await until(()=>received.every(events=>events.length>index),weapon+' shot confirmed on both seats');
+   const a=received[0][index],b=received[1][index];
+   assert.equal(a.weapon,weapon);assert.equal(a.actionId,[actor.id,actor.lifeId,seat.epoch,fireId].join(':'));
+   assert.equal(a.actionId,b.actionId);assert.equal(a.eventId,b.eventId);assert.equal(a.tick,b.tick);
+   assert.equal(game.item(actor).ammo,before-1);
+   await until(()=>peers.every(peer=>peer.state.actors.get(actor.id).ammo===before-1),weapon+' replicated one debit');
+   const item=game.item(actor),reserve=item.reserve;
+   const reload=()=>send(host,{reloadId:++reloadId,fireId,fire:false,fireEdge:false,holdThrow:false});
+   if(before>1){
+     reload();
+     await until(()=>both(s=>s.weapon===weapon && s.reloadUntil>game.state.time && s.ammo===before-1),weapon+' tactical reload appears on both seats');
+     select('knife');
+     await until(()=>both(s=>s.weapon==='knife' && !s.reloadUntil),weapon+' reload interrupted on both seats');
+     select(slot);
+     await until(()=>both(s=>s.weapon===weapon && !s.reloadUntil && s.ammo===before-1 && s.reserve===reserve),weapon+' retains untransferred ammunition');
+   }
+   // Seed an empty magazine for each family. The SDK starts the reload and
+   // the authority's ordinary deadline debits reserve and fills both views.
+   item.ammo=0;
+   await until(()=>both(s=>s.ammo===0 && s.reserve===reserve),weapon+' empty magazine fixture reached both seats');
+   reload();
+   await until(()=>both(s=>s.reloadUntil>game.state.time && s.ammo===0),weapon+' empty reload begins');
+   await until(()=>both(s=>!s.reloadUntil && s.ammo===before && s.reserve===reserve-before),weapon+' refills at the authority deadline');
+   const completed=reloads[0].filter(e=>e.weapon===weapon);
+   assert.equal(completed.length,before>1?2:1);
+   assert.deepEqual(completed,reloads[1].filter(e=>e.weapon===weapon));
+   proof.push({weapon,actionId:a.actionId,eventId:a.eventId,tick:a.tick,ammoBefore:before,ammoAfter:before-1,
+     tacticalInterrupted:before>1,emptyRefill:item.ammo,reserveBefore:reserve,reserveAfter:item.reserve,reloadEvents:completed});
+ }
+ await delay(90);assert(received.every(events=>events.length===weapons.length));assert.equal(room.metrics.invalid,0);
+ t.diagnostic(JSON.stringify(proof));
+});

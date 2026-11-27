@@ -66,6 +66,7 @@ async function pause(page){
   await page.waitForFunction(()=>__fps.network?.room?.state.phase==='active'&&__fps.modal!=='online');
   if(await page.locator('#pause').isHidden())await page.keyboard.press('Escape');
   await page.locator('#resume').waitFor();
+  assert(await page.locator('#countdown-look').isHidden(),'Resume is the only visible mouse capture control in the pause menu');
 }
 async function pointDesktop(page,actor){
   // Use the actual pointer-lock input handler. Keyboard turns can overshoot
@@ -87,7 +88,7 @@ async function observe(p,target){
   await p.evaluate(({id,lifeId})=>{
     const {renderer,audio,network}=__fps;
     window.rocketEvidence?.unsubscribe?.();
-    const seen=window.rocketEvidence={visible:new Set(),sounds:[],events:[],deaths:[],impacts:[]};
+    const seen=window.rocketEvidence={visible:new Set(),sounds:[],events:[],deaths:[],impacts:[],views:[]};
     const room=network.room;
     const snapshot=state=>{
       const actor=state.actors.get(id);
@@ -104,6 +105,9 @@ async function observe(p,target){
         render(...args);
         for(const [id,m] of renderer.actionVisuals.rockets){
           const q=m.position.clone().project(renderer.camera);
+          const samples=window.rocketEvidence.views;
+          if(samples.length<32)samples.push({id,view:args[1]?.id,life:args[1]?.lifeId,
+            x:q.x,y:q.y,z:q.z,t:args[0].state.time});
           if(m.visible&&Math.abs(q.x)<1&&Math.abs(q.y)<1&&Math.abs(q.z)<1)window.rocketEvidence.visible.add(id);
         }
       };
@@ -375,14 +379,14 @@ try{
   await cycle(desktop,mobile,'classic');
   assert.deepEqual(errors,[]);
 }catch(error){
-  for(const p of pages)console.error(await p.evaluate(()=>({status:__fps.network?.status,modal:__fps.modal,
+  for(const p of pages)console.dir(await p.evaluate(()=>({status:__fps.network?.status,modal:__fps.modal,
     rendererClock:{time:__fps.game.state.time,roomTime:__fps.network?.room?.state.time,
       phase:__fps.network?.room?.state.phase,resultAt:__fps.network?.resultsAt,visible:!document.hidden},
     actor:__fps.game.player&&{x:__fps.game.player.x,z:__fps.game.player.z,yaw:__fps.game.player.yaw,weapon:__fps.game.player.weapon},
-    rocket:window.rocketEvidence&&{models:[...rocketEvidence.visible],events:rocketEvidence.events.map(e=>[e.type,e.rocketId]),sound:rocketEvidence.sounds,hits:rocketEvidence.deaths,impacts:rocketEvidence.impacts,audio:{state:__fps.audio.context?.state,volume:__fps.audio.volume,stats:__fps.audio.stats}},
+    rocket:window.rocketEvidence&&{models:[...rocketEvidence.visible],views:rocketEvidence.views,events:rocketEvidence.events.map(e=>[e.type,e.rocketId]),sound:rocketEvidence.sounds,hits:rocketEvidence.deaths,impacts:rocketEvidence.impacts,audio:{state:__fps.audio.context?.state,volume:__fps.audio.volume,stats:__fps.audio.stats}},
     controls:{enabled:__fps.mobile?.enabled,visible:__fps.mobile?.visible,alive:__fps.game.player?.alive,
       more:document.getElementById('mobile-more')?.outerHTML,primaryCoarse:matchMedia('(pointer: coarse)').matches,
       anyCoarse:matchMedia('(any-pointer: coarse)').matches,touchPoints:navigator.maxTouchPoints},
-    fatal:document.querySelector('#fatal pre')?.textContent})).catch(()=>null));
+    fatal:document.querySelector('#fatal pre')?.textContent})).catch(()=>null),{depth:5});
   throw error;
 }finally{for(const b of browsers)await b.close();await local.close();}

@@ -48,17 +48,6 @@ html.network-session-ui.hud-map-open #hud #map-legend{
 html.network-session-ui.online-classic #hud #objectives{
   max-width:calc(100vw - 28px);white-space:normal;justify-content:center;text-align:center
 }
-html.network-session-ui[data-hud=full] #mobile-controls{
-  --full-buy-left:max(3%,calc(env(safe-area-inset-left,0px) + 12px))
-}
-html.network-session-ui[data-hud=full] #mobile-controls .mobile-buy{left:var(--full-buy-left)}
-html.network-session-ui[data-hud=full] #mobile-controls .mobile-more{
-  top:max(12px,env(safe-area-inset-top));left:calc(var(--full-buy-left) + 60px);
-  bottom:auto;right:auto;width:52px;height:44px;min-height:44px;transform:none
-}
-html.network-session-ui[data-hud=full] #mobile-controls #mobile-utilities .mobile-button{
-  position:static;inset:auto;width:72px;height:48px;transform:none
-}
 @media(pointer:coarse){
   html.network-session-ui.hud-map-open #hud .map-panel{top:max(94px,calc(env(safe-area-inset-top) + 64px))!important}
   html.network-session-ui.hud-map-open #hud #minimap{max-height:calc(100dvh - 180px)}

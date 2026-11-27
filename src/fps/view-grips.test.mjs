@@ -91,6 +91,50 @@ test('empty kit actions contact their moving part and return to the idle grip', 
     assert.ok(hand.position.distanceTo(action) > .035);
   }
 });
+test('normal and empty primary reloads use distinct mechanisms and release on interruption',()=>{
+  for(const id of ['ar47','smg','shotgun','sniper']){
+    const model=makeWeapon(id),d=model.userData,duration=WEAPONS[id].reload;
+    const phase=id==='sniper'?2.48/3.4:id==='shotgun'?.955:.85;
+    for(const ammo of [1,0]){
+      const actor={weapon:id,inventory:{primary:{id,ammo}},reloadUntil:10+duration};
+      animateWeapon(model,actor,10+phase*duration,1/60);
+      const part=id==='shotgun'?d.pump:d.slide;
+      const travel=part.position.z-(id==='shotgun'?0:d.slideHome.z);
+      assert.ok(ammo ? travel===0 : travel>.03,id+' empty-only mechanism '+travel);
+      if(id!=='shotgun'){
+        const handTravel=d.rightHand.position.distanceTo(d.handPose.grips[0].position);
+        assert.ok(ammo ? handTravel<1e-6 : handTravel>.04,id+' operating hand '+handTravel);
+      }
+      actor.reloadUntil=0;
+      animateWeapon(model,actor,10+phase*duration+1/60,1/60);
+      assert.ok(Math.abs(part.position.z-(id==='shotgun'?0:d.slideHome.z))<1e-8);
+      assert.equal(part.rotation.z,0);
+      assert.ok(d.rightHand.position.distanceTo(d.handPose.grips[0].position)<1e-8);
+    }
+    disposeWeaponResources(model);
+  }
+});
+
+test('Scout follows the reference confirmed-shot bolt cycle with a fixed moving hand contact',()=>{
+  const model=makeWeapon('sniper'),d=model.userData,actor={weapon:'sniper'},shotAt=10;
+  let contact;
+  for(const age of [.24,.44,.52,.60,.70,.93]){
+    animateWeapon(model,actor,shotAt+age,1/60,{shotAt});
+    if(age<=.70){
+      assert.ok(Math.abs(d.slide.rotation.z-1.2)<1e-5);
+      const hand=relativeTo(d.slide,d.rightHand);
+      if(!contact)contact=hand;
+      assertMatrix(hand,contact,'Scout hand lost the bolt through rotation/translation');
+      assert.ok(d.leftHand.position.distanceTo(d.handPose.grips[1].position)<1e-8);
+      const rear=age===.44 || age===.52;
+      assert.ok(Math.abs(d.slide.position.z-d.slideHome.z-(rear?.092:0))<1e-5);
+    }else{
+      assert.equal(d.slide.rotation.z,0);
+      assert.ok(d.rightHand.position.distanceTo(d.handPose.grips[0].position)<1e-8);
+    }
+  }
+  disposeWeaponResources(model);
+});
 test('running and turning during inspection keeps the end of the support arm below the screen', async () => {
   const {Game} = await import('./game.mjs');
   const {createWorld} = await import('./world.mjs');
@@ -122,6 +166,58 @@ test('running and turning during inspection keeps the end of the support arm bel
       }
     }
     assert.ok(player.moving > 4, 'full running input reached the presentation');
+  }
+});
+test('the authored sights converge on the reticle in ADS and the off hand stays visible through a pistol Rush', () => {
+  for (const aspect of [16/9, 19.5/9]) {
+    const camera=new T.PerspectiveCamera(60,aspect,.01,5);
+    for (const [id,front,rear] of [
+      ['p9',[0,.090,-.174],[0,.089,.037]], ['p12',[0,.090,-.174],[0,.089,.037]],
+      ['cr4',[0,.119,-.475],[0,.119,.023]], ['ar47',[0,.104,-.640],[0,.126,-.210]],
+      ['smg',[0,.122,-.380],[0,.133,.030]], ['shotgun',[0,.073,-.760],[0,.100,.070]],
+      ['sniper',[0,.165,-.425],[0,.165,-.055]]
+    ]) {
+      const model=makeWeapon(id),actor={id:'local',weapon:id,alive:true,onGround:true,aimAmount:1};
+      animateWeapon(model,actor,1,1/60);
+      for (const marker of [front,rear]) {
+        const p=model.localToWorld(new T.Vector3(...marker)).project(camera);
+        assert.ok(Math.hypot(p.x,p.y)<.001,id+' sight missed the reticle');
+      }
+      if(id!=='sniper'){
+        const ray=new T.Raycaster(new T.Vector3(),new T.Vector3(0,0,-1),.01,5);
+        const hit=ray.intersectObject(model.userData.weapon,true)[0];
+        assert(hit && Math.abs(model.worldToLocal(hit.point).z-front[2])<.018,id+' rear geometry masks the visible front mark');
+      }
+      if(id!=='p9')continue;
+      Object.assign(actor,{aimAmount:0,moving:6,rushWeight:1});
+      for(let i=0;i<24;i++){
+        actor.distanceWalked=i*Math.PI/12/4.4;
+        animateWeapon(model,actor,1+i/60,1/60);
+        const wrist=model.userData.leftHand.getWorldPosition(new T.Vector3()).project(camera);
+        assert.ok(wrist.x>-.85 && wrist.x<-.19 && wrist.y>-.95 && wrist.y<-.53,'left wrist must be visible in the lower-left quarter');
+      }
+    }
+  }
+});
+test('the complete held-item set leaves the reticle clear at ready and through a Rush stride', () => {
+  const ray=new T.Raycaster(new T.Vector3(),new T.Vector3(0,0,-1),.01,5);
+  const items=Object.values(WEAPONS).filter(w=>w.slot!=='armor');
+  assert.equal(items.length,13);
+  for(const weapon of items){
+    const m=makeWeapon(weapon.id),a={id:'local',weapon:weapon.id,alive:true,onGround:true,reloadUntil:0};
+    for(const [t,weight,travel] of [[1,0,0],[2,1,0],[2.05,1,.35],[2.10,1,.7],[2.15,1,1.05],[2.20,1,1.4]]){
+      Object.assign(a,{rushWeight:weight,moving:6.5*weight,distanceWalked:travel});
+      animateWeapon(m,a,t,1/60);
+      assert.equal(ray.intersectObject(m,true).length,0,weapon.id+' obscures the central view at '+t);
+    }
+  }
+});
+test('inspection shows both flanks of the selected family and returns to ready in Reduced Motion',async()=>{
+  const {inspectPose,inspectDuration}=await import('./view-surface.mjs');
+  for(const weapon of ['p9','cr4','ar47','he','knife','bomb']){
+    const options={weapon,reducedMotion:true},left=inspectPose(.7,options),right=inspectPose(2,options);
+    assert(left.rotation[2]>0 && right.rotation[2]<0,weapon);
+    assert.deepEqual(inspectPose(inspectDuration(weapon),options).rotation,[0,0,0]);
   }
 });
 test.after(disposeWeaponResources);

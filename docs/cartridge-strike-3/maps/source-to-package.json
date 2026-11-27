@@ -313,6 +313,11 @@
           "file": "assets/fps/maps/embruns/sky.webp",
           "bytes": 10132,
           "sha256": "0d80d18eb4c2e314c27c0ec895f7fa8c8d569bb4a0a63c1cd10671176eaf7583"
+        },
+        {
+          "file": "assets/fps/maps/embruns/ground.bin.gz",
+          "bytes": 959800,
+          "sha256": "1676f93ecef47bb9d0971e54c60aa87b4de81f6886ef0ec6f3512ee58958a0d9"
         }
       ],
       "bakedLighting": {
@@ -336,6 +341,60 @@
           "lights": 23,
           "lampGain": 4.8
         }
+      },
+      "groundSurface": {
+        "version": 1,
+        "id": "embruns",
+        "width": 416,
+        "height": 560,
+        "side": 256,
+        "bounds": [
+          -52,
+          -70,
+          104,
+          140
+        ],
+        "scales": [
+          2.5,
+          2.6,
+          2.2,
+          4.5
+        ],
+        "dirt": [
+          0.62,
+          0.6,
+          0.57
+        ],
+        "layers": [
+          {
+            "layer": "concrete",
+            "sha256": "0f162e10f8c16276c130cf5136c3c1d70746eed9557cc02032ee5ed52a364046"
+          },
+          {
+            "layer": "pavers",
+            "sha256": "d87bcbc88e4ed244d2c38757dc71e9159e7ce1d3d6e5673947ff6673e1a8031d"
+          },
+          {
+            "layer": "cobble",
+            "sha256": "fc5ad6edee722642be2ebb94d123d049cb3aaedc4e6b2c1efab855f245b9a013"
+          },
+          {
+            "layer": "asphalt",
+            "sha256": "5de115441364a21677d55af284ace3598059c527cddf65ad59c04e052d96dcdf"
+          }
+        ],
+        "maskSHA256": "0262c79c61e95c59f73a449c16ba2157d2bb2aba0b9d5328fd24f4aa48897f21",
+        "bytes": 959800,
+        "sha256": "1676f93ecef47bb9d0971e54c60aa87b4de81f6886ef0ec6f3512ee58958a0d9",
+        "pinnedSourceBlobs": {
+          "02b-texlab.js": "0a7ff324c718f6a5dca5a2076a66d6703fb0ceaf",
+          "02c-materials.js": "302834b0aed24ffa9ec132f93ac45b219715d70f",
+          "01-core.js": "e054e504a82c3b24917b1b8c2c0d08a391389007",
+          "02u-embruns.js": "6d87b9a4ffa273045edf65dad853c4bddd03d9a8"
+        },
+        "runtime": "referenceScene → referenceGround → DataTexture mask and four-layer mipmapped sRGB DataArrayTexture",
+        "samplers": 2,
+        "gpuBytesIncludingTileMipmaps": 2329936
       }
     },
     "tephra": {
@@ -494,6 +553,11 @@
           "file": "assets/fps/maps/tephra/sky.webp",
           "bytes": 15328,
           "sha256": "c0ea9a9df7e3f3f708d04590b0f417de6d801e2cbb41194ac77813dfbafa8d7d"
+        },
+        {
+          "file": "assets/fps/maps/tephra/ground.bin.gz",
+          "bytes": 943846,
+          "sha256": "a6b4d3047690dd4ccf012a7c69192c8345ab231893b70c05335f2e5259d831b3"
         }
       ],
       "bakedLighting": {
@@ -517,6 +581,61 @@
           "lights": 4,
           "lampGain": 6.4
         }
+      },
+      "groundSurface": {
+        "version": 1,
+        "id": "tephra",
+        "width": 550,
+        "height": 550,
+        "side": 256,
+        "bounds": [
+          -150,
+          -110,
+          220,
+          220
+        ],
+        "scales": [
+          2.6,
+          4.5,
+          2.6,
+          2.4
+        ],
+        "dirt": [
+          1.7,
+          1.62,
+          1.55
+        ],
+        "layers": [
+          {
+            "layer": "ash",
+            "sha256": "899f684d50ea456ea7dc25159b4e4f3c65efe320e882816c6d67a392eff9017a"
+          },
+          {
+            "layer": "asphalt",
+            "sha256": "5de115441364a21677d55af284ace3598059c527cddf65ad59c04e052d96dcdf"
+          },
+          {
+            "layer": "pavers",
+            "sha256": "d87bcbc88e4ed244d2c38757dc71e9159e7ce1d3d6e5673947ff6673e1a8031d"
+          },
+          {
+            "layer": "moss",
+            "sha256": "3272f02bc3376cf7e5f9a4af3866bd04ec5ca0d9c44b960f5162b2ad8b8cbf2d"
+          }
+        ],
+        "maskSHA256": "86cdf8d1ecfe7c344d827991fc97e86fb6e4600a0f31da646f1eacfd3cf7a478",
+        "bytes": 943846,
+        "sha256": "a6b4d3047690dd4ccf012a7c69192c8345ab231893b70c05335f2e5259d831b3",
+        "pinnedSourceBlobs": {
+          "02b-texlab.js": "0a7ff324c718f6a5dca5a2076a66d6703fb0ceaf",
+          "02c-materials.js": "302834b0aed24ffa9ec132f93ac45b219715d70f",
+          "01-core.js": "e054e504a82c3b24917b1b8c2c0d08a391389007",
+          "02yh-tephra.js": "d4bd2b3b8f477f8244a82f909111bb19ff35e4a7",
+          "02yg-tephra-kit.js": "b394efcfc19d1bf4feb85153976a6c590b8a60bf"
+        },
+        "runtime": "referenceScene → referenceGround → DataTexture mask and four-layer mipmapped sRGB DataArrayTexture",
+        "samplers": 2,
+        "gpuBytesIncludingTileMipmaps": 2608096
       }
     }
   },

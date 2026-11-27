@@ -77,8 +77,19 @@ export class ActionVisuals{
      this.shortFlights.push({launch,impact:e,presented:false});
     }else this.explode(e,game.state.time);
    }
+   if(e.type==='kill' && e.rocketId && e.actorId===game.player?.id){
+    const flight=this.shortFlights.find(flight=>flight.impact.rocketId===e.rocketId);
+    if(flight)flight.victim={id:e.actorId,life:e.lifeId};
+   }
    if(e.type==='impact'&&e.surface!=='carpet')for(let i=0;i<3;i++)this.particle(e,game.state.time,{size:.035,duration:.15+i*.035,velocity:[Math.sin(i*7)*1.2,.8+i*.3,Math.cos(i*7)*1.2],colour:0xf3cf8e});
   }
+ }
+ finishingFlightFor(actor){
+  // A delayed patch can report the victim's death before either end of the
+  // flight has reached a display. Keep the last authorized local viewpoint
+  // through these two paints; the existing team spectator takes over next.
+  return !!actor && !actor.alive && this.shortFlights.some(({victim})=>
+   victim && victim.id===actor.id && victim.life===actor.lifeId);
  }
  explode(e,time){
   // A short authoritative flight may begin and end between two snapshots.
