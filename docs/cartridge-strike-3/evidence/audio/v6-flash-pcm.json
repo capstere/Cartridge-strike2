@@ -152,24 +152,24 @@
     {
       "label": "near",
       "ringStarted": true,
-      "frequency": 3133.7099811676085,
-      "early": 0.008992367436399244,
-      "late": 0.0006171284615934629,
+      "frequency": 3109.068115336398,
+      "early": 0.008991761766021506,
+      "late": 0.0006169581402280223,
       "tail": 0
     },
     {
       "label": "reduced",
       "ringStarted": true,
-      "frequency": 3104.227710339054,
-      "early": 0.0007171638155691895,
+      "frequency": 3109.068115336398,
+      "early": 0.0007171393312342407,
       "late": 0,
       "tail": 0
     },
     {
       "label": "wall",
       "ringStarted": true,
-      "frequency": 3122.359339050408,
-      "early": 0.002922553580883531,
+      "frequency": 3109.068115336398,
+      "early": 0.002923208795987198,
       "late": 0,
       "tail": 0
     },
@@ -208,7 +208,7 @@
   ],
   "worldTone": {
     "before": 0.12084997594796208,
-    "exposed": 0.00011476207426132876,
+    "exposed": 0.00012100282011683529,
     "recovered": 0.12084997594796208
   },
   "cancelled": {
@@ -216,7 +216,8 @@
     "silence": true,
     "remaining": 0
   },
-  "revision": "138dbbf4c1a9025658c2ba8bc3b0a0f2f78c4a0e",
-  "tree": "394a68834fcf2c727b406587d88436200247139b",
+  "revision": "8351d1e912353204dccacca79415757c3038deb5",
+  "tree": "775f1a1410b56408e37cbf890f55e02c08e505e8",
+  "buildHash": "bcdacb9b575bf5ede19857cd8d8605b27a6bf8fc5f3a4d78ad5ad49094c5b237",
   "device": "Raspberry Pi 5, local Chromium OfflineAudioContext before device output"
 }

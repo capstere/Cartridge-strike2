@@ -229,8 +229,7 @@ export class AudioSystem {
     const voice = ctx.createOscillator();
     const envelope = ctx.createGain();
     voice.type = 'sine';
-    voice.frequency.setValueAtTime(3150,start);
-    voice.frequency.exponentialRampToValueAtTime(3050,start+duration);
+    voice.frequency.setValueAtTime(3109,start);
     envelope.gain.setValueAtTime(.0001,start);
     envelope.gain.exponentialRampToValueAtTime(.035*strength,start+.03);
     envelope.gain.exponentialRampToValueAtTime(.0001,start+duration);
