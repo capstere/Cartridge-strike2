@@ -37,7 +37,7 @@
       "scope": "Design system; en catalog; main/Play/Solo/With Friends, options, map cards, roster, countdown, news; real solo and private lobby actions; placeholder routes explicitly disabled pending 03/04/09/10.",
       "tests": "IMG_8150, 8158, 8160–8162 and 8164, V1 countdown, English guest Pages and denied/authorized Pi routes. Provide class-picker navigation for later class/wardrobe owners. Exercise real loading, Classic buy success/failure and re-login after translation.",
       "exit": "Menu→match→results real flows; stable back/resize/focus.",
-      "status": "IN_PROGRESS",
+      "status": "VERIFIED",
       "branch": "cs3/01-countdown",
       "pullRequests": [
         48,
@@ -46,16 +46,21 @@
       ],
       "mergedSlices": [
         "65a6f06385a3fa8944ed605ebdd4680522f70588",
-        "e6a56c2159fed23fac576abe068dece4fce98207"
+        "e6a56c2159fed23fac576abe068dece4fce98207",
+        "adb3cdf6c7c0a8721cecc1db30602eea1fe200f6"
       ],
       "evidence": [
         "evidence/01-private-entry.md",
-        "evidence/01-menu/README.md"
+        "evidence/01-menu/README.md",
+        "evidence/01-countdown/README.md"
       ],
       "workBranches": [
         "cs3/01-runtime-english",
         "cs3/01-countdown"
-      ]
+      ],
+      "verifiedHead": "2390c8248743582e3d13883a18acd46e0f7f9af1",
+      "verifiedRun": 46017902821,
+      "independentReview": "Accepted the full English guest and private flows, all six native countdown images and the corrected two-client draw timing."
     },
     {
       "id": "CS3-02",
@@ -115,7 +120,9 @@
       "scope": "Scoped remembered sessions, invite link/QR/short code, migration, optional accounts/recovery/stats storage, secure public listing behind off-by-default flag.",
       "tests": "network-family-browser, network-pilot-browser, security/expiry/revoke/replay tests, migration/restore. Verify guest Pages flow separately from Pi pilot proof, room proof and account identity.",
       "exit": "Two-client old and new access, private credentials protected, real persistent accounts.",
-      "status": "NOT_STARTED"
+      "status": "IN_PROGRESS",
+      "branch": "cs3/04-account-access",
+      "baseline": "adb3cdf6c7c0a8721cecc1db30602eea1fe200f6"
     },
     {
       "id": "CS3-05",
