@@ -1,0 +1,536 @@
+{
+  "revision": "317255e2d358e7661635da04395d2020b6aa80be",
+  "buildHash": "5693fe6e5f2f2bf0ac865e43e63853aa561d8eb1f0b43d874905b46928976338",
+  "manifestHash": "c4653b7a9b1b16cd3da60dcf5d922ab986f44930b5c314674dd22db82128bdba",
+  "startedAt": "2026-11-27T14:12:54.759Z",
+  "browser": "156.0.8078.79",
+  "touchExposure": "Chromium touch emulation",
+  "scenarios": [
+    {
+      "entry": "Solo Classic",
+      "locale": "fr-FR",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "touchDrag": true,
+      "headingBefore": "a2c562d480c6fb7cf8c4821954e5095ceb7f189bcd30ddb1ca0f17a9d456c915",
+      "headingAfter": "83c088cf76c943127e1d48d2a1acdf87a37bbc72b88cf44b59f57d2043f1b036",
+      "buyOpenAfterRelease": true,
+      "loaded": [
+        "ui_tick",
+        "r_beep-1",
+        "st_start"
+      ],
+      "sounds": [
+        {
+          "name": "ui_tick",
+          "rate": 0.8199999928474426,
+          "at": 24076
+        },
+        {
+          "name": "ui_tick",
+          "rate": 0.8199999928474426,
+          "at": 25145
+        },
+        {
+          "name": "r_beep-1",
+          "rate": 1,
+          "at": 26167
+        },
+        {
+          "name": "r_beep-1",
+          "rate": 1,
+          "at": 27151
+        },
+        {
+          "name": "r_beep-1",
+          "rate": 1,
+          "at": 28153
+        },
+        {
+          "name": "st_start",
+          "rate": 1,
+          "at": 29188
+        }
+      ],
+      "stages": [
+        {
+          "text": "5",
+          "at": 24076,
+          "color": "rgb(248, 244, 233)",
+          "animation": "none",
+          "timer": "0:15",
+          "score": [
+            "0",
+            "0"
+          ],
+          "minimap": [
+            11,
+            11,
+            85,
+            60
+          ],
+          "scoreboard": [
+            297,
+            12,
+            251,
+            40
+          ],
+          "more": [
+            12,
+            85,
+            52,
+            44
+          ],
+          "phase": null
+        },
+        {
+          "text": "4",
+          "at": 25145,
+          "color": "rgb(248, 244, 233)",
+          "animation": "none",
+          "timer": "0:15",
+          "score": [
+            "0",
+            "0"
+          ],
+          "minimap": [
+            11,
+            11,
+            85,
+            60
+          ],
+          "scoreboard": [
+            297,
+            12,
+            251,
+            40
+          ],
+          "more": [
+            12,
+            85,
+            52,
+            44
+          ],
+          "phase": null
+        },
+        {
+          "text": "3",
+          "at": 26168,
+          "color": "rgb(255, 208, 103)",
+          "animation": "none",
+          "timer": "0:15",
+          "score": [
+            "0",
+            "0"
+          ],
+          "minimap": [
+            11,
+            11,
+            85,
+            60
+          ],
+          "scoreboard": [
+            297,
+            12,
+            251,
+            40
+          ],
+          "more": [
+            12,
+            85,
+            52,
+            44
+          ],
+          "phase": null
+        },
+        {
+          "text": "2",
+          "at": 27152,
+          "color": "rgb(255, 208, 103)",
+          "animation": "none",
+          "timer": "0:15",
+          "score": [
+            "0",
+            "0"
+          ],
+          "minimap": [
+            11,
+            11,
+            85,
+            60
+          ],
+          "scoreboard": [
+            297,
+            12,
+            251,
+            40
+          ],
+          "more": [
+            12,
+            85,
+            52,
+            44
+          ],
+          "phase": null
+        },
+        {
+          "text": "1",
+          "at": 28153,
+          "color": "rgb(255, 208, 103)",
+          "animation": "none",
+          "timer": "0:15",
+          "score": [
+            "0",
+            "0"
+          ],
+          "minimap": [
+            11,
+            11,
+            85,
+            60
+          ],
+          "scoreboard": [
+            297,
+            12,
+            251,
+            40
+          ],
+          "more": [
+            12,
+            85,
+            52,
+            44
+          ],
+          "phase": null
+        },
+        {
+          "text": "Move out!",
+          "at": 29189,
+          "color": "rgb(255, 208, 103)",
+          "animation": "none",
+          "timer": "0:15",
+          "score": [
+            "0",
+            "0"
+          ],
+          "minimap": [
+            11,
+            11,
+            85,
+            60
+          ],
+          "scoreboard": [
+            297,
+            12,
+            251,
+            40
+          ],
+          "more": [
+            12,
+            85,
+            52,
+            44
+          ],
+          "phase": null
+        }
+      ],
+      "fade": [
+        {
+          "age": 2,
+          "opacity": 1
+        },
+        {
+          "age": 212,
+          "opacity": 1
+        },
+        {
+          "age": 445,
+          "opacity": 1
+        },
+        {
+          "age": 642,
+          "opacity": 1
+        },
+        {
+          "age": 855,
+          "opacity": 1
+        }
+      ],
+      "audioMinusDisplayMs": [
+        0,
+        0,
+        -1,
+        -1,
+        0,
+        -1
+      ]
+    },
+    {
+      "entry": "Private TDM",
+      "locale": "sv-SE",
+      "viewport": {
+        "width": 1000,
+        "height": 600
+      },
+      "map": "compact-arena",
+      "firstActiveTick": 879,
+      "firstActiveSimulationSeconds": 0.016666666666666666,
+      "observedAfterFadeTick": 969,
+      "startingPose": [
+        2.6,
+        0,
+        7.75,
+        30,
+        0
+      ],
+      "headingBefore": "fb37a52b86c45428f25b161b23e9bcdb84df645ed0792d47d227ef38bf5a59e5",
+      "headingAfter": "71a50436a32c59404ac0f948f5e3c037642ab806ff9054ab3c47f490e617887e",
+      "englishLiveShield": true,
+      "stationaryAtThree": true,
+      "actualShot": true,
+      "thirdSeatJoinedActive": true,
+      "foregroundRestored": true,
+      "renderedLateJoin": true,
+      "returnedDuringCountdown": {
+        "marks": [
+          "5",
+          "2",
+          "1",
+          "Move out!"
+        ],
+        "sounds": [
+          "ui_tick",
+          "r_beep-1",
+          "st_start"
+        ]
+      },
+      "loaded": [
+        "ui_tick",
+        "r_beep-1",
+        "st_start"
+      ],
+      "sounds": [
+        {
+          "name": "ui_tick",
+          "rate": 0.8199999928474426,
+          "at": 12778
+        },
+        {
+          "name": "ui_tick",
+          "rate": 0.8199999928474426,
+          "at": 13993
+        },
+        {
+          "name": "r_beep-1",
+          "rate": 1,
+          "at": 14793
+        },
+        {
+          "name": "r_beep-1",
+          "rate": 1,
+          "at": 15809
+        },
+        {
+          "name": "r_beep-1",
+          "rate": 1,
+          "at": 16735
+        },
+        {
+          "name": "st_start",
+          "rate": 1,
+          "at": 17762
+        }
+      ],
+      "stages": [
+        {
+          "text": "5",
+          "at": 12779,
+          "color": "rgb(248, 244, 233)",
+          "animation": "deploy-odd",
+          "timer": "10:00",
+          "score": [
+            "0",
+            "0"
+          ],
+          "minimap": [
+            11,
+            11,
+            97,
+            68
+          ],
+          "scoreboard": [
+            269,
+            12,
+            461,
+            46
+          ],
+          "more": null,
+          "phase": "countdown"
+        },
+        {
+          "text": "4",
+          "at": 13993,
+          "color": "rgb(248, 244, 233)",
+          "animation": "deploy-even",
+          "timer": "10:00",
+          "score": [
+            "0",
+            "0"
+          ],
+          "minimap": [
+            11,
+            11,
+            97,
+            68
+          ],
+          "scoreboard": [
+            269,
+            12,
+            461,
+            46
+          ],
+          "more": null,
+          "phase": "countdown"
+        },
+        {
+          "text": "3",
+          "at": 14794,
+          "color": "rgb(255, 208, 103)",
+          "animation": "deploy-odd",
+          "timer": "10:00",
+          "score": [
+            "0",
+            "0"
+          ],
+          "minimap": [
+            11,
+            11,
+            97,
+            68
+          ],
+          "scoreboard": [
+            269,
+            12,
+            461,
+            46
+          ],
+          "more": null,
+          "phase": "countdown"
+        },
+        {
+          "text": "2",
+          "at": 15809,
+          "color": "rgb(255, 208, 103)",
+          "animation": "deploy-even",
+          "timer": "10:00",
+          "score": [
+            "0",
+            "0"
+          ],
+          "minimap": [
+            11,
+            11,
+            97,
+            68
+          ],
+          "scoreboard": [
+            269,
+            12,
+            461,
+            46
+          ],
+          "more": null,
+          "phase": "countdown"
+        },
+        {
+          "text": "1",
+          "at": 16736,
+          "color": "rgb(255, 208, 103)",
+          "animation": "deploy-odd",
+          "timer": "10:00",
+          "score": [
+            "0",
+            "0"
+          ],
+          "minimap": [
+            11,
+            11,
+            97,
+            68
+          ],
+          "scoreboard": [
+            269,
+            12,
+            461,
+            46
+          ],
+          "more": null,
+          "phase": "countdown"
+        },
+        {
+          "text": "Move out!",
+          "at": 17762,
+          "color": "rgb(255, 208, 103)",
+          "animation": "deploy-go",
+          "timer": "10:00",
+          "score": [
+            "0",
+            "0"
+          ],
+          "minimap": [
+            11,
+            11,
+            97,
+            68
+          ],
+          "scoreboard": [
+            269,
+            12,
+            461,
+            46
+          ],
+          "more": null,
+          "phase": "active"
+        }
+      ],
+      "fade": [
+        {
+          "age": 14,
+          "opacity": 1
+        },
+        {
+          "age": 210,
+          "opacity": 1
+        },
+        {
+          "age": 430,
+          "opacity": 1
+        },
+        {
+          "age": 649,
+          "opacity": 1
+        },
+        {
+          "age": 868,
+          "opacity": 0.406957
+        },
+        {
+          "age": 1064,
+          "opacity": 0.0495278
+        }
+      ],
+      "audioMinusDisplayMs": [
+        -1,
+        0,
+        -1,
+        0,
+        -1,
+        0
+      ]
+    }
+  ],
+  "status": "PASS",
+  "finishedAt": "2026-11-27T14:14:12.871Z"
+}
