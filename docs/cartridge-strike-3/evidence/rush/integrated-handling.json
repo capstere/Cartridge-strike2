@@ -1,0 +1,534 @@
+{
+  "source": "tools/handling-family-probe.mjs, server/test/rush.test.mjs",
+  "authority": {
+    "scenariosPassed": 80,
+    "dampedRoundTrip": {
+      "configuredRttMs": 250,
+      "jitterMs": 20,
+      "authorityRttMs": 208,
+      "liveShots": 1,
+      "recoveryFallbacks": 0,
+      "acceptedShots": 1
+    },
+    "twoSDKReceipts": [
+      {
+        "weapon": "p9",
+        "actionId": "analysts-0:1:0:1",
+        "eventId": 6,
+        "tick": 75,
+        "ammoBefore": 20,
+        "ammoAfter": 19
+      },
+      {
+        "weapon": "p12",
+        "actionId": "analysts-0:1:0:2",
+        "eventId": 10,
+        "tick": 93,
+        "ammoBefore": 12,
+        "ammoAfter": 11
+      },
+      {
+        "weapon": "cr4",
+        "actionId": "analysts-0:1:0:3",
+        "eventId": 14,
+        "tick": 112,
+        "ammoBefore": 30,
+        "ammoAfter": 29
+      },
+      {
+        "weapon": "ar47",
+        "actionId": "analysts-0:1:0:4",
+        "eventId": 18,
+        "tick": 129,
+        "ammoBefore": 30,
+        "ammoAfter": 29
+      },
+      {
+        "weapon": "smg",
+        "actionId": "analysts-0:1:0:5",
+        "eventId": 22,
+        "tick": 144,
+        "ammoBefore": 30,
+        "ammoAfter": 29
+      },
+      {
+        "weapon": "shotgun",
+        "actionId": "analysts-0:1:0:6",
+        "eventId": 26,
+        "tick": 159,
+        "ammoBefore": 8,
+        "ammoAfter": 7
+      },
+      {
+        "weapon": "sniper",
+        "actionId": "analysts-0:1:0:7",
+        "eventId": 44,
+        "tick": 212,
+        "ammoBefore": 5,
+        "ammoAfter": 4
+      },
+      {
+        "weapon": "bazooka",
+        "actionId": "analysts-0:1:0:8",
+        "eventId": 48,
+        "tick": 289,
+        "ammoBefore": 1,
+        "ammoAfter": 0
+      }
+    ]
+  },
+  "families": [
+    {
+      "id": "p9",
+      "earlyCasings": 1,
+      "cycleCasings": 1,
+      "shots": [
+        1.33333,
+        3.11667
+      ],
+      "audioDispatch": [
+        1.33333,
+        3.11667
+      ],
+      "tacticalReloadInterrupted": true,
+      "emptyReloadResult": [
+        20,
+        60
+      ],
+      "shotsWithLiveFoley": [],
+      "cyclePose": {
+        "slideZ": 0.01324,
+        "slideTurn": 0
+      },
+      "emptyPose": {
+        "slideZ": 0.033,
+        "slideTurn": 0
+      }
+    },
+    {
+      "id": "p12",
+      "earlyCasings": 1,
+      "cycleCasings": 1,
+      "shots": [
+        6.26667,
+        8.05
+      ],
+      "audioDispatch": [
+        6.26667,
+        8.05
+      ],
+      "tacticalReloadInterrupted": true,
+      "emptyReloadResult": [
+        12,
+        60
+      ],
+      "shotsWithLiveFoley": [],
+      "cyclePose": {
+        "slideZ": 0.01324,
+        "slideTurn": 0
+      },
+      "emptyPose": {
+        "slideZ": 0.033,
+        "slideTurn": 0
+      }
+    },
+    {
+      "id": "cr4",
+      "earlyCasings": 1,
+      "cycleCasings": 1,
+      "shots": [
+        11.2,
+        13.58333
+      ],
+      "audioDispatch": [
+        11.2,
+        13.58333
+      ],
+      "tacticalReloadInterrupted": true,
+      "emptyReloadResult": [
+        30,
+        60
+      ],
+      "shotsWithLiveFoley": [
+        {
+          "take": "magout_rifle-2",
+          "sim": 11.78333,
+          "audioClock": 33.32267,
+          "scheduled": 33.32267,
+          "length": 0.39704
+        },
+        {
+          "take": "magout_rifle-2",
+          "sim": 14.23333,
+          "audioClock": 34.61333,
+          "scheduled": 34.61333,
+          "length": 0.39704
+        },
+        {
+          "take": "magin_rifle-1",
+          "sim": 15.03333,
+          "audioClock": 34.96533,
+          "scheduled": 34.96533,
+          "length": 0.21856
+        },
+        {
+          "take": "charge_rifle-2",
+          "sim": 15.2,
+          "audioClock": 35.04,
+          "scheduled": 35.04,
+          "length": 0.55367
+        }
+      ],
+      "cyclePose": {
+        "slideZ": 0.01324,
+        "slideTurn": 0
+      },
+      "emptyPose": {
+        "slideZ": 0.033,
+        "slideTurn": 0
+      }
+    },
+    {
+      "id": "ar47",
+      "earlyCasings": 1,
+      "cycleCasings": 1,
+      "shots": [
+        17.28333,
+        19.88333
+      ],
+      "audioDispatch": [
+        17.28333,
+        19.88333
+      ],
+      "tacticalReloadInterrupted": true,
+      "emptyReloadResult": [
+        30,
+        60
+      ],
+      "shotsWithLiveFoley": [
+        {
+          "take": "magout_rifle-2",
+          "sim": 17.86667,
+          "audioClock": 36.66133,
+          "scheduled": 36.66133,
+          "length": 0.39704
+        },
+        {
+          "take": "magout_rifle-2",
+          "sim": 20.53333,
+          "audioClock": 38.048,
+          "scheduled": 38.048,
+          "length": 0.39704
+        },
+        {
+          "take": "magin_rifle-2",
+          "sim": 21.8,
+          "audioClock": 38.624,
+          "scheduled": 38.624,
+          "length": 0.19083
+        },
+        {
+          "take": "charge_rifle-1",
+          "sim": 21.8,
+          "audioClock": 38.624,
+          "scheduled": 38.624,
+          "length": 0.4294
+        }
+      ],
+      "cyclePose": {
+        "slideZ": 0.01376,
+        "slideTurn": 0
+      },
+      "emptyPose": {
+        "slideZ": 0.04,
+        "slideTurn": 0
+      }
+    },
+    {
+      "id": "smg",
+      "earlyCasings": 1,
+      "cycleCasings": 1,
+      "shots": [
+        23.78333,
+        25.85
+      ],
+      "audioDispatch": [
+        23.78333,
+        25.85
+      ],
+      "tacticalReloadInterrupted": true,
+      "emptyReloadResult": [
+        30,
+        90
+      ],
+      "shotsWithLiveFoley": [
+        {
+          "take": "magout_smg",
+          "sim": 24.23333,
+          "audioClock": 40.032,
+          "scheduled": 40.032,
+          "length": 0.1511
+        },
+        {
+          "take": "magout_smg",
+          "sim": 26.36667,
+          "audioClock": 41.22667,
+          "scheduled": 41.22667,
+          "length": 0.1511
+        },
+        {
+          "take": "magin_smg",
+          "sim": 27.36667,
+          "audioClock": 41.67467,
+          "scheduled": 41.67467,
+          "length": 0.1661
+        },
+        {
+          "take": "charge_rifle-1",
+          "sim": 27.36667,
+          "audioClock": 41.67467,
+          "scheduled": 41.67467,
+          "length": 0.4
+        }
+      ],
+      "cyclePose": {
+        "slideZ": 0.01376,
+        "slideTurn": 0
+      },
+      "emptyPose": {
+        "slideZ": 0.04,
+        "slideTurn": 0
+      }
+    },
+    {
+      "id": "shotgun",
+      "earlyCasings": 0,
+      "cycleCasings": 1,
+      "shots": [
+        29.25,
+        32.46667
+      ],
+      "audioDispatch": [
+        29.25,
+        32.46667
+      ],
+      "tacticalReloadInterrupted": true,
+      "emptyReloadResult": [
+        8,
+        24
+      ],
+      "shotsWithLiveFoley": [
+        {
+          "take": "pump-1",
+          "sim": 29.56667,
+          "audioClock": 42.816,
+          "scheduled": 42.816,
+          "length": 0.54596
+        },
+        {
+          "take": "shell-1",
+          "sim": 30.26667,
+          "audioClock": 43.21067,
+          "scheduled": 43.21067,
+          "length": 0.27156
+        },
+        {
+          "take": "shell-1",
+          "sim": 33.25,
+          "audioClock": 44.97067,
+          "scheduled": 44.97067,
+          "length": 0.27156
+        },
+        {
+          "take": "shell-2",
+          "sim": 33.88333,
+          "audioClock": 45.248,
+          "scheduled": 45.248,
+          "length": 0.33363
+        },
+        {
+          "take": "shell-1",
+          "sim": 34.55,
+          "audioClock": 45.80267,
+          "scheduled": 45.80267,
+          "length": 0.27156
+        },
+        {
+          "take": "shell-3",
+          "sim": 34.71667,
+          "audioClock": 45.87733,
+          "scheduled": 45.87733,
+          "length": 0.30458
+        },
+        {
+          "take": "pump-1",
+          "sim": 34.95,
+          "audioClock": 45.984,
+          "scheduled": 45.984,
+          "length": 0.23333
+        }
+      ],
+      "cyclePose": {
+        "slideZ": 0,
+        "slideTurn": 0,
+        "pumpZ": 0.0794
+      },
+      "emptyPose": {
+        "slideZ": 0,
+        "slideTurn": 0,
+        "pumpZ": 0.08
+      }
+    },
+    {
+      "id": "sniper",
+      "earlyCasings": 0,
+      "cycleCasings": 1,
+      "shots": [
+        36.66667,
+        40.35
+      ],
+      "audioDispatch": [
+        36.66667,
+        40.35
+      ],
+      "tacticalReloadInterrupted": true,
+      "emptyReloadResult": [
+        5,
+        20
+      ],
+      "shotsWithLiveFoley": [
+        {
+          "take": "bolt-1",
+          "sim": 36.85,
+          "audioClock": 47.11467,
+          "scheduled": 47.11467,
+          "length": 0.8806
+        },
+        {
+          "take": "magout_rifle-1",
+          "sim": 37.88333,
+          "audioClock": 47.98933,
+          "scheduled": 47.98933,
+          "length": 0.6
+        },
+        {
+          "take": "magout_rifle-1",
+          "sim": 41.2,
+          "audioClock": 49.99467,
+          "scheduled": 49.99467,
+          "length": 0.6
+        },
+        {
+          "take": "magin_rifle-1",
+          "sim": 42.3,
+          "audioClock": 50.48533,
+          "scheduled": 50.48533,
+          "length": 0.21856
+        },
+        {
+          "take": "bolt-1",
+          "sim": 42.4,
+          "audioClock": 50.528,
+          "scheduled": 50.528,
+          "length": 0.8806
+        }
+      ],
+      "cyclePose": {
+        "slideZ": 0.092,
+        "slideTurn": 1.2
+      },
+      "emptyPose": {
+        "slideZ": 0.08995,
+        "slideTurn": 1.2
+      }
+    },
+    {
+      "id": "bazooka",
+      "earlyCasings": 0,
+      "cycleCasings": 0,
+      "shots": [
+        44.85
+      ],
+      "audioDispatch": [
+        44.85
+      ],
+      "tacticalReloadInterrupted": false,
+      "emptyReloadResult": [
+        1,
+        4
+      ],
+      "shotsWithLiveFoley": [
+        {
+          "take": "pickup-2",
+          "sim": 45.76667,
+          "audioClock": 52.27733,
+          "scheduled": 52.27733,
+          "length": 0.33119
+        },
+        {
+          "take": "stow-2",
+          "sim": 47.03333,
+          "audioClock": 52.66133,
+          "scheduled": 52.66133,
+          "length": 0.31121
+        }
+      ],
+      "cyclePose": {},
+      "emptyPose": {}
+    },
+    {
+      "id": "knife",
+      "swingTime": 49.3,
+      "returnTime": 49.8
+    }
+  ],
+  "rawSha256": {
+    "families.json": "aa26427edbdc5284f901fa449bca7c0bc31bd7a94e32e7c6b7a29e46786c88e2",
+    "unit-room.log": "1c3bc7bde5c341808cbf74728bc8ddfcc000d5a2012dc053b783fc55e3b00134"
+  },
+  "firstIntegratedPass": {
+    "runtimeBuild": "2c2c7059bde71c204bae56f6cb8ac251e132026dc3ce0fb57d04b898eca23bbb",
+    "nativeInput": "Chromium touch on Raspberry Pi V3D, 844 \u00d7 390 CSS, DPR 0.75",
+    "screenSubmissions": 227,
+    "lastSubmissionMs": 7348.5,
+    "audioAndSimulationEvents": [
+      {
+        "kind": "shot",
+        "simulationSeconds": 2.7667,
+        "wallMs": 1680.0
+      },
+      {
+        "kind": "throw",
+        "simulationSeconds": 2.8667,
+        "wallMs": 1915.1
+      },
+      {
+        "kind": "flash",
+        "simulationSeconds": 4.6667,
+        "wallMs": 3713.0
+      },
+      {
+        "kind": "reload",
+        "simulationSeconds": 5.65,
+        "wallMs": 4744.2
+      }
+    ],
+    "overlappingHighRushSamples": [
+      {
+        "ms": 4086.8,
+        "rush": 0.7693,
+        "flash": 0.7248,
+        "ammo": 6,
+        "prompt": "RELOAD"
+      }
+    ],
+    "rawTimelineSha256": "075e7cec479b79c1ddfb5b3a8710fecccce6b2cf7e8a4b2a1a9bcc58710b6a1e",
+    "rawOpusSha256": "ac07fafe46cdd78762694ec265930ea753150fc1afb4b8b352b732a9cd7aeb68"
+  },
+  "correctedInputPass": {
+    "runtimeBuild": "3a06223a91bd12358ba01507e12490bbd060c79fc8f89358dbb9c471adedfdb1",
+    "networkSessionFixtureCount": 14,
+    "correctedHoldAndSwitchRoomChecks": 2,
+    "rawRoomSha256": "d3b154aa6cd3c84eacda82c0599c115aede0bdaa32f2238aaa5d968e890412d3"
+  }
+}

@@ -2097,7 +2097,7 @@
     {
       "path": "shared/multiplayer/build.mjs",
       "bytes": 660,
-      "sha256": "8584f224f64f779feeb6a6c3178042dd9e005357557b58e01300a4e623acab33"
+      "sha256": "ad5aaa1861de60f9315cd16cfc22f02be180a1b9756e463ca7e0e647f84a56d8"
     },
     {
       "path": "shared/multiplayer/collision-contract.mjs",
@@ -2117,7 +2117,7 @@
     {
       "path": "shared/multiplayer/map-build.mjs",
       "bytes": 1215,
-      "sha256": "f0aea83bb5c40a2542f7fda5f84531e6f666750ee4a4e691a426f7b94df2a2e0"
+      "sha256": "1f1108549f3d7ef23ff0a17ebd214e822df0301e89f3b42c630564aa5c7f6fa1"
     },
     {
       "path": "shared/multiplayer/maps.mjs",
@@ -2182,12 +2182,12 @@
     {
       "path": "src/fps/app.mjs",
       "bytes": 57099,
-      "sha256": "b95b6e0c7c28c53778f3fe638ad48f3a2849c2d451995418db4cb7edbbb35a4f"
+      "sha256": "69dddc8210f859cd241f7c79c99f7c6fe2bb1c9e54562d962d4a421aa4922e17"
     },
     {
       "path": "src/fps/audio.mjs",
-      "bytes": 21433,
-      "sha256": "adcc9883ada45a0cd143ff8a027f3c111003725e2ecfc8b99b97ca5f2e54075a"
+      "bytes": 21362,
+      "sha256": "bc14c34be950b85d28ec26b7dd1e0f63064ffed88032cd13d43b36e1a23c5e1f"
     },
     {
       "path": "src/fps/authored-hand-data.mjs",
@@ -2511,8 +2511,8 @@
     },
     {
       "path": "src/fps/network/session.mjs",
-      "bytes": 39854,
-      "sha256": "bea9b947d5a1e72e4ed040bef42a2becd6ea7d74a5b2758c494c257c3480e166"
+      "bytes": 40099,
+      "sha256": "b0ec5d4fef3dcc7adeb3cdd06fb522b423ce70fe81a29d67df75af38ca319783"
     },
     {
       "path": "src/fps/physics.mjs",
@@ -2835,7 +2835,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 59446055,
+  "bytes": 59446229,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

@@ -361,7 +361,7 @@ async function joinNetwork(options){
  await networkSession?.dispose();networkSession=null;clearInput();audio.reset();renderer?.resetTransient();combatHud.reset();recoil.reset();
  const {NetworkSession}=await import('./network/session.mjs');
  if(generation!==networkJoinGeneration)throw Error('Join cancelled.');
- const session=new NetworkSession(null,{loadWorld:loadRoomWorld,onRocketAudio(event,serverTime){
+ const session=new NetworkSession(null,{loadWorld:loadRoomWorld,onCombatAudio(event,serverTime){
   if(networkSession!==session || game!==session.view)return false;
   const view=viewActor();
   if(view && !document.hidden){

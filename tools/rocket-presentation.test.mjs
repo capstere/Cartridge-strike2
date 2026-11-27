@@ -91,3 +91,26 @@ test('rocket sound uses the confirmed patch once and still rejects stale or mute
   session.receiveEvents([{...impact,eventId:24,time:state.time}]);
   assert.equal(played.length,2);
 });
+
+test('a remote firearm arriving between two paints starts once while the room event is fresh',()=>{
+  const played=[];
+  const audio=new AudioSystem({}, {volume:.5});
+  Object.assign(audio,{context:{state:'running'},listener:{},play:e=>played.push(e.actionId)});
+  const state={phase:'active',mode:'tdm',matchId:7,time:12.05,actors:new Map([['other',{lifeId:3,controlEpoch:1}]]),residents:new Map()};
+  const session=Object.assign(Object.create(NetworkSession.prototype),{
+    room:{state},enabled:true,closed:false,connectionState:'connected',localPlayerId:'self',seenEvent:0,events:[],
+    onCombatAudio(e,serverTime){audio.handleEvent(e,serverTime);return true;},
+  });
+  const shot={type:'shot',weapon:'p9',actorId:'other',lifeId:3,controlEpoch:1,matchId:7,eventId:1,time:12,actionId:'other:3:1:5'};
+  session.receiveEvents([shot,shot]);
+  state.time=12.75;
+  const visuals=session.drainEvents();
+  for(const e of visuals)if(!e.audioPresented)audio.handleEvent(e,state.time);
+  assert.deepEqual(played,[shot.actionId]);
+  assert.equal(visuals.length,1,'the renderer retains the same confirmed muzzle event');
+  session.receiveEvents([{...shot,eventId:2,actionId:'old'}]);
+  assert.equal(audio.stats.stale,1,'a shot already stale when received stays silent');
+  session.enabled=false;
+  session.receiveEvents([{...shot,eventId:3,time:state.time,actionId:'paused'}]);
+  assert.deepEqual(played,[shot.actionId]);
+});

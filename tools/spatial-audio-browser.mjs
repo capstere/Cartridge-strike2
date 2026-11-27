@@ -131,7 +131,7 @@ try {
   });
   const cancelled=rows.pop(), {flash,worldTone}=rows.pop(), latch=rows.pop();
   const [near,reduced,wall,far,reset,spectator,newLife]=flash;
-  assert(near.ringStarted && near.frequency>3050 && near.frequency<3160);
+  assert(near.ringStarted && Math.abs(near.frequency-3109)<6 && Math.abs(reduced.frequency-3109)<6);
   assert(near.early>near.late && near.late>0 && near.tail===0);
   assert(reduced.early>0 && reduced.early<near.early*.3 && reduced.late===0);
   assert(wall.early>reduced.early && wall.early<near.early);

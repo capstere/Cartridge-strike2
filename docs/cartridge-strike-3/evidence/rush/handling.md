@@ -1,5 +1,7 @@
 # Movement and held-item handling
 
+The integrated English client adds real-time touch video timing, family sound and casing observations, and matched events from two connected seats. [Integrated handling verification](integration.md)
+
 The CS3 control path enters Rush from forward input and actual resolved movement. While rushing, press Ctrl, the touch crouch button, or B on a standard gamepad to slide. The existing capsule sweep resolves each step. Releasing the stick and pressing crouch in the same input sample preserves the last resolved Rush impulse. A held crouch stays low after the slide. A blocked capsule ends the slide, and a jump requires standing clearance. The authoritative state and movement replay share the direction, speed, end time and cooldown. The source for the decaying speed curve and limited steering is Riposte's 07c-controller. [Recording comparison](../../RECORDING_REVIEW.md)
 
 P9 and P12 bring their authored front and rear marks to screen center in ADS. The ordinary long guns align their sights or optic, and each model retains its own shot response. The pistol runner releases the support wrist into the lower-left view while the trigger hand stays on its grip. All 13 held items keep the central ray clear at rest and across a full Rush stride. The two-handed reloads still attach the support palm to the animated magazine or shell. [Grip and projection tests](../../../../src/fps/view-grips.test.mjs)
