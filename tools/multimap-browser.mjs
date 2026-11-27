@@ -9,7 +9,7 @@ import {join} from 'node:path';
 import {setTimeout as delay} from 'node:timers/promises';
 import {chromium, devices} from '../frontline/source/tools/dev/node_modules/playwright-core/index.mjs';
 import {startPilotFixture} from './network-pilot-fixture.mjs';
-import {resumeDesktop} from './network-browser-resume.mjs';
+import {enterTouchMatch, resumeDesktop, waitForActiveHud} from './network-browser-resume.mjs';
 import {CONTRACT} from '../shared/multiplayer/build.mjs';
 
 const cases = {
@@ -308,8 +308,8 @@ try {
   await page.locator('#room-ready').click();
   mark('start match');
   const start=performance.now(); await page.locator('#room-start').click();
-  await page.locator('#resume').waitFor(); result.startToPlayableMs=Math.round(performance.now()-start);
-  if(spec.mobile) await page.locator('#resume').tap(); else mousePoint=(await resumeDesktop(page)).point;
+  await waitForActiveHud(page); result.startToPlayableMs=Math.round(performance.now()-start);
+  if(spec.mobile) await enterTouchMatch(page); else mousePoint=(await resumeDesktop(page)).point;
   await until(()=>localSeat()?.enabled && room.state.phase==='active','Active controls on authority');
   await delay(result.warmupMs);
   result.controls=await walkAndFire(spec.mobile);

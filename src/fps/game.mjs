@@ -109,7 +109,10 @@ export class Game {
       this.actors.push({ id: `${side}-${i}`, name: isPlayer ? 'You' : `${side === 'analysts' ? 'A' : 'C'}-${String(i + 1).padStart(2, '0')}`, team: side, index: i, isPlayer, controllerType,
         money: this.config.startMoney, kills: 0, deaths: 0, alive: false, x: 0, y: 0, z: 0, radius: this.config.radius, height: this.config.standingHeight });
     }
-    this.beginRound(); return this;
+    this.warmupRemaining=0;
+    this.beginRound();
+    this.warmupRemaining=this.config.deploymentSeconds || 0;
+    return this;
   }
   beginRound() {
     this.beforeBeginRound?.();
@@ -145,7 +148,7 @@ export class Game {
     this.afterBeginRound?.();
     this.emit('round', null, { round: s.round });
   }
-  radio(id, actor=this.player) { if(this.config.networkSlice)return false; return sendRadio(this,id,actor); }
+  radio(id, actor=this.player) { if(this.config.networkSlice||this.warmupRemaining)return false; return sendRadio(this,id,actor); }
   startInventory(team) {
     const id = team === 'analysts' ? 'p9' : 'p12';
     return { primary: null, pistol: this.weaponItem(id), knife: { id: 'knife', ammo: Infinity, reserve: 0 }, smoke: 0, flash: 0, he: 0 };
@@ -153,8 +156,18 @@ export class Game {
   weaponItem(id) { const w = WEAPONS[id]; return { id, ammo: w.magazine, reserve: w.reserve }; }
   item(actor = this.player) { const w = WEAPONS[actor.weapon]; return actor.inventory[w?.slot] ?? null; }
   pause(value = true) { this.state.paused = Boolean(value); this.accumulator = 0; this.firePress = null; this.crouchEdge=false; for (const a of this.actors) { this.interruptCartridge(a);interruptRush(a,this.state.time);a.waitTriggerRelease=false; a.fireHeld = false; a.interactHeld = false; a.jumpHeld = false; a.action = null; } }
+  advanceWarmup(dt,input) {
+    if(!this.warmupRemaining)return false;
+    if(Number.isFinite(input.yaw))this.player.yaw=input.yaw;
+    if(Number.isFinite(input.pitch))this.player.pitch=clamp(input.pitch,-1.49,1.49);
+    this.warmupRemaining=Math.max(0,this.warmupRemaining-Math.max(0,dt));
+    if(this.warmupRemaining<EPS)this.warmupRemaining=0;
+    this.firePress=null;this.crouchEdge=false;
+    return true;
+  }
   update(dt, input = {}) {
     if (this.state.paused || ['menu', 'match'].includes(this.phase)) return;
+    if(this.advanceWarmup(dt, input))return;
     if(input.crouchEdge && this.phase==='active')this.crouchEdge=true;
     if (input.firePress && this.phase==='active') this.firePress ??= input.firePress;
     this.accumulator += Math.min(Math.max(0, dt), this.config.maxCatchUp);
@@ -167,6 +180,7 @@ export class Game {
   step(dt, input = {}, inputsByActor = null) {
     const s = this.state;
     if (s.paused || ['menu', 'match'].includes(s.phase)) return;
+    if(this.advanceWarmup(dt,input))return;
     s.time += dt;
     if (s.phase === 'result') { if (s.time + EPS >= s.resultDeadline) this.beginRound(); return; }
     tickDance(this);
@@ -245,6 +259,7 @@ export class Game {
   buy(id, actor = this.player) {
     const reject = reasonId => ({ ok: false, reasonId, reason: purchaseReasons[reasonId] });
     if (this.config.networkSlice && (this.config.mode!=='classic' || !['smg','ar47','cr4','shotgun','sniper','bazooka','armor','he'].includes(id))) return reject('unavailableInMode');
+    if(this.warmupRemaining)return reject('buyTime');
     const w = WEAPONS[id];
     if (!w || !w.cost) return reject('unavailable');
     if(this.config.networkSlice&&!actor?.alive)return reject('nextRound');
@@ -262,6 +277,7 @@ export class Game {
     this.emit('buy', actor, { item: id }); return { ok: true };
   }
   select(slot, actor = this.player) {
+    if(this.warmupRemaining)return false;
     if (!actor?.alive) return false;
     const inventory = actor.inventory; let id = slot;
     if (slot === 1 || slot === '1' || slot === 'primary') id = inventory.primary?.id;
@@ -286,6 +302,7 @@ export class Game {
     this.emit('switch', actor, { weapon: id }); return true;
   }
   reload(actor = this.player) {
+    if(this.warmupRemaining)return false;
     if (!actor?.alive || actor.reloadUntil || !['buy', 'active'].includes(this.phase)) return false;
     const item = this.item(actor), w = WEAPONS[actor.weapon];
     if (!item || !w.reload || item.ammo >= w.magazine || !item.reserve) return false;
@@ -303,6 +320,7 @@ export class Game {
   }
   dropItem(actor, item) { if(this.config.networkSlice)return; this.state.drops.push({ ...point(actor), id: `drop-${++this.eventSerial}`, type: 'weapon', createdAt:this.state.time, item: { ...item } }); }
   drop(actor = this.player) {
+    if(this.warmupRemaining)return false;
     if(this.config.networkSlice && (this.config.mode!=='classic'||this.bomb.carrierId!==actor?.id))return false;
     if (!actor?.alive || !['buy', 'active'].includes(this.phase)) return false;
     if ((actor.weapon === 'bomb'||this.config.networkSlice) && this.bomb.carrierId === actor.id) {
@@ -351,6 +369,7 @@ export class Game {
   }
 
   fire(actor = this.player, pressed = true, shot = actor) {
+    if(this.warmupRemaining)return false;
     const w = WEAPONS[actor.weapon];
     if (this.phase !== 'active' || !actor.alive || !rushReady(actor) || actor.reloadUntil || this.state.time + EPS < actor.nextShot || actor.action) return false;
     if (!w || w.slot === 'bomb' || (!w.automatic && !pressed && !actor.bot)) return false;

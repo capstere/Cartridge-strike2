@@ -95,7 +95,78 @@
         20,
         60
       ],
-      "shotsWithLiveFoley": [],
+      "decodedSources": [
+        {
+          "take": "foley/f_draw-1.mp3",
+          "sim": 0.05,
+          "audioClock": 25.10933,
+          "scheduled": 25.10933,
+          "length": 0.505
+        },
+        {
+          "take": "armes/g_glock_pov-1.mp3",
+          "sim": 1.35,
+          "audioClock": 25.99467,
+          "scheduled": 25.99467,
+          "length": 0.76369
+        },
+        {
+          "take": "impacts/i_glass-1.mp3",
+          "sim": 1.35,
+          "audioClock": 25.99467,
+          "scheduled": 25.99467,
+          "length": 0.505
+        },
+        {
+          "take": "p9:out:0",
+          "sim": 1.78333,
+          "audioClock": 26.50667,
+          "scheduled": 26.50667,
+          "length": 0.25729
+        },
+        {
+          "take": "foley/f_draw-1.mp3",
+          "sim": 2.0,
+          "audioClock": 26.752,
+          "scheduled": 26.752,
+          "length": 0.505
+        },
+        {
+          "take": "foley/f_draw-1.mp3",
+          "sim": 2.05,
+          "audioClock": 26.816,
+          "scheduled": 26.816,
+          "length": 0.505
+        },
+        {
+          "take": "armes/g_glock_pov-2.mp3",
+          "sim": 3.13333,
+          "audioClock": 27.392,
+          "scheduled": 27.392,
+          "length": 0.68077
+        },
+        {
+          "take": "p9:out:0",
+          "sim": 3.63333,
+          "audioClock": 27.68,
+          "scheduled": 27.68,
+          "length": 0.25729
+        },
+        {
+          "take": "p9:in:0",
+          "sim": 4.23333,
+          "audioClock": 27.97867,
+          "scheduled": 27.97867,
+          "length": 0.33542
+        },
+        {
+          "take": "p9:action:0",
+          "sim": 4.55,
+          "audioClock": 28.29867,
+          "scheduled": 28.29867,
+          "length": 0.12077
+        }
+      ],
       "cyclePose": {
         "slideZ": 0.01324,
         "slideTurn": 0
@@ -122,7 +193,78 @@
         12,
         60
       ],
-      "shotsWithLiveFoley": [],
+      "decodedSources": [
+        {
+          "take": "foley/f_draw-1.mp3",
+          "sim": 4.98333,
+          "audioClock": 28.64,
+          "scheduled": 28.64,
+          "length": 0.505
+        },
+        {
+          "take": "armes/g_pistol_pov-1.mp3",
+          "sim": 6.28333,
+          "audioClock": 29.32267,
+          "scheduled": 29.32267,
+          "length": 1.405
+        },
+        {
+          "take": "p9:out:0",
+          "sim": 6.71667,
+          "audioClock": 29.74933,
+          "scheduled": 29.74933,
+          "length": 0.25729
+        },
+        {
+          "take": "foley/f_draw-1.mp3",
+          "sim": 6.93333,
+          "audioClock": 29.952,
+          "scheduled": 29.952,
+          "length": 0.505
+        },
+        {
+          "take": "foley/f_draw-1.mp3",
+          "sim": 6.98333,
+          "audioClock": 29.984,
+          "scheduled": 29.984,
+          "length": 0.505
+        },
+        {
+          "take": "armes/g_pistol_pov-2.mp3",
+          "sim": 8.06667,
+          "audioClock": 30.54933,
+          "scheduled": 30.54933,
+          "length": 1.405
+        },
+        {
+          "take": "impacts/i_metal-1.mp3",
+          "sim": 8.06667,
+          "audioClock": 30.54933,
+          "scheduled": 30.54933,
+          "length": 0.30646
+        },
+        {
+          "take": "p9:out:0",
+          "sim": 8.56667,
+          "audioClock": 30.816,
+          "scheduled": 30.816,
+          "length": 0.25729
+        },
+        {
+          "take": "p9:in:0",
+          "sim": 9.16667,
+          "audioClock": 31.104,
+          "scheduled": 31.104,
+          "length": 0.33542
+        },
+        {
+          "take": "p9:action:0",
+          "sim": 9.48333,
+          "audioClock": 31.33867,
+          "scheduled": 31.33867,
+          "length": 0.12077
+        }
+      ],
       "cyclePose": {
         "slideZ": 0.01324,
         "slideTurn": 0
@@ -149,33 +291,68 @@
         30,
         60
       ],
-      "shotsWithLiveFoley": [
+      "decodedSources": [
+        {
+          "take": "foley/f_draw-1.mp3",
+          "sim": 9.91667,
+          "audioClock": 31.584,
+          "scheduled": 31.584,
+          "length": 0.505
+        },
+        {
+          "take": "armes/g_rifle_pov-1.mp3",
+          "sim": 11.21667,
+          "audioClock": 32.23467,
+          "scheduled": 32.23467,
+          "length": 1.605
+        },
         {
           "take": "magout_rifle-2",
           "sim": 11.78333,
-          "audioClock": 33.32267,
-          "scheduled": 33.32267,
+          "audioClock": 32.59733,
+          "scheduled": 32.59733,
           "length": 0.39704
+        },
+        {
+          "take": "foley/f_draw-1.mp3",
+          "sim": 12.08333,
+          "audioClock": 32.88533,
+          "scheduled": 32.88533,
+          "length": 0.505
+        },
+        {
+          "take": "foley/f_draw-1.mp3",
+          "sim": 12.13333,
+          "audioClock": 32.98133,
+          "scheduled": 32.98133,
+          "length": 0.505
+        },
+        {
+          "take": "armes/g_rifle_pov-2.mp3",
+          "sim": 13.6,
+          "audioClock": 33.71733,
+          "scheduled": 33.71733,
+          "length": 1.605
         },
         {
           "take": "magout_rifle-2",
           "sim": 14.23333,
-          "audioClock": 34.61333,
-          "scheduled": 34.61333,
+          "audioClock": 34.02667,
+          "scheduled": 34.02667,
           "length": 0.39704
         },
         {
           "take": "magin_rifle-1",
           "sim": 15.03333,
-          "audioClock": 34.96533,
-          "scheduled": 34.96533,
+          "audioClock": 34.38933,
+          "scheduled": 34.38933,
           "length": 0.21856
         },
         {
           "take": "charge_rifle-2",
           "sim": 15.2,
-          "audioClock": 35.04,
-          "scheduled": 35.04,
+          "audioClock": 34.47467,
+          "scheduled": 34.47467,
           "length": 0.55367
         }
       ],
@@ -205,33 +382,68 @@
         30,
         60
       ],
-      "shotsWithLiveFoley": [
+      "decodedSources": [
+        {
+          "take": "foley/f_draw-1.mp3",
+          "sim": 16.0,
+          "audioClock": 34.95467,
+          "scheduled": 34.95467,
+          "length": 0.505
+        },
+        {
+          "take": "armes/g_ak_pov-1.mp3",
+          "sim": 17.3,
+          "audioClock": 35.72267,
+          "scheduled": 35.72267,
+          "length": 1.605
+        },
         {
           "take": "magout_rifle-2",
           "sim": 17.86667,
-          "audioClock": 36.66133,
-          "scheduled": 36.66133,
+          "audioClock": 36.07467,
+          "scheduled": 36.07467,
           "length": 0.39704
+        },
+        {
+          "take": "foley/f_draw-1.mp3",
+          "sim": 18.23333,
+          "audioClock": 36.33067,
+          "scheduled": 36.33067,
+          "length": 0.505
+        },
+        {
+          "take": "foley/f_draw-1.mp3",
+          "sim": 18.28333,
+          "audioClock": 36.37333,
+          "scheduled": 36.37333,
+          "length": 0.505
+        },
+        {
+          "take": "armes/g_ak_pov-2.mp3",
+          "sim": 19.9,
+          "audioClock": 37.13067,
+          "scheduled": 37.13067,
+          "length": 1.605
         },
         {
           "take": "magout_rifle-2",
           "sim": 20.53333,
-          "audioClock": 38.048,
-          "scheduled": 38.048,
+          "audioClock": 37.48267,
+          "scheduled": 37.48267,
           "length": 0.39704
         },
         {
           "take": "magin_rifle-2",
           "sim": 21.8,
-          "audioClock": 38.624,
-          "scheduled": 38.624,
+          "audioClock": 38.06933,
+          "scheduled": 38.06933,
           "length": 0.19083
         },
         {
           "take": "charge_rifle-1",
           "sim": 21.8,
-          "audioClock": 38.624,
-          "scheduled": 38.624,
+          "audioClock": 38.06933,
+          "scheduled": 38.06933,
           "length": 0.4294
         }
       ],
@@ -261,33 +473,68 @@
         30,
         90
       ],
-      "shotsWithLiveFoley": [
+      "decodedSources": [
+        {
+          "take": "foley/f_draw-1.mp3",
+          "sim": 22.5,
+          "audioClock": 38.53867,
+          "scheduled": 38.53867,
+          "length": 0.505
+        },
+        {
+          "take": "armes/g_smg_pov-1.mp3",
+          "sim": 23.8,
+          "audioClock": 39.18933,
+          "scheduled": 39.18933,
+          "length": 1.12154
+        },
         {
           "take": "magout_smg",
           "sim": 24.23333,
-          "audioClock": 40.032,
-          "scheduled": 40.032,
+          "audioClock": 39.52,
+          "scheduled": 39.52,
           "length": 0.1511
+        },
+        {
+          "take": "foley/f_draw-1.mp3",
+          "sim": 24.55,
+          "audioClock": 39.75467,
+          "scheduled": 39.75467,
+          "length": 0.505
+        },
+        {
+          "take": "foley/f_draw-1.mp3",
+          "sim": 24.6,
+          "audioClock": 39.78667,
+          "scheduled": 39.78667,
+          "length": 0.505
+        },
+        {
+          "take": "armes/g_smg_pov-2.mp3",
+          "sim": 25.86667,
+          "audioClock": 40.37333,
+          "scheduled": 40.37333,
+          "length": 1.28031
         },
         {
           "take": "magout_smg",
           "sim": 26.36667,
-          "audioClock": 41.22667,
-          "scheduled": 41.22667,
+          "audioClock": 40.61867,
+          "scheduled": 40.61867,
           "length": 0.1511
         },
         {
           "take": "magin_smg",
           "sim": 27.36667,
-          "audioClock": 41.67467,
-          "scheduled": 41.67467,
+          "audioClock": 41.07733,
+          "scheduled": 41.07733,
           "length": 0.1661
         },
         {
           "take": "charge_rifle-1",
           "sim": 27.36667,
-          "audioClock": 41.67467,
-          "scheduled": 41.67467,
+          "audioClock": 41.07733,
+          "scheduled": 41.07733,
           "length": 0.4
         }
       ],
@@ -317,54 +564,145 @@
         8,
         24
       ],
-      "shotsWithLiveFoley": [
+      "decodedSources": [
+        {
+          "take": "foley/f_draw-1.mp3",
+          "sim": 27.96667,
+          "audioClock": 41.472,
+          "scheduled": 41.472,
+          "length": 0.505
+        },
+        {
+          "take": "armes/g_shotgun_pov-1.mp3",
+          "sim": 29.26667,
+          "audioClock": 42.144,
+          "scheduled": 42.144,
+          "length": 1.605
+        },
+        {
+          "take": "impacts/i_glass-1.mp3",
+          "sim": 29.26667,
+          "audioClock": 42.144,
+          "scheduled": 42.144,
+          "length": 0.505
+        },
         {
           "take": "pump-1",
           "sim": 29.56667,
-          "audioClock": 42.816,
-          "scheduled": 42.816,
+          "audioClock": 42.304,
+          "scheduled": 42.304,
           "length": 0.54596
         },
         {
           "take": "shell-1",
           "sim": 30.26667,
-          "audioClock": 43.21067,
-          "scheduled": 43.21067,
+          "audioClock": 42.688,
+          "scheduled": 42.688,
           "length": 0.27156
+        },
+        {
+          "take": "foley/f_draw-1.mp3",
+          "sim": 30.61667,
+          "audioClock": 43.02933,
+          "scheduled": 43.02933,
+          "length": 0.505
+        },
+        {
+          "take": "foley/f_draw-1.mp3",
+          "sim": 30.66667,
+          "audioClock": 43.072,
+          "scheduled": 43.072,
+          "length": 0.505
+        },
+        {
+          "take": "armes/g_shotgun_pov-2.mp3",
+          "sim": 32.48333,
+          "audioClock": 43.92533,
+          "scheduled": 43.92533,
+          "length": 1.605
+        },
+        {
+          "take": "impacts/i_concrete-1.mp3",
+          "sim": 32.48333,
+          "audioClock": 43.92533,
+          "scheduled": 43.92533,
+          "length": 0.32371
+        },
+        {
+          "take": "impacts/i_concrete-1.mp3",
+          "sim": 32.48333,
+          "audioClock": 43.92533,
+          "scheduled": 43.92533,
+          "length": 0.32371
+        },
+        {
+          "take": "impacts/i_concrete-1.mp3",
+          "sim": 32.48333,
+          "audioClock": 43.92533,
+          "scheduled": 43.92533,
+          "length": 0.32371
+        },
+        {
+          "take": "impacts/i_concrete-1.mp3",
+          "sim": 32.48333,
+          "audioClock": 43.92533,
+          "scheduled": 43.92533,
+          "length": 0.32371
+        },
+        {
+          "take": "impacts/i_concrete-1.mp3",
+          "sim": 32.48333,
+          "audioClock": 43.92533,
+          "scheduled": 43.92533,
+          "length": 0.32371
+        },
+        {
+          "take": "impacts/i_concrete-1.mp3",
+          "sim": 32.48333,
+          "audioClock": 43.92533,
+          "scheduled": 43.92533,
+          "length": 0.32371
+        },
+        {
+          "take": "impacts/i_concrete-1.mp3",
+          "sim": 32.48333,
+          "audioClock": 43.92533,
+          "scheduled": 43.92533,
+          "length": 0.32371
         },
         {
           "take": "shell-1",
           "sim": 33.25,
-          "audioClock": 44.97067,
-          "scheduled": 44.97067,
+          "audioClock": 44.30933,
+          "scheduled": 44.30933,
           "length": 0.27156
         },
         {
           "take": "shell-2",
           "sim": 33.88333,
-          "audioClock": 45.248,
-          "scheduled": 45.248,
+          "audioClock": 44.608,
+          "scheduled": 44.608,
           "length": 0.33363
         },
         {
           "take": "shell-1",
           "sim": 34.55,
-          "audioClock": 45.80267,
-          "scheduled": 45.80267,
+          "audioClock": 45.00267,
+          "scheduled": 45.00267,
           "length": 0.27156
         },
         {
           "take": "shell-3",
           "sim": 34.71667,
-          "audioClock": 45.87733,
-          "scheduled": 45.87733,
+          "audioClock": 45.07733,
+          "scheduled": 45.07733,
           "length": 0.30458
         },
         {
           "take": "pump-1",
           "sim": 34.95,
-          "audioClock": 45.984,
-          "scheduled": 45.984,
+          "audioClock": 45.184,
+          "scheduled": 45.184,
           "length": 0.23333
         }
       ],
@@ -396,40 +734,82 @@
         5,
         20
       ],
-      "shotsWithLiveFoley": [
+      "decodedSources": [
+        {
+          "take": "foley/f_draw-1.mp3",
+          "sim": 35.38333,
+          "audioClock": 45.55733,
+          "scheduled": 45.55733,
+          "length": 0.505
+        },
+        {
+          "take": "armes/g_sniper_pov-1.mp3",
+          "sim": 36.68333,
+          "audioClock": 46.18667,
+          "scheduled": 46.18667,
+          "length": 1.605
+        },
         {
           "take": "bolt-1",
           "sim": 36.85,
-          "audioClock": 47.11467,
-          "scheduled": 47.11467,
+          "audioClock": 46.272,
+          "scheduled": 46.272,
           "length": 0.8806
         },
         {
           "take": "magout_rifle-1",
           "sim": 37.88333,
-          "audioClock": 47.98933,
-          "scheduled": 47.98933,
+          "audioClock": 46.98667,
+          "scheduled": 46.98667,
           "length": 0.6
+        },
+        {
+          "take": "foley/f_draw-1.mp3",
+          "sim": 38.28333,
+          "audioClock": 47.28533,
+          "scheduled": 47.28533,
+          "length": 0.505
+        },
+        {
+          "take": "foley/f_draw-1.mp3",
+          "sim": 38.33333,
+          "audioClock": 47.328,
+          "scheduled": 47.328,
+          "length": 0.505
+        },
+        {
+          "take": "armes/g_sniper_pov-2.mp3",
+          "sim": 40.36667,
+          "audioClock": 48.288,
+          "scheduled": 48.288,
+          "length": 1.605
+        },
+        {
+          "take": "impacts/i_metal-1.mp3",
+          "sim": 40.36667,
+          "audioClock": 48.288,
+          "scheduled": 48.288,
+          "length": 0.30646
         },
         {
           "take": "magout_rifle-1",
           "sim": 41.2,
-          "audioClock": 49.99467,
-          "scheduled": 49.99467,
+          "audioClock": 48.68267,
+          "scheduled": 48.68267,
           "length": 0.6
         },
         {
           "take": "magin_rifle-1",
           "sim": 42.3,
-          "audioClock": 50.48533,
-          "scheduled": 50.48533,
+          "audioClock": 49.19467,
+          "scheduled": 49.19467,
           "length": 0.21856
         },
         {
           "take": "bolt-1",
           "sim": 42.4,
-          "audioClock": 50.528,
-          "scheduled": 50.528,
+          "audioClock": 49.23733,
+          "scheduled": 49.23733,
           "length": 0.8806
         }
       ],
@@ -457,19 +837,33 @@
         1,
         4
       ],
-      "shotsWithLiveFoley": [
+      "decodedSources": [
+        {
+          "take": "foley/f_draw-1.mp3",
+          "sim": 43.56667,
+          "audioClock": 50.12267,
+          "scheduled": 50.12267,
+          "length": 0.505
+        },
+        {
+          "take": "impacts/i_flesh-1.mp3",
+          "sim": 44.93333,
+          "audioClock": 50.72,
+          "scheduled": 50.72,
+          "length": 0.24394
+        },
         {
           "take": "pickup-2",
           "sim": 45.76667,
-          "audioClock": 52.27733,
-          "scheduled": 52.27733,
+          "audioClock": 50.912,
+          "scheduled": 50.912,
           "length": 0.33119
         },
         {
           "take": "stow-2",
           "sim": 47.03333,
-          "audioClock": 52.66133,
-          "scheduled": 52.66133,
+          "audioClock": 51.31733,
+          "scheduled": 51.31733,
           "length": 0.31121
         }
       ],
@@ -483,7 +877,7 @@
     }
   ],
   "rawSha256": {
-    "families.json": "aa26427edbdc5284f901fa449bca7c0bc31bd7a94e32e7c6b7a29e46786c88e2",
+    "families.json": "203a211ee079f71f07913520f1dd2a7841ad27a2c74eed837c2a34427c59acef",
     "unit-room.log": "1c3bc7bde5c341808cbf74728bc8ddfcc000d5a2012dc053b783fc55e3b00134"
   },
   "firstIntegratedPass": {
@@ -530,5 +924,442 @@
     "networkSessionFixtureCount": 14,
     "correctedHoldAndSwitchRoomChecks": 2,
     "rawRoomSha256": "d3b154aa6cd3c84eacda82c0599c115aede0bdaa32f2238aaa5d968e890412d3"
-  }
+  },
+  "recordedFamilyRuntime": "082b9a98eaa391615c3f5fd52b0382e75dd491f6535df8621f853bb38cedd0f0",
+  "familyShotCapture": "Native 844 \u00d7 390 CSS; both primary and pistol reload samples, and all decoded POV buffers",
+  "media": [
+    {
+      "file": "v6-touch.webm",
+      "sha256": "2cf0c771fa8df4498bbaa062146dbc20b7010697d4e08b868c172fb973916cbe",
+      "duration": 7.052,
+      "bytes": 423908,
+      "compositorFrames": 216,
+      "sampledRaf": 213,
+      "overlap": {
+        "frames": 14,
+        "firstMs": 3942.4,
+        "lastMs": 4278.2,
+        "peakRush": 0.991,
+        "prompt": "RELOAD"
+      },
+      "audioClockEvents": [
+        {
+          "type": "shot",
+          "actor": "analysts-0",
+          "sim": 2.3499999999999965,
+          "clipSec": 1.5477
+        },
+        {
+          "type": "throw",
+          "actor": "analysts-1",
+          "sim": 2.3999999999999964,
+          "clipSec": 1.7083
+        },
+        {
+          "type": "flash",
+          "actor": null,
+          "sim": 4.19999999999999,
+          "clipSec": 3.5957
+        },
+        {
+          "type": "reload",
+          "actor": "analysts-0",
+          "sim": 5.049999999999987,
+          "clipSec": 4.4787
+        }
+      ],
+      "measuredFlashBand": [
+        {
+          "clipSec": 3.3457,
+          "offsetSec": -0.25,
+          "windowSec": 0.12,
+          "ringPeakHzDbFS": [
+            3133.3,
+            -84.37
+          ],
+          "lowerControlHzDbFS": [
+            2925.0,
+            -90.92
+          ],
+          "upperControlHzDbFS": [
+            3333.3,
+            -76.07
+          ],
+          "allBandRmsDbFS": -40.61
+        },
+        {
+          "clipSec": 3.6957,
+          "offsetSec": 0.1,
+          "windowSec": 0.12,
+          "ringPeakHzDbFS": [
+            3108.3,
+            -34.59
+          ],
+          "lowerControlHzDbFS": [
+            2966.7,
+            -82.48
+          ],
+          "upperControlHzDbFS": [
+            3233.3,
+            -79.08
+          ],
+          "allBandRmsDbFS": -37.09
+        },
+        {
+          "clipSec": 3.8957,
+          "offsetSec": 0.3,
+          "windowSec": 0.12,
+          "ringPeakHzDbFS": [
+            3108.3,
+            -36.29
+          ],
+          "lowerControlHzDbFS": [
+            2916.7,
+            -58.18
+          ],
+          "upperControlHzDbFS": [
+            3266.7,
+            -63.54
+          ],
+          "allBandRmsDbFS": -33.32
+        },
+        {
+          "clipSec": 4.1957,
+          "offsetSec": 0.6,
+          "windowSec": 0.12,
+          "ringPeakHzDbFS": [
+            3108.3,
+            -42.1
+          ],
+          "lowerControlHzDbFS": [
+            2966.7,
+            -74.07
+          ],
+          "upperControlHzDbFS": [
+            3316.7,
+            -75.24
+          ],
+          "allBandRmsDbFS": -34.82
+        },
+        {
+          "clipSec": 4.5957,
+          "offsetSec": 1,
+          "windowSec": 0.12,
+          "ringPeakHzDbFS": [
+            3108.3,
+            -48.92
+          ],
+          "lowerControlHzDbFS": [
+            2966.7,
+            -112.22
+          ],
+          "upperControlHzDbFS": [
+            3233.3,
+            -109.4
+          ],
+          "allBandRmsDbFS": -51.84
+        },
+        {
+          "clipSec": 5.1957,
+          "offsetSec": 1.6,
+          "windowSec": 0.12,
+          "ringPeakHzDbFS": [
+            3108.3,
+            -59.24
+          ],
+          "lowerControlHzDbFS": [
+            2808.3,
+            -78.17
+          ],
+          "upperControlHzDbFS": [
+            3250.0,
+            -82.16
+          ],
+          "allBandRmsDbFS": -50.42
+        },
+        {
+          "clipSec": 5.8957,
+          "offsetSec": 2.3,
+          "windowSec": 0.12,
+          "ringPeakHzDbFS": [
+            3100.0,
+            -45.69
+          ],
+          "lowerControlHzDbFS": [
+            2950.0,
+            -47.44
+          ],
+          "upperControlHzDbFS": [
+            3225.0,
+            -47.84
+          ],
+          "allBandRmsDbFS": -31.42
+        },
+        {
+          "clipSec": 6.4957,
+          "offsetSec": 2.9,
+          "windowSec": 0.12,
+          "ringPeakHzDbFS": [
+            3108.3,
+            -82.4
+          ],
+          "lowerControlHzDbFS": [
+            2966.7,
+            -127.03
+          ],
+          "upperControlHzDbFS": [
+            3225.0,
+            -124.71
+          ],
+          "allBandRmsDbFS": -72.39
+        }
+      ],
+      "rawTimelineSha256": "ccfc2534659bef79f9245891ca432f32bc965f9d6d023a23225e3e23956d7d7f"
+    },
+    {
+      "file": "v6-keyboard.webm",
+      "sha256": "4fc4451d7d30a26546ab4cb28438ee0e572b9598a6d8cfa7da7b75df941695cd",
+      "duration": 6.59,
+      "bytes": 456343,
+      "compositorFrames": 200,
+      "sampledRaf": 201,
+      "overlap": {
+        "frames": 11,
+        "firstMs": 3592.2,
+        "lastMs": 3907.8,
+        "peakRush": 0.979,
+        "prompt": "R \u00b7 RELOAD"
+      },
+      "audioClockEvents": [
+        {
+          "type": "shot",
+          "actor": "analysts-0",
+          "sim": 1.8333333333333317,
+          "clipSec": 1.2585
+        },
+        {
+          "type": "throw",
+          "actor": "analysts-1",
+          "sim": 1.9166666666666647,
+          "clipSec": 1.4534
+        },
+        {
+          "type": "flash",
+          "actor": null,
+          "sim": 3.7166666666666583,
+          "clipSec": 3.2798
+        },
+        {
+          "type": "reload",
+          "actor": "analysts-0",
+          "sim": 4.233333333333324,
+          "clipSec": 3.9351
+        }
+      ],
+      "measuredFlashBand": [
+        {
+          "clipSec": 3.0298,
+          "offsetSec": -0.25,
+          "windowSec": 0.12,
+          "ringPeakHzDbFS": [
+            3150.0,
+            -108.01
+          ],
+          "lowerControlHzDbFS": [
+            2816.7,
+            -107.6
+          ],
+          "upperControlHzDbFS": [
+            3400.0,
+            -95.19
+          ],
+          "allBandRmsDbFS": -42.48
+        },
+        {
+          "clipSec": 3.3798,
+          "offsetSec": 0.1,
+          "windowSec": 0.12,
+          "ringPeakHzDbFS": [
+            3108.3,
+            -35.28
+          ],
+          "lowerControlHzDbFS": [
+            2966.7,
+            -82.36
+          ],
+          "upperControlHzDbFS": [
+            3225.0,
+            -77.78
+          ],
+          "allBandRmsDbFS": -36.82
+        },
+        {
+          "clipSec": 3.5798,
+          "offsetSec": 0.3,
+          "windowSec": 0.12,
+          "ringPeakHzDbFS": [
+            3108.3,
+            -36.51
+          ],
+          "lowerControlHzDbFS": [
+            2925.0,
+            -85.84
+          ],
+          "upperControlHzDbFS": [
+            3250.0,
+            -83.85
+          ],
+          "allBandRmsDbFS": -39.33
+        },
+        {
+          "clipSec": 3.8798,
+          "offsetSec": 0.6,
+          "windowSec": 0.12,
+          "ringPeakHzDbFS": [
+            3108.3,
+            -41.86
+          ],
+          "lowerControlHzDbFS": [
+            2783.3,
+            -89.64
+          ],
+          "upperControlHzDbFS": [
+            3283.3,
+            -90.99
+          ],
+          "allBandRmsDbFS": -39.74
+        },
+        {
+          "clipSec": 4.2798,
+          "offsetSec": 1,
+          "windowSec": 0.12,
+          "ringPeakHzDbFS": [
+            3108.3,
+            -48.74
+          ],
+          "lowerControlHzDbFS": [
+            2933.3,
+            -114.64
+          ],
+          "upperControlHzDbFS": [
+            3233.3,
+            -106.14
+          ],
+          "allBandRmsDbFS": -51.66
+        },
+        {
+          "clipSec": 4.8798,
+          "offsetSec": 1.6,
+          "windowSec": 0.12,
+          "ringPeakHzDbFS": [
+            3108.3,
+            -59.1
+          ],
+          "lowerControlHzDbFS": [
+            2941.7,
+            -118.49
+          ],
+          "upperControlHzDbFS": [
+            3275.0,
+            -124.59
+          ],
+          "allBandRmsDbFS": -61.87
+        },
+        {
+          "clipSec": 5.5798,
+          "offsetSec": 2.3,
+          "windowSec": 0.12,
+          "ringPeakHzDbFS": [
+            3108.3,
+            -71.18
+          ],
+          "lowerControlHzDbFS": [
+            2958.3,
+            -132.9
+          ],
+          "upperControlHzDbFS": [
+            3333.3,
+            -127.99
+          ],
+          "allBandRmsDbFS": -71.61
+        },
+        {
+          "clipSec": 6.1798,
+          "offsetSec": 2.9,
+          "windowSec": 0.12,
+          "ringPeakHzDbFS": [
+            3108.3,
+            -81.94
+          ],
+          "lowerControlHzDbFS": [
+            2925.0,
+            -128.0
+          ],
+          "upperControlHzDbFS": [
+            3225.0,
+            -127.38
+          ],
+          "allBandRmsDbFS": -73.17
+        }
+      ],
+      "rawTimelineSha256": "c5c6ca503deacd79c3e040bcc41206eb01fee692a25968645cab397f86a58e14"
+    }
+  ],
+  "accessibleFlash": [
+    {
+      "reduced": false,
+      "flashStrength": 0.8015893873132354,
+      "visualOpacity": 0.753494,
+      "rush": 0.7228879476114932,
+      "magazineText": "6 / 90",
+      "prompt": "RELOAD",
+      "promptRect": {
+        "left": 390.890625,
+        "right": 453.109375,
+        "top": 255.59375,
+        "bottom": 274.78125
+      },
+      "mapClearOfScore": true
+    },
+    {
+      "reduced": true,
+      "flashStrength": 0.8015893873132354,
+      "visualOpacity": 0.360715,
+      "rush": 0.7228879476114932,
+      "magazineText": "6 / 90",
+      "prompt": "RELOAD",
+      "promptRect": {
+        "left": 390.890625,
+        "right": 453.109375,
+        "top": 255.59375,
+        "bottom": 274.78125
+      },
+      "mapClearOfScore": true
+    }
+  ],
+  "localCartridges": [
+    {
+      "item": "smoke",
+      "deadlineHeld": 0,
+      "flightFuse": 1.8,
+      "guideToDetonationM": 0.0,
+      "returned": "cr4"
+    },
+    {
+      "item": "flash",
+      "deadlineHeld": 0,
+      "flightFuse": 1.8,
+      "guideToDetonationM": 0.0,
+      "returned": "cr4"
+    },
+    {
+      "item": "he",
+      "warning": "HE \u00b7 DETONATION IN HAND",
+      "secondsRemaining": 0.0867,
+      "outwardPathVisible": false,
+      "holderToBlastM": 0.0,
+      "stockAfter": 0,
+      "healthAfter": 35.323
+    }
+  ]
 }

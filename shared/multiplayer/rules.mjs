@@ -21,7 +21,7 @@ export const MATCH_PREFERENCES = Object.freeze({tdmMinutes:10,tdmKills:50,classi
   analystsBots:TEAM_CAPACITY,counterAnalystsBots:TEAM_CAPACITY});
 export const MATCH_CHOICES = Object.freeze({tdmMinutes:TDM_MINUTES,tdmKills:TDM_KILLS,classicWins:CLASSIC_WINS,
   analystsBots:BOT_COUNTS,counterAnalystsBots:BOT_COUNTS});
-export const MATCH_DEFAULTS = Object.freeze({durationSeconds:MATCH_PREFERENCES.tdmMinutes*60,scoreTarget:MATCH_PREFERENCES.tdmKills,countdownSeconds:3});
+export const MATCH_DEFAULTS = Object.freeze({durationSeconds:MATCH_PREFERENCES.tdmMinutes*60,scoreTarget:MATCH_PREFERENCES.tdmKills,countdownSeconds:5});
 export const RTT_FRESH_MS = 4000;
 export const RECONNECT_SECONDS = 15;
 export const INTERPOLATION_MS = 100;

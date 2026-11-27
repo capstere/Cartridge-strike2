@@ -574,7 +574,7 @@ export function makeActor(team, id, isHostage = false) {
   const weaponSocket = group(torso, 'weapon-socket', .026, .267, -.165);
   let bag;
   if (!isHostage) { bag = makeBag(); bag.position.set(.217, -.100, .040); torso.add(bag); }
-  const marker = label(root, isHostage ? 'GISSLAN' : analyst ? 'A' : 'CA', 0, 1.84, 0, isHostage ? .29 : .18, .104, { background: isHostage ? '#315345' : analyst ? '#274d67' : '#756044', foreground: '#dce5df' });
+  const marker = label(root, isHostage ? 'HOSTAGE' : analyst ? 'A' : 'CA', 0, 1.84, 0, isHostage ? .29 : .18, .104, { background: isHostage ? '#315345' : analyst ? '#274d67' : '#756044', foreground: '#dce5df' });
   const frame = group(null, 'body-frame');
   for (const child of [...root.children]) if (child !== marker) frame.add(child); root.add(frame);
   root.userData = { limbs, knees, torso, head, weaponSocket, bag, marker, frame, seed: seed % 1000 / 100, speed: 0, walkPhase: 0, crouch: 0, isHostage, weaponId: null, weaponCache: new Map(), authoredHeight: 1.70 };

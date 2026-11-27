@@ -5,7 +5,7 @@ import {setTimeout as delay} from 'node:timers/promises';
 import {chromium} from '../frontline/source/tools/dev/node_modules/playwright-core/index.mjs';
 import '../server/register-shared.mjs';
 const {createLocalServer}=await import('../server/local-server.mjs');
-import {resumeDesktop} from './network-browser-resume.mjs';
+import {enterTouchMatch, resumeDesktop} from './network-browser-resume.mjs';
 
 const local=await createLocalServer({port:0,testMatch:{countdownSeconds:.15}});
 const browsers=[],pages=[],errors=[];
@@ -68,7 +68,7 @@ try{
   Object.assign(game.config,{buyTime:80,resultTime:12});
   await mobile.locator('#network-room').fill(room.roomId);await mobile.locator('[data-create=false]').tap();
   await mobile.locator('#room-ready').tap();await desktop.locator('#room-ready').click();
-  await desktop.locator('#room-start').click();await mobile.locator('#resume').tap();await resumeDesktop(desktop);
+  await desktop.locator('#room-start').click();await enterTouchMatch(mobile);await resumeDesktop(desktop);
   if(out)for(const page of pages)await watchHandling(page);
   const carrier=game.actors.find(a=>a.team==='counterAnalysts'),defender=game.actors.find(a=>a.team==='analysts');
   assert.equal(game.bomb.carrierId,carrier.id);assert.equal(carrier.inventory.primary,null);

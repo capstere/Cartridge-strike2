@@ -5,7 +5,7 @@ import '../server/register-shared.mjs';
 const {createLocalServer}=await import('../server/local-server.mjs');
 import {verifyRoomAudio} from './network-audio-observer.mjs';
 import {glassCrossing} from './network-glass-fixture.mjs';
-import {resumeDesktop} from './network-browser-resume.mjs';
+import {resumeDesktop, waitForActiveHud} from './network-browser-resume.mjs';
 
 const local=await createLocalServer({port:0,testMatch:{countdownSeconds:.15}});
 const browsers=[],pages=[],errors=[];
@@ -41,6 +41,8 @@ try{
   await desktop.locator('[data-create=true]').click();
   await desktop.locator('#room-primary').selectOption('ar47');
   await desktop.locator('#room-ready').click();await desktop.locator('#room-start').click();
+  await waitForActiveHud(desktop);
+  if(await desktop.locator('#pause').isHidden())await desktop.keyboard.press('Escape');
   await desktop.locator('#resume').waitFor();
   const room=[...local.rooms][0],game=room.sim.game,host=[...room.seats.values()][0].actor;
   assert.equal(room.bots.size,9);assert.equal(host.weapon,'ar47');
@@ -50,7 +52,11 @@ try{
   const guest=[...room.seats.values()].find(s=>s.actor!==host).actor;
   // Move the shooter's test spawn onto the normal of an existing clear pane.
   const crossing=glassCrossing(game.world);
-  Object.assign(host,crossing.pose);
+  await until(()=>host.alive,'host is alive before setting the glass test spawn');
+  // Stage one reproducible spawn. The normal first shot ends protection immediately.
+  // All eight bots continue moving and firing while the two renderers acquire their inputs.
+  Object.assign(host,crossing.pose,{spawnProtectedUntil:game.state.time+30});
+  const stagedLife=host.lifeId;
   await desktop.waitForFunction(({x,z,yaw})=>{
     const actor=reviewSession.view.player;
     return Math.hypot(actor.x-x,actor.z-z)<.12 && Math.abs(actor.yaw-yaw)<.01 && Math.abs(actor.pitch)<.01;
@@ -76,6 +82,8 @@ try{
     try{await until(()=>room.state.brokenGlass.has(crossing.pane.id),'aimed shot broke pane');}
     finally{await desktop.mouse.up();}
   }finally{await desktop.mouse.up({button:'right'});}
+  assert.equal(host.lifeId,stagedLife,'the same real host life broke the pane');
+  assert.equal(host.spawnProtectedUntil,0,'normal gunfire removed setup protection');
   for(const p of [desktop,mobile])await p.waitForFunction(id=>reviewSession.world.glass.panes.get(id).broken,crossing.pane.id);
   await desktop.keyboard.press('r');await until(()=>host.reloadUntil>0,'desktop reload');
   await desktop.keyboard.press('2');await until(()=>host.weapon==='p9'&&!host.reloadUntil,'switch cancels reload');

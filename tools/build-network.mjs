@@ -17,7 +17,9 @@ const knockdownFiles=['src/fps/character-actors.mjs','src/fps/character-library.
   'src/fps/actor-occlusion.mjs','src/fps/headshot-pose.mjs',
   'assets/animations/headshot-male.animation.glb','assets/animations/headshot-female.animation.glb'];
 const accessCatalog='shared/multiplayer/access-english.mjs';
-const frontendFiles=['src/fps/game-english.mjs','src/fps/english-ui.mjs','src/fps/solo-maps.mjs','src/fps/menu-navigation.mjs','fps/routes.css','furniture-editor/build/environment-art.mjs'];
+const deploymentFiles=['src/fps/deployment-countdown.mjs',
+  ...['ui_tick','r_beep-1','st_start'].map(name=>'assets/fps/audio/riposte-'+name+'.mp3')];
+const frontendFiles=[...deploymentFiles,'src/fps/game-english.mjs','src/fps/english-ui.mjs','src/fps/solo-maps.mjs','src/fps/menu-navigation.mjs','fps/routes.css','furniture-editor/build/environment-art.mjs'];
 const rushPresentation=['src/fps/mobile-controls.mjs','src/fps/gamepad-controls.mjs','src/fps/presentation-hands.mjs',
   'src/fps/strike-kit-models.mjs','src/fps/model-primitives.mjs','src/fps/view-surface.mjs',
   'src/fps/grenade-assist.mjs','src/fps/action-audio.mjs','src/fps/reload-foley.mjs','src/fps/effects.mjs','src/fps/focus-hud.mjs','fps/focus-hud.css'];
