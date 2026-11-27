@@ -224,3 +224,70 @@ test('closing controls cannot renew a slide boost within the same life',()=>{
  run(game,sprint,2);run(game,{...sprint,crouchEdge:true},1);
  assert.equal(a.slideUntil,0);
 });
+
+test('crouch in the air survives landing, matches a restored prediction and makes one slide sound',()=>{
+ const {game,a}=fixture(),sprint={forward:1,sprint:true};
+ for(const released of [false,true]){
+   resetRush(a);Object.assign(a,{x:0,y:0,z:0,vy:0,onGround:true,jumpHeld:false});
+   run(game,sprint,18);run(game,{...sprint,jump:true},1);
+   for(let tick=0;tick<36 && (a.vy>=0 || a.y>.10);tick++)run(game,sprint,1);
+   assert(a.y>0 && a.y<=.10 && !a.onGround);
+   a.y=.078; // Measured height in the reported late-press case.
+   const travel=released ? {} : sprint;
+   const events=run(game,{...travel,crouchEdge:true,crouch:true},1);
+   assert.equal(a.slideBuffer,.3);assert(a.onGround);assert.equal(a.slideUntil,0);
+   const wire={handling:{}};copyPose(wire,a);
+   const replay={...a,slideBuffer:0};copyPose(replay,wire);
+   const predicted={world:game.world,config:game.config,actors:[replay],hostages:[],state:{time:game.state.time,zombies:[]}};
+   for(let tick=0;tick<9;tick++){
+     const controls={...travel,crouch:true,crouchEdge:false};
+     events.push(...run(game,controls,1));predicted.state.time+=dt;
+     moveActor(predicted,replay,controls,dt,false);
+     for(const key of [...POSE_NUMBERS,...POSE_BOOLEANS])assert.equal(replay[key],a[key],key);
+   }
+   const slides=events.filter(e=>e.type==='slide');
+   assert.equal(slides.length,1);assert.equal(slides[0].actorId,a.id);
+   assert.equal(slides[0].surface,game.world.materialAt(slides[0].x,slides[0].z));
+   assert.equal(a.slideBuffer,0);assert(a.slideUntil>game.state.time);
+   assert.equal(game.soundEvents.filter(e=>e.type==='slide').length,0,'presentation does not alter bot hearing');
+ }
+});
+
+test('a second physical tap waits through the active slide and cooldown, ages only on usable ground and fires once',()=>{
+ const {game,a}=fixture(),rush={forward:1,sprint:true};
+ run(game,rush,16);
+ const first=run(game,{...rush,crouchEdge:true},1);
+ assert.equal(first.filter(e=>e.type==='slide').length,1);
+ const end=a.slideUntil;
+ run(game,{...rush,crouchEdge:true},1);assert.equal(a.slideBuffer,.3);
+ const events=[];
+ while(game.state.time<end+.24){
+   events.push(...run(game,rush,1));assert.equal(a.slideBuffer,.3);
+ }
+ events.push(...run(game,rush,36));
+ assert.equal(events.filter(e=>e.type==='slide').length,1);
+ assert.equal(a.slideBuffer,0);
+ // An ordinary crouch held over sparse SDK ticks cannot synthesize another edge.
+ const held=run(game,{...rush,crouch:true,crouchEdge:false},90);
+ assert.equal(held.filter(e=>e.type==='slide').length,0);
+ resetRush(a);Object.assign(a,{slideBuffer:.3,moving:0});
+ run(game,{},17);assert(a.slideBuffer>0);
+ run(game,{},1);assert.equal(a.slideBuffer,0);
+ assert.equal(run(game,rush,6).filter(e=>e.type==='slide').length,0);
+});
+
+test('fresh competing actions and lifecycle transitions clear the actual buffered movement field',()=>{
+ const {game,a}=fixture(),rush={forward:1,sprint:true};
+ for(const action of [{aim:true},{fire:true},{sneak:true},{interact:true},{forward:-1}]){
+   a.slideBuffer=.3;run(game,{...rush,...action},1);
+   assert.equal(a.slideBuffer,0);assert.equal(a.slideUntil,0);
+ }
+ a.slideBuffer=.3;assert(game.select('knife'));assert.equal(a.slideBuffer,0);
+ game.select('pistol');game.item().ammo--;a.slideBuffer=.3;assert(game.reload());assert.equal(a.slideBuffer,0);
+ a.slideBuffer=.3;game.pause(true);assert.equal(a.slideBuffer,0);game.pause(false);
+ a.slideBuffer=.3;game.beginRound();assert.equal(a.slideBuffer,0);
+ game.state.phase='active';a.slideBuffer=.3;game.damage(a,200,null);assert(!a.alive);assert.equal(a.slideBuffer,0);
+ game.beginRound();game.warmupRemaining=.2;
+ run(game,{...rush,crouch:true,crouchEdge:true},12);assert.equal(a.slideBuffer,0);
+ assert.equal(run(game,rush,6).filter(e=>e.type==='slide').length,0);
+});

@@ -361,6 +361,7 @@ export class AudioSystem {
       case 'zombie-windup':
         this.noise(sound,.34,.14,850);this.tone(sound,108,.32,.12,'triangle',65);break;
       case 'rustle': this.noise(sound, .18, event.mode === 'sneak' ? .015 : .075, 7800); break;
+      case 'slide': this.noise(sound,.65,.22,1100);break;
       case 'jump': this.sample('impactSoft_medium_000', sound, .17, 1.4); this.noise(sound, .09, .05, 1400); break;
       case 'land': this.sample('impactSoft_medium_000', sound, .45, .85); break;
       case 'cartridge-latch': this.sample('impactMetal_light_001', sound, .14, 1.7); break;

@@ -68,3 +68,15 @@ test('the Scout bolt and shotgun pump match the credited CC0 donor cuts',()=>{
   }
   assert.match(readFileSync(new URL('credits.html',root),'utf8'),/Free Firearm Sound Library/);
 });
+
+test('the movement slide ships the actual Nox Sound CC0 cut on all surfaces',()=>{
+ const root=new URL('../../',import.meta.url),name='s_slide_soft';
+ const shipped=readFileSync(new URL('assets/fps/audio/riposte-'+name+'.mp3',root));
+ const donor=readFileSync(new URL('frontline/source/assets/sfx/foley/'+name+'.mp3',root));
+ const credits=JSON.parse(readFileSync(new URL('licenses/riposte-sfx-credits.json',root)));
+ assert.deepEqual(shipped,donor);
+ assert.equal(createHash('sha256').update(shipped).digest('hex'),'d91fe4155c4fb7ec3f94d307867d16e9ed922abd1700f0f52bd041e965ea8ef5');
+ assert.equal(credits.sons.find(s=>s.id===name).source,'nox');
+ assert.equal(credits.sources.nox.licence,'CC0 1.0');
+ assert.match(readFileSync(new URL('credits.html',root),'utf8'),/Nox_Sound/);
+});
