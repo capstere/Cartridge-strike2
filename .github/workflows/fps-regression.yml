@@ -86,6 +86,7 @@ jobs:
           server=$!
           trap 'kill $server || true' EXIT
           node tools/asset-sharing-browser.mjs
+          node tools/spatial-audio-browser.mjs
       - name: Verify simultaneous touch input and orientation lifecycle
         if: github.event_name != 'push'
         timeout-minutes: 6

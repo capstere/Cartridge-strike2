@@ -19,7 +19,7 @@ export class FocusHud {
     this.spawnText = $('spawn-protection').textContent;
     this.mapPanel = document.querySelector('#hud .map-panel');
     this.buttons = new Map();
-    if (mobile.enabled) this.installDrawer();
+    if (mobile.touchCapable ?? mobile.enabled) this.installDrawer();
     this.applyMode();
     window.addEventListener('blur', () => this.reset());
     window.addEventListener('orientationchange', () => this.reset());

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {DeploymentCountdown} from '../../src/fps/deployment-countdown.mjs';
+import {DeploymentCountdown,ForegroundCountdownClock} from '../../src/fps/deployment-countdown.mjs';
 import {Game} from '../../src/fps/game.mjs';
 import {MATCH_DEFAULTS} from '../../shared/multiplayer/rules.mjs';
 import {loadHeadlessWorld} from '../headless.mjs';
@@ -82,3 +82,16 @@ for(const mode of ['classic','endless']){
     }
   });
 }
+
+test('a one-second foreground stall advances deployment while a hidden interval does not',()=>{
+ const clock=new ForegroundCountdownClock();
+ assert.equal(clock.advance(0),0);
+ clock.presented(10000); // first draw, including shader compilation, has completed
+ assert.equal(clock.advance(11000),1);
+ assert.equal(clock.advance(11500),.5);
+ clock.suspend();
+ assert.equal(clock.advance(50000),0);
+ clock.presented(50100);
+ assert.equal(clock.advance(50050),0,'an older animation timestamp cannot double-count after resume');
+ assert.equal(clock.advance(50600),.5);
+});

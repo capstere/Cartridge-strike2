@@ -1,4 +1,4 @@
-import {countdownHud} from './deployment-countdown.mjs';
+import {countdownHud, ForegroundCountdownClock} from './deployment-countdown.mjs';
 import {MATCH_DEFAULTS} from '../../shared/multiplayer/rules.mjs';
 import {loadSoloManifest, resolveSoloSelection} from './solo-maps.mjs';
 import {UI_EN} from './english-ui.mjs';
@@ -168,6 +168,7 @@ function nameWorld(){
  if(missions[1])missions[1].replaceChildren(document.createTextNode(roomDisplayName(h&&world.roomAt(h.x,h.z))),document.createElement('br'),Object.assign(document.createElement('strong'),{textContent:'Escort / guard'}));
 }
 const deployment=countdownHud($('deployment-countdown'), mark=>audio?.deploymentCue(mark));
+const foregroundCountdown=new ForegroundCountdownClock();
 let countdownSession=null;
 const mouseLookButton=$('countdown-look');
 function showMouseLook(show){if(mouseLookButton.hidden===show)mouseLookButton.hidden=!show;}
@@ -197,6 +198,7 @@ function recordFirePress(){
 }
 const mobile=new MobileControls({
   onFirePress:recordFirePress,
+  onModeChange(touch) { settings.mobile = touch; clearInput(); },
   root:$('mobile-controls'),
   onLook(dx,dy){if(modal||teamRadioOpen||!game?.player?.alive)return;const k=settings.sensitivity*2.15*(tactical?.lookScale(true,yaw,pitch)??1);const before=pitch;yaw-=dx*k;pitch=Math.max(-1.49,Math.min(1.49,pitch-dy*k));recoil.counter(pitch-before);},
   onAction(action){
@@ -309,7 +311,7 @@ function unlockMouse(){if(document.pointerLockElement)document.exitPointerLock()
 function requestMouse(){if(mobile.enabled)return;try{const result=$('game').requestPointerLock();result?.catch(()=>{showPause();$('pause').querySelector('p:not(.eyebrow)').textContent='Mouse capture failed. Open the game in its own browser tab and select Resume.';});}catch{showPause();}}
 function notify(text,duration=3){setText('notification',text);notificationUntil=(game?.state.time||0)+duration;}
 function syncFullscreenToggle(){const button=$('fullscreen-toggle'),hint=$('fullscreen-hint'),fs=window.__csFlow?.fullscreen;if(!button)return;button.hidden=!fs?.supported;if(fs?.supported)button.textContent=fs.active?'EXIT FULLSCREEN':'ENTER FULLSCREEN';if(hint)hint.hidden=!!fs?.supported;}
-function showPause(){if(networkSession&&!['countdown','active'].includes(networkSession.room?.state.phase))return;if(!game||['menu','match'].includes(game.phase)||modal==='menu')return;modal='pause';mobile.show(false);$('pause').querySelector('p:not(.eyebrow)').textContent=networkSession?`Room ${networkSession.room.roomId} · Friendly fire: ${networkSession.room.state.friendlyFire?'On':'Off'} · Bot difficulty ${DIFFICULTIES[game.state.difficulty].name} · The match continues and you can still take damage.`:'Round timers and bots are paused.';clearInput();game.pause(true);audio.reset();$('pause').hidden=false;$('buy').hidden=true;$('scoreboard').hidden=true;board=false;unlockMouse();settingsPanel('pause-settings');syncFullscreenToggle();}
+function showPause(){foregroundCountdown.suspend();if(networkSession&&!['countdown','active'].includes(networkSession.room?.state.phase))return;if(!game||['menu','match'].includes(game.phase)||modal==='menu')return;modal='pause';mobile.show(false);$('pause').querySelector('p:not(.eyebrow)').textContent=networkSession?`Room ${networkSession.room.roomId} · Friendly fire: ${networkSession.room.state.friendlyFire?'On':'Off'} · Bot difficulty ${DIFFICULTIES[game.state.difficulty].name} · The match continues and you can still take damage.`:'Round timers and bots are paused.';clearInput();game.pause(true);audio.reset();$('pause').hidden=false;$('buy').hidden=true;$('scoreboard').hidden=true;board=false;unlockMouse();settingsPanel('pause-settings');syncFullscreenToggle();}
 // LAN fullscreen is an explicit menu action. A simultaneous fullscreen/focus
 // transition can interrupt the Resume gesture that enables mouse and audio.
 function resume(){if(networkSession&&(networkSession.connectionState==='reconnecting'||!['countdown','active'].includes(networkSession.room?.state.phase)))return;if(!networkMode)window.__csFlow?.fullscreen?.resume();audio.unlock();if(holdingDeployment())lastFrame=0;modal=null;$('pause').hidden=true;$('buy').hidden=true;clearInput();game.pause(false);yaw=game.player.yaw;pitch=game.player.pitch;mobile.show(true,game.player?.alive);requestMouse();}
@@ -376,7 +378,7 @@ function refreshShop(){
  }));
 }
 
-function start(selected=team,overrides={},autoplay=false){deployment.reset();team=rehearsalMode?'analysts':selected;setPrivateCharacterActors(rehearsalMode?['analysts-0','analysts-1']:[team+'-0']);clearInput();audio.reset();renderer.resetTransient();combatHud.reset();recoil.reset();resetAutoAim();game=new Game(world,{team,seed:Number($('seed').value)||42,config:{mobile:settings.mobile,mode:settings.mode,firefight:settings.firefight,friendlyFire:settings.friendlyFire,hostageDamage:true,wanderers:settings.wanderers,loadout:settings.loadout,...overrides},autoplay,difficulty:overrides.difficulty||settings.difficulty});game.start(team);if(game.warmupRemaining){game.drainEvents();lastFrame=0;}for(const actor of game.actors)renderer.actorModel(actor);modal=null;lastRound=game.warmupRemaining?game.state.round:0;lastPhase=game.phase;spectateIndex=0;feed=[];yaw=game.player.yaw;pitch=game.player.pitch;for(const id of ['menu','pause','buy','match-end','scoreboard'])$(id).hidden=true;$('hud').hidden=false;setText('notification','');mobile.show(true,game.player?.alive);updateHud();return game;}
+function start(selected=team,overrides={},autoplay=false){foregroundCountdown.suspend();deployment.reset();team=rehearsalMode?'analysts':selected;setPrivateCharacterActors(rehearsalMode?['analysts-0','analysts-1']:[team+'-0']);clearInput();audio.reset();renderer.resetTransient();combatHud.reset();recoil.reset();resetAutoAim();game=new Game(world,{team,seed:Number($('seed').value)||42,config:{mobile:settings.mobile,mode:settings.mode,firefight:settings.firefight,friendlyFire:settings.friendlyFire,hostageDamage:true,wanderers:settings.wanderers,loadout:settings.loadout,...overrides},autoplay,difficulty:overrides.difficulty||settings.difficulty});game.start(team);if(game.warmupRemaining){game.drainEvents();lastFrame=0;}for(const actor of game.actors)renderer.actorModel(actor);modal=null;lastRound=game.warmupRemaining?game.state.round:0;lastPhase=game.phase;spectateIndex=0;feed=[];yaw=game.player.yaw;pitch=game.player.pitch;for(const id of ['menu','pause','buy','match-end','scoreboard'])$(id).hidden=true;$('hud').hidden=false;setText('notification','');mobile.show(true,game.player?.alive);updateHud();return game;}
 async function joinNetwork(options){
  if(!networkMode)throw Error('Open the local multiplayer lobby first.');
  const generation=++networkJoinGeneration;
@@ -446,7 +448,7 @@ function networkPhase(){
  }
 }
 function restartMatch(){if(networkMode){newMatch();return;}window.__csFlow?.fullscreen?.start();audio.unlock();start(team,{deploymentSeconds:testMode?0:MATCH_DEFAULTS.countdownSeconds});requestMouse();}
-function newMatch(){deployment.reset();countdownSession=null;$('countdown-look').hidden=true;if(networkMode){networkJoinGeneration++;setMapExpanded(false);document.documentElement.classList.toggle('cs-family-lobby',familyRoomLink);}onlineRoomUi?.hide();if(networkSession){networkSession.dispose();networkSession=null;game=new Game(world);game.network=true;lastRound=game.state.round;lastPhase=game.phase;} window.__csFlow?.fullscreen?.exit();clearInput();recoil.reset();game.pause(true);audio.reset();renderer?.resetTransient();modal='menu';mobile.show(false);unlockMouse();for(const id of ['pause','buy','match-end','scoreboard','hud'])$(id).hidden=true;$('menu').hidden=false;settingsPanel('menu-settings');}
+function newMatch(){foregroundCountdown.suspend();deployment.reset();countdownSession=null;$('countdown-look').hidden=true;if(networkMode){networkJoinGeneration++;setMapExpanded(false);document.documentElement.classList.toggle('cs-family-lobby',familyRoomLink);}onlineRoomUi?.hide();if(networkSession){networkSession.dispose();networkSession=null;game=new Game(world);game.network=true;lastRound=game.state.round;lastPhase=game.phase;} window.__csFlow?.fullscreen?.exit();clearInput();recoil.reset();game.pause(true);audio.reset();renderer?.resetTransient();modal='menu';mobile.show(false);unlockMouse();for(const id of ['pause','buy','match-end','scoreboard','hud'])$(id).hidden=true;$('menu').hidden=false;settingsPanel('menu-settings');}
 function viewActor(){if(game.player?.alive)return game.player;const alive=game.actors.filter(a=>a.alive&&a.team===game.team);return alive[spectateIndex%Math.max(1,alive.length)]||game.player;}
 function timer(value){const sec=Math.max(0,Math.ceil(value));return `${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}`;}
 function scoreboard(){
@@ -559,7 +561,6 @@ function frame(now){try{
  }
  // The empty lobby has a fixed camera and simulation time. Retain its
  // pixels until a new lobby, viewport or graphics setting needs a redraw.
- const firstDeploymentFrame=!networkSession && !modal && holdingDeployment() && deployment.key!==game;
  const stillLobby=modal==='menu'&&game.phase==='menu';
  const stillRevision=stillLobby?`${innerWidth}:${innerHeight}:${devicePixelRatio}:${settings.graphics}`:null;
  if(!renderBudget.shouldRender(now,document.hidden,!!modal||game.state.paused,stillLobby?game:null,stillRevision)){lastFrame=now;raf=requestAnimationFrame(frame);return;}const wallDt=lastFrame?Math.max(0,(now-lastFrame)/1000):1/60,dt=Math.min(.05,wallDt);lastFrame=now;
@@ -571,10 +572,16 @@ function frame(now){try{
  if(networkSession)networkSession.advanceFrame(now,(testMode&&globalThis.__fps?.liveControls)||input(dt));
  else if(!testMode||new URLSearchParams(location.search).has('realtime')){
   const holding=holdingDeployment();
-  game.update(holding?(firstDeploymentFrame?0:Math.min(.25,wallDt)):dt,(testMode&&globalThis.__fps?.liveControls)||input(dt));
+  game.update(holding?foregroundCountdown.advance(now):dt,(testMode&&globalThis.__fps?.liveControls)||input(dt));
   if(holding&&!holdingDeployment())clearInput();
  }
- showDeployment(now);consumeEvents();tactical.render(renderer);grenadeAssist.update(game,viewActor(),modal);renderer.render(game,viewActor(),dt);if(firstDeploymentFrame)lastFrame=performance.now();const p=viewActor();$('flash-overlay').style.opacity=String((p?.flash||0)*(settings.reducedFlash?.45:.94));const hurt=Math.max(0,Math.min(1,(renderer.damageUntil-game.state.time)/.55));$('damage-overlay').style.opacity=String(hurt*.35);$('damage-direction').style.opacity=String(hurt);if(renderer.damageDirection){const d=renderer.damageDirection;$('damage-direction').style.transform=`translate(-50%,-50%) rotate(${(p?.yaw||0)-Math.atan2(d.x,d.z)}rad)`;}$('smoke-overlay').style.opacity=String(p?renderer.smokeOpacity(p,game.state.smokes):0);$('hitmarker').style.opacity=game.state.time<renderer.hitUntil?'1':'0';if(now-hudAt>100){updateHud();hudAt=now;}raf=requestAnimationFrame(frame);}catch(e){fatal(e);}}
+ consumeEvents();tactical.render(renderer);grenadeAssist.update(game,viewActor(),modal);renderer.render(game,viewActor(),dt);const p=viewActor();$('flash-overlay').style.opacity=String((p?.flash||0)*(settings.reducedFlash?.45:.94));const hurt=Math.max(0,Math.min(1,(renderer.damageUntil-game.state.time)/.55));$('damage-overlay').style.opacity=String(hurt*.35);$('damage-direction').style.opacity=String(hurt);if(renderer.damageDirection){const d=renderer.damageDirection;$('damage-direction').style.transform=`translate(-50%,-50%) rotate(${(p?.yaw||0)-Math.atan2(d.x,d.z)}rad)`;}$('smoke-overlay').style.opacity=String(p?renderer.smokeOpacity(p,game.state.smokes):0);$('hitmarker').style.opacity=game.state.time<renderer.hitUntil?'1':'0';if(now-hudAt>100){updateHud();hudAt=now;}
+ // Present the cue only after the first-person scene has actually been drawn.
+ // On a cold GPU the first shader compilation can block for several seconds.
+ const presentedAt=performance.now();
+ if(!networkSession && !modal && !document.hidden && holdingDeployment())foregroundCountdown.presented(presentedAt);
+ showDeployment(presentedAt);
+ raf=requestAnimationFrame(frame);}catch(e){fatal(e);}}
 function fatal(error){cancelAnimationFrame(raf);grenadeAssist?.reset();$('fatal').hidden=false;$('fatal').querySelector('pre').textContent=error.stack||String(error);$('loading').hidden=true;console.error(error);}
 team = document.querySelector('.team-option.selected').dataset.team;
 for (const option of document.querySelectorAll('[data-team]')) option.addEventListener('click', () => { team = option.dataset.team; });
@@ -609,7 +616,7 @@ document.addEventListener('pointerlockchange',()=>{if(mobile.enabled)return;if(d
 function updateMode(){settings.mode=$('game-mode').value;$('loadout-row').hidden=settings.mode!=='endless';$('mode-description').textContent=settings.mode==='endless'?'Respawn in three seconds. Press B for a free loadout. Optional control zones bring teams together. Play as long as you like.':'Plant or defuse the bomb, rescue the hostages, or eliminate the opposing team. First to five rounds wins. One life per round.';saveSettings();}
 // A viewport rotation can cover the game with the portrait prompt without blur.
 // Freeze combat/audio and require an explicit resume after either orientation change.
-if(mobile.enabled)matchMedia('(orientation: portrait)').addEventListener('change',()=>{clearInput();if(!modal)showPause();});
+if(mobile.touchCapable)matchMedia('(orientation: portrait)').addEventListener('change',()=>{if(!mobile.enabled)return;clearInput();if(!modal)showPause();});
 $('game-mode').value=['classic','endless'].includes(settings.mode)?settings.mode:'classic';$('loadout').value=settings.loadout||'smg';$('game-mode').onchange=updateMode;$('loadout').onchange=()=>{settings.loadout=$('loadout').value;saveSettings();};
 $('radio-options').innerHTML=RADIO.map((r,i)=>`<div><kbd>${i+1}</kbd><span>${r.text}<small>${r.label}</small></span></div>`).join('');updateMode();
 

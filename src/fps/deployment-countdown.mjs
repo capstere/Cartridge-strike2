@@ -45,3 +45,17 @@ export function countdownHud(root, sound) {
     root.parentElement.classList.toggle('deploy-counting',typeof value==='number');
   }, sound);
 }
+
+// A cold world can spend seconds compiling its first draw. Begin charging
+// foreground time after that draw, and start afresh after an explicit resume.
+export class ForegroundCountdownClock {
+  previous = null;
+  suspend() { this.previous=null; }
+  presented(now) { this.previous??=now; }
+  advance(now) {
+    if(this.previous===null||now<=this.previous)return 0;
+    const elapsed=(now-this.previous)/1000;
+    this.previous=now;
+    return elapsed;
+  }
+}
