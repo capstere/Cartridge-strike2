@@ -34,13 +34,30 @@ function joinPage(res,head){
 <title>Join a private room · Cartridge-Strike 3</title><link rel="stylesheet" href="/fps/account.css"><main><h1>Join a private room</h1>
 <form><label>Room invitation code <input required name="code" type="password" maxlength="64" autocomplete="off" spellcheck="false"></label>
 <button>Join room</button></form><p role="status" aria-live="polite"></p></main><script nonce="${nonce}">
-const fragment=location.hash.slice(1);history.replaceState(null,'',location.pathname);
 const form=document.querySelector('form'),status=document.querySelector('[role=status]');
-async function enter(code){form.querySelector('button').disabled=true;status.textContent='Checking invitation…';
-try{const r=await fetch('/api/room/exchange',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code})});
-const value=await r.json();if(!r.ok)throw Error(value.error);location.replace(value.destination);}
-catch(error){status.textContent=error.message;}finally{form.querySelector('button').disabled=false;}}
-form.addEventListener('submit',e=>{e.preventDefault();const code=form.elements.code.value.trim();form.reset();enter(code);});if(fragment)enter(fragment);
+let request,latest=0;
+async function enter(code){
+  const intent=++latest;
+  request?.abort();request=new AbortController();
+  form.querySelector('button').disabled=true;status.textContent='Checking invitation…';
+  try{
+    const response=await fetch('/api/room/exchange',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code}),signal:request.signal});
+    const value=await response.json();
+    if(intent!==latest)return;
+    if(!response.ok)throw Error(value.error);
+    location.replace(value.destination);
+  }catch(error){if(intent===latest)status.textContent=error.message;}
+  finally{if(intent===latest)form.querySelector('button').disabled=false;}
+}
+function readInvitation(){
+  const code=location.hash.slice(1);
+  if(!code)return;
+  history.replaceState(null,'',location.pathname);
+  form.reset();enter(code);
+}
+window.addEventListener('hashchange',readInvitation);
+form.addEventListener('submit',event=>{event.preventDefault();const code=form.elements.code.value.trim();form.reset();enter(code);});
+readInvitation();
 </script></html>`);
 }
 
@@ -65,7 +82,7 @@ export function accountAccess(config,active){
     const device=store.device(ctx.roomToken,ctx.origin);
     if(device.token!==ctx.roomToken)setCookie(res,roomCookie,device.token);
     const user=store.userFor(ctx.token,ctx.origin);
-    return {device:device.id,user:user?.id,session:user?.session,legacy};
+    return {device:device.id,user:user?.id,session:user?.session,pilotSession:ctx.pilotSession,legacy};
   }
   function roomFor(id){return [...active].find(r=>r.roomId===id||roomScope(r)===id);}
   function requireHost(ctx,id){
@@ -149,12 +166,12 @@ export function accountAccess(config,active){
         setCookie(res,roomCookie,device.token);json(res,{room,destination:destination(room)});return true;
       }
       if(typeof input.room!=='string'||!/^[A-Za-z0-9_-]{1,32}$/.test(input.room))fail(400,'Invalid room.');
-      if(action==='invites'&&directory?.publication(roomFor(input.room)))fail(409,'Unpublish the room before issuing private invitations.');
+      if(['invites','revoke'].includes(action)&&directory?.publication(roomFor(input.room)))fail(409,'Unpublish the room before managing private invitations.');
       if(action==='invites')json(res,store.issue(requireHost(ctx,input.room),ctx.origin));
       else if(action==='revoke'){
         const scope=requireHost(ctx,input.room);store.revoke(scope,ctx.origin);disconnectRevoked(scope);json(res,{room:scope});
       }else{
-        store.forget(ctx.device,input.room);if(ctx.device)directory?.forget(input.room,ctx.device);if(ctx.device)disconnectRevoked(input.room,ctx.device);json(res,{rooms:store.rooms(ctx.device)});
+        store.forget(ctx.device,input.room);if(ctx.device)directory?.forget(input.room,ctx.device);if(ctx.device)disconnectRevoked(input.room,ctx.device);json(res,{rooms:context(req,ctx.origin).rooms});
       }
       return true;
     }

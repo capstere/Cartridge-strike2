@@ -113,6 +113,16 @@ async function run(input) {
       await playMatch(/endless action/i,'meltem-match');
       const unsupported = new URL(page.url());
       unsupported.searchParams.set('mode','classic');
+      await press(page.locator('.map-tile'));
+      const eligible = await page.evaluate(async()=>{
+        const {loadSoloManifest,soloCatalog}=await import('/src/fps/solo-maps.mjs');
+        return soloCatalog(await loadSoloManifest()).filter(row=>row.random&&row.modes.includes('endless')).map(row=>row.id);
+      });
+      assert.ok(eligible.includes('floor5-prepared')&&!eligible.includes('meltem'));
+      await press(page.locator('#random-map'));
+      await page.waitForURL(url=>eligible.includes(url.searchParams.get('level'))&&url.searchParams.get('mode')==='endless');
+      await page.locator('#setup-title').waitFor();
+      await snap('random-endless-setup');
       await page.goto(unsupported.href,{waitUntil:'domcontentloaded'});
       await page.locator('#solo-map-notice').waitFor();
       assert.match(await page.locator('#solo-map-notice').textContent(),/Meltem.*does not support.*Floor 5/i);

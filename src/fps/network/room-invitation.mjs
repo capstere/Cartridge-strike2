@@ -33,7 +33,8 @@ export function roomInvitation(root) {
     clear(); panel.hidden = true; trigger.setAttribute('aria-expanded','false');
   }
   function update(id) {
-    if (room !== id) { hide(); room = id; }
+    if (room === id) return;
+    hide(); room = id;
     trigger.hidden = !room;
   }
   trigger.onclick = () => {

@@ -1,0 +1,87 @@
+{
+  "browser": "156.0.8078.79",
+  "original": "62d3ea0d490442f863616e9ae6d05584201b89e4",
+  "rows": [
+    {
+      "variant": "original",
+      "width": 960,
+      "height": 540,
+      "touch": false,
+      "panelRightPx": 645,
+      "clockRightPx": 692.421875,
+      "scoreRightPx": 692.421875,
+      "clearancePx": -47.421875
+    },
+    {
+      "variant": "original",
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "panelRightPx": 805,
+      "clockRightPx": 852.421875,
+      "scoreRightPx": 852.421875,
+      "clearancePx": -47.421875
+    },
+    {
+      "variant": "original",
+      "width": 667,
+      "height": 375,
+      "touch": true,
+      "panelRightPx": 503.5,
+      "clockRightPx": 492.5,
+      "scoreRightPx": 492.5,
+      "clearancePx": 11
+    },
+    {
+      "variant": "original",
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "panelRightPx": 592,
+      "clockRightPx": 581,
+      "scoreRightPx": 581,
+      "clearancePx": 11
+    },
+    {
+      "variant": "corrected",
+      "width": 960,
+      "height": 540,
+      "touch": false,
+      "panelRightPx": 645,
+      "clockRightPx": 634,
+      "scoreRightPx": 634,
+      "clearancePx": 11
+    },
+    {
+      "variant": "corrected",
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "panelRightPx": 805,
+      "clockRightPx": 794,
+      "scoreRightPx": 794,
+      "clearancePx": 11
+    },
+    {
+      "variant": "corrected",
+      "width": 667,
+      "height": 375,
+      "touch": true,
+      "panelRightPx": 503.5,
+      "clockRightPx": 492.5,
+      "scoreRightPx": 492.5,
+      "clearancePx": 11
+    },
+    {
+      "variant": "corrected",
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "panelRightPx": 592,
+      "clockRightPx": 581,
+      "scoreRightPx": 581,
+      "clearancePx": 11
+    }
+  ],
+  "method": "Native Chromium with the shipped CSS link order, extracted CombatHUD markup and the English Meltem quay capture labels. Bounds use DOMRect CSS pixels. The normal Endless browser smoke also asserts both live footer labels fit."
+}

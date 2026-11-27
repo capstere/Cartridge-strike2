@@ -14,6 +14,8 @@ import {levelProjectToWorldData} from './level-adapter.mjs?v=5.9.0';
 
 import {addCabinFittings} from './start-elevators.mjs';
 
+import {createReferenceWorld} from './reference-world.mjs';
+
 let sharedWorld;
 let levelCacheKey='',levelCache;
 const flatPoint=p=>({x:p[0],y:0,z:p[1]});
@@ -71,6 +73,7 @@ function createLevelWorld(project,{fresh=false,template=null}={}){
 }
 
 export function createWorld({fresh=false,levelProject=null,template=null}={}){
+ if(levelProject?.projectId==='lvl-meltem'&&levelProject.referenceMap)return createReferenceWorld(levelProject);
  if(levelProject)return createLevelWorld(levelProject,{fresh,template});
   if(sharedWorld&&!fresh)return sharedWorld;
   // SpelWorld.build itself caches its description, even when sharedWorld is bypassed.

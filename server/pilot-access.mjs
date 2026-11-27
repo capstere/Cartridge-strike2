@@ -66,7 +66,7 @@ export function pilotAccess(config, limiter) {
       const match = token?.match(/^(\d{10})\.([\w-]{16})\.([\w-]{43})$/);
       const authenticated = !!match && Number(match[1]) > Date.now()/1000 &&
         timingSafeEqual(Buffer.from(match[3]), Buffer.from(sign(origin, match[1] + '.' + match[2])));
-      return {origin, authenticated};
+      return {origin, authenticated, session:authenticated?digest(token).toString('hex'):null};
     },
 
     async login(req, res, origin, familyEnabled = false) {

@@ -1,3 +1,5 @@
+import {CoastalAmbience, coastalMaps} from './coastal-ambience.mjs';
+
 /** Local Web Audio presentation. Logical hearing belongs to Game, including at volume 0.
  * Kenney CC0 samples and modifications: docs/fps-assets.json and THIRD_PARTY_NOTICES.md.
  * All scheduled sources are owned, bounded and stopped on pause/round reset.
@@ -131,6 +133,11 @@ export class AudioSystem {
     if (!this.context || this.context.state !== 'running' || !this.volume || listener?.ambient === false || this.settings.ambient === false) {
       this.stopAmbient(); return;
     }
+    const coast = this.world?.referenceId;
+    if (Object.hasOwn(coastalMaps, coast)) {
+      this.updateSeasideAmbient(coast);
+      return;
+    }
     const room = this.world?.roomAt?.(this.listener?.x,this.listener?.z);
     if (!room?.polygon?.length) { this.stopAmbient(); return; }
     if (this.ambientRoom !== room.id) {
@@ -170,7 +177,18 @@ export class AudioSystem {
     this.ambient.push({source,gain,filter,position,volume,cutoff,nodes:[gain,filter,panner]});
   }
 
+  updateSeasideAmbient(mapId) {
+    if (this.seaside?.mapId !== mapId) {
+      this.stopAmbient();
+      const coarse = globalThis.matchMedia?.('(any-pointer: coarse)').matches ?? false;
+      this.seaside = new CoastalAmbience(this.context, this.worldOutput?.() ?? this.master, mapId, coarse);
+      this.ambientRoom = mapId;
+    }
+    this.seaside.update(this.listener, this.world);
+  }
+
   stopAmbient(){
+    this.seaside?.dispose(); this.seaside = null;
     for(const item of this.ambient){try{item.source.stop();}catch{}item.source.disconnect();for(const node of item.nodes)node.disconnect();}
     this.ambient.length=0;this.ambientRoom=null;
   }

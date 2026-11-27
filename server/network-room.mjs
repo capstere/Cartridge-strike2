@@ -89,6 +89,7 @@ export class NetworkRoom extends Room {
       else if(!respawnActor(this.sim.game,actor)){this.sim.game.state.actors.pop();client.send('problem','No safe spawn is available.');client.leave(4008);return;}
       if(this.sim.game.world.networkDynamics.elevatorOpenAt<0)this.sim.game.world.networkDynamics.elevatorOpenAt=this.sim.game.state.time;
       seat.admitted=true;seat.ready=true;seat.enabled=true;seat.actor=actor;seat.deadline=Infinity;
+      this.accountMatch?.admit(seat);
       seat.lifeStartedAt=this.clock.elapsedTime;seat.diedAtMs=0;
       if(!seat.pending)this.sim.controllers.bind(client.sessionId,actor.id);
       if(this.familyRoom)this.match.ownership();

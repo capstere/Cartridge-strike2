@@ -60,7 +60,7 @@ export class AccountStore {
       });
       this.findUser=this.db.prepare('SELECT u.*,s.token AS session FROM users u JOIN sessions s ON s.user_id=u.id WHERE s.token=? AND s.origin=? AND s.expires>?');
       this.findDevice=this.db.prepare('SELECT token FROM devices WHERE token=? AND origin=? AND expires>?');
-      this.findRooms=this.db.prepare('SELECT room FROM grants WHERE device=? AND expires>? ORDER BY room');
+      this.findRooms=this.db.prepare('SELECT g.room FROM grants g JOIN devices d ON d.token=g.device WHERE g.device=? AND g.expires>? AND d.expires>? ORDER BY g.room');
     }catch(error){this.db.close();throw error;}
   }
   transaction(fn){
@@ -180,7 +180,7 @@ export class AccountStore {
     const fresh=secret(),id=digest(fresh);
     this.db.prepare('INSERT INTO devices VALUES(?,?,?)').run(id,origin,this.now()+30*DAY);return {id,token:fresh};
   }
-  rooms(device){return device?this.findRooms.all(device,this.now()).map(g=>g.room):[];}
+  rooms(device){return device?this.findRooms.all(device,this.now(),this.now()).map(g=>g.room):[];}
   remember(device,room,invite=null){
     this.db.prepare(`INSERT INTO grants VALUES(?,?,?,?) ON CONFLICT(device,room) DO UPDATE SET expires=excluded.expires,
       invite=CASE WHEN grants.invite IS NULL AND grants.expires>? THEN NULL ELSE excluded.invite END`).run(device,room,invite,this.now()+30*DAY,this.now());
@@ -212,11 +212,17 @@ export class AccountStore {
   }
   recordMatch(instance,mode,map,entries){
     this.transaction(()=>{
-      const insert=this.db.prepare('INSERT OR IGNORE INTO summaries SELECT ?,id,?,?,?,?,?,? FROM users WHERE id=? AND (? IS NULL OR EXISTS(SELECT 1 FROM sessions WHERE token=? AND user_id=users.id AND expires>?))');
-      for(const e of entries){
-        if(!insert.run(instance,mode,map,this.now(),e.kills,e.deaths,Number(e.win),e.user,e.session??null,e.session??null,this.now()).changes)continue;
-        const points=e.kills*10+(e.win?25:0);
-        this.db.prepare('INSERT INTO rewards VALUES(?,?,?,?,?)').run(instance,'result',e.user,'match',points);
+      const insert=this.db.prepare('INSERT OR IGNORE INTO summaries SELECT ?,id,?,?,?,?,?,? FROM users WHERE id=?');
+      const live=this.db.prepare('SELECT 1 FROM sessions WHERE token=? AND user_id=? AND expires>?');
+      const played=this.now();
+      for(const player of entries){
+        const eligible=(player.segments??[player]).filter(s=>!s.session||live.get(s.session,player.user,played));
+        if(!eligible.length)continue;
+        const kills=eligible.reduce((total,s)=>total+s.kills,0);
+        const deaths=eligible.reduce((total,s)=>total+s.deaths,0);
+        const win=eligible.at(-1).win;
+        if(!insert.run(instance,mode,map,played,kills,deaths,Number(win),player.user).changes)continue;
+        this.db.prepare('INSERT INTO rewards VALUES(?,?,?,?,?)').run(instance,'result',player.user,'match',kills*10+(win?25:0));
       }
     });
   }

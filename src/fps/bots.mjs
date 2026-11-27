@@ -219,8 +219,12 @@ export class BotController {
   }
   setGoal(goal) {
     if (!goal) { this.goal = null; this.path = []; return; }
-    if (!this.goal || distance(this.goal, goal) > .5){this.nextPath = 0;this.lastProgress=this.game.state.time;}
+    const goalY=this.game.world.layeredTerrain ? goal.y??this.actor.y : undefined;
+    if (!this.goal || distance(this.goal, goal) > .5 || (goalY!==undefined && Math.abs(goalY-this.goal.y)>.5)){
+      this.nextPath = 0;this.lastProgress=this.game.state.time;
+    }
     this.goal = { x: goal.x, z: goal.z };
+    if(goalY!==undefined)this.goal.y=goalY;
   }
   planObjective() {
     if (this.teamOrder) {

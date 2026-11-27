@@ -188,7 +188,7 @@ export function roomUi({leave,resume,activate}){
     if(!map)return;
     const loading=s.worldRevision!==state.worldRevision||!self?.ready;
     const host=state.ownerId===s.room.sessionId,canEdit=waiting&&host&&!loading&&s.connectionState==='connected';
-    invitation.update(privateAccess&&canEdit?s.room.roomId:'');
+    invitation.update(privateAccess&&canEdit&&moderation.allowsPrivateInvites()?s.room.roomId:'');
     if($('room-map-preview').dataset.map!==map.id){
       $('room-map-preview').dataset.map=map.id;
       $('room-map-preview').src='../'+map.preview;

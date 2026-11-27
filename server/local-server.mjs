@@ -1,11 +1,12 @@
 import http from 'node:http';
-import {randomBytes,randomUUID} from 'node:crypto';
+import {randomBytes} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {readFile} from 'node:fs/promises';
 import express from 'express';
 import {matchMaker,Server,ServerError} from '@colyseus/core';
 import {WebSocketTransport} from '@colyseus/ws-transport';
 import {NetworkRoom} from './network-room.mjs';
+import {MatchCredits} from './match-credits.mjs';
 import {ROOM_TYPE} from '../shared/multiplayer/rules.mjs';
 import {CONTRACT} from '../shared/multiplayer/build.mjs';
 import {checkContract} from '../shared/multiplayer/protocol.mjs';
@@ -56,38 +57,37 @@ export async function createLocalServer(options={}) {
       if(options.credential.legacy)accounts.store.remember(options.credential.device,this.familyRoom?FAMILY_ROOM_ALIAS:this.roomId);
     }
     beginAccountMatch(){
-      if(accounts)this.accountMatch={id:randomUUID(),departed:new Map()};
-    }
-    snapshotAccount(seat){
-      const actor=seat?.actor,user=seat?.credential?.user;
-      if(!user||!seat.admitted||seat.pending||!actor)return;
-      return {user,session:seat.credential.session,kills:actor.kills,deaths:actor.deaths,team:actor.team};
+      if(accounts)this.accountMatch=new MatchCredits(this.seats.values());
     }
     onDrop(client,code){
       super.onDrop(client,code);
       accounts?.directory?.publication(this);
     }
+    canResume(seat){
+      if(!seat||seat.revoked)return false;
+      const credential=seat.credential;
+      if(!credential)return true;
+      if(credential.publicEpoch)return !!accounts?.directory?.canJoin(this,credential);
+      return accounts.store.rooms(credential.device).includes(this.familyRoom?FAMILY_ROOM_ALIAS:this.roomId);
+    }
     onReconnect(client){
-      const credential=this.seats.get(client.sessionId)?.credential;
-      if(credential?.publicEpoch&&!accounts?.directory?.canJoin(this,credential))throw new ServerError(403,'Public room access has expired.');
+      const seat=this.seats.get(client.sessionId);
+      if(!this.canResume(seat)){
+        if(seat&&!seat.connected)this.onLeave(seat.client);
+        throw new ServerError(403,'Room access has expired.');
+      }
       super.onReconnect(client);
     }
     onLeave(client){
-      const entry=this.accountMatch&&this.state.phase==='active'&&this.snapshotAccount(this.seats.get(client.sessionId));
-      if(entry)this.accountMatch.departed.set(entry.user,entry);
-      super.onLeave(client);accounts?.directory?.publication(this);
+      const seat=this.seats.get(client.sessionId);
+      if(seat&&seat.client===client)this.accountMatch?.leave(seat);
+      super.onLeave(client);
+      if(this.accountMatch)for(const remaining of this.seats.values())this.accountMatch.admit(remaining);
+      accounts?.directory?.publication(this);
     }
     finishAccountMatch(winner){
       if(!this.accountMatch)return;
-      const {id,departed}=this.accountMatch;
-      const players=new Map(departed);
-      // One account can receive at most one result, even with two browser tabs.
-      for(const seat of this.seats.values()){
-        const entry=this.snapshotAccount(seat);
-        if(entry&&!players.has(entry.user))players.set(entry.user,entry);
-      }
-      const results=[...players.values()].map(entry=>({...entry,win:entry.team===winner}));
-      accounts.recordMatch(id,this.state.mode,this.state.mapId,results);
+      accounts.recordMatch(this.accountMatch.id,this.state.mode,this.state.mapId,this.accountMatch.finish(winner));
       this.accountMatch=null;
     }
     onDispose(){
@@ -164,9 +164,17 @@ export async function createLocalServer(options={}) {
     try{
       const access=await inspect(req,true);
       const id=req.url.split('?')[0].split('/')[2],room=id&&accounts?.roomFor(id);
-      const scoped=!access.denied&&room&&accounts.context(req,access.origin).rooms.includes(room.familyRoom?FAMILY_ROOM_ALIAS:room.roomId);
-      const status=access.denied?.[0] || (pilot&&!access.authenticated&&!scoped?401:0) ||
-        (pilot&&(!roomSocket.test(req.url)||!new URLSearchParams(req.url.split('?')[1]).has('sessionId'))?404:0) ||
+      const ctx=!access.denied&&room?accounts.context(req,access.origin):null;
+      const scoped=ctx?.rooms.includes(room.familyRoom?FAMILY_ROOM_ALIAS:room.roomId);
+      const query=new URLSearchParams(req.url.split('?')[1]);
+      const seat=query.has('reconnectionToken')&&room?.seats?.get(query.get('sessionId'));
+      // Existing CS2 SDKs may retain only their original pilot cookie. Its
+      // server-verified fingerprint still belongs to that original admission.
+      const credential=seat?.credential;
+      const sameDevice=credential&&(credential.device===ctx?.device||credential.pilotSession&&credential.pilotSession===access.session);
+      const deniedResume=seat&&(!room.canResume(seat)||credential&&!sameDevice);
+      const status=access.denied?.[0] || (pilot&&!access.authenticated&&!scoped?401:0) || (deniedResume?403:0) ||
+        (pilot&&(!roomSocket.test(req.url)||!query.has('sessionId'))?404:0) ||
         (transport.wss.clients.size>=32?429:0);
       if(socket.destroyed)return;
       if(status){
@@ -195,6 +203,7 @@ export async function createLocalServer(options={}) {
           pilotAuthorized=access.authenticated;
           if(accounts&&(admission||path==='/profile'||path==='/join'||path==='/fps/account.css'||path==='/src/fps/account-profile.mjs'||path.startsWith('/api/')||!pilotAuthorized)){
             ctx=accounts.context(req,access.origin);
+            ctx.pilotSession=access.session;
             if(await accounts.handle(req,res,path,ctx))return;
           }
           if(req.method==='POST'&&req.url==='/pilot/session'){

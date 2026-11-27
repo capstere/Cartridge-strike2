@@ -23,7 +23,7 @@ export function roomModeration(roomRoot) {
   const content=node('div'),status=node('p'); status.setAttribute('role','status');
   const close=action('Close',()=>dialog.close());
   dialog.append(title,content,status,close); document.body.append(dialog);
-  let room='', generation=0;
+  let room='', owner=false, publication='private', generation=0, lookup=0;
   dialog.addEventListener('close',()=>{ generation++; content.replaceChildren();status.textContent=''; });
   dialog.addEventListener('keydown',e=>{ if (e.key==='Escape') e.stopPropagation(); });
   function row(...items) {
@@ -36,6 +36,7 @@ export function roomModeration(roomRoot) {
     try {
       const state=await accountRequest('/api/room/moderation?room='+encodeURIComponent(room));
       if (!active()) return;
+      publication=state.published?'public':'private';
       status.textContent='';
       async function change(path,body) {
         if (!active()) return;
@@ -43,7 +44,10 @@ export function roomModeration(roomRoot) {
         for (const control of controls) control.disabled=true;
         try {
           await accountRequest('/api/room/'+path,{room,...body});
-          if (active()) await load();
+          if (active()) {
+            if (path==='publish') publication=body.enabled?'public':'private';
+            await load();
+          }
         } catch(e) {
           if (active()) {
             status.textContent=e.message;
@@ -74,7 +78,7 @@ export function roomModeration(roomRoot) {
         const list=node('ul');
         for (const report of state.reports) {
           const player=state.players.find(p=>p.id===report.player);
-          list.append(node('li',(player?.name || 'Former player')+' · '+(reasonLabels[report.reason]||'Other')+' · '+report.count));
+          list.append(node('li',(player?.name || 'You')+' · '+(reasonLabels[report.reason]||'Other')+' · '+report.count));
         }
         content.append(list);
       }
@@ -82,11 +86,31 @@ export function roomModeration(roomRoot) {
   }
   function open() { if (room && !dialog.open) { dialog.showModal();load(); } }
   lobbyButton.onclick=open; pauseButton.onclick=open;
-  return {update(s) {
-    const available=s && document.documentElement.hasAttribute('data-public-rooms') && !s.familyAlias && s.connectionState==='connected';
-    const next=available?s.room.roomId:'';
-    if (room!==next && dialog.open) dialog.close();
-    room=next;
-    lobbyButton.hidden=!room; pauseButton.hidden=!room;
-  }};
+  return {
+    allowsPrivateInvites:()=>publication==='private',
+    update(s) {
+      const available=s && document.documentElement.hasAttribute('data-public-rooms') && !s.familyAlias && s.connectionState==='connected';
+      const next=available?s.room.roomId:'';
+      const host=!!next && s.room.state.ownerId===s.room.sessionId;
+      if (room===next && owner===host) return;
+      if (dialog.open) dialog.close();
+      room=next; owner=host;
+      const current=++lookup;
+      publication=room?'loading':'private';
+      lobbyButton.hidden=pauseButton.hidden=true;
+      if (!room) return;
+      // An authenticated member can see these controls in a public room. The
+      // owner may also advertise an eligible private room from the same panel.
+      accountRequest('/api/room/moderation?room='+encodeURIComponent(room)).then(state=>{
+        if (current!==lookup) return;
+        publication=state.published?'public':'private';
+        lobbyButton.hidden=pauseButton.hidden=!state.host && !state.published;
+      }).catch(()=>{
+        if (current!==lookup) return;
+        // The server still checks the publication state on every private action.
+        publication='private';
+        lobbyButton.hidden=pauseButton.hidden=!owner;
+      });
+    }
+  };
 }

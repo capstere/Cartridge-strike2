@@ -16,6 +16,16 @@
       "multiplayerOnly": true,
       "file": "levels/compact-arena.json",
       "rights": "Original fictional geometry and existing original/MIT procedural furnishings"
+    },
+    {
+      "id": "meltem",
+      "name": "Meltem",
+      "file": "levels/meltem.json",
+      "modes": [
+        "endless"
+      ],
+      "preview": "assets/fps/maps/meltem.webp",
+      "rights": "Riposte MIT map factory and credited CC0 reference media"
     }
   ],
   "defaultLevel": "floor5-prepared"

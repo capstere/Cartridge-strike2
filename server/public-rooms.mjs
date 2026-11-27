@@ -22,14 +22,14 @@ export function publicRooms(store,active){
   function publication(room){
     if(!room?.publication)return;
     const host=room.seats.get(room.state.ownerId);
-    if(!host?.connected||host.revoked||host!==room.publication.host||!sessionLive(host.credential)){
+    if(!host||host.revoked||host!==room.publication.host||!sessionLive(host.credential)){
       revoke(room);return;
     }
     return room.publication;
   }
   function visible(room,user,capacity=true){
     const listing=publication(room);
-    if(!listing||!user||listing.banned.has(user)||capacity&&(!listing.host.ready||room.changingMap||room.locked||room.hasReachedMaxClients()||room.state.phase==='results'))return false;
+    if(!listing||!user||listing.banned.has(user)||capacity&&(!listing.host.connected||!listing.host.ready||room.changingMap||room.locked||room.hasReachedMaxClients()||room.state.phase==='results'))return false;
     const blocked=db.prepare('SELECT 1 FROM public_blocks WHERE (owner=? AND target=?) OR (owner=? AND target=?)');
     for(const seat of room.seats.values()){
       const peer=seat.credential?.user;

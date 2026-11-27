@@ -30,6 +30,9 @@ async function page(mobile) {
   await p.addInitScript(()=>localStorage.setItem('cartridge-settings',JSON.stringify({graphics:'low'})));
   return p;
 }
+async function followPrivateLink(p,url) {
+  try { await p.goto(url); } catch { throw Error('Could not navigate to the single-use test invitation.'); }
+}
 async function screenshot(p,name) {
   if (!output) return;
   await mkdir(output,{recursive:true,mode:0o700});
@@ -51,8 +54,8 @@ try {
   await account.getByRole('button',{name:'I saved my code'}).click();
   await account.getByRole('heading',{name:'Test operator'}).waitFor();
   assert.equal(await host.evaluate(()=>document.cookie),'');
-  const denied = await host.request.get(fixture.origin+'/src/fps/network/session.mjs');
-  assert.equal(denied.status(),401);
+  const denied = await host.evaluate(async () => (await fetch('/src/fps/network/session.mjs',{cache:'no-store'})).status);
+  assert.equal(denied,401);
   await account.getByRole('button',{name:'Sign out'}).click();
   await account.getByRole('heading',{name:'Local guest'}).waitFor();
   await account.getByRole('button',{name:'Recover account',exact:true}).click();
@@ -115,14 +118,14 @@ try {
   const fresh = await guest.context().browser().newContext();
   try {
     const replay = await fresh.newPage();
-    await replay.goto(destination);
+    await followPrivateLink(replay,destination);
     await replay.getByRole('status').filter({hasText:/invalid|expired/i}).waitFor();
     assert(!new URL(replay.url()).hash,'exchange page cleared the fragment');
     await invite.getByRole('button',{name:'Create invitation'}).click();
     await invite.locator('canvas').waitFor();
     const secondLink = await invite.getByLabel('Invitation link').inputValue();
     assert(secondLink!==destination);
-    await replay.goto(secondLink);
+    await followPrivateLink(replay,secondLink);
     await replay.waitForFunction(()=>document.querySelector('#network-code')?.required===false);
     assert(!new URL(replay.url()).hash,'exchange page cleared the fragment');
   } finally { await fresh.close(); }
@@ -144,6 +147,7 @@ try {
   await dialog.getByRole('button',{name:'List this room publicly'}).click();
   await dialog.getByRole('button',{name:'Make room private'}).waitFor();
   await dialog.getByRole('button',{name:'Close'}).click();
+  await host.locator('#room-invite').waitFor({state:'hidden'});
   await guest.goto(fixture.origin+'/profile');
   const guestAccount=guest.locator('[data-account-profile]');
   await guestAccount.getByRole('button',{name:'Create account',exact:true}).tap();

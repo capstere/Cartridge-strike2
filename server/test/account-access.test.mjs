@@ -10,6 +10,7 @@ import {WebSocket} from 'ws';
 import {CONTRACT} from '../../shared/multiplayer/build.mjs';
 import {FAMILY_ROOM_ALIAS} from '../../shared/multiplayer/family-room.mjs';
 import {options,own,ready,until} from './helpers.mjs';
+import {respawnActor} from '../../src/fps/action-rules.mjs';
 globalThis.WebSocket=WebSocket;
 const {Client}=await import('@colyseus/sdk');
 
@@ -219,6 +220,22 @@ test('explicit public host consent, scoped admission, reports, removal, blocks a
   assert.equal((await guest.send(mod)).status,404);
   assert.equal((await send(guest,'public-join')).json().destination,'/fps/?network=internet&room='+room);
   const g=await connect(guest,direct,{...options,name:'Visiting player',code:''});
+  assert.equal((await send(host,'revoke')).status,409);
+  assert.deepEqual((await guest.send('/api/room/forget',{room:'previous-room'})).json().rooms,[room]);
+  const serverRoom=[...local.rooms].find(r=>r.roomId===room);
+  t.mock.method(console,'info',()=>{}); // The SDK logs the transient reconnect identifier.
+  Object.assign(privateRoom.reconnection,{enabled:true,minUptime:0,minDelay:700,maxDelay:700,maxRetries:2});
+  let resumed=false;
+  privateRoom.onReconnect(()=>{resumed=true;});
+  serverRoom.seats.get(privateRoom.sessionId).client.ref.terminate();
+  await until(()=>!serverRoom.seats.get(privateRoom.sessionId).connected,'host entered the reserved interval');
+  assert.deepEqual(await list(friend),[]);
+  assert.equal((await send(friend,'public-join')).status,404);
+  assert.equal(g.connection.isOpen,true);
+  await until(()=>resumed&&serverRoom.seats.get(privateRoom.sessionId).connected,'same host reclaimed the public room');
+  assert.equal((await list(friend))[0].id,room);
+  assert.equal(g.connection.isOpen,true);
+  privateRoom.reconnection.enabled=false;
   assert.equal((await send(friend,'public-join')).status,200);
   const f=await connect(friend,direct,{...options,name:'Second visitor',code:''});
   const authority=[...local.rooms].find(r=>r.roomId===room),capacity=authority.maxClients;
@@ -252,4 +269,83 @@ test('explicit public host consent, scoped admission, reports, removal, blocks a
   assert.equal((await list(guest)).length,1);
   await host.send('/api/account/logout',{});
   assert.deepEqual(await list(guest),[]);
+});
+
+test('a revoked private device cannot resume its reserved seat through its separate valid pilot login',async t=>{
+  const dir=await mkdtemp(join(tmpdir(),'cs3-revoke-resume-'));
+  const local=await createLocalServer({port:0,publicOrigin:origin,pilotInvite:randomBytes(32).toString('hex'),accountDb:join(dir,'accounts.sqlite')});
+  const peers=[];
+  t.after(async()=>{for(const peer of peers)if(peer.connection.isOpen)await peer.leave();await local.close();await rm(dir,{recursive:true,force:true});});
+  const host=browser(local.url),guest=browser(local.url);
+  for(const b of [host,guest])await b.send('/pilot/session',new URLSearchParams({invite:local.config.pilotInvite}),{'Content-Type':'application/x-www-form-urlencoded'});
+  async function connect(b,path,body){
+    const response=await b.send(path,body);
+    assert.equal(response.status,200);
+    const peer=await new Client(local.url,{headers:b.headers()}).consumeSeatReservation(response.json());peers.push(peer);return ready(peer);
+  }
+  const room=await connect(host,'/matchmake/create/private-fps',options);
+  const invite=await host.send('/api/room/invites',{room:room.roomId});
+  assert.equal((await guest.send('/api/room/exchange',{code:invite.json().token})).status,200);
+  const guestPeer=await connect(guest,'/matchmake/joinById/'+room.roomId,{...options,code:''});
+  const serverRoom=[...local.rooms][0],seat=serverRoom.seats.get(guestPeer.sessionId);
+  t.mock.method(console,'info',()=>{});t.mock.method(console,'warn',()=>{});
+  let finished=false;
+  guestPeer.onLeave(()=>{finished=true;});
+  Object.assign(guestPeer.reconnection,{enabled:true,minUptime:0,minDelay:750,maxDelay:750,maxRetries:1});
+  seat.client.ref.terminate();
+  await until(()=>!seat.connected,'guest is reserved after signal loss');
+  assert.equal((await host.send('/api/room/revoke',{room:room.roomId})).status,200);
+  assert.deepEqual((await guest.send('/api/account')).json().rooms,[]);
+  assert.equal((await guest.send('/shared/multiplayer/rules.mjs')).status,200,'pilot session remains valid');
+  await until(()=>finished,'official SDK exhausts its reconnect attempt');
+  assert.equal(guestPeer.connection.isOpen,false);assert.equal(serverRoom.metrics.reconnects,0);
+  assert.equal(seat.connected,false);assert.equal(seat.revoked,true);
+});
+
+test('authoritative kills across a full rejoin and a grace reconnect credit one scoring seat at a time',async t=>{
+  const dir=await mkdtemp(join(tmpdir(),'cs3-score-segments-'));
+  const local=await createLocalServer({port:0,publicOrigin:origin,pilotInvite:randomBytes(32).toString('hex'),
+    accountDb:join(dir,'accounts.sqlite'),testMatch:{countdownSeconds:.1,scoreTarget:12}});
+  const peers=[];
+  t.after(async()=>{for(const peer of peers)if(peer.connection.isOpen)await peer.leave();await local.close();await rm(dir,{recursive:true,force:true});});
+  const host=browser(local.url,'192.0.2.11'),player=browser(local.url,'192.0.2.12');
+  for(const b of [host,player])await b.send('/pilot/session',new URLSearchParams({invite:local.config.pilotInvite}),{'Content-Type':'application/x-www-form-urlencoded'});
+  assert.equal((await player.send('/api/account/register',{username:'return_player',password:randomBytes(20).toString('hex')})).status,200);
+  async function connect(b,path,team){
+    const response=await b.send(path,{...options,fillBots:false,team});
+    assert.equal(response.status,200);
+    const peer=await new Client(local.url,{headers:b.headers()}).consumeSeatReservation(response.json());peers.push(peer);return ready(peer);
+  }
+  const anchor=await connect(host,'/matchmake/create/private-fps','counterAnalysts');
+  const direct='/matchmake/joinById/'+anchor.roomId,room=[...local.rooms][0],game=room.sim.game;
+  const first=await connect(player,direct,'analysts'),overlap=await connect(player,direct,'analysts'),spare=await connect(host,direct,'analysts');
+  const command=(peer,kind,more={})=>peer.send('match',{kind,matchId:peer.state.matchId,controlEpoch:own(peer).controlEpoch,...more});
+  for(const peer of peers)command(peer,'ready',{ready:true});
+  await until(()=>peers.every(peer=>own(peer)?.playerReady),'participants ready for ordinary match');
+  command(anchor,'start');await until(()=>anchor.state.phase==='active','match started');
+  function score(killer,victim){
+    const attacker=room.seats.get(killer.sessionId).actor,target=room.seats.get(victim.sessionId).actor;
+    for(const actor of [attacker,target])if(!actor.alive)assert(respawnActor(game,actor));
+    target.spawnProtectedUntil=0;
+    assert(game.damage(target,400,attacker,'smg'),'authoritative enemy elimination');
+  }
+  score(first,anchor);score(anchor,first);
+  score(overlap,anchor);score(anchor,overlap); // Overlapping tab has its own actor; these are not account credits.
+  await first.leave();await until(()=>!room.seats.has(first.sessionId),'first scoring seat fully left');
+  score(overlap,anchor);
+  t.mock.method(console,'info',()=>{});
+  Object.assign(overlap.reconnection,{enabled:true,minUptime:0,minDelay:150,maxDelay:150,maxRetries:2});
+  const epoch=own(overlap).controlEpoch;
+  room.seats.get(overlap.sessionId).client.ref.terminate();
+  await until(()=>room.metrics.reconnects===1&&own(overlap)?.controlEpoch>epoch,'same scoring actor resumed');
+  overlap.reconnection.enabled=false;
+  score(overlap,anchor);score(anchor,overlap);
+  await overlap.leave();await until(()=>!room.seats.has(overlap.sessionId),'second scoring seat fully left');
+  const returned=await connect(player,direct,'counterAnalysts');
+  score(returned,spare);score(spare,returned);score(spare,returned);
+  while(game.state.score.counterAnalysts<room.state.scoreTarget)score(anchor,spare);
+  await until(()=>anchor.state.phase==='results','winning team and summary committed');
+  const {stats,recent}= (await player.send('/api/account')).json();
+  assert.deepEqual(stats,{matches:1,kills:4,deaths:4,wins:1,xp:65});
+  assert.equal(recent.length,1);assert.equal(recent[0].win,1);
 });
