@@ -150,7 +150,7 @@ export class MatchLifecycle {
     // Remove every old body before selecting the new safe spawn positions.
     for(const a of g.actors)a.alive=false;
     for(const seat of r.participants()){
-      const sid=seat.client?.sessionId;if(sid)r.inputs.get(sid).clear();seat.aim=seat.trigger=false;seat.lastSelect=0;seat.enabled=false;
+      const sid=seat.client?.sessionId;if(sid)r.inputs.get(sid).clear();seat.holdThrow=seat.aim=seat.trigger=false;seat.lastSelect=0;seat.enabled=false;
       seat.lastFire=seat.lastReload=seat.lastSampleTick=seat.lastShotStamp=0;
       if(!seat.ready)continue;
       seat.epoch++;seat.actor.controlEpoch=seat.epoch;

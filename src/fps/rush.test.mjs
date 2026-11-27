@@ -102,3 +102,91 @@ test('legacy maps ground at zero; a layered world owns support and body overlaps
    }
  }
 });
+
+test('one crouch tap while rushing starts a grounded steerable slide and replay reproduces its entire path',()=>{
+ const {game,a}=fixture(),sprint={forward:1,sprint:true};
+ run(game,sprint,24);
+ const speed=a.moving;
+ game.update(dt/3,{...sprint,crouchEdge:true});game.update(dt*2/3,sprint);
+ assert(a.slideUntil>game.state.time);assert(a.crouching);assert(!a.rushing);assert(a.moving>speed);
+ const predicted={...a};copyPose(predicted,a);
+ const replay={world:game.world,config:game.config,actors:[predicted],hostages:[],state:{time:game.state.time,zombies:[]}};
+ const start=a.slideUntil,dir=a.travelDirZ;
+ for(let i=0;i<55;i++){
+   const controls={strafe:i<10?1:0,forward:i<10?0:-1,crouch:true,sprint:true};
+   game.state.time+=dt;replay.state.time+=dt;
+   moveActor(game,a,controls,dt);moveActor(replay,predicted,controls,dt,false);
+   for(const key of [...POSE_NUMBERS,...POSE_BOOLEANS])assert.equal(a[key],predicted[key],key);
+   if(i<10){assert(a.travelDirX>=0 && a.travelDirZ<-.9);assert.equal(a.slideUntil,start);}
+ }
+ assert(a.travelDirZ>=dir);assert.equal(a.slideUntil,0);assert(a.crouching);
+ assert(a.moving<=game.config.crouchSpeed+.00001);
+ run(game,{...sprint,crouch:true},30);assert.equal(a.slideUntil,0);
+});
+
+test('slide stops at a swept capsule and cannot jump into an overhead obstruction',()=>{
+ const {game,a}=fixture(),sprint={forward:1,sprint:true};
+ run(game,sprint,18);run(game,{...sprint,crouch:true},1);assert(a.slideUntil>0);
+ game.world.canStand=()=>false;
+ run(game,{jump:true},1);assert(a.onGround);assert(a.crouching);assert(a.slideUntil>0);
+ const occupant=game.actors.find(b=>b!==a);
+ Object.assign(occupant,{x:a.x,y:a.y,z:a.z-a.radius-occupant.radius-.004,alive:true});
+ run(game,{},1);assert.equal(a.slideUntil,0);assert.equal(a.blockedBy,occupant.id);
+ assert(a.slideReadyAt>game.state.time);assert(a.onGround);
+ resetRush(a);assert.equal(a.slideReadyAt,0);assert.equal(a.travelDirZ,0);
+});
+
+test('cartridge quick release finishes the pull once, returns to the previous sidearm and preserves the full fuse',()=>{
+ const {game,a}=fixture();const pistol=a.inventory.pistol.id;
+ a.inventory.he=1;game.select(pistol);assert(game.select('he'));run(game,{},16);
+ const events=run(game,{firePress:{yaw:0,pitch:0}},1);assert(a.cartridge);assert.equal(a.inventory.he,1);
+ events.push(...run(game,{},31));assert.equal(game.state.grenades.length,0);
+ events.push(...run(game,{},3));assert.equal(game.state.grenades.length,1);
+ assert.equal(events.filter(e=>e.type==='throw'&&e.actorId===a.id).length,1);
+ assert.equal(events.filter(e=>e.type==='cartridge-latch'&&e.actorId===a.id).length,1);
+ const launched=events.find(e=>e.type==='throw');
+ assert(Math.abs(game.state.grenades[0].deadline-launched.time-game.config.grenadeFuse)<1e-7);
+ assert.equal(a.weapon,pistol);assert.equal(a.inventory.he,0);
+});
+
+test('only the HE fuse runs while held; switching cancels an unarmed cartridge and releases a live HE at its owner',()=>{
+ for(const id of ['he','flash','smoke']){
+   const {game,a}=fixture();a.inventory[id]=1;game.select(id);run(game,{},16);
+   run(game,{fire:true},10);assert(a.cartridge);game.select('pistol');assert.equal(a.inventory[id],1);
+   assert.equal(a.cartridge,null);assert.equal(game.state.grenades.length,0);
+   game.select(id);run(game,{},16);run(game,{fire:true},37);
+   assert.equal(a.cartridge.deadline>0,id==='he');const deadline=a.cartridge.deadline;
+   if(id==='he'){
+     assert(game.select('pistol'));assert.equal(a.inventory.he,0);assert.equal(game.state.grenades.length,1);
+     const g=game.state.grenades[0];assert.equal(g.deadline,deadline);assert.equal(g.vx,0);assert.equal(g.vz,0);
+   }else{
+     run(game,{fire:true},Math.ceil(game.config.grenadeFuse/dt)+5);assert.equal(a.inventory[id],1);
+     run(game,{},10);assert.equal(a.inventory[id],0);assert.equal(game.state.grenades.length,1);
+   }
+ }
+});
+
+test('HE held to expiry produces one local blast and debit with friendly fire off; auto-trigger never primes',()=>{
+ const {game,a}=fixture();a.inventory.he=1;a.hp=250;a.armor=0;game.config.friendlyFire=false;
+ game.select('he');run(game,{},16);run(game,{fire:true,autoFire:true},40);assert(!a.cartridge);
+ run(game,{},1);const events=run(game,{fire:true},Math.ceil((game.config.grenadeFuse+.65)/dt));
+ assert.equal(a.inventory.he,0);assert.equal(a.cartridge,null);assert.equal(game.state.grenades.length,0);
+ assert.equal(events.filter(e=>e.type==='he').length,1);
+ assert.equal(events.filter(e=>e.type==='throw' && e.dropped).length,1);
+ assert.equal(events.filter(e=>e.type==='shot' && e.actorId===a.id).length,0);
+ assert(a.hp<250);
+});
+
+test('standard gamepad analog travel, L3 sprint, crouch edge, trigger hysteresis and reset require physical input',async()=>{
+ const {GamepadControls}=await import('./gamepad-controls.mjs');
+ const input=new GamepadControls(),pad={id:'test pad',buttons:Array.from({length:17},()=>({pressed:false,value:0})),axes:[.02,-.01,0,.04]};
+ assert.equal(input.sample(pad).forward,0);
+ pad.axes[1]=-1;pad.buttons[10].pressed=true;assert(input.sample(pad).sprint);
+ pad.buttons[10].pressed=false;pad.buttons[1].pressed=true;
+ const slide=input.sample(pad);assert(slide.sprint && slide.crouchEdge);assert(!input.sample(pad).crouchEdge);
+ pad.buttons[7].value=.27;const shot=input.sample(pad);assert(shot.firePress && !shot.sprint);
+ pad.buttons[7].value=.18;assert(input.sample(pad).fire);
+ pad.buttons[7].value=.14;assert(!input.sample(pad).fire);
+ input.clear();assert.equal(input.sample(pad),null);
+ pad.buttons[1].pressed=false;assert(input.sample(pad));
+});

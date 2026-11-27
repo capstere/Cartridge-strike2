@@ -28,6 +28,7 @@ function headshotResultTime(room){
 }
 function actorView(s,localId){
   const a={id:s.id,name:s.name,team:s.team,index:Number(s.id.split('-').at(-1)),isPlayer:s.id===localId,controllerType:s.bot?'bot':'human',bot:null,
+    cartridge:s.cartridgeStart?{type:s.weapon,started:s.cartridgeStart,releaseAt:s.cartridgeRelease,deadline:s.cartridgeFuse}:null,
     pending:!!s.pending,radius:NETWORK_CONFIG.radius,weapon:s.weapon,lastWeapon:s.lastWeapon,loadout:s.loadout,aimAmount:s.aimAmount,aiming:s.aiming,money:s.money,flash:0,action:s.actionType?{type:s.actionType,start:s.actionStart,duration:s.actionDuration}:null,
     inventory:{primary:s.primary?{id:s.primary,ammo:s.primaryAmmo,reserve:s.primaryReserve}:null,pistol:{id:s.pistol,ammo:s.pistolAmmo,reserve:s.pistolReserve},knife:{id:'knife',ammo:Infinity,reserve:0},smoke:0,flash:0,he:s.he}};
   copyPose(a,s);
@@ -269,7 +270,7 @@ export class NetworkSession {
       this.clearTeamComms();
     }
     if(newMatch||newPhase||modeChanged){
-      this.firePress=null;this.pendingCosmetic=null;this.confirmedLocalShots?.clear();
+      this.crouchEdge=false;this.firePress=null;this.pendingCosmetic=null;this.confirmedLocalShots?.clear();
       this.matchId=state.matchId;this.matchPhase=state.phase;
       this.resultsAt=state.phase==='results'?this.lastPatch:undefined;
       this.view.state.headshotTime=this.resultsAt!==undefined?headshotResultTime(this.room):undefined;
@@ -384,14 +385,14 @@ export class NetworkSession {
           this.metrics.corrections.push(Math.hypot(c.x||0,c.y||0,c.z||0));if(this.metrics.corrections.length>512)this.metrics.corrections.shift();},
       });
     }
-    if(this.cosmeticWeapon!==self.weapon){this.firePress=null;this.pendingCosmetic=null;this.nextCosmetic=0;this.cosmeticWeapon=self.weapon;}
+    if(this.cosmeticWeapon!==self.weapon){this.crouchEdge=false;this.firePress=null;this.pendingCosmetic=null;this.nextCosmetic=0;this.cosmeticWeapon=self.weapon;}
     const newLife=self.lifeId!==this.lifeId;
     if(newLife||self.alive!==this.alive||self.controlEpoch!==this.controlEpoch){
       const newConnection=self.controlEpoch!==this.controlEpoch;this.controlEpoch=self.controlEpoch;
       this.lifeId=self.lifeId;this.alive=self.alive;this.metrics.resets++;
       // Reset the replay controller, NOT InputHandle's reliable wire counters.
       this.prediction.reset();if(newLife||newConnection){this.predictedShots.clear();this.actionTimes?.clear();}this.nextCosmetic=0;
-      this.firePress=null;this.pendingCosmetic=null;this.confirmedLocalShots?.clear();
+      this.crouchEdge=false;this.firePress=null;this.pendingCosmetic=null;this.confirmedLocalShots?.clear();
       this.fireId=0;this.reloadId=0;this.trigger=false;
       this.keepRocketEffects();
     }
@@ -440,18 +441,19 @@ export class NetworkSession {
     if(!self)return;
     const stale=performance.now()-this.lastPatch>1000;
     if(this.enabled && !stale && self.alive && state.phase==='active' && (state.mode!=='classic'||state.roundPhase==='active')){
+      if(controls.crouchEdge)this.crouchEdge=true;
       if(controls.firePress)this.firePress ??= controls.firePress;
-    }else{this.firePress=null;this.pendingCosmetic=null;}
+    }else{this.crouchEdge=false;this.firePress=null;this.pendingCosmetic=null;}
     for(let i=0;i<steps;i++){
       if(state.phase!=='active'||!this.enabled||!self.alive||stale)break;
       const data=this.input.data;
       Object.assign(data,{lifeId:self.lifeId,controlEpoch:self.controlEpoch,sampleTick:state.tick,fireId:this.fireId,reloadId:this.reloadId,
         forward:controls.forward||0,strafe:controls.strafe||0,yaw:wrapYaw(controls.yaw??self.yaw),pitch:controls.pitch??self.pitch,
-        jump:!!controls.jump,crouch:!!controls.crouch,sneak:!!controls.sneak,sprint:!!controls.sprint,
+        holdThrow:!!controls.fire && !controls.autoFire,jump:!!controls.jump,crouch:!!controls.crouch,crouchEdge:!!this.crouchEdge,sneak:!!controls.sneak,sprint:!!controls.sprint,
         fireEdge:!!this.firePress,shotYaw:wrapYaw(this.firePress?.yaw??0),shotPitch:this.firePress?.pitch??0,interact:!!controls.interact,aim:!!controls.aim,fire:!!controls.fire});
       const time=this.prediction.world.game.state.time;
       const weapon=WEAPONS[self.weapon],throwing=self.weapon==='he';
-      const shotReady=(state.mode!=='classic'||state.roundPhase==='active')&&time+1e-8>=Math.max(this.nextCosmetic,self.nextShot)&&
+      const shotReady=!self.waitTriggerRelease && !self.cartridgeStart && (state.mode!=='classic'||state.roundPhase==='active')&&time+1e-8>=Math.max(this.nextCosmetic,self.nextShot)&&
         (self.ammo>0||self.weapon==='knife'||throwing&&self.he>0)&&!self.reloadUntil;
       const actor=this.prediction.world.actor,shouldered=rushReady(actor);
       if(data.fireEdge)data.fire=true;
@@ -469,7 +471,7 @@ export class NetworkSession {
         this.pendingCosmetic={weapon:self.weapon,id:data.fireId,yaw:data.fireEdge?data.shotYaw:data.yaw,
           pitch:data.fireEdge?data.shotPitch:data.pitch,until:time+RUSH.edgeLifetime};
       }
-      this.firePress=null;
+      this.crouchEdge=false;this.firePress=null;
       const pending=this.pendingCosmetic;
       if(pending && (pending.weapon!==self.weapon || self.reloadUntil || time>pending.until))this.pendingCosmetic=null;
       else if(pending && shouldered){
@@ -531,7 +533,7 @@ export class NetworkSession {
     const generation=[this.localPlayerId,this.matchId,this.matchPhase,this.lifeId,this.controlEpoch].join('/');
     if(this.enabled===enabled && this.lastControlGeneration===generation)return;
     this.lastControlGeneration=generation;
-    this.firePress=null;this.pendingCosmetic=null;
+    this.crouchEdge=false;this.firePress=null;this.pendingCosmetic=null;
     this.trigger=false;this.enabled=enabled;this.view.state.paused=!enabled;
     this.keepRocketEffects();
     if(this.room&&this.lifeId&&this.connectionState!=='reconnecting')this.room.send('controls',{enabled,lifeId:this.lifeId,controlEpoch:this.controlEpoch});
@@ -549,7 +551,7 @@ export class NetworkSession {
   }
   beginReconnect(){
     if(this.closed||this.connectionState==='reconnecting')return;
-    this.firePress=null;this.pendingCosmetic=null;
+    this.crouchEdge=false;this.firePress=null;this.pendingCosmetic=null;
     this.connectionState='reconnecting';this.enabled=false;this.view.state.paused=true;
     this.events=[];this.clearTeamComms();this.status='Återansluter… Din plats reserveras i 15 sekunder. Matchen fortsätter.';
     this.onConnection('reconnecting');

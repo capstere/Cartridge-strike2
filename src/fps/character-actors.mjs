@@ -47,7 +47,8 @@ export function syncAuthoredActor(model,actor,time,options={}){
  if(d.bag){const hip=bonePoint(s.bones.get('pelvis'),model);d.bag.position.set(hip.x+.26,hip.y-.10,hip.z+.025);d.bag.rotation.set(Math.sin(time*3+s.seed)*Math.min(.035,(actor.moving||0)*.01),0,.04);}
  if(!d.isHostage&&d.weaponModel){
   const wrist=bonePoint(s.bones.get('hand_r'),model),gun=d.weaponModel,grip=gun.userData.grip,pitch=Math.max(-.65,Math.min(.65,actor.pitch||0));
-  d.weaponSocket.rotation.set(pitch,0,0);const held=heldScratch.copy(grip||heldScratch.set(0,0,0)).multiplyScalar(.85).applyEuler(d.weaponSocket.rotation);
+  const rush=actor.reloadUntil>time?0:(actor.rushWeight || 0);
+  d.weaponSocket.rotation.set(pitch-.30*rush,.12*rush,-.16*rush);const held=heldScratch.copy(grip||heldScratch.set(0,0,0)).multiplyScalar(.85).applyEuler(d.weaponSocket.rotation);
   d.weaponSocket.position.copy(wrist).sub(held);d.weaponSocket.position.y-=.012;d.weaponSocket.position.z-=.043;d.weaponSocket.updateWorldMatrix(true,true);
   s.gunHandLocal??=new T.Matrix4();s.gunHandLocal.copy(s.bones.get('hand_r').matrixWorld).invert().multiply(d.weaponSocket.matrixWorld);
   if(!(actor.reloadUntil>time)&&WEAPONS[actor.weapon]?.slot==='primary'){

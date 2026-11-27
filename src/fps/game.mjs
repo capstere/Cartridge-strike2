@@ -4,7 +4,7 @@ import {rejoinNavigation} from './body-recovery.mjs';
 import {populateZombies,tickZombies,tickDance,reactZombie} from './zombies.mjs';
 import {zombieRay,zombiePosition} from './zombie-poses.mjs';
 import {missionRoomName} from './player-names.mjs';
-import { grenadeLaunch, advanceGrenade } from './grenade-physics.mjs';
+import { CARTRIDGE, grenadeLaunch, advanceGrenade } from './grenade-physics.mjs';
 import { advanceAim, canAim, shotSpread } from './tactical-rules.mjs';
 import {initializeCombat,tickCombat,combatEvent} from './combat-flow.mjs';
 import { CONFIG, TEAMS, WEAPONS, PRIORITY, seededRandom, DIFFICULTIES, DEFAULT_DIFFICULTY, TEAMMATE_DIFFICULTY } from './config.mjs';
@@ -128,7 +128,7 @@ export class Game {
         lastStep: s.time, fireHeld: false, interactHeld: false, jumpHeld: false, lastWeapon: 'knife', hurtTime: -Infinity, hurtDirection: null, deathAt: null, deathCause: null, deathVariant: '',
         weapon: actor.inventory.primary?.id ?? actor.inventory.pistol?.id ?? 'knife',
       });
-      resetRush(actor);
+      actor.cartridge=null;actor.waitTriggerRelease=false;resetRush(actor);
       actor.bot = actor.controllerType === 'bot' ? new BotController(this, actor) : null;
     }
     s.hostages = (this.config.networkSlice && this.config.mode !== 'classic' ? [] : this.world.anchors.hostages).map((p, i) => ({ ...point(p), id: `hostage-${i}`, name: `Gisslan ${i + 1}`, height: 1.6, radius: this.config.radius, vy: 0, onGround: true, rescued: false, escortId: null, path: [], pathAt: 0, distanceWalked: 0 }));
@@ -151,13 +151,14 @@ export class Game {
   }
   weaponItem(id) { const w = WEAPONS[id]; return { id, ammo: w.magazine, reserve: w.reserve }; }
   item(actor = this.player) { const w = WEAPONS[actor.weapon]; return actor.inventory[w?.slot] ?? null; }
-  pause(value = true) { this.state.paused = Boolean(value); this.accumulator = 0; this.firePress = null; for (const a of this.actors) { resetRush(a); a.fireHeld = false; a.interactHeld = false; a.jumpHeld = false; a.action = null; } }
+  pause(value = true) { this.state.paused = Boolean(value); this.accumulator = 0; this.firePress = null; this.crouchEdge=false; for (const a of this.actors) { this.interruptCartridge(a);resetRush(a);a.waitTriggerRelease=false; a.fireHeld = false; a.interactHeld = false; a.jumpHeld = false; a.action = null; } }
   update(dt, input = {}) {
     if (this.state.paused || ['menu', 'match'].includes(this.phase)) return;
+    if(input.crouchEdge && this.phase==='active')this.crouchEdge=true;
     if (input.firePress && this.phase==='active') this.firePress ??= input.firePress;
     this.accumulator += Math.min(Math.max(0, dt), this.config.maxCatchUp);
-    while (this.accumulator + EPS >= this.config.fixedStep) { this.step(this.config.fixedStep, this.firePress ? {...input,firePress:this.firePress} : input); this.firePress=null;
-      if(input.firePress)input={...input,firePress:null};
+    while (this.accumulator + EPS >= this.config.fixedStep) { this.step(this.config.fixedStep, this.firePress || this.crouchEdge ? {...input,firePress:this.firePress,crouchEdge:this.crouchEdge} : input); this.firePress=null;this.crouchEdge=false;
+      if(input.firePress || input.crouchEdge)input={...input,firePress:null,crouchEdge:false};
       this.accumulator -= this.config.fixedStep; }
   }
   /** One externally clocked authoritative tick; never enters update's accumulator. */
@@ -193,8 +194,10 @@ export class Game {
       actor.flash = actor.flashUntil > s.time ? actor.flashStrength * (actor.flashUntil - s.time) / (actor.flashUntil - actor.flashStart) : 0;
       this.completeReloadIfDue(actor);
       const controls = actor.bot ? actor.bot.update(dt) : actor.controllerType === 'human' ? (inputsByActor?.get(actor.id) ?? (actor.isPlayer && !inputsByActor ? input : {})) : {};
+      const held=controls.holdThrow ?? (!!controls.fire && !controls.autoFire);
+      if(!held)actor.waitTriggerRelease=false;
       const press=controls.firePress || (controls.fire && !actor.fireHeld && !controls.autoFire);
-      if(!this.authorizeShot && press && !actor.reloadUntil && !actor.action && (controls.firePress || !rushReady(actor))) {
+      if(!actor.waitTriggerRelease && !this.authorizeShot && press && !actor.reloadUntil && !actor.action && (controls.firePress || !rushReady(actor))) {
         queueShot(actor,{yaw:press.yaw??controls.yaw??actor.yaw,pitch:press.pitch??controls.pitch??actor.pitch},s.time);
       }
       this.moveActor(actor, controls, dt);
@@ -203,10 +206,21 @@ export class Game {
         actor.aimAmount=actor.aiming?advanceAim(actor.aimAmount||0,true,dt):0;
       }
       const shot=takeReadyShot(actor,s.time);
-      if(shot) {
-        if(!this.authorizeShot || this.authorizeShot(actor,shot)) this.fire(actor,true,shot);
-      } else if(controls.fire && (!this.authorizeShot || actor.bot) && rushReady(actor)) {
-        this.fire(actor, this.config.networkSlice || !!controls.autoFire || !actor.fireHeld);
+      if(!actor.bot && WEAPONS[actor.weapon]?.slot==='grenade'){
+        const admitted=shot && (!this.authorizeShot || this.authorizeShot(actor,shot));
+        if(!actor.cartridge && !actor.waitTriggerRelease && !controls.autoFire &&
+           (admitted || (!this.authorizeShot && press)) && rushReady(actor) &&
+           !actor.action && !actor.reloadUntil && s.time+EPS>=actor.nextShot && actor.inventory[actor.weapon]){
+          const actionId=shot?.fireId ? [actor.id,actor.lifeId,actor.controlEpoch,shot.fireId].join(':') : '';
+          actor.cartridge={type:actor.weapon,started:s.time,releaseAt:0,deadline:0,actionId};
+        }
+        this.updateCartridge(actor,held);
+      }else if(!actor.waitTriggerRelease){
+        if(shot) {
+          if(!this.authorizeShot || this.authorizeShot(actor,shot)) this.fire(actor,true,shot);
+        } else if(controls.fire && (!this.authorizeShot || actor.bot) && rushReady(actor)) {
+          this.fire(actor, this.config.networkSlice || !!controls.autoFire || !actor.fireHeld);
+        }
       }
       actor.fireHeld = !!controls.fire;
       this.interact(actor, controls);
@@ -263,6 +277,7 @@ export class Game {
     if (w.slot === 'grenade' && !inventory[id]) return false;
     if (['primary', 'pistol', 'knife'].includes(w.slot) && inventory[w.slot]?.id !== id) return false;
     if (actor.weapon === id) return true;
+    this.interruptCartridge(actor,false);
     actor.pendingShot=null; actor.lastWeapon = actor.weapon; actor.weapon = id; actor.reloadUntil = 0; actor.nextShot = Math.max(actor.nextShot, this.state.time + .22);
     this.emit('switch', actor, { weapon: id }); return true;
   }
@@ -382,7 +397,7 @@ export class Game {
     if (this.phase !== 'active' || !target?.alive || !Number.isFinite(amount) || amount <= 0) return false;
     const owner = context.projectileOwner;
     const sourceTeam = owner?.team ?? source?.team, sourceName = owner?.ownerName ?? source?.name;
-    if (sourceTeam && sourceTeam === target.team && !this.config.friendlyFire && !(source === target && kind === 'bazooka')) return false;
+    if (sourceTeam && sourceTeam === target.team && !this.config.friendlyFire && !(source === target && (kind === 'bazooka' || (kind==='he' && context.inHand)))) return false;
     if(target.spawnProtectedUntil>this.state.time)return false;
     if(kind==='stomp' && (!source?.alive || source.behavior!=='attack'))return false;
     if(target.kind==='hostage'&&!this.config.hostageDamage)return false;
@@ -412,7 +427,7 @@ export class Game {
     this.emit('damage', target, detail); this.emit('hit', target, detail);
     if(target.kind==='zombie')reactZombie(this,target,kind,detail,owner&&!currentSource?undefined:source);
     if (target.hp > 0) return true;
-    if(target.controllerType)resetRush(target);
+    if(target.controllerType){this.interruptCartridge(target);target.waitTriggerRelease=false;resetRush(target);}
     target.alive = false; target.deaths++; target.action = null; target.reloadUntil = 0; target.deathAt = this.state.time;
     target.deathVariant = context.head && canAim(kind) && Object.hasOwn(TEAMS,target.team) ? 'headshot' : '';
     target.deathCause = { sourceId, sourceName, weapon: kind, point: { ...hitPoint }, direction: { ...incoming } };
@@ -437,18 +452,46 @@ export class Game {
     }
     return false;
   }
-  throwGrenade(actor, type) {
+  updateCartridge(actor,held) {
+    const c=actor.cartridge;if(!c)return;
+    const now=this.state.time,armed=c.started+CARTRIDGE.pull;
+    if(!c.latched && now+EPS>=c.started+CARTRIDGE.pin){c.latched=true;this.emit('cartridge-latch',actor,{grenade:c.type,actionId:c.actionId});}
+    if(!held && !c.releaseAt)c.releaseAt=Math.max(now,armed)+CARTRIDGE.release;
+    if(!c.releaseAt && !c.deadline && c.type==='he' && now+EPS>=armed)c.deadline=armed+this.config.grenadeFuse;
+    const expired=c.deadline && now+EPS>=c.deadline;
+    if(expired || (c.releaseAt && now+EPS>=c.releaseAt)){
+      actor.waitTriggerRelease=!!held;
+      this.throwGrenade(actor,c.type,{held:c,drop:!!expired,inHand:!!expired});
+    }
+  }
+  interruptCartridge(actor,restore=true){
+    const c=actor.cartridge;if(!c)return;
+    actor.cartridge=null;
+    if(c.deadline)this.throwGrenade(actor,c.type,{held:c,drop:true,restore});
+  }
+  throwGrenade(actor, type, {held=null,drop=false,restore=true,inHand=false}={}) {
     if (this.phase !== 'active' || !actor.alive || !actor.inventory[type]) return false;
-    actor.inventory[type]--;
+    actor.cartridge=null;actor.inventory[type]--;
     if(this.config.networkSlice)actor.spawnProtectedUntil=0;
-    this.state.grenades.push({ ...grenadeLaunch(actor, this.config, this.state.time, type),
-      ...(this.config.networkSlice?{owner:actor,team:actor.team,ownerLifeId:actor.lifeId??0,ownerName:actor.name,ownerControlEpoch:actor.controlEpoch??0}:{}), id: `grenade-${++this.eventSerial}` });
-    this.emit('throw', actor, { grenade: type }); this.select(actor.inventory.primary?.id ?? actor.inventory.pistol?.id ?? 'knife', actor); return true;
+    const grenade={...grenadeLaunch(actor,this.config,this.state.time,type),
+      ...(this.config.networkSlice?{owner:actor,team:actor.team,ownerLifeId:actor.lifeId??0,ownerName:actor.name,ownerControlEpoch:actor.controlEpoch??0}:{}),id:`grenade-${++this.eventSerial}`};
+    if(inHand)grenade.inHand=true;
+    if(held?.deadline)grenade.deadline=held.deadline;
+    if(drop)Object.assign(grenade,{vx:0,vy:0,vz:0,y:actor.y+actor.height*.55});
+    this.state.grenades.push(grenade);
+    this.emit('throw',actor,{grenade:type,dropped:drop,actionId:held?.actionId||''});
+    if(restore){
+      const previous=actor.lastWeapon;
+      if(!['primary','pistol','knife'].includes(WEAPONS[previous]?.slot) || !this.select(previous,actor))
+        this.select(actor.inventory.primary?.id ?? actor.inventory.pistol?.id ?? 'knife',actor);
+    }
+    actor.nextShot=Math.max(actor.nextShot,this.state.time+CARTRIDGE.return-CARTRIDGE.release);
+    return true;
   }
   updateGrenades(dt) {
     const remaining = [];
     for (const grenade of this.state.grenades) {
-      const hit = advanceGrenade(grenade, this.world, this.config.gravity, dt);
+      const hit = !grenade.inHand && advanceGrenade(grenade, this.world, this.config.gravity, dt);
       if (hit && this.state.time - grenade.lastBounce > .12) {
         this.emit('bounce', null, { ...point(grenade), grenade: grenade.type }); grenade.lastBounce = this.state.time;
       }
@@ -467,7 +510,7 @@ export class Game {
       const target = eye(actor), d = Math.hypot(target.x - origin.x, target.y - origin.y, target.z - origin.z);
       if (grenade.type === 'he') {
         // Solid glass is cover for blast; clear glass only permits vision/flash.
-        if (d < c.heRadius && this.world.segmentClear(origin, { ...target, y: actor.y + actor.height * .55 }, { vision: false })) this.pendingDamage.push({ target: actor, amount: 105 * (1 - d / c.heRadius), source: owner, projectileOwner: c.networkSlice ? grenade : undefined, kind: 'he', point: { ...target, y: actor.y + actor.height * .55 }, sourcePosition: origin });
+        if (d < c.heRadius && ((grenade.inHand && actor===owner) || this.world.segmentClear(origin, { ...target, y: actor.y + actor.height * .55 }, { vision: false }))) this.pendingDamage.push({ target: actor, amount: 105 * (1 - d / c.heRadius), source: owner, projectileOwner: c.networkSlice ? grenade : undefined, kind: 'he', inHand:!!grenade.inHand, point: { ...target, y: actor.y + actor.height * .55 }, sourcePosition: origin });
       } else if (d < c.flashRadius && this.world.segmentClear(origin, target, { vision: true })) {
         const view = direction(actor.yaw, actor.pitch), dot = ((origin.x - target.x) * view.x + (origin.y - target.y) * view.y + (origin.z - target.z) * view.z) / (d || 1);
         const strength = (1 - d / c.flashRadius) * (dot > .35 ? 1 : dot > -.25 ? .5 : .16);
@@ -576,7 +619,7 @@ export class Game {
       else if (result.winner) { reward = Math.min(this.config.maxLossMoney, this.config.lossMoney + this.config.lossIncrement * s.lossStreak[team]); s.lossStreak[team]++; }
       for (const a of this.actors.filter(actor => actor.team === team)) a.money = Math.min(this.config.maxMoney, a.money + reward);
     }
-    for (const a of this.actors) { resetRush(a); a.action = null; a.reloadUntil = 0; a.flash = 0; a.flashUntil = 0; }
+    for (const a of this.actors) { a.cartridge=null;a.waitTriggerRelease=false;resetRush(a); a.action = null; a.reloadUntil = 0; a.flash = 0; a.flashUntil = 0; }
     s.grenades = []; s.smokes = []; this.soundEvents = [];
     if (this.config.networkSlice) s.projectiles = [];
     s.bomb.status = result.reason === 'detonation' ? 'detonated' : result.reason === 'defuse' ? 'defused' : 'inactive';

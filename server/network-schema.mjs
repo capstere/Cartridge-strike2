@@ -3,8 +3,8 @@ import {POSE_NUMBERS,POSE_BOOLEANS} from '../shared/multiplayer/rules.mjs';
 export const NetworkInput=schema({
   lifeId:t.uint32(),controlEpoch:t.uint32(),sampleTick:t.uint32(),fireId:t.uint32(),reloadId:t.uint32(),
   forward:t.float64(),strafe:t.float64(),yaw:t.float64(),pitch:t.float64(),
-  jump:t.boolean(),crouch:t.boolean(),sneak:t.boolean(),sprint:t.boolean(),fireEdge:t.boolean(),shotYaw:t.float64(),shotPitch:t.float64(),aim:t.boolean(),fire:t.boolean(),interact:t.boolean(),
-},'FPSInputV15');
+  jump:t.boolean(),crouch:t.boolean(),crouchEdge:t.boolean(),holdThrow:t.boolean(),sneak:t.boolean(),sprint:t.boolean(),fireEdge:t.boolean(),shotYaw:t.float64(),shotPitch:t.float64(),aim:t.boolean(),fire:t.boolean(),interact:t.boolean(),
+},'FPSInputV16');
 export const ActorState=schema({
   ...Object.fromEntries(POSE_NUMBERS.map(k=>[k,t.float64()])),
   ...Object.fromEntries(POSE_BOOLEANS.map(k=>[k,t.boolean()])),
@@ -13,10 +13,11 @@ export const ActorState=schema({
   pending:t.boolean(),money:t.uint16(),actionType:t.string(),actionStart:t.float64(),actionDuration:t.float64(),bot:t.boolean(),aimAmount:t.float32(),aiming:t.boolean(),weapon:t.string(),lastWeapon:t.string(),loadout:t.string(),
   primary:t.string(),primaryAmmo:t.uint16(),primaryReserve:t.uint16(),pistol:t.string(),pistolAmmo:t.uint16(),pistolReserve:t.uint16(),he:t.uint8(),
   ammo:t.uint16(),reserve:t.uint16(),kills:t.uint16(),deaths:t.uint16(),
+  cartridgeStart:t.float64(),cartridgeRelease:t.float64(),cartridgeFuse:t.float64(),waitTriggerRelease:t.boolean(),
   reloadUntil:t.float64(),nextShot:t.float64(),respawnAt:t.float64(),
   spawnProtectedUntil:t.float64(),deathAt:t.float64(),hurtTime:t.float64(),
   deathSource:t.string(),deathWeapon:t.string(),deathVariant:t.string(),recoil:t.float64(),
-},'FPSActorV15');
+},'FPSActorV16');
 export const DoorState=schema({angle:t.float64(),poseAngle:t.float64(),target:t.float64(),sign:t.float64(),holdUntil:t.float64()},'FPSDoorV10');
 export const GrenadeState=schema({id:t.string(),type:t.string(),ownerId:t.string(),team:t.string(),ownerLifeId:t.uint32(),deadline:t.float64(),x:t.float32(),y:t.float32(),z:t.float32()},'FPSGrenadeV10');
 export const RocketState=schema({

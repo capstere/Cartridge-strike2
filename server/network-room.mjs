@@ -91,7 +91,7 @@ export class NetworkRoom extends Room {
       if(!seat?.ready||!seat.connected||seat.client!==client||message?.lifeId!==seat.actor.lifeId||
         (message.controlEpoch??0)!==seat.epoch||typeof message.enabled!=='boolean')return;
       if(seat.enabled===message.enabled)return;
-      resetRush(seat.actor);seat.enabled=message.enabled;seat.interactUntil=0;seat.actor.action=null;seat.aim=false;seat.trigger=false;seat.actor.aimAmount=0;this.inputs.get(client.sessionId).clear();
+      this.sim.game.interruptCartridge(seat.actor);seat.holdThrow=false;seat.actor.waitTriggerRelease=false;resetRush(seat.actor);seat.enabled=message.enabled;seat.interactUntil=0;seat.actor.action=null;seat.aim=false;seat.trigger=false;seat.actor.aimAmount=0;this.inputs.get(client.sessionId).clear();
       if(!seat.enabled)this.teamComms.prune();
     });
     this.onMessage('select',(client,m)=>{
@@ -248,7 +248,7 @@ export class NetworkRoom extends Room {
     this.sim.game.authorizeShot ??= (actor,shot)=>{
       const seat=this.seats.get(shot.sessionId);
       if(!seat?.connected || !seat.enabled || seat.actor!==actor || shot.lifeId!==actor.lifeId || shot.epoch!==seat.epoch)return false;
-      if(!WEAPONS[actor.weapon].projectile)this.lag.useAdmittedShot(actor.id,shot.rewindStamp);
+      if(!WEAPONS[actor.weapon].projectile && WEAPONS[actor.weapon].slot!=='grenade')this.lag.useAdmittedShot(actor.id,shot.rewindStamp);
       this.tickActions.set(actor.id,`${actor.id}:${actor.lifeId}:${seat.epoch}:${shot.fireId}`);
       return true;
     };
@@ -268,7 +268,7 @@ export class NetworkRoom extends Room {
       // renderer sent catch-up frames faster than the server timer could drain.
       // Coalesce controls, never simulation time. Preserve a short fire press
       // with ITS orientation/tick/stamp even if a release follows in this batch.
-      let latest,shot,reload=false,consumed=0;
+      let latest,shot,crouchEdge=false,reload=false,consumed=0;
       for(let f;(f=buffer.next());){
         consumed++;
         try{
@@ -276,11 +276,12 @@ export class NetworkRoom extends Room {
           if(f.sampleTick<seat.lastSampleTick)throw Error('Regressed input tick');
           seat.lastSampleTick=f.sampleTick;
           latest={input,frame:f,stamp:buffer.renderTime};
+          crouchEdge ||= !!input.crouchEdge;
           if(f.fire && f.fireId>seat.lastFire && (WEAPONS[seat.actor.weapon].automatic || !seat.trigger || f.fireEdge)){
             shot ??= {yaw:f.fireEdge?f.shotYaw:f.yaw,pitch:f.fireEdge?f.shotPitch:f.pitch,sampleTick:f.sampleTick,
               stamp:latest.stamp,fireId:f.fireId,lifeId:f.lifeId,epoch:f.controlEpoch,sessionId:client.sessionId};
           }
-          seat.trigger=f.fire;seat.aim=!!input.aim;
+          seat.holdThrow=!!input.holdThrow;seat.trigger=f.fire;seat.aim=!!input.aim;
           if(!input.interact)seat.releaseInteract=false;
           input.interact=!!input.interact&&!seat.releaseInteract;
           seat.interactUntil=this.classic&&input.interact?this.clock.elapsedTime+180:0;
@@ -291,22 +292,22 @@ export class NetworkRoom extends Room {
       this.metrics.coalesced+=Math.max(0,consumed-1);
       if(!latest){
         const interact=this.classic&&seat.interactUntil>this.clock.elapsedTime;
-        if(seat.aim||interact)frames.set(client.sessionId,{aim:!!seat.aim,interact});
+        if(seat.aim || interact || (seat.holdThrow && (seat.actor.cartridge || seat.actor.waitTriggerRelease || seat.actor.pendingShot)))frames.set(client.sessionId,{aim:!!seat.aim,interact,holdThrow:!!seat.holdThrow});
         continue;
       } // no cached held movement/fire on silence
       const input=latest.input;
       if(shot && !seat.actor.pendingShot && this.sim.game.phase==='active' && !reload && !seat.actor.reloadUntil && !seat.actor.action){
-        const rewindStamp=WEAPONS[seat.actor.weapon].projectile ? 0 : this.lag.admit(seat,shot,shot.stamp);
+        const rewindStamp=(WEAPONS[seat.actor.weapon].projectile || WEAPONS[seat.actor.weapon].slot==='grenade') ? 0 : this.lag.admit(seat,shot,shot.stamp);
         if(rewindStamp!==null)queueShot(seat.actor,{...shot,rewindStamp},this.sim.game.state.time);
       }
-      input.reload=reload;
+      input.crouchEdge=crouchEdge;input.reload=reload;
       frames.set(client.sessionId,input);
     }
     this.teamComms.prune();
     const oldLives=new Map(this.sim.game.actors.map(a=>[a.id,a.lifeId]));
     const events=this.sim.tick(frames);this.match.afterTick();
     for(const seat of this.participants())if(!this.classic&&seat.ready&&oldLives.get(seat.id)!==seat.actor.lifeId){
-      const sid=seat.client?.sessionId;if(sid)this.inputs.get(sid).clear();seat.lastFire=seat.lastReload=seat.lastSelect=0;seat.trigger=seat.aim=false;
+      const sid=seat.client?.sessionId;if(sid)this.inputs.get(sid).clear();seat.lastFire=seat.lastReload=seat.lastSelect=0;seat.holdThrow=seat.trigger=seat.aim=false;
       seat.lifeStartedAt=this.clock.elapsedTime;seat.diedAtMs=0;
       // New schema identity drops old-life interpolation and rewind histories.
       this.state.actors.set(seat.id,new ActorState({id:seat.id,sessionId:sid||'',name:seat.actor.name,team:seat.actor.team}));
@@ -317,7 +318,7 @@ export class NetworkRoom extends Room {
         const actor=this.state.actors.get(e.actorId)||this.state.residents.get(e.actorId);
         const source=this.state.actors.get(e.sourceId)||this.state.residents.get(e.sourceId);
         return {...e,round:this.state.round,matchId:this.state.matchId,eventId:e.serial,tick:this.sim.tickNumber,lifeId:actor?.lifeId||0,sourceLifeId:source?.lifeId||0,controlEpoch:actor?.controlEpoch||0,sourceControlEpoch:source?.controlEpoch||0,
-          actionId:this.tickActions.get(e.sourceId||e.actorId)||''};
+          actionId:e.actionId||this.tickActions.get(e.sourceId||e.actorId)||''};
       });
       this.metrics.events+=wire.length;this.broadcast('events',wire,{afterNextPatch:true});
     }
@@ -356,6 +357,7 @@ export class NetworkRoom extends Room {
       for(const k of ['lifeId','alive','hp','armor','kills','deaths','reloadUntil','nextShot','spawnProtectedUntil','recoil'])s[k]=a[k]??0;
       const {primary,pistol,he}=a.inventory;
       Object.assign(s,{ready:true,pending:!!seat.pending,bot:a.controllerType==='bot',money:a.money||0,actionType:a.action?.type||'',actionStart:a.action?.start||0,actionDuration:a.action?.duration||0,weapon:a.weapon,lastWeapon:a.lastWeapon,loadout:a.loadout||'smg',
+        cartridgeStart:a.cartridge?.started||0,cartridgeRelease:a.cartridge?.releaseAt||0,cartridgeFuse:a.cartridge?.deadline||0,waitTriggerRelease:!!a.waitTriggerRelease,
         aimAmount:a.aimAmount||0,aiming:!!a.aiming,primary:primary?.id||'',primaryAmmo:primary?.ammo||0,primaryReserve:primary?.reserve||0,
         pistol:pistol.id,pistolAmmo:pistol.ammo,pistolReserve:pistol.reserve,he});
       const item=g.item(a);s.ammo=Number.isFinite(item?.ammo)?item.ammo:0;s.reserve=item?.reserve||0;
@@ -385,7 +387,7 @@ export class NetworkRoom extends Room {
     const seat=this.seats.get(client.sessionId);if(!seat||seat.client!==client)return;
     if(!seat.ready)this.state.actors.get(seat.waitId).connected=false;
     this.releaseObjectives(seat.actor,false);seat.interactUntil=0;
-    seat.enabled=false;seat.aim=seat.trigger=false;if(seat.actor){seat.actor.aimAmount=0;resetRush(seat.actor);}seat.connected=false;seat.playerReady=false;this.inputs.get(client.sessionId).clear();
+    seat.enabled=false;seat.aim=seat.trigger=false;if(seat.actor){this.sim.game.interruptCartridge(seat.actor);seat.holdThrow=false;seat.actor.waitTriggerRelease=false;seat.actor.aimAmount=0;resetRush(seat.actor);}seat.connected=false;seat.playerReady=false;this.inputs.get(client.sessionId).clear();
     this.sim.controllers.unbind(client.sessionId);this.metrics.drops++;this.project();
     // Protocol violations, payload limits and server shutdown never reserve a seat.
     if(seat.admitted&&!seat.revoked&&[1000,1001,1005,1006].includes(code))this.allowReconnection(client,RECONNECT_SECONDS).catch(()=>{});

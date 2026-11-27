@@ -1,3 +1,4 @@
+import {CARTRIDGE} from './grenade-physics.mjs';
 import { createThrowableCartridge, disposeThrowableCartridges } from './throwable-cartridge.mjs';
 import {buildBazookaParts} from './action-models.mjs';
 import {fitPresentationHands, poseViewHands, refitViewArms, disposePresentationHands} from './presentation-hands.mjs';
@@ -605,19 +606,27 @@ export function animateWeapon(model, actor, time, dt, { reducedMotion = false, s
   const swap = 1 - smooth((time - switchAt) / .26);
   const throwAge = time - throwAt, throwing = throwAge >= 0 && throwAge < .48 ? Math.sin(throwAge / .48 * Math.PI) : 0;
   const swingAge = time - swingAt, swing = swingAge >= 0 && swingAge < .36 ? Math.sin(swingAge / .36 * Math.PI) : 0;
+  const cartridge=actor.cartridge?.type===d.id?actor.cartridge:null;
+  const pull=cartridge?smooth((time-cartridge.started)/CARTRIDGE.pull):0;
+  const cast=cartridge?.releaseAt?smooth(1-(cartridge.releaseAt-time)/CARTRIDGE.release):0;
   const primary = WEAPONS[d.id]?.slot === 'primary';
   model.position.set((primary ? .24 : .17) + (primary ? reach * .015 : 0), (primary ? -.15 : -.11) + bob + idle - swap * .23 - throwing * .26, (primary ? -.53 - reach * .10 : -.47) + shot * .027 + recoil * .35);
   if(d.visualVariant==='p9-firstperson-refined'){model.position.y-=.012;model.position.z-=.035;}
   model.rotation.set(-shot * .065 + reach * (primary ? .12 : -.18) + swap * .48, .14 + reach * (primary ? .23 : -.08), -reach * .33 - swing * .9);
   if (!reducedMotion) { model.position.x += Math.cos(stride * .5) * .004 * speed; model.rotation.z += Math.sin(stride * .5) * .009 * speed; }
   if (reloading) model.position.y += reach * .055;
+  if(cartridge){
+    model.position.x+=pull*.062-cast*.05;model.position.y+=.036*pull+.04*cast;
+    model.position.z+=.09*pull-.16*cast;
+    model.rotation.x+=.40*pull-.64*cast;model.rotation.z-=.19*pull;
+  }
   if (swing) { model.position.x -= swing * .15; model.position.z -= swing * .15; }
   if (actor.action) { model.position.y -= .12; model.rotation.x -= .25; }
   if (d.viewmodel) {
     const shell = d.id === 'shotgun';
     const hold = reloading ? (shell ? envelope(progress, 0, .095, .91, 1) : envelope(progress, .015, .15, .78, .92)) : 0;
     const release = !shell && d.id !== 'bazooka' ? envelope(progress, .42, .46, .51, .56) : 0;
-    poseViewHands(model, hold, 0, shot, release, throwing);
+    poseViewHands(model, hold, 0, shot, release, Math.max(throwing,pull));
     if (!d.presentationMotion) refitViewArms(model);
   }
   model.updateMatrixWorld(true);

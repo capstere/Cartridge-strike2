@@ -1,3 +1,4 @@
+import {WEAPONS} from './config.mjs';
 import {kitWeapon} from './strike-kit-timing.mjs';
 import {makeKitWeapon,animateKitWeapon,disposeKitModels} from './strike-kit-models.mjs?v=6.1.2';
 import {upgradeViewSurfaces,disposeViewSurfaces} from './view-surface.mjs';
@@ -12,6 +13,25 @@ import { makeWeapon as primitiveWeapon, makeActor as primitiveActor,
   disposeWeaponResources as disposePrimitiveWeapons, animateCorpse as primitiveCorpse } from './model-primitives.mjs';
 import {refitViewArms,releasePistolSupport} from './presentation-hands.mjs';
 import { createViewMotion, viewMotion, strideSample, solveLeg, clamp } from './presentation-motion.mjs';
+
+// Front/rear marker coordinates on the authored meshes, in viewmodel space.
+const sightLines = {
+  p9: [.090,-.174,.089,.037], p12: [.090,-.174,.089,.037],
+  cr4: [.119,-.475,.119,.023], ar47: [.092,-.640,.114,-.210],
+  smg: [.122,-.380,.133,.030], shotgun: [.073,-.760,.073,0],
+  sniper: [.165,-.425,.165,-.055]
+};
+function alignSights(model,amount,shotAge) {
+  const line=sightLines[model.userData.id];
+  if(!line || amount<=0)return;
+  const [frontY,frontZ,rearY,rearZ]=line;
+  const pitch=Math.atan((rearY-frontY)/(rearZ-frontZ));
+  const aimY=rearZ*Math.sin(pitch)-rearY*Math.cos(pitch);
+  const kick=shotAge>=0 && shotAge<.18 ? Math.exp(-shotAge*28)*.035 : 0;
+  model.rotation.x+=(pitch-kick-model.rotation.x)*amount;
+  model.rotation.y*=1-amount;model.rotation.z*=1-amount;
+  model.position.x*=1-amount;model.position.y+=(aimY-model.position.y)*amount;
+}
 
 export function makeWeapon(id='p9',options={}) {
   const hero=options.viewmodel!==false&&kitWeapon(id);
@@ -30,7 +50,7 @@ export function animateWeapon(model,actor,time,dt,options={}) {
     // Riposte 5.6.1 06-weapons VM_SPRINT and 06c-models pistolRunPose.
     // Copyright (c) 2026 BenDBSS, MIT (licenses/riposte-MIT.txt).
     const gait=actor.rushWeight || 0,phase=(actor.distanceWalked || 0)*4.4;
-    const handling=pose.reloading || actor.action || options.inspecting ||
+    const handling=pose.reloading || actor.action || actor.cartridge || options.inspecting ||
       time-(options.switchAt ?? -Infinity)<.26 || time-(options.throwAt ?? -Infinity)<.48;
     const rush=gait*(handling ? .08 : 1)*(1-(actor.aimAmount || 0));
     if(rush>.001){
@@ -43,15 +63,21 @@ export function animateWeapon(model,actor,time,dt,options={}) {
         model.position.z+=(.095+.030*stride)*rush;
         model.rotation.x-=.38*rush;model.rotation.y-=.25*rush;model.rotation.z-=.24*rush;
         releasePistolSupport(model,rush,stride,bounce);
-      }else{
+      }else if(WEAPONS[model.userData.id]?.slot==='primary'){
         model.position.x+=(.01+.012*stride)*rush;model.position.y+=(-.04+.012*bounce)*rush;
         model.position.z+=(-.04+.01*bounce)*rush;
         model.rotation.x+=(-.50+.04*bounce)*rush;
         model.rotation.y+=(.65+.05*stride)*rush;model.rotation.z+=(.70+.10*roll)*rush;
+      }else{
+        const compact=WEAPONS[model.userData.id]?.slot!=='bomb';
+        model.position.y+=(-.045+.012*bounce)*rush;
+        model.position.z+=(.055+.012*stride)*rush;
+        model.rotation.x-=(compact?.18:.10)*rush;model.rotation.z+=(compact?.14:.07)*rush;
       }
     }
     const wall=(options.nearWall || 0)*(1-rush)*(1-(actor.aimAmount || 0));
     model.rotation.x+=wall*.75;model.position.z+=wall*.12;
+    if(!handling)alignSights(model,clamp(actor.aimAmount || 0),time-(options.shotAt ?? -Infinity));
     refitViewArms(model);
     model.updateMatrixWorld(true);
     // Muzzle effect follows the final pose. Bullet/hitscan origin stays owned by Game.

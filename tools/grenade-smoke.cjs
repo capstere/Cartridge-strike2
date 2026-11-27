@@ -68,9 +68,11 @@ async function boot(browser,mobile){
         const r=await trigger.boundingBox();
         await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:r.x+r.width/2,y:r.y+r.height/2,id:21}]});
       }else await page.evaluate(()=>document.getElementById('game').dispatchEvent(new MouseEvent('mousedown',{button:0,bubbles:true})));
-      const thrown=await page.evaluate(()=>{__fps.step(null,1/60);return {ammo:__fps.game.player.inventory.he,n:__fps.game.state.grenades.length,guide:__fps.grenadeAssist.group.visible};});
+      const held=await page.evaluate(()=>{__fps.step(null,1/60);return {ammo:__fps.game.player.inventory.he,n:__fps.game.state.grenades.length,pulling:!!__fps.game.player.cartridge};});
+      assert.deepEqual(held,{ammo:1,n:0,pulling:true},'Physical press initiates one pull');
       if(mobile)await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
       else await page.evaluate(()=>window.dispatchEvent(new MouseEvent('mouseup',{button:0,bubbles:true})));
+      const thrown=await page.evaluate(()=>{for(let i=0;i<40&&!__fps.game.state.grenades.length;i++)__fps.step(null,1/60);return {ammo:__fps.game.player.inventory.he,n:__fps.game.state.grenades.length,guide:__fps.grenadeAssist.group.visible};});
       assert.deepEqual(thrown,{ammo:0,n:1,guide:false},'Actual input must throw once and hide guide');
       const landed=await page.evaluate(()=>{
         const g=__fps.game;

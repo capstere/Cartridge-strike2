@@ -2,8 +2,16 @@
  * 09q-tactile. Copyright (c) 2026 BenDBSS, MIT. See licenses/riposte-MIT.txt. */
 export const RUSH = Object.freeze({speed:1.55, damping:11, ready:0.3, shoulderTime:0.18, edgeLifetime:0.25});
 
+// Reference 07c-controller: preserve resolved travel, steer at up to 2 rad/s,
+ // then decay toward the regular crouching pace. Speed limits are in CS units.
+export const SLIDE=Object.freeze({duration:.75,cooldown:.26,wallCooldown:.12,boost:1.4,maxRush:1.40,turn:2});
+export function endSlide(actor,time,blocked=false){
+  actor.slideUntil=0;
+  actor.slideReadyAt=time+(blocked?SLIDE.wallCooldown:SLIDE.cooldown);
+  actor.slideSpeed=0;
+}
 export function resetRush(actor) {
-  Object.assign(actor,{rushing:false,rushWeight:0,rushResumeAt:0,pendingShot:null});
+  Object.assign(actor,{rushing:false,rushWeight:0,rushResumeAt:0,pendingShot:null,crouchHeld:false,slideUntil:0,slideReadyAt:0,slideSpeed:0,travelDirX:0,travelDirZ:0});
 }
 
 export function rushReady(actor) { return (actor.rushWeight || 0) <= RUSH.ready; }

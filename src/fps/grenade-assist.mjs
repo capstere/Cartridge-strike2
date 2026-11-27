@@ -1,6 +1,6 @@
 import { TrajectoryCache } from './trajectory-cache.mjs';
 import * as THREE from '../../vendor/three/three.module.js';
-import { GRENADE_TYPES, grenadeThreat } from './grenade-physics.mjs';
+import { CARTRIDGE, GRENADE_TYPES, grenadeThreat } from './grenade-physics.mjs';
 
 const COLORS = {he:0xffb16e, flash:0xffe6a0, smoke:0x87e5cc};
 const NAMES = {he:'HE', flash:'FLASH', smoke:'RÖK'};
@@ -61,7 +61,9 @@ export class GrenadeAssist {
         if(time<this.pathAt)this.predictionCache.clear();
         this.pathAt=time;this.weapon=p.weapon;
         const previous=this.preview;
-        this.preview=this.predictionCache.read(p,game.config,game.world);
+        const release=p.cartridge?.releaseAt || time+CARTRIDGE.release;
+        const config=p.cartridge?.deadline ? {...game.config,grenadeFuse:Math.max(0,p.cartridge.deadline-release)} : game.config;
+        this.preview=this.predictionCache.read(p,config,game.world);
         if (this.preview && this.preview!==previous) this.drawPreview(p);
       }
       this.group.visible=!!this.preview;this.note.hidden=!this.preview;

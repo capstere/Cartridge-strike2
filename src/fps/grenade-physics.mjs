@@ -5,6 +5,9 @@
 export const GRENADE_TYPES = Object.freeze(['he', 'flash', 'smoke']);
 const point = g => ({x:g.x, y:g.y, z:g.z});
 const EPS = 1e-8;
+// Riposte: Frontline 08-player, NADE_ANIM (MIT, BenDBSS 2026).
+export const CARTRIDGE=Object.freeze({pin:.24,pull:.42,release:.12,return:.38});
+
 
 export function grenadeLaunch(actor, config, time = 0, type = actor.weapon) {
   const pitch = actor.pitch + .15, cp = Math.cos(pitch);

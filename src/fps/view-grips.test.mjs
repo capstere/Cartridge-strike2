@@ -124,4 +124,30 @@ test('running and turning during inspection keeps the end of the support arm bel
     assert.ok(player.moving > 4, 'full running input reached the presentation');
   }
 });
+test('the authored sights converge on the reticle in ADS and the off hand stays visible through a pistol Rush', () => {
+  for (const aspect of [16/9, 19.5/9]) {
+    const camera=new T.PerspectiveCamera(60,aspect,.01,5);
+    for (const [id,front,rear] of [
+      ['p9',[0,.090,-.174],[0,.089,.037]], ['p12',[0,.090,-.174],[0,.089,.037]],
+      ['cr4',[0,.119,-.475],[0,.119,.023]], ['ar47',[0,.092,-.640],[0,.114,-.210]],
+      ['smg',[0,.122,-.380],[0,.133,.030]], ['shotgun',[0,.073,-.760],[0,.073,0]],
+      ['sniper',[0,.165,-.425],[0,.165,-.055]]
+    ]) {
+      const model=makeWeapon(id),actor={id:'local',weapon:id,alive:true,onGround:true,aimAmount:1};
+      animateWeapon(model,actor,1,1/60);
+      for (const marker of [front,rear]) {
+        const p=model.localToWorld(new T.Vector3(...marker)).project(camera);
+        assert.ok(Math.hypot(p.x,p.y)<.001,id+' sight missed the reticle');
+      }
+      if(id!=='p9')continue;
+      Object.assign(actor,{aimAmount:0,moving:6,rushWeight:1});
+      for(let i=0;i<24;i++){
+        actor.distanceWalked=i*Math.PI/12/4.4;
+        animateWeapon(model,actor,1+i/60,1/60);
+        const wrist=model.userData.leftHand.getWorldPosition(new T.Vector3()).project(camera);
+        assert.ok(wrist.x>-.85 && wrist.x<-.19 && wrist.y>-.95 && wrist.y<-.53,'left wrist must be visible in the lower-left quarter');
+      }
+    }
+  }
+});
 test.after(disposeWeaponResources);

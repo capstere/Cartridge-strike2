@@ -143,7 +143,7 @@ export function releasePistolSupport(model,weight,stride,bounce) {
   const mix=T.MathUtils.smoothstep(weight,.15,.85);
   model.updateMatrix();
   state.inverse.copy(model.matrix).invert();
-  state.position.set(-.20+.015*stride,-.43+.025*bounce,-.26+.10*stride).applyMatrix4(state.inverse);
+  state.position.set(-.225+.015*stride,-.179+.017*bounce,-.434+.043*stride).applyMatrix4(state.inverse);
   leftHand.position.lerp(state.position,mix);
   leftHand.quaternion.slerp(loosePalm,mix);
   fingers(leftHand,.6,false);

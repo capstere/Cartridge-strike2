@@ -108,6 +108,7 @@ export class MobileControls {
         if (this.buttonPointers.has(e.pointerId)) return;
         this.buttonPointers.set(e.pointerId, button);
         button.classList.add('pressed');
+        if(action==='crouch' && !this.state.crouch)this.crouchEdge=true;
         if(action==='fire' && !this.state.fire)onFirePress?.();
         if (HELD.has(action)) this.state[action] = true;
         else this.onAction(action);
@@ -132,10 +133,11 @@ export class MobileControls {
     if (this.autoFire) this.state.fire = false;
   }
 
-  input() { return { ...this.state }; }
+  input() { const frame={...this.state,crouchEdge:!!this.crouchEdge};this.crouchEdge=false;return frame; }
 
   // Weapon changes release held actions without stealing the thumbs' drag ownership.
   clearActions() {
+    this.crouchEdge=false;
     for (const action of HELD) this.state[action] = false;
     this.buttonPointers.clear();
     if (this.root) for (const button of this.root.querySelectorAll('.mobile-button')) button.classList.remove('pressed');

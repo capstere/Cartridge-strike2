@@ -258,13 +258,13 @@ export function animateAuthored(state,actor,time,options={}){
  // render must never accumulate a new bend in the already-posed skeleton.
  if(state.hitApplied){spine.quaternion.copy(state.hitBase);state.hitApplied=false;}
  if(reset){state.mixer.stopAllAction();state.activeBase=null;state.activeUpper=null;state.motionSpeed=0;state.holder.scale.setScalar(state.scale);state.holder.position.set(0,state.groundOffset,0);state.holder.rotation.set(0,Math.PI,0);}
- const crouch=actor.crouching||actor.height<1.3;
+ const crouch=actor.crouching||actor.height<1.3,sliding=actor.slideUntil>time;
  // Hostage state intentionally has no `moving` field. Use its real displacement
  // so escorted visitors walk rather than slide in an idle pose.
  const speed=Math.max(0,Math.min(5,Number.isFinite(actor.moving)?actor.moving:!reset&&elapsed>0?travel/elapsed:state.motionSpeed));
  state.motionSpeed=speed;
  const previous=state.activeBase,walkThreshold=previous==='Idle_Loop'?.16:.08,jogThreshold=previous==='Jog_Fwd_Loop'?1.8:2.15,sprintThreshold=previous==='Sprint_Loop'?3.25:3.6;
- const name=actor.onGround===false?'Jump_Loop':crouch?(speed>(previous==='Crouch_Fwd_Loop'?.07:.16)?'Crouch_Fwd_Loop':'Crouch_Idle_Loop'):speed>sprintThreshold?'Sprint_Loop':speed>jogThreshold?'Jog_Fwd_Loop':speed>walkThreshold?'Walk_Loop':'Idle_Loop';
+ const name=actor.onGround===false?'Jump_Loop':sliding?'Crouch_Idle_Loop':crouch?(speed>(previous==='Crouch_Fwd_Loop'?.07:.16)?'Crouch_Fwd_Loop':'Crouch_Idle_Loop'):(actor.rushing || (actor.controllerType!=='human' && speed>sprintThreshold))?'Sprint_Loop':speed>jogThreshold?'Jog_Fwd_Loop':speed>walkThreshold?'Walk_Loop':'Idle_Loop';
  play(state,state.base,name,'activeBase');const action=state.base.get(name);
  action.timeScale=/^(Walk|Jog|Sprint|Crouch_Fwd)/.test(name)?Math.min(1.65,speed/(crouch?1.2:name==='Walk_Loop'?1.4:name==='Jog_Fwd_Loop'?3:4.2)):1;
  if(!state.isHostage){
@@ -287,7 +287,7 @@ export function animateAuthored(state,actor,time,options={}){
   spine.quaternion.multiply(state.hitRotation.setFromEuler(state.hitEuler));state.hitApplied=true;
  }
  state.time=time;state.x=actor.x;state.z=actor.z;
- state.holder.scale.setScalar(state.scale);state.holder.rotation.set(0,Math.PI,0);state.holder.position.set(0,0,0);
+ state.holder.scale.setScalar(state.scale);state.holder.rotation.set(sliding?.18:0,Math.PI,sliding?.13:0);state.holder.position.set(0,0,0);
  // updateMatrixWorld also refreshes attached skins' bind inverses before sampling.
  state.holder.updateWorldMatrix(true,false);state.holder.updateMatrixWorld(true);const rootInverse=state.groundInverse;rootInverse.identity();if(state.holder.parent)rootInverse.copy(state.holder.parent.matrixWorld).invert();let bottom=Infinity;
  for(const shoe of state.shoes){
