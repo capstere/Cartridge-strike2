@@ -563,7 +563,7 @@ function frame(now){try{
  // pixels until a new lobby, viewport or graphics setting needs a redraw.
  const stillLobby=modal==='menu'&&game.phase==='menu';
  const stillRevision=stillLobby?`${innerWidth}:${innerHeight}:${devicePixelRatio}:${settings.graphics}`:null;
- if(!renderBudget.shouldRender(now,document.hidden,!!modal||game.state.paused,stillLobby?game:null,stillRevision)){lastFrame=now;raf=requestAnimationFrame(frame);return;}const wallDt=lastFrame?Math.max(0,(now-lastFrame)/1000):1/60,dt=Math.min(.05,wallDt);lastFrame=now;
+ if(!renderBudget.shouldRender(now,document.hidden,!!modal||game.state.paused,stillLobby?game:null,stillRevision)){lastFrame=now;raf=requestAnimationFrame(frame);return;}const dt=lastFrame?Math.max(0,Math.min(.05,(now-lastFrame)/1000)):1/60;lastFrame=now;
  tactical.update(dt);
  if(!modal&&game.player?.alive&&game.phase==='active'&&!game.state.paused){
    if(recoil.weapon&&recoil.weapon!==game.player.weapon)recoil.reset();
