@@ -90,7 +90,7 @@ export class FocusHud {
       for (const b of this.buttons.values()) b.removeAttribute('data-focus-hidden');
     }
     const spawn = $('spawn-protection');
-    spawn.textContent = mode === 'clean' ? 'SPAWNSKYDD' : this.spawnText;
+    spawn.textContent = mode === 'clean' ? 'SPAWN PROTECTION' : this.spawnText;
     spawn.title = this.spawnText;
   }
 

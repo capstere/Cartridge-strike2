@@ -1,7 +1,19 @@
 // Desktop pointer lock needs a real foreground user gesture. The game returns
 // to Resume when Chromium denies that gesture and prompts the user to try again.
+export async function waitForActiveHud(page){
+  await page.locator('#hud[data-match-phase="active"]').waitFor();
+}
+
+export async function enterTouchMatch(page){
+  await waitForActiveHud(page);
+  if(await page.locator('#pause').isVisible())await page.locator('#resume').tap();
+  await page.locator('#pause').waitFor({state:'hidden'});
+  await page.locator('#mobile-controls').waitFor();
+}
+
 export async function resumeDesktop(page){
-  const resume=page.locator('#resume');
+  const resume=page.locator('#resume:visible, #countdown-look:visible');
+
   for(let attempts=1;attempts<=2;attempts++){
     await page.bringToFront();
     const box=await resume.boundingBox();

@@ -417,3 +417,27 @@ html[data-hud=clean] #mobile-controls #mobile-utilities{background:#06090ef2!imp
   html #buy #shop button small{grid-column:1!important}
   html #buy #shop button.cs-other::after{position:static;grid-area:2/1;text-align:left}
 }
+
+#deployment-countdown { position:absolute; z-index:6; top:55%; left:50%; transform:translate(-50%,-50%); pointer-events:none; text-align:center; color:#f8f4e9; text-transform:uppercase; text-shadow:0 2px 5px #080d14,0 0 12px #06090cb0 }
+#deployment-countdown small { display:block; font:700 clamp(11px,1.6vw,18px)/1.5 "Barlow Condensed",sans-serif; letter-spacing:.2em; white-space:nowrap }
+#deployment-countdown strong { display:block; font:800 clamp(54px,10vw,108px)/1 "Barlow Condensed",sans-serif; white-space:nowrap }
+#deployment-countdown:is([data-stage=final],[data-stage=go]) strong { color:#ffd067 }
+#deployment-countdown[data-stage=go] strong { font-size:clamp(35px,7vw,84px); animation:deploy-go 1.1s ease-out both }
+@keyframes deploy-go { 0%{transform:scale(1.12)} 18%,56%{transform:none;opacity:1} 100%{opacity:0} }
+#deployment-countdown[data-beat="0"] strong { animation:deploy-even .22s ease-out }
+#deployment-countdown[data-beat="1"] strong { animation:deploy-odd .22s ease-out }
+@keyframes deploy-even { from { transform:scale(1.18) } }
+@keyframes deploy-odd { from { transform:scale(1.18) } }
+@media(prefers-reduced-motion:reduce) { #deployment-countdown[data-stage] strong { animation:none } }
+#deployment-countdown.reduced-motion strong { animation:none }
+#deployment-countdown [hidden] { display:none }
+@media (max-width:900px), (max-height:600px) {
+  html #hud.deploy-announcing .map-panel { display:block!important; top:max(7px,env(safe-area-inset-top)); left:max(7px,env(safe-area-inset-left)); width:clamp(58px,11vw,105px); padding:3px!important; pointer-events:none }
+  html #hud.deploy-announcing #minimap { display:block; width:100%!important; height:auto!important }
+  html #hud.deploy-announcing .map-panel :is(p,small) { display:none }
+  html[data-hud=clean] #hud.deploy-announcing ~ #mobile-controls #mobile-more {
+    top:calc(max(7px,env(safe-area-inset-top)) + clamp(58px,8vw,86px) + 10px);
+  }
+}
+#countdown-look { position:absolute; z-index:7; left:50%; top:74%; transform:translateX(-50%); pointer-events:auto; min-height:44px; padding:0 16px; background:#131e2aeb; color:white; border:1px solid #91a4b8; cursor:pointer }
+#hud.deploy-counting #crosshair { visibility:hidden }

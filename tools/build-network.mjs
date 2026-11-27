@@ -24,7 +24,9 @@ const meltemRuntime=['src/fps/reference-world.mjs','src/fps/reference-terrain.mj
   'src/fps/coastal-ambience.mjs','src/fps/coastal-recordings.mjs',...coastalAudio,
   'assets/fps/maps/meltem.webp',...['base.bin.gz','detail.bin.gz','plaster.webp','stone.webp','pavers.webp','signs.webp'].map(f=>'assets/fps/maps/meltem/'+f)];
 const accessCatalog='shared/multiplayer/access-english.mjs';
-const frontendFiles=['src/fps/game-english.mjs','src/fps/english-ui.mjs','src/fps/solo-maps.mjs','src/fps/menu-navigation.mjs','fps/routes.css','furniture-editor/build/environment-art.mjs'];
+const deploymentFiles=['src/fps/deployment-countdown.mjs',
+  ...['ui_tick','r_beep-1','st_start'].map(name=>'assets/fps/audio/riposte-'+name+'.mp3')];
+const frontendFiles=[...deploymentFiles,'src/fps/game-english.mjs','src/fps/english-ui.mjs','src/fps/solo-maps.mjs','src/fps/menu-navigation.mjs','fps/routes.css','furniture-editor/build/environment-art.mjs'];
 const rushPresentation=['src/fps/mobile-controls.mjs','src/fps/presentation-hands.mjs'];
 const rocketPresentation=['src/fps/action-visuals.mjs','src/fps/audio.mjs'];
 const shotAudioFiles=['assets/fps/audio/ffsl-f_bolt-1.mp3','assets/fps/audio/ffsl-f_pump-1.mp3',

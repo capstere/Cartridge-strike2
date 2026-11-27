@@ -1,6 +1,7 @@
 // Two independently authenticated Chromium contexts and an isolated Pi-shaped
 // game server. Run from the repository root: node tools/custom-match-browser.mjs
 import assert from 'node:assert/strict';
+import {enterTouchMatch} from './network-browser-resume.mjs';
 import {mkdir, writeFile} from 'node:fs/promises';
 import {join} from 'node:path';
 import {setTimeout as delay} from 'node:timers/promises';
@@ -185,9 +186,13 @@ try {
   await press(mobile, control(mobile, 'ready'));
   await press(mobile, control(mobile, 'start'));
   await until(() => room().state.phase === 'countdown', 'Touch host starts countdown');
-  await displayed(mobile, {tdmMinutes:3, tdmKills:25}, false);
+  await mobile.page.locator('#deployment-countdown').waitFor();
+  assert(await control(mobile,'tdmMinutes').isHidden());
+  assert(await control(mobile,'tdmKills').isHidden());
+  assert.equal(room().state.durationSeconds,180);
+  assert.equal(room().state.scoreTarget,25);
   await until(() => room().state.phase === 'active', 'Selected Compact match starts');
-  await mobile.page.locator('#resume').tap();
+  await enterTouchMatch(mobile.page);
   await mobile.page.locator('#hud').waitFor();
   assert(room().match.deadline - room().clock.elapsedTime > 160000, 'Real match uses the configured timer');
   // Advance the match clock only after the unmodified production timer was

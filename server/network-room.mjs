@@ -72,6 +72,14 @@ export class NetworkRoom extends Room {
       // A slow previous load can finish after the room adopted another map.
       if((message?.worldRevision??1)!==this.state.worldRevision)return;
       try{checkContract(message,MAP_CONTRACTS[this.state.mapId]);}catch(e){client.send('problem',e.message);client.leave(4009);return;}
+      if(seat.pending&&['waiting','countdown'].includes(this.state.phase)){
+        // A new Classic seat may finish loading before the first live tick.
+        // Keep its bot until this acknowledgement or the next round boundary.
+        this.removeBot(seat.id);
+        this.state.actors.delete(seat.waitId);
+        seat.pending=false;seat.waitId=seat.id;
+        this.state.actors.set(seat.id,new ActorState({id:seat.id,sessionId:client.sessionId,name:seat.name,team:seat.id.split('-')[0]}));
+      }
       const actor=structuredClone(this.templates.get(seat.id));
       Object.assign(actor,{name:seat.name,alive:false,lifeId:this.lives.get(seat.id)||0,controlEpoch:seat.epoch,respawnAt:null});
       if(onlinePrimaries(actor.team).includes(seat.loadout))actor.loadout=seat.loadout;
@@ -156,7 +164,7 @@ export class NetworkRoom extends Room {
   }
   onJoin(client,options) {
     const id=this.chooseSeat(options.team);
-    const waiting=this.classic&&this.state.phase==='active';
+    const waiting=this.classic&&['countdown','active'].includes(this.state.phase);
     if(!waiting)this.removeBot(id);
     const waitId=waiting?id+'-waiting':id;
     const seat={id,waitId,pending:waiting,name:safeName(options.name),ready:false,playerReady:false,enabled:false,lastFire:0,lastReload:0,lastSampleTick:0,lastShotStamp:0,epoch:0,connected:true,client,rtts:[],deadline:this.clock.elapsedTime+MAP_LOAD_MS};
@@ -201,7 +209,7 @@ export class NetworkRoom extends Room {
       aimAmount:0,aiming:false,respawnAt:null,spawnProtectedUntil:0});
   }
   fillVacancies(roundBoundary=false){
-    if(this.classic&&this.state.phase==='active'&&!roundBoundary)return;
+    if(this.classic&&['countdown','active'].includes(this.state.phase)&&!roundBoundary)return;
     const reserved=new Set([...this.seats.values()].map(s=>s.id));
     for(const team of teams){
       const limit=reserved.size?this.state[team+'Bots']:0;
