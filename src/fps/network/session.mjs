@@ -1,3 +1,4 @@
+import {RUSH,rushReady} from '../rush.mjs';
 import {networkEndpoint} from './connection.mjs';
 import '../../../vendor/colyseus/colyseus.js';
 import {Game,WEAPONS} from '../game.mjs';
@@ -268,6 +269,7 @@ export class NetworkSession {
       this.clearTeamComms();
     }
     if(newMatch||newPhase||modeChanged){
+      this.firePress=null;this.pendingCosmetic=null;this.confirmedLocalShots?.clear();
       this.matchId=state.matchId;this.matchPhase=state.phase;
       this.resultsAt=state.phase==='results'?this.lastPatch:undefined;
       this.view.state.headshotTime=this.resultsAt!==undefined?headshotResultTime(this.room):undefined;
@@ -366,7 +368,7 @@ export class NetworkSession {
           this.metrics.adopts++;const d=Math.hypot(w.actor.x-s.x,w.actor.y-s.y,w.actor.z-s.z);
           this.metrics.adoptionDistance.push(d);if(this.metrics.adoptionDistance.length>512)this.metrics.adoptionDistance.shift();
           w.dynamics.adopt(this.room.state);
-          copyPose(w.actor,s);w.actor.alive=s.alive;w.actor.lifeId=s.lifeId;w.game.state.time=this.room.state.time;
+          copyPose(w.actor,s);w.actor.action=s.actionType?{type:s.actionType}:null;w.actor.alive=s.alive;w.actor.lifeId=s.lifeId;w.game.state.time=this.room.state.time;
           w.game.hostages=this.view.hostages;
           w.game.state.zombies=[...this.residents.values()].map(({schema:s})=>({id:s.id,x:s.x,y:s.y,z:s.z,height:s.height,radius:s.radius,alive:s.alive}));
           w.game.actors=[w.actor,...[...this.room.state.actors.values()].filter(a=>a.ready&&a.id!==s.id).map(a=>actorView(a,null))];
@@ -382,13 +384,14 @@ export class NetworkSession {
           this.metrics.corrections.push(Math.hypot(c.x||0,c.y||0,c.z||0));if(this.metrics.corrections.length>512)this.metrics.corrections.shift();},
       });
     }
-    if(this.cosmeticWeapon!==self.weapon){this.nextCosmetic=0;this.cosmeticWeapon=self.weapon;}
+    if(this.cosmeticWeapon!==self.weapon){this.firePress=null;this.pendingCosmetic=null;this.nextCosmetic=0;this.cosmeticWeapon=self.weapon;}
     const newLife=self.lifeId!==this.lifeId;
     if(newLife||self.alive!==this.alive||self.controlEpoch!==this.controlEpoch){
       const newConnection=self.controlEpoch!==this.controlEpoch;this.controlEpoch=self.controlEpoch;
       this.lifeId=self.lifeId;this.alive=self.alive;this.metrics.resets++;
       // Reset the replay controller, NOT InputHandle's reliable wire counters.
       this.prediction.reset();if(newLife||newConnection){this.predictedShots.clear();this.actionTimes?.clear();}this.nextCosmetic=0;
+      this.firePress=null;this.pendingCosmetic=null;this.confirmedLocalShots?.clear();
       this.fireId=0;this.reloadId=0;this.trigger=false;
       this.keepRocketEffects();
     }
@@ -418,6 +421,9 @@ export class NetworkSession {
       }
       if(event.type==='shot'&&event.actorId===this.localPlayerId){
         this.metrics.confirmedShots++;
+        this.confirmedLocalShots ??= new Set();
+        this.confirmedLocalShots.add(event.actionId);
+        if(this.confirmedLocalShots.size>128)this.confirmedLocalShots.delete(this.confirmedLocalShots.values().next().value);
         const sent=this.predictedShots.get(event.actionId);
         if(sent!==undefined&&this.metrics.shotLatency){this.metrics.shotLatency.push(performance.now()-sent);if(this.metrics.shotLatency.length>512)this.metrics.shotLatency.shift();}
         if(this.predictedShots.has(event.actionId)){this.predictedShots.delete(event.actionId);this.metrics.suppressedShots++;continue;}
@@ -433,31 +439,49 @@ export class NetworkSession {
     const steps=Math.min(6,this.predict.tick(now)),state=this.room.state,self=state.actors.get(this.localPlayerId);
     if(!self)return;
     const stale=performance.now()-this.lastPatch>1000;
+    if(this.enabled && !stale && self.alive && state.phase==='active' && (state.mode!=='classic'||state.roundPhase==='active')){
+      if(controls.firePress)this.firePress ??= controls.firePress;
+    }else{this.firePress=null;this.pendingCosmetic=null;}
     for(let i=0;i<steps;i++){
       if(state.phase!=='active'||!this.enabled||!self.alive||stale)break;
       const data=this.input.data;
       Object.assign(data,{lifeId:self.lifeId,controlEpoch:self.controlEpoch,sampleTick:state.tick,fireId:this.fireId,reloadId:this.reloadId,
         forward:controls.forward||0,strafe:controls.strafe||0,yaw:wrapYaw(controls.yaw??self.yaw),pitch:controls.pitch??self.pitch,
-        jump:!!controls.jump,crouch:!!controls.crouch,sneak:!!controls.sneak,interact:!!controls.interact,aim:!!controls.aim,fire:!!controls.fire});
+        jump:!!controls.jump,crouch:!!controls.crouch,sneak:!!controls.sneak,sprint:!!controls.sprint,
+        fireEdge:!!this.firePress,shotYaw:wrapYaw(this.firePress?.yaw??0),shotPitch:this.firePress?.pitch??0,interact:!!controls.interact,aim:!!controls.aim,fire:!!controls.fire});
       const time=this.prediction.world.game.state.time;
       const weapon=WEAPONS[self.weapon],throwing=self.weapon==='he';
       const shotReady=(state.mode!=='classic'||state.roundPhase==='active')&&time+1e-8>=Math.max(this.nextCosmetic,self.nextShot)&&
         (self.ammo>0||self.weapon==='knife'||throwing&&self.he>0)&&!self.reloadUntil;
-      if(controls.autoFire){
+      const actor=this.prediction.world.actor,shouldered=rushReady(actor);
+      if(data.fireEdge)data.fire=true;
+      if(controls.autoFire && !data.fireEdge){
         // Auto-trigger is local input intent, never a new server privilege.
         // Semi-auto weapons need a real release between ordinary fire frames;
         // generate it per fixed input step, including render catch-up batches.
         const eligible=['primary','pistol','knife'].includes(weapon.slot)&&!weapon.projectile;
         data.fire=data.fire&&eligible&&(weapon.automatic||(!this.trigger&&shotReady));
       }
-      if(data.fire&&shotReady&&(weapon.automatic||!this.trigger)){
-        data.fireId=++this.fireId;this.nextCosmetic=time+weapon.interval;
+      const manualPress=data.fireEdge || (!this.trigger && data.fire && !controls.autoFire);
+      if(shotReady && !this.pendingCosmetic && data.fire && (weapon.automatic || !this.trigger || data.fireEdge) &&
+        (shouldered || manualPress)){
+        data.fireId=++this.fireId;
+        this.pendingCosmetic={weapon:self.weapon,id:data.fireId,yaw:data.fireEdge?data.shotYaw:data.yaw,
+          pitch:data.fireEdge?data.shotPitch:data.pitch,until:time+RUSH.edgeLifetime};
+      }
+      this.firePress=null;
+      const pending=this.pendingCosmetic;
+      if(pending && (pending.weapon!==self.weapon || self.reloadUntil || time>pending.until))this.pendingCosmetic=null;
+      else if(pending && shouldered){
+        this.pendingCosmetic=null;this.nextCosmetic=time+weapon.interval;
         if(!throwing&&!weapon.projectile){
-          const actionId=`${self.id}:${self.lifeId}:${self.controlEpoch}:${this.fireId}`;
-          this.predictedShots.set(actionId,performance.now());this.actionTimes.set(actionId,performance.now());this.metrics.cosmeticShots++;
-          const a=this.prediction.world.actor;
-          this.events.push({type:'shot',actorId:self.id,team:self.team,weapon:self.weapon,time:this.view.state.time,
-            x:a.x,y:a.y,z:a.z,yaw:data.yaw,pitch:data.pitch,actionId,lifeId:self.lifeId,predicted:true});
+          const actionId=`${self.id}:${self.lifeId}:${self.controlEpoch}:${pending.id}`;
+          // A late prediction must not replay a shot already seen from the authority.
+          if(!this.confirmedLocalShots?.has(actionId)){
+            this.predictedShots.set(actionId,performance.now());this.actionTimes.set(actionId,performance.now());this.metrics.cosmeticShots++;
+            this.events.push({type:'shot',actorId:self.id,team:self.team,weapon:self.weapon,time:this.view.state.time,
+              x:actor.x,y:actor.y,z:actor.z,yaw:pending.yaw,pitch:pending.pitch,actionId,lifeId:self.lifeId,predicted:true});
+          }
         }
       }
       this.trigger=data.fire;
@@ -503,7 +527,11 @@ export class NetworkSession {
   }
   setInputEnabled(enabled){
     if(this.closed)return;
-    enabled=enabled&&this.connectionState!=='reconnecting';
+    enabled=!!enabled && this.connectionState!=='reconnecting';
+    const generation=[this.localPlayerId,this.matchId,this.matchPhase,this.lifeId,this.controlEpoch].join('/');
+    if(this.enabled===enabled && this.lastControlGeneration===generation)return;
+    this.lastControlGeneration=generation;
+    this.firePress=null;this.pendingCosmetic=null;
     this.trigger=false;this.enabled=enabled;this.view.state.paused=!enabled;
     this.keepRocketEffects();
     if(this.room&&this.lifeId&&this.connectionState!=='reconnecting')this.room.send('controls',{enabled,lifeId:this.lifeId,controlEpoch:this.controlEpoch});
@@ -521,6 +549,7 @@ export class NetworkSession {
   }
   beginReconnect(){
     if(this.closed||this.connectionState==='reconnecting')return;
+    this.firePress=null;this.pendingCosmetic=null;
     this.connectionState='reconnecting';this.enabled=false;this.view.state.paused=true;
     this.events=[];this.clearTeamComms();this.status='Återansluter… Din plats reserveras i 15 sekunder. Matchen fortsätter.';
     this.onConnection('reconnecting');

@@ -10,7 +10,7 @@ export const NETWORK_CONFIG = Object.freeze({...CONFIG, networkSlice:true,
 export const CLASSIC_NETWORK_CONFIG = Object.freeze({...NETWORK_CONFIG,mode:'classic',
   startMoney:CONFIG.startMoney,maxMoney:CONFIG.maxMoney,killMoney:CONFIG.killMoney,hostageDamage:CONFIG.hostageDamage});
 export {DEFAULT_MAP_ID as NETWORK_MAP} from './maps.mjs';
-export const PROTOCOL_VERSION = 14;
+export const PROTOCOL_VERSION = 15;
 export const TEAM_CAPACITY = 5;
 export const ROOM_CAPACITY = TEAM_CAPACITY * 2;
 export const TDM_MINUTES = Object.freeze([3,5,10,15]);
@@ -29,8 +29,8 @@ export const INTERPOLATION_MS = 100;
 // legitimate shots. Include its 100 ms display buffer plus scheduler margin.
 export const REWIND_MS = 500;
 export const ROOM_TYPE = 'private-fps';
-export const POSE_NUMBERS = ['x','y','z','yaw','pitch','height','vy','moving','distanceWalked','lastStep'];
-export const POSE_BOOLEANS = ['onGround','crouching','jumpHeld'];
+export const POSE_NUMBERS = ['x','y','z','yaw','pitch','height','vy','moving','distanceWalked','lastStep','rushWeight','rushResumeAt'];
+export const POSE_BOOLEANS = ['onGround','crouching','jumpHeld','rushing'];
 export function copyPose(target, source) {
   for(const key of [...POSE_NUMBERS,...POSE_BOOLEANS]) target[key]=source[key];
 }

@@ -3,8 +3,8 @@ import {POSE_NUMBERS,POSE_BOOLEANS} from '../shared/multiplayer/rules.mjs';
 export const NetworkInput=schema({
   lifeId:t.uint32(),controlEpoch:t.uint32(),sampleTick:t.uint32(),fireId:t.uint32(),reloadId:t.uint32(),
   forward:t.float64(),strafe:t.float64(),yaw:t.float64(),pitch:t.float64(),
-  jump:t.boolean(),crouch:t.boolean(),sneak:t.boolean(),aim:t.boolean(),fire:t.boolean(),interact:t.boolean(),
-},'FPSInputV10');
+  jump:t.boolean(),crouch:t.boolean(),sneak:t.boolean(),sprint:t.boolean(),fireEdge:t.boolean(),shotYaw:t.float64(),shotPitch:t.float64(),aim:t.boolean(),fire:t.boolean(),interact:t.boolean(),
+},'FPSInputV15');
 export const ActorState=schema({
   ...Object.fromEntries(POSE_NUMBERS.map(k=>[k,t.float64()])),
   ...Object.fromEntries(POSE_BOOLEANS.map(k=>[k,t.boolean()])),
@@ -16,7 +16,7 @@ export const ActorState=schema({
   reloadUntil:t.float64(),nextShot:t.float64(),respawnAt:t.float64(),
   spawnProtectedUntil:t.float64(),deathAt:t.float64(),hurtTime:t.float64(),
   deathSource:t.string(),deathWeapon:t.string(),deathVariant:t.string(),recoil:t.float64(),
-},'FPSActorV12');
+},'FPSActorV15');
 export const DoorState=schema({angle:t.float64(),poseAngle:t.float64(),target:t.float64(),sign:t.float64(),holdUntil:t.float64()},'FPSDoorV10');
 export const GrenadeState=schema({id:t.string(),type:t.string(),ownerId:t.string(),team:t.string(),ownerLifeId:t.uint32(),deadline:t.float64(),x:t.float32(),y:t.float32(),z:t.float32()},'FPSGrenadeV10');
 export const RocketState=schema({

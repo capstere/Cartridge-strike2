@@ -40,11 +40,11 @@ test('bounded Colyseus hitbox rewind hits moving targets without changing live p
  r.state.actors.get(target.id).lifeStartedAt=at+1;
  assert.equal(r.lag.query(shooter,from,dir,20).victim,null);
  const seat=r.seats.get(a.sessionId),frame={sampleTick:r.sim.tickNumber};
- for(const [stamp,reason] of [[NaN,'invalid'],[r.clock.elapsedTime+100,'future'],[r.clock.elapsedTime-REWIND_MS-1,'old']])assert.equal(r.lag.accept(seat,frame,stamp),false,reason);
- assert.equal(r.lag.accept(seat,{sampleTick:0},r.clock.elapsedTime-100),false,'chosen unrelated historic input tick is rejected');
+ for(const [stamp,reason] of [[NaN,'invalid'],[r.clock.elapsedTime+100,'future'],[r.clock.elapsedTime-REWIND_MS-1,'old']])assert.equal(r.lag.admit(seat,frame,stamp),null,reason);
+ assert.equal(r.lag.admit(seat,{sampleTick:0},r.clock.elapsedTime-100),null,'chosen unrelated historic input tick is rejected');
  const started=seat.lifeStartedAt;seat.lifeStartedAt=r.clock.elapsedTime;
- assert.equal(r.lag.accept(seat,frame,r.clock.elapsedTime-50),false,'a current-life counter cannot select a previous-life timestamp');seat.lifeStartedAt=started;
- seat.lastShotStamp=r.clock.elapsedTime;assert.equal(r.lag.accept(seat,frame,r.clock.elapsedTime-50),false,'regressing stamped shot is rejected');
+ assert.equal(r.lag.admit(seat,frame,r.clock.elapsedTime-50),null,'a current-life counter cannot select a previous-life timestamp');seat.lifeStartedAt=started;
+ seat.lastShotStamp=r.clock.elapsedTime;assert.equal(r.lag.admit(seat,frame,r.clock.elapsedTime-50),null,'regressing stamped shot is rejected');
  assert(r.lag.tickTimes.size<=64);
 });
 
@@ -110,6 +110,6 @@ test('coalesced reliable burst retains a short fire press and its aim without ex
   await until(()=>target.hp<hp,'the short press uses its own orientation');
   assert.equal(shooter.inventory.primary.ammo,29,'the batch fires once');
   assert(r.metrics.coalesced>=7);assert.equal(buffer.size,0);
-  assert.equal(shooter.yaw,Math.PI,'release cannot substitute an arbitrary shot orientation');
+  assert.equal(shooter.yaw,0,'the latest look survives while the shot uses its separately retained aim');
  }finally{r.fixedTick=original;}
 });
