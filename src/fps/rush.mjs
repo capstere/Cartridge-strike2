@@ -4,14 +4,47 @@ export const RUSH = Object.freeze({speed:1.55, damping:11, ready:0.3, shoulderTi
 
 // Reference 07c-controller: preserve resolved travel, steer at up to 2 rad/s,
  // then decay toward the regular crouching pace. Speed limits are in CS units.
-export const SLIDE=Object.freeze({duration:.75,cooldown:.26,wallCooldown:.12,boost:1.4,maxRush:1.40,turn:2});
+export const SLIDE=Object.freeze({duration:.75,cooldown:.26,wallCooldown:.12,buffer:.30,min:3/4.75,floor:6.8/4.75,boost:1.4,maxRush:1.40,turn:2});
 export function endSlide(actor,time,blocked=false){
   actor.slideUntil=0;
   actor.slideReadyAt=time+(blocked?SLIDE.wallCooldown:SLIDE.cooldown);
   actor.slideSpeed=0;
 }
+// Riposte only spends the usable input window when the actor can start a slide.
+export function beginBufferedSlide(actor,input,time,dt,runSpeed){
+  const forward=input.forward || 0,run=input.sprint && forward>.3;
+  // SDK and DOM frames have an explicit edge. Falling back to the held state is
+  // for older simulation callers; a quiet server tick must not create a new tap.
+  const edge=input.crouchEdge ?? (input.crouch && !actor.crouchHeld);
+  actor.crouchHeld=!!input.crouch;
+  if(actor.slideUntil && time>=actor.slideUntil)endSlide(actor,time);
+  if(input.aim || input.fire || input.fireEdge || input.firePress || input.sneak || input.interact ||
+      input.reload || actor.pendingShot || actor.reloadUntil>time || actor.action || actor.cartridge || forward<0){
+    actor.slideBuffer=0;
+    return false;
+  }
+  const moving=actor.moving>runSpeed*SLIDE.min;
+  const released=!forward && !input.strafe;
+  const hasDirection=!!(actor.travelDirX || actor.travelDirZ);
+  const chain=actor.slideUntil || (input.sprint && actor.slideReadyAt>time);
+  // A quiet SDK tick can end its movement sample between two real inputs.
+  // Only the request is remembered here. Launch still requires resolved speed.
+  const airborne=!actor.onGround && (run && (moving || hasDirection) || released && moving && hasDirection);
+  if(edge && (actor.rushing || chain || airborne)){
+    actor.slideBuffer=SLIDE.buffer;
+  }
+  if(!actor.slideBuffer || !actor.onGround || actor.slideUntil || actor.slideReadyAt>time)return false;
+  actor.slideBuffer=actor.slideBuffer<=dt+1e-9 ? 0 : actor.slideBuffer-dt;
+  // A released stick still has the last resolved velocity. A stopped or
+  // sideways-moving player does not get a fresh boost from a queued request.
+  if(!(run || released) || !moving || !hasDirection)return false;
+  actor.slideBuffer=0;
+  actor.slideUntil=time+SLIDE.duration;
+  actor.slideSpeed=Math.min(runSpeed*RUSH.speed*SLIDE.maxRush,Math.max(runSpeed*SLIDE.floor,actor.moving*SLIDE.boost));
+  return true;
+}
 export function resetRush(actor) {
-  Object.assign(actor,{rushing:false,rushWeight:0,rushResumeAt:0,pendingShot:null,crouchHeld:false,slideUntil:0,slideReadyAt:0,slideSpeed:0,travelDirX:0,travelDirZ:0});
+  Object.assign(actor,{rushing:false,rushWeight:0,rushResumeAt:0,pendingShot:null,crouchHeld:false,slideBuffer:0,slideUntil:0,slideReadyAt:0,slideSpeed:0,travelDirX:0,travelDirZ:0});
 }
 
 export function interruptRush(actor,time){

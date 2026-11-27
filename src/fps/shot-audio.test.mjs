@@ -68,3 +68,31 @@ test('the Scout bolt and shotgun pump match the credited CC0 donor cuts',()=>{
   }
   assert.match(readFileSync(new URL('credits.html',root),'utf8'),/Free Firearm Sound Library/);
 });
+
+test('the movement slide ships the actual Nox Sound CC0 cut on all surfaces',()=>{
+ const root=new URL('../../',import.meta.url),name='s_slide_soft';
+ const shipped=readFileSync(new URL('assets/fps/audio/riposte-'+name+'.mp3',root));
+ const donor=readFileSync(new URL('frontline/source/assets/sfx/foley/'+name+'.mp3',root));
+ const credits=JSON.parse(readFileSync(new URL('licenses/riposte-sfx-credits.json',root)));
+ assert.deepEqual(shipped,donor);
+ assert.equal(createHash('sha256').update(shipped).digest('hex'),'d91fe4155c4fb7ec3f94d307867d16e9ed922abd1700f0f52bd041e965ea8ef5');
+ assert.equal(credits.sons.find(s=>s.id===name).source,'nox');
+ assert.equal(credits.sources.nox.licence,'CC0 1.0');
+ assert.match(readFileSync(new URL('credits.html',root),'utf8'),/Nox_Sound/);
+});
+
+test('slide foley uses one decoded movement source through 30 metres on carpet and concrete',async()=>{
+ const {AudioSystem}=await import('./riposte-audio.mjs'),buf={duration:.82};
+ const played=[];
+ const sys={reuseBuffers:new Map([['foley/s_slide_soft.mp3',buf]]),reuseOffsets:new Map(),
+   listener:{x:0,y:0,z:0},listenerId:'self',active:new Set(),stats:{},reuseStats:{},
+   context:{createBufferSource(){return{playbackRate:{value:1},connect(){}};}},
+   channel(event,gain,delay){return{event,gain,delay};},track(source,channel){played.push({source,channel});}};
+ for(const [actorId,x,surface] of [['self',55,'carpet'],['other',30,'concrete'],['other',30.01,'wood']]){
+   AudioSystem.prototype.play.call(sys,{type:'slide',actorId,x,y:0,z:0,surface,serial:3});
+ }
+ assert.equal(played.length,2);
+ for(const {source,channel} of played){
+   assert.equal(source.buffer,buf);assert.equal(channel.gain,.5);assert.equal(channel.delay,0);assert.equal(source.playbackRate.value,.98);
+ }
+});

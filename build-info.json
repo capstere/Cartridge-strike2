@@ -505,6 +505,11 @@
       "sha256": "b8d597b92c7b41e71073e8d5d57c0bdc3b6af0b22bdde990713a0f12b91e03b6"
     },
     {
+      "path": "assets/fps/audio/riposte-s_slide_soft.mp3",
+      "bytes": 8709,
+      "sha256": "d91fe4155c4fb7ec3f94d307867d16e9ed922abd1700f0f52bd041e965ea8ef5"
+    },
+    {
       "path": "assets/fps/audio/riposte-st_start.mp3",
       "bytes": 17065,
       "sha256": "beb94e8bd5895379cd5df178b27440e7671fac462b643c27102cae26a93fd35f"
@@ -956,8 +961,8 @@
     },
     {
       "path": "credits.html",
-      "bytes": 16127,
-      "sha256": "6881715524eec2d14afae890e9884ffd03c0464df4501ad2b2e3a373bb78af74"
+      "bytes": 16414,
+      "sha256": "e836b177d4b10015daea07275ba5433e53f0a454e107970c1d2fe6e46c6e1791"
     },
     {
       "path": "docs/fps-furniture-library.md",
@@ -2282,7 +2287,7 @@
     {
       "path": "shared/multiplayer/build.mjs",
       "bytes": 660,
-      "sha256": "5dfa7089c5fa5392cb751863f3f81faae83f45d73f53afc06ac1beb01cb144eb"
+      "sha256": "4aaacb78f3348e63fcf12a6942f0774864a4a6bc2330e221fbc14269d4af4839"
     },
     {
       "path": "shared/multiplayer/collision-contract.mjs",
@@ -2302,7 +2307,7 @@
     {
       "path": "shared/multiplayer/map-build.mjs",
       "bytes": 1753,
-      "sha256": "65a8e70c8d3e520b6fede85a8c4103d96ca46e2613975b46e25193136630b696"
+      "sha256": "1880bc5ecdaf07eaf7d5f752c05f14e3f1cce9c62ed4c7ec7cc2496c5690e7ae"
     },
     {
       "path": "shared/multiplayer/maps.mjs",
@@ -2316,8 +2321,8 @@
     },
     {
       "path": "shared/multiplayer/rules.mjs",
-      "bytes": 4646,
-      "sha256": "d547081567730a9406fdcbaebd1c0240165c328e6434feb412cd0a067f52ef35"
+      "bytes": 4660,
+      "sha256": "c274a5a3504ce6ca34db1b9190589fe65672cfa0c00c7257127ae2e17efe85b7"
     },
     {
       "path": "shared/multiplayer/world.mjs",
@@ -2371,8 +2376,8 @@
     },
     {
       "path": "src/fps/audio.mjs",
-      "bytes": 22020,
-      "sha256": "99535a99836e27ec9bc3ff421c73cebf0779c7ab0d75a0d6f8b99fd3e44e60e0"
+      "bytes": 22078,
+      "sha256": "2b21512de781915ca5137d72b62c3a4bfebcfd3794a9d586787cd643c901ce00"
     },
     {
       "path": "src/fps/authored-hand-data.mjs",
@@ -2586,8 +2591,8 @@
     },
     {
       "path": "src/fps/game.mjs",
-      "bytes": 47647,
-      "sha256": "f69abbe01813b7b986fc186872b51ae2eff8c6907739b762c8146249ac9f5092"
+      "bytes": 47689,
+      "sha256": "37be8907c83e24037182a8f0d60c677f0340950aa79e15cb9e430cb46a0b668d"
     },
     {
       "path": "src/fps/gamepad-controls.mjs",
@@ -2686,8 +2691,8 @@
     },
     {
       "path": "src/fps/movement.mjs",
-      "bytes": 8287,
-      "sha256": "8a15b7dc4354cbf398de669d3d4456f9c6305754e51435a87d18b8d6b225254f"
+      "bytes": 8231,
+      "sha256": "4a5631a5805d2b324aa8f8ba5537ae79c7f8c575af20a704c472e8e50c2bf0e2"
     },
     {
       "path": "src/fps/navigation.mjs",
@@ -2711,8 +2716,8 @@
     },
     {
       "path": "src/fps/network/session.mjs",
-      "bytes": 40099,
-      "sha256": "b0ec5d4fef3dcc7adeb3cdd06fb522b423ce70fe81a29d67df75af38ca319783"
+      "bytes": 40542,
+      "sha256": "6885bf661e7f4c0dfc54063601f6630e5deb6c23d78d550e45634a9f7283bc97"
     },
     {
       "path": "src/fps/physics.mjs",
@@ -2806,8 +2811,8 @@
     },
     {
       "path": "src/fps/riposte-audio.mjs",
-      "bytes": 5417,
-      "sha256": "0b5d2b595949d824c0693f7d4fe5f9913b62c1ec009385343453329e753c1288"
+      "bytes": 5949,
+      "sha256": "92784844467eb0e1916784e689e474bb184fa1c55f5ad6f3f281c469e5df9634"
     },
     {
       "path": "src/fps/riposte-fps-math.mjs",
@@ -2846,8 +2851,8 @@
     },
     {
       "path": "src/fps/rush.mjs",
-      "bytes": 2669,
-      "sha256": "13775c7d55f62dd86b0c0c674634a9cac2f1d39694d6729b2a527f5ed484f4ec"
+      "bytes": 4721,
+      "sha256": "0a471c414c3caf7370b392189673378a432de9f44cd34c4910fa391e39b71d41"
     },
     {
       "path": "src/fps/shot-audio.mjs",
@@ -3065,7 +3070,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 65271204,
+  "bytes": 65283285,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

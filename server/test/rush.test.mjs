@@ -255,3 +255,45 @@ test('each firearm spends one authoritative round and both SDK seats see cancell
  await delay(90);assert(received.every(events=>events.length===weapons.length));assert.equal(room.metrics.invalid,0);
  t.diagnostic(JSON.stringify(proof));
 });
+
+test('two seats receive one accepted buffered landing slide and cancel a second request on control loss',{timeout:12000},async t=>{
+ const local=await createLocalServer({testMatch:{continuous:true},port:0});
+ let host,guest;
+ t.after(async()=>{await Promise.allSettled([host?.leave(),guest?.leave()]);await local.close();});
+ const sdk=new Client(local.url,{headers:{Origin:local.url}});
+ host=await ready(await sdk.create('private-fps',options));
+ guest=await ready(await sdk.joinById(host.roomId,options));
+ const room=[...local.rooms][0],seat=room.seats.get(host.sessionId),actor=seat.actor;
+ const both=[host,guest],slides=[[],[]],poses=()=>both.map(peer=>peer.state.actors.get(actor.id).handling);
+ both.forEach((peer,i)=>peer.onMessage('events',events=>slides[i].push(...events.filter(e=>e.type==='slide'&&e.actorId===actor.id))));
+ Object.assign(actor,{x:20,z:-18,y:0,onGround:true});
+ const original=room.fixedTick,queue=room.inputs.get(host.sessionId),rush={forward:1,sprint:true,yaw:Math.PI};
+ // Step on each real SDK arrival so the pre-landing gesture is repeatable.
+ room.fixedTick=function(){if(queue.size)original.call(this);};
+ const step=async(input={})=>{
+   const previous=room.sim.tickNumber;
+   send(host,{...rush,crouchEdge:false,...input});
+   await until(()=>room.sim.tickNumber>previous,'one authoritative SDK tick');
+ };
+ try{
+   for(let i=0;i<20;i++)await step();
+   await step({jump:true});assert(!actor.onGround);
+   for(let i=0;i<36 && (actor.vy>=0 || actor.y>.10);i++)await step();
+   const height=actor.y;assert(height>0 && height<=.10 && !actor.onGround);
+   await step({crouch:true,crouchEdge:true});
+   assert(actor.onGround);assert.equal(actor.slideUntil,0);assert.equal(actor.slideBuffer,.3);
+   await until(()=>poses().every(p=>p.slideBuffer===.3),'landing gesture replicated before consumption');
+   await step({crouch:false});assert(actor.slideUntil>room.sim.game.state.time);assert.equal(actor.slideBuffer,0);
+   await until(()=>poses().every(p=>p.slideUntil===actor.slideUntil && p.slideBuffer===0) && slides.every(s=>s.length===1),'both seats saw the accepted slide');
+   assert.deepEqual(slides[0],slides[1]);
+   const accepted=slides[0][0];assert.equal(accepted.lifeId,actor.lifeId);assert.equal(accepted.controlEpoch,seat.epoch);
+   await step({crouch:true,crouchEdge:true});assert.equal(actor.slideBuffer,.3);
+   await until(()=>poses().every(p=>p.slideBuffer===.3),'second slide is waiting');
+   t.diagnostic(JSON.stringify({height,bufferSeconds:.3,slideUntil:actor.slideUntil,event:accepted}));
+ }finally{room.fixedTick=original;}
+ host.send('controls',{enabled:false,lifeId:actor.lifeId,controlEpoch:seat.epoch});
+ await until(()=>!seat.enabled && poses().every(p=>!p.slideBuffer && !p.slideUntil),'both poses reset after loss of control');
+ host.send('controls',{enabled:true,lifeId:actor.lifeId,controlEpoch:seat.epoch});
+ await until(()=>seat.enabled,'same-life resume');
+ await delay(350);assert(slides.every(s=>s.length===1));assert.equal(room.metrics.invalid,0);
+});

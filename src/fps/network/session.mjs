@@ -27,6 +27,11 @@ const wait=async(predicate,timeout=15000)=>{
 function headshotResultTime(room){
   return room.state.time+Math.max(0,room.clock.serverNow()-room.state.resultsAtMs)/1000;
 }
+function discardSlideRequest(session){
+  const predicted=session.prediction?.world?.actor;
+  if(predicted)predicted.slideBuffer=0;
+  if(session.view?.player)session.view.player.slideBuffer=0;
+}
 function actorView(s,localId){
   const a={id:s.id,name:s.name,team:s.team,index:Number(s.id.split('-').at(-1)),isPlayer:s.id===localId,controllerType:s.bot?'bot':'human',bot:null,
     cartridge:s.handling?.cartridgeStart?{type:s.weapon,started:s.handling.cartridgeStart,releaseAt:s.handling.cartridgeRelease,deadline:s.handling.cartridgeFuse}:null,
@@ -387,7 +392,9 @@ export class NetworkSession {
           this.metrics.adopts++;const d=Math.hypot(w.actor.x-s.x,w.actor.y-s.y,w.actor.z-s.z);
           this.metrics.adoptionDistance.push(d);if(this.metrics.adoptionDistance.length>512)this.metrics.adoptionDistance.shift();
           w.dynamics.adopt(this.room.state);
-          copyPose(w.actor,s);w.actor.action=s.actionType?{type:s.actionType}:null;w.actor.alive=s.alive;w.actor.lifeId=s.lifeId;w.game.state.time=this.room.state.time;
+          copyPose(w.actor,s);
+          if(!this.enabled)w.actor.slideBuffer=0;
+          w.actor.reloadUntil=s.reloadUntil;w.actor.cartridge=s.handling?.cartridgeStart || null;w.actor.action=s.actionType?{type:s.actionType}:null;w.actor.alive=s.alive;w.actor.lifeId=s.lifeId;w.game.state.time=this.room.state.time;
           w.game.hostages=this.view.hostages;
           w.game.state.zombies=[...this.residents.values()].map(({schema:s})=>({id:s.id,x:s.x,y:s.y,z:s.z,height:s.height,radius:s.radius,alive:s.alive}));
           w.game.actors=[w.actor,...[...this.room.state.actors.values()].filter(a=>a.ready&&a.id!==s.id).map(a=>actorView(a,null))];
@@ -450,10 +457,10 @@ export class NetworkSession {
       if(event.type==='hit'&&event.sourceId===this.localPlayerId){const sent=this.actionTimes?.get(event.actionId);
         if(sent!==undefined){this.metrics.hitLatency.push(performance.now()-sent);if(this.metrics.hitLatency.length>512)this.metrics.hitLatency.shift();}}
       if(this.enabled||rocketEffect&&['active','results'].includes(this.room.state.phase)){
-        // Schedule fresh confirmed gunfire on receipt. Rendering may resume after
+        // Schedule fresh confirmed gunfire and slide starts on receipt. Rendering may resume after
         // the audio freshness window. Muzzle and rocket visuals keep their event.
         const rocketSound=event.type==='rocket-launch'||event.type==='rocket-explosion';
-        if(event.type==='shot'||rocketSound){
+        if(event.type==='shot'||event.type==='slide'||rocketSound){
           const present=this.onCombatAudio??(rocketSound?this.onRocketAudio:undefined);
           if(present?.(event,this.room.state.time))event={...event,audioPresented:true};
         }
@@ -567,6 +574,7 @@ export class NetworkSession {
     this.keepRocketEffects();
     if(this.room&&this.lifeId&&this.connectionState!=='reconnecting')this.room.send('controls',{enabled,lifeId:this.lifeId,controlEpoch:this.controlEpoch});
     if(enabled&&this.prediction)this.prediction.reset();
+    discardSlideRequest(this);
   }
   checkConnection(now){
     if(this.closed||this.connectionState!=='connected')return;
@@ -581,6 +589,7 @@ export class NetworkSession {
   beginReconnect(){
     if(this.closed||this.connectionState==='reconnecting')return;
     this.crouchEdge=false;this.firePress=null;this.pendingCosmetic=null;
+    discardSlideRequest(this);
     this.connectionState='reconnecting';this.purchase=null;this.enabled=false;this.view.state.paused=true;
     this.events=[];this.clearTeamComms();this.status='Reconnecting… Your seat is reserved for 15 seconds. The match continues.';
     this.onConnection('reconnecting');

@@ -1,0 +1,108 @@
+{
+  "sourceRevision": "3523597566a3ab5d047087066ebcf24246716b60",
+  "build": "bd52eacc8636ea7be1c44eaced4adf67ba55f4c0ea814adea1bae59a7745177d",
+  "protocol": 17,
+  "sourceAudio": {
+    "donor": "frontline/source/assets/sfx/foley/s_slide_soft.mp3",
+    "runtime": "assets/fps/audio/riposte-s_slide_soft.mp3",
+    "bytes": 8709,
+    "sha256": "d91fe4155c4fb7ec3f94d307867d16e9ed922abd1700f0f52bd041e965ea8ef5",
+    "creator": "Nox_Sound",
+    "license": "CC0 1.0"
+  },
+  "twoSdkSeats": {
+    "height": 0.07356386247872021,
+    "bufferSeconds": 0.3,
+    "slideUntil": 1.8666666666666676,
+    "event": {
+      "type": "slide",
+      "time": 1.1166666666666676,
+      "serial": 9,
+      "x": 20.10001,
+      "y": 0,
+      "z": -13.457856743280074,
+      "actorId": "analysts-0",
+      "team": "analysts",
+      "surface": "carpet",
+      "round": 0,
+      "matchId": 1,
+      "eventId": 9,
+      "tick": 67,
+      "lifeId": 1,
+      "sourceLifeId": 0,
+      "controlEpoch": 0,
+      "sourceControlEpoch": 0,
+      "actionId": ""
+    }
+  },
+  "nodeQualification": {
+    "build": "3dd1934bc5609860e7448c2fb6fccfb34f8b6cf79feabaacf05cf278e7a2e79d",
+    "node": "22.23.5",
+    "loader": "tools/vendor-three-test-loader.mjs",
+    "completeRushFile": 20,
+    "completeShotAudioAndSessionFiles": 23,
+    "runtimePaths": 612
+  },
+  "nativeRoom": {
+    "build": "3dd1934bc5609860e7448c2fb6fccfb34f8b6cf79feabaacf05cf278e7a2e79d",
+    "protocol": 17,
+    "airborneHeight": 0.08500000000000246,
+    "maxRushWeight": 0.16750938738839627,
+    "maxResolvedSpeed": 6.5099999999999625,
+    "fixture": "Two separate native Chromium processes, one normal desktop keyboard client and one emulated-touch observer. Both processes opened /dev/dri/renderD128 using v3d. No bots. The private fixture held the descending server tick at the reported height until the real keyboard crouch edge was sent, then resumed the normal simulation.",
+    "confirmedOnBothSeats": {
+      "type": "slide",
+      "time": 9.633333333333391,
+      "serial": 11,
+      "x": 20,
+      "y": 0,
+      "z": -17.4015,
+      "actorId": "analysts-0",
+      "team": "analysts",
+      "surface": "carpet",
+      "round": 0,
+      "matchId": 1,
+      "eventId": 11,
+      "tick": 2728,
+      "lifeId": 2,
+      "sourceLifeId": 0,
+      "controlEpoch": 1,
+      "sourceControlEpoch": 0,
+      "actionId": ""
+    },
+    "listeners": [
+      {
+        "id": 11,
+        "tick": 2728,
+        "actor": "analysts-0",
+        "listener": "analysts-0",
+        "source": "carpet",
+        "rate": 0.949999988079071,
+        "bufferSeconds": 0.8,
+        "sampleRate": 48000,
+        "spatial": false,
+        "distance": 0.9802260725124436,
+        "scheduledDelayMs": 0,
+        "peak": 0.2478412389755249,
+        "finalAuthoritativeBuffer": 0,
+        "peakDbFS": -12.12
+      },
+      {
+        "id": 11,
+        "tick": 2728,
+        "actor": "analysts-0",
+        "listener": "counterAnalysts-0",
+        "source": "carpet",
+        "rate": 0.949999988079071,
+        "bufferSeconds": 0.8,
+        "sampleRate": 48000,
+        "spatial": true,
+        "distance": 3.762526046421462,
+        "scheduledDelayMs": 0,
+        "peak": 0.15980666875839233,
+        "finalAuthoritativeBuffer": 0,
+        "peakDbFS": -15.93
+      }
+    ]
+  }
+}
