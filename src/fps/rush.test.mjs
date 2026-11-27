@@ -75,6 +75,11 @@ test('CR4 retains both grips and P9 releases and recovers its support wrist; sta
    assert(m.rotation.x<hip.x-.28);
    assert(m.userData.rightHand.position.distanceTo(trigger)<1e-8);
    assert.equal(m.userData.leftHand.position.distanceTo(support)>.15,id==='p9');
+   const parked=m.matrix.clone(),wrist=m.userData.leftHand.position.clone();
+   a.distanceWalked+=.42;
+   animateWeapon(m,a,2+dt*2,dt,{reducedMotion:true});
+   assert(m.matrix.equals(parked),'steady reduced-motion silhouette at a second stride phase');
+   assert(m.userData.leftHand.position.equals(wrist),'steady support wrist at a second stride phase');
    a.rushWeight=0;animateWeapon(m,a,2+dt*2,dt);
    assert(m.userData.leftHand.position.distanceTo(support)<1e-8);
  }

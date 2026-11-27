@@ -34,7 +34,8 @@ export function animateWeapon(model,actor,time,dt,options={}) {
       time-(options.switchAt ?? -Infinity)<.26 || time-(options.throwAt ?? -Infinity)<.48;
     const rush=gait*(handling ? .08 : 1)*(1-(actor.aimAmount || 0));
     if(rush>.001){
-      const stride=Math.cos(phase),bounce=Math.sin(2*phase);
+      const stride=options.reducedMotion?0:Math.cos(phase),bounce=options.reducedMotion?0:Math.sin(2*phase);
+      const roll=options.reducedMotion?0:Math.sin(phase);
       const pistol=['p9','p12'].includes(model.userData.id);
       if(pistol){
         model.position.x+=(.035+.008*stride)*rush;
@@ -46,7 +47,7 @@ export function animateWeapon(model,actor,time,dt,options={}) {
         model.position.x+=(.01+.012*stride)*rush;model.position.y+=(-.04+.012*bounce)*rush;
         model.position.z+=(-.04+.01*bounce)*rush;
         model.rotation.x+=(-.50+.04*bounce)*rush;
-        model.rotation.y+=(.65+.05*stride)*rush;model.rotation.z+=(.70+.10*Math.sin(phase))*rush;
+        model.rotation.y+=(.65+.05*stride)*rush;model.rotation.z+=(.70+.10*roll)*rush;
       }
     }
     const wall=(options.nearWall || 0)*(1-rush)*(1-(actor.aimAmount || 0));

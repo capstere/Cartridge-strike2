@@ -527,7 +527,10 @@ export class NetworkSession {
   }
   setInputEnabled(enabled){
     if(this.closed)return;
-    enabled=enabled&&this.connectionState!=='reconnecting';
+    enabled=!!enabled && this.connectionState!=='reconnecting';
+    const generation=[this.localPlayerId,this.matchId,this.matchPhase,this.lifeId,this.controlEpoch].join('/');
+    if(this.enabled===enabled && this.lastControlGeneration===generation)return;
+    this.lastControlGeneration=generation;
     this.firePress=null;this.pendingCosmetic=null;
     this.trigger=false;this.enabled=enabled;this.view.state.paused=!enabled;
     this.keepRocketEffects();

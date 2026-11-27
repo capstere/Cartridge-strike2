@@ -90,6 +90,7 @@ export class NetworkRoom extends Room {
       const seat=this.seats.get(client.sessionId);
       if(!seat?.ready||!seat.connected||seat.client!==client||message?.lifeId!==seat.actor.lifeId||
         (message.controlEpoch??0)!==seat.epoch||typeof message.enabled!=='boolean')return;
+      if(seat.enabled===message.enabled)return;
       resetRush(seat.actor);seat.enabled=message.enabled;seat.interactUntil=0;seat.actor.action=null;seat.aim=false;seat.trigger=false;seat.actor.aimAmount=0;this.inputs.get(client.sessionId).clear();
       if(!seat.enabled)this.teamComms.prune();
     });
@@ -243,12 +244,11 @@ export class NetworkRoom extends Room {
     if(this.familyRoom&&!this.seats.size)return;
     this.match.beforeTick();
     const frames=new Map();this.tickActions=new Map();this.lag.shots.clear();
-    // Check the sampled historical aim when recovery actually permits fire.
-    // Only the server attaches a session ID, original stamp and generation.
+    // Only this authority admits timestamps and binds the pending shot to a seat.
     this.sim.game.authorizeShot ??= (actor,shot)=>{
       const seat=this.seats.get(shot.sessionId);
       if(!seat?.connected || !seat.enabled || seat.actor!==actor || shot.lifeId!==actor.lifeId || shot.epoch!==seat.epoch)return false;
-      if(!WEAPONS[actor.weapon].projectile && !this.lag.accept(seat,shot,shot.stamp))return false;
+      if(!WEAPONS[actor.weapon].projectile)this.lag.useAdmittedShot(actor.id,shot.rewindStamp);
       this.tickActions.set(actor.id,`${actor.id}:${actor.lifeId}:${seat.epoch}:${shot.fireId}`);
       return true;
     };
@@ -295,8 +295,9 @@ export class NetworkRoom extends Room {
         continue;
       } // no cached held movement/fire on silence
       const input=latest.input;
-      if(shot && this.sim.game.phase==='active' && !reload && !seat.actor.reloadUntil && !seat.actor.action){
-        queueShot(seat.actor,shot,this.sim.game.state.time);
+      if(shot && !seat.actor.pendingShot && this.sim.game.phase==='active' && !reload && !seat.actor.reloadUntil && !seat.actor.action){
+        const rewindStamp=WEAPONS[seat.actor.weapon].projectile ? 0 : this.lag.admit(seat,shot,shot.stamp);
+        if(rewindStamp!==null)queueShot(seat.actor,{...shot,rewindStamp},this.sim.game.state.time);
       }
       input.reload=reload;
       frames.set(client.sessionId,input);

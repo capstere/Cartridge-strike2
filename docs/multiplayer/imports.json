@@ -1,5 +1,9 @@
 {
-  "src/fps/movement.mjs": [],
+  "src/fps/rush.mjs": [],
+  "src/fps/movement.mjs": [
+    "src/fps/rush.mjs",
+    "src/fps/zombie-poses.mjs"
+  ],
   "src/fps/body-recovery.mjs": [],
   "src/fps/config.mjs": [],
   "src/fps/zombie-poses.mjs": [],
@@ -24,6 +28,7 @@
   ],
   "vendor/yuka/yuka.module.js": [],
   "src/fps/action-rules.mjs": [
+    "src/fps/rush.mjs",
     "src/fps/bots.mjs",
     "src/fps/combat-flow.mjs",
     "src/fps/config.mjs",
@@ -71,6 +76,7 @@
     "src/fps/config.mjs",
     "src/fps/grenade-physics.mjs",
     "src/fps/movement.mjs",
+    "src/fps/rush.mjs",
     "src/fps/player-names.mjs",
     "src/fps/tactical-rules.mjs",
     "src/fps/zombie-poses.mjs",
