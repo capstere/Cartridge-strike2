@@ -3,8 +3,8 @@ export const MAP_CONTRACTS = Object.freeze({
   "floor5-prepared": {
     "protocolVersion": 15,
     "protocolHash": "1f27f4d871f9ded137565609bf5eef6c8e94b0f296c386222b3d3c68952f7ea5",
-    "configHash": "fdf889c558f03dbabb3c3d1e55430799e461cbf811a26eff43bc17b517094338",
-    "buildHash": "fba695c52dbb78092c56923655d7610d78655f04172238eb485925c77c1cbe29",
+    "configHash": "a7635fd62302ab12fe8d7f5fe138df1482d4f1508197690dff1feead76a16687",
+    "buildHash": "09eb908138ad90666cade05d27fae0f8e390443195b41301f7d3960518873358",
     "tickRate": 60,
     "patchMs": 50,
     "mapId": "floor5-prepared",
@@ -14,8 +14,8 @@ export const MAP_CONTRACTS = Object.freeze({
   "compact-arena": {
     "protocolVersion": 15,
     "protocolHash": "1f27f4d871f9ded137565609bf5eef6c8e94b0f296c386222b3d3c68952f7ea5",
-    "configHash": "fdf889c558f03dbabb3c3d1e55430799e461cbf811a26eff43bc17b517094338",
-    "buildHash": "fba695c52dbb78092c56923655d7610d78655f04172238eb485925c77c1cbe29",
+    "configHash": "a7635fd62302ab12fe8d7f5fe138df1482d4f1508197690dff1feead76a16687",
+    "buildHash": "09eb908138ad90666cade05d27fae0f8e390443195b41301f7d3960518873358",
     "tickRate": 60,
     "patchMs": 50,
     "mapId": "compact-arena",

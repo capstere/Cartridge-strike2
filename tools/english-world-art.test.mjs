@@ -37,3 +37,15 @@ test('only the historical official fixture title is mapped and its original data
   const renamed={...legacy,environment:{...legacy.environment,fixtures:[{...row,title:'Åkes rum'}]}};
   assert.strictEqual(englishPublishedFixtures(renamed),renamed);
 });
+
+test('the procedural hostage fallback paints an English marker and visitor badge', async t=>{
+  await import('../server/register-shared.mjs');
+  const {makeActor}=await import('../src/fps/model-primitives.mjs');
+  const text=[],previous=globalThis.document;
+  globalThis.document={createElement:()=>({getContext:()=>({fillRect(){},fillText(value){text.push(value);}})})};
+  t.after(()=>{if(previous===undefined)delete globalThis.document;else globalThis.document=previous;});
+  const actor=makeActor('neutral','hostage-0',true);
+  assert(actor.userData.marker.material.map);
+  assert.deepEqual(text,['VISITOR','05','HOSTAGE']);
+  actor.traverse(node=>{node.geometry?.dispose();node.material?.map?.dispose();node.material?.dispose();});
+});

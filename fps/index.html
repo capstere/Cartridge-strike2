@@ -139,6 +139,8 @@
     <footer class="lb-foot"><span id="game-version">Cartridge-Strike 3</span><a href="../credits.html" target="_blank" rel="noopener">Credits</a></footer>
   </main>
   <div id="hud" hidden>
+    <div id="deployment-countdown" role="status" aria-live="polite" aria-atomic="true" hidden><small>Match begins in</small><strong></strong></div>
+    <button id="countdown-look" type="button" hidden>Enable mouse look</button>
     <div class="top-hud"><div class="score analysts"><strong id="score-a">0</strong><span>ANALYSTS <small id="alive-a">5 alive</small></span></div><div class="round-clock"><small id="round-label">ROUND 1</small><b id="timer">0:15</b><small id="phase">BUY PHASE</small></div><div class="score counter"><span>COUNTER ANALYSTS <small id="alive-ca">5 alive</small></span><strong id="score-ca">0</strong></div></div>
     <div class="map-panel"><p id="location">Unit 05</p><canvas id="minimap" width="224" height="158" aria-label="Map showing teammates and objectives"></canvas><small class="offline-map-hint">M tactical map · B buy</small><small class="online-map-hint">M map · Z radio</small><small id="map-legend" hidden></small></div>
     <div id="killfeed" aria-live="polite"></div>

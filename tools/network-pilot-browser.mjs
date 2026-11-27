@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import {randomBytes} from 'node:crypto';
 import {mkdir,readFile,writeFile} from 'node:fs/promises';
 import {setTimeout as delay} from 'node:timers/promises';
-import {resumeDesktop} from './network-browser-resume.mjs';
+import {enterTouchMatch, resumeDesktop, waitForActiveHud} from './network-browser-resume.mjs';
 import {chromium} from '../frontline/source/tools/dev/node_modules/playwright-core/index.mjs';
 
 const external=process.env.CS2_PILOT_URL;
@@ -119,7 +119,7 @@ try{
   await friend.locator('#network-status').filter({hasText:'Incorrect private room code'}).waitFor();
   await submit(friend,'Pilot friend',roomId);await friend.locator('#room-ready').waitFor({state:'visible'});
   await host.locator('#room-ready').click();await friend.locator('#room-ready').tap();await host.locator('#room-start').click();
-  await host.locator('#resume').waitFor({state:'visible'});await friend.locator('#resume').tap();
+  await waitForActiveHud(host);await enterTouchMatch(friend);
   await friend.waitForFunction(()=>document.querySelector('#pause').hidden);
   const read=await inspectFriend(friend,roomId),before=await until(read,s=>s.readyCount===2,'Both ready');
   assert.equal(before.doors,51,'Replicated Floor 5 doors');
@@ -149,7 +149,7 @@ try{
     assert.equal(result.reason,'time');assert.equal(result.winner,'draw');assert.deepEqual(result.score,{analysts:0,counterAnalysts:0});
     await host.locator('#room-rematch').click();await friend.locator('#room-ready').waitFor({state:'visible'});
     await host.locator('#room-ready').click();await friend.locator('#room-ready').tap();await host.locator('#room-start').click();
-    await host.locator('#resume').waitFor({state:'visible'});await friend.locator('#resume').tap();const secondResume=await resumeDesktop(host);
+    await waitForActiveHud(host);await enterTouchMatch(friend);const secondResume=await resumeDesktop(host);
     const next=await until(read,s=>s.phase==='active'&&s.matchId===before.matchId+1,'same public room rematch');
     assert.equal(next.ammo,30);await host.mouse.move(secondResume.point.x,secondResume.point.y+1000);
     await host.mouse.down();try{await until(read,s=>s.ammo<30,'public rematch fire');}finally{await host.mouse.up();}

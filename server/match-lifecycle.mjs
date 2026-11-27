@@ -126,7 +126,9 @@ export class MatchLifecycle {
     }else if(m.kind==='start'&&state.phase==='waiting'){
       if(state.ownerId!==client.sessionId)throw Error('Only the room host can start the match.');
       if(!this.eligible())throw Error('Both teams need a player, and all connected players must be ready.');
-      this.resetActors();state.phase='countdown';this.deadline=this.now+this.settings.countdownSeconds*1000;
+      this.resetActors();
+      this.startingSeats=[...r.seats.values()].filter(seat=>seat.connected);
+      state.phase='countdown';state.remainingSeconds=this.settings.countdownSeconds;this.deadline=this.now+this.settings.countdownSeconds*1000;
     }else if(m.kind==='rematch'&&state.phase==='results'){
       state.matchId++;state.phase='waiting';state.winner=state.reason=state.results='';state.resultsAtMs=0;
       this.resetActors();
@@ -167,8 +169,20 @@ export class MatchLifecycle {
     this.ownership();const s=this.state;
     if(this.continuous)return;
     if(s.phase==='countdown'){
-      if(!this.eligible()){s.phase='waiting';s.remainingSeconds=this.lobbySeconds;}
+      // New reservations may load during deployment. Only the ready cohort that
+      // launched the match participates in the cancellation decision.
+      if(this.startingSeats.some(seat=>!seat.connected||!seat.playerReady||!this.room.seats.has(seat.client.sessionId))){
+        s.phase='waiting';s.remainingSeconds=this.lobbySeconds;this.startingSeats=null;
+      }
       else if(this.now>=this.deadline){
+        // Inputs received during the hold must not become a queued first shot or step.
+        for(const client of this.room.clients)this.room.inputs.get(client.sessionId).clear();
+        this.startingSeats=null;
+        if(!this.room.classic){
+          // The deployment hold has already satisfied initial weapon readiness.
+          // Ordinary mid-match respawns retain their own short draw delay.
+          for(const actor of this.room.sim.game.actors)actor.nextShot=this.room.sim.game.state.time;
+        }
         s.phase='active';this.deadline=this.now+this.tdmDuration*1000;
         this.room.sim.game.state.paused=false;
         if(!this.room.classic)this.room.sim.game.world.networkDynamics.elevatorOpenAt=this.room.sim.game.state.time;

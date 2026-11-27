@@ -1,6 +1,7 @@
 // Runs only against the generated loopback HTTPS fixture. Both touch profiles
 // enter through the public-shaped link with independent browser storage.
 import assert from 'node:assert/strict';
+import {enterTouchMatch, waitForActiveHud} from './network-browser-resume.mjs';
 import {createHash, randomBytes} from 'node:crypto';
 import {mkdir, readFile, writeFile} from 'node:fs/promises';
 import {join} from 'node:path';
@@ -239,7 +240,7 @@ try {
     await press(client, client.page.locator('#room-ready'));
   }
   await press(iphone, iphone.page.locator('#room-start'));
-  for (const client of [iphone, android]) await client.page.locator('#resume').waitFor();
+  for (const client of [iphone, android]) await waitForActiveHud(client.page);
   const active = await waitForHealth(s => s.rooms === 1 && s.players === 2 && s.matches[0].phase === 'active' && s.matches[0].tick > 0, 'Real match began');
   const rotate = iphone.page.getByRole('dialog', {name: 'Rotate your screen'});
   await iphone.page.setViewportSize({width: 390, height: 844});
@@ -248,7 +249,7 @@ try {
   await iphone.page.setViewportSize({width: 844, height: 390});
   await rotate.waitFor({state: 'hidden'});
   for (const client of [iphone, android]) {
-    await press(client, client.page.locator('#resume'));
+    await enterTouchMatch(client.page);
     await client.page.locator('#pause').waitFor({state: 'hidden'});
     await client.page.locator('#hud').waitFor();
     await snap(client, 'match', client.page.locator('#game'));

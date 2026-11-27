@@ -16,7 +16,9 @@ const knockdownFiles=['src/fps/character-actors.mjs','src/fps/character-library.
   'src/fps/actor-occlusion.mjs','src/fps/headshot-pose.mjs',
   'assets/animations/headshot-male.animation.glb','assets/animations/headshot-female.animation.glb'];
 const accessCatalog='shared/multiplayer/access-english.mjs';
-const frontendFiles=['src/fps/game-english.mjs','src/fps/english-ui.mjs','src/fps/solo-maps.mjs','src/fps/menu-navigation.mjs','fps/routes.css','furniture-editor/build/environment-art.mjs'];
+const deploymentFiles=['src/fps/deployment-countdown.mjs','src/fps/riposte-audio.mjs',
+  ...['ui_tick','r_beep-1','st_start'].map(name=>'assets/fps/audio/riposte-'+name+'.mp3')];
+const frontendFiles=[...deploymentFiles,'src/fps/game-english.mjs','src/fps/english-ui.mjs','src/fps/solo-maps.mjs','src/fps/menu-navigation.mjs','fps/routes.css','furniture-editor/build/environment-art.mjs'];
 const rushPresentation=['src/fps/mobile-controls.mjs','src/fps/presentation-hands.mjs'];
 const rocketPresentation=['src/fps/action-visuals.mjs','src/fps/audio.mjs'];
 const paths=[...Object.keys(graph),...frontendFiles,...rushPresentation,...rocketPresentation,accessCatalog,'shared/multiplayer/rules.mjs','shared/multiplayer/protocol.mjs','server/network-schema.mjs','server/network-room.mjs','server/team-comms.mjs','server/lag-compensation.mjs','server/match-lifecycle.mjs','server/classic-round.mjs','server/headless.mjs','shared/multiplayer/input.mjs','src/fps/app.mjs','src/fps/tactical-controls.mjs','src/fps/render-engine.mjs','src/fps/render.mjs','src/fps/minimap-cache.mjs','src/fps/hud-shell.mjs','src/fps/zombie-visuals.mjs','src/fps/floor-audio.mjs','fps/network.css','src/fps/lobby-stage.mjs','src/fps/network/menu.mjs','src/fps/network/session.mjs','src/fps/network/room-ui.mjs','shared/multiplayer/world.mjs','shared/multiplayer/collision-contract.mjs','shared/sha256.mjs','src/fps/network/connection.mjs','server/access.mjs','server/pilot-access.mjs','server/local-server.mjs',

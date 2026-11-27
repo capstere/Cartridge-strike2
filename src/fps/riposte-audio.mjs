@@ -1,10 +1,12 @@
 /** Selected CC0 Riposte SFX on the existing positional/occlusion/mute channel.
  * No new simulation hearing events and no delayed replay after decoding.
- * Source names, licenses and exact hashes: reviews/responsiveness-riposte/reuse-provenance.json.
+ * Source names and author credits are preserved in licenses/riposte-sfx-credits.json.
  */
 import {AudioSystem as ExistingAudio} from './strike-kit-audio.mjs';
 const GUNS=Object.freeze({p9:'glock',p12:'pistol',cr4:'rifle',ar47:'ak',smg:'smg',shotgun:'shotgun',sniper:'sniper'});
+const deployClips={tick:'ui/ui_tick.mp3',beep:'series/r_beep-1.mp3',go:'series/st_start.mp3'};
 export const RIPOSTE_AUDIO_FILES=Object.freeze([
+ ...Object.values(deployClips),
  ...[...new Set(Object.values(GUNS))].flatMap(g=>['pov','near'].map(r=>`armes/g_${g}_${r}-1.mp3`)),
  ...['flesh','metal','concrete','glass','wood'].map(s=>`impacts/i_${s}-1.mp3`),
  ...['dry','draw','knife','knife_hit','throw','pickup'].map(s=>`foley/f_${s}-1.mp3`)
@@ -20,6 +22,23 @@ export class AudioSystem extends ExistingAudio{
    }catch(e){if(!this.disposed)this.errors.push('Riposte '+name+': '+e.message);}
   }));
   await this.reuseLoad;return !this.disposed&&this.context.state==='running';
+ }
+ deploymentCue(mark){
+  if(!this.context||this.context.state!=='running'||!this.volume||this.active.size>=94)return;
+  const type=mark==='go'?'go':mark<=3?'beep':'tick';
+  const buffer=this.reuseBuffers.get(deployClips[type]);
+  const event={type:'round'};
+  if(buffer){
+   const source=this.context.createBufferSource(), channel=this.channel(event,{tick:.62,beep:.42,go:.38}[type]);
+   source.buffer=buffer;source.playbackRate.value=type==='tick'?.82:1;
+   source.connect(channel.gain);this.track(source,channel,buffer.duration/source.playbackRate.value+.005);
+   this.reuseStats.played++;
+  }else{
+   // Cold audio can still mark the current beat. Decoding never replays it later.
+   this.tone(event,type==='tick'?900:type==='beep'?1000:660,type==='go'?.16:.07,.1,'sine',type==='go'?990:undefined);
+   this.reuseStats.fallback++;
+  }
+  this.stats.played++;
  }
  play(e){
   let name=null,gain=.45;

@@ -1,3 +1,5 @@
+import {countdownHud} from './deployment-countdown.mjs';
+import {MATCH_DEFAULTS} from '../../shared/multiplayer/rules.mjs';
 import {loadSoloManifest, resolveSoloSelection} from './solo-maps.mjs';
 import {UI_EN} from './english-ui.mjs';
 import {roundReasons, purchaseLabel} from './game-english.mjs';
@@ -165,9 +167,31 @@ function nameWorld(){
  const h=world.anchors.hostages?.[0];
  if(missions[1])missions[1].replaceChildren(document.createTextNode(roomDisplayName(h&&world.roomAt(h.x,h.z))),document.createElement('br'),Object.assign(document.createElement('strong'),{textContent:'Escort / guard'}));
 }
+const deployment=countdownHud($('deployment-countdown'), mark=>audio?.deploymentCue(mark));
+let countdownSession=null;
+const mouseLookButton=$('countdown-look');
+function showMouseLook(show){if(mouseLookButton.hidden===show)mouseLookButton.hidden=!show;}
+const holdingDeployment=()=>networkSession ? networkSession.room?.state.phase==='countdown' : !!game?.warmupRemaining;
+function showDeployment(now){
+ const state=networkSession?.room?.state;
+ if($('hud').hidden || document.hidden || modal || networkSession?.connectionState==='reconnecting' ||
+    state?.phase==='countdown' && now-networkSession.lastPatch>1000){
+   deployment.suspend();showMouseLook(false);return;
+ }
+ const during=holdingDeployment();
+ const active=state ? state.phase==='active' : !!game?.player;
+ if(!during&&!active){deployment.reset();showMouseLook(false);return;}
+ const remaining=during ? (state ? Math.max(.001,state.remainingSeconds) : game.warmupRemaining) : 0;
+ deployment.update(state ? state.matchId : game,remaining,active,now);
+ $('deployment-countdown').classList.toggle('reduced-motion',settings.reducedMotion);
+ const needsTouchAudio=mobile.enabled && during && audio.volume>0 && audio.context?.state!=='running';
+ const gestureLabel=needsTouchAudio?'Enable match audio':'Enable mouse look';
+ if(mouseLookButton.textContent!==gestureLabel)mouseLookButton.textContent=gestureLabel;
+ showMouseLook(needsTouchAudio || !!(during || active && state && !testMode) && !mobile.enabled && document.pointerLockElement!==$('game'));
+}
 let firePress=null;
 function recordFirePress(){
- if(!modal && !teamRadioOpen && game?.player?.alive && game.phase==='active'){
+ if(!modal && !holdingDeployment() && !teamRadioOpen && game?.player?.alive && game.phase==='active'){
    firePress ??= {yaw,pitch,weapon:game.player.weapon,life:game.player.lifeId,epoch:game.player.controlEpoch,round:game.state.round};
  }
 }
@@ -179,6 +203,7 @@ const mobile=new MobileControls({
     if(!game||teamRadioOpen)return;
     if(action==='restart'){restartMatch();return;}
     if(action==='pause'){showPause();return;}
+    if(holdingDeployment())return;
     if(action==='buy'){showBuy();return;}
     if(!game.player?.alive)return;
     if(action==='reload')game.reload();
@@ -188,11 +213,11 @@ const mobile=new MobileControls({
   }
 });
 mobile.setAutoFire(settings.mobileAutoFire);
-tactical=new TacticalControls({settings,mobile,getGame:()=>game,getModal:()=>modal||teamRadioOpen,
+tactical=new TacticalControls({settings,mobile,getGame:()=>game,getModal:()=>modal||teamRadioOpen||holdingDeployment(),
   isInteracting:()=>keys.has('KeyE')||mobile.state.interact,onAimChange:resetAutoAim});
 const combatHud=new CombatHUD(settings);
 focusHud=new FocusHud({
- settings,mobile,getGame:()=>game,getModal:()=>modal||teamRadioOpen,onMap:toggleMap,onStats:showPause,
+ settings,mobile,getGame:()=>game,getModal:()=>modal||teamRadioOpen||holdingDeployment(),onMap:toggleMap,onStats:showPause,
  onRadio:networkMode?toggleTeamRadio:null,networkMode
 });
 function selectTeamRadio(index){
@@ -284,10 +309,10 @@ function unlockMouse(){if(document.pointerLockElement)document.exitPointerLock()
 function requestMouse(){if(mobile.enabled)return;try{const result=$('game').requestPointerLock();result?.catch(()=>{showPause();$('pause').querySelector('p:not(.eyebrow)').textContent='Mouse capture failed. Open the game in its own browser tab and select Resume.';});}catch{showPause();}}
 function notify(text,duration=3){setText('notification',text);notificationUntil=(game?.state.time||0)+duration;}
 function syncFullscreenToggle(){const button=$('fullscreen-toggle'),hint=$('fullscreen-hint'),fs=window.__csFlow?.fullscreen;if(!button)return;button.hidden=!fs?.supported;if(fs?.supported)button.textContent=fs.active?'EXIT FULLSCREEN':'ENTER FULLSCREEN';if(hint)hint.hidden=!!fs?.supported;}
-function showPause(){if(networkSession?.room?.state.phase!=='active'&&networkSession)return;if(!game||['menu','match'].includes(game.phase)||modal==='menu')return;modal='pause';mobile.show(false);$('pause').querySelector('p:not(.eyebrow)').textContent=networkSession?`Room ${networkSession.room.roomId} · Friendly fire: ${networkSession.room.state.friendlyFire?'On':'Off'} · Bot difficulty ${DIFFICULTIES[game.state.difficulty].name} · The match continues and you can still take damage.`:'Round timers and bots are paused.';clearInput();game.pause(true);audio.reset();$('pause').hidden=false;$('buy').hidden=true;$('scoreboard').hidden=true;board=false;unlockMouse();settingsPanel('pause-settings');syncFullscreenToggle();}
+function showPause(){if(networkSession&&!['countdown','active'].includes(networkSession.room?.state.phase))return;if(!game||['menu','match'].includes(game.phase)||modal==='menu')return;modal='pause';mobile.show(false);$('pause').querySelector('p:not(.eyebrow)').textContent=networkSession?`Room ${networkSession.room.roomId} · Friendly fire: ${networkSession.room.state.friendlyFire?'On':'Off'} · Bot difficulty ${DIFFICULTIES[game.state.difficulty].name} · The match continues and you can still take damage.`:'Round timers and bots are paused.';clearInput();game.pause(true);audio.reset();$('pause').hidden=false;$('buy').hidden=true;$('scoreboard').hidden=true;board=false;unlockMouse();settingsPanel('pause-settings');syncFullscreenToggle();}
 // LAN fullscreen is an explicit menu action. A simultaneous fullscreen/focus
 // transition can interrupt the Resume gesture that enables mouse and audio.
-function resume(){if(networkSession&&(networkSession.connectionState==='reconnecting'||networkSession.room?.state.phase!=='active'))return;if(!networkMode)window.__csFlow?.fullscreen?.resume();audio.unlock();modal=null;$('pause').hidden=true;$('buy').hidden=true;clearInput();game.pause(false);yaw=game.player.yaw;pitch=game.player.pitch;mobile.show(true,game.player?.alive);requestMouse();}
+function resume(){if(networkSession&&(networkSession.connectionState==='reconnecting'||!['countdown','active'].includes(networkSession.room?.state.phase)))return;if(!networkMode)window.__csFlow?.fullscreen?.resume();audio.unlock();if(holdingDeployment())lastFrame=0;modal=null;$('pause').hidden=true;$('buy').hidden=true;clearInput();game.pause(false);yaw=game.player.yaw;pitch=game.player.pitch;mobile.show(true,game.player?.alive);requestMouse();}
 function shopMessage(outcome, text) {
  const message=$('buy-message');
  if(outcome) {
@@ -301,7 +326,7 @@ function shopBalance(player, free) {
  if(money.dataset.free!==String(free))money.dataset.free=String(free);
  setText('buy-money', free ? 'FREE LOADOUT' : player.money+' ¤');
 }
-function showBuy(){if(!game.player?.alive||(game.phase!=='buy'&&!isEndless(game))){notify('The shop opens in the next buy phase.');return;}modal='buy';mobile.show(false);shopMessage(null,'');if(networkSession)networkSession.purchase=null;clearInput();game.pause(true);audio.reset();$('buy').hidden=false;unlockMouse();refreshShop();}
+function showBuy(){if(holdingDeployment())return;if(!game.player?.alive||(game.phase!=='buy'&&!isEndless(game))){notify('The shop opens in the next buy phase.');return;}modal='buy';mobile.show(false);shopMessage(null,'');if(networkSession)networkSession.purchase=null;clearInput();game.pause(true);audio.reset();$('buy').hidden=false;unlockMouse();refreshShop();}
 function closeBuy(){if(networkSession){resume();return;}window.__csFlow?.fullscreen?.resume();modal=null;$('buy').hidden=true;clearInput();game.pause(false);audio.unlock();mobile.show(true,game.player?.alive);requestMouse();}
 function refreshShop(){
  shopBalance(game.player,isEndless(game));
@@ -351,7 +376,7 @@ function refreshShop(){
  }));
 }
 
-function start(selected=team,overrides={},autoplay=false){team=rehearsalMode?'analysts':selected;setPrivateCharacterActors(rehearsalMode?['analysts-0','analysts-1']:[team+'-0']);clearInput();audio.reset();renderer.resetTransient();combatHud.reset();recoil.reset();resetAutoAim();game=new Game(world,{team,seed:Number($('seed').value)||42,config:{mobile:settings.mobile,mode:settings.mode,firefight:settings.firefight,friendlyFire:settings.friendlyFire,hostageDamage:true,wanderers:settings.wanderers,loadout:settings.loadout,...overrides},autoplay,difficulty:overrides.difficulty||settings.difficulty});game.start(team);for(const actor of game.actors)renderer.actorModel(actor);modal=null;lastRound=0;lastPhase='buy';spectateIndex=0;feed=[];yaw=game.player.yaw;pitch=game.player.pitch;for(const id of ['menu','pause','buy','match-end','scoreboard'])$(id).hidden=true;$('hud').hidden=false;setText('notification','');mobile.show(true,game.player?.alive);updateHud();return game;}
+function start(selected=team,overrides={},autoplay=false){deployment.reset();team=rehearsalMode?'analysts':selected;setPrivateCharacterActors(rehearsalMode?['analysts-0','analysts-1']:[team+'-0']);clearInput();audio.reset();renderer.resetTransient();combatHud.reset();recoil.reset();resetAutoAim();game=new Game(world,{team,seed:Number($('seed').value)||42,config:{mobile:settings.mobile,mode:settings.mode,firefight:settings.firefight,friendlyFire:settings.friendlyFire,hostageDamage:true,wanderers:settings.wanderers,loadout:settings.loadout,...overrides},autoplay,difficulty:overrides.difficulty||settings.difficulty});game.start(team);if(game.warmupRemaining){game.drainEvents();lastFrame=0;}for(const actor of game.actors)renderer.actorModel(actor);modal=null;lastRound=game.warmupRemaining?game.state.round:0;lastPhase=game.phase;spectateIndex=0;feed=[];yaw=game.player.yaw;pitch=game.player.pitch;for(const id of ['menu','pause','buy','match-end','scoreboard'])$(id).hidden=true;$('hud').hidden=false;setText('notification','');mobile.show(true,game.player?.alive);updateHud();return game;}
 async function joinNetwork(options){
  if(!networkMode)throw Error('Open the local multiplayer lobby first.');
  const generation=++networkJoinGeneration;
@@ -370,7 +395,7 @@ async function joinNetwork(options){
  },onLoading:id=>{
   if(networkSession!==session)return;
   networkUi?.status(accessEnglish.loadingMap(networkMap(id).name));if(game===session.view)onlineRoomUi?.update(session);
- },onMatch:()=>{if(networkSession===session&&game===session.view)networkPhase();},onConnection:status=>{if(networkSession!==session)return;clearInput();audio.reset();renderer?.resetTransient();recoil.reset();if(status==='reconnecting')showPause();$('pause').querySelector('p:not(.eyebrow)').textContent=status==='reconnecting'?accessEnglish.reconnectingHelp:accessEnglish.reconnected;},onDisconnect:message=>{if(networkSession!==session)return;newMatch();networkUi?.status(connectionMessage(message),connectionFailure(message));}});
+ },onMatch:()=>{if(networkSession===session&&game===session.view)networkPhase();},onConnection:status=>{if(networkSession!==session)return;countdownSession=null;deployment.suspend();clearInput();audio.reset();renderer?.resetTransient();recoil.reset();if(status==='reconnecting')showPause();$('pause').querySelector('p:not(.eyebrow)').textContent=status==='reconnecting'?accessEnglish.reconnectingHelp:accessEnglish.reconnected;},onDisconnect:message=>{if(networkSession!==session)return;newMatch();networkUi?.status(connectionMessage(message),connectionFailure(message));}});
  networkSession=session;
  try{await session.connect(options);if(session.room.state.mode==='classic')await renderer.prepareClassic();if(generation!==networkJoinGeneration){await session.dispose();throw Error('Join cancelled.');}}
  catch(e){await session.dispose();if(networkSession===session)networkSession=null;throw e;}
@@ -402,20 +427,26 @@ function networkPhase(){
    renderer.prepareClassic().catch(()=>{if(networkSession===session)session.notice='The hostage model could not load.';});
   }
  }
+ const phase=networkSession.room.state.phase,active=phase==='active',warmup=phase==='countdown';
+ $('hud').dataset.matchPhase=phase;
+ const sameCountdown=countdownSession===networkSession && deployment.key===networkSession.room.state.matchId;
+ const paused=modal==='pause';
  clearInput();audio.reset();renderer.resetTransient();combatHud.reset();recoil.reset();feed=[];
- yaw=game.player.yaw;pitch=game.player.pitch;
- const active=networkSession.room.state.phase==='active';
- if(familyRoomLink||networkSession.familyAlias)document.documentElement.classList.toggle('cs-family-lobby',!active);
- if(active){
-  onlineRoomUi?.update(networkSession);modal=null;
-  if(!testMode)showPause();else game.pause(false);
+ if(!sameCountdown){yaw=game.player.yaw;pitch=game.player.pitch;}
+ if(familyRoomLink||networkSession.familyAlias)document.documentElement.classList.toggle('cs-family-lobby',!active&&!warmup);
+ if(warmup||active){
+  onlineRoomUi?.update(networkSession);
+  if(!paused){modal=null;$('pause').hidden=true;}
+  if(active&&!testMode&&(!sameCountdown || paused))showPause();
+  else if(!paused){game.pause(false);mobile.show(true,game.player.alive);}
+  countdownSession=warmup?networkSession:null;
  }else{
-  game.pause(true);modal='online';mobile.show(false);unlockMouse();$('pause').hidden=true;$('buy').hidden=true;$('match-end').hidden=true;
+  countdownSession=null;deployment.reset();game.pause(true);modal='online';mobile.show(false);unlockMouse();$('pause').hidden=true;$('buy').hidden=true;$('match-end').hidden=true;
   onlineRoomUi?.update(networkSession);
  }
 }
-function restartMatch(){if(networkMode){newMatch();return;}window.__csFlow?.fullscreen?.start();audio.unlock();start(team);requestMouse();}
-function newMatch(){if(networkMode){networkJoinGeneration++;setMapExpanded(false);document.documentElement.classList.toggle('cs-family-lobby',familyRoomLink);}onlineRoomUi?.hide();if(networkSession){networkSession.dispose();networkSession=null;game=new Game(world);game.network=true;lastRound=game.state.round;lastPhase=game.phase;} window.__csFlow?.fullscreen?.exit();clearInput();recoil.reset();game.pause(true);audio.reset();renderer?.resetTransient();modal='menu';mobile.show(false);unlockMouse();for(const id of ['pause','buy','match-end','scoreboard','hud'])$(id).hidden=true;$('menu').hidden=false;settingsPanel('menu-settings');}
+function restartMatch(){if(networkMode){newMatch();return;}window.__csFlow?.fullscreen?.start();audio.unlock();start(team,{deploymentSeconds:testMode?0:MATCH_DEFAULTS.countdownSeconds});requestMouse();}
+function newMatch(){deployment.reset();countdownSession=null;$('countdown-look').hidden=true;if(networkMode){networkJoinGeneration++;setMapExpanded(false);document.documentElement.classList.toggle('cs-family-lobby',familyRoomLink);}onlineRoomUi?.hide();if(networkSession){networkSession.dispose();networkSession=null;game=new Game(world);game.network=true;lastRound=game.state.round;lastPhase=game.phase;} window.__csFlow?.fullscreen?.exit();clearInput();recoil.reset();game.pause(true);audio.reset();renderer?.resetTransient();modal='menu';mobile.show(false);unlockMouse();for(const id of ['pause','buy','match-end','scoreboard','hud'])$(id).hidden=true;$('menu').hidden=false;settingsPanel('menu-settings');}
 function viewActor(){if(game.player?.alive)return game.player;const alive=game.actors.filter(a=>a.alive&&a.team===game.team);return alive[spectateIndex%Math.max(1,alive.length)]||game.player;}
 function timer(value){const sec=Math.max(0,Math.ceil(value));return `${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}`;}
 function scoreboard(){
@@ -471,12 +502,14 @@ function updateHud(){if(!game?.player)return;combatHud.update(game);const s=game
    if(p.pending)setText('respawn-status','Connected · you will play next round');
    if(modal==='buy')refreshShop();
  }
- if(notificationUntil<s.time)setText('notification','');feed=feed.filter(f=>f.until>s.time);updateKillfeed(); if(networkSession&&game.state.mode!=='classic'){if(modal==='buy'&&$('shop').dataset.selected!==p.loadout){$('shop').dataset.selected=p.loadout;refreshShop();}onlineRoomUi?.update(networkSession);setText('timer',timer(networkSession.room.state.remainingSeconds));setText('round-label','TEAM DEATHMATCH · '+networkSession.room.state.scoreTarget+' KILLS');setText('phase',networkSession.status||'CONNECTING');setText('money','B · EQUIPMENT');setText('bomb-status','4 · HE · FIRE TO THROW');setText('hostage-status','The match continues in menus · Esc or Pause to leave');setText('respawn-status',`RESPAWN ${Math.max(0,(p.respawnAt||s.time)-s.time).toFixed(1)} s`);}
+ if(notificationUntil<s.time)setText('notification','');feed=feed.filter(f=>f.until>s.time);updateKillfeed(); if(networkSession&&game.state.mode!=='classic'){if(modal==='buy'&&$('shop').dataset.selected!==p.loadout){$('shop').dataset.selected=p.loadout;refreshShop();}onlineRoomUi?.update(networkSession);setText('timer',timer(holdingDeployment()?networkSession.room.state.durationSeconds:networkSession.room.state.remainingSeconds));setText('round-label','TEAM DEATHMATCH · '+networkSession.room.state.scoreTarget+' KILLS');setText('phase',networkSession.status||'CONNECTING');setText('money','B · EQUIPMENT');setText('bomb-status','4 · HE · FIRE TO THROW');setText('hostage-status','The match continues in menus · Esc or Pause to leave');setText('respawn-status',`RESPAWN ${Math.max(0,(p.respawnAt||s.time)-s.time).toFixed(1)} s`);}
+ if(holdingDeployment()){setText('phase','DEPLOYING');setText('reload-text','');$('prompt').hidden=true;$('spawn-protection').hidden=true;}
  if(board)scoreboard();minimap();setText('perf',`${renderer.stats.fps} FPS`);focusHud.update();
 }
 function input(dt=1/60){
  if(modal||teamRadioOpen||!game.player?.alive){firePress=null;resetAutoAim();return {};}
  yaw+=((keys.has('ArrowLeft')?1:0)-(keys.has('ArrowRight')?1:0))*1.7*dt;
+ if(holdingDeployment()){firePress=null;return {yaw,pitch};}
  const touch=mobile.enabled?mobile.input():null;
  const f=(keys.has('KeyW')||keys.has('ArrowUp')?1:0)-(keys.has('KeyS')||keys.has('ArrowDown')?1:0);
  const x=(keys.has('KeyD')?1:0)-(keys.has('KeyA')?1:0);
@@ -526,22 +559,29 @@ function frame(now){try{
  }
  // The empty lobby has a fixed camera and simulation time. Retain its
  // pixels until a new lobby, viewport or graphics setting needs a redraw.
+ const firstDeploymentFrame=!networkSession && !modal && holdingDeployment() && deployment.key!==game;
  const stillLobby=modal==='menu'&&game.phase==='menu';
  const stillRevision=stillLobby?`${innerWidth}:${innerHeight}:${devicePixelRatio}:${settings.graphics}`:null;
- if(!renderBudget.shouldRender(now,document.hidden,!!modal||game.state.paused,stillLobby?game:null,stillRevision)){lastFrame=now;raf=requestAnimationFrame(frame);return;}const dt=lastFrame?Math.min(.05,(now-lastFrame)/1000):1/60;lastFrame=now;
+ if(!renderBudget.shouldRender(now,document.hidden,!!modal||game.state.paused,stillLobby?game:null,stillRevision)){lastFrame=now;raf=requestAnimationFrame(frame);return;}const wallDt=lastFrame?Math.max(0,(now-lastFrame)/1000):1/60,dt=Math.min(.05,wallDt);lastFrame=now;
  tactical.update(dt);
  if(!modal&&game.player?.alive&&game.phase==='active'&&!game.state.paused){
    if(recoil.weapon&&recoil.weapon!==game.player.weapon)recoil.reset();
    pitch=Math.max(-1.49,Math.min(1.49,pitch-recoil.recover(dt,game.state.time)));
  }
- if(networkSession)networkSession.advanceFrame(now,(testMode&&globalThis.__fps?.liveControls)||input(dt));else if(!testMode||new URLSearchParams(location.search).has('realtime'))game.update(dt,(testMode&&globalThis.__fps?.liveControls)||input(dt));consumeEvents();tactical.render(renderer);grenadeAssist.update(game,viewActor(),modal);renderer.render(game,viewActor(),dt);const p=viewActor();$('flash-overlay').style.opacity=String((p?.flash||0)*(settings.reducedFlash?.45:.94));const hurt=Math.max(0,Math.min(1,(renderer.damageUntil-game.state.time)/.55));$('damage-overlay').style.opacity=String(hurt*.35);$('damage-direction').style.opacity=String(hurt);if(renderer.damageDirection){const d=renderer.damageDirection;$('damage-direction').style.transform=`translate(-50%,-50%) rotate(${(p?.yaw||0)-Math.atan2(d.x,d.z)}rad)`;}$('smoke-overlay').style.opacity=String(p?renderer.smokeOpacity(p,game.state.smokes):0);$('hitmarker').style.opacity=game.state.time<renderer.hitUntil?'1':'0';if(now-hudAt>100){updateHud();hudAt=now;}raf=requestAnimationFrame(frame);}catch(e){fatal(e);}}
+ if(networkSession)networkSession.advanceFrame(now,(testMode&&globalThis.__fps?.liveControls)||input(dt));
+ else if(!testMode||new URLSearchParams(location.search).has('realtime')){
+  const holding=holdingDeployment();
+  game.update(holding?(firstDeploymentFrame?0:Math.min(.25,wallDt)):dt,(testMode&&globalThis.__fps?.liveControls)||input(dt));
+  if(holding&&!holdingDeployment())clearInput();
+ }
+ showDeployment(now);consumeEvents();tactical.render(renderer);grenadeAssist.update(game,viewActor(),modal);renderer.render(game,viewActor(),dt);if(firstDeploymentFrame)lastFrame=performance.now();const p=viewActor();$('flash-overlay').style.opacity=String((p?.flash||0)*(settings.reducedFlash?.45:.94));const hurt=Math.max(0,Math.min(1,(renderer.damageUntil-game.state.time)/.55));$('damage-overlay').style.opacity=String(hurt*.35);$('damage-direction').style.opacity=String(hurt);if(renderer.damageDirection){const d=renderer.damageDirection;$('damage-direction').style.transform=`translate(-50%,-50%) rotate(${(p?.yaw||0)-Math.atan2(d.x,d.z)}rad)`;}$('smoke-overlay').style.opacity=String(p?renderer.smokeOpacity(p,game.state.smokes):0);$('hitmarker').style.opacity=game.state.time<renderer.hitUntil?'1':'0';if(now-hudAt>100){updateHud();hudAt=now;}raf=requestAnimationFrame(frame);}catch(e){fatal(e);}}
 function fatal(error){cancelAnimationFrame(raf);grenadeAssist?.reset();$('fatal').hidden=false;$('fatal').querySelector('pre').textContent=error.stack||String(error);$('loading').hidden=true;console.error(error);}
 team = document.querySelector('.team-option.selected').dataset.team;
 for (const option of document.querySelectorAll('[data-team]')) option.addEventListener('click', () => { team = option.dataset.team; });
 function launchMatch(event){
  if(networkMode || modal!=='menu' || !audio || !$('loading').hidden || characterSelectionFailed || !$('fatal').hidden)return;
  mobile.attemptLandscape();
- start(document.querySelector('.team-option.selected').dataset.team);
+ start(document.querySelector('.team-option.selected').dataset.team,{deploymentSeconds:testMode?0:MATCH_DEFAULTS.countdownSeconds});
  if(!mobile.enabled && navigator.userActivation && !navigator.userActivation.isActive && !event?.detail?.fullscreenRequested){
    showPause();$('pause').querySelector('p:not(.eyebrow)').textContent='Match ready. Select Resume to begin.';
    $('resume').focus();return;
@@ -549,17 +589,22 @@ function launchMatch(event){
  audio.unlock();requestMouse();
 }
 $('start').addEventListener('cs-start-match',launchMatch);
+$('start').addEventListener('cs-deploy-gesture',()=>audio?.unlock());
+$('mobile-controls').addEventListener('pointerdown',()=>{
+ if(holdingDeployment() && audio?.volume>0 && audio.context?.state!=='running')audio.unlock();
+},{capture:true});
 document.addEventListener('webglcontextrestored',()=>renderBudget.invalidate(),true);
+$('countdown-look').onclick=()=>{if(modal)return;audio.unlock();requestMouse();};
 $('death-restart').onclick=restartMatch;$('resume').onclick=resume;$('restart').onclick=newMatch;$('new-match').onclick=newMatch;$('close-buy').onclick=closeBuy;$('return-buy').onclick=closeBuy;
 $('fullscreen-toggle').onclick=()=>{window.__csFlow?.fullscreen?.toggle();syncFullscreenToggle();};
 document.addEventListener('fullscreenchange',()=>{syncFullscreenToggle();if(mobile.enabled&&document.fullscreenElement)mobile.attemptLandscape();window.dispatchEvent(new Event('resize'));});syncFullscreenToggle();
-window.addEventListener('keydown',e=>{if(teamRadioKey(e))return;if(!modal&&['Tab','Space','Escape','ControlLeft','ControlRight'].includes(e.code))e.preventDefault();if(e.code==='Escape'){if(radioOpen){radioOpen=false;$('radio-menu').hidden=true;return;}if(modal==='buy')closeBuy();else if(!modal)showPause();return;}if(modal)return;if(!networkMode&&e.code==='KeyZ'&&game.player?.alive){radioOpen=!radioOpen;$('radio-menu').hidden=!radioOpen;return;}if(radioOpen&&/^Digit[1-6]$/.test(e.code)){const result=game.radio(RADIO[Number(e.code.slice(-1))-1]?.id);if(!result)notify('Radio busy. Try again shortly.');return;}if(!networkMode&&e.code==='Enter'&&!game.player?.alive&&!isEndless(game)){restartMatch();return;}if(e.code==='Tab'){board=true;$('scoreboard').hidden=false;scoreboard();return;}if(e.repeat)return;keys.add(e.code);if(e.code==='KeyB'){showBuy();return;}if(e.code==='KeyR')game.reload();if(e.code==='KeyQ')game.select('last');if(e.code==='KeyG')game.drop();if(/^Digit[1-5]$/.test(e.code))game.select(e.code.slice(-1));if(e.code==='KeyM'){toggleMap();return;}if(!game.player.alive&&['ArrowLeft','ArrowRight'].includes(e.code)){const count=game.actors.filter(a=>a.alive&&a.team===game.team).length;spectateIndex=(spectateIndex+(e.code==='ArrowLeft'?-1:1)+count)%Math.max(1,count);}});
+window.addEventListener('keydown',e=>{if(!holdingDeployment()&&teamRadioKey(e))return;if(!modal&&['Tab','Space','Escape','ControlLeft','ControlRight'].includes(e.code))e.preventDefault();if(e.code==='Escape'){if(radioOpen){radioOpen=false;$('radio-menu').hidden=true;return;}if(modal==='buy')closeBuy();else if(!modal)showPause();return;}if(modal)return;if(holdingDeployment()){if(['ArrowLeft','ArrowRight'].includes(e.code)){e.preventDefault();keys.add(e.code);}return;}if(!networkMode&&e.code==='KeyZ'&&game.player?.alive){radioOpen=!radioOpen;$('radio-menu').hidden=!radioOpen;return;}if(radioOpen&&/^Digit[1-6]$/.test(e.code)){const result=game.radio(RADIO[Number(e.code.slice(-1))-1]?.id);if(!result)notify('Radio busy. Try again shortly.');return;}if(!networkMode&&e.code==='Enter'&&!game.player?.alive&&!isEndless(game)){restartMatch();return;}if(e.code==='Tab'){board=true;$('scoreboard').hidden=false;scoreboard();return;}if(e.repeat)return;keys.add(e.code);if(e.code==='KeyB'){showBuy();return;}if(e.code==='KeyR')game.reload();if(e.code==='KeyQ')game.select('last');if(e.code==='KeyG')game.drop();if(/^Digit[1-5]$/.test(e.code))game.select(e.code.slice(-1));if(e.code==='KeyM'){toggleMap();return;}if(!game.player.alive&&['ArrowLeft','ArrowRight'].includes(e.code)){const count=game.actors.filter(a=>a.alive&&a.team===game.team).length;spectateIndex=(spectateIndex+(e.code==='ArrowLeft'?-1:1)+count)%Math.max(1,count);}});
 window.addEventListener('keyup',e=>{keys.delete(e.code);if(e.code==='Tab'){board=false;$('scoreboard').hidden=true;}});
 window.addEventListener('mousemove',e=>{if(document.pointerLockElement!==$('game')||modal||teamRadioOpen||!game.player?.alive)return;const k=settings.sensitivity*tactical.lookScale(false,yaw,pitch);yaw-=e.movementX*k;const before=pitch;pitch=Math.max(-1.49,Math.min(1.49,pitch-e.movementY*k));recoil.counter(pitch-before);});
-document.addEventListener('mousedown',e=>{if(e.target!==$('game')||e.button!==0||modal||teamRadioOpen)return;if(document.pointerLockElement!==$('game')){resume();return;}if(!fire)recordFirePress();fire=true;});window.addEventListener('mouseup',e=>{if(e.button===0)fire=false;});window.addEventListener('contextmenu',e=>e.preventDefault());
+document.addEventListener('mousedown',e=>{if(e.target!==$('game')||e.button!==0||modal||teamRadioOpen)return;if(document.pointerLockElement!==$('game')){resume();return;}if(holdingDeployment())return;if(!fire)recordFirePress();fire=true;});window.addEventListener('mouseup',e=>{if(e.button===0)fire=false;});window.addEventListener('contextmenu',e=>e.preventDefault());
 document.addEventListener('pointerlockerror',()=>{if(!mobile.enabled&&!modal){showPause();$('pause').querySelector('p:not(.eyebrow)').textContent='Mouse capture failed. Open the game in its own tab and select Resume again.';}});
 window.addEventListener('offline',()=>networkSession?.interruptConnection());
-document.addEventListener('pointerlockchange',()=>{if(mobile.enabled)return;if(document.pointerLockElement=== $('game')&&modal){unlockMouse();return;}if(document.pointerLockElement!==$('game')){clearInput();if(!modal&&game.player?.alive)showPause();}});window.addEventListener('blur',()=>{clearInput();if(!modal)showPause();});document.addEventListener('visibilitychange',()=>{if(document.hidden){clearInput();if(!modal)showPause();}});
+document.addEventListener('pointerlockchange',()=>{if(mobile.enabled)return;if(document.pointerLockElement=== $('game')&&modal){unlockMouse();return;}if(document.pointerLockElement!==$('game')){clearInput();if(!modal&&game.player?.alive)showPause();}});window.addEventListener('blur',()=>{deployment.suspend();clearInput();if(!modal)showPause();});document.addEventListener('visibilitychange',()=>{if(document.hidden){deployment.suspend();clearInput();if(!modal)showPause();}});
 
 function updateMode(){settings.mode=$('game-mode').value;$('loadout-row').hidden=settings.mode!=='endless';$('mode-description').textContent=settings.mode==='endless'?'Respawn in three seconds. Press B for a free loadout. Optional control zones bring teams together. Play as long as you like.':'Plant or defuse the bomb, rescue the hostages, or eliminate the opposing team. First to five rounds wins. One life per round.';saveSettings();}
 // A viewport rotation can cover the game with the portrait prompt without blur.
@@ -573,10 +618,10 @@ if(!window.__csFlow && !rehearsalMode && characterQuery.get('team')==='counterAn
 if(characterQuery.has('seed'))$('seed').value=String(Math.min(999999,Math.max(1,Number(characterQuery.get('seed'))||42)));
 try{
  loadingStage('level');
+ audio=new AudioSystem(null,settings);
  await preparePrivateCharacter();
  if(networkMode){
   game=new Game(null);game.network=true;
-  audio=new AudioSystem(null,settings);
   const {networkMenu}=await import('./network/menu.mjs');
   networkUi=networkMenu(joinNetwork,()=>audio.unlock(),internetMode,newMatch);
  }else{
@@ -586,7 +631,7 @@ try{
    document.querySelector('.intro .eyebrow').textContent=(new URLSearchParams(location.search).get('level')==='preview'?'PRIVATE PREVIEW / ':'PUBLISHED MAP / ')+$('loading').dataset.mapName;
    document.querySelector('.intro .lead').textContent='Five-a-side match on this map.';
   }
-  game=new Game(world);renderer=new Renderer($('game'),world,settings);audio=new AudioSystem(world,settings);
+  game=new Game(world);renderer=new Renderer($('game'),world,settings);audio.world=world;
   loadingStage('assets');
   await Promise.all([renderer.assetsReady,audio.prepareFloorAudio()]);grenadeAssist=new GrenadeAssist(renderer,settings);
  }

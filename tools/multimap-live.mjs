@@ -4,6 +4,7 @@
 // Credentials remain in their existing root-owned files. Only JESPERS-ROOM's
 // host controls are used. Restore the observed settings through the same UI.
 import assert from 'node:assert/strict';
+import {enterTouchMatch} from './network-browser-resume.mjs';
 import {execFileSync} from 'node:child_process';
 import {mkdir,realpath,writeFile} from 'node:fs/promises';
 import {basename,join} from 'node:path';
@@ -100,7 +101,7 @@ try {
   const lobby=await state();
   assert(lobby?.host&&lobby.phase==='waiting'&&lobby.settings.map===arena&&lobby.others===0,'Only the probe may start its family match');
   await control('ready').tap();await control('start').tap();
-  await page.locator('#resume').tap();await until(async()=>(await state())?.phase==='active','Live Compact match active');
+  await enterTouchMatch(page);await until(async()=>(await state())?.phase==='active','Live Compact match active');
   const before=await state();assert.equal(before.settings.map,arena);assert.equal(before.settings.mode,'tdm');assert.equal(before.actors,6);
   assert.equal(before.duration,180);assert.equal(before.target,10);
   assert.deepEqual(before.bots,{analysts:2,counterAnalysts:3});

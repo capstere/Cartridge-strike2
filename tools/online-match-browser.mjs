@@ -9,7 +9,7 @@ import {chromium} from '../frontline/source/tools/dev/node_modules/playwright-co
 import {CONTRACT} from '../shared/multiplayer/build.mjs';
 import {DEFAULT_MAP_ID} from '../shared/multiplayer/maps.mjs';
 import {startPilotFixture} from './network-pilot-fixture.mjs';
-import {resumeDesktop} from './network-browser-resume.mjs';
+import {enterTouchMatch, resumeDesktop, waitForActiveHud} from './network-browser-resume.mjs';
 const mapId=process.env.FPS_MATCH_MAP??DEFAULT_MAP_ID;
 const lanes={
  'floor5-prepared':{x:20,hostZ:-16,friendZ:-18},
@@ -43,7 +43,7 @@ async function roomRead(page){
 }
 async function readyAndStart(host,friend){
  await host.locator('#room-ready').click();await friend.locator('#room-ready').tap();await host.locator('#room-start').click();
- await host.locator('#resume').waitFor({state:'visible'});await friend.locator('#resume').tap();host.aimPoint=(await resumeDesktop(host)).point;
+ await waitForActiveHud(host);await enterTouchMatch(friend);host.aimPoint=(await resumeDesktop(host)).point;
 }
 try{
  const host=await open(false);
