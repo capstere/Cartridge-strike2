@@ -4,6 +4,7 @@ const http = require('node:http');
 const {execFileSync} = require('node:child_process');
 const {setTimeout:sleep}=require('node:timers/promises');
 const observe=require('./observe.cjs');
+const traceRush=process.env.CS3_TRACE_RUSH==='1', listenRaw=process.env.CS3_TRACE_RAW==='1';
 const {tmpdir}=require('node:os');
 const root=process.cwd(), output=process.env.CS3_BENCH_OUT||fs.mkdtempSync(path.join(tmpdir(),'cs3-comparison-'));
 console.log('Private raw result directory',output);
@@ -94,6 +95,13 @@ async function run(ctx,base,i,version,cacheWarm){
       if(touch && await page.locator('#tcHelp').isVisible())await page.locator('#tcHelp').tap();
       await page.waitForFunction(()=>MATCH.state==='playing'&&!cdOn());
     }
+    // The full first-person CS3 countdown deliberately freezes buy and equipment input.
+    if(candidate){
+      await page.locator('#deployment-countdown[data-stage=go]').waitFor({timeout:25000});
+      if(await page.locator('#resume, #countdown-look').filter({visible:true}).count()){
+        await page.locator('#resume:visible, #countdown-look:visible').first().click();
+      }
+    }
     await mark('playable');
     if(cs2){
       await page.keyboard.press('b');
@@ -101,7 +109,9 @@ async function run(ctx,base,i,version,cacheWarm){
       await page.locator('#return-buy').click();
       if(await page.locator('#resume').isVisible())await page.locator('#resume').click();
     }
-    await page.evaluate(observe,kind);await sleep(3000);
+    await page.evaluate(observe,kind);
+    if(traceRush) await page.evaluate(require('../../evidence/rush/latency/probe.cjs'),{kind,listenRaw});
+    await sleep(3000);
     await page.evaluate(()=>{cs3Baseline.mode='pace';});
     await sleep(10000);
     const raw=await page.evaluate(()=>{cs3Baseline.mode='off';return {identity:cs3Baseline.identity,frames:cs3Baseline.frames};});
@@ -115,6 +125,10 @@ async function run(ctx,base,i,version,cacheWarm){
     await page.evaluate(()=>{cs3Baseline.mode='action';});await sleep(200);
     await controls(page);
     row.action=await page.evaluate(()=>{cs3Baseline.mode='off';return {frames:cs3Baseline.actions,audio:cs3Baseline.audio,inputs:cs3Baseline.inputs};});
+    if(traceRush) row.rushTrace=await page.evaluate(()=>rushTrace);
+    if(traceRush && candidate && touch && process.env.CS3_STICK_TRIALS==='1'){
+      row.stickTrials=await require('../../evidence/rush/latency/stick-trials.cjs')(page);
+    }
     row.memory=await page.evaluate(()=>performance.memory&&({usedHeap:performance.memory.usedJSHeapSize,totalHeap:performance.memory.totalJSHeapSize}));
     row.after=environment();row.status='measured';
   }catch(err){row.status='incomplete';row.error=String(err.message).slice(0,680);row.visible=await page.locator('body').innerText({timeout:2000}).then(s=>s.slice(0,350)).catch(()=>null);}

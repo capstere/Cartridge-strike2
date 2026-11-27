@@ -1,0 +1,221 @@
+[
+  {
+    "build": "241bbd423de29d7603c50a765be6c060441ef29a",
+    "game": "candidate",
+    "profile": "desktop",
+    "repeat": 0,
+    "cache": "new browser context",
+    "at": "2026-11-27T15:25:58.728Z",
+    "browser": "156.0.8078.79",
+    "map": "lvl-floor5-preppad-20261105",
+    "buffer": [
+      493,
+      228
+    ],
+    "mode": "endless",
+    "quality": "low",
+    "actors": 10,
+    "localWeapon": "ar47",
+    "residents": 5,
+    "thermalC": [
+      50.15,
+      50.15
+    ],
+    "throttle": [
+      "throttled=0x0",
+      "throttled=0x0"
+    ],
+    "frameMs": {
+      "n": 157,
+      "p50": 62.5,
+      "p95": 79.3,
+      "p99": 87.6,
+      "max": 201.3,
+      "over33": 157,
+      "over50": 156,
+      "over100": 1
+    },
+    "renderMs": {
+      "n": 158,
+      "p50": 54.4,
+      "p95": 65.9,
+      "p99": 76.1,
+      "max": 190.4,
+      "over33": 158,
+      "over50": 96,
+      "over100": 1
+    },
+    "draws": {
+      "n": 158,
+      "p50": 1295,
+      "p95": 1547,
+      "p99": 1547,
+      "max": 1547,
+      "over33": 158,
+      "over50": 158,
+      "over100": 158
+    },
+    "tris": {
+      "n": 158,
+      "p50": 712340,
+      "p95": 857760,
+      "p99": 857760,
+      "max": 857760,
+      "over33": 158,
+      "over50": 158,
+      "over100": 158
+    },
+    "census": {
+      "projectFurniture": 727,
+      "world/room-static-batch": 138,
+      "actor-analysts-1": 85,
+      "actor-analysts-4": 83,
+      "actor-analysts-3": 83,
+      "actor-analysts-2": 81,
+      "action": 73,
+      "doors": 70,
+      "glass": 51,
+      "environment": 38,
+      "world/cosmetic-room-details": 28,
+      "world/Mesh": 22,
+      "viewmodel": 16,
+      "world/Group": 8,
+      "actor-hostage-0": 8,
+      "actor-hostage-1": 8,
+      "world/Tattered Wanderer": 2,
+      "world/The Hollow Walker": 2,
+      "world/combat-flow-effects": 2
+    },
+    "rawCallback": null,
+    "pointerOrKeyCallback": 75.1,
+    "touchOrKeyCallback": 75.1,
+    "gameRead": 75.6,
+    "firstMovedStep": 76.5,
+    "firstMovedRenderBegin": 91.8,
+    "worldSubmit": [
+      98.5,
+      140.7
+    ],
+    "weaponSubmit": [
+      140.7,
+      141.3
+    ],
+    "firstMovedRenderEnd": 141.3,
+    "presentation": 155.6,
+    "firstWeight": 0.4231,
+    "weaponYAndRoll": [
+      -0.25695,
+      0.26201
+    ],
+    "unshiftedRendersAfterInput": 1
+  },
+  {
+    "build": "241bbd423de29d7603c50a765be6c060441ef29a",
+    "game": "candidate",
+    "profile": "touch",
+    "repeat": 0,
+    "cache": "new browser context",
+    "at": "2026-11-27T15:24:59.876Z",
+    "browser": "156.0.8078.79",
+    "map": "lvl-floor5-preppad-20261105",
+    "buffer": [
+      493,
+      228
+    ],
+    "mode": "endless",
+    "quality": "low",
+    "actors": 10,
+    "localWeapon": "ar47",
+    "residents": 4,
+    "thermalC": [
+      49.05,
+      51.8
+    ],
+    "throttle": [
+      "throttled=0x0",
+      "throttled=0x0"
+    ],
+    "frameMs": {
+      "n": 154,
+      "p50": 64,
+      "p95": 79.7,
+      "p99": 99,
+      "max": 101.4,
+      "over33": 154,
+      "over50": 154,
+      "over100": 1
+    },
+    "renderMs": {
+      "n": 155,
+      "p50": 51.3,
+      "p95": 64,
+      "p99": 78.7,
+      "max": 80.8,
+      "over33": 155,
+      "over50": 91,
+      "over100": 0
+    },
+    "draws": {
+      "n": 155,
+      "p50": 1293,
+      "p95": 1545,
+      "p99": 1545,
+      "max": 1545,
+      "over33": 155,
+      "over50": 155,
+      "over100": 155
+    },
+    "tris": {
+      "n": 155,
+      "p50": 679564,
+      "p95": 824984,
+      "p99": 824984,
+      "max": 824984,
+      "over33": 155,
+      "over50": 155,
+      "over100": 155
+    },
+    "census": {
+      "projectFurniture": 727,
+      "world/room-static-batch": 138,
+      "actor-analysts-4": 85,
+      "actor-analysts-1": 85,
+      "actor-analysts-3": 83,
+      "actor-analysts-2": 81,
+      "action": 73,
+      "doors": 70,
+      "glass": 51,
+      "environment": 38,
+      "world/cosmetic-room-details": 28,
+      "world/Mesh": 22,
+      "viewmodel": 16,
+      "world/Group": 8,
+      "actor-hostage-0": 8,
+      "actor-hostage-1": 8,
+      "world/The Hollow Walker": 2,
+      "world/combat-flow-effects": 2
+    },
+    "rawCallback": null,
+    "pointerOrKeyCallback": 269.4,
+    "touchOrKeyCallback": 269.7,
+    "gameRead": 270.7,
+    "firstMovedStep": 271.3,
+    "firstMovedRenderBegin": 274.6,
+    "worldSubmit": [
+      281.1,
+      324.5
+    ],
+    "weaponSubmit": [
+      324.5,
+      324.9
+    ],
+    "firstMovedRenderEnd": 325.0,
+    "presentation": 371.3,
+    "firstWeight": 0.4231,
+    "weaponYAndRoll": [
+      -0.25755,
+      0.33467
+    ],
+    "unshiftedRendersAfterInput": 3
+  }
+]
