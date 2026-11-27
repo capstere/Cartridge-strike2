@@ -20,7 +20,7 @@ def sample_action(data,game,profile):
     desktop=profile=="desktop"
     move=event("keydown","KeyW") if desktop else event("touchmove")
     if desktop:
-        sprint=event("keydown","ShiftLeft")
+        sprint=event("keydown","KeyX" if game=="candidate" else "ShiftLeft")
         fire=event("pointerdown","mouse")
         reload=event("keydown","KeyR")
     else:
@@ -86,7 +86,7 @@ def server(file):
 
 if __name__=="__main__":
     inp,dst=map(Path,sys.argv[1:3]); dst.mkdir(parents=True,exist_ok=True)
-    results=[browser(f) for f in sorted(inp.glob("*-*-*.json")) if f.name.split("-")[0] in ("fps","frontline")]
+    results=[browser(f) for f in sorted(inp.glob("*-*-*.json")) if f.name.split("-")[0] in ("fps","frontline","candidate")]
     (dst/"client.json").write_text(json.dumps(results,indent=2)+"\n")
     network=[row for f in sorted(inp.glob("server-*.json")) for row in server(f)]
     revision_file=inp/"network-worktree-revisions.json"

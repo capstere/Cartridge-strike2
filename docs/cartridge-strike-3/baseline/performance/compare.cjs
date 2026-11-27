@@ -9,8 +9,8 @@ const root=process.cwd(), output=process.env.CS3_BENCH_OUT||fs.mkdtempSync(path.
 console.log('Private raw result directory',output);
 const { chromium }=require(path.join(root,'frontline/source/tools/dev/node_modules/playwright-core'));
 const [kind,profile='desktop',repeats='3',offset='0']=process.argv.slice(2);
-if(!['fps','frontline'].includes(kind)||!['desktop','touch'].includes(profile))throw Error('Usage: node compare.cjs fps|frontline desktop|touch [repeats]');
-const touch=profile==='touch', cs2=kind==='fps';
+if(!['fps','frontline','candidate'].includes(kind)||!['desktop','touch'].includes(profile))throw Error('Usage: node compare.cjs fps|frontline|candidate desktop|touch [repeats]');
+const touch=profile==='touch', candidate=kind==='candidate', cs2=kind==='fps'||candidate;
 const level=process.env.CS3_BENCH_LEVEL;
 if(level && (!cs2 || !/^[a-z0-9-]{1,48}$/.test(level)))throw Error('Invalid published CS2 benchmark level.');
 const mime={'.html':'text/html','.mjs':'text/javascript','.js':'text/javascript','.json':'application/json','.css':'text/css','.ogg':'audio/ogg','.mp3':'audio/mpeg','.png':'image/png','.jpg':'image/jpeg','.webp':'image/webp','.wasm':'application/wasm','.svg':'image/svg+xml','.woff2':'font/woff2'};
@@ -36,8 +36,9 @@ function distro(v){
 async function controls(page){
   if(!touch){
     await page.keyboard.down('w');await sleep(600);await page.keyboard.up('w');await sleep(350);
-    await page.keyboard.down('w');await page.keyboard.down('Shift');await sleep(700);
-    await page.mouse.down();await sleep(300);await page.mouse.up();await page.keyboard.up('Shift');await page.keyboard.up('w');
+    const runKey=candidate?'x':'Shift';
+    await page.keyboard.down('w');await page.keyboard.down(runKey);await sleep(700);
+    await page.mouse.down();await sleep(300);await page.mouse.up();await page.keyboard.up(runKey);await page.keyboard.up('w');
     await sleep(250);await page.keyboard.press('r');await sleep(3200);
     return;
   }
@@ -66,7 +67,11 @@ async function run(ctx,base,i,version,cacheWarm){
   page.on('pageerror',e=>{row.errors.push(e.message.slice(0,200));if(level)console.error(e.stack);});
   if(level)page.on('console',message=>{if(message.type()==='error')console.error(message.text().slice(0,500));});
   try{
-    await page.goto(base+'/'+kind+'/'+(level?'?level='+level:''),{waitUntil:'domcontentloaded',timeout:120000});
+    await page.goto(base+'/'+(candidate?'fps':kind)+'/'+(level?'?level='+level:''),{waitUntil:'domcontentloaded',timeout:120000});
+    if(candidate && !level){
+      await page.locator('[data-go=play]:visible').click();
+      await page.locator('[data-go=solo]:visible').click();
+    }
     const menu=page.locator(cs2?'#start':'#scr-main [data-go=play]');
     if(touch && !cs2){
       const installChoice=page.locator('#pwaOffer:not(.hidden) #poHelp');

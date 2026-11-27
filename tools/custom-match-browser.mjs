@@ -56,9 +56,18 @@ async function open(name, touch = false) {
   await press(client, page.locator('button[type=submit]'));
   return client;
 }
-async function enter(client) {
+async function enter(client, {remembered = false} = {}) {
   await client.page.locator('#network-name').fill(client.name);
-  await client.page.locator('#network-code').fill(fixture.familyPassword);
+  const password = client.page.locator('#network-code');
+  if (remembered) {
+    await client.page.getByText('This device remembers access to this room.', {exact:false}).waitFor();
+    assert(await password.isHidden());
+    assert.equal(await password.inputValue(), '');
+    assert.equal(await password.evaluate(input => input.required), false);
+  } else {
+    assert(await password.evaluate(input => input.required));
+    await password.fill(fixture.familyPassword);
+  }
   await press(client, client.page.locator('[data-create=false]'));
   await control(client, 'title').filter({hasText:'Lobby'}).waitFor();
   await until(() => seat(client)?.ready && seat(client)?.connected, client.name + ' loaded the server-selected map', 90000);
@@ -209,11 +218,10 @@ try {
 
   await fixture.restart();
   await mobile.page.goto(landing, {waitUntil:'domcontentloaded'});
-  // Restart creates a new pilot cookie issuer while retaining the same invite.
-  const invite = mobile.page.getByLabel('Server invite code', {exact:true});
-  await invite.fill(fixture.invite);
-  await press(mobile, mobile.page.locator('button[type=submit]'));
-  await enter(mobile);
+  // The authoritative session restarts. A durable room grant on the same
+  // device admits this family member without either legacy credential.
+  await enter(mobile, {remembered:true});
+  assert.equal(await mobile.page.getByLabel('Server invite code', {exact:true}).count(), 0);
   assert.equal(room().state.mapId, compact);
   await displayed(mobile, custom, true);
   await switchMap(mobile, floor, [mobile]);

@@ -81,7 +81,18 @@ html[data-hud=clean] #mobile-controls .mobile-stick{box-shadow:none;opacity:.2}
 html[data-hud=clean] #mobile-controls .mobile-stick.active{opacity:.8}
 #mobile-utilities{position:absolute;left:max(12px,env(safe-area-inset-left));top:calc(max(12px,env(safe-area-inset-top)) + 52px);padding:8px;display:grid;grid-template-columns:repeat(2,72px);gap:8px;background:#0e222af5;border:1px solid #59757c;border-radius:8px;pointer-events:auto;z-index:6;max-height:calc(100dvh - 82px);overflow-y:auto;touch-action:pan-y}
 html[data-hud=clean] #mobile-controls #mobile-utilities .mobile-button{position:static;inset:auto;width:72px;height:48px;min-height:48px;border-radius:6px;font-size:11px;transform:none}
-html[data-hud=clean] #mobile-controls.mobile-dead #mobile-more{display:none}
+html[data-hud=full] #mobile-controls{
+  --full-buy-left:max(3%,calc(env(safe-area-inset-left,0px) + 12px))
+}
+html[data-hud=full] #mobile-controls .mobile-buy{left:var(--full-buy-left)}
+html[data-hud=full] #mobile-controls .mobile-more{
+  top:max(12px,env(safe-area-inset-top));left:calc(var(--full-buy-left) + 60px);
+  bottom:auto;right:auto;width:52px;height:44px;min-height:44px;transform:none
+}
+html[data-hud=full] #mobile-controls #mobile-utilities .mobile-button{
+  position:static;inset:auto;width:72px;height:48px;transform:none
+}
+#mobile-controls.mobile-dead #mobile-more{display:none}
 @media(pointer:coarse){
  html[data-hud=clean] #hud .top-hud{top:max(12px,env(safe-area-inset-top));margin:0;transform:translateX(-50%);gap:2px;max-width:calc(100vw - 152px)}
  html[data-hud=clean] .score{min-width:64px;gap:6px;padding:4px 7px}
@@ -133,4 +144,31 @@ html[data-hud=clean] #mobile-controls.mobile-dead #mobile-more{display:none}
  html[data-hud=clean] #notification{bottom:280px;max-width:calc(100vw - 32px)}
  html[data-hud=clean] #radio-caption{bottom:322px;max-width:calc(100vw - 32px)}
  html[data-hud=clean] #grenade-preview-note{bottom:204px;max-width:240px}
+}
+
+/* World effects sit beneath the persistent tactical HUD in both layouts. */
+html #flash-overlay,html #smoke-overlay,html #damage-overlay{z-index:2}
+html.hud-low-ammo #hud #ammo{color:#ffad94}
+html.hud-low-ammo #hud #reload-text{color:#ffd9b9}
+
+/* The donor's outer-stick Rush turns the thumb and base gold. The dashed
+   outer arc stays distinguishable from the solid base on either HUD. */
+html #mobile-controls [data-mobile-stick].active.rushing{border-color:#e5b642!important}
+html #mobile-controls [data-mobile-stick].active.rushing [data-mobile-nub]{background:#edbf4d!important;border-color:#ffda7e!important}
+html #mobile-controls .mobile-stick[data-mobile-stick].active.rushing::after{border-style:dashed}
+
+/* The compact ammo plate only fits the weapon and magazine. Keep its action
+   prompt above the interaction row, visible against either world or flash. */
+@media (orientation:landscape) and (max-height:520px){
+  html.touch-fps[data-hud=clean] #hud #reload-text:not(:empty){
+    position:fixed;top:68%;left:50%;transform:translate(-50%,-50%);
+    width:max-content;max-width:38vw;padding:3px 8px;text-align:center;
+    line-height:1.2;font-size:11px!important;font-weight:700;
+    color:#ffd9b9!important;background:#080b0fe8;pointer-events:none;
+  }
+  html.touch-fps[data-hud=clean].hud-map-open:not(.network-session-ui) #hud .map-panel{
+    top:max(64px,calc(env(safe-area-inset-top) + 56px))!important;
+    left:max(12px,env(safe-area-inset-left))!important;
+    max-width:min(36vw,340px)!important;
+  }
 }

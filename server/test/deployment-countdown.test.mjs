@@ -53,7 +53,8 @@ for(const mode of ['classic','endless']){
     const player=game.player;
     const positions=()=>game.actors.map(({x,y,z,hp})=>[x,y,z,hp]);
     const initial=positions(),ammo=game.item().ammo;
-    const attempts={forward:1,fire:true,jump:true,sprint:true,interact:true,yaw:1.4,pitch:.26};
+    const attempts={forward:1,fire:true,firePress:{yaw:1.4,pitch:.26},crouchEdge:true,
+      jump:true,sprint:true,holdThrow:true,interact:true,yaw:1.4,pitch:.26};
     game.update(1.2,attempts);
     game.pause(true);game.update(15,attempts);game.pause(false);
     game.update(3.7,attempts);
@@ -67,6 +68,9 @@ for(const mode of ['classic','endless']){
     assert.equal(game.item().ammo,ammo);
     game.update(.1,attempts);
     assert.equal(game.warmupRemaining,0);
+    assert.equal(game.firePress,null);
+    assert.equal(game.crouchEdge,false);
+    assert.equal(player.cartridge?.deadline??0,0);
     assert.equal(game.state.time,0);
     assert.equal(game.item().ammo,ammo);
     if(mode==='classic'){

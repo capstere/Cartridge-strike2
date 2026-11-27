@@ -53,14 +53,15 @@ export class MobileControls {
       const distance = Math.hypot(dx, dy);
       const scale = distance > radius ? radius / distance : 1;
       nub.style.transform = 'translate(' + (dx * scale).toFixed(1) + 'px,' + (dy * scale).toFixed(1) + 'px)';
-      this.state.sprint=stickRush(this.state.sprint,distance/radius,distance ? -dy/distance : 0);
+      const forward=distance ? -dy/distance : 0;
+      this.state.sprint=(this.runButton && distance/radius>.4 && forward>.55) || stickRush(this.state.sprint,distance/radius,forward);
       stick.classList.toggle('rushing',this.state.sprint);
       this.state.strafe = clamp(dx / radius, -1, 1);
       this.state.forward = clamp(-dy / radius, -1, 1);
     };
     const endStick = e => {
       if (e.pointerId !== this.stickId) return;
-      this.stickId = null;
+      this.stickId = null;this.runButton=false;
       this.state.strafe = this.state.forward = 0;
       this.state.sprint=false;
       stick.classList.remove('active','rushing');
@@ -123,6 +124,7 @@ export class MobileControls {
         if (this.buttonPointers.has(e.pointerId)) return;
         this.buttonPointers.set(e.pointerId, button);
         button.classList.add('pressed');
+        if(action==='crouch' && !this.state.crouch)this.crouchEdge=true;
         if(action==='fire' && !this.state.fire)onFirePress?.();
         if (HELD.has(action)) this.state[action] = true;
         else this.onAction(action);
@@ -147,17 +149,18 @@ export class MobileControls {
     if (this.autoFire) this.state.fire = false;
   }
 
-  input() { return { ...this.state }; }
+  input() { const frame={...this.state,crouchEdge:!!this.crouchEdge};this.crouchEdge=false;return frame; }
 
   // Weapon changes release held actions without stealing the thumbs' drag ownership.
   clearActions() {
+    this.crouchEdge=false;
     for (const action of HELD) this.state[action] = false;
     this.buttonPointers.clear();
     if (this.root) for (const button of this.root.querySelectorAll('.mobile-button')) button.classList.remove('pressed');
   }
 
   clear() {
-    this.clearActions();
+    this.runButton=false;this.clearActions();
     this.state.forward = this.state.strafe = 0;
     this.stickId = this.lookId = null;
     this.state.sprint=false;

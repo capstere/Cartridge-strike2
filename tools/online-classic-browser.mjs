@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict';
+import {writeFileSync} from 'node:fs';
+import {join} from 'node:path';
 import {setTimeout as delay} from 'node:timers/promises';
 import {chromium} from '../frontline/source/tools/dev/node_modules/playwright-core/index.mjs';
 import '../server/register-shared.mjs';
@@ -7,6 +9,45 @@ import {enterTouchMatch, resumeDesktop} from './network-browser-resume.mjs';
 
 const local=await createLocalServer({port:0,testMatch:{countdownSeconds:.15}});
 const browsers=[],pages=[],errors=[];
+const out=process.env.CS3_HANDLING_OUT;
+const interactionTrace=[];
+let interactionGesture='before plant';
+function observeInteraction(room,actor){
+  const original=room.fixedTick;
+  const seat=[...room.seats.values()].find(s=>s.actor===actor);
+  let latestPacket=room.clock.elapsedTime;
+  room.fixedTick=function(){
+    const input=room.inputs.get(seat.client?.sessionId);
+    if(input?.size)latestPacket=room.clock.elapsedTime;
+    const previous=actor.action?.start;
+    const value=original.call(this);
+    if(previous!==actor.action?.start){
+      interactionTrace.push({gesture:interactionGesture,time:room.sim.game.state.time,
+        type:actor.action?.type||'',position:[actor.x,actor.y,actor.z],moving:actor.moving,
+        onGround:actor.onGround,lastInputAgeMs:room.clock.elapsedTime-latestPacket,
+        heldForMs:Math.max(0,seat.interactUntil-room.clock.elapsedTime),alive:actor.alive});
+    }
+    return value;
+  };
+}
+async function watchHandling(page){
+  const cdp=await page.context().newCDPSession(page);
+  try{
+    const {result}=await cdp.send('Runtime.evaluate',{expression:"import('/src/fps/network/session.mjs').then(m=>m.NetworkSession.prototype)",awaitPromise:true});
+    const {objects}=await cdp.send('Runtime.queryObjects',{prototypeObjectId:result.objectId});
+    const installed=await cdp.send('Runtime.callFunctionOn',{objectId:objects.objectId,returnByValue:true,functionDeclaration:`function(){
+      const session=Array.from(this).find(s=>s.room&&!s.closed);
+      if(!session)return false;
+      window.handlingEvents=[];
+      session.room.onMessage('events',batch=>{
+        for(const {type,eventId,time,actionId,actorId,round,weapon} of batch)
+          if(['shot','switch','reload','plant','defuse','rescued','planted'].includes(type))handlingEvents.push({type,eventId,time,actionId,actorId,round,weapon});
+      });
+      return true;
+    }`});
+    assert(installed.result.value,'normal room observer');
+  }finally{await cdp.detach();}
+}
 async function until(check,label){
   const start=performance.now();
   while(!await check()){assert(performance.now()-start<25000,label);await delay(50);}
@@ -24,8 +65,8 @@ async function holdTouch(page,action,untilDone){
   }
 }
 async function lobby(mobile){
-  const browser=await chromium.launch({channel:'chromium',executablePath:process.env.CHROMIUM_PATH||undefined,
-    args:['--use-angle='+(process.env.FPS_NETWORK_ANGLE||'swiftshader'),'--disable-background-timer-throttling','--disable-renderer-backgrounding']});
+  const browser=await chromium.launch({channel:'chromium',executablePath:process.env.CHROMIUM_PATH||undefined,headless:process.env.FPS_NETWORK_HEADED!=='1',
+    args:[...(process.env.FPS_NETWORK_HEADED==='1'?['--ozone-platform=wayland']:[]),'--use-angle='+(process.env.FPS_NETWORK_ANGLE||'swiftshader'),'--disable-background-timer-throttling','--disable-renderer-backgrounding']});
   browsers.push(browser);
   const page=await browser.newPage({viewport:mobile?{width:844,height:390}:{width:820,height:480},deviceScaleFactor:.5,isMobile:mobile,hasTouch:mobile});
   pages.push(page);page.on('pageerror',e=>errors.push(e.message));
@@ -48,6 +89,7 @@ try{
   await mobile.locator('#network-room').fill(room.roomId);await mobile.locator('[data-create=false]').tap();
   await mobile.locator('#room-ready').tap();await desktop.locator('#room-ready').click();
   await desktop.locator('#room-start').click();await enterTouchMatch(mobile);await resumeDesktop(desktop);
+  if(out)for(const page of pages)await watchHandling(page);
   const carrier=game.actors.find(a=>a.team==='counterAnalysts'),defender=game.actors.find(a=>a.team==='analysts');
   assert.equal(game.bomb.carrierId,carrier.id);assert.equal(carrier.inventory.primary,null);
   await desktop.keyboard.press('b');
@@ -69,6 +111,12 @@ try{
   const pistol=defender.inventory.pistol,full=pistol.ammo,startingReserve=pistol.reserve;
   await mobile.waitForFunction(()=>document.querySelector('#phase').textContent==='HYBRID');
   await holdTouch(mobile,'fire',()=>until(()=>pistol.ammo===full-1,'defender fires a single pistol shot'));
+  if(out){
+    await desktop.keyboard.press('5');await until(()=>carrier.weapon==='bomb','carried mission bomb selected');
+    await desktop.keyboard.press('v');await delay(740);
+    await desktop.screenshot({path:join(out,'classic-mission-inspect.png')});
+    await desktop.keyboard.press('2');await until(()=>carrier.weapon===carrier.inventory.pistol.id,'previous sidearm readied');
+  }
   const rescue=game.world.anchors.rescue,h=game.hostages[0],world=game.world;
   // Place the pair outside the rescue zone with a clear approach. The player
   // acquires the follower and walks it in using keyboard input.
@@ -96,8 +144,18 @@ try{
   finally{await desktop.keyboard.up('w');}
   await until(()=>h.rescued&&h.distanceWalked>1,'visible follower reached rescue');
   for(const p of [desktop,mobile])await p.waitForFunction(()=>document.querySelector('#hostage-status').textContent.includes('1/'));
-  Object.assign(carrier,game.world.anchors.bomb);
+  const site=game.world.anchors.bomb;
+  Object.assign(carrier,{x:site.x,y:site.y??0,z:site.z});
+  if(out)observeInteraction(room,carrier);
   await desktop.waitForFunction(()=>document.querySelector('#prompt-text').textContent.includes('Plant'));
+  if(out){
+    interactionGesture='short press';
+    await desktop.keyboard.down('e');
+    try{await until(()=>carrier.action?.type==='plant','interrupted plant starts');}
+    finally{interactionGesture='short release';await desktop.keyboard.up('e');}
+    await until(()=>!carrier.action && game.bomb.status==='carried','released plant retains the carried objective');
+  }
+  interactionGesture='full press';
   await desktop.keyboard.down('e');
   try{await until(()=>carrier.action?.type==='plant','desktop hold starts');await until(()=>game.bomb.status==='planted','desktop plant finishes');}
   finally{await desktop.keyboard.up('e');}
@@ -117,6 +175,7 @@ try{
     await p.locator('#round-result').waitFor();assert(await p.locator('#fatal').isHidden());
     assert.match(await p.locator('#round-label').textContent(),/CLASSIC/);
   }
+  if(out)await mobile.screenshot({path:join(out,'classic-defuse-result.png')});
   game.state.resultDeadline=game.state.time;
   await until(()=>game.phase==='buy'&&game.state.round===2,'survivor reached the next buy phase');
   await mobile.waitForFunction(()=>document.querySelector('#phase').textContent==='BUY PHASE');
@@ -126,6 +185,15 @@ try{
   await until(()=>pistol.ammo===full&&pistol.reserve===startingReserve-1,'buy-phase reload finished on the server');
   await mobile.waitForFunction(text=>document.querySelector('#ammo').textContent===text,`${full} / ${startingReserve-1}`);
   assert.equal(game.phase,'buy');
+  if(out){
+    await until(async()=>await desktop.evaluate(()=>handlingEvents.some(e=>e.type==='reload' && e.round===2)),'remote survivor reload delivered');
+    const records=await Promise.all(pages.map(page=>page.evaluate(()=>handlingEvents)));
+    assert.deepEqual(records[0],records[1],'both rooms observe identical authoritative handling events');
+    assert.equal(new Set(records[0].map(e=>e.eventId)).size,records[0].length);
+    writeFileSync(join(out,'classic.json'),JSON.stringify({authorityAmmo:pistol.ammo,round:game.state.round,records,interactionTrace},null,2));
+    for(const [type,count] of Object.entries({shot:1,plant:2,planted:1,defuse:1,rescued:1}))
+      assert.equal(records[0].filter(e=>e.type===type).length,count,type+' '+JSON.stringify(interactionTrace));
+  }
   assert.deepEqual(errors,[]);console.log('PASS Classic two rendered clients, desktop and mobile buys, plant, touch defuse, authoritative result and survivor touch reload during the next buy phase.');
 }catch(error){
  for(const page of pages)console.error(await page.evaluate(()=>({fatal:document.querySelector('#fatal pre')?.textContent,notice:document.querySelector('#room-notice')?.textContent,status:document.querySelector('#network-status')?.textContent,hud:document.querySelector('#phase')?.textContent,prompt:document.querySelector('#prompt-text')?.textContent})).catch(()=>null));

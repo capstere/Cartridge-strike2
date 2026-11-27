@@ -32,7 +32,9 @@ const fontFiles=['fps/type.css',...Array.from(fontCss.toString().matchAll(/url\(
 const accountFiles=[...fontFiles,'fps/account.html','fps/account.css','src/fps/account-profile.mjs','src/fps/network/room-invitation.mjs','src/fps/network/room-moderation.mjs',
   'vendor/qrcode-generator/qrcode.mjs','licenses/qrcode-generator-MIT.txt'];
 const frontendFiles=[...deploymentFiles,...accountFiles,'src/fps/game-english.mjs','src/fps/english-ui.mjs','src/fps/solo-maps.mjs','src/fps/menu-navigation.mjs','fps/routes.css','furniture-editor/build/environment-art.mjs'];
-const rushPresentation=['src/fps/mobile-controls.mjs','src/fps/presentation-hands.mjs'];
+const rushPresentation=['src/fps/mobile-controls.mjs','src/fps/gamepad-controls.mjs','src/fps/presentation-hands.mjs',
+  'src/fps/strike-kit-models.mjs','src/fps/model-primitives.mjs','src/fps/view-surface.mjs',
+  'src/fps/grenade-assist.mjs','src/fps/action-audio.mjs','src/fps/reload-foley.mjs','src/fps/effects.mjs','src/fps/focus-hud.mjs','fps/focus-hud.css'];
 const rocketPresentation=['src/fps/action-visuals.mjs','src/fps/audio.mjs'];
 const shotAudioFiles=['assets/fps/audio/ffsl-f_bolt-1.mp3','assets/fps/audio/ffsl-f_pump-1.mp3',
   'assets/fps/audio/riposte-f_pin.mp3','src/fps/audio.mjs','src/fps/riposte-audio.mjs','src/fps/shot-audio.mjs','src/fps/shot-timing.mjs',

@@ -84,7 +84,7 @@ export class TacticalControls {
   }
 
   reset() {
-    this.wanted = false; this.amount = 0; this.tap = this.previousTap = null;
+    this.wanted = false; this.padAim=false; this.amount = 0; this.tap = this.previousTap = null;
     this.reload.reset();
     const p = this.getGame()?.player;
     if (p) { p.aiming = false; p.aimAmount = 0; }
@@ -103,7 +103,7 @@ export class TacticalControls {
     }
     if (!canAim(p.weapon) || p.reloadUntil || p.action) this.wanted = false;
     this.reload.tick(g, this.settings.autoReload, this.isInteracting());
-    const target = this.wanted && !p.reloadUntil && rushReady(p) ? 1 : 0;
+    const target = (this.wanted || (this.padAim && canAim(p.weapon) && !p.action)) && !p.reloadUntil && rushReady(p) ? 1 : 0;
     this.amount = this.settings.reducedMotion ? target : advanceAim(this.amount,target,dt);
     p.aimAmount = clamp01(this.amount); p.aiming = target === 1;
     this.updateButton();

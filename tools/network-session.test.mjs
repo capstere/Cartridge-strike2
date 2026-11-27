@@ -174,6 +174,21 @@ test('automatic fire never launches explosives while their manual trigger remain
  }
 });
 
+test('only a currently stocked HE sends a manual hold through weapon or seat changes',()=>{
+ const f=triggerSession('he');
+ f.frame({fire:true});assert.equal(f.wire.at(-1).data.holdThrow,true);
+ f.self.weapon='cr4';f.self.handling={waitTriggerRelease:true};
+ for(let i=0;i<90;i++)f.frame({fire:true});
+ assert(f.wire.slice(1).every(row=>!row.data.holdThrow && row.data.fire));assert.equal(f.session.fireId,1);
+ f.frame({fire:false});f.self.handling.waitTriggerRelease=false;
+ f.frame({fire:true,firePress:{yaw:.4,pitch:.1}});assert.equal(f.session.fireId,2);
+ f.self.weapon='he';f.self.he=0;
+ f.frame({fire:true});assert.equal(f.wire.at(-1).data.holdThrow,false);assert.equal(f.session.fireId,2);
+ f.self.weapon='unknown';f.frame({fire:true,autoFire:true});
+ assert.equal(f.wire.at(-1).data.fire,false);assert.equal(f.wire.at(-1).data.holdThrow,false);
+ const count=f.wire.length;f.state.actors.delete('a');f.frame({fire:true});assert.equal(f.wire.length,count);
+});
+
 test('render stalls do not masquerade as network loss; real silence still reconnects',()=>{
  let drops=0;
  const session={closed:false,connectionState:'connected',lastPatch:100,lastWatchdog:100,silenceSince:0,interruptConnection(){drops++;}};

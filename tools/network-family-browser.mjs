@@ -156,9 +156,19 @@ async function invite(client, wrongFirst = false) {
   await snap(client, 'family-form', code);
 }
 
-async function revisit({page}) {
+async function rememberedFamilyForm(page) {
+  await page.locator('#network-name').waitFor();
+  await page.getByText('This device remembers access to this room.', {exact:false}).waitFor();
+  const password = page.locator('#network-code');
+  assert(await password.isHidden());
+  assert.equal(await password.inputValue(), '');
+  assert.equal(await password.evaluate(input => input.required), false);
+}
+
+async function revisit({page}, remembered = false) {
   await page.goto(link, {waitUntil: 'domcontentloaded'});
-  await page.locator('#network-code').waitFor();
+  if (remembered) await rememberedFamilyForm(page);
+  else await page.locator('#network-code').waitFor();
   assert.equal(new URL(page.url()).searchParams.get('family'), alias);
   assert.equal(await page.locator('#network-code').inputValue(), '');
 }
@@ -257,7 +267,7 @@ try {
   }
   for (const client of [iphone, android]) {
     await press(client, client.page.locator('#restart'));
-    await client.page.locator('#network-code').waitFor();
+    await rememberedFamilyForm(client.page);
     await client.context.close();
   }
   const departed = await verifyEmpty();
@@ -272,8 +282,8 @@ try {
   for (const selector of botControls) assert.equal(await desktop.page.locator(selector).inputValue(), '0');
   await share(desktop);
   await press(desktop, desktop.page.locator('#room-leave'));
-  await desktop.page.locator('#network-code').waitFor();
-  await revisit(desktop);
+  await rememberedFamilyForm(desktop.page);
+  await revisit(desktop, true);
   const finished = await verifyEmpty();
   for (const {exceptions, ws, codesInUrls} of clients) {
     assert.deepEqual(exceptions, []);

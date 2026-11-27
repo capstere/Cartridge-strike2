@@ -1,3 +1,4 @@
+import {resetRush} from '../src/fps/rush.mjs';
 import {BOT_DIFFICULTY_IDS,CLASSIC_NETWORK_CONFIG,MATCH_DEFAULTS,NETWORK_CONFIG,RECONNECT_SECONDS} from '../shared/multiplayer/rules.mjs';
 import {prepareNetworkWorld} from '../shared/multiplayer/world.mjs';
 import {onlinePrimaries,respawnActor} from '../src/fps/action-rules.mjs';
@@ -152,7 +153,7 @@ export class MatchLifecycle {
     // Remove every old body before selecting the new safe spawn positions.
     for(const a of g.actors)a.alive=false;
     for(const seat of r.participants()){
-      const sid=seat.client?.sessionId;if(sid)r.inputs.get(sid).clear();seat.aim=seat.trigger=false;seat.lastSelect=0;seat.enabled=false;
+      const sid=seat.client?.sessionId;if(sid)r.inputs.get(sid).clear();seat.holdThrow=seat.aim=seat.trigger=false;seat.lastSelect=0;seat.enabled=false;
       seat.lastFire=seat.lastReload=seat.lastSampleTick=seat.lastShotStamp=0;
       if(!seat.ready)continue;
       seat.epoch++;seat.actor.controlEpoch=seat.epoch;
@@ -216,7 +217,8 @@ export class MatchLifecycle {
     Object.assign(this.state,{phase:'results',winner,reason,remainingSeconds:0,resultsAtMs:this.now,
       results:JSON.stringify({matchId:this.state.matchId,winner,reason,score:{...score},players:g.actors.map(a=>({id:a.id,name:a.name,team:a.team,kills:a.kills,deaths:a.deaths}))})});
     r.finishAccountMatch?.(winner);
-    g.state.paused=true;g.state.projectiles=[];
-    for(const [sid,seat] of r.seats){seat.enabled=false;r.inputs.get(sid).clear();}
+    g.state.paused=true;g.state.projectiles=[];g.state.grenades=[];
+    for(const actor of g.actors){resetRush(actor);actor.cartridge=null;actor.waitTriggerRelease=false;}
+    for(const [sid,seat] of r.seats){seat.enabled=false;seat.holdThrow=false;r.inputs.get(sid).clear();}
   }
 }

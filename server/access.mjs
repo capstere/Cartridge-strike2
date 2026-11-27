@@ -28,7 +28,8 @@ export function hostingConfig({lan=false,host,port=2567,publicOrigin,publicOrigi
        [familyStateFile,publicOriginFile].filter(Boolean).some(file=>resolve(file)===resolve(accountDb)))throw Error('Accounts require HTTPS pilot mode and a separate absolute database path outside the release.');
   }
   if(typeof publicListing!=='boolean'||publicListing&&!accountDb)throw Error('Public listing requires private account storage.');
-  return {lan,host,port,accountDb,publicListing,...pilot,...family};
+  const accounts = accountDb ? {accountDb,publicListing} : {};
+  return {lan,host,port,...pilot,...family,...accounts};
 }
 export function configFromEnv(env) {
   if(env.CS2_LAN!==undefined&&!['0','1'].includes(env.CS2_LAN))throw Error('CS2_LAN must be 0 or 1.');
