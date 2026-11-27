@@ -1,7 +1,10 @@
 import assert from 'node:assert/strict';
 import {randomBytes} from 'node:crypto';
 import http from 'node:http';
-import {mkdtemp,rm} from 'node:fs/promises';
+import {mkdtemp,rm,stat} from 'node:fs/promises';
+import {DatabaseSync} from 'node:sqlite';
+import {copyAccountDatabase} from '../account-backup.mjs';
+import {resultJournalPath} from '../result-journal.mjs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import test from 'node:test';
@@ -348,4 +351,57 @@ test('authoritative kills across a full rejoin and a grace reconnect credit one 
   const {stats,recent}= (await player.send('/api/account')).json();
   assert.deepEqual(stats,{matches:1,kills:4,deaths:4,wins:1,xp:65});
   assert.equal(recent.length,1);assert.equal(recent[0].win,1);
+});
+
+test('an authoritative result survives a locked WAL writer, isolated backup and server replacement',async t=>{
+  const dir=await mkdtemp(join(tmpdir(),'cs3-pending-result-'));
+  const path=join(dir,'accounts.sqlite'),backup=join(dir,'backup.sqlite'),restore=join(dir,'isolated.sqlite');
+  const config={port:0,publicOrigin:origin,pilotInvite:randomBytes(32).toString('hex'),accountDb:path,testMatch:{countdownSeconds:.1,durationSeconds:.3}};
+  let local=await createLocalServer(config),busy;
+  t.after(async()=>{busy?.close();await local?.close();await rm(dir,{recursive:true,force:true});});
+  let b=browser(local.url);
+  const password=randomBytes(20).toString('hex');
+  await b.send('/pilot/session',new URLSearchParams({invite:config.pilotInvite}),{'Content-Type':'application/x-www-form-urlencoded'});
+  assert.equal((await b.send('/api/account/register',{username:'durable_result',password})).status,200);
+  const reservation=await b.send('/matchmake/create/private-fps',{...options,fillBots:true,analystsBots:1,counterAnalystsBots:1});
+  const room=await ready(await new Client(local.url,{headers:b.headers()}).consumeSeatReservation(reservation.json()));
+  const command=(kind,extras={})=>room.send('match',{kind,matchId:room.state.matchId,controlEpoch:own(room).controlEpoch,...extras});
+  command('ready',{ready:true});await until(()=>own(room)?.playerReady,'host ready');
+  busy=new DatabaseSync(path);busy.exec('BEGIN IMMEDIATE');
+  command('start');await until(()=>room.state.phase==='results','real result reached under write contention');
+  assert.equal((await b.send('/api/account')).json().stats.matches,0,'uncommitted primary result is not shown');
+  const journal=resultJournalPath(path);
+  assert.equal((await stat(journal)).mode&0o777,0o600);
+  const journalDb=new DatabaseSync(journal,{readOnly:true});
+  let receipt;
+  try{
+    const rows=journalDb.prepare('SELECT instance,receipt FROM pending').all();
+    assert.equal(rows.length,1);receipt=rows[0];
+    assert(!/session|password|token|recoveryCode/.test(receipt.receipt));
+  }finally{journalDb.close();}
+  await copyAccountDatabase('backup',path,backup);
+  await copyAccountDatabase('restore',backup,restore);
+  const restored=new DatabaseSync(restore,{readOnly:true});
+  assert.equal(restored.prepare('SELECT count(*) AS n FROM summaries').get().n,1);
+  assert.equal(restored.prepare('SELECT count(*) AS n FROM rewards').get().n,1);
+  restored.close();
+  const jar=b.jar;
+  // The writer still owns the original DB during controlled shutdown.
+  await local.close();local=null;
+  busy.exec('ROLLBACK');busy.close();busy=null;
+  async function reopen(){
+    local=await createLocalServer(config);b=browser(local.url);
+    for(const [key,value] of jar)b.jar.set(key,value);
+    return (await b.send('/api/account')).json();
+  }
+  assert.equal((await reopen()).stats.matches,1);
+  await local.close();local=null;
+  // Model a restart just after primary commit and before durable acknowledgement.
+  const duplicate=new DatabaseSync(journal);
+  assert.equal(duplicate.prepare('SELECT count(*) AS n FROM pending').get().n,0);
+  duplicate.prepare('INSERT INTO pending VALUES(?,?)').run(receipt.instance,receipt.receipt);duplicate.close();
+  const profile=await reopen();
+  assert.equal(profile.stats.matches,1);assert.equal(profile.recent.length,1);
+  const drained=new DatabaseSync(journal,{readOnly:true});
+  assert.equal(drained.prepare('SELECT count(*) AS n FROM pending').get().n,0);drained.close();
 });

@@ -25,7 +25,7 @@ export async function createLocalServer(options={}) {
   const config=hostingConfig(options),{host,port,lan}=config,testMatch=options.testMatch;
   const pilot=config.pilotInvite ? pilotAccess(config, admissionLimiter()) : null;
   const family=openFamilyRoom(config);
-  let familyInstance, familyCreation;
+  let familyInstance, familyCreation, shuttingDown=false;
   const active=new Set(),root=fileURLToPath(new URL('../',import.meta.url));
   const accounts=config.accountDb?(await import('./account-access.mjs')).accountAccess(config,active):null;
   const manifest=JSON.parse(await readFile(new URL('../build-info.json',import.meta.url)));
@@ -91,8 +91,9 @@ export async function createLocalServer(options={}) {
       this.accountMatch=null;
     }
     onDispose(){
-      accounts?.directory?.revoke(this);super.onDispose();active.delete(this);
-      if(accounts&&!this.familyRoom)accounts.store.removeScope(this.roomId);
+      if(!shuttingDown)accounts?.directory?.revoke(this);
+      super.onDispose();active.delete(this);
+      if(accounts&&!this.familyRoom&&!shuttingDown)accounts.store.removeScope(this.roomId);
     }
   }
   class LocalFamilyRoom extends LocalRoom {
@@ -281,7 +282,7 @@ export async function createLocalServer(options={}) {
     httpServer.listen(port,host,()=>{policy=accessPolicy(config,httpServer.address().port);httpServer.off('error',reject);resolve();});
   });
   return {server,httpServer,transport,rooms:active,config,url:`http://${host}:${httpServer.address().port}`,
-    close:async()=>{await server.gracefullyShutdown(false);httpServer.closeIdleConnections();accounts?.close();}};
+    close:async()=>{shuttingDown=true;await server.gracefullyShutdown(false);httpServer.closeIdleConnections();accounts?.close();}};
 }
 if(process.argv[1]===fileURLToPath(import.meta.url)){
   const local=await createLocalServer(configFromEnv(process.env));

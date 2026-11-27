@@ -4,6 +4,7 @@ import {chmod,link,lstat,mkdtemp,open,realpath,rm} from 'node:fs/promises';
 import {basename,dirname,isAbsolute,join,resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {DatabaseSync} from 'node:sqlite';
+import {applyMatchCredit,pendingBackup,resultJournalPath} from './result-journal.mjs';
 
 const release=fileURLToPath(new URL('../',import.meta.url));
 async function privatePath(path) {
@@ -27,21 +28,31 @@ export async function copyAccountDatabase(action,from,to) {
   from=await privatePath(from);to=await privatePath(to);
   if(!(await lstat(from)).isFile()||resolve(from)===resolve(to))throw Error('Use separate regular file paths.');
   // Refuse collateral SQLite sidecars as well as any occupied destination.
-  for(const file of [to,to+'-wal',to+'-shm',to+'-journal']){
+  const occupied=[to,resultJournalPath(to)].flatMap(file=>[file,file+'-wal',file+'-shm',file+'-journal']);
+  for(const file of occupied){
     if(await lstat(file).then(()=>true,error=>{if(error.code==='ENOENT')return false;throw error;}))throw Error('Destination must be a new isolated database.');
   }
   const dir=await mkdtemp(join(dirname(to),'.cs3-snapshot-'));
   try{
     const staged=join(dir,'snapshot.sqlite');
     await (await open(staged,'wx',0o600)).close();
+    const pending=pendingBackup(from);
     const source=new DatabaseSync(from,{readOnly:true});
     try{
       source.exec('PRAGMA trusted_schema=OFF; PRAGMA busy_timeout=1500');
       verifyAccountDatabase(source);
       source.prepare('VACUUM INTO ?').run(staged);
     }finally{source.close();}
-    const copy=new DatabaseSync(staged,{readOnly:true});
-    let version;try{version=verifyAccountDatabase(copy);}finally{copy.close();}
+    const copy=new DatabaseSync(staged,{readOnly:!pending.length});
+    let version;
+    try{
+      if(pending.length){
+        copy.exec('PRAGMA trusted_schema=OFF; PRAGMA foreign_keys=ON; BEGIN IMMEDIATE');
+        for(const receipt of pending)applyMatchCredit(copy,receipt);
+        copy.exec('COMMIT');
+      }
+      version=verifyAccountDatabase(copy);
+    }finally{copy.close();}
     await chmod(staged,0o600);
     const data=await open(staged,'r');try{await data.sync();}finally{await data.close();}
     await link(staged,to);

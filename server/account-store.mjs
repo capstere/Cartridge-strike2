@@ -4,6 +4,7 @@ import {closeSync,openSync,fchmodSync,realpathSync,fstatSync,constants} from 'no
 import {basename,dirname,join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {DatabaseSync} from 'node:sqlite';
+import {applyMatchCredit} from './result-journal.mjs';
 
 const derive=promisify(scrypt);
 const DAY=86400000;
@@ -211,19 +212,6 @@ export class AccountStore {
     });
   }
   recordMatch(instance,mode,map,entries){
-    this.transaction(()=>{
-      const insert=this.db.prepare('INSERT OR IGNORE INTO summaries SELECT ?,id,?,?,?,?,?,? FROM users WHERE id=?');
-      const live=this.db.prepare('SELECT 1 FROM sessions WHERE token=? AND user_id=? AND expires>?');
-      const played=this.now();
-      for(const player of entries){
-        const eligible=(player.segments??[player]).filter(s=>!s.session||live.get(s.session,player.user,played));
-        if(!eligible.length)continue;
-        const kills=eligible.reduce((total,s)=>total+s.kills,0);
-        const deaths=eligible.reduce((total,s)=>total+s.deaths,0);
-        const win=eligible.at(-1).win;
-        if(!insert.run(instance,mode,map,played,kills,deaths,Number(win),player.user).changes)continue;
-        this.db.prepare('INSERT INTO rewards VALUES(?,?,?,?,?)').run(instance,'result',player.user,'match',kills*10+(win?25:0));
-      }
-    });
+    this.transaction(()=>applyMatchCredit(this.db,{instance,mode,map,entries,played:this.now()}));
   }
 }

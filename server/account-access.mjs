@@ -4,6 +4,7 @@ import {FAMILY_ROOM_ALIAS} from '../shared/multiplayer/family-room.mjs';
 import {AccountStore} from './account-store.mjs';
 import {readJson} from './access.mjs';
 import {publicRooms} from './public-rooms.mjs';
+import {resultWriter} from './result-journal.mjs';
 
 const accountCookie='__Host-cs3_account',roomCookie='__Host-cs3_room';
 const cookie=(req,name)=>(req.headers.cookie||'').split(/;\s*/).find(s=>s.startsWith(name+'='))?.slice(name.length+1);
@@ -191,29 +192,9 @@ export function accountAccess(config,active){
     json(res,{...store.profile(current,rooms),features,...(result.recoveryCode?{recoveryCode:result.recoveryCode}:{})});
     return true;
   }
-  const pending=new Map();
-  let retry;
-  function flush(){
-    for(const [id,args] of pending){
-      try{store.recordMatch(...args);pending.delete(id);}catch{break;}
-    }
-    if(!pending.size){clearInterval(retry);retry=undefined;}
-  }
-  function recordMatch(...args){
-    if(!args[3].length)return;
-    try{store.recordMatch(...args);}catch{
-      if(pending.size>=64){console.error('Account storage is unavailable and the pending result queue is full.');return;}
-      pending.set(args[0],args);
-      if(!retry){
-        console.error('Account storage is unavailable. Completed results will retry.');
-        retry=setInterval(flush,5000);retry.unref();
-      }
-    }
-  }
+  const writer=resultWriter(store,config.accountDb);
   function close(){
-    clearInterval(retry);flush();
-    if(pending.size)console.error('Account storage still has unsaved match results at shutdown.');
-    directory?.close();store.close();
+    writer.close();directory?.close();store.close();
   }
-  return {directory,store,context,bind,handle,roomFor,recordMatch,close};
+  return {directory,store,context,bind,handle,roomFor,recordMatch:writer.recordMatch,close};
 }
