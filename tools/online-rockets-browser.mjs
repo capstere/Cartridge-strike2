@@ -66,6 +66,7 @@ async function pause(page){
   await page.waitForFunction(()=>__fps.network?.room?.state.phase==='active'&&__fps.modal!=='online');
   if(await page.locator('#pause').isHidden())await page.keyboard.press('Escape');
   await page.locator('#resume').waitFor();
+  assert(await page.locator('#countdown-look').isHidden(),'Resume is the only visible mouse capture control in the pause menu');
 }
 async function pointDesktop(page,actor){
   // Use the actual pointer-lock input handler. Keyboard turns can overshoot

@@ -1,0 +1,73 @@
+{
+  "build": "716549a4d4e5636e8490a55c7eb49ca5103c589607f4011fe932e0759608ee45",
+  "results": [
+    {
+      "label": "near",
+      "id": "analysts-0:2:1:3",
+      "own": {
+        "id": "analysts-0:2:1:3",
+        "actor": "analysts-0",
+        "take": "armes/g_glock_pov-1.mp3",
+        "distance": 1.58,
+        "delay": 0,
+        "predicted": true,
+        "tick": null,
+        "contextTime": 90.848,
+        "scheduled": 90.848,
+        "eventTime": 60.06666666666454,
+        "dispatch": 97759.10000002384,
+        "frame": 97817.10000002384
+      },
+      "remote": {
+        "id": "analysts-0:2:1:3",
+        "actor": "analysts-0",
+        "take": "armes/g_glock_near-1.mp3",
+        "distance": 8.14868490252415,
+        "delay": 0.02375709884118038,
+        "predicted": false,
+        "tick": 5160,
+        "contextTime": 61.653333333333336,
+        "scheduled": 61.677090432174516,
+        "eventTime": 60.21666666666453,
+        "dispatch": 94836.69999992847,
+        "frame": 95140.29999995232
+      },
+      "ammoBefore": 20,
+      "ammoAfter": 19
+    },
+    {
+      "label": "far",
+      "id": "analysts-0:2:1:4",
+      "own": {
+        "id": "analysts-0:2:1:4",
+        "actor": "analysts-0",
+        "take": "armes/g_glock_pov-2.mp3",
+        "distance": 1.58,
+        "delay": 0,
+        "predicted": true,
+        "tick": null,
+        "contextTime": 92.52266666666667,
+        "scheduled": 92.52266666666667,
+        "eventTime": 61.64999999999778,
+        "dispatch": 99430.29999995232,
+        "frame": 99508.79999995232
+      },
+      "remote": {
+        "id": "analysts-0:2:1:4",
+        "actor": "analysts-0",
+        "take": "armes/g_far_pistol-1.mp3",
+        "distance": 48.05347777314688,
+        "delay": 0.14009760283716588,
+        "predicted": false,
+        "tick": 5258,
+        "contextTime": 62.944,
+        "scheduled": 63.08409760283717,
+        "eventTime": 61.84999999999777,
+        "dispatch": 96127.69999992847,
+        "frame": 96177.39999997616
+      },
+      "ammoBefore": 19,
+      "ammoAfter": 18
+    }
+  ]
+}

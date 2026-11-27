@@ -78,3 +78,9 @@ Reproduce from the project root on the Pi with an existing temporary output dire
 WAYLAND_DISPLAY=wayland-0 CS3_BENCH_OUT=/tmp/cs3-pacing node docs/cartridge-strike-3/baseline/performance/compare.cjs candidate desktop 3
 WAYLAND_DISPLAY=wayland-0 CS3_BENCH_OUT=/tmp/cs3-pacing node docs/cartridge-strike-3/baseline/performance/compare.cjs candidate touch 3
 ```
+
+### Countdown and handling together on the Pi
+
+The integrated protocol 16 build `716549a4d4e5636e8490a55c7eb49ca5103c589607f4011fe932e0759608ee45` passed the ordinary two-renderer equipment test with eight active bot controllers. The real desktop host resumed with pointer lock, aimed through an existing Floor 5 pane and broke it. Its first real gunshot ended the staged spawn protection. Both clients saw the glass break. The touch client moved, aimed and fired simultaneously, held and released a single HE cartridge, and selected equipment for the next respawn. The observer identified matching action IDs and recorded a single magazine debit at each of the two distances. The server-confirmed listener heard the near pistol at 8.15 m with 23.76 ms propagation, then the distant pistol at 48.05 m with 140.10 ms propagation. The shooter used the first-person recording both times. [Two actual audio timelines](integrated-room-audio.json).
+
+The first native attempt waited for a paused predicted camera to adopt a forced test-spawn angle. The fixture now checks the replicated authority first, compares wrapped angles, then resumes and aligns the actual camera. It verifies the same life, first shot, both rendered glass states and original audio assertions. The prior correction for late listener audio also passed all eight [hosted checks](https://github.com/capstere/Cartridge-strike2/actions/runs/46019325677).
