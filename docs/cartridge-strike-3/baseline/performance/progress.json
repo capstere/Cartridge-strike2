@@ -1,0 +1,8 @@
+{
+  "complete": false,
+  "acceptedClientRepeats": {"cs2Desktop": 3, "cs2Touch": 0, "frontlineDesktop": 1, "frontlineTouch": 3},
+  "acceptedAuthorityRepeats": {"loopback": 1, "injected100ms": 0},
+  "pending": ["remaining donor desktop repeats", "CS2 touch repeats with contextual Reload", "additional 90 s authority windows", "normal two-seat emulated touch match", "20-cycle lifecycle"],
+  "excluded": "excluded.json",
+  "physicalPhones": "UNMEASURED"
+}

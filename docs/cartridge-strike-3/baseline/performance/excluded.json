@@ -1,0 +1,84 @@
+[
+  {
+    "kind": "fps",
+    "profile": "desktop",
+    "git": "5364240599164c0aee278bb0ac2a35d662c3a818",
+    "at": "2026-11-27T10:07:02.200Z",
+    "reason": "CS2 defaulted to Pulse SMG. The rifle comparison buys the Arc Rifle after launch.",
+    "status": "measured",
+    "weapon": "smg",
+    "engineBuffer": [
+      493,
+      228
+    ],
+    "internalRenderBuffer": null
+  },
+  {
+    "kind": "frontline",
+    "profile": "desktop",
+    "git": "09725d87420155ade2aed7894f663db0d9d02abb",
+    "at": "2026-11-27T10:08:27.835Z",
+    "reason": "Native reference smoke with working actions. The internal render buffer was not observed. Excluded from the three final runs.",
+    "status": "measured",
+    "weapon": "M4A1",
+    "engineBuffer": [
+      548,
+      253
+    ],
+    "internalRenderBuffer": null
+  },
+  {
+    "kind": "frontline",
+    "profile": "touch",
+    "git": "a18877a8e3f331ed2d3002becb3828f6943d1d53",
+    "at": "2026-11-27T10:12:26.078Z",
+    "reason": "The desktop menu selector stayed hidden because touch presents the installation choice. The probe stopped there. The corrected harness follows the visible play-in-browser route.",
+    "status": "incomplete"
+  },
+  {
+    "kind": "fps",
+    "profile": "touch",
+    "repeat": 0,
+    "git": "f90b817d7ca919a264e631a7dcb7e25c96626470",
+    "at": "2026-11-27T10:16:20.415Z",
+    "reason": "Clean HUD exposed Reload only after the rifle fired. The original action script looked for the control at full magazine and skipped the tap. Rerun resolves Reload after firing.",
+    "status": "excluded",
+    "internalRenderBuffer": [
+      493,
+      228
+    ]
+  },
+  {
+    "kind": "fps",
+    "profile": "touch",
+    "repeat": 1,
+    "git": "f90b817d7ca919a264e631a7dcb7e25c96626470",
+    "at": "2026-11-27T10:17:10.697Z",
+    "reason": "Clean HUD exposed Reload only after the rifle fired. The original action script looked for the control at full magazine and skipped the tap. Rerun resolves Reload after firing.",
+    "status": "excluded",
+    "internalRenderBuffer": [
+      493,
+      228
+    ]
+  },
+  {
+    "kind": "fps",
+    "profile": "touch",
+    "repeat": 2,
+    "git": "f90b817d7ca919a264e631a7dcb7e25c96626470",
+    "at": "2026-11-27T10:17:49.208Z",
+    "reason": "Clean HUD exposed Reload only after the rifle fired. The original action script looked for the control at full magazine and skipped the tap. Rerun resolves Reload after firing.",
+    "status": "excluded",
+    "internalRenderBuffer": [
+      493,
+      228
+    ]
+  },
+  {
+    "kind": "server",
+    "profile": "two human seats, eight AI and residents, no added delay",
+    "git": "f90b817d7ca919a264e631a7dcb7e25c96626470",
+    "status": "excluded",
+    "reason": "The initial 5 s warmup and 30 s measurement failed the existing composite active AI movement/combat assertion. The fixture did not emit the individual counts on this attempt. Retain every activity assertion and repeat with the established 90 s TDM workload."
+  }
+]
