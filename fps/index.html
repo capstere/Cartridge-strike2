@@ -26,7 +26,7 @@
     <header class="lb-bar">
       <a class="lb-brand" href="?screen=main" aria-label="Cartridge-Strike"><span class="lb-mark" aria-hidden="true"><i></i></span><span>CARTRIDGE<b>//STRIKE</b> 3</span></a>
       <button type="button" id="route-back" class="route-back" hidden>← Back</button>
-      <div class="lb-tools"><a class="cs-quick" href="https://cs2.capstere.com/room/JESPERS-ROOM" data-family-link>Quick join</a><button type="button" class="lb-icon" id="menu-fullscreen" hidden>Fullscreen</button><button type="button" id="mm-open-settings" class="lb-icon" aria-controls="mm-settings" aria-label="Options and controls"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg><span>Options</span></button></div>
+      <div class="lb-tools"><a class="cs-quick" href="https://cs2.capstere.com/room/JESPERS-ROOM" data-family-link>Quick join</a><button type="button" class="lb-icon" id="menu-fullscreen" hidden>Fullscreen</button><button type="button" class="cs-profile lb-icon" data-go="profile">Profile</button><button type="button" id="mm-open-settings" class="lb-icon" aria-controls="mm-settings" aria-label="Options and controls"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg><span>Options</span></button></div>
     </header>
 
     <section class="route-panel home-panel" data-panel="main" aria-labelledby="home-title">
@@ -68,6 +68,10 @@
       <h1 id="outfits-title" tabindex="-1">Outfits</h1><div class="route-details"><p>The operator preview uses your team and selected local character. Choose a saved character in Solo setup.</p>
       <button type="button" class="route-action" data-go="solo" data-focus="player-character">Choose operator →</button><p>Wardrobe challenges are unavailable in this build.</p></div>
     </section>
+    <section class="route-panel sub-panel" data-panel="profile" aria-labelledby="profile-title" hidden>
+      <h1 id="profile-title" tabindex="-1">Player profile</h1><div class="route-details"><h2>Local guest</h2><p>Your control settings and saved characters stay in this browser. Joining a private room uses a separate room invitation and password.</p>
+      <button type="button" data-go="outfits" class="route-action">View operator →</button><p>Cross-device sign-in is unavailable in this build.</p></div>
+    </section>
     <section class="route-panel sub-panel" data-panel="news" aria-labelledby="news-title" hidden>
       <h1 id="news-title" tabindex="-1">What’s new</h1><article class="route-details"><time datetime="2026-11-27">November 27, 2026</time><h2>New match menus</h2>
       <p>Choose Solo or With friends from Play. Quick join takes you directly to the family room. Your saved characters are available in Solo setup.</p></article>
@@ -82,7 +86,7 @@
       </header>
 
       <div class="lb-block">
-        <div class="lb-label"><b>01</b>Team</div>
+        <div class="lb-label"><b>Team</b></div>
         <div class="lb-teams" role="group" aria-label="Choose your team">
           <button class="team-option selected" data-team="analysts" aria-pressed="true"><span class="team-icon analysts">A</span><span class="lb-tinfo"><strong>Analysts</strong><small>Start · Cargo Lift</small><em>Defend the laboratory and defuse the bomb.</em></span><span class="radio-dot"></span></button>
           <button class="team-option" data-team="counterAnalysts" aria-pressed="false"><span class="team-icon counter">CA</span><span class="lb-tinfo"><strong>Counter Analysts</strong><small>Start · Transit Lift</small><em>Plant the bomb in North Laboratory or rescue both hostages.</em></span><span class="radio-dot"></span></button>
@@ -144,7 +148,7 @@
     <div id="round-result" hidden><small id="result-kicker">ROUND OVER</small><h2 id="result-title"></h2><p id="result-reason"></p></div>
     <div id="spectate" hidden>ELIMINATED · <span></span><small id="death-cause"></small><small id="respawn-status">← → Switch teammate · Next round starts automatically</small><button id="death-restart">RESTART MATCH <kbd>Enter</kbd></button></div>
     <div class="bottom-hud"><div class="vitals"><span class="health-symbol">+</span><strong id="health">100</strong><div><span>HEALTH</span><small id="armor"></small></div></div><div class="inventory"><div id="weapon-slots"></div><small id="money">800 ¤</small></div><div class="ammo"><small id="weapon-name">PISTOL</small><strong id="ammo">20 <span>/ 120</span></strong><span id="reload-text"></span></div></div>
-    <div class="key-hints">V inspect &nbsp; Z radio &nbsp; Shift sneak &nbsp; Ctrl crouch &nbsp; Space jump &nbsp; R reload &nbsp; E interact &nbsp; G drop &nbsp; Esc pause</div>
+    <div class="key-hints">X Rush &nbsp; V inspect &nbsp; Z radio &nbsp; Shift sneak &nbsp; Ctrl crouch &nbsp; Space jump &nbsp; R reload &nbsp; E interact &nbsp; G drop &nbsp; Esc pause</div>
     <div id="difficulty-label"></div><div id="perf"></div>
   </div>
   <div id="flash-overlay"></div><div id="damage-overlay"></div><div id="damage-direction">⌃</div><div id="smoke-overlay"></div>

@@ -21,13 +21,17 @@ const P = {
 const iconFor = w => w.slot === 'armor' ? 'armor' : w.slot === 'grenade' ? 'grenade' : ({ smg: 'smg', shotgun: 'shotgun', sniper: 'sniper', bazooka: 'rocket' })[w.id] || 'rifle';
 const svg = (k, view = '0 0 24 24') => `<svg viewBox="${view}" aria-hidden="true"><path d="${P[k]}"/></svg>`;
 const CATS = [
-  { key: 'primary', label: 'Huvudvapen', test: w => w.slot !== 'grenade' && w.slot !== 'armor' },
-  { key: 'grenade', label: 'Granater', test: w => w.slot === 'grenade' },
-  { key: 'armor', label: 'Utrustning', test: w => w.slot === 'armor' },
+  { key: 'primary', label: 'Primary weapons', test: w => w.slot !== 'grenade' && w.slot !== 'armor' },
+  { key: 'grenade', label: 'Grenades', test: w => w.slot === 'grenade' },
+  { key: 'armor', label: 'Equipment', test: w => w.slot === 'armor' },
 ];
 
 const team = () => $('menu')?.dataset.side || 'analysts';
-const money = () => { const t = $('buy-money')?.textContent || ''; if (/FRITT/i.test(t)) return Infinity; const n = parseInt(t.replace(/\D/g, ''), 10); return Number.isFinite(n) ? n : 0; };
+function money() {
+  const {free,credits} = $('buy-money').dataset;
+  if (free === 'true') return Infinity;
+  return credits === undefined ? null : Number(credits);
+}
 
 let detail, grouping = false;
 function ensureDetail() {
@@ -40,24 +44,24 @@ function ensureDetail() {
 }
 function showDetail(w) {
   const d = ensureDetail();
-  if (!w) { d.innerHTML = '<small>VALD UTRUSTNING</small><p>'+(html.classList.contains('network-session-ui')?'Välj huvudvapen för nästa respawn.':'Välj utrustning till vänster. Tryck på en vara för att köpa.')+'</p>'; return; }
+  if (!w) { d.innerHTML = '<small>SELECTED EQUIPMENT</small><p>'+(html.classList.contains('network-session-ui')?'Select a weapon for your next spawn.':'Select an item to view its details and equip it.')+'</p>'; return; }
   const bar = (label, v, max, txt) => `<div>${label}<i style="--v:${Math.min(100, Math.round(v / max * 100))}%"></i><b>${txt}</b></div>`;
   let stats = '';
   if (w.slot === 'grenade') stats = `<div>MAX<i style="--v:${w.limit * 50}%"></i><b>${w.limit}</b></div>`;
-  else if (w.slot === 'armor') stats = bar('RUSTNING', 100, 100, '100');
-  else stats = bar('SKADA', (w.damage || 0) * (w.pellets || 1), 150, `${w.damage}${w.pellets > 1 ? '×' + w.pellets : ''}`)
-    + bar('TAKT', 1 / (w.interval || 1), 14, `${(1 / (w.interval || 1)).toFixed(1)}/s`)
-    + bar('MAGASIN', w.magazine || 0, 30, `${w.magazine}/${w.reserve}`)
-    + (w.reload ? bar('OMLADDNING', 3.2 - w.reload, 2, `${w.reload}s`) : '');
+  else if (w.slot === 'armor') stats = bar('ARMOR', 100, 100, '100');
+  else stats = bar('DAMAGE', (w.damage || 0) * (w.pellets || 1), 150, `${w.damage}${w.pellets > 1 ? '×' + w.pellets : ''}`)
+    + bar('FIRE RATE', 1 / (w.interval || 1), 14, `${(1 / (w.interval || 1)).toFixed(1)}/s`)
+    + bar('MAGAZINE', w.magazine || 0, 30, `${w.magazine}/${w.reserve}`)
+    + (w.reload ? bar('RELOAD', 3.2 - w.reload, 2, `${w.reload}s`) : '');
   const free = money() === Infinity;
-  d.innerHTML = `<small>${(CATS.find(c => c.test(w))?.label || '').toUpperCase()}${w.team ? ' · ' + TEAM_NAME[w.team].toUpperCase() : ''}</small><h4>${w.name}</h4><div class="cs-big">${svg(iconFor(w))}</div><dl>${stats}</dl><small>${free ? 'GRATIS' : w.cost + ' ¤'}</small>`;
+  d.innerHTML = `<small>${(CATS.find(c => c.test(w))?.label || '').toUpperCase()}${w.team ? ' · ' + TEAM_NAME[w.team].toUpperCase() : ''}</small><h4>${w.name}</h4><div class="cs-big">${svg(iconFor(w))}</div><dl>${stats}</dl><small>${free ? 'FREE' : w.cost + ' ¤'}</small>`;
 }
 
 function refreshPrices() {
   const cash = money();
   for (const button of $('shop').querySelectorAll('button[data-item]')) {
     const weapon = WEAPONS[button.dataset.item];
-    if (weapon) button.classList.toggle('cs-cant', weapon.cost > cash);
+    if (weapon) button.classList.toggle('cs-cant', Number.isFinite(cash) && weapon.cost > cash);
   }
 }
 
@@ -84,13 +88,13 @@ function group() {
 
 function initBuy() {
   const shop = $('shop'); if (!shop) return;
-  new MutationObserver(refreshPrices).observe($('buy-money'), { childList: true });
+  new MutationObserver(refreshPrices).observe($('buy-money'), { attributes:true, attributeFilter:['data-credits','data-free'] });
   new MutationObserver(group).observe(shop, { childList: true });
   const top = document.querySelector('#buy .card-top');
   const clock = document.createElement('span'); clock.className = 'cs-buy-clock';
   top?.insertBefore(clock, $('close-buy'));
   const msg = $('buy-message');
-  new MutationObserver(() => msg.classList.toggle('cs-err', !!msg.textContent && !/köpt\.?$/i.test(msg.textContent.trim()))).observe(msg, { childList: true, characterData: true, subtree: true });
+  new MutationObserver(() => msg.classList.toggle('cs-err', msg.dataset.outcome === 'denied')).observe(msg, { attributes:true, attributeFilter:['data-outcome'] });
   const syncClock = () => {
     if ($('buy').hidden) return;
     clock.innerHTML = `${($('phase')?.textContent || '').toUpperCase()}<b>${$('timer')?.textContent || ''}</b>`;
@@ -103,17 +107,21 @@ function initBuy() {
   for (const id of ['phase', 'timer']) clockChanges.observe($(id), { childList: true });
 }
 
-function winnerOf(text) { return /^Counter/i.test(text) ? 'counterAnalysts' : /^Analysts/i.test(text) ? 'analysts' : ''; }
-function watchText(id, attr) {
-  const el = $(id); if (!el) return;
-  new MutationObserver(() => { const w = winnerOf(el.textContent.trim()); if (w) html.dataset[attr] = w; else delete html.dataset[attr]; })
-    .observe(el, { childList: true, characterData: true, subtree: true });
+function watchWinner(id, attribute) {
+  const element = $(id);
+  const update = () => {
+    const winner = element.dataset.winner;
+    if (Object.hasOwn(TEAM_NAME, winner)) html.dataset[attribute] = winner;
+    else delete html.dataset[attribute];
+  };
+  new MutationObserver(update).observe(element, {attributes:true, attributeFilter:['data-winner']});
+  update();
 }
 
 function init() {
   initBuy();
-  watchText('result-title', 'csRound');
-  watchText('match-winner', 'csMatch');
+  watchWinner('result-title', 'csRound');
+  watchWinner('match-winner', 'csMatch');
   const card = document.querySelector('#match-end .pause-card');
   if (card && !card.querySelector('.cs-strip')) card.insertAdjacentHTML('afterbegin', '<i class="cs-strip" aria-hidden="true"></i>');
   const sync = () => { const t = team(); if (html.dataset.csTeam !== t) html.dataset.csTeam = t; };

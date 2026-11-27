@@ -38,7 +38,7 @@ async function boot(browser,mobile){
     HTMLCanvasElement.prototype.requestPointerLock=function(){Object.defineProperty(document,'pointerLockElement',{configurable:true,get:()=>this});return Promise.resolve();};
     document.exitPointerLock=()=>Object.defineProperty(document,'pointerLockElement',{configurable:true,get:()=>null});
   });
-  await page.goto(origin+'/fps/?test',{waitUntil:'domcontentloaded',timeout:60000});
+  await page.goto(origin+'/fps/?screen=solo&test',{waitUntil:'domcontentloaded',timeout:60000});
   await page.waitForFunction(()=>globalThis.__fps||!document.getElementById('fatal').hidden,null,{timeout:180000});
   assert.equal(await page.locator('#fatal').isVisible(),false);
   await page.evaluate(()=>{window.requestAnimationFrame=()=>0;});

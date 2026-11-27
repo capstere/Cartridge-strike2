@@ -4,8 +4,8 @@ import {selectedMapName} from './english-ui.mjs';
 import {FAMILY_ROOM_PATH} from '../../shared/multiplayer/family-room.mjs';
 import {createFullscreenController} from './fullscreen.mjs';
 
-const routes = ['main', 'play', 'friends', 'solo', 'maps', 'classes', 'outfits', 'options', 'news'];
-const parentRoute = {play:'main', friends:'play', solo:'play', maps:'solo', classes:'main', outfits:'main', options:'main', news:'main'};
+const routes = ['main', 'play', 'friends', 'solo', 'maps', 'classes', 'outfits', 'profile', 'options', 'news'];
+const parentRoute = {play:'main', friends:'play', solo:'play', maps:'solo', classes:'main', outfits:'main', profile:'main', options:'main', news:'main'};
 
 export function initialScreen(url) {
   const query = url.searchParams;

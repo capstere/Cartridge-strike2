@@ -8,7 +8,6 @@ import {loadCharacterLibrary,createAuthoredAvatar,animateAuthored,disposeAvatar,
 const $=id=>document.getElementById(id);
 const menu=$('menu'),canvas=$('lobby-stage'),reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const ACCENT={analysts:0x3d8bff,counterAnalysts:0xe8a33d};
-const currentTeam=()=>document.querySelector('.lobby .team-option.selected')?.dataset.team||'analysts';
 
 /* ---------- UI wiring (no state of its own) ---------- */
 function syncTeam(){
@@ -20,7 +19,7 @@ function syncTeam(){
   if(!menu.classList.contains('network-menu'))$('lb-objective').textContent=sel?.querySelector('em')?.textContent||'';
   stage?.setTeam(team);
 }
-document.querySelectorAll('.lobby .team-option').forEach(b=>b.addEventListener('click',()=>setTimeout(syncTeam,0)));
+menu.addEventListener('cs-team-selected',syncTeam);
 
 const modeSelect=$('game-mode'),seg=$('lb-mode-seg');
 function buildSeg(){
@@ -69,7 +68,8 @@ function makeStage(){
   const turntable=new T.Group();scene.add(turntable);
 
   let avatar=null,team=null,yaw=Math.PI-.32,dragYaw=0,dragging=false,lastX=0,t0=performance.now(),last=t0;
-  const actor={x:0,z:0,y:0,yaw:0,moving:0,onGround:true,crouching:false,height:1.8,weapon:'smg',reloadUntil:-1,alive:true};
+  // Use the rig's relaxed upper-body idle for this unarmed operator preview.
+  const actor={x:0,z:0,y:0,yaw:0,moving:0,onGround:true,crouching:false,height:1.8,weapon:'knife',reloadUntil:-1,alive:true};
   function setTeam(next){
     if(next===team&&avatar)return;team=next;const col=ACCENT[next]||ACCENT.analysts;
     rimA.color.setHex(col);rimB.color.setHex(col);ringMat.color.setHex(col);ring2.material.color.setHex(col);
@@ -77,7 +77,8 @@ function makeStage(){
       setPrivateCharacterActors([next+'-0']);
       const fresh=createAuthoredAvatar(next,next+'-0');
       canvas.classList.remove('is-ready');
-      setTimeout(()=>{if(avatar){turntable.remove(avatar.holder);try{disposeAvatar(avatar);}catch{}}avatar=fresh;turntable.add(fresh.holder);canvas.classList.add('is-ready');},avatar?260:0);
+      if(avatar){turntable.remove(avatar.holder);disposeAvatar(avatar);}
+      avatar=fresh;turntable.add(fresh.holder);canvas.classList.add('is-ready');
     }catch(e){console.warn('Lobby preview unavailable:',e.message);}
   }
   function resize(){
@@ -88,7 +89,8 @@ function makeStage(){
   canvas.style.pointerEvents='auto';canvas.style.cursor='grab';
   canvas.addEventListener('pointerdown',e=>{dragging=true;lastX=e.clientX;canvas.setPointerCapture(e.pointerId);canvas.style.cursor='grabbing';});
   canvas.addEventListener('pointermove',e=>{if(!dragging)return;dragYaw+=(e.clientX-lastX)*.01;lastX=e.clientX;});
-  canvas.addEventListener('pointerup',()=>{dragging=false;canvas.style.cursor='grab';});
+  const release=()=>{dragging=false;canvas.style.cursor='grab';};
+  canvas.addEventListener('pointerup',release);canvas.addEventListener('lostpointercapture',release);
   // Render loop runs only while the lobby is visible; fully stopped during loading/gameplay.
   let running=false;
   const loadingOpen=()=>document.documentElement.classList.contains('cs-loading-open');

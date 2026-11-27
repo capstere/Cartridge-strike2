@@ -155,7 +155,7 @@ async function main() {
       const run = await page.evaluate(() => window.floor5Profiles.at(-1));
       const { seed, actors, bots, graphics, team, mode, size, character } = run.settings;
       assert.deepEqual([seed, actors, bots, graphics, team, mode, size, character],
-        [42, 10, 9, 'low', 'analysts', 'endless', [844, 390], 'Originalkaraktär']);
+        [42, 10, 9, 'low', 'analysts', 'endless', [844, 390], 'Default operator']);
       assert.ok(run.firstPlayable > run.click && run.shots.count > 0);
       assert.deepEqual(Object.keys(run.traces).sort(), ['encounter', 'lift']);
       if (angle === 'metal') assert.match(run.settings.backend, /metal/i);

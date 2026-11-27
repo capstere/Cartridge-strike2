@@ -14,7 +14,7 @@ test('FPS entrypoints expose only gameplay, not editor navigation',()=>{
  assert.match(html,/id="character-picker"/); // playable local characters stay available
  assert.doesNotMatch(html,/href="[^"]*(?:character-design|furniture-editor|\/studio\/)/i);
  assert.doesNotMatch(read('src/fps/app.mjs'),/href=['"]\.\.\/character-design\//);
- assert.doesNotMatch(read('src/fps/character-selection.mjs'),/Öppna studion/);
+ assert.doesNotMatch(read('src/fps/character-selection.mjs'),/Open the studio/i);
 });
 
 test('standalone authoring pages and source trees are absent',()=>{
@@ -34,6 +34,6 @@ test('shared level runtime and lobby audio remain available',()=>{
 
 test('mobile orientation refers only to playing the game',()=>{
  const js=read('ui/cs-mobile.mjs');
- assert.match(js,/Vrid telefonen/);
+ assert.match(js,/Rotate your phone/);
  assert.doesNotMatch(js,/charPanelToggle|pinchZoom|Level Studio|Character Studio/);
 });
