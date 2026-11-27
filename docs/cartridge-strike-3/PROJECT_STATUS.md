@@ -4,7 +4,7 @@
 
 | ID | State | Next action |
 | --- | --- | --- |
-| CS3-00 | IN_PROGRESS | Complete the private restore and performance baseline, then independently review the receipts. |
+| CS3-00 | IN_PROGRESS | Private recovery passed independent review. Finish and review matched performance evidence. |
 | CS3-01 | NOT_STARTED | Wait for CS3-00 |
 | CS3-02 | NOT_STARTED | Wait for CS3-00 |
 | CS3-03 | NOT_STARTED | Wait for CS3-00, CS3-01, CS3-02 |

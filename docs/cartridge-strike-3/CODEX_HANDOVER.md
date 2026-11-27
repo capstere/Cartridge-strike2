@@ -2,6 +2,8 @@
 
 **Owner authorization recorded.** Jesper approved PR #47 at `f1f36396`. Preparation merged at `5364240599164c0aee278bb0ac2a35d662c3a818`. The authorization covers development and eventual release after the documented gates. Resume from `develop/cartridge-strike-3` and the first eligible unfinished row in [tasks.json](tasks.json). Read [project status](PROJECT_STATUS.md) for current measurements and open checks.
 
+Run `node docs/cartridge-strike-3/verify-program.mjs` after updating the manifest and status table. It lists the packages whose dependencies permit work and reports inconsistent status or dependency cycles. Open focused pull requests against `develop/cartridge-strike-3`. These run the full FPS regression workflow. The final release PR targets `main`.
+
 ## Lead execution procedure
 1. Read README, MASTER_PLAN, CURRENT_STATE_AUDIT, decisions, architecture, source matrix, all specifications, task DAG, existing root handover and deploy docs. Use English for player UI and new project documentation. No need to ask owner to repeat prior chats. Recheck current main and backup reference, production revision and exact repo/working tree; do not assume identical. Review any intervening changes. Verify existing CI and Pi CLI agent discovery, current processes and resource limits. 
 2. Start CS3-00: private backup/restore rehearsal, fresh matched baselines, actual comparative reference/CS2 gameplay and code traces, rights/source pin, confirm interface contracts. If unable to reach Pi or devices, state precise blocker; do not fake tests. Do not change production yet.
