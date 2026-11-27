@@ -12,8 +12,9 @@ const clamp = (x, lo, hi) => Math.max(lo, Math.min(hi, x));
 const HELD = new Set(['fire', 'jump', 'crouch', 'interact', 'sneak']);
 
 export class MobileControls {
-  constructor({ root, onLook, onAction, onFirePress }) {
+  constructor({ root, onLook, onAction, onFirePress, onModeChange }) {
     this.enabled = isTouchDevice();
+    this.touchCapable = this.enabled || (typeof navigator !== 'undefined' && navigator.maxTouchPoints > 0);
     this.root = root;
     this.onLook = onLook;
     this.onAction = onAction;
@@ -22,9 +23,23 @@ export class MobileControls {
     this.lookId = null;
     this.buttonPointers = new Map();
     this.visible = false;
-    if (!this.enabled || !root) return;
+    if (!this.touchCapable || !root) return;
 
-    document.documentElement.classList.add('touch-fps');
+    if (this.enabled) document.documentElement.classList.add('touch-fps');
+    // A touchscreen laptop or a newly emulated device may report a fine
+    // primary pointer when the page boots. Install once, then let the first
+    // real finger activate the controls on the same page.
+    document.addEventListener('pointerdown', event => {
+      const touch = event.pointerType === 'touch';
+      const mouse = event.pointerType === 'mouse' && !isTouchDevice() && !root.contains(event.target);
+      if ((!touch && !mouse) || this.enabled === touch) return;
+      this.clear();
+      if (!touch) this.show(false);
+      this.enabled = touch;
+      document.documentElement.classList.toggle('touch-fps', touch);
+      if (touch) this.setAutoFire(this.autoFire);
+      onModeChange?.(touch);
+    }, {capture:true});
     const zone = root.querySelector('[data-mobile-stick-zone]');
     const stick = root.querySelector('[data-mobile-stick]');
     const nub = root.querySelector('[data-mobile-nub]');

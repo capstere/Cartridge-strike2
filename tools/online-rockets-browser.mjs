@@ -156,6 +156,14 @@ async function mapControls(desktop,mobile,room){
     return state;
   };
   const touch=async()=>{
+    const controls = await mobile.evaluate(() => ({
+      initialized: __fps.mobile.enabled,
+      attached: Boolean(document.getElementById('mobile-more')),
+      open: __fps.modal, visible: __fps.mobile.visible, alive: __fps.game.player?.alive,
+      primaryCoarse: matchMedia('(pointer: coarse)').matches,
+      anyCoarse: matchMedia('(any-pointer: coarse)').matches, touchPoints: navigator.maxTouchPoints,
+    }));
+    assert(controls.initialized && controls.attached, 'touch utility controls must exist after ordinary mobile boot: '+JSON.stringify(controls));
     await mobile.locator('#mobile-more').tap();
     await mobile.locator('[data-utility=karta]').tap();
   };
@@ -372,6 +380,9 @@ try{
       phase:__fps.network?.room?.state.phase,resultAt:__fps.network?.resultsAt,visible:!document.hidden},
     actor:__fps.game.player&&{x:__fps.game.player.x,z:__fps.game.player.z,yaw:__fps.game.player.yaw,weapon:__fps.game.player.weapon},
     rocket:window.rocketEvidence&&{models:[...rocketEvidence.visible],events:rocketEvidence.events.map(e=>[e.type,e.rocketId]),sound:rocketEvidence.sounds,hits:rocketEvidence.deaths,impacts:rocketEvidence.impacts,audio:{state:__fps.audio.context?.state,volume:__fps.audio.volume,stats:__fps.audio.stats}},
+    controls:{enabled:__fps.mobile?.enabled,visible:__fps.mobile?.visible,alive:__fps.game.player?.alive,
+      more:document.getElementById('mobile-more')?.outerHTML,primaryCoarse:matchMedia('(pointer: coarse)').matches,
+      anyCoarse:matchMedia('(any-pointer: coarse)').matches,touchPoints:navigator.maxTouchPoints},
     fatal:document.querySelector('#fatal pre')?.textContent})).catch(()=>null));
   throw error;
 }finally{for(const b of browsers)await b.close();await local.close();}

@@ -1,0 +1,157 @@
+{
+  "browser": "156.0.8078.79",
+  "sampleRate": 48000,
+  "rows": [
+    {
+      "weapon": "cr4",
+      "distance": 0,
+      "bank": "g_rifle_pov",
+      "starts": [
+        {
+          "name": "armes/g_rifle_pov-1.mp3",
+          "time": 0,
+          "offset": 0,
+          "channels": 1
+        },
+        {
+          "name": "armes/g_rifle_pov-2.mp3",
+          "time": 1,
+          "offset": 0,
+          "channels": 1
+        }
+      ],
+      "firstPcmMs": 0.3125,
+      "peak": 0.49536949396133423,
+      "secondPeak": 0.48679736256599426,
+      "errors": []
+    },
+    {
+      "weapon": "cr4",
+      "distance": 8,
+      "bank": "g_rifle_near",
+      "starts": [
+        {
+          "name": "armes/g_rifle_near-1.mp3",
+          "time": 0.023323615160349854,
+          "offset": 0,
+          "channels": 1
+        },
+        {
+          "name": "armes/g_rifle_near-2.mp3",
+          "time": 1.0233236151603498,
+          "offset": 0,
+          "channels": 1
+        }
+      ],
+      "firstPcmMs": 29.854166666666668,
+      "peak": 0.07542330026626587,
+      "secondPeak": 0.05993708223104477,
+      "errors": []
+    },
+    {
+      "weapon": "cr4",
+      "distance": 48,
+      "bank": "g_far_rifle",
+      "starts": [
+        {
+          "name": "armes/g_far_rifle-1.mp3",
+          "time": 0.13994169096209913,
+          "offset": 0,
+          "channels": 1
+        },
+        {
+          "name": "armes/g_far_rifle-2.mp3",
+          "time": 1.1399416909620992,
+          "offset": 0,
+          "channels": 1
+        }
+      ],
+      "firstPcmMs": 146.3125,
+      "peak": 0.010539859533309937,
+      "secondPeak": 0.013102302327752113,
+      "errors": []
+    },
+    {
+      "weapon": "p9",
+      "distance": 0,
+      "bank": "g_glock_pov",
+      "starts": [
+        {
+          "name": "armes/g_glock_pov-1.mp3",
+          "time": 0,
+          "offset": 0,
+          "channels": 1
+        },
+        {
+          "name": "armes/g_glock_pov-2.mp3",
+          "time": 1,
+          "offset": 0,
+          "channels": 1
+        }
+      ],
+      "firstPcmMs": 0.16666666666666666,
+      "peak": 0.5377821326255798,
+      "secondPeak": 0.5024547576904297,
+      "errors": []
+    },
+    {
+      "weapon": "p9",
+      "distance": 8,
+      "bank": "g_glock_near",
+      "starts": [
+        {
+          "name": "armes/g_glock_near-1.mp3",
+          "time": 0.023323615160349854,
+          "offset": 0,
+          "channels": 1
+        },
+        {
+          "name": "armes/g_glock_near-2.mp3",
+          "time": 1.0233236151603498,
+          "offset": 0,
+          "channels": 1
+        }
+      ],
+      "firstPcmMs": 30.666666666666668,
+      "peak": 0.08040347695350647,
+      "secondPeak": 0.08638012409210205,
+      "errors": []
+    },
+    {
+      "weapon": "p9",
+      "distance": 48,
+      "bank": "g_far_pistol",
+      "starts": [
+        {
+          "name": "armes/g_far_pistol-1.mp3",
+          "time": 0.13994169096209913,
+          "offset": 0,
+          "channels": 1
+        },
+        {
+          "name": "armes/g_far_pistol-2.mp3",
+          "time": 1.1399416909620992,
+          "offset": 0,
+          "channels": 1
+        }
+      ],
+      "firstPcmMs": 147.625,
+      "peak": 0.013901453465223312,
+      "secondPeak": 0.013136127963662148,
+      "errors": []
+    }
+  ],
+  "latch": {
+    "latch": true,
+    "sources": 1,
+    "firstPcmMs": 5.708333333333333,
+    "peak": 0.26511749625205994,
+    "errors": []
+  },
+  "cancelled": {
+    "cancelled": true,
+    "silence": true,
+    "remaining": 0
+  },
+  "runtimeBuild": "ff13002dba01f90bfe2bd221dd267df792c422a9699f98869f7f64b32f90963c"
+}
