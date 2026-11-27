@@ -63,7 +63,7 @@ export function compactModel(meshes){
   else{
    const copies=group.map(bakeRigidPart);
    m.geometry=mergeGeometries(copies);copies.forEach(g=>g.dispose());
-   if(!m.geometry)throw Error('Möbeldelarnas geometrier kunde inte sammanfogas.');
+   if(!m.geometry)throw Error('The furniture geometry could not be combined.');
   }
   m.name=source.name;m.receiveShadow=source.receiveShadow;m.renderOrder=source.renderOrder;model.add(m);
  }

@@ -84,7 +84,7 @@ export function combatEvent(g,e){
  if(e.type!=='kill'||g.state.zombies?.some(z=>z.id===e.actorId))return;
  if(victim){
   const received=victim.combat.incoming;
-  victim.combat.recap={attacker:source?.name||e.sourceName||'Miljön',weapon:e.weapon,
+  victim.combat.recap={attacker:source?.name||e.sourceName||'Environment',weapon:e.weapon,
    distance:source?Math.round(distance(source,victim)):null,
    damage:Math.round(Object.values(received).reduce((s,r)=>s+r.amount,0)),hits:Object.values(received).reduce((s,r)=>s+r.hits,0),
    streak:victim.combat.streak,at:e.time};
