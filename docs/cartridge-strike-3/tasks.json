@@ -58,7 +58,8 @@
       "status": "IN_PROGRESS",
       "branch": "cs3/02-handling",
       "pullRequests": [
-        49
+        49,
+        51
       ],
       "mergedSlices": [
         "1a0e1fab3ed2fe53f9764470039a89ebe5943598"
@@ -141,7 +142,10 @@
       "tests": "build-network --check, compact-arena/owner-door-traversal tests, multimap-browser/recovery, asset-memory and complete matches",
       "exit": "Original maps preserved. All nine have a source ID, capability assessment and explicit disposition. Each offered map passes versioned collision/nav/void, mode eligibility, spawn, lifecycle and measured budget.",
       "status": "IN_PROGRESS",
-      "branch": "cs3/07-reference-maps"
+      "branch": "cs3/07-reference-maps",
+      "pullRequests": [
+        52
+      ]
     },
     {
       "id": "CS3-08",
