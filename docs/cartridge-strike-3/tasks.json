@@ -42,6 +42,12 @@
       "pullRequests": [
         48,
         50
+      ],
+      "mergedSlices": [
+        "65a6f06385a3fa8944ed605ebdd4680522f70588"
+      ],
+      "evidence": [
+        "evidence/01-private-entry.md"
       ]
     },
     {
@@ -59,7 +65,8 @@
       "branch": "cs3/02-handling",
       "pullRequests": [
         49,
-        51
+        51,
+        53
       ],
       "mergedSlices": [
         "1a0e1fab3ed2fe53f9764470039a89ebe5943598"
