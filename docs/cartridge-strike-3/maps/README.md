@@ -68,3 +68,14 @@ WAYLAND_DISPLAY=wayland-0 CS3_BENCH_LEVEL=meltem CS3_BENCH_OUT="$scratch" \
 ```
 
 The private TLS room fixture then passed a complete 45-second Meltem match on map-branch revision `377595e` with one rendered touch client and one SDK peer. The host selected the map in the waiting room. The Pi received 0.71 m of stick movement and two shots, confirmed the same seat and map after reconnect, accepted rematch, then released both sockets and the room. The host rendered at 713 × 321 on V3D with a 915 × 412 emulated viewport. Across 567 intervals the client recorded 16.6 ms median, 22.2 ms p95 and a 126.6 ms maximum. Across 605 ticks the server recorded 0.51 ms median execution, 1.07 ms p95 and a 6.86 ms maximum. This two-human profile had zero bots. [Room results and phase timings](meltem-room-touch.json) · [Rendered match after input](meltem-room-touch.jpg)
+
+The protocol-15 family-room run at `1daf1f6` used one rendered desktop player and nine authority-controlled bots. An earlier run found that network setup replaced the map’s 76 raised and ground-level patrol destinations with an empty list. The corrected setup preserves those destinations and bot goal elevation. The 45-second rematch fixture finished 1–1, with forward movement, right-click aim and a shot acknowledged by the authority. Over the measured ten seconds, server work took 1.23 ms median, 6.08 ms p95, 12.65 ms p99 and 20.4 ms maximum. Client frame intervals were 23.3 ms median, 34.0 ms p95 and 61.9 ms maximum on the Pi driving the renderer and server together. Adaptive resolution ranged from 0.47 to 0.77. [Desktop room measurements](meltem-room-desktop.json) · [Rendered gameplay](meltem-room-desktop.jpg)
+
+The host switched that same room between Floor 5 and Meltem 20 times. After every switch one renderer was alive and reachable. On each return Floor 5 had 358 geometries and 124 textures, Meltem had 368 geometries and 59 textures. The damaged-map test rejected a modified Floor 5 level, released its seat and then reopened the saved map with the intact level. JavaScript heap after requested garbage collection rose from 39.67 to 47.36 MiB on Meltem and from 73.16 to 81.56 MiB on Floor 5 over those ten visits per map. The candidate still needs a retained-allocation comparison to establish the cause and verify a steady state. The fixture records each individual switch and heap reading.
+
+```sh
+scratch=$(mktemp -d)
+WAYLAND_DISPLAY=wayland-0 CHROMIUM_PATH=/usr/bin/chromium FPS_NETWORK_HEADED=1 \
+  FPS_NETWORK_ANGLE=gl-egl FPS_MAP_CASE=meltem FPS_MAP_SWITCH_PAIRS=10 FPS_MAP_OUT="$scratch" \
+  node --import ./server/register-shared.mjs tools/multimap-browser.mjs
+```

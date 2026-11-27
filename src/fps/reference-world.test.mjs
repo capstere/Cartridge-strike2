@@ -71,3 +71,21 @@ test('an empty or one-team Endless room starts with an inactive bomb at a real m
     assert.deepEqual([game.bomb.x,game.bomb.y,game.bomb.z],[anchor.x,anchor.y,anchor.z]);
   }
 });
+
+
+test('room preparation retains all 76 authored patrol destinations for nine active bots',async()=>{
+  const {prepareNetworkWorld}=await import('../../shared/multiplayer/world.mjs');
+  const roomWorld=prepareNetworkWorld(createWorld({levelProject:project,fresh:true}));
+  assert.deepEqual(roomWorld.tactical.patrolPoints,project.referenceMap.poi.map(([x,y,z])=>({x,y,z})));
+  assert.equal(roomWorld.tactical.patrolPoints.length,76);
+  const {ROOM_SEATS}=await import('../../server/room-world.mjs');
+  const controllers=Object.fromEntries(ROOM_SEATS.map(id=>[id,'human']));
+  const game=new Game(roomWorld,{controllers,config:{mode:'endless',networkSlice:true,wanderers:false}}).start();
+  for(const actor of game.actors.slice(1))actor.controllerType='bot';
+  game.beginRound();
+  assert.equal(game.actors.filter(a=>a.bot).length,9);
+  for(let i=0;i<60;i++)game.stepActors(new Map());
+  const bot=game.actors.find(a=>a.bot).bot,roof=roomWorld.tactical.patrolPoints.find(p=>p.y>3);
+  bot.setGoal(roof);assert.deepEqual(bot.goal,roof);
+  assert.ok(roomWorld.findPath(bot.actor,bot.goal).length);
+});
