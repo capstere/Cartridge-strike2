@@ -1,3 +1,4 @@
+import {referenceScene} from './reference-scene.mjs';
 import {ActorOcclusion} from './actor-occlusion.mjs';
 import {preparedFloorFinish} from '../../furniture-editor/build/floor5-appearance.mjs';
 import {microFinishMaterial} from '../../furniture-editor/build/pattern-materials.mjs?v=5.6.1';
@@ -66,6 +67,7 @@ export class Renderer extends EngineRenderer {
   constructor(canvas,world,settings){
     const visualWorld={...world,description:{...world.description,boxes:world.description.boxes.filter(b=>!b.livingVisual)}};
     super(canvas,visualWorld,settings);
+    if(world.referenceId)this.referenceScene=referenceScene(this.scene,world,settings);
     if(!world.newLevel){this.detailScene=buildFacilityDetails(world.details,this.registry);this.scene.add(this.detailScene.root);freezeStaticTransforms(this.detailScene.root);}
     this.glassVisuals=new GlassVisuals(this.scene,world.glass,this.registry);
     this.visualDepth=this.neutralLighting?null:new VisualDepth(this.renderer);this.inspectAt=-Infinity;this.inspectActor=null;
@@ -76,6 +78,7 @@ export class Renderer extends EngineRenderer {
     this.actorOcclusion=this.neutralLighting?new ActorOcclusion(world):null;
     this.nativeRender=this.renderer.render.bind(this.renderer);this.inDepthPass=false;
     this.renderer.render=(scene,camera)=>{
+      if(scene===this.scene&&!this.inDepthPass)this.referenceScene?.update(camera);
       if(scene===this.scene&&!this.inDepthPass)this.doorVisuals?.update(camera,this.renderer.shadowMap.enabled?this.lights:[]);
       if(scene===this.scene&&!this.inDepthPass){
         const residents=this.presentationGame?.state.zombies;
@@ -105,7 +108,7 @@ export class Renderer extends EngineRenderer {
     this.presentationDisposed=false;this.presentationRestores=[];this.presentationField=null;
     // Stage the field before the existing app declares its assets ready. Never bake in render().
     if(!world.networkSlice&&isZombieFloor(world))this.zombieVisuals=new ZombieVisuals(this.scene,settings.mobile);
-    this.assetsReady=Promise.all([this.assetsReady,this.zombieVisuals?.ready]).then(async()=>{
+    this.assetsReady=Promise.all([this.assetsReady,this.zombieVisuals?.ready,this.referenceScene?.ready]).then(async()=>{
       if(this.presentationDisposed)return;
       if(world.projectScene){
        this.projectFurniture=new THREE.Group();this.scene.add(this.projectFurniture);
@@ -265,7 +268,7 @@ export class Renderer extends EngineRenderer {
   }
   dispose({keepCharacterLibrary=false}={}){
     if(this.presentationDisposed)return;this.presentationDisposed=true;
-    this.zombieVisuals?.dispose();this.floorEnvironment?.dispose();this.glassVisuals?.dispose();this.detailScene?.dispose();this.doorVisuals?.dispose();this.riposteProps?.dispose();
+    this.referenceScene?.dispose();this.zombieVisuals?.dispose();this.floorEnvironment?.dispose();this.glassVisuals?.dispose();this.detailScene?.dispose();this.doorVisuals?.dispose();this.riposteProps?.dispose();
     this.focusLighting?.dispose();this.facilityScene?.dispose();
     for(const restore of this.presentationRestores||[])restore();
      for(const m of this.floor5PatternMaterials?.values()||[])m.dispose();this.floor5PatternMaterials?.clear();

@@ -129,6 +129,6 @@ export function combatSpawnCandidates(g,a){
  const home=g.world.anchors[a.team][0],dx=home.x-zone.x,dz=home.z-zone.z;
  const nodes=g.world.navigation.nodes.filter(n=>{const d=distance(n,zone);return d>=9&&d<=17&&(n.x-zone.x)*dx+(n.z-zone.z)*dz>0;});
  const stride=Math.max(1,Math.ceil(nodes.length/32));
- const pool=nodes.filter((_,i)=>i%stride===0).filter(n=>g.world.canOccupy(n.x,n.z,a.radius+.02,a.height,0)&&g.world.findPath(zone,n).length).map(n=>({x:n.x,z:n.z,frontline:true}));
+ const pool=nodes.filter((_,i)=>i%stride===0).filter(n=>g.world.canOccupy(n.x,n.z,a.radius+.02,a.height,n.y??0)&&g.world.findPath(zone,n).length).map(n=>({x:n.x,y:n.y??0,z:n.z,frontline:true}));
  g.combatSpawnPools.set(key,pool);return pool;
 }
