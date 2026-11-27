@@ -73,7 +73,7 @@
       "scope": "First prove CR4 and P9 hip → Rush → release/ADS/short fire in both normal input paths and under reconciliation. Extend to slide, reload/inspect/switch, grenade hold/return and remaining held models. Preserve manual/auto-fire and saved bindings.",
       "tests": "RECORDING_REVIEW V2/V4/V6, input tick → legal shot → ammo/FX, near/far A/V onset, pause/cancel. Use view-arms-capture, recoil-autofire, online-equipment and the sprint-reload reticle fixture.",
       "exit": "Readable camera and grips, distinct supported poses, no lost tap or duplicate shot/foley. Fixed-step client/server/offline trace and synchronized video per weapon family.",
-      "status": "IN_PROGRESS",
+      "status": "REVIEW",
       "branch": "cs3/02-buffered-slide",
       "pullRequests": [
         49,
@@ -96,7 +96,10 @@
         "cs3/02-spatial-audio",
         "cs3/02-buffered-slide",
         "cs3/02-rush-latency"
-      ]
+      ],
+      "reviewHead": "4ce7aaa56aa9201a4c4ca13e6cb8975315763af4",
+      "reviewRun": 46031863063,
+      "independentReview": "Package accepted against its recorded runtime, subject to the integrated hosted checks."
     },
     {
       "id": "CS3-03",
@@ -125,12 +128,15 @@
       "scope": "Scoped remembered sessions, invite link/QR/short code, migration, optional accounts/recovery/stats storage, secure public listing behind off-by-default flag.",
       "tests": "network-family-browser, network-pilot-browser, security/expiry/revoke/replay tests, migration/restore. Verify guest Pages flow separately from Pi pilot proof, room proof and account identity.",
       "exit": "Two-client old and new access, private credentials protected, real persistent accounts.",
-      "status": "IN_PROGRESS",
+      "status": "REVIEW",
       "branch": "cs3/04-account-access",
       "baseline": "adb3cdf6c7c0a8721cecc1db30602eea1fe200f6",
       "pullRequests": [
         55
-      ]
+      ],
+      "reviewHead": "c36017025c012d4806301b05af1932f72ab2abcf",
+      "reviewRun": 46031933296,
+      "independentReview": "Package accepted against its recorded runtime, subject to the integrated hosted checks."
     },
     {
       "id": "CS3-05",
