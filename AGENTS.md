@@ -1,6 +1,6 @@
-# Cartridge-Strike repository — CS3 review gate
+# Cartridge-Strike development
 
-Read [CS3 program](docs/cartridge-strike-3/README.md), [CODEX_HANDOVER](docs/cartridge-strike-3/CODEX_HANDOVER.md) and [PROJECT_STATUS](docs/cartridge-strike-3/PROJECT_STATUS.md). CS3 preparation is REVIEW_REQUIRED. Do not execute implementation or deployment until explicit owner approval of the preparation. After approval the CS3 program supersedes the historical first-open-task rule for the CS3 assignment. English is mandatory for CS3 player-facing UI, server notices and new documentation. The existing CS2 instructions below remain valid for historical maintenance and recovery; do not silently change production. Keep one writer per shared file, maximum existing agent concurrency, one heavy Pi job.
+For the authorized CS3 assignment, read the [program](docs/cartridge-strike-3/README.md), [lead handover](docs/cartridge-strike-3/CODEX_HANDOVER.md), [status](docs/cartridge-strike-3/PROJECT_STATUS.md) and task manifest. Jesper approved the preparation review, dependency-ordered development and production release subject to CS3-12. Work on develop/cartridge-strike-3 and focused branches. All listed dependencies must be VERIFIED. Maintain the English player experience, saved content and CS2 recovery path. One writer per shared file, up to three delegated threads and one heavy Pi job. Keep feature changes off main until the release gates pass. The historical CS2 instructions below still govern CS2 maintenance and recovery.
 
 ---
 

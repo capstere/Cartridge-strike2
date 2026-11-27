@@ -1,9 +1,6 @@
 # Lead Codex assignment — Cartridge-Strike 3
 
-**Gate:** REVIEW_REQUIRED. The independent preparation review is recorded in PROJECT_STATUS. Explicit owner approval is pending. Merging documentation alone does not approve implementation. If started before approval, report gate and inspect read-only. After owner approves, record approval and preparation merge SHA in PROJECT_STATUS.md and tasks.json, then execute program.
-
-## Startup instruction for owner after approval
-"Read AGENTS.md and docs/cartridge-strike-3/CODEX_HANDOVER.md. The preparation is approved. Execute the complete Cartridge-Strike 3 development program on the Raspberry Pi in dependency order. Coordinate agents, test every phase, integrate and release only after the documented gates."
+**Owner authorization recorded.** Jesper approved PR #47 at `f1f36396`. Preparation merged at `5364240599164c0aee278bb0ac2a35d662c3a818`. The authorization covers development and eventual release after the documented gates. Resume from `develop/cartridge-strike-3` and the first eligible unfinished row in [tasks.json](tasks.json). Read [project status](PROJECT_STATUS.md) for current measurements and open checks.
 
 ## Lead execution procedure
 1. Read README, MASTER_PLAN, CURRENT_STATE_AUDIT, decisions, architecture, source matrix, all specifications, task DAG, existing root handover and deploy docs. Use English for player UI and new project documentation. No need to ask owner to repeat prior chats. Recheck current main and backup reference, production revision and exact repo/working tree; do not assume identical. Review any intervening changes. Verify existing CI and Pi CLI agent discovery, current processes and resource limits. 

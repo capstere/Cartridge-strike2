@@ -1,6 +1,6 @@
 # Cartridge-Strike 3 — development program
 
-**Preparation only. Status: REVIEW_REQUIRED.** No gameplay implementation or production activation is authorized by this preparation PR. See [CODEX_HANDOVER](CODEX_HANDOVER.md) and [PROJECT_STATUS](PROJECT_STATUS.md).
+**Development authorized.** Use [lead handover](CODEX_HANDOVER.md), [current status](PROJECT_STATUS.md) and [task dependencies](tasks.json) to resume. Release requires CS3-12.
 
 The existing repository and https://cs2.capstere.com remain the release destination. English (en) is the mandatory default and complete player-facing language, including desktop/mobile, server notices and help. CS2 remains recoverable.
 

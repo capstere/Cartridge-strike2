@@ -1,10 +1,10 @@
 # Persistent project status
 
-**REVIEW_REQUIRED · owner approval pending.** The pre-implementation review covers preparation head `b387b4d`, main `1a9dc3f`, and the local Riposte source tree recorded in tasks.json. All 13 implementation packages remain NOT_STARTED. English is a release requirement. The existing CS2 game still contains Swedish. CS3-00 owns the private backup/restore, comparable baselines and architecture gates.
+**Development approved. CS3-00 in progress.** Jesper authorized the complete program and gated production release. [PR #47](https://github.com/capstere/Cartridge-strike2/pull/47) merged at `5364240599164c0aee278bb0ac2a35d662c3a818` after [all eight jobs](https://github.com/capstere/Cartridge-strike2/actions/runs/45976270665) passed on `f1f363963cd082c6cc1b0f6289c3f9b616064e83`. The reviewed draft head and merge preserve the CS2 game runtime. Development and its evidence live on the integration branch `develop/cartridge-strike-3`. The Pi remains on its verified CS2 release.
 
 | ID | State | Next action |
 | --- | --- | --- |
-| CS3-00 | NOT_STARTED | After approval: verify Pi baseline and backup, run tests |
+| CS3-00 | IN_PROGRESS | Complete the private restore and performance baseline, then independently review the receipts. |
 | CS3-01 | NOT_STARTED | Wait for CS3-00 |
 | CS3-02 | NOT_STARTED | Wait for CS3-00 |
 | CS3-03 | NOT_STARTED | Wait for CS3-00, CS3-01, CS3-02 |
@@ -20,7 +20,22 @@
 
 Update tasks.json in sync with this document. Allowed states NOT_STARTED / IN_PROGRESS / BLOCKED / REVIEW / VERIFIED. For each task maintain exact SHA, actual changed files, reference symbols, commands/results, evidence, known gaps, next executable action. Before context compaction or reset save this state and the lead's decisions. Do not infer progress from task descriptions. Gate changes only with explicit owner approval and preparation PR review; record approval/PR/merge SHA. Do not begin implementation merely because preparation files are merged.
 
-## Pre-implementation review on November 27
+## CS3-00 execution
+
+The approved preparation head and merge share the CS2 runtime. The [production identity](baseline/identity.json) records the live and previous revisions, exact protocol/build, compared directories and Pages publishing ref. The [interface decisions](baseline/contracts.md) tie each proposed cross-system change to an owner and a working reference implementation.
+
+| Check from repository root at the preparation head | Result on Raspberry Pi 5 |
+| --- | --- |
+| `node --experimental-loader ./tools/vendor-three-test-loader.mjs --test src/fps/*.test.mjs tools/*.test.mjs` | 258 passed in 147.3 s |
+| `npm test --prefix server` | 53 passed in 152.0 s |
+| `python3 deploy/online/test_manage.py` | 7 passed |
+| `node tools/verify-owner-runtime.mjs` | 528 manifest files verified |
+| `npm run build --prefix server -- --check` | 107 compatibility sources, protocol 14 |
+| `node --experimental-vm-modules docs/cartridge-strike-3/baseline/runtime-inventory.mjs` | Five script entry points, 166 statically imported modules, 230 editor dependencies, 59,025,743 manifest bytes |
+
+The production sample showed healthy services and zero rooms. Private restoration and matched performance measurements are in progress. The lead will record the sanitized receipts, reviewer decision and subsequent work here.
+
+## Historical pre-implementation review on November 27
 
 The lead reviewed both fetched branches and the full preparation program with gameplay, performance and an independent reviewer. The backup ref still resolves to `239b15b01040c2b0a1fd394f3be158cfb006d82a`. Main `1a9dc3f10605a7ccd2c28fef354b25bcd4418c1b` has seven media-only commits beyond that runtime. The [source audit](SOURCE_REVIEW.md) covers the 966-file vendored tree, including all 144 runtime scripts. The [screenshot inventory](UI_UX_SPECIFICATION.md) covers IMG_8150–IMG_8165. The [recording report](RECORDING_REVIEW.md) gives the five archive blobs and extracted hashes, 451 timestamped frames, stereo audio and the observed transitions. All decoding and local browser captures used private scratch directories. Heavy jobs ran serially.
 
