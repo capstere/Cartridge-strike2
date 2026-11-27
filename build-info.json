@@ -1951,13 +1951,13 @@
     },
     {
       "path": "shared/multiplayer/access-english.mjs",
-      "bytes": 5865,
-      "sha256": "8f451253499a9fce97c10b37dfb06da2565ba8f4e23ade96db4e5ab35221ac5e"
+      "bytes": 6009,
+      "sha256": "b5435caf8e52d6c32446ee179e07b25f8c3a310bc9c2d2edd1628d5e125e248d"
     },
     {
       "path": "shared/multiplayer/build.mjs",
       "bytes": 660,
-      "sha256": "6f686482605422347d36e08e2015d844fc51cc9e89aafd138295301659411248"
+      "sha256": "291da384405585c7b235075f3a478b21058b2fea9d4de5c57036e2b5c2d6c8fb"
     },
     {
       "path": "shared/multiplayer/collision-contract.mjs",
@@ -1977,7 +1977,7 @@
     {
       "path": "shared/multiplayer/map-build.mjs",
       "bytes": 1215,
-      "sha256": "b6a860e390ec3bbeeb93e295b4002999210dfa7427902ecdba8ab5b3addab8df"
+      "sha256": "d21888f3e1ee91cb6243937a87ceb6c0276697914c85f5f178043acd2b435969"
     },
     {
       "path": "shared/multiplayer/maps.mjs",
@@ -2041,8 +2041,8 @@
     },
     {
       "path": "src/fps/app.mjs",
-      "bytes": 53486,
-      "sha256": "d74c495a2677d87cba8393c7fcbb8f89afde1aed7ec0d8bdbb57178000046084"
+      "bytes": 53515,
+      "sha256": "3f274f48a42f55467874dbc50f22c3bb9ddd0e65b39dc9a0ffa632ee6ad26ed5"
     },
     {
       "path": "src/fps/audio.mjs",
@@ -2336,8 +2336,8 @@
     },
     {
       "path": "src/fps/network/connection.mjs",
-      "bytes": 2241,
-      "sha256": "af45e785980a1d6968ec7b4f5812a4b85c1a404e564382bb0bdda2b21ba4f3e2"
+      "bytes": 2463,
+      "sha256": "3389db75c38de0c8a7c37ee109e454fa59d3150ce5b1c9149e758e8337b13dd4"
     },
     {
       "path": "src/fps/network/menu.mjs",
@@ -2351,8 +2351,8 @@
     },
     {
       "path": "src/fps/network/session.mjs",
-      "bytes": 35428,
-      "sha256": "19d4e40672a8b7ddaa7c1a35de1ec66dd6cc4da6a30e1d24d211546281133899"
+      "bytes": 35467,
+      "sha256": "5ac9c7e25a2902781072b33790b953ce4f4ad3a855f19ce859a4eea9265b5f5c"
     },
     {
       "path": "src/fps/physics.mjs",
@@ -2655,7 +2655,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 59030349,
+  "bytes": 59030783,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

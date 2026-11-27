@@ -97,6 +97,11 @@ try{
     console.log('LAN both pages active before room creation');
   }
   await b.screenshot({path:`test-results/lan/${mobileEngine}-lobby.png`});
+  const roomsBeforeInvalidCode=local.rooms.size;
+  await form(b,{code:'team_one'});
+  const invalidCode=b.locator('#network-status[data-error-id=invalidOptions]');
+  await invalidCode.filter({hasText:'6–64 letters, numbers or hyphens'}).waitFor();
+  assert.equal(local.rooms.size,roomsBeforeInvalidCode,'An invalid new room code cannot allocate a room');
   let id;
   if(protocolPeer)id=a.room.roomId;
   else{await form(a);await joined(a);id=await a.locator('#network-room').inputValue();}

@@ -28,7 +28,8 @@ const familyRoomLink=isFamilyRoomLink(location.search);
 import {networkMap} from '../../shared/multiplayer/maps.mjs';
 import {sha256} from '../../shared/sha256.mjs';
 let networkSession=null,networkUi=null,onlineRoomUi=null,networkJoinGeneration=0;
-import {connectionMessage} from './network/connection.mjs';
+import {accessText as accessEnglish} from '../../shared/multiplayer/access-english.mjs';
+import {connectionFailure, connectionMessage, MapLoadError} from './network/connection.mjs';
 import {roomUi} from './network/room-ui.mjs';
 const touchDevice=isTouchDevice();
 const renderBudget=new RenderBudget();
@@ -93,7 +94,7 @@ function loadRoomWorld(contract,mode,signal){
   if(displayMapId!==contract.mapId){
    const map=networkMap(contract.mapId);
    const response=await fetch('../'+map.file,{signal,cache:'no-store'});
-   if(!response.ok)throw Error('Kunde inte ladda '+map.name+'. Anslut igen för att försöka på nytt.');
+   if(!response.ok)throw new MapLoadError(map.name);
    const body=await response.text();
    if(await sha256(body)!==contract.mapHash)throw Error('Map version mismatch');
    signal.throwIfAborted();
@@ -309,8 +310,8 @@ async function joinNetwork(options){
  if(generation!==networkJoinGeneration)throw Error('Join cancelled.');
  const session=new NetworkSession(null,{loadWorld:loadRoomWorld,onLoading:id=>{
   if(networkSession!==session)return;
-  networkUi?.status('Laddar '+networkMap(id).name+'…');if(game===session.view)onlineRoomUi?.update(session);
- },onMatch:()=>{if(networkSession===session&&game===session.view)networkPhase();},onConnection:status=>{if(networkSession!==session)return;clearInput();audio.reset();renderer?.resetTransient();recoil.reset();if(status==='reconnecting')showPause();$('pause').querySelector('p:not(.eyebrow)').textContent=status==='reconnecting'?'Återansluter… Platsen reserveras i 15 sekunder. Matchen fortsätter.':'Ansluten igen. Tryck Fortsätt för kontroller och ljud.';},onDisconnect:message=>{if(networkSession!==session)return;newMatch();networkUi?.status(connectionMessage(message));}});
+  networkUi?.status(accessEnglish.loadingMap(networkMap(id).name));if(game===session.view)onlineRoomUi?.update(session);
+ },onMatch:()=>{if(networkSession===session&&game===session.view)networkPhase();},onConnection:status=>{if(networkSession!==session)return;clearInput();audio.reset();renderer?.resetTransient();recoil.reset();if(status==='reconnecting')showPause();$('pause').querySelector('p:not(.eyebrow)').textContent=status==='reconnecting'?accessEnglish.reconnectingHelp:accessEnglish.reconnected;},onDisconnect:message=>{if(networkSession!==session)return;newMatch();networkUi?.status(connectionMessage(message),connectionFailure(message));}});
  networkSession=session;
  try{await session.connect(options);if(session.room.state.mode==='classic')await renderer.prepareClassic();if(generation!==networkJoinGeneration){await session.dispose();throw Error('Join cancelled.');}}
  catch(e){await session.dispose();if(networkSession===session)networkSession=null;throw e;}

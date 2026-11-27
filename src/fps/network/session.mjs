@@ -191,7 +191,7 @@ export class NetworkSession {
     this.predict=Predict.get(room,{mode:'lerp',delay:INTERPOLATION_MS});
     this.snapshot();
     await wait(()=>this.closed||(this.worldRevision===room.state.worldRevision&&room.state.actors.get(this.localPlayerId)?.ready),125000);
-    if(this.closed)throw Error(this.problem||'Room closed before spawn.');
+    if(this.closed)throw this.problem instanceof Error ? this.problem : Error(this.problem||'Room closed before spawn.');
     this.connectionState='connected';this.snapshot();
     this.lastWatchdog=performance.now();this.silenceSince=0;
     this.watchdog=setInterval(()=>this.checkConnection(performance.now()),1000);
@@ -229,7 +229,7 @@ export class NetworkSession {
       this.worldRevision=worldRevision;this.loadingRevision=null;
       this.snapshot();
     }).catch(error=>{
-      if(!signal.aborted&&!this.closed)this.disconnect(error.message);
+      if(!signal.aborted&&!this.closed)this.disconnect(error);
     });
   }
   snapshot(){

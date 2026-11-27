@@ -1,5 +1,11 @@
 import {accessText as en} from '../../../shared/multiplayer/access-english.mjs';
 
+export class MapLoadError extends Error {
+  constructor(mapName) {
+    super(en.mapLoadFailed(mapName));
+  }
+}
+
 export function networkEndpoint(endpoint = globalThis.location?.origin, origin = globalThis.location?.origin) {
   let url;
   try {
@@ -17,6 +23,7 @@ export function networkEndpoint(endpoint = globalThis.location?.origin, origin =
 // Some Colyseus versions send only the server's reason string. Classify that
 // transport input here so the UI never derives a recovery action from its label.
 export function connectionFailure(error) {
+  if (error instanceof MapLoadError) return {id: 'mapLoadFailed', message: error.message, recovery: 'retry'};
   const reason = String(error?.message || error || '');
   const code = Number(error?.code);
   let id;

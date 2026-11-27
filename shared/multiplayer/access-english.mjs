@@ -104,7 +104,7 @@ export const accessText = Object.freeze({
   roomMissing: "Room not found. Check the room ID or create a new room.",
   outdated: "The game and server versions differ. Reload on both devices.",
   busy: "Too many rooms or connection attempts. Wait a moment and try again.",
-  invalidOptions: "Use a short player name and a private room code of 6–64 letters, numbers, underscores or hyphens.",
+  invalidOptions: "Use a short player name and a private room code of 6–64 letters, numbers or hyphens.",
   pilotExpired: "Your server invite session has expired. Sign in again with the server invite code.",
   originDenied: "Open the game directly from the shared server address.",
   unreachable: "Cannot reach the server. Check the connection and server address, then try again.",
@@ -117,5 +117,7 @@ export const accessText = Object.freeze({
   preview: name => `Gameplay view of ${name}`,
   roundsWon: rounds => `${rounds} round wins`,
   secondary: name => ` + ${name} · Knife · 1 HE`,
+  mapLoadFailed: name => `Could not load ${name}. Rejoin the room to try again.`,
+  reconnected: "Reconnected. Select Resume to enable controls and sound.",
   loadingMap: name => `Loading ${name}…`,
 });
