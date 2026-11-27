@@ -1,0 +1,351 @@
+{
+  "build": "55dbca6e1f72c611eb42fe5913f62027f71753bbeed997e5803a4659d9f8dfbe",
+  "sha256": "777ea7b91f9180bf260be8f87254eb4639b67d27ff2bef110245c38dd659b47c",
+  "bytes": 2437854,
+  "durationSeconds": 50.414,
+  "streams": [
+    {
+      "codec_name": "vp8",
+      "codec_type": "video",
+      "width": 633,
+      "height": 292,
+      "nb_read_packets": "723"
+    },
+    {
+      "codec_name": "opus",
+      "codec_type": "audio",
+      "sample_rate": "48000",
+      "nb_read_packets": "840"
+    }
+  ],
+  "families": [
+    {
+      "weapon": "p9",
+      "inputSeconds": {
+        "select": 0.631,
+        "inspect": 0.906,
+        "fire": 1.273,
+        "tactical reload": 1.595,
+        "cancel with knife": 2.32,
+        "final round": 2.835,
+        "empty reload": 2.961,
+        "ready": 4.555
+      },
+      "events": {
+        "shot": 2,
+        "reload": 2
+      },
+      "decodedSources": {
+        "armes/g_glock_pov-1.mp3": 1,
+        "p9:out:0": 2,
+        "armes/g_glock_pov-2.mp3": 1,
+        "p9:in:0": 1,
+        "p9:action:0": 1
+      },
+      "decodedMedia": {
+        "checkedSeconds": 1.186,
+        "lumaStandardDeviation": 58.1,
+        "actionWindowStartSeconds": 1.273,
+        "actionWindowRmsDbFS": -39.4
+      }
+    },
+    {
+      "weapon": "p12",
+      "inputSeconds": {
+        "select": 4.992,
+        "inspect": 5.292,
+        "fire": 5.732,
+        "tactical reload": 6.05,
+        "cancel with knife": 6.705,
+        "final round": 7.263,
+        "empty reload": 7.374,
+        "ready": 8.965
+      },
+      "events": {
+        "shot": 2,
+        "reload": 2
+      },
+      "decodedSources": {
+        "armes/g_pistol_pov-1.mp3": 1,
+        "p9:out:0": 2,
+        "armes/g_pistol_pov-2.mp3": 1,
+        "p9:in:0": 1,
+        "p9:action:0": 1
+      },
+      "decodedMedia": {
+        "checkedSeconds": 5.572,
+        "lumaStandardDeviation": 57.5,
+        "actionWindowStartSeconds": 5.732,
+        "actionWindowRmsDbFS": -37.3
+      }
+    },
+    {
+      "weapon": "cr4",
+      "inputSeconds": {
+        "select": 9.421,
+        "inspect": 9.721,
+        "fire": 10.185,
+        "tactical reload": 10.428,
+        "cancel with knife": 11.271,
+        "final round": 11.837,
+        "empty reload": 11.914,
+        "ready": 14.042
+      },
+      "events": {
+        "shot": 2,
+        "reload": 2
+      },
+      "decodedSources": {
+        "armes/g_rifle_pov-1.mp3": 1,
+        "armes/g_rifle_pov-2.mp3": 1,
+        "charge_rifle-2": 1
+      },
+      "decodedMedia": {
+        "checkedSeconds": 10.001,
+        "lumaStandardDeviation": 62.1,
+        "actionWindowStartSeconds": 10.185,
+        "actionWindowRmsDbFS": -37.2
+      }
+    },
+    {
+      "weapon": "ar47",
+      "inputSeconds": {
+        "select": 14.481,
+        "inspect": 14.792,
+        "fire": 15.25,
+        "tactical reload": 15.509,
+        "cancel with knife": 16.394,
+        "final round": 16.943,
+        "empty reload": 17.052,
+        "ready": 19.395
+      },
+      "events": {
+        "shot": 2,
+        "reload": 2
+      },
+      "decodedSources": {
+        "armes/g_ak_pov-1.mp3": 1,
+        "armes/g_ak_pov-2.mp3": 1,
+        "charge_rifle-1": 1
+      },
+      "decodedMedia": {
+        "checkedSeconds": 15.072,
+        "lumaStandardDeviation": 64.8,
+        "actionWindowStartSeconds": 15.25,
+        "actionWindowRmsDbFS": -37.6
+      }
+    },
+    {
+      "weapon": "smg",
+      "inputSeconds": {
+        "select": 19.844,
+        "inspect": 20.117,
+        "fire": 20.485,
+        "tactical reload": 20.718,
+        "cancel with knife": 21.436,
+        "final round": 21.979,
+        "empty reload": 22.062,
+        "ready": 23.892
+      },
+      "events": {
+        "shot": 2,
+        "reload": 2
+      },
+      "decodedSources": {
+        "armes/g_smg_pov-1.mp3": 1,
+        "armes/g_smg_pov-2.mp3": 1,
+        "charge_rifle-1": 1
+      },
+      "decodedMedia": {
+        "checkedSeconds": 20.397,
+        "lumaStandardDeviation": 73.1,
+        "actionWindowStartSeconds": 20.485,
+        "actionWindowRmsDbFS": -39.2
+      }
+    },
+    {
+      "weapon": "shotgun",
+      "inputSeconds": {
+        "select": 24.313,
+        "inspect": 24.581,
+        "fire": 25.021,
+        "tactical reload": 25.695,
+        "cancel with knife": 26.75,
+        "final round": 27.284,
+        "empty reload": 27.375,
+        "ready": 30.014
+      },
+      "events": {
+        "shot": 2,
+        "reload": 2
+      },
+      "decodedSources": {
+        "armes/g_shotgun_pov-1.mp3": 1,
+        "pump-1": 2,
+        "armes/g_shotgun_pov-2.mp3": 1
+      },
+      "decodedMedia": {
+        "checkedSeconds": 24.861,
+        "lumaStandardDeviation": 68.6,
+        "actionWindowStartSeconds": 25.021,
+        "actionWindowRmsDbFS": -37.8
+      }
+    },
+    {
+      "weapon": "sniper",
+      "inputSeconds": {
+        "select": 30.468,
+        "inspect": 30.719,
+        "fire": 31.118,
+        "tactical reload": 31.945,
+        "cancel with knife": 33.079,
+        "final round": 33.618,
+        "empty reload": 33.692,
+        "ready": 36.613
+      },
+      "events": {
+        "shot": 2,
+        "reload": 2
+      },
+      "decodedSources": {
+        "armes/g_sniper_pov-1.mp3": 1,
+        "bolt-1": 2,
+        "armes/g_sniper_pov-2.mp3": 1
+      },
+      "decodedMedia": {
+        "checkedSeconds": 30.999,
+        "lumaStandardDeviation": 71.7,
+        "actionWindowStartSeconds": 31.118,
+        "actionWindowRmsDbFS": -37.1
+      }
+    },
+    {
+      "weapon": "bazooka",
+      "inputSeconds": {
+        "select": 37.037,
+        "inspect": 37.271,
+        "fire": 37.635,
+        "empty reload": 37.734,
+        "ready": 40.532
+      },
+      "events": {
+        "shot": 1,
+        "rocket-launch": 1,
+        "reload": 1
+      },
+      "decodedSources": {},
+      "decodedMedia": {
+        "checkedSeconds": 37.551,
+        "lumaStandardDeviation": 77.9,
+        "actionWindowStartSeconds": 37.635,
+        "actionWindowRmsDbFS": -19.3
+      }
+    },
+    {
+      "weapon": "knife",
+      "inputSeconds": {
+        "select": 40.664,
+        "swing": 40.906,
+        "ready": 41.428
+      },
+      "events": {
+        "shot": 1
+      },
+      "decodedSources": {
+        "foley/f_knife-1.mp3": 1
+      },
+      "decodedMedia": {
+        "checkedSeconds": 41.006,
+        "lumaStandardDeviation": 46.7,
+        "actionWindowStartSeconds": 40.906,
+        "actionWindowRmsDbFS": -38.2
+      }
+    },
+    {
+      "weapon": "smoke",
+      "inputSeconds": {
+        "select": 41.433,
+        "pull and hold": 41.717,
+        "release": 42.228,
+        "return": 42.665
+      },
+      "events": {
+        "cartridge-latch": 1,
+        "throw": 1
+      },
+      "decodedSources": {
+        "foley/f_pin.mp3": 1
+      },
+      "decodedMedia": {
+        "checkedSeconds": 42.117,
+        "lumaStandardDeviation": 49.0,
+        "actionWindowStartSeconds": 41.717,
+        "actionWindowRmsDbFS": -40.6
+      }
+    },
+    {
+      "weapon": "flash",
+      "inputSeconds": {
+        "select": 42.781,
+        "pull and hold": 43.01,
+        "release": 43.53,
+        "return": 43.94
+      },
+      "events": {
+        "cartridge-latch": 1,
+        "throw": 1
+      },
+      "decodedSources": {
+        "foley/f_pin.mp3": 1
+      },
+      "decodedMedia": {
+        "checkedSeconds": 43.41,
+        "lumaStandardDeviation": 50.2,
+        "actionWindowStartSeconds": 43.01,
+        "actionWindowRmsDbFS": -39.1
+      }
+    },
+    {
+      "weapon": "he",
+      "inputSeconds": {
+        "select": 44.072,
+        "pull and hold": 44.31,
+        "release": 44.831,
+        "return": 45.241
+      },
+      "events": {
+        "cartridge-latch": 1,
+        "throw": 1
+      },
+      "decodedSources": {
+        "foley/f_pin.mp3": 1
+      },
+      "decodedMedia": {
+        "checkedSeconds": 44.71,
+        "lumaStandardDeviation": 49.9,
+        "actionWindowStartSeconds": 44.31,
+        "actionWindowRmsDbFS": -35.7
+      }
+    },
+    {
+      "weapon": "bomb",
+      "inputSeconds": {
+        "select": 45.592,
+        "inspect": 45.89,
+        "plant": 46.839,
+        "planted": 49.963
+      },
+      "events": {
+        "plant": 1,
+        "planted": 1
+      },
+      "decodedSources": {},
+      "decodedMedia": {
+        "checkedSeconds": 46.17,
+        "lumaStandardDeviation": 75.2,
+        "actionWindowStartSeconds": 46.839,
+        "actionWindowRmsDbFS": -33.9
+      }
+    }
+  ]
+}

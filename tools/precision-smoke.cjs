@@ -110,8 +110,10 @@ const equip = (page,id) => page.evaluate(id=>{
     assert.equal(await trigger.textContent(),'THROW');
     const rect=await trigger.boundingBox();
     await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:rect.x+rect.width/2,y:rect.y+rect.height/2,id:70}]});
-    const threw=await page.evaluate(()=>{__fps.step(null,1/60);return {n:__fps.game.player.inventory.he,grenades:__fps.game.state.grenades.length};});
+    const held=await page.evaluate(()=>{__fps.step(null,1/60);return {n:__fps.game.player.inventory.he,pulling:!!__fps.game.player.cartridge};});
+    assert.deepEqual(held,{n:1,pulling:true});
     await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+    const threw=await page.evaluate(()=>{for(let i=0;i<40&&!__fps.game.state.grenades.length;i++)__fps.step(null,1/60);return {n:__fps.game.player.inventory.he,grenades:__fps.game.state.grenades.length};});
     assert.equal(threw.n,0);assert.equal(threw.grenades,1,'Manual touch produced one real grenade');
     await equip(page,'bazooka');await advance(page,2);
     assert.equal(await trigger.isVisible(),true);assert.equal(await trigger.textContent(),'AVFYRA');

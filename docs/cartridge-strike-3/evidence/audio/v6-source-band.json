@@ -1,0 +1,69 @@
+{
+  "source": "V6",
+  "wavSha256": "7960057beabc79345dbc1a42b4a3358517a67f0b4439ae551385976137936ed3",
+  "sourceMovieSha256": "ed62d04c77c90d5b3a18e3101a8e8cc0575951f4b3261c237a06c1d038260f2e",
+  "sampleRateHz": 44100,
+  "windowSeconds": 0.1,
+  "rows": [
+    {
+      "startSeconds": 0.9,
+      "frequencyHz": 3108.57,
+      "amplitudeDbFS": -16.51,
+      "aboveAdjacentMedianDb": 27.95
+    },
+    {
+      "startSeconds": 1.0,
+      "frequencyHz": 3109.19,
+      "amplitudeDbFS": -16.04,
+      "aboveAdjacentMedianDb": 25.63
+    },
+    {
+      "startSeconds": 1.2,
+      "frequencyHz": 3108.6,
+      "amplitudeDbFS": -18.24,
+      "aboveAdjacentMedianDb": 31.39
+    },
+    {
+      "startSeconds": 1.6,
+      "frequencyHz": 3108.8,
+      "amplitudeDbFS": -13.07,
+      "aboveAdjacentMedianDb": 29.47
+    },
+    {
+      "startSeconds": 1.9,
+      "frequencyHz": 3108.89,
+      "amplitudeDbFS": -16.41,
+      "aboveAdjacentMedianDb": 29.83
+    },
+    {
+      "startSeconds": 2.2,
+      "frequencyHz": 3108.45,
+      "amplitudeDbFS": -20.28,
+      "aboveAdjacentMedianDb": 31.09
+    },
+    {
+      "startSeconds": 2.5,
+      "frequencyHz": 3108.55,
+      "amplitudeDbFS": -23.55,
+      "aboveAdjacentMedianDb": 39.97
+    },
+    {
+      "startSeconds": 2.8,
+      "frequencyHz": 3108.79,
+      "amplitudeDbFS": -27.02,
+      "aboveAdjacentMedianDb": 50.66
+    },
+    {
+      "startSeconds": 3.1,
+      "frequencyHz": 3108.96,
+      "amplitudeDbFS": -32.38,
+      "aboveAdjacentMedianDb": 16.52
+    },
+    {
+      "startSeconds": 3.4,
+      "frequencyHz": 3108.51,
+      "amplitudeDbFS": -36.87,
+      "aboveAdjacentMedianDb": 37.22
+    }
+  ]
+}

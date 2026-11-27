@@ -1,6 +1,6 @@
 // This function is serialized into the browser. It observes normal gameplay.
 module.exports = async function installProbe(kind) {
-  const cs2 = kind === 'fps';
+  const candidate = kind === 'candidate', cs2 = candidate || kind === 'fps';
   const store = window.cs3Baseline = {frames:[], actions:[], audio:[], inputs:[], mode:'off', last:null};
   const moduleURL = name => performance.getEntriesByType('resource').find(e=>new URL(e.name).pathname.endsWith('/src/fps/'+name))?.name;
   let lastSource;
@@ -23,10 +23,10 @@ module.exports = async function installProbe(kind) {
       store.frames.push([begin,now-begin,info.render.calls,info.render.triangles,renderer.getPixelRatio()]);
     }else if(store.mode==='action'){
       const w = cs2 ? g.item(actor) : curW();
-      store.actions.push([now,cs2?actor.x:actor.pos.x,cs2?actor.z:actor.pos.z,cs2?null:VM.sprint,
-        cs2?null:PL.ent.arms.sprintW,cs2?w?.ammo:w.mag,cs2?actor.reloadUntil>g.state.time:!!PL.reload,
+      store.actions.push([now,cs2?actor.x:actor.pos.x,cs2?actor.z:actor.pos.z,candidate?actor.rushWeight:cs2?null:VM.sprint,
+        candidate?actor.rushWeight:cs2?null:PL.ent.arms.sprintW,cs2?w?.ammo:w.mag,cs2?actor.reloadUntil>g.state.time:!!PL.reload,
         !!actor.alive,cs2?g.phase:MATCH.state,cs2?actor.weapon:curW().def.name,
-        camera.fov,cs2?null:PL.sprinting]);
+        camera.fov,candidate?actor.rushing:cs2?null:PL.sprinting]);
     }
   };
   let audioTag=null;

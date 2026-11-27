@@ -2,6 +2,7 @@
  * View-only cloned materials: world/bot weapons and ammunition remain untouched.
  * Continuous object-space grain avoids stretching the existing bevel UVs.
  */
+import {envelope} from './strike-kit-timing.mjs';
 import * as THREE from '../../vendor/three/three.module.js';
 const owned=new Set();
 const vertex=`varying vec3 vFinishPosition;`;
@@ -51,10 +52,18 @@ export function upgradeViewSurfaces(model){
   });
   model.userData.viewSurfaces={materials:copies.size,kind:'original-object-space-finish'};
 }
-export function inspectPose(elapsed,{cancel=false,reducedMotion=false}={}){
-  if(cancel||!Number.isFinite(elapsed)||elapsed<=0||elapsed>=2.15||reducedMotion)return {position:[0,0,0],rotation:[0,0,0]};
-  const ease=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
-  const amount=ease(elapsed/.42)*(1-ease((elapsed-1.55)/.6));
-  return {position:[-.035*amount,.055*amount,.03*amount],rotation:[.12*amount,-.38*amount,.42*amount]};
+// Riposte 06d-reload, INSPECT_PISTOL / INSPECT_LONG, MIT BenDBSS 2026.
+// Use its opposing flank holds with offsets scaled to the CS authored grips.
+const pistolInspection=id=>id==='p9'||id==='p12';
+export const inspectDuration=id=>pistolInspection(id)?2.8:3.3;
+export function inspectPose(elapsed,{weapon,cancel=false,reducedMotion=false}={}){
+  const end=inspectDuration(weapon);
+  if(cancel||!Number.isFinite(elapsed)||elapsed<=0||elapsed>=end)return {position:[0,0,0],rotation:[0,0,0]};
+  const small=pistolInspection(weapon),cross=small?1.1:1.25,turn=small?1.5:1.75;
+  const left=envelope(elapsed,0,small?.35:.4,cross,turn);
+  const right=envelope(elapsed,cross,turn,small?2.15:2.55,end);
+  const gain=reducedMotion?.5:1;
+  return {position:[(-.04*left-.015*right)*gain,(.050*left+.045*right)*gain,(.032*left+.024*right)*gain],
+    rotation:[(.12*left+.08*right)*gain,(-.38*left+.30*right)*gain,(.42*left-.37*right)*gain]};
 }
 export function disposeViewSurfaces(){for(const m of owned)m.dispose();owned.clear();}

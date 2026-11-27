@@ -7,8 +7,15 @@ async function observeVoices(page) {
   await page.evaluate(async () => {
     const {AudioSystem} = await import('/src/fps/riposte-audio.mjs');
     const proto = AudioSystem.prototype;
-    const play = proto.play, track = proto.track, update = proto.updateListener;
-    const probe = window.roomAudioProbe = {voices:[]};
+    const play = proto.play, track = proto.track, update = proto.updateListener, handle = proto.handleEvent;
+    const probe = window.roomAudioProbe = {voices:[],dispatches:[]};
+    proto.handleEvent = function(event, time) {
+      if(event.type==='shot' && event.weapon==='p9' && event.actionId) {
+        probe.dispatches.push({id:event.actionId,age:time-event.time,voices:this.active.size,
+          context:this.context?.state,volume:this.volume,listener:this.listenerId,predicted:!!event.predicted});
+      }
+      return handle.call(this,event,time);
+    };
     proto.updateListener = function(listener) {
       probe.system = this;
       return update.call(this,listener);
@@ -34,7 +41,7 @@ async function observeVoices(page) {
       return result;
     };
     probe.restore = () => {
-      proto.play = play; delete proto.track; delete proto.updateListener;
+      proto.play = play; delete proto.track; delete proto.updateListener; delete proto.handleEvent;
       delete window.roomAudioProbe;
     };
   });
@@ -80,8 +87,17 @@ export async function verifyRoomAudio({desktop,mobile,room,host,guest,until}) {
       const seat = [...room.seats.values()].find(s=>s.actor===host);
       const id = [host.id,host.lifeId,seat.epoch,seat.lastFire].join(':');
       await desktop.waitForFunction(id=>reviewSession.confirmedLocalShots?.has(id),id);
-      const samples = await Promise.all(peers.map(async page => {
-        await page.waitForFunction(id=>roomAudioProbe.voices.some(row=>row.id===id && row.frame!==null),id);
+      const samples = await Promise.all(peers.map(async (page,index) => {
+        try {
+          await page.waitForFunction(id=>roomAudioProbe.voices.some(row=>row.id===id && row.frame!==null),id);
+        } catch(error) {
+          const observed=await page.evaluate(()=>({
+            dispatches:roomAudioProbe.dispatches.slice(-8),voices:roomAudioProbe.voices.slice(-8),
+            audio:roomAudioProbe.system.stats,listener:roomAudioProbe.system.listenerId,
+            enabled:reviewSession.enabled,visible:!document.hidden
+          }));
+          throw Error(`${label} ${index===0?'shooter':'listener'} missed ${id}: ${JSON.stringify(observed)}`,{cause:error});
+        }
         return page.evaluate(id=>roomAudioProbe.voices.filter(row=>row.id===id),id);
       }));
       for (const rows of samples) assert.equal(rows.length,1,'one started firearm voice for this action per seat');

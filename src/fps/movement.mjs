@@ -1,4 +1,4 @@
-import {RUSH,wantsRush,advanceRush} from './rush.mjs';
+import {RUSH,SLIDE,endSlide,wantsRush,advanceRush} from './rush.mjs';
 import {zombiePosition} from './zombie-poses.mjs';
 
 /** Shared capsule movement. Uses the existing world physics and body sweep.
@@ -12,18 +12,45 @@ const clamp = (x, min, max) => Math.max(min, Math.min(max, x));
 export function moveActor(game, actor, input, dt, effects = true) {
   if (Number.isFinite(input.yaw)) actor.yaw = input.yaw;
   if (Number.isFinite(input.pitch)) actor.pitch = clamp(input.pitch, -1.49, 1.49);
-  const crouching = !!input.crouch;
+  const time=game.state.time,runSpeed=game.config.runSpeed;
+  const crouchPress=input.crouchEdge || (input.crouch && !actor.crouchHeld);
+  actor.crouchHeld=!!input.crouch;
+  if(actor.slideUntil && time>=actor.slideUntil)endSlide(actor,time);
+  // A finger can release the stick in the same sample as the crouch edge.
+  // Previous resolved Rush velocity still owns the slide impulse.
+  if(crouchPress && actor.rushing && actor.onGround && (input.forward || 0)>=0 &&
+      !input.aim && !input.fire && !input.sneak && !actor.action && !actor.slideUntil &&
+      time>=(actor.slideReadyAt || 0) && actor.moving>runSpeed*.75){
+    actor.slideUntil=time+SLIDE.duration;
+    actor.slideSpeed=Math.min(runSpeed*RUSH.speed*SLIDE.maxRush,actor.moving*SLIDE.boost);
+  }
+  const sliding=actor.slideUntil>time;
+  const slideJump=sliding && input.jump && !actor.jumpHeld && actor.onGround &&
+    (!game.world.canStand || game.world.canStand(actor,game.config.standingHeight));
+  const crouching = !slideJump && (sliding || !!input.crouch);
   if (crouching) actor.height = game.config.crouchingHeight;
   else if (!game.world.canStand || game.world.canStand(actor, game.config.standingHeight)) actor.height = game.config.standingHeight;
   actor.crouching = actor.height < game.config.standingHeight;
   let forward = clamp(input.forward || 0, -1, 1), strafe = clamp(input.strafe || 0, -1, 1);
   const magnitude = Math.hypot(forward, strafe);
   if (magnitude > 1) { forward /= magnitude; strafe /= magnitude; }
-  const rush = wantsRush(actor,input,forward,game.state.time);
+  const rush = wantsRush(actor,input,forward,time) && !sliding;
   const mode = rush ? 'rush' : actor.crouching ? 'crouch' : input.sneak ? 'sneak' : 'run';
   const speed = rush ? game.config.runSpeed*RUSH.speed : actor.crouching ? game.config.crouchSpeed : input.sneak ? game.config.sneakSpeed : actor.bot ? game.config.botSpeed : game.config.runSpeed;
   let dx = (-Math.sin(actor.yaw) * forward + Math.cos(actor.yaw) * strafe) * speed * dt;
   let dz = (-Math.cos(actor.yaw) * forward - Math.sin(actor.yaw) * strafe) * speed * dt;
+  if(sliding){
+    if(magnitude>.15){
+      const turn=Math.atan2(actor.travelDirX*dz-actor.travelDirZ*dx,actor.travelDirX*dx+actor.travelDirZ*dz);
+      if(Math.abs(turn)<2.6){
+        const angle=clamp(turn*6,-SLIDE.turn,SLIDE.turn)*dt,c=Math.cos(angle),s=Math.sin(angle),oldX=actor.travelDirX;
+        actor.travelDirX=oldX*c-actor.travelDirZ*s;actor.travelDirZ=oldX*s+actor.travelDirZ*c;
+      }
+    }
+    const end=game.config.crouchSpeed,remaining=(actor.slideUntil-time)/SLIDE.duration;
+    const distance=(end+(actor.slideSpeed-end)*remaining**1.35)*dt;
+    dx=distance*actor.travelDirX;dz=distance*actor.travelDirZ;
+  }
   if (input.moveWorld) { dx = input.moveWorld.x; dz = input.moveWorld.z; }
   if (input.jump && !actor.jumpHeld && actor.onGround && !actor.crouching) { actor.vy = game.config.jumpSpeed; actor.onGround = false; effects && game.emit('jump', actor); }
   actor.jumpHeld = !!input.jump;
@@ -37,7 +64,14 @@ export function moveActor(game, actor, input, dt, effects = true) {
   if (effects && !wasGrounded && actor.onGround) game.emit('land', actor, { surface: game.world.materialAt(actor.x, actor.z) });
   const moved = distance(actor, before); actor.moving = moved / dt; actor.distanceWalked += moved;
   advanceRush(actor,rush,dt,game.config.runSpeed);
-  if (moved > .001 && actor.onGround && game.state.time - actor.lastStep > (mode === 'rush' ? .29 : mode === 'run' ? .36 : mode === 'sneak' ? .66 : .75)) {
+  if(actor.rushing && moved>.001){
+    actor.travelDirX=(actor.x-before.x)/moved;actor.travelDirZ=(actor.z-before.z)/moved;
+  }
+  if(sliding){
+    const blocked=moved<.35*Math.hypot(dx,dz);
+    if(blocked || !actor.onGround || slideJump)endSlide(actor,time,blocked);
+  }
+  if (!sliding && moved > .001 && actor.onGround && game.state.time - actor.lastStep > (mode === 'rush' ? .29 : mode === 'run' ? .36 : mode === 'sneak' ? .66 : .75)) {
     actor.lastStep = game.state.time;
     if (effects) game.emit('step', actor, { mode, surface: game.world.materialAt(actor.x, actor.z) });
     if (effects && !actor.isPlayer && actor.controllerType !== 'human' && game.random() < .33) game.emit('rustle', actor, { mode });

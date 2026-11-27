@@ -16,7 +16,7 @@ import {patternMaterial} from '../../furniture-editor/build/pattern-materials.mj
 import {buildFacilityScene} from './facility-scene.mjs';
 import {installFocusLighting} from './strike-kit-environment.mjs';
 import {VisualDepth} from './visual-depth.mjs';
-import {inspectPose} from './view-surface.mjs';
+import {inspectPose,inspectDuration} from './view-surface.mjs';
 import {refitViewArms} from './presentation-hands.mjs';
 import {ZombieVisuals} from './zombie-visuals.mjs';
 import {isZombieFloor} from './zombie-sites.mjs';
@@ -226,8 +226,9 @@ export class Renderer extends EngineRenderer {
     await loadDefaultHostages();
   }
   requestInspect(game){
-    const p=game.player;if(!p?.alive||game.state.paused||game.phase!=='active'||p.reloadUntil>game.state.time)return false;
-    this.inspectAt=game.state.time;this.inspectActor=p.id;this.inspectWeapon=p.weapon;return true;
+    const p=game.player;if(!p?.alive||game.state.paused||game.phase!=='active'||p.aiming||p.cartridge||p.action||p.reloadUntil>game.state.time)return false;
+    if(Number.isFinite(this.inspectAt) && game.state.time<this.inspectUntil && p.id===this.inspectActor && p.weapon===this.inspectWeapon)return false;
+    this.inspectAt=game.state.time;this.inspectUntil=this.inspectAt+inspectDuration(p.weapon);this.inspectActor=p.id;this.inspectLife=p.lifeId;this.inspectEpoch=p.controlEpoch;this.inspectRound=game.state.round;this.inspectWeapon=p.weapon;return true;
   }
   updateLights(p,t,active){
     super.updateLights(p,t,active);
@@ -236,8 +237,8 @@ export class Renderer extends EngineRenderer {
   applyInspection(){
     const game=this.presentationGame,p=game?.player,t=game?.state.time??0;
     if(this.weaponModel&&p){
-      if(p.id!==this.inspectActor||p.weapon!==this.inspectWeapon||!p.alive||p.reloadUntil>t||(this.shotAt??-Infinity)>=this.inspectAt)this.inspectAt=-Infinity;
-      const pose=inspectPose(t-this.inspectAt,{reducedMotion:this.settings.reducedMotion});
+      if(p.id!==this.inspectActor||p.lifeId!==this.inspectLife||p.controlEpoch!==this.inspectEpoch||game.state.round!==this.inspectRound||game.phase!=='active'||p.aiming||p.onGround===false||p.cartridge||p.action||p.weapon!==this.inspectWeapon||!p.alive||p.reloadUntil>t||(this.shotAt??-Infinity)>=this.inspectAt)this.inspectAt=-Infinity;
+      const pose=inspectPose(t-this.inspectAt,{weapon:p.weapon,reducedMotion:this.settings.reducedMotion});
       if (!pose.rotation.some(Boolean) && !pose.position.some(Boolean)) return;
       // Show the authored side profile and gripping hands instead of the stock end.
       if(this.weaponModel.userData.heroKit){pose.rotation[1]*=-1.3;pose.rotation[2]*=-.67;}
