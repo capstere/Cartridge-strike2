@@ -29,8 +29,7 @@ exports.install=function installReferenceProbe(){
     const definition=CURMAP.def,atmo=definition.atmo,sound=definition.sound;
     const update=definition.update?.toString()||'';
     const staticGeometry=window.sourceMapGeometry;
-    let restPropTriangles=0;
-    for(const body of bodies)for(const part of body.V.pf.parts.values())restPropTriangles+=part.g.ni/3;
+
     return {
       id:CURMAP.id,bounds:CURMAP.def.bounds,spawns:SPAWNS.map(team=>team.length),
       volumes:COL.length,ramps:RAMPS.length,holes:HOLES.length,bridges:BRIDGES.length,
@@ -57,25 +56,40 @@ exports.install=function installReferenceProbe(){
       rayProps:bodies.filter(body=>body.d.ray).length,
       breakableRayProps:bodies.filter(body=>body.d.ray&&body.d.brk).length,
       geometry:{staticGroups:staticGeometry.groups,staticTriangles:staticGeometry.triangles,
-        staticMaterials:staticGeometry.materials,restPropTriangles}
+        staticMaterials:staticGeometry.materials,restPropTriangles:staticGeometry.restPropTriangles}
     };
   };
   window.readReferenceMap=()=>({
-    bounds:CURMAP.def.bounds,spawns:SPAWNS,zones:ZONES,poi:POI,ramps:RAMPS,holes:HOLES,
+    sourceId:CURMAP.id,bounds:CURMAP.def.bounds,spawns:SPAWNS,zones:ZONES,poi:POI,ramps:RAMPS,holes:HOLES,
     solids:COL.map(c=>[c.x0,c.x1,c.y0,c.y1,c.z0,c.z1,c.m,+!!c.ray,+!!c.noRay,+!!c.inv,+!!c.prop]),
-    water:{y:WATER.y,floor:WATER.floor,box:WATER.box,land:WATER.land},
+    water:WATER.on?{y:WATER.y,floor:WATER.floor,box:WATER.box,land:WATER.land}:null,
     atmosphere:{fog:CURMAP.def.atmo.fog,sun:CURMAP.def.atmo.sun,sunColor:CURMAP.def.atmo.sunColor,sky:CURMAP.def.atmo.sky},
     renderGroups:window.exportBuffers.map(b=>({material:b.mat,detail:b.cls,chunk:b.ck,n:b.g.nv,indices:b.g.ni})),
     nav:{x:[...NAV.nx],y:[...NAV.ny],z:[...NAV.nz],offsets:[...NAV.adjStart],adj:[...NAV.adj],cost:[...NAV.adjCost],kind:[...NAV.adjKind]},
     rayProps:PHYS.bodies.filter(b=>!b.pooled&&b.origin&&b.d.ray).map(b=>({
       id:b.id,p:{x:b.p.x,y:b.p.y,z:b.p.z},R:[...b.R],sh:b.sh,rad:b.rad,through:!!b.d.through,material:b.d.mat
     })),
+    groundMaterials:CURMAP.id==='tephra'?(()=>{
+      const b=CURMAP.def.bounds,step=1,width=Math.ceil((b.x1-b.x0)/step),height=Math.ceil((b.z1-b.z0)/step),names=[],indices=[];
+      for(let z=0;z<height;z++)for(let x=0;x<width;x++){
+        const px=b.x0+(x+.5)*step,pz=b.z0+(z+.5)*step,material=CURMAP.def.surface({x:px,y:gy0(px,pz),z:pz});
+        if(!names.includes(material))names.push(material);
+        indices.push(names.indexOf(material));
+      }
+      return {step,width,height,names,indices};
+    })():null,
     sourceProps:PHYS.bodies.filter(b=>!b.pooled&&b.origin).length
   });
 };
 exports.capture=function captureStaticGeometry(surveyOnly){
   const sourceGroups=Array.from(WORLD.bufs.values()).filter(group=>group.g.ni>0);
-  window.sourceMapGeometry={
+  // propsFinalize releases the prefab after GPU buffers have been built.
+  let restPropTriangles=0;
+  for(const body of PHYS.bodies){
+    if(!body.origin||body.pooled)continue;
+    for(const part of body.V.pf.parts.values())restPropTriangles+=part.g.ni/3;
+  }
+  window.sourceMapGeometry={restPropTriangles,
     groups:sourceGroups.length,triangles:sourceGroups.reduce((n,group)=>n+group.g.ni/3,0),
     materials:[...new Set(sourceGroups.map(group=>group.mat))].sort()
   };
@@ -101,5 +115,5 @@ exports.group=function readGeometryGroup(i){
     return btoa(text);
   }
   return {position:base64(g.P,g.nv*3),normal:base64(g.N,g.nv*3),uv:base64(g.U,g.nv*2),
-    color:base64(g.C,g.nv*3),ao:base64(g.A,g.nv),index:base64(g.I,g.ni)};
+    color:base64(g.C,g.nv*3),ao:base64(g.A,g.nv),index:base64(g.I,g.ni),sway:g.S?base64(g.S,g.nv):null};
 };

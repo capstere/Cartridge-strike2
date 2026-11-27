@@ -53,8 +53,8 @@
   "assets": [
     {
       "file": "assets/fps/maps/meltem/base.bin.gz",
-      "bytes": 2806902,
-      "sha256": "b005100ae6d7081b5b6282c76fe0a6f199e4ab8d56b9a510b1f2dac696b9a296"
+      "bytes": 2805032,
+      "sha256": "8ef6ea1744698179b8f3baa2aa322fff603cd3660fd443463ee80c7b4d9625fe"
     },
     {
       "file": "assets/fps/maps/meltem/detail.bin.gz",
@@ -90,6 +90,15 @@
       "file": "levels/meltem.json",
       "bytes": 774660,
       "sha256": "c25fcc797cc6f96e79e144c14a00332e65745ea7b8c835d21df6a5e2617b818f"
+    },
+    {
+      "file": "assets/fps/maps/meltem/signs.webp",
+      "bytes": 80880,
+      "sha256": "79ee402e3c9735f698db635da120089cad53b55f45fbde4094842bb6f81470dd"
     }
-  ]
+  ],
+  "generatedSigns": {
+    "source": "Riposte 02yb-cyclades.js, cySignAtlas and cyDecalAtlas, with English lettering from tools/reference-map/signs.mjs",
+    "license": "MIT"
+  }
 }

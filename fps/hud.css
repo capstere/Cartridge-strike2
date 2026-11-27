@@ -305,6 +305,7 @@ html #scoreboard th,html #scoreboard .small{color:var(--h-mu)!important}
    green/teal panels unrelated to the Analysts/Counter Analysts palette. */
 html #hud #control-card,
 html[data-hud=clean] #hud #control-card{
+  grid-template-columns:minmax(0,1fr) max-content;
   background:var(--h-plate)!important;
   color:var(--h-wh)!important;
   border:1px solid var(--h-ln)!important;
@@ -318,6 +319,7 @@ html #hud #control-card small{color:var(--h-ac)!important}
 html #hud #control-card[data-state=contested] small{color:var(--h-amber)!important}
 html #hud #control-card .control-progress i{background:var(--h-ac)!important}
 html #hud #control-name{font-family:var(--h-disp);font-weight:700;letter-spacing:.04em}
+html #hud #control-card footer{margin:0}
 html #hud #control-state,html #hud #control-card footer{font-family:var(--h-mono);color:var(--h-mu)!important}
 html #hud #combat-session{background:var(--h-plate)!important;border-left:2px solid var(--h-ac)!important;border-radius:0!important;color:var(--h-wh)!important}
 html #hud #combat-session>span{color:var(--h-mu)!important;font-family:var(--h-mono)}
@@ -401,9 +403,7 @@ html[data-hud=clean] #mobile-controls #mobile-utilities{background:#06090ef2!imp
   html.touch-fps[data-hud=clean] #hud #round-label{max-width:none}
   html.touch-fps[data-hud=clean] #hud #control-card{
     width:min(340px,calc(100vw - 160px));
-    grid-template-columns:minmax(0,1fr) max-content;
   }
-  html.touch-fps[data-hud=clean] #hud #control-card footer{margin:0}
   html.touch-fps[data-hud=clean] #hud .ammo{padding:3px!important}
   html.touch-fps[data-hud=clean] #hud .ammo strong{font-size:21px!important}
   html.touch-fps[data-hud=clean] #hud .ammo strong span{font-size:10px!important}

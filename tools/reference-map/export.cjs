@@ -7,7 +7,9 @@ const probe=require('./donor-probe.cjs');
 const environment=require('./environment-probe.cjs');
 const root=process.cwd(),output=path.resolve(process.argv[2]||'');
 const assess=process.argv.includes('--assess'),withEnvironment=process.argv.includes('--environment');
-const requestedMap=process.argv.find(arg=>arg.startsWith('--map='))?.slice(6)||'meltem';
+const requestedMaps=(process.argv.find(arg=>arg.startsWith('--maps='))?.slice(7)||
+  process.argv.find(arg=>arg.startsWith('--map='))?.slice(6)||'meltem').split(',');
+if(!requestedMaps.every(id=>['meltem','embruns','tephra'].includes(id)))throw Error('Unsupported target map export.');
 if(!process.argv[2]||output.startsWith(root+path.sep)||output===root)throw Error('Supply a private output directory outside the checkout.');
 fs.mkdirSync(output,{mode:0o700,recursive:true});
 const {chromium}=require(path.join(root,'frontline/source/tools/dev/node_modules/playwright-core'));
@@ -28,11 +30,16 @@ const server=http.createServer((req,res)=>{
   if(target===donor)return res.end(html);
   const stream=fs.createReadStream(target);res.on('close',()=>stream.destroy());stream.on('error',()=>res.destroy()).pipe(res);
 });
-async function saveEnvironment(page,id){
+async function saveEnvironment(page,id,destination=output){
   const data=await page.evaluate(()=>readSourceEnvironment());
   if(data.id!==id)throw Error('Environment belongs to '+data.id);
+  for(const [key,atlas] of Object.entries(data.atlas)){
+    if(!['cyfol','cyflag','lava','basalt','moss','panel'].includes(key)||atlas.flipY)throw Error('Review the changed Cyclades atlas orientation.');
+    fs.writeFileSync(path.join(destination,key+'.png'),Buffer.from(atlas.image,'base64'));
+  }
+  delete data.atlas;
   const bytes=gzipSync(JSON.stringify(data));
-  fs.writeFileSync(path.join(output,id+'-environment.json.gz'),bytes);
+  fs.writeFileSync(path.join(destination,id+'-environment.json.gz'),bytes);
   console.log(id,'environment:',data.fabrics.length,'fabrics,',data.mills.length,'mills,',bytes.length,'bytes');
 }
 async function run(){
@@ -60,29 +67,35 @@ async function run(){
         geometryScope:'Indexed static WORLD buffers before finalizeWorld and rest-pose prefab triangles expanded per body. Runtime draw calls depend on the camera, quality and culling.',
         maps:[]};
       for(const [id,factory] of Object.entries(files)){
+        console.log('Building original factory',id);
         const actual=await page.evaluate(id=>startReferenceExport(id),id);
         if(actual!==id)throw Error('Requested '+id+' but the donor loaded '+actual);
         const row=await page.evaluate(()=>readReferenceCapabilities());
-        if(withEnvironment&&id==='meltem')await saveEnvironment(page,id);
         if(!row.navigationNodes || !row.volumes || !row.geometry.staticGroups || row.spawns.some(team=>!team))
           throw Error('Incomplete factory output for '+id);
         row.factory=sourceFile('frontline/source/src/'+factory+'.js');
         report.maps.push(row);
         fs.writeFileSync(path.join(output,'map-capabilities.json'),JSON.stringify(report,null,2)+'\n');
+        if(withEnvironment&&id==='meltem')await saveEnvironment(page,id);
         console.log(id,row.volumes,'volumes,',row.navigationNodes,'nodes,',row.geometry.staticTriangles,'static triangles');
       }
       return;
     }
-    const loaded=await page.evaluate(id=>startReferenceExport(id),requestedMap);
-    if(loaded!==requestedMap)throw Error('Requested '+requestedMap+' but loaded '+loaded);
-    if(withEnvironment)await saveEnvironment(page,loaded);
-    const result=await page.evaluate(()=>readReferenceMap());
-    fs.writeFileSync(path.join(output,'map.json.gz'),gzipSync(JSON.stringify(result)));
-    for(let i=0;i<result.renderGroups.length;i++){
-      const data=await page.evaluate(probe.group,i);
-      fs.writeFileSync(path.join(output,'group-'+i+'.json.gz'),gzipSync(JSON.stringify(data),{level:1}));
+    for(const id of requestedMaps){
+      const destination=requestedMaps.length===1?output:path.join(output,id);
+      fs.mkdirSync(destination,{recursive:true,mode:0o700});
+      console.log('Exporting original factory',id);
+      const loaded=await page.evaluate(id=>startReferenceExport(id),id);
+      if(loaded!==id)throw Error('Requested '+id+' but loaded '+loaded);
+      if(withEnvironment)await saveEnvironment(page,id,destination);
+      const result=await page.evaluate(()=>readReferenceMap());
+      fs.writeFileSync(path.join(destination,'map.json.gz'),gzipSync(JSON.stringify(result)));
+      for(let i=0;i<result.renderGroups.length;i++){
+        const data=await page.evaluate(probe.group,i);
+        fs.writeFileSync(path.join(destination,'group-'+i+'.json.gz'),gzipSync(JSON.stringify(data),{level:1}));
+      }
+      console.log('Exported',id,result.solids.length,'volumes,',result.nav.x.length,'navigation nodes and',result.renderGroups.length,'source geometry groups.');
     }
-    console.log('Exported',result.solids.length,'volumes,',result.nav.x.length,'navigation nodes and',result.renderGroups.length,'draw batches.');
   }finally{await browser?.close();server.closeAllConnections();server.close();}
 }
 run().catch(error=>{console.error(error);process.exitCode=1;});

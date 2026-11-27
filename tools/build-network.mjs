@@ -5,6 +5,7 @@ import {fileURLToPath} from 'node:url';
 import {relative,sep} from 'node:path';
 import '../server/register-shared.mjs';
 import {collisionContract} from '../shared/multiplayer/collision-contract.mjs';
+import {coastalRecordings,coastalClipPath} from '../src/fps/coastal-recordings.mjs';
 import {shotTakes} from '../src/fps/shot-audio.mjs';
 import {CONFIG} from '../src/fps/config.mjs';
 import {DEFAULT_MAP_ID,NETWORK_MAPS} from '../shared/multiplayer/maps.mjs';
@@ -17,9 +18,11 @@ const knockdownFiles=['src/fps/character-actors.mjs','src/fps/character-library.
   'src/fps/actor-occlusion.mjs','src/fps/headshot-pose.mjs',
   'assets/animations/headshot-male.animation.glb','assets/animations/headshot-female.animation.glb'];
 // Map geometry, prediction and source render assets share one compatibility boundary.
+const coastalAudio=Object.entries(coastalRecordings).flatMap(([id,takes])=>Object.keys(takes).map(take=>coastalClipPath(id,take)));
 const meltemRuntime=['src/fps/reference-world.mjs','src/fps/reference-terrain.mjs','src/fps/reference-rays.mjs',
   'src/fps/reference-prop-ray.mjs','src/fps/reference-navigation.mjs','src/fps/reference-scene.mjs',
-  'assets/fps/maps/meltem.webp',...['base.bin.gz','detail.bin.gz','plaster.webp','stone.webp','pavers.webp','sea.mp3'].map(f=>'assets/fps/maps/meltem/'+f)];
+  'src/fps/coastal-ambience.mjs','src/fps/coastal-recordings.mjs',...coastalAudio,
+  'assets/fps/maps/meltem.webp',...['base.bin.gz','detail.bin.gz','plaster.webp','stone.webp','pavers.webp','signs.webp'].map(f=>'assets/fps/maps/meltem/'+f)];
 const accessCatalog='shared/multiplayer/access-english.mjs';
 const frontendFiles=['src/fps/game-english.mjs','src/fps/english-ui.mjs','src/fps/solo-maps.mjs','src/fps/menu-navigation.mjs','fps/routes.css','furniture-editor/build/environment-art.mjs'];
 const rushPresentation=['src/fps/mobile-controls.mjs','src/fps/presentation-hands.mjs'];

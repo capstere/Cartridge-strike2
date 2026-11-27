@@ -510,6 +510,71 @@
       "sha256": "bc904bfa26a16d5caba69c5ff0cd6ae4599157432b3ca000aa1ad5aad88e5dcd"
     },
     {
+      "path": "assets/fps/maps/embruns/audio/a_bed.mp3",
+      "bytes": 355941,
+      "sha256": "0881d007ecbac5881325c9c01fc4c75da8fc3f1ed6f62ce5c8cebc15055aa97f"
+    },
+    {
+      "path": "assets/fps/maps/embruns/audio/a_buoybell-1.mp3",
+      "bytes": 26109,
+      "sha256": "874182102c21950008eee6d71ca290ccf71a2c8ebc7c14a3cebc9995388e94d1"
+    },
+    {
+      "path": "assets/fps/maps/embruns/audio/a_buoybell-2.mp3",
+      "bytes": 26073,
+      "sha256": "5bea8a445cd285442b80240bd2dfa80720d9065809ca7edf9980c6fe49838fa2"
+    },
+    {
+      "path": "assets/fps/maps/embruns/audio/a_creak-1.mp3",
+      "bytes": 18981,
+      "sha256": "201d0bfe105e27a744d484c13a3bfe6e4813d2eb1e649c5f05573081bf4a6b09"
+    },
+    {
+      "path": "assets/fps/maps/embruns/audio/a_creak-2.mp3",
+      "bytes": 26397,
+      "sha256": "f8b9257d68378df74978d4de24abcbc1eb2fff8f17ff960601082b51bdb3df81"
+    },
+    {
+      "path": "assets/fps/maps/embruns/audio/a_foghorn.mp3",
+      "bytes": 25209,
+      "sha256": "7e7b872b94ae3b463a28a53045806e6f946161eb183c5d6b4e3b3b02970c3341"
+    },
+    {
+      "path": "assets/fps/maps/embruns/audio/a_gull-1.mp3",
+      "bytes": 28485,
+      "sha256": "afaf9ff3fc8605278469d5cd19a29ad2ad24cef5d711d3cc2dd7c892bb1e172d"
+    },
+    {
+      "path": "assets/fps/maps/embruns/audio/a_gull-2.mp3",
+      "bytes": 29781,
+      "sha256": "9bd983072b1d4f83ceddea58c835c65fe14de13d013e3eb14324a9e48c6cdeb8"
+    },
+    {
+      "path": "assets/fps/maps/embruns/audio/a_gull-3.mp3",
+      "bytes": 34605,
+      "sha256": "303aa80eda63c485a7c1f5e72cdf47ef6da2ffaf46965353ec74337a9c2d1686"
+    },
+    {
+      "path": "assets/fps/maps/embruns/audio/a_gull-4.mp3",
+      "bytes": 34425,
+      "sha256": "f1288456ef6fbbd0053f596aac0fea4b4e700f906621dfd065379e77e1394d65"
+    },
+    {
+      "path": "assets/fps/maps/embruns/audio/a_rigging-1.mp3",
+      "bytes": 16317,
+      "sha256": "ba31d691196ac9b3cf39e587860143ec64184f6753ffb6c98c806c5b0c675a20"
+    },
+    {
+      "path": "assets/fps/maps/embruns/audio/a_rigging-2.mp3",
+      "bytes": 16785,
+      "sha256": "c9b7c6ddc1da0af26ac70ac8b6ad15c51a5d1a5b27191793130c1dd36b0c4c04"
+    },
+    {
+      "path": "assets/fps/maps/embruns/audio/a_waves.mp3",
+      "bytes": 43101,
+      "sha256": "2e52f2e91746218e91e4179498dc510676671f63d095113d6e727fa891cb7d20"
+    },
+    {
       "path": "assets/fps/maps/floor5-prepared.jpg",
       "bytes": 33216,
       "sha256": "d3a17115e605082010ae7fc980cdeca7d79b59a934f1ad39532bb41cef1bfb84"
@@ -520,9 +585,69 @@
       "sha256": "b8615c919c93e004394f67afc84cfa8c48473c90348b5aebbc37ab4144daa3db"
     },
     {
+      "path": "assets/fps/maps/meltem/audio/a_bell.mp3",
+      "bytes": 35541,
+      "sha256": "781e951872f2c5fbdc2ecc35d6454ec901a38035ddfd05ce0b3d16ed13075dc9"
+    },
+    {
+      "path": "assets/fps/maps/meltem/audio/a_cicadas.mp3",
+      "bytes": 70497,
+      "sha256": "6343a9db39aa2e39ea72ffde1ee32e28abd65f75e45caa4199bdcffbc6c20c0f"
+    },
+    {
+      "path": "assets/fps/maps/meltem/audio/a_goats-1.mp3",
+      "bytes": 34533,
+      "sha256": "e263d54779362219f03b53b2a2cd4e45dfe4e68ed939aacadc16cd1246c4e1f4"
+    },
+    {
+      "path": "assets/fps/maps/meltem/audio/a_goats-2.mp3",
+      "bytes": 34425,
+      "sha256": "904e45afa457542aa4c2e9eb456c47ee52feb1a6835067680afb7d9eec9ffdf1"
+    },
+    {
+      "path": "assets/fps/maps/meltem/audio/a_gull-1.mp3",
+      "bytes": 18945,
+      "sha256": "b0ecdaae8201703cf8f8720f192fe300d5489fcf5474a41a8908d82019456871"
+    },
+    {
+      "path": "assets/fps/maps/meltem/audio/a_gull-2.mp3",
+      "bytes": 19089,
+      "sha256": "f6fe9ba96643ed39c2b318d25bdf3eef48dc5f12878c0cad4dcfd4ba6dfe4845"
+    },
+    {
+      "path": "assets/fps/maps/meltem/audio/a_gull-3.mp3",
+      "bytes": 19377,
+      "sha256": "44e9c20f6b313340efa3a238f7f7e54ed5aa028f516e948e36645781f0c79573"
+    },
+    {
+      "path": "assets/fps/maps/meltem/audio/a_gull-4.mp3",
+      "bytes": 18765,
+      "sha256": "f325d9a5d9fd91ace89e6a1023fa1e0399da3af6d8c2c7dc66e7b8f7dcdde190"
+    },
+    {
+      "path": "assets/fps/maps/meltem/audio/a_gust-1.mp3",
+      "bytes": 18693,
+      "sha256": "68c4032e29f354043e3c24852d07fb3d7de169d75f5afc40c8233950067a668c"
+    },
+    {
+      "path": "assets/fps/maps/meltem/audio/a_gust-2.mp3",
+      "bytes": 18729,
+      "sha256": "422cea76ab7450210402ff7e1d5f9ea21c3f2ac021a0fc9c9f049b59130efd65"
+    },
+    {
+      "path": "assets/fps/maps/meltem/audio/a_mill.mp3",
+      "bytes": 106569,
+      "sha256": "3d016c2599f32a816131d0106949ad7508db60c76a92973083f18a64d0aaaedb"
+    },
+    {
+      "path": "assets/fps/maps/meltem/audio/a_waves.mp3",
+      "bytes": 69561,
+      "sha256": "b1f3efce3996394cbac83880e7408c520415b79d139577ff71882d6130b4d56e"
+    },
+    {
       "path": "assets/fps/maps/meltem/base.bin.gz",
-      "bytes": 2806902,
-      "sha256": "b005100ae6d7081b5b6282c76fe0a6f199e4ab8d56b9a510b1f2dac696b9a296"
+      "bytes": 2805032,
+      "sha256": "8ef6ea1744698179b8f3baa2aa322fff603cd3660fd443463ee80c7b4d9625fe"
     },
     {
       "path": "assets/fps/maps/meltem/detail.bin.gz",
@@ -543,6 +668,11 @@
       "path": "assets/fps/maps/meltem/sea.mp3",
       "bytes": 273285,
       "sha256": "fc419be87608483c6e4ded692697b37d8bf1e0c9e66b7fc47cba841f22fbfc43"
+    },
+    {
+      "path": "assets/fps/maps/meltem/signs.webp",
+      "bytes": 80880,
+      "sha256": "79ee402e3c9735f698db635da120089cad53b55f45fbde4094842bb6f81470dd"
     },
     {
       "path": "assets/fps/maps/meltem/stone.webp",
@@ -826,8 +956,8 @@
     },
     {
       "path": "fps/hud.css",
-      "bytes": 35685,
-      "sha256": "d8d9266c2d52b78668101aaa41f0a4f7ce46486c46c9a27b52350b80ff56a0e9"
+      "bytes": 35655,
+      "sha256": "81652dccf3277a72d6d40ebee2f5b4de32666065a5085cf03099de1482805359"
     },
     {
       "path": "fps/index.html",
@@ -2137,7 +2267,7 @@
     {
       "path": "shared/multiplayer/build.mjs",
       "bytes": 660,
-      "sha256": "1bcccc2d84d88a45876a5f8997a8f2071321a8c1efa1ec4321efb7309c7577e1"
+      "sha256": "33e000f7df2830215fc2f70e4953f6c794bf7c6bc948916b1080e45363883827"
     },
     {
       "path": "shared/multiplayer/collision-contract.mjs",
@@ -2157,7 +2287,7 @@
     {
       "path": "shared/multiplayer/map-build.mjs",
       "bytes": 1753,
-      "sha256": "1e58610cd6e5e647bd4305692298636ddb70a2ed202edf61578cd898602c6b26"
+      "sha256": "46bd1b8f7a5350d151cea143b52bafb64272e2dacd4940a573d7b9adf5c98c36"
     },
     {
       "path": "shared/multiplayer/maps.mjs",
@@ -2226,8 +2356,8 @@
     },
     {
       "path": "src/fps/audio.mjs",
-      "bytes": 19443,
-      "sha256": "46dd890587f71fcbf33ec8ef9c96d6cb53ae6a8722ec16c90cb067ee8fa16762"
+      "bytes": 18446,
+      "sha256": "2a6fbe0597a94ce9a0400215ebd26023ec3afd5857b29956a93ff2f10d3902c3"
     },
     {
       "path": "src/fps/authored-hand-data.mjs",
@@ -2298,6 +2428,16 @@
       "path": "src/fps/character-selection.mjs",
       "bytes": 3492,
       "sha256": "0f08800d3fdec4488b7c402be221ed3ec4583315890a644ea3f26232baf03503"
+    },
+    {
+      "path": "src/fps/coastal-ambience.mjs",
+      "bytes": 10225,
+      "sha256": "21952a124525557d25e32ab358e58a92462f02e8c7f0c0054ca4467d71b839ea"
+    },
+    {
+      "path": "src/fps/coastal-recordings.mjs",
+      "bytes": 1275,
+      "sha256": "ac8405f89530758f3313a3aa77879186c28414172cddae6eca6a60e8b0ec2394"
     },
     {
       "path": "src/fps/combat-audio.mjs",
@@ -2606,8 +2746,8 @@
     },
     {
       "path": "src/fps/reference-scene.mjs",
-      "bytes": 5181,
-      "sha256": "0b5727696db4f0f8625f981ac3c781c7de5104de6748a82f082b5072a60013e5"
+      "bytes": 5512,
+      "sha256": "c65ea408d9335608a6be6eeca08c4a65f325eecc3e136a3e967849f552134b57"
     },
     {
       "path": "src/fps/reference-terrain.mjs",
@@ -2900,7 +3040,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 63972653,
+  "bytes": 65209400,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

@@ -279,11 +279,11 @@ jobs:
       - name: Play a complete human-only match on Compact Arena with touch controls
         env:
           FPS_MAP_CASE: mobile
-        run: node --import ./server/register-shared.mjs tools/multimap-browser.mjs
+        run: node --import ./tools/multimap-teardown.mjs --import ./server/register-shared.mjs tools/multimap-browser.mjs
       - name: Play a complete human-only match on Meltem with touch controls
         env:
           FPS_MAP_CASE: meltemTouch
-        run: node --import ./server/register-shared.mjs tools/multimap-browser.mjs
+        run: node --import ./tools/multimap-teardown.mjs --import ./server/register-shared.mjs tools/multimap-browser.mjs
       - name: Verify custom match settings in desktop and mobile family lobbies
         run: node tools/custom-match-browser.mjs
       - uses: actions/upload-artifact@v4

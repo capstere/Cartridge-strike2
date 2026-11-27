@@ -1,6 +1,8 @@
 // Rendered multiplayer play and measurements. Start in the repo root.
 // FPS_MAP_CASE=desktop|mobile|four|floor|meltem|meltemTouch node tools/multimap-browser.mjs
+import {verifyMapProcessExit} from './multimap-teardown.mjs';
 import assert from 'node:assert/strict';
+import {writeFileSync} from 'node:fs';
 import {execFileSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {mkdir, mkdtemp, readFile, rm, writeFile} from 'node:fs/promises';
@@ -115,7 +117,7 @@ async function renderedResources() {
       liveOwners:mapProbe.renderers.filter(ref=>ref.deref() && !ref.deref().presentationDisposed).length};
   });
 }
-function localSeat() { return [...room.seats.values()].find(s=>s.actor?.name==='Mapptest'); }
+function localSeat() { return [...room.seats.values()].find(s=>s.actor?.name==='Map Tester'); }
 async function acknowledge(id) {
   await until(()=>room.state.mapId===id && localSeat()?.ready, 'Authority confirmed map and loading seat');
   await until(async()=>(await renderedResources())?.projectId===room.sim.game.world.project.projectId,
@@ -138,7 +140,7 @@ async function addPeer(index) {
     const build = await import('/shared/multiplayer/build.mjs');
     await import('/vendor/colyseus/colyseus.js');
     const room = await new Colyseus.Client(location.origin).joinById(id, {contract:build.CONTRACT,
-      name:'Spelare '+index, team:index%2 ? 'counterAnalysts' : 'analysts', code});
+      name:'Player '+index, team:index%2 ? 'counterAnalysts' : 'analysts', code});
     window.mapPeerRoom = room;
     room.onMessage('clock-probe',token=>room.send('clock-echo',token));
     room.onMessage('events',()=>{});
@@ -155,7 +157,7 @@ async function addPeer(index) {
     room.onStateChange(ready);
     ready();
   },{id:room.roomId,code,index});
-  await until(()=>[...room.seats.values()].find(s=>s.actor?.name==='Spelare '+index)?.ready,'Late joining SDK peer loaded selected map');
+  await until(()=>[...room.seats.values()].find(s=>s.actor?.name==='Player '+index)?.ready,'Late joining SDK peer loaded selected map');
   await peer.evaluate(()=>{
     const r = window.mapPeerRoom, own = [...r.state.actors.values()].find(s=>s.sessionId===r.sessionId);
     r.send('match',{kind:'ready',ready:true,matchId:r.state.matchId,controlEpoch:own.controlEpoch});
@@ -304,7 +306,7 @@ try {
   await page.evaluate(observe);
   if(profileHeap)await page.evaluate(installRetentionProbe);
   assert.equal(await page.evaluate(()=>typeof window.__fps),'undefined');
-  await page.locator('#network-name').fill('Mapptest');
+  await page.locator('#network-name').fill('Map Tester');
   await page.locator('#network-code').fill(spec.family ? fixture.familyPassword : code);
   if(!spec.family) await page.locator('#network-fill-bots').uncheck();
   if(tour) await page.locator('#network-map').selectOption(arena);
@@ -342,7 +344,7 @@ try {
         groups:architecture.length, triangles:architecture.reduce((n,mesh)=>n+mesh.geometry.index.count/3,0),
         projectId:renderer.world.project.projectId};
     });
-    assert.deepEqual(result.sourceGeometry,{inScene:true,groups:293,triangles:291400,projectId:'lvl-meltem'},
+    assert.deepEqual(result.sourceGeometry,{inScene:true,groups:295,triangles:291400,projectId:'lvl-meltem'},
       'The selected room must render the compiled Meltem architecture');
   }
   await page.screenshot({path:join(out,name+'-game.jpg'), quality:86});
@@ -472,5 +474,16 @@ try {
 } finally {
   try {await browser?.close();} finally {await fixture.close();}
   result.hardwareAfter=await piState();
-  await writeFile(join(out,name+'.json'),JSON.stringify(result,null,2)+'\n');
+  const receipt=join(out,name+'.json');
+  await writeFile(receipt,JSON.stringify(result,null,2)+'\n');
+  verifyMapProcessExit(teardown=>{
+    result.teardown=teardown;
+    if(teardown.naturalExit)console.log(name,'browser, TLS proxy and authority released; Node naturally drained',teardown.elapsedMs+'ms');
+    if(!teardown.naturalExit){
+      result.status='FAIL';
+      result.failure=[result.failure,'The browser, TLS proxy and authority closed, but the Node event loop remained referenced.'].filter(Boolean).join('\n');
+      console.error(result.failure,JSON.stringify(teardown));
+    }
+    writeFileSync(receipt,JSON.stringify(result,null,2)+'\n');
+  });
 }

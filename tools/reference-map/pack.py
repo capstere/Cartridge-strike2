@@ -4,6 +4,7 @@ import gzip
 import json
 from pathlib import Path
 import struct
+import subprocess
 import sys
 
 import numpy as np
@@ -18,7 +19,8 @@ geometry.mkdir(parents=True,exist_ok=True)
 surface={
     'chaux':'plaster','ashlar':'stone','drystone':'stone','rock':'stone',
     'paintwood':'wood','timber':'wood','wood':'wood','boards':'wood','shutter':'wood',
-    'ground':'ground','glass':'glass','window':'glass'
+    'ground':'ground','glass':'glass','window':'glass',
+    'signs4':'signs','decals4':'decals'
 }
 groups={}
 for i,g in enumerate(source['renderGroups']):
@@ -34,10 +36,17 @@ for i,g in enumerate(source['renderGroups']):
     centre=pos[indices][:,:,[0,2]].mean(axis=1)
     cell=np.floor(centre/24).astype('int32')
     cell=np.clip(cell,-5,5)
+    material=surface.get(g['material'],'color')
+    if material in ('signs','decals'):
+        # Only 274 triangles. One map-wide batch per material keeps the number
+        # of low-tier draw calls bounded. Reuse the source V orientation.
+        cell[:]=0
+        uv=uv.copy()
+        uv[:,0]=uv[:,0]*.5 + (.5 if material=='decals' else 0)
     chunks,assignment=np.unique(cell,axis=0,return_inverse=True)
     for ci,(cx,cz) in enumerate(chunks):
         used,local=np.unique(indices[assignment==ci],return_inverse=True)
-        key=(int(g['detail']>=2),surface.get(g['material'],'color'),int(cx),int(cz))
+        key=(int(g['detail']>=2),material,int(cx),int(cz))
         groups.setdefault(key,[]).append((pos[used],normal[used],uv[used],colors[used],local.astype('<u4')))
 def write_batches(level):
     blob=bytearray();rows=[]
@@ -98,3 +107,5 @@ for name in ("plaster","stone","pavers"):
     image.save(geometry/(name+".webp"),quality=80,method=4)
 shutil.copyfile("frontline/source/assets/sfx/amb_meltem/a_bed.mp3",geometry/"sea.mp3")
 shutil.copyfile("frontline/source/assets/maps/meltem.webp",geometry.parent/"meltem.webp")
+
+subprocess.run(['node', str(Path(__file__).with_name('signs.mjs')), str(geometry/'signs.webp')], check=True)

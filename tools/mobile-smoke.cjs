@@ -189,6 +189,14 @@ async function openOriginal(browser, mobile, mode = 'classic') {
 
     const { context: desktopCtx, page: desktop, state: desktopState } = await openOriginal(browser, false, 'endless');
     assert.ok(await desktop.locator('#control-card').isVisible(), 'Endless shows its active control area');
+    const fitsCard=await desktop.locator('#control-card').evaluate(card=>{
+      const bounds=card.getBoundingClientRect();
+      return [...card.querySelectorAll('footer span')].every(label=>{
+        const rect=label.getBoundingClientRect();
+        return rect.width>0 && rect.right<=bounds.right && rect.left>=bounds.left;
+      });
+    });
+    assert.ok(fitsCard,'The full English control timer and scores fit on the objective card');
     assert.ok(await desktop.locator('#objectives').isHidden(), 'The general objective strip leaves the control area unobstructed');
     assert.equal(desktopState.mobile, false, 'Desktop must preserve mouse input');
     assert.equal(desktopState.controlsVisible, false, 'Touch UI must be absent on desktop');
