@@ -16,6 +16,8 @@ const cases = {
   desktop: {actors:10, bots:9, family:true, video:true},
   mobile: {actors:2, bots:0, mobile:true},
   four: {actors:4, bots:0},
+  meltem: {actors:10, bots:9, family:true, reference:true},
+  meltemTouch: {actors:2, bots:0, mobile:true, reference:true},
   floor: {actors:10, bots:9, family:true, floor:true},
 };
 const name = process.env.FPS_MAP_CASE || 'desktop';
@@ -24,8 +26,8 @@ const spec = cases[name];
 // A pair switches the same family room to Floor 5 and then back to Compact.
 const switchPairs = Number(process.env.FPS_MAP_SWITCH_PAIRS ?? 2);
 assert(Number.isSafeInteger(switchPairs) && switchPairs>=1, 'Use a positive number of map switch pairs');
-assert(spec, 'Choose desktop, mobile, four or floor');
-const floor = 'floor5-prepared', arena = 'compact-arena', map = spec.floor ? floor : arena;
+assert(spec, 'Unknown map browser scenario');
+const floor = 'floor5-prepared', arena = 'compact-arena', map = spec.reference ? 'meltem' : spec.floor ? floor : arena;
 const out = process.env.FPS_MAP_OUT || 'test-results/multiplayer-maps';
 await mkdir(out, {recursive:true});
 const fixture = await startPilotFixture({familyRoom:true, host:'127.0.0.1',
@@ -354,10 +356,10 @@ try {
   await page.locator('#room-rematch').click();
   await until(()=>room.state.phase==='waiting','Rematch returns to same room');
   if(!spec.floor) await acknowledge(map);
-  if(spec.video) {
+  if(spec.video || (spec.reference && spec.family)) {
     result.transitions=[];
     for(let turn=0;turn<2*switchPairs;turn++) {
-      const id=turn%2 ? arena : floor;
+      const id=turn%2 ? map : floor;
       mark('switch '+id); const ms=await selectMap(id);
       const cdp=await context.newCDPSession(page);
       try {await cdp.send('HeapProfiler.collectGarbage');} finally {await cdp.detach();}

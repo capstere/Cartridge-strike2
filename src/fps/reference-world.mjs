@@ -63,7 +63,8 @@ export function createReferenceWorld(project){
   const doors=createDoors(data,physics),glass=createGlassState({specs:[]},physics);
   const roomAt=(x,z)=>rooms.find((_,i)=>{const v=spec.zones[i];return x>=v[1]&&x<=v[2]&&z>=v[3]&&z<=v[4];})||outside;
   return {...physics,newLevel:true,layeredTerrain:true,referenceId:'meltem',project,data,description,anchors,doors,glass,
-    furnishings:{instances:[],boxes:[]},tactical:createFloorTactics(navigation,anchors),navigation,findPath:navigation.findPath,roomAt,
+    furnishings:{instances:[],boxes:[]},tactical:{...createFloorTactics(navigation,anchors),
+      patrolPoints:spec.poi.map(([x,y,z])=>({x,y,z}))},navigation,findPath:navigation.findPath,roomAt,
     materialAt:(x,z)=>x< -30?'wood':Math.abs(z)>41&&x> -18?'dirt':'concrete',
     setElevatorProgress:()=>{},statistics:{staticBoxes:staticBoxes.length,navigation:navigation.statistics,furnishings:0}};
 }
