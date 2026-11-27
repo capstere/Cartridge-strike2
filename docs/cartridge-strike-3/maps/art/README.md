@@ -24,6 +24,12 @@ Both signage materials reported the same decoded texture. The opaque batch sampl
 
 The atlas is 80,880 bytes with SHA-256 `79ee402e3c9735f698db635da120089cad53b55f45fbde4094842bb6f81470dd`. The base mesh changed from 2,806,902 to 2,805,032 bytes with SHA-256 `8ef6ea1744698179b8f3baa2aa322fff603cd3660fd443463ee80c7b4d9625fe`. Together they add 79,010 bytes to the packaged low-tier map. The restored runtime revision was `c52c3363649fb27d4d1ef1130d6e7b99984cd79f`.
 
+### Open quay
+
+From three metres in front of the waterfront stall, the restored board reads **KIOSK**. Its teal face, pale lettering and worn frame are visible from a normal standing position. This capture used the same Pi and graphics settings. The HUD shows Waterfront after the normal spawn-protection timer elapsed. [Original kiosk](kiosk/before.jpg) · [Restored kiosk](kiosk/after.jpg)
+
+Draw calls rose from 502 to 504. The paired 90-frame samples measured 20.5 ms at the median in both runs and 24.6 / 37.1 ms at p95. Actors advanced independently until the fixed-view capture in each match. The integrated map budget check should repeat matched captures at both sight lines to investigate the 12.5 ms kiosk p95 increase alongside the 0.6 ms reduction at the tavern. [Original kiosk receipt](kiosk/before.json) · [Restored kiosk receipt](kiosk/after.json)
+
 ## Reproduction
 
 Use the full checkout with the map export’s Python dependencies and the vendored Playwright dependencies installed. Supply the private directory produced by the original map exporter to the existing packer. `CHROMIUM_PATH` can select the installed Pi Chromium. The packer invokes the sign generator automatically.
@@ -38,3 +44,5 @@ For the fixed-view comparison, serve the checkout over loopback and set `FPS_TES
 CHROMIUM_PATH=/usr/bin/chromium FPS_NETWORK_HEADED=1 FPS_NETWORK_ANGLE=gl-egl \
   node tools/reference-map/capture-signs.mjs "$evidence" 37c006f766ec799581eff54c9273703373a4099a
 ```
+
+Set `FPS_SIGN_VIEW=kiosk` for the closer kiosk comparison.

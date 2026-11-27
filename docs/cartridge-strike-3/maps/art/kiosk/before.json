@@ -1,0 +1,30 @@
+{
+  "map": "meltem",
+  "quality": "low",
+  "position": [
+    -27.17,
+    0,
+    9
+  ],
+  "yaw": -1.5707963267948966,
+  "pitch": 0.36,
+  "frameIntervals": {
+    "n": 90,
+    "p50": 20.5,
+    "p95": 24.599999999998545,
+    "p99": 38.20000000000073
+  },
+  "renderer": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+  "buffer": [
+    816,
+    459
+  ],
+  "drawCalls": 502,
+  "triangles": 427905,
+  "textures": 71,
+  "signage": [],
+  "browser": "156.0.8078.79",
+  "baseline": "37c006f766ec799581eff54c9273703373a4099a",
+  "revision": "fe3864cbb6e3513105193e53df6ee8ebc6425581",
+  "dirty": false
+}

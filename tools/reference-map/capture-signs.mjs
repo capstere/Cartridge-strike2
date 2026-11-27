@@ -8,6 +8,8 @@ import {chromium} from '../../frontline/source/tools/dev/node_modules/playwright
 const origin=process.env.FPS_TEST_ORIGIN;
 const output=process.argv[2];
 const base=process.argv[3];
+const viewpoint=process.env.FPS_SIGN_VIEW||'tavern';
+assert(['tavern','kiosk'].includes(viewpoint),'Unknown waterfront viewpoint.');
 assert(origin && output,'Supply FPS_TEST_ORIGIN and an evidence output directory.');
 assert(!base || /^[0-9a-f]{40}$/.test(base),'Baseline must be an exact commit.');
 await mkdir(output,{recursive:true});
@@ -34,19 +36,22 @@ try{
           await page.route('**/'+path,route=>route.fulfill({body,contentType:path.endsWith('mjs')?'text/javascript':'application/octet-stream'}));
         }
       }
-      await page.goto(origin+'/fps/?test=1&level=meltem&mode=endless',{waitUntil:'domcontentloaded'});
+      const realtime=viewpoint==='kiosk'?'&realtime=1':'';
+      await page.goto(origin+'/fps/?test=1&level=meltem&mode=endless'+realtime,{waitUntil:'domcontentloaded'});
       await page.locator('#start').click();
       await page.locator('#hud').waitFor();
       await page.locator('#cs-loading').waitFor({state:'hidden'});
       await page.waitForFunction(()=>window.__fps?.world?.project?.referenceMap?.sourceId==='meltem' && __fps.game.player?.alive);
-      const metrics=await page.evaluate(async()=>{
+      if(viewpoint==='kiosk')await page.waitForFunction(()=>__fps.game.player.alive && __fps.game.player.spawnProtectedUntil<=__fps.game.state.time);
+      const metrics=await page.evaluate(async viewpoint=>{
         const {game,renderer}=__fps;
         __fps.stopFrameLoop();
         if(renderer.quality!=='low' || game.state.mode!=='endless')throw Error('Expected a low-quality Endless match');
         const player=game.player;
-        // Stand on the quay, four metres in front of its actual seafood tavern sign.
-        if(!renderer.world.canOccupy(-26.27,18.6,player.radius,player.height,0))throw Error('The quay viewpoint is obstructed');
-        Object.assign(player,{x:-26.27,y:0,z:18.6,yaw:-Math.PI/2,pitch:.18});
+        const [x,z,pitch]=viewpoint==='kiosk'?[-27.17,9,.36]:[-26.27,18.6,.18];
+        if(!renderer.world.canOccupy(x,z,player.radius,player.height,0))throw Error('The quay viewpoint is obstructed');
+        Object.assign(player,{x,y:0,z,yaw:-Math.PI/2,pitch});
+        if(viewpoint==='kiosk')__fps.render();
         renderer.render(game,player,1/60);
         const durations=[];
         let last;
@@ -76,7 +81,7 @@ try{
           buffer:[gl.drawingBufferWidth,gl.drawingBufferHeight],
           drawCalls:renderer.stats.drawCalls,triangles:renderer.stats.triangles,
           textures:renderer.renderer.info.memory.textures,signage};
-      });
+      },viewpoint);
       assert.deepEqual(errors,[]);
       if(baseline)assert.equal(metrics.signage.length,0);
       else{
