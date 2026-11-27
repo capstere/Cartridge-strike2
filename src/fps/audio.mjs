@@ -83,9 +83,16 @@ export class AudioSystem {
 
   updateListener(listener) {
     if (!this.context || !listener) return;
+    const id = listener.id ?? listener.actorId;
+    const life = listener.lifeId ?? listener.deaths;
+    const alive = listener.alive !== false;
+    if (this.listener && (id !== this.listenerId || life !== this.listenerLife || alive !== this.listenerAlive)) {
+      this.clearFlashHearing();
+    }
     this.listener = point(listener.position || listener);
-    this.listenerId = listener.id ?? listener.actorId;
-    this.listenerAlive = listener.alive !== false;
+    this.listenerId = id;
+    this.listenerLife = life;
+    this.listenerAlive = alive;
     const yaw = Number(listener.yaw) || 0, pitch = Number(listener.pitch) || 0;
     const forward = listener.forward || { x: -Math.sin(yaw) * Math.cos(pitch), y: Math.sin(pitch), z: -Math.cos(yaw) * Math.cos(pitch) };
     const l = this.context.listener, t = this.context.currentTime;
@@ -370,9 +377,8 @@ export class AudioSystem {
     this.stats.played++;
   }
 
-  /** Stop all tails and future scheduled reload/result notes. No setTimeouts survive a reset. */
-  reset() {
-    this.generation++;
+  clearFlashHearing() {
+    if (this.flashVoice) this.flashVoice.stop(this.context.currentTime);
     this.flashVoice = null;
     if (this.worldFilter) {
       const time = this.context.currentTime;
@@ -381,6 +387,12 @@ export class AudioSystem {
       this.worldGain.gain.cancelScheduledValues(time);
       this.worldGain.gain.setValueAtTime(1,time);
     }
+  }
+
+  /** Stop all tails and future scheduled notes on pause or a round reset. */
+  reset() {
+    this.generation++;
+    this.clearFlashHearing();
     this.stopAmbient();
     for (const item of this.active) {
       item.source.onended = null;

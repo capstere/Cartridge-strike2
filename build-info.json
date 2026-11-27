@@ -776,8 +776,8 @@
     },
     {
       "path": "credits.html",
-      "bytes": 14927,
-      "sha256": "44ce2553c95d1b05732a81bf1e36f74dc5e4137e35549930af7455abd1ac665a"
+      "bytes": 15156,
+      "sha256": "ff05176dccb7e18c064632f467e14e3b903270cfc361ffc682d955ded944cd1a"
     },
     {
       "path": "docs/fps-furniture-library.md",
@@ -2097,7 +2097,7 @@
     {
       "path": "shared/multiplayer/build.mjs",
       "bytes": 660,
-      "sha256": "87d677b27cd7cfe8c71f1e731556c729811efb384b7630e7d3bcf01ad2ddb0db"
+      "sha256": "b4fbb9a8bc759f0e6908966b19c908cdf984225178ecae21a0d63266368d086e"
     },
     {
       "path": "shared/multiplayer/collision-contract.mjs",
@@ -2117,7 +2117,7 @@
     {
       "path": "shared/multiplayer/map-build.mjs",
       "bytes": 1215,
-      "sha256": "2ca9cdd60c55c17bb95b1842c82d009fc380966ceb98e0b633d92c0eda328657"
+      "sha256": "a330786a160a397e7f2ed4741ec791fc9b4d459fbdf9c8a0f39946624fc5e26a"
     },
     {
       "path": "shared/multiplayer/maps.mjs",
@@ -2186,8 +2186,8 @@
     },
     {
       "path": "src/fps/audio.mjs",
-      "bytes": 21041,
-      "sha256": "09d360d109d16eff50f7da6cb597e2898a601e2bb9d6e439276d093d0b2a82c5"
+      "bytes": 21433,
+      "sha256": "adcc9883ada45a0cd143ff8a027f3c111003725e2ecfc8b99b97ca5f2e54075a"
     },
     {
       "path": "src/fps/authored-hand-data.mjs",
@@ -2830,7 +2830,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 59420201,
+  "bytes": 59420822,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

@@ -60,16 +60,25 @@ try {
     // Render the whole flash event, then measure after its short blast has ended.
     const flash = [];
     for (const [label,distance,clear,reduced] of [
-      ['near',2,true,false],['reduced',2,true,true],['wall',2,false,false],['far',20,true,false],['reset',2,true,false]
+      ['near',2,true,false],['reduced',2,true,true],['wall',2,false,false],['far',20,true,false],['reset',2,true,false],
+      ['spectator',2,true,false],['newLife',2,true,false]
     ]) {
       const audio=new AudioSystem({segmentClear:()=>clear},{volume:1,reducedFlash:reduced});
       const rate=48000,ctx=new OfflineAudioContext(1,rate*4,rate);
       audio.context=ctx; audio.master=ctx.createGain(); audio.master.connect(ctx.destination);
-      audio.updateListener({id:'self',x:0,y:0,z:0});
+      audio.updateListener({id:'self',lifeId:1,x:0,y:0,z:0});
       audio.play({type:'flash',x:0,y:0,z:-distance});
       const ringStarted=!!audio.flashVoice;
       if(label==='reset')audio.reset();
-      const data=(await ctx.startRendering()).getChannelData(0);
+      const changeEar=label==='spectator' || label==='newLife';
+      const change=changeEar && ctx.suspend(.30);
+      const rendering=ctx.startRendering();
+      if(changeEar){
+        await change;
+        audio.updateListener({id:label==='spectator'?'teammate':'self',lifeId:2,x:0,y:0,z:0});
+        await ctx.resume();
+      }
+      const data=(await rendering).getChannelData(0);
       const rms=(start,end)=>{
         const slice=data.subarray(Math.round(rate*start),Math.round(rate*end));
         return Math.sqrt(slice.reduce((sum,value)=>sum+value*value,0)/slice.length);
@@ -81,7 +90,32 @@ try {
       flash.push({label,ringStarted,frequency,early:rms(.45,.55),late:rms(1.8,1.9),tail:rms(3.6,3.8)});
       await audio.dispose();
     }
-    runs.push({flash});
+    // A real continuing world tone follows the ducked bus. Project the result
+    // onto its frequency so the separate ringing oscillator cannot inflate it.
+    const worldAudio=new AudioSystem(null,{volume:1,reducedFlash:false});
+    const worldCtx=new OfflineAudioContext(1,48000*4,48000);
+    worldAudio.context=worldCtx; worldAudio.master=worldCtx.createGain(); worldAudio.master.connect(worldCtx.destination);
+    worldAudio.updateListener({id:'self',x:0,y:0,z:0});
+    const tone=worldCtx.createOscillator(), level=worldCtx.createGain();
+    tone.frequency.value=6000; level.gain.value=.12;
+    tone.connect(level).connect(worldAudio.worldOutput()); tone.start();
+    const pause=worldCtx.suspend(.12), rendered=worldCtx.startRendering();
+    await pause;
+    worldAudio.play({type:'flash',x:0,y:0,z:-2});
+    await worldCtx.resume();
+    const worldSamples=(await rendered).getChannelData(0);
+    const band=start=>{
+      const first=Math.round(start*48000), count=4800;
+      let re=0,im=0;
+      for(let i=0;i<count;i++){
+        const phase=2*Math.PI*6000*i/48000, value=worldSamples[first+i];
+        re+=value*Math.cos(phase); im+=value*Math.sin(phase);
+      }
+      return Math.hypot(re,im)*2/count;
+    };
+    const worldTone={before:band(.01),exposed:band(.65),recovered:band(3.5)};
+    await worldAudio.dispose();
+    runs.push({flash,worldTone});
     // Pause must cancel the future arrival of a remotely scheduled shot.
     const audio=new AudioSystem(null,{}), ctx=new OfflineAudioContext(1,24000,48000);
     audio.context=ctx;audio.master=ctx.createGain();audio.master.connect(ctx.destination);
@@ -95,14 +129,17 @@ try {
     runs.push({cancelled:true,silence,remaining:audio.active.size});
     return runs;
   });
-  const cancelled=rows.pop(), {flash}=rows.pop(), latch=rows.pop();
-  const [near,reduced,wall,far,reset]=flash;
+  const cancelled=rows.pop(), {flash,worldTone}=rows.pop(), latch=rows.pop();
+  const [near,reduced,wall,far,reset,spectator,newLife]=flash;
   assert(near.ringStarted && near.frequency>3050 && near.frequency<3160);
   assert(near.early>near.late && near.late>0 && near.tail===0);
   assert(reduced.early>0 && reduced.early<near.early*.3 && reduced.late===0);
   assert(wall.early>reduced.early && wall.early<near.early);
   assert(!far.ringStarted && far.early===0);
   assert(reset.ringStarted && reset.early===0 && reset.tail===0);
+  for(const change of [spectator,newLife])assert(change.ringStarted && change.early===0 && change.tail===0);
+  assert(worldTone.exposed<worldTone.before*.12);
+  assert(Math.abs(worldTone.recovered/worldTone.before-1)<.01);
   assert.deepEqual(latch.errors,[]);
   assert.equal(latch.sources,1);
   assert(latch.peak>0 && latch.firstPcmMs>=0 && latch.firstPcmMs<120);
@@ -115,7 +152,7 @@ try {
     assert(peak>0 && secondPeak>0);
     assert(firstPcmMs>=expected*1000-1 && firstPcmMs<expected*1000+40);
   }
-  const receipt={browser:browser.version(),sampleRate:48000,rows,latch,flash,cancelled};
+  const receipt={browser:browser.version(),sampleRate:48000,rows,latch,flash,worldTone,cancelled};
   if(process.env.CS3_AUDIO_RESULT)await writeFile(process.env.CS3_AUDIO_RESULT,JSON.stringify(receipt,null,2)+'\n');
   console.log(JSON.stringify(receipt));
 }finally{await browser.close();}
