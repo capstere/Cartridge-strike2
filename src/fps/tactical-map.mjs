@@ -5,8 +5,8 @@ import { insidePolygon } from './physics.mjs';
 
 export const TACTICAL_MAP_VERSION = 'fps-0.7-existing-corridor-lanes';
 export const TACTICAL_LANES = Object.freeze([
-  { id:'direct', label:'SYD · DIREKT', color:'#e8b45e', approachDoors:['D08'], entryDoorId:'D09', description:'South approach to North Laboratory; direct route through the central passage.' },
-  { id:'flank', label:'NORD · FLANK', color:'#77cce8', approachDoors:['D07','D55'], entryDoorId:'D13', description:'North approach through Analysis Chamber and the connecting laboratory passage.' },
+  { id:'direct', label:'SOUTH · DIRECT', color:'#e8b45e', approachDoors:['D08'], entryDoorId:'D09', description:'South approach to North Laboratory; direct route through the central passage.' },
+  { id:'flank', label:'NORTH · FLANK', color:'#77cce8', approachDoors:['D07','D55'], entryDoorId:'D13', description:'North approach through Analysis Chamber and the connecting laboratory passage.' },
 ]);
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 export const pathLength=(start,path)=>path.reduce((sum,p,i)=>sum+distance(i?path[i-1]:start,p),0);

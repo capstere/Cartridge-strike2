@@ -65,18 +65,18 @@ test('missing/stale RTT uses live hits; forged and delayed echoes cannot buy mor
  const {r,a}=await fixture(t);const seat=r.seats.get(a.sessionId);
  await delay(160);const frame={sampleTick:r.sim.tickNumber},stamp=r.clock.elapsedTime-100;
  seat.rtt=undefined;seat.rttAt=undefined;
- assert(r.lag.accept(seat,frame,stamp));assert.equal(r.lag.shots.get(seat.id),0);
+ assert.equal(r.lag.admit(seat,frame,stamp),0);
  recordRtt(seat,20,r.clock.elapsedTime);recordRtt(seat,450,r.clock.elapsedTime);assert.equal(seat.rtt,20);
  seat.rttAt=r.clock.elapsedTime-RTT_FRESH_MS-1;
- assert(r.lag.accept(seat,frame,stamp));assert.equal(r.lag.shots.get(seat.id),0);
+ assert.equal(r.lag.admit(seat,frame,stamp),0);
  const before=seat.rttAt;a.send('clock-echo','forged');await delay(50);assert.equal(seat.rttAt,before);
  assert.equal(recordRtt(seat,1001,r.clock.elapsedTime),false);assert.equal(recordRtt(seat,NaN,r.clock.elapsedTime),false);
  seat.rtt=310;seat.rttAt=r.clock.elapsedTime;seat.lifeStartedAt=0;seat.lastShotStamp=0;
  const tick=r.sim.tickNumber;r.lag.tickTimes.set(tick,r.clock.elapsedTime-310);
  // Synthetic monotonic room clock permits the measured 250 ms stress budget.
  const old=r.clock.elapsedTime;r.clock.elapsedTime=old+500;r.lag.tickTimes.set(tick,old+190);
- assert(r.lag.accept(seat,{sampleTick:tick},old+90));assert.equal(r.lag.shots.get(seat.id),old+90);
+ assert.equal(r.lag.admit(seat,{sampleTick:tick},old+90),old+90);
  seat.rtt=20;seat.lastShotStamp=0;recordRtt(seat,450,r.clock.elapsedTime);
- assert(r.lag.accept(seat,{sampleTick:tick},old+90));assert.equal(r.lag.shots.get(seat.id),0,'delayed echo does not enlarge historical allowance');
+ assert.equal(r.lag.admit(seat,{sampleTick:tick},old+90),0,'delayed echo does not enlarge historical allowance');
  r.clock.elapsedTime=old;
 });

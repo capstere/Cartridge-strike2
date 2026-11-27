@@ -64,7 +64,7 @@ async function boot(browser,mobile){
       if(mobile){
         cdp=await context.newCDPSession(page);
         const trigger=page.locator('[data-mobile-action=fire]');
-        assert.equal(await trigger.textContent(),'KASTA');
+        assert.equal(await trigger.textContent(),'THROW');
         const r=await trigger.boundingBox();
         await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:r.x+r.width/2,y:r.y+r.height/2,id:21}]});
       }else await page.evaluate(()=>document.getElementById('game').dispatchEvent(new MouseEvent('mousedown',{button:0,bubbles:true})));

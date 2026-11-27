@@ -1,3 +1,4 @@
+import {RUSH,wantsRush,advanceRush} from './rush.mjs';
 import {zombiePosition} from './zombie-poses.mjs';
 
 /** Shared capsule movement. Uses the existing world physics and body sweep.
@@ -18,8 +19,9 @@ export function moveActor(game, actor, input, dt, effects = true) {
   let forward = clamp(input.forward || 0, -1, 1), strafe = clamp(input.strafe || 0, -1, 1);
   const magnitude = Math.hypot(forward, strafe);
   if (magnitude > 1) { forward /= magnitude; strafe /= magnitude; }
-  const mode = actor.crouching ? 'crouch' : input.sneak ? 'sneak' : 'run';
-  const speed = actor.crouching ? game.config.crouchSpeed : input.sneak ? game.config.sneakSpeed : actor.bot ? game.config.botSpeed : game.config.runSpeed;
+  const rush = wantsRush(actor,input,forward,game.state.time);
+  const mode = rush ? 'rush' : actor.crouching ? 'crouch' : input.sneak ? 'sneak' : 'run';
+  const speed = rush ? game.config.runSpeed*RUSH.speed : actor.crouching ? game.config.crouchSpeed : input.sneak ? game.config.sneakSpeed : actor.bot ? game.config.botSpeed : game.config.runSpeed;
   let dx = (-Math.sin(actor.yaw) * forward + Math.cos(actor.yaw) * strafe) * speed * dt;
   let dz = (-Math.cos(actor.yaw) * forward - Math.sin(actor.yaw) * strafe) * speed * dt;
   if (input.moveWorld) { dx = input.moveWorld.x; dz = input.moveWorld.z; }
@@ -29,19 +31,20 @@ export function moveActor(game, actor, input, dt, effects = true) {
   const before = point(actor), wasGrounded = actor.onGround;
   const result = moveBody(game, actor, dx, actor.vy * dt, dz);
   if (result.onGround !== undefined) actor.onGround = result.onGround;
-  if (actor.y <= .001) { actor.y = Math.max(0, actor.y); actor.onGround = true; }
+  if (!game.world.layeredTerrain && actor.y <= .001) { actor.y = Math.max(0, actor.y); actor.onGround = true; }
   if (actor.onGround && actor.vy < 0) actor.vy = 0;
   if (result.ceiling && actor.vy > 0) actor.vy = 0;
   if (effects && !wasGrounded && actor.onGround) game.emit('land', actor, { surface: game.world.materialAt(actor.x, actor.z) });
   const moved = distance(actor, before); actor.moving = moved / dt; actor.distanceWalked += moved;
-  if (moved > .001 && actor.onGround && game.state.time - actor.lastStep > (mode === 'run' ? .36 : mode === 'sneak' ? .66 : .75)) {
+  advanceRush(actor,rush,dt,game.config.runSpeed);
+  if (moved > .001 && actor.onGround && game.state.time - actor.lastStep > (mode === 'rush' ? .29 : mode === 'run' ? .36 : mode === 'sneak' ? .66 : .75)) {
     actor.lastStep = game.state.time;
     if (effects) game.emit('step', actor, { mode, surface: game.world.materialAt(actor.x, actor.z) });
     if (effects && !actor.isPlayer && actor.controllerType !== 'human' && game.random() < .33) game.emit('rustle', actor, { mode });
   }
 }
 export function moveBody(game, actor, dx, dy, dz) {
-  const before = point(actor), projectedY = Math.max(0, actor.y + dy);
+  const before = point(actor), projectedY = game.world.layeredTerrain ? actor.y + dy : Math.max(0, actor.y + dy);
   const residents = game.state.zombies.filter(z=>z.alive&&z!==actor);
   const residentBodies = game.config.networkSlice ? residents.map(z=>z.seat?{...z,...zombiePosition(z,game.state.time)}:z) : residents;
   const bodies = [...game.actors.filter(a => a.alive), ...game.hostages.filter(h => h.alive!==false && !h.rescued), ...residentBodies].filter(other => other !== actor &&

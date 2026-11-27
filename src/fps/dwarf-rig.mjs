@@ -10,7 +10,7 @@ export const DWARF_CLIPS=Object.freeze(['Idle_Loop','Walk_Loop','Death01']);
 import {DWARF_PALETTES} from './character-roles.mjs?v=6.1.2';
 export {DWARF_PALETTES};
 export function createDwarfAsset(variant=0){
- if(!Number.isInteger(variant)||variant<0||variant>4)throw Error('Okänd dvärgvariant.');
+ if(!Number.isInteger(variant)||variant<0||variant>4)throw Error('Unknown dwarf variant.');
  const root=new T.Group();root.name='dwarf-source';const bones=[],byName=new Map();
  function bone(name,parent,world){const b=new T.Bone();b.name=name;(parent||root).add(b);b.position.fromArray(world);if(parent){root.updateMatrixWorld(true);b.position.sub(parent.getWorldPosition(new T.Vector3()));}bones.push(b);byName.set(name,b);return b;}
  const origin=bone('dwarf_root',null,[0,0,0]),pelvis=bone('pelvis',origin,[0,.23,0]),chest=bone('spine_03',pelvis,[0,.34,0]),head=bone('Head',chest,[0,.57,.008]);
@@ -61,7 +61,7 @@ export function createDwarfAvatar(asset=createDwarfAsset()){
 }
 export function animateDwarf(state,actor,time){
  const name=actor.alive===false?'Death01':actor.moving>.03?'Walk_Loop':'Idle_Loop',action=state.base.get(name);
- if(!action)throw Error('Dvärgklipp saknas: '+name);
+ if(!action)throw Error('Missing dwarf animation: '+name);
  if(state.activeBase!==name){state.mixer.stopAllAction();action.reset().play();state.activeBase=name;}
  action.setLoop(name==='Death01'?T.LoopOnce:T.LoopRepeat,name==='Death01'?1:Infinity);action.clampWhenFinished=name==='Death01';
  // Match the original procedural cadence; preview/export use these same clips.

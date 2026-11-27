@@ -1,3 +1,4 @@
+import {rushReady} from './rush.mjs';
 import { WEAPONS } from './config.mjs';
 import { advanceAim, canAim, aimFov, aimFriction, EmptyMagazineReload, nextWeapon, clamp01 } from './tactical-rules.mjs';
 
@@ -102,7 +103,7 @@ export class TacticalControls {
     }
     if (!canAim(p.weapon) || p.reloadUntil || p.action) this.wanted = false;
     this.reload.tick(g, this.settings.autoReload, this.isInteracting());
-    const target = this.wanted && !p.reloadUntil ? 1 : 0;
+    const target = this.wanted && !p.reloadUntil && rushReady(p) ? 1 : 0;
     this.amount = this.settings.reducedMotion ? target : advanceAim(this.amount,target,dt);
     p.aimAmount = clamp01(this.amount); p.aiming = target === 1;
     this.updateButton();
@@ -157,6 +158,9 @@ export class TacticalControls {
     }
     const scoped = p?.weapon === 'sniper' && amount > .92;
     this.scope.hidden = !scoped;
+    const crosshair=document.getElementById('crosshair');
+    const opacity=Math.max(0,1-(p?.rushWeight||0)*2).toFixed(2);
+    if(crosshair && crosshair.style.opacity!==opacity)crosshair.style.opacity=opacity;
     document.body.classList.toggle('fps-scoped', scoped);
     document.body.classList.toggle('fps-aiming', amount > .1);
     document.documentElement.style.setProperty('--aim-amount', amount.toFixed(3));

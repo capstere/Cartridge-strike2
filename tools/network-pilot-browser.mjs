@@ -156,7 +156,7 @@ try{
     matchCycle={sameRoom:true,shippingDefaults:!!external,durationSeconds:before.duration,scoreTarget:before.scoreTarget,firstMatch:before.matchId,result,secondMatch:next.matchId,rematchFire:true};
   }
   await host.keyboard.press('Escape');await host.locator('#restart').click();
-  await friend.waitForFunction(()=>document.querySelector('#alive-a')?.textContent==='0 kvar');
+  await friend.waitForFunction(()=>document.querySelector('#alive-a')?.textContent==='0 alive');
   await friend.locator('[data-mobile-action=pause]').tap();await friend.locator('#restart').tap();
   assert.deepEqual(errors,[]);
   const report={status:'PASS',path:external?'public HTTPS':'loopback TLS',date:new Date().toISOString(),

@@ -34,11 +34,11 @@ export class LagCompensation {
     this.tickTimes.set(this.room.sim.tickNumber,this.room.clock.elapsedTime);
     while(this.tickTimes.size>64)this.tickTimes.delete(this.tickTimes.keys().next().value);
   }
-  reject(reason){this.metrics.rejected++;this.metrics.reasons[reason]=(this.metrics.reasons[reason]||0)+1;return false;}
-  accept(seat,frame,stamp){
+  reject(reason){this.metrics.rejected++;this.metrics.reasons[reason]=(this.metrics.reasons[reason]||0)+1;return null;}
+  admit(seat,frame,stamp){
     const now=this.room.clock.elapsedTime,anchor=this.tickTimes.get(frame.sampleTick);
     // A never-synced SDK can shoot live; it gets no historic advantage.
-    if(stamp===0){this.shots.set(seat.id,0);this.metrics.live++;return true;}
+    if(stamp===0)return 0;
     if(!Number.isFinite(stamp)||stamp>now)return this.reject('future/invalid');
     const age=now-stamp;
     if(age>REWIND_MS)return this.reject('expired');
@@ -52,16 +52,26 @@ export class LagCompensation {
     if(!Number.isFinite(seat.rtt)||!Number.isFinite(seat.rttAt)||now-seat.rttAt>RTT_FRESH_MS){
       // Missing/stale echoes never silently waive the history agreement check.
       // Keep shooting responsive against the live world without rewind credit.
-      seat.lastShotStamp=stamp;this.shots.set(seat.id,0);this.metrics.live++;return true;
+      seat.lastShotStamp=stamp;return 0;
     }
     if(Math.abs(age-(seat.rtt+INTERPOLATION_MS))>125){
       // A changed real path still permits live fire; delayed echoes buy no history.
       this.metrics.reasons['live RTT mismatch']=(this.metrics.reasons['live RTT mismatch']||0)+1;
-      seat.lastShotStamp=stamp;this.shots.set(seat.id,0);this.metrics.live++;return true;
+      seat.lastShotStamp=stamp;return 0;
     }
-    seat.lastShotStamp=stamp;this.shots.set(seat.id,stamp);this.metrics.accepted++;
+    seat.lastShotStamp=stamp;this.metrics.accepted++;
     this.metrics.ages.push(age);if(this.metrics.ages.length>512)this.metrics.ages.shift();
-    return true;
+    return stamp;
+  }
+  useAdmittedShot(actorId,stamp){
+    // The gameplay clock may have spent several ticks shouldering a weapon.
+    // A valid press survives that wait, but never extends the history window.
+    if(stamp && this.room.clock.elapsedTime-stamp>REWIND_MS){
+      stamp=0;
+      this.metrics.reasons['aged during recovery']=(this.metrics.reasons['aged during recovery']||0)+1;
+    }
+    if(!stamp)this.metrics.live++;
+    this.shots.set(actorId,stamp);
   }
   query(actor,origin,dir,range){
     const g=this.room.sim.game,stamp=this.shots.get(actor.id);

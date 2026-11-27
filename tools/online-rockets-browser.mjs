@@ -130,7 +130,7 @@ async function mapControls(desktop,mobile,room){
     await until(async()=>(await read(page)).open,'the map becomes visible');
     const state=await read(page);
     assert(state.right+4<=state.aimLeft && state.events==='none','map stays outside aim and lets touch through');
-    assert.match(state.legend,/Pil · Du.*Punkt · Laget/);
+    assert.match(state.legend,/Arrow · You.*Dot · Team/);
     assert.equal(state.legend.includes('Bomb site'),classic);
     assert(state.cache<=2);
     return state;
@@ -179,8 +179,8 @@ async function mapControls(desktop,mobile,room){
   if(await desktop.locator('#resume').isVisible())await resumeDesktop(desktop);
   assert.equal(await desktop.evaluate(()=>document.pointerLockElement?.id),'game');
   if(classic){
-    await desktop.waitForFunction(()=>document.querySelector('#bomb-status').textContent.includes('Stoppa'));
-    await mobile.waitForFunction(()=>document.querySelector('#bomb-status').textContent.includes('gisslan')||document.querySelector('#bomb-status').textContent.includes('North Laboratory'));
+    await desktop.waitForFunction(()=>document.querySelector('#bomb-status').textContent.includes('Prevent the plant and the rescue'));
+    await mobile.waitForFunction(()=>document.querySelector('#bomb-status').textContent.includes('hostages')||document.querySelector('#bomb-status').textContent.includes('North Laboratory'));
   }
   console.log('PASS tactical map',room.state.mode,JSON.stringify({desktop:await read(desktop),touch:await read(mobile)}));
 }
@@ -205,7 +205,7 @@ async function radioControls(desktop,mobile,mode,shooter){
       assert.equal(await desktop.evaluate(()=>!!__fps.input(0).fire),false,'radio blocks a mouse trigger');
     }finally{await desktop.mouse.up();}
     await desktop.keyboard.press('1');
-    await desktop.locator('#radio-caption').filter({hasText:'Håll ihop'}).waitFor();
+    await desktop.locator('#radio-caption').filter({hasText:'Group up'}).waitFor();
     await desktop.waitForFunction(()=>window.playedTeamVoice===1);
     assert.equal(await desktop.evaluate(()=>document.pointerLockElement?.id),'game');
     assert.equal(await mobile.evaluate(()=>__fps.network.teamSignal),null,'opposing touch client sees no Classic radio');

@@ -10,7 +10,7 @@ export async function resumeDesktop(page){
       await page.waitForFunction(()=>document.pointerLockElement?.id==='game'&&document.querySelector('#pause').hidden,null,{timeout:5000});
       return {attempts,point:{x:box.x+box.width/2,y:box.y+box.height/2}};
     }catch(error){
-      const denied=await page.locator('#pause').isVisible()&&(await page.locator('#pause').textContent()).includes('Muslås');
+      const denied=await page.locator('#pause').isVisible()&&(await page.locator('#pause').textContent()).includes('Mouse capture failed');
       if(attempts===2||!denied)throw error;
     }
   }

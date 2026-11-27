@@ -107,7 +107,7 @@ const equip = (page,id) => page.evaluate(id=>{
     await equip(page,'he');await advance(page,3);
     const trigger=page.locator('[data-mobile-action=fire]');
     assert.equal(await trigger.isVisible(),true,'Grenade has manual trigger in auto-fire mode');
-    assert.equal(await trigger.textContent(),'KASTA');
+    assert.equal(await trigger.textContent(),'THROW');
     const rect=await trigger.boundingBox();
     await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:rect.x+rect.width/2,y:rect.y+rect.height/2,id:70}]});
     const threw=await page.evaluate(()=>{__fps.step(null,1/60);return {n:__fps.game.player.inventory.he,grenades:__fps.game.state.grenades.length};});
