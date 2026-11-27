@@ -33,9 +33,10 @@ async function open(viewport={width:1280,height:720},mobile=false,endpoint=local
  await page.locator('#network-mode').waitFor();
  assert.equal(await page.locator('#network-mode').inputValue(),'tdm');
  assert.deepEqual(await page.locator('#network-mode option').allTextContents(),['Team Deathmatch','Classic']);
- assert.match(await page.locator('#lb-objective').textContent(),/Team Deathmatch.*Classic/);
- assert.match(await page.locator('.lb-brief').textContent(),/Floor 5 Laboratory/);
- assert.match(await page.locator('.lb-brief').textContent(),/5 mot 5/);
+ assert.deepEqual(await page.locator('.lb-brief dt').allTextContents(),['Map','Format','Available modes']);
+ assert.deepEqual(await page.locator('.lb-brief dd').allTextContents(),[
+   'Floor 5 Laboratory','5v5 · Private room','Team Deathmatch or Classic',
+ ]);
  assert.deepEqual(levelRequests,[],'no LevelProject requested before room admission');
  assert(await page.evaluate(()=>!__fps.world&&!__fps.renderer&&__fps.renderBudget.stats.rendered===0));
  return page;
@@ -50,8 +51,7 @@ async function join(page,endpoint,roomId='',name='Player'){
   // single opaque timeout hid the actual failure on the Linux software runner.
   await page.waitForFunction(()=>__fps.network?.view.player?.alive&&__fps.game.network&&(__fps.modal===null||__fps.modal==='pause')||
    !document.querySelector('#fatal').hidden||
-   !document.querySelector('.network-form button').disabled&&
-   !document.querySelector('#network-status').textContent.startsWith('Ansluter'));
+   !!document.querySelector('#network-status[data-error-id]'));
   if(await page.evaluate(()=>__fps.modal==='pause')){
    await page.waitForFunction(()=>__fps.network?.connectionState==='connected');
    await page.locator('#resume').click();await page.waitForFunction(()=>__fps.modal===null&&__fps.network.enabled);
@@ -330,7 +330,7 @@ try{
    try{await a.waitForFunction(()=>__fps.modal===null&&document.pointerLockElement===document.querySelector('#game'),null,{timeout:5000});break;}
    catch(e){const diagnostic=await a.evaluate(()=>({modal:__fps.modal,focused:document.hasFocus(),hidden:document.hidden,fullscreen:!!document.fullscreenElement,text:document.querySelector('#pause p:not(.eyebrow)').textContent}));
     console.log('resume diagnostic',diagnostic);
-    if(resumeAttempts===2||diagnostic.modal!=='pause'||!diagnostic.text.includes('Muslås'))throw e;
+    if(resumeAttempts===2||diagnostic.modal!=='pause'||!diagnostic.text.includes('Mouse capture failed'))throw e;
    }
   }
   // Rotation uses the existing mobile input/audio lifecycle, without room pause.

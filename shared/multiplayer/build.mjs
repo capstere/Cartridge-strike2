@@ -3,11 +3,11 @@ export {MAP_CONTRACTS} from './map-build.mjs';
 export const CONTRACT = Object.freeze({
   "protocolVersion": 15,
   "protocolHash": "1f27f4d871f9ded137565609bf5eef6c8e94b0f296c386222b3d3c68952f7ea5",
-  "configHash": "6b01cccd31801a78ca231eeb119204c103e5b8bdc2af84f6e45f470b151fa5cb",
-  "buildHash": "e9edf62f74ce7fd6b84bd6f8e5d583e2e1fd7bfc005e45c7404305e24a40064e",
+  "configHash": "fdf889c558f03dbabb3c3d1e55430799e461cbf811a26eff43bc17b517094338",
+  "buildHash": "c25b901c3d3bf7c199fdf20cfbf2037df078d2119ff2b32c9254096304ae661b",
   "tickRate": 60,
   "patchMs": 50,
   "mapId": "floor5-prepared",
-  "mapHash": "89283f437623457a10da37be29a282a41591f202270051ba940549ba01b4b050",
+  "mapHash": "1dd0ec97a14f5a4cab6448e9a8f4b5da091b71a3caa63b575ef58ef1426b9ef0",
   "collisionHash": "a5351e073a01ac95466acf4346acf9812f4265224e56712ce3e889085a42b6d9"
 });

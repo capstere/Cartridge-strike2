@@ -74,10 +74,11 @@
     "src/fps/bots.mjs",
     "src/fps/combat-flow.mjs",
     "src/fps/config.mjs",
+    "src/fps/game-english.mjs",
     "src/fps/grenade-physics.mjs",
     "src/fps/movement.mjs",
-    "src/fps/rush.mjs",
     "src/fps/player-names.mjs",
+    "src/fps/rush.mjs",
     "src/fps/tactical-rules.mjs",
     "src/fps/zombie-poses.mjs",
     "src/fps/zombies.mjs"
@@ -156,7 +157,9 @@
     "furniture-editor/appearance.mjs",
     "furniture-editor/project-limits.mjs"
   ],
-  "furniture-editor/library/glb-utils.mjs": [],
+  "furniture-editor/library/glb-utils.mjs": [
+    "shared/sha256.mjs"
+  ],
   "furniture-editor/library/zip.mjs": [],
   "furniture-editor/build/project-scene.mjs": [
     "furniture-editor/build/architecture.mjs",
@@ -250,5 +253,7 @@
   "src/fps/reference-prop-ray.mjs": [],
   "src/fps/reference-terrain.mjs": [
     "src/fps/physics.mjs"
-  ]
+  ],
+  "src/fps/game-english.mjs": [],
+  "shared/sha256.mjs": []
 }

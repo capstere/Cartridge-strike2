@@ -54,7 +54,7 @@ export function tickCombat(g,dt){
    f.owner=side;f.capturing=null;f.progress=0;
    // Captures affect the independent control score, NOT the enemy-kill score.
    f.scores[side]+=5;
-   for(const a of inside){a.combat.captures++;medal(g,a,'OMRÅDE SÄKRAT',z.name,75,'capture');}
+   for(const a of inside){a.combat.captures++;medal(g,a,'ZONE CAPTURED',z.name,75,'capture');}
    g.emit('control-captured',null,{...z,team:side});
   }
  }else{
@@ -84,7 +84,7 @@ export function combatEvent(g,e){
  if(e.type!=='kill'||g.state.zombies?.some(z=>z.id===e.actorId))return;
  if(victim){
   const received=victim.combat.incoming;
-  victim.combat.recap={attacker:source?.name||e.sourceName||'Miljön',weapon:e.weapon,
+  victim.combat.recap={attacker:source?.name||e.sourceName||'Environment',weapon:e.weapon,
    distance:source?Math.round(distance(source,victim)):null,
    damage:Math.round(Object.values(received).reduce((s,r)=>s+r.amount,0)),hits:Object.values(received).reduce((s,r)=>s+r.hits,0),
    streak:victim.combat.streak,at:e.time};
@@ -97,10 +97,10 @@ export function combatEvent(g,e){
  const c=source.combat;c.streak++;c.bestStreak=Math.max(c.bestStreak,c.streak);
  c.chain=e.time-c.lastKill<=4.5?Math.min(5,c.chain+1):1;c.lastKill=e.time;
  let title=c.chain>=3?'TRIPLE ELIMINATION':c.chain===2?'DOUBLE ELIMINATION':'ELIMINATION';
- if([3,5,10].includes(c.streak))title=c.streak===3?'PÅ GÅNG · 3 I RAD':c.streak===5?'DOMINERAR · 5 I RAD':'OSTOPPBAR · 10 I RAD';
+ if([3,5,10].includes(c.streak))title=c.streak===3?'ON A ROLL · 3 IN A ROW':c.streak===5?'DOMINATING · 5 IN A ROW':'UNSTOPPABLE · 10 IN A ROW';
  const first=!f.firstKill;f.firstKill=true;
- if(first&&c.chain===1)title='FÖRSTA ELIMINATIONEN';
- medal(g,source,title,`${victim.name} · ${c.streak} i rad`,100,'kill');
+ if(first&&c.chain===1)title='FIRST ELIMINATION';
+ medal(g,source,title,`${victim.name} · ${c.streak} in a row`,100,'kill');
  for(const [id,r]of Object.entries(victim.combat.incoming)){
   const a=g.actors.find(a=>a.id===id);
   if(a&&a!==source&&a.team===source.team&&(r.recent||[]).filter(hit=>e.time-hit.at<=8).reduce((n,hit)=>n+hit.amount,0)>=20){a.combat.assists++;medal(g,a,'ASSIST',victim.name,35,'assist');}

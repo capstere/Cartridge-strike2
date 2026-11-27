@@ -72,6 +72,8 @@ test('pilot login, protected assets, room admission and upgrades follow the acti
   const entry = await get('/fps/');
   assert.equal(entry.status,200);
   assert.match(entry.body,/name="invite"/);
+  assert.match(entry.body,/<html lang="en">/);
+  assert.match(entry.body,/>Server invite code<input/);
   const nonce = entry.body.match(/<script nonce="([A-Za-z0-9+/=]+)">/)?.[1];
   assert(nonce);
   assert(entry.headers['content-security-policy'].includes("script-src 'nonce-"+nonce+"'"));
@@ -92,6 +94,7 @@ test('pilot login, protected assets, room admission and upgrades follow the acti
     const denied = await login(invalid);
     assert.equal(denied.status,403,'Only surrounding whitespace may be ignored');
     assert.equal(denied.headers['set-cookie'],undefined);
+    assert.match(denied.body,/<p role="alert">That server invite code did not match/);
     assert(!denied.body.includes(invite),'Do not echo submitted credentials');
   }
   assert.equal(local.rooms.size,0);

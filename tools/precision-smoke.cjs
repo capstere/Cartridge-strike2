@@ -18,7 +18,7 @@ async function boot(browser, mobile) {
     };
     document.exitPointerLock=()=>Object.defineProperty(document,'pointerLockElement',{configurable:true,get:()=>null});
   });
-  await page.goto(origin+'/fps/?test',{waitUntil:'domcontentloaded',timeout:60000});
+  await page.goto(origin+'/fps/?screen=solo&test',{waitUntil:'domcontentloaded',timeout:60000});
   await page.waitForFunction(()=>globalThis.__fps||!document.getElementById('fatal').hidden,null,{timeout:180000});
   assert.equal(await page.locator('#fatal').isVisible(),false,'Startup error');
   // This suite advances and draws explicit game frames. Avoid queuing a second
@@ -107,7 +107,7 @@ const equip = (page,id) => page.evaluate(id=>{
     await equip(page,'he');await advance(page,3);
     const trigger=page.locator('[data-mobile-action=fire]');
     assert.equal(await trigger.isVisible(),true,'Grenade has manual trigger in auto-fire mode');
-    assert.equal(await trigger.textContent(),'KASTA');
+    assert.equal(await trigger.textContent(),'THROW');
     const rect=await trigger.boundingBox();
     await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:rect.x+rect.width/2,y:rect.y+rect.height/2,id:70}]});
     const threw=await page.evaluate(()=>{__fps.step(null,1/60);return {n:__fps.game.player.inventory.he,grenades:__fps.game.state.grenades.length};});

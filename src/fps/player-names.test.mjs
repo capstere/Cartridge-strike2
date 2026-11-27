@@ -11,7 +11,7 @@ const hash=value=>createHash('sha256').update(JSON.stringify(value,(k,v)=>['name
 
 test('the fiction registry preserves the three names and never rewrites technical IDs',()=>{
  assert.equal(missionRoomName({anchors:{}}),COMPLEX_NAME);
- assert.equal(GAME_NAME,'Cartridge-Strike');assert.equal(TEAMS.analysts,'Analysts');assert.equal(TEAMS.counterAnalysts,'Counter Analysts');
+ assert.equal(GAME_NAME,'Cartridge-Strike 3');assert.equal(TEAMS.analysts,'Analysts');assert.equal(TEAMS.counterAnalysts,'Counter Analysts');
  const room={id:'I01',name:'untrusted imported display name'};assert.equal(roomDisplayName(room),'North Laboratory');assert.equal(room.id,'I01');
  assert.equal(roomDisplayName('I02'),'Analysis Chamber');assert.equal(roomDisplayName('I12'),'Technical Storage');assert.equal(roomDisplayName('I31'),'Main Atrium');
  assert.equal(roomDisplayName('C02'),'Sector B');assert.notEqual(roomDisplayName('X32b'),roomDisplayName('X32c'));

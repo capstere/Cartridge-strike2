@@ -1,51 +1,57 @@
 // Cinematic lobby: renders the real authored operator (same character library and
 // private-character install as the match) on a lit stage over the live level.
 // Purely presentational — team/mode/character state stays owned by app.mjs.
+import {UI_EN} from './english-ui.mjs';
 import * as T from '../../vendor/three/three.module.js';
 import {loadCharacterLibrary,createAuthoredAvatar,animateAuthored,disposeAvatar,setPrivateCharacterActors} from './character-library.mjs?v=6.1.2';
 
 const $=id=>document.getElementById(id);
 const menu=$('menu'),canvas=$('lobby-stage'),reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const ACCENT={analysts:0x3d8bff,counterAnalysts:0xe8a33d};
-const currentTeam=()=>document.querySelector('.lobby .team-option.selected')?.dataset.team||'analysts';
 
 /* ---------- UI wiring (no state of its own) ---------- */
 function syncTeam(){
   const sel=document.querySelector('.lobby .team-option.selected'),team=sel?.dataset.team||'analysts';
   menu.dataset.side=team;
+  $('roster-analysts').textContent=team==='analysts'?'You + 4 bots':'5 bots';
+  $('roster-counter').textContent=team==='counterAnalysts'?'You + 4 bots':'5 bots';
   $('lb-team-name').textContent=sel?.querySelector('strong')?.textContent||'Analysts';
   if(!menu.classList.contains('network-menu'))$('lb-objective').textContent=sel?.querySelector('em')?.textContent||'';
   stage?.setTeam(team);
 }
-document.querySelectorAll('.lobby .team-option').forEach(b=>b.addEventListener('click',()=>setTimeout(syncTeam,0)));
+menu.addEventListener('cs-team-selected',syncTeam);
 
 const modeSelect=$('game-mode'),seg=$('lb-mode-seg');
 function buildSeg(){
   seg.innerHTML='';
   for(const o of modeSelect.options){
-    const [title,sub]=o.textContent.split(' · ');const b=document.createElement('button');
+    const {name:title,detail:sub}=UI_EN.modes[o.value] || {name:o.textContent,detail:''};const b=document.createElement('button');
     b.type='button';b.setAttribute('role','radio');b.dataset.value=o.value;b.innerHTML=`${title}<small>${sub||''}</small>`;
     b.addEventListener('click',()=>{if(modeSelect.value===o.value)return;modeSelect.value=o.value;modeSelect.dispatchEvent(new Event('change'));syncSeg();});
     seg.append(b);
   }
   syncSeg();
 }
-function syncSeg(){for(const b of seg.children)b.setAttribute('aria-checked',String(b.dataset.value===modeSelect.value));}
+function syncSeg(){
+  for(const b of seg.children){
+    b.disabled = [...modeSelect.options].find(option=>option.value===b.dataset.value)?.disabled || false;
+    b.setAttribute('aria-checked',String(b.dataset.value===modeSelect.value));
+  }
+}
+menu.addEventListener('cs-solo-selection',syncSeg);
 modeSelect.addEventListener('change',syncSeg);buildSeg();setTimeout(syncSeg,0);
 
 const charSelect=$('player-character');
-function syncOperator(){const o=charSelect.selectedOptions[0];$('lb-op-name').textContent=(o?.textContent||'Originalkaraktär').split(' · ')[0];}
+function syncOperator(){const o=charSelect.selectedOptions[0];$('lb-op-name').textContent=(o?.dataset.name||o?.textContent||UI_EN.defaultOperator);}
 new MutationObserver(syncOperator).observe(charSelect,{childList:true,subtree:true,attributes:true});charSelect.addEventListener('change',syncOperator);syncOperator();
 
-const drawer=$('mm-settings'),scrim=document.createElement('div');scrim.className='lb-scrim';menu.append(scrim);
-$('mm-open-settings').addEventListener('click',()=>{drawer.open=!drawer.open;});
-drawer.addEventListener('toggle',()=>menu.classList.toggle('drawer-open',drawer.open));
-scrim.addEventListener('click',()=>{drawer.open=false;});
-window.addEventListener('keydown',e=>{
-  if(menu.hidden)return;
-  if(e.key==='Escape'&&drawer.open){drawer.open=false;return;}
-  const tag=e.target?.tagName;
-  if(e.key==='Enter'&&!drawer.open&&!['SELECT','INPUT','TEXTAREA','BUTTON','A','SUMMARY'].includes(tag)&&!$('start').disabled){e.preventDefault();$('start').click();}
+window.addEventListener('keydown', event => {
+  if (menu.hidden || menu.inert || menu.dataset.screen !== 'solo' || event.defaultPrevented) return;
+  const tag = event.target?.tagName;
+  if (event.key === 'Enter' && !['SELECT','INPUT','TEXTAREA','BUTTON','A','SUMMARY'].includes(tag) && !$('start').disabled) {
+    event.preventDefault();
+    $('start').click();
+  }
 });
 
 /* ---------- 3D operator stage ---------- */
@@ -68,7 +74,8 @@ function makeStage(){
   const turntable=new T.Group();scene.add(turntable);
 
   let avatar=null,team=null,yaw=Math.PI-.32,dragYaw=0,dragging=false,lastX=0,t0=performance.now(),last=t0;
-  const actor={x:0,z:0,y:0,yaw:0,moving:0,onGround:true,crouching:false,height:1.8,weapon:'smg',reloadUntil:-1,alive:true};
+  // Use the rig's relaxed upper-body idle for this unarmed operator preview.
+  const actor={x:0,z:0,y:0,yaw:0,moving:0,onGround:true,crouching:false,height:1.8,weapon:'knife',reloadUntil:-1,alive:true};
   function setTeam(next){
     if(next===team&&avatar)return;team=next;const col=ACCENT[next]||ACCENT.analysts;
     rimA.color.setHex(col);rimB.color.setHex(col);ringMat.color.setHex(col);ring2.material.color.setHex(col);
@@ -76,27 +83,30 @@ function makeStage(){
       setPrivateCharacterActors([next+'-0']);
       const fresh=createAuthoredAvatar(next,next+'-0');
       canvas.classList.remove('is-ready');
-      setTimeout(()=>{if(avatar){turntable.remove(avatar.holder);try{disposeAvatar(avatar);}catch{}}avatar=fresh;turntable.add(fresh.holder);canvas.classList.add('is-ready');},avatar?260:0);
+      if(avatar){turntable.remove(avatar.holder);disposeAvatar(avatar);}
+      avatar=fresh;turntable.add(fresh.holder);canvas.classList.add('is-ready');
     }catch(e){console.warn('Lobby preview unavailable:',e.message);}
   }
   function resize(){
     const w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);camera.aspect=w/h;
-    const centre=w<=760?.5:w<=1100?.66:.535;camera.setViewOffset(w,h,-(centre-.5)*w,0,w,h);camera.updateProjectionMatrix();
+    const centre=menu.dataset.screen==='main'?(w/h>1.1?.72:.63):w<=760?.5:w<=1100?.66:.535;camera.setViewOffset(w,h,-(centre-.5)*w,0,w,h);camera.updateProjectionMatrix();
   }
-  addEventListener('resize',resize);resize();
+  addEventListener('resize',resize);menu.addEventListener('cs-menu-screen',resize);resize();
   canvas.style.pointerEvents='auto';canvas.style.cursor='grab';
   canvas.addEventListener('pointerdown',e=>{dragging=true;lastX=e.clientX;canvas.setPointerCapture(e.pointerId);canvas.style.cursor='grabbing';});
   canvas.addEventListener('pointermove',e=>{if(!dragging)return;dragYaw+=(e.clientX-lastX)*.01;lastX=e.clientX;});
-  canvas.addEventListener('pointerup',()=>{dragging=false;canvas.style.cursor='grab';});
+  const release=()=>{dragging=false;canvas.style.cursor='grab';};
+  canvas.addEventListener('pointerup',release);canvas.addEventListener('lostpointercapture',release);
   // Render loop runs only while the lobby is visible; fully stopped during loading/gameplay.
   let running=false;
   const loadingOpen=()=>document.documentElement.classList.contains('cs-loading-open');
-  function wake(){if(running||menu.hidden||document.hidden||loadingOpen())return;running=true;last=performance.now();requestAnimationFrame(frame);}
-  new MutationObserver(wake).observe(menu,{attributes:true,attributeFilter:['hidden']});
+  const visible=()=>['main','solo','outfits'].includes(menu.dataset.screen);
+  function wake(){if(running||menu.hidden||document.hidden||loadingOpen()||!visible())return;running=true;last=performance.now();requestAnimationFrame(frame);}
+  new MutationObserver(wake).observe(menu,{attributes:true,attributeFilter:['hidden','data-screen']});
   new MutationObserver(wake).observe(document.documentElement,{attributes:true,attributeFilter:['class']});
   document.addEventListener('visibilitychange',wake);
   function frame(now){
-    if(menu.hidden||document.hidden||loadingOpen()){running=false;return;}
+    if(menu.hidden||document.hidden||loadingOpen()||!visible()){running=false;return;}
     requestAnimationFrame(frame);
     const dt=Math.min(.05,(now-last)/1000),time=(now-t0)/1000;last=now;
     const sway=reduced?0:Math.sin(time*.35)*.18;

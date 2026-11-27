@@ -70,7 +70,7 @@ unsupported offline systems. No client can request controller reassignment.
 
 ## Ownership and import audit
 
-[Static transitive import graph](imports.json): 69 modules, including vendored
+[Static transitive import graph](imports.json): 71 modules, including vendored
 Three/Yuka and the necessary furniture-editor runtime modules. Actual Node tests
 construct both maps with no window/document/localStorage/WebGL context or renderer
 shim. The registration hook resolves bare `three` to the same vendored module;

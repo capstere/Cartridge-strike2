@@ -58,6 +58,10 @@ try{
   await until(()=>carrier.money===500&&carrier.inventory.he===1,'desktop bought HE');
   await desktop.waitForFunction(()=>document.querySelector('#buy-money').textContent.includes('500'));
   await desktop.locator('[data-item=armor].cs-cant').waitFor();
+  await desktop.locator('#buy-message[data-outcome="accepted"]').filter({hasText:'HE Cartridge purchased.'}).waitFor();
+  await desktop.locator('[data-item=he]').click();
+  await desktop.locator('#buy-message[data-outcome="denied"]').filter({hasText:'Your grenade slot is full.'}).waitFor();
+  assert.equal(carrier.money,500);assert.equal(carrier.inventory.he,1);
   await desktop.locator('#return-buy').click();
   await mobile.locator('#mobile-more').tap();await mobile.locator('[data-mobile-action=buy]').tap();
   await mobile.locator('[data-item=armor]').tap();await until(()=>defender.armor===100&&defender.money===150,'mobile bought armor');await mobile.locator('#return-buy').tap();
@@ -77,10 +81,10 @@ try{
   const d=Math.hypot(spawn.x-rescue.x,spawn.z-rescue.z);
   Object.assign(h,{x:spawn.x,z:spawn.z,y:0});
   Object.assign(carrier,{x:spawn.x+(rescue.x-spawn.x)*.7/d,z:spawn.z+(rescue.z-spawn.z)*.7/d,y:0});
-  await desktop.waitForFunction(()=>document.querySelector('#prompt-text').textContent.includes('starta eskort'));
+  await desktop.waitForFunction(()=>document.querySelector('#prompt-text').textContent.includes('Start escort'));
   await desktop.keyboard.down('e');
   try{await until(()=>h.escortId===carrier.id,'desktop starts escort');}finally{await desktop.keyboard.up('e');}
-  await desktop.waitForFunction(()=>document.querySelector('#bomb-status').textContent.includes('Eskortera till räddningszonen'));
+  await desktop.waitForFunction(()=>document.querySelector('#bomb-status').textContent.includes('Escort to the rescue zone'));
   const target=Math.atan2(carrier.x-rescue.x,carrier.z-rescue.z);
   const error=()=>Math.atan2(Math.sin(target-carrier.yaw),Math.cos(target-carrier.yaw));
   if(Math.abs(error())>.15){
@@ -93,17 +97,17 @@ try{
   await until(()=>h.rescued&&h.distanceWalked>1,'visible follower reached rescue');
   for(const p of [desktop,mobile])await p.waitForFunction(()=>document.querySelector('#hostage-status').textContent.includes('1/'));
   Object.assign(carrier,game.world.anchors.bomb);
-  await desktop.waitForFunction(()=>document.querySelector('#prompt-text').textContent.includes('plantera'));
+  await desktop.waitForFunction(()=>document.querySelector('#prompt-text').textContent.includes('Plant'));
   await desktop.keyboard.down('e');
   try{await until(()=>carrier.action?.type==='plant','desktop hold starts');await until(()=>game.bomb.status==='planted','desktop plant finishes');}
   finally{await desktop.keyboard.up('e');}
-  await desktop.waitForFunction(()=>document.querySelector('#bomb-status').textContent.includes('Försvara bomben'));
-  await mobile.waitForFunction(()=>document.querySelector('#bomb-status').textContent.includes('Desarmera bomben'));
+  await desktop.waitForFunction(()=>document.querySelector('#bomb-status').textContent.includes('Defend the bomb'));
+  await mobile.waitForFunction(()=>document.querySelector('#bomb-status').textContent.includes('Defuse the bomb'));
   Object.assign(carrier,game.world.anchors.counterAnalysts[0]);Object.assign(defender,{x:game.bomb.x,z:game.bomb.z,y:0});
   assert(game.damage(carrier,200,defender));
   await desktop.locator('#spectate').waitFor();
   await desktop.keyboard.press('Enter');
-  await mobile.waitForFunction(()=>document.querySelector('#prompt-text').textContent.includes('desarmera'));
+  await mobile.waitForFunction(()=>document.querySelector('#prompt-text').textContent.includes('Defuse'));
   await holdTouch(mobile,'interact',async()=>{
     await until(()=>defender.action?.type==='defuse','mobile hold starts');
     await mobile.waitForFunction(()=>parseFloat(document.querySelector('#action-progress').style.width)>1);
@@ -115,7 +119,7 @@ try{
   }
   game.state.resultDeadline=game.state.time;
   await until(()=>game.phase==='buy'&&game.state.round===2,'survivor reached the next buy phase');
-  await mobile.waitForFunction(()=>document.querySelector('#phase').textContent==='KÖPFAS');
+  await mobile.waitForFunction(()=>document.querySelector('#phase').textContent==='BUY PHASE');
   const ammo=mobile.locator('#ammo');
   assert.equal(await ammo.textContent(),`${full-1} / ${startingReserve}`);
   await mobile.locator('[data-mobile-action=reload]').tap();

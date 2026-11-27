@@ -1,0 +1,288 @@
+{
+  "revision": "bb88b38ca77be1a140b3ce60bdc9ab0a6b0d40dc",
+  "buildHash": "685bff7572e80c47cd0763a577fcbdc7b4ba4bf14dbdd76db28937828a64f2db",
+  "date": "2026-11-27T13:36:05.608Z",
+  "status": "PASS",
+  "model": "Raspberry Pi 5 Model B Rev 1.1",
+  "browser": "156.0.8078.79",
+  "hardwareBefore": {
+    "thermalC": 47.95,
+    "cpuKHz": 2400000
+  },
+  "hardwareAfter": {
+    "thermalC": 49.05,
+    "cpuKHz": 2400000
+  },
+  "controls": {
+    "distanceM": 0.63,
+    "ammoBefore": 30,
+    "ammoAfter": 29,
+    "rightClickAim": true,
+    "team": "analysts"
+  },
+  "damagedMapRejected": true,
+  "sameMap": [
+    {
+      "switch": 2,
+      "heapUsedBytes": 39414892,
+      "livePrototypes": {
+        "Game": 1,
+        "NetworkSession": 1,
+        "AudioSystem": 1,
+        "threeRenderers": 2,
+        "glContexts": 2,
+        "glPrograms": 69,
+        "glShaders": 130,
+        "canvases": 78,
+        "detachedGameCanvases": 0,
+        "audioContexts": 1
+      },
+      "geometries": 368,
+      "textures": 59,
+      "programs": 55,
+      "gpuListeners": {
+        "geometry": {
+          "resources": 628,
+          "max": 2,
+          "overTwo": 0,
+          "examples": []
+        },
+        "material": {
+          "resources": 246,
+          "max": 1,
+          "overTwo": 0,
+          "examples": []
+        },
+        "texture": {
+          "resources": 67,
+          "max": 1,
+          "overTwo": 0,
+          "examples": []
+        }
+      }
+    },
+    {
+      "switch": 4,
+      "heapUsedBytes": 39269592,
+      "livePrototypes": {
+        "Game": 1,
+        "NetworkSession": 1,
+        "AudioSystem": 1,
+        "threeRenderers": 2,
+        "glContexts": 2,
+        "glPrograms": 69,
+        "glShaders": 130,
+        "canvases": 78,
+        "detachedGameCanvases": 0,
+        "audioContexts": 1
+      },
+      "geometries": 368,
+      "textures": 59,
+      "programs": 55,
+      "gpuListeners": {
+        "geometry": {
+          "resources": 628,
+          "max": 2,
+          "overTwo": 0,
+          "examples": []
+        },
+        "material": {
+          "resources": 246,
+          "max": 1,
+          "overTwo": 0,
+          "examples": []
+        },
+        "texture": {
+          "resources": 67,
+          "max": 1,
+          "overTwo": 0,
+          "examples": []
+        }
+      }
+    }
+  ],
+  "parked": [
+    {
+      "heapUsedBytes": 38706376,
+      "gpuListeners": {
+        "geometry": {
+          "resources": 628,
+          "max": 2,
+          "overTwo": 0,
+          "examples": []
+        },
+        "material": {
+          "resources": 246,
+          "max": 1,
+          "overTwo": 0,
+          "examples": []
+        },
+        "texture": {
+          "resources": 67,
+          "max": 1,
+          "overTwo": 0,
+          "examples": []
+        }
+      },
+      "atMs": 1
+    },
+    {
+      "heapUsedBytes": 39302592,
+      "gpuListeners": {
+        "geometry": {
+          "resources": 628,
+          "max": 2,
+          "overTwo": 0,
+          "examples": []
+        },
+        "material": {
+          "resources": 246,
+          "max": 1,
+          "overTwo": 0,
+          "examples": []
+        },
+        "texture": {
+          "resources": 67,
+          "max": 1,
+          "overTwo": 0,
+          "examples": []
+        }
+      },
+      "atMs": 26457
+    },
+    {
+      "heapUsedBytes": 38942940,
+      "livePrototypes": {
+        "Game": 1,
+        "NetworkSession": 1,
+        "AudioSystem": 1,
+        "threeRenderers": 2,
+        "glContexts": 2,
+        "glPrograms": 69,
+        "glShaders": 130,
+        "canvases": 78,
+        "detachedGameCanvases": 0,
+        "audioContexts": 1
+      },
+      "gpuListeners": {
+        "geometry": {
+          "resources": 628,
+          "max": 2,
+          "overTwo": 0,
+          "examples": []
+        },
+        "material": {
+          "resources": 246,
+          "max": 1,
+          "overTwo": 0,
+          "examples": []
+        },
+        "texture": {
+          "resources": 67,
+          "max": 1,
+          "overTwo": 0,
+          "examples": []
+        }
+      },
+      "atMs": 52915
+    }
+  ],
+  "fullObservationSha256": "15b5a1e90ad864719c3e7a59d5883e25e63925a3c5a51aed6856f513588dd5a1",
+  "portableNodeSuite": {
+    "command": "node --experimental-loader ./tools/vendor-three-test-loader.mjs --test --test-concurrency=2 src/fps/*.test.mjs tools/*.test.mjs",
+    "serverNodeModulesPresent": false,
+    "tests": 272,
+    "passed": 272,
+    "skipped": 0,
+    "durationMs": 166688.126586,
+    "logSha256": "d313af1c3c209273a9d9dd500c27ce066394276d328f32a6800d30869680b081"
+  },
+  "activeGameplay": {
+    "client": {
+      "frameIntervalMs": {
+        "n": 414,
+        "min": 18.4,
+        "p50": 23.1,
+        "p95": 31.1,
+        "p99": 41.4,
+        "max": 55.7
+      },
+      "framesOver33": 13,
+      "framesOver50": 1,
+      "framesOver100": 0,
+      "renderCpuMs": {
+        "n": 415,
+        "min": 15.5,
+        "p50": 19.7,
+        "p95": 25.3,
+        "p99": 29.6,
+        "max": 47.9
+      },
+      "draws": {
+        "n": 415,
+        "min": 450,
+        "p50": 494,
+        "p95": 583,
+        "p99": 586,
+        "max": 586
+      },
+      "triangles": {
+        "n": 415,
+        "min": 437240,
+        "p50": 463665,
+        "p95": 512991,
+        "p99": 513709,
+        "max": 513805
+      },
+      "pixelRatio": {
+        "n": 415,
+        "min": 0.47,
+        "p50": 0.51,
+        "p95": 0.68,
+        "p99": 0.68,
+        "max": 0.77
+      }
+    },
+    "server": {
+      "executionMs": {
+        "n": 607,
+        "min": 0.4,
+        "p50": 1.12,
+        "p95": 4.7,
+        "p99": 9.66,
+        "max": 14.93
+      },
+      "intervalMs": {
+        "n": 606,
+        "min": 0.68,
+        "p50": 16.14,
+        "p95": 17.78,
+        "p99": 32.2,
+        "max": 41.79
+      },
+      "executionOverTickBudget": 0,
+      "executionOver33": 0,
+      "executionOver50": 0,
+      "intervalOver33": 3,
+      "rttMs": 0,
+      "tick": 2742
+    },
+    "resources": {
+      "projectId": "lvl-meltem",
+      "level": "Meltem",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        478,
+        269
+      ],
+      "quality": "low",
+      "geometries": 479,
+      "textures": 77,
+      "programs": 56,
+      "owners": 2,
+      "disposals": 1,
+      "reachableOwners": 2,
+      "liveOwners": 1
+    }
+  }
+}

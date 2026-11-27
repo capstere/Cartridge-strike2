@@ -28,14 +28,24 @@ test('Classic economy, timed objectives, new lives, reserved seats and rematch',
  assert.equal(host.state.round,1);assert.equal(host.state.carrierId,a.id);assert.equal(own(host).primary,'');assert.equal(a.money,800);
  let serial=0;
  const purchase=(item)=>({kind:'buy',item,round:r.state.round,matchId:r.state.matchId,lifeId:a.lifeId,controlEpoch:a.controlEpoch,serial:++serial});
- const notice=[];host.onMessage('notice',m=>notice.push(m));
- async function reject(item,reason){host.send('classic',purchase(item));await until(()=>notice.at(-1)?.includes(reason),reason);}
- await reject('ar47','andra laget');await reject('cr4','krediter');await reject('smoke','kan inte');
- at(a,g.world.anchors.bomb);await reject('he','köpzon');at(a,g.world.anchors[a.team][0]);
+ const receipts=[],otherReceipts=[];
+ host.onMessage('purchase',m=>receipts.push(m));defender.onMessage('purchase',m=>otherReceipts.push(m));
+ async function reject(item,reasonId){
+   const request=purchase(item),balance=a.money;
+   host.send('classic',request);
+   await until(()=>receipts.at(-1)?.serial===request.serial,reasonId);
+   const {kind,...scope}=request;
+   assert.deepEqual(receipts.at(-1),{...scope,outcome:'denied',reasonId});
+   assert.equal(a.money,balance);
+ }
+ await reject('ar47','wrongTeam');await reject('cr4','credits');await reject('smoke','unavailableInMode');
+ at(a,g.world.anchors.bomb);await reject('he','buyZone');at(a,g.world.anchors[a.team][0]);
  const old=purchase('he');host.send('classic',old);host.send('classic',old);
- await until(()=>own(host).he===1,'one purchase');assert.equal(a.money,500);await reject('he','fullt');
+ await until(()=>own(host).he===1,'one purchase');assert.equal(a.money,500);await reject('he','grenadeFull');
+ assert.equal(receipts.filter(r=>r.serial===old.serial&&r.outcome==='accepted').length,1);
+ assert.equal(otherReceipts.length,0);
  g.state.buyDeadline=g.state.time;await until(()=>host.state.roundPhase==='active','live');
- await reject('armor','köptiden');resume(host);resume(defender);
+ await reject('armor','buyTime');resume(host);resume(defender);
  at(a,g.world.anchors.bomb);send(host,{interact:true});await until(()=>a.action?.type==='plant','plant begins');
  await until(()=>!a.action,'input silence cancels hold');assert.equal(g.bomb.status,'carried');
  await hold(host,()=>host.state.bombStatus==='planted','plant from a held control');

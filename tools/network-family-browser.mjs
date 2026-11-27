@@ -99,7 +99,7 @@ async function snap(client, stage, focus) {
 async function invite(client, wrongFirst = false) {
   const {page, context} = client;
   await page.goto(link, {waitUntil: 'domcontentloaded'});
-  const field = page.getByLabel('Inbjudningskod', {exact: true});
+  const field = page.getByLabel('Server invite code', {exact: true});
   await field.waitFor();
   assert.equal(await field.getAttribute('type'), 'password');
   assert.equal(await field.getAttribute('autocomplete'), 'off');
@@ -116,10 +116,10 @@ async function invite(client, wrongFirst = false) {
   await field.fill(fixture.invite);
   await press(client, submit);
   console.log(client.id, 'invite submitted');
-  const code = page.getByLabel('Familjerummets lösenord', {exact: true});
+  const code = page.getByLabel('Family room password', {exact: true});
   await code.waitFor();
   console.log(client.id, 'family form visible');
-  assert(await page.getByRole('dialog', {name: 'Vrid skärmen'}).isHidden(), 'Portrait sign-in is directly accessible');
+  assert(await page.getByRole('dialog', {name: 'Rotate your screen'}).isHidden(), 'Portrait sign-in is directly accessible');
   const url = new URL(page.url());
   assert.equal(url.origin + url.pathname, fixture.origin + '/fps/');
   assert.deepEqual([...url.searchParams], [['network', 'internet'], ['family', alias]]);
@@ -142,7 +142,7 @@ async function invite(client, wrongFirst = false) {
   assert.equal(await code.getAttribute('autocorrect'), 'off');
   assert.equal(await code.getAttribute('spellcheck'), 'false');
   assert.equal(await code.getAttribute('type'), 'password');
-  const reveal = page.getByLabel('Visa lösenord', {exact: true});
+  const reveal = page.getByLabel('Show password', {exact: true});
   await code.fill(incorrect);
   await press(client, reveal);
   assert.equal(await code.getAttribute('type'), 'text');
@@ -166,20 +166,20 @@ async function enter(client, name, wrongFirst = false) {
   const {page} = client;
   await page.locator('#network-name').fill(name);
   const password = page.locator('#network-code');
-  const submit = page.getByRole('button', {name: 'Anslut till familjerummet', exact: true});
+  const submit = page.getByRole('button', {name: 'Join family room', exact: true});
   assert.equal(await submit.getAttribute('data-create'), 'false');
   if (wrongFirst) {
     await password.fill(incorrect);
     const [reply] = await Promise.all([page.waitForResponse(r => new URL(r.url()).pathname === '/matchmake/joinOrCreate/' + alias), password.press('Enter')]);
     assert.equal(reply.status(), 403);
-    await page.locator('#network-status').filter({hasText: /fel.*lösenord/i}).waitFor();
+    await page.locator('#network-status[data-error-id=wrongFamilyPassword]').filter({hasText: /incorrect family room password/i}).waitFor();
     assert.equal((await health()).rooms, 0, 'A rejected password must leave the empty room unallocated');
     console.log(client.id, 'family password rejected with zero rooms');
   }
   await password.fill(fixture.familyPassword);
   await press(client, submit);
-  await page.locator('#room-title').filter({hasText: 'Väntrum'}).waitFor();
-  assert(await page.getByRole('dialog', {name: 'Vrid skärmen'}).isHidden(), 'The waiting room is usable in portrait');
+  await page.locator('#room-title').filter({hasText: 'Lobby'}).waitFor();
+  assert(await page.getByRole('dialog', {name: 'Rotate your screen'}).isHidden(), 'The waiting room is usable in portrait');
   assert.equal((await page.locator('#room-identity').innerText()).trim(), alias);
   await page.locator('#room-roster tr').filter({hasText: name}).waitFor();
   await snap(client, 'lobby', page.locator('#room-identity'));
@@ -241,7 +241,7 @@ try {
   await press(iphone, iphone.page.locator('#room-start'));
   for (const client of [iphone, android]) await client.page.locator('#resume').waitFor();
   const active = await waitForHealth(s => s.rooms === 1 && s.players === 2 && s.matches[0].phase === 'active' && s.matches[0].tick > 0, 'Real match began');
-  const rotate = iphone.page.getByRole('dialog', {name: 'Vrid skärmen'});
+  const rotate = iphone.page.getByRole('dialog', {name: 'Rotate your screen'});
   await iphone.page.setViewportSize({width: 390, height: 844});
   await rotate.waitFor();
   await snap(iphone, 'match-rotation', rotate);

@@ -14,7 +14,7 @@ test('FPS entrypoints expose only gameplay, not editor navigation',()=>{
  assert.match(html,/id="character-picker"/); // playable local characters stay available
  assert.doesNotMatch(html,/href="[^"]*(?:character-design|furniture-editor|\/studio\/)/i);
  assert.doesNotMatch(read('src/fps/app.mjs'),/href=['"]\.\.\/character-design\//);
- assert.doesNotMatch(read('src/fps/character-selection.mjs'),/Öppna studion/);
+ assert.doesNotMatch(read('src/fps/character-selection.mjs'),/Öppna studion|Open the studio/i);
 });
 
 test('standalone authoring pages and source trees are absent',()=>{
@@ -34,6 +34,17 @@ test('shared level runtime and lobby audio remain available',()=>{
 
 test('mobile orientation refers only to playing the game',()=>{
  const js=read('ui/cs-mobile.mjs');
- assert.match(js,/Vrid telefonen/);
+ assert.match(js,/Rotate your phone/);
  assert.doesNotMatch(js,/charPanelToggle|pinchZoom|Level Studio|Character Studio/);
+});
+
+test('normal and early entry, credits and touch controls have English accessible labels',()=>{
+ for(const path of ['index.html','fps/index.html','credits.html']) assert.match(read(path),/<html lang="en">/,path);
+ assert.match(read('index.html'),/Opening the lobby/);
+ assert.match(read('credits.html'),/>Back to game</);
+ const html=read('fps/index.html');
+ for(const copy of ['aria-label="Main menu"','aria-label="Move with your left thumb"','The game could not start','Choose equipment']) assert.ok(html.includes(copy),copy);
+ for(const path of ['index.html','fps/index.html','credits.html','ui/cs-mobile.mjs','fps/hud.css']) {
+  assert.doesNotMatch(read(path),/Starta match|Laddar |Vrid telefonen|Köptid|Inställningar|RUSTNING|Öppna spelet/i,path);
+ }
 });

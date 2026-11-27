@@ -46,12 +46,12 @@ export class NetworkRoom extends Room {
       friendlyFire:false,botDifficulty:DEFAULT_NETWORK_BOT_DIFFICULTY,
     })};
     const preferences=matchPreferences(this.familyRoom?settings:options);
-    if(!preferences)throw new ServerError(400,'Ogiltiga matchinställningar.');
+    if(!preferences)throw new ServerError(400,'Invalid match settings.');
     Object.assign(settings,preferences);
     const map=networkMap(settings.mapId);
-    if(!map)throw new ServerError(400,'Okänd multiplayerkarta.');
+    if(!map)throw new ServerError(400,'Unknown multiplayer map.');
     if(!map.modes.includes(settings.mode)||(!map.residents&&(settings.zombiesEnabled||settings.dancemanEnabled))){
-      throw new ServerError(400,'Inställningarna stöds inte på den valda kartan.');
+      throw new ServerError(400,'This map does not support those match settings.');
     }
     const sim=await prepareRoomSimulation(settings);
     this.clock.tick();
@@ -117,7 +117,11 @@ export class NetworkRoom extends Room {
       s.lastClassic=m.serial;
       if(m.kind==='buy'&&typeof m.item==='string'){
         const result=g.buy(m.item,s.actor);
-        client.send('notice',result.ok?WEAPONS[m.item].name+' köpt.':result.reason);
+        client.send('purchase', {
+          matchId: this.state.matchId, round: g.state.round, lifeId: s.actor.lifeId,
+          controlEpoch: s.epoch, serial: m.serial, item: m.item,
+          outcome: result.ok ? 'accepted' : 'denied', reasonId: result.reasonId || '',
+        });
       }else if(m.kind==='drop'&&s.enabled&&s.actor.alive&&g.phase==='active')g.drop(s.actor);
     });
     this.onMessage('clock-echo',(client,message)=>{

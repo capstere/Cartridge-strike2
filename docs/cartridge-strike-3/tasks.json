@@ -38,10 +38,22 @@
       "tests": "IMG_8150, 8158, 8160–8162 and 8164, V1 countdown, English guest Pages and denied/authorized Pi routes. Provide class-picker navigation for later class/wardrobe owners. Exercise real loading, Classic buy success/failure and re-login after translation.",
       "exit": "Menu→match→results real flows; stable back/resize/focus.",
       "status": "IN_PROGRESS",
-      "branch": "cs3/01-runtime-english",
+      "branch": "cs3/01-countdown",
       "pullRequests": [
         48,
         50
+      ],
+      "mergedSlices": [
+        "65a6f06385a3fa8944ed605ebdd4680522f70588",
+        "e6a56c2159fed23fac576abe068dece4fce98207"
+      ],
+      "evidence": [
+        "evidence/01-private-entry.md",
+        "evidence/01-menu/README.md"
+      ],
+      "workBranches": [
+        "cs3/01-runtime-english",
+        "cs3/01-countdown"
       ]
     },
     {
@@ -58,7 +70,9 @@
       "status": "IN_PROGRESS",
       "branch": "cs3/02-handling",
       "pullRequests": [
-        49
+        49,
+        51,
+        53
       ],
       "mergedSlices": [
         "1a0e1fab3ed2fe53f9764470039a89ebe5943598"
@@ -141,7 +155,10 @@
       "tests": "build-network --check, compact-arena/owner-door-traversal tests, multimap-browser/recovery, asset-memory and complete matches",
       "exit": "Original maps preserved. All nine have a source ID, capability assessment and explicit disposition. Each offered map passes versioned collision/nav/void, mode eligibility, spawn, lifecycle and measured budget.",
       "status": "IN_PROGRESS",
-      "branch": "cs3/07-reference-maps"
+      "branch": "cs3/07-reference-maps",
+      "pullRequests": [
+        52
+      ]
     },
     {
       "id": "CS3-08",

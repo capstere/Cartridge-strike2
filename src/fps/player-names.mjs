@@ -1,7 +1,7 @@
 /** Player-facing fiction. Keys are stable technical anchors, never renamed game IDs.
  * Source/provenance names remain internal; this module owns presentation only.
  */
-export const GAME_NAME='Cartridge-Strike';
+export const GAME_NAME='Cartridge-Strike 3';
 export const COMPLEX_NAME='Unit 05';
 export const ROOM_NAMES=Object.freeze({
  I01:'North Laboratory',I02:'Analysis Chamber',I03:'Supply Annex',I04:'Isolation Laboratory',

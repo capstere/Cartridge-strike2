@@ -10,7 +10,7 @@ import {setTimeout as delay} from 'node:timers/promises';
 import {chromium, devices} from '../frontline/source/tools/dev/node_modules/playwright-core/index.mjs';
 import {startPilotFixture} from './network-pilot-fixture.mjs';
 import {resumeDesktop} from './network-browser-resume.mjs';
-import {countLivePrototypes,installRetentionProbe,parkedControl,readRetained,writeRetainedProfile} from './multimap-heap.mjs';
+import {countLivePrototypes,installRetentionProbe,parkedControl,readRetained,snapshotDetachedCanvases,writeRetainedProfile} from './multimap-heap.mjs';
 import {CONTRACT} from '../shared/multiplayer/build.mjs';
 
 const cases = {
@@ -40,6 +40,15 @@ const gpu = process.env.FPS_NETWORK_ANGLE || (process.platform === 'darwin' ? 'm
 const args = ['--use-angle=' + gpu, '--ignore-gpu-blocklist', '--enable-unsafe-swiftshader',
   '--disable-renderer-backgrounding', '--disable-background-timer-throttling', '--disable-backgrounding-occluded-windows', ...fixture.args];
 if (process.env.WAYLAND_DISPLAY) args.push('--ozone-platform=wayland');
+async function piState() {
+  const number=async file=>{
+    const value=await readFile(file,'utf8').catch(()=>null);
+    return value===null?null:Number(value.trim());
+  };
+  const temperature=await number('/sys/class/thermal/thermal_zone0/temp');
+  const cpuKHz=await number('/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq');
+  return {thermalC:temperature===null?null:temperature/1000,cpuKHz};
+}
 const errors = [], peers = [], phases = [];
 const code = 'compact-render-test';
 let browser, page, room, mousePoint;
@@ -49,7 +58,7 @@ const result = {scenario:name, map, physicalPhone:false, transport:'TLS loopback
   cpu:cpus()[0].model, arch:arch(), os:platform(), node:process.version,
   model:await readFile('/proc/device-tree/model','utf8').then(s=>s.replaceAll('\0','')).catch(()=>null),
   warmupMs:3000, windowMs:10000, scheduledSeconds:45, scoreTarget:150, args:args.filter(a=>!a.includes('certificate')),
-  renderedClients:1, sdkPeers:spec.actors - spec.bots - 1, phaseLog:phases};
+  hardwareBefore:await piState(),renderedClients:1, sdkPeers:spec.actors - spec.bots - 1, phaseLog:phases};
 const mark = msg => { phases.push({step:msg, elapsedMs:Math.round(performance.now()-startAt)}); console.log(name, msg); };
 async function until(check, reason, timeout=90000) {
   const end = performance.now() + timeout;
@@ -67,7 +76,7 @@ function stats(raw) {
 async function observe() {
   const path = performance.getEntriesByType('resource').find(r=>new URL(r.name).pathname.endsWith('/src/fps/render.mjs'))?.name;
   const {Renderer} = await import(path || '/src/fps/render.mjs?v=floor5-environment-1');
-  const observed = window.mapProbe = {frames:[], collecting:false, renderers:[], last:null};
+  const observed = window.mapProbe = {frames:[], collecting:false, renderers:[], gameCanvases:[], last:null};
   const draw = Renderer.prototype.render, dispose = Renderer.prototype.dispose;
   Renderer.prototype.render = function(...args) {
     const started = performance.now();
@@ -75,7 +84,9 @@ async function observe() {
     const result = draw.apply(this,args);
     if(observed.last?.deref() !== this) {
       observed.last = new WeakRef(this);
-      if(!observed.renderers.some(ref=>ref.deref()===this)) observed.renderers.push(observed.last);
+      if(!observed.renderers.some(ref=>ref.deref()===this)){
+        observed.renderers.push(observed.last);observed.gameCanvases.push(new WeakRef(this.renderer.domElement));
+      }
     }
     if(observed.collecting) {
       const info = this.renderer.info;
@@ -202,9 +213,10 @@ async function sample() {
   assert(frames.length>=4,'At least four rendered frames');
   assert.equal(room.state.phase,'active');
   const gaps=frames.slice(1).map(([t],i)=>t-frames[i][0]);
-  return {client:{frameIntervalMs:stats(gaps), renderCpuMs:stats(frames.map(f=>f[1])), draws:stats(frames.map(f=>f[2])),
+  return {client:{frameIntervalMs:stats(gaps),framesOver33:gaps.filter(v=>v>33).length,
+      framesOver50:gaps.filter(v=>v>50).length,framesOver100:gaps.filter(v=>v>100).length,renderCpuMs:stats(frames.map(f=>f[1])), draws:stats(frames.map(f=>f[2])),
       triangles:stats(frames.map(f=>f[3])), pixelRatio:stats(frames.map(f=>f[6]))},
-    server:{executionMs:stats(tickCosts), intervalMs:stats(tickGaps), executionOver33:tickCosts.filter(v=>v>33).length,
+    server:{executionMs:stats(tickCosts),intervalMs:stats(tickGaps),executionOverTickBudget:tickCosts.filter(v=>v>1000/CONTRACT.tickRate).length,executionOver33:tickCosts.filter(v=>v>33).length,
       executionOver50:tickCosts.filter(v=>v>50).length, intervalOver33:tickGaps.filter(v=>v>33).length,
       rttMs:localSeat().rtt, tick:room.state.tick}, resources:await renderedResources()};
 }
@@ -371,6 +383,14 @@ try {
   await page.locator('#room-rematch').click();
   await until(()=>room.state.phase==='waiting','Rematch returns to same room');
   if(!spec.floor) await acknowledge(map);
+  if(spec.reference){
+    const cdp=await context.newCDPSession(page);
+    try {await cdp.send('HeapProfiler.collectGarbage');} finally {await cdp.detach();}
+    result.retiredGameCanvases=await page.evaluate(()=>mapProbe.gameCanvases.filter(ref=>{
+      const canvas=ref.deref();return canvas&&!canvas.isConnected;
+    }).length);
+    assert.equal(result.retiredGameCanvases,0,'Previous maps must release their WebGL canvas');
+  }
   if(spec.video || (spec.reference && spec.family)) {
     result.transitions=[];
     const cdp=await context.newCDPSession(page), switchesStarted=performance.now();
@@ -381,14 +401,29 @@ try {
         mark('switch '+id); const ms=await selectMap(id);
         result.transitions.push({id,ms,...await readRetained(cdp,page),...await renderedResources()});
         if(profileHeap && id===map && [2,2*Math.ceil(switchPairs/2),2*switchPairs].includes(turn+1)){
-          result.transitions.at(-1).livePrototypes=await countLivePrototypes(cdp);
+          const sample=result.transitions.at(-1);
+          sample.livePrototypes=await countLivePrototypes(cdp);
+          await writeFile(join(out,'heap-'+(turn+1)+'.json'),JSON.stringify(sample,null,2)+'\n');
           await writeRetainedProfile(cdp,out,turn+1);
         }
+        if(profileHeap)await writeFile(join(out,'lifecycle-progress.json'),JSON.stringify({
+          revision:result.revision,buildHash:result.buildHash,measurement:result.measurement,transitions:result.transitions,
+        },null,2)+'\n');
       }
       if(profileHeap) {
         mark('park on '+map+' for the same interval as all switches');
         result.parked=await parkedControl(cdp,page,out,Math.round(performance.now()-switchesStarted));
         await cdp.send('HeapProfiler.stopSampling');
+        const first=result.transitions.find(row=>row.livePrototypes)?.livePrototypes;
+        const last=result.parked.at(-1).livePrototypes;
+        if(process.env.FPS_MAP_HEAP_SNAPSHOT==='1' && first && last.canvases>first.canvases)
+          await snapshotDetachedCanvases(cdp,out);
+        for(const sample of [...result.transitions,...result.parked].filter(row=>row.livePrototypes)){
+          const counts=sample.livePrototypes;
+          assert.equal(counts.detachedGameCanvases,0,'A retired game canvas still owns a WebGL context');
+          for(const key of ['Game','NetworkSession','AudioSystem','threeRenderers','glContexts','canvases'])
+            assert.equal(counts[key],first[key],'Stable same-map live '+key);
+        }
       }
     } finally {await cdp.detach();}
     for(const row of result.transitions) {
@@ -436,5 +471,6 @@ try {
   console.error(result.failure,result.ui);process.exitCode=1;
 } finally {
   try {await browser?.close();} finally {await fixture.close();}
+  result.hardwareAfter=await piState();
   await writeFile(join(out,name+'.json'),JSON.stringify(result,null,2)+'\n');
 }

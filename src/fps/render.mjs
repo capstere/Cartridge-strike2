@@ -63,6 +63,25 @@ function installField(material, texture, bounds) {
   return ()=>{material.onBeforeCompile=previous;material.customProgramCacheKey=previousKey;material.needsUpdate=true;};
 }
 
+// Shared meshes and character templates keep their CPU data between maps.
+// Three attaches per-renderer disposal callbacks to each uploaded resource.
+// Dispatch disposal while the old renderer still owns those callbacks, including
+// weapons that shader warmup has removed from the first-person scene.
+function releaseMapGpuResources(roots) {
+  const geometries=new Set(),materials=new Set(),textures=new Set();
+  for(const root of roots)root?.traverse(node=>{
+    if(node.geometry)geometries.add(node.geometry);
+    for(const material of [].concat(node.material||[]))if(material)materials.add(material);
+  });
+  for(const material of materials){
+    for(const value of Object.values(material))if(value?.isTexture)textures.add(value);
+    for(const uniform of Object.values(material.uniforms||{}))if(uniform?.value?.isTexture)textures.add(uniform.value);
+  }
+  for(const geometry of geometries)geometry.dispose();
+  for(const material of materials)material.dispose();
+  for(const texture of textures)texture.dispose();
+}
+
 export class Renderer extends EngineRenderer {
   constructor(canvas,world,settings){
     const visualWorld={...world,description:{...world.description,boxes:world.description.boxes.filter(b=>!b.livingVisual)}};
@@ -269,6 +288,7 @@ export class Renderer extends EngineRenderer {
   }
   dispose({keepCharacterLibrary=false}={}){
     if(this.presentationDisposed)return;this.presentationDisposed=true;
+    if(keepCharacterLibrary)releaseMapGpuResources([this.scene,this.viewScene,...this.weaponCache.values()]);
     this.referenceScene?.dispose();this.zombieVisuals?.dispose();this.floorEnvironment?.dispose();this.glassVisuals?.dispose();this.detailScene?.dispose();this.doorVisuals?.dispose();this.riposteProps?.dispose();
     this.focusLighting?.dispose();this.facilityScene?.dispose();
     for(const restore of this.presentationRestores||[])restore();

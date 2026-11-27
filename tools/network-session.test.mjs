@@ -30,6 +30,66 @@ function triggerSession(weapon='p9'){
 }
 const shots=wire=>wire.filter((entry,index)=>entry.data.fireId>(wire[index-1]?.data.fireId||0));
 
+test('Classic purchase feedback belongs to the latest command and current server seat',()=>{
+ const {session,self,state}=triggerSession();
+ Object.assign(state,{mode:'classic',roundPhase:'buy',round:1,matchId:5});
+ self.connected=true;
+ Object.assign(session,{classicSerial:0,onConnection(){}});
+ session.view.player=self;
+ const sent=[];
+ session.room.send=(type,command)=>{assert.equal(type,'classic');sent.push(command);};
+
+ assert.ok(session.classicCommand('buy','armor'));
+ assert.ok(session.classicCommand('buy','smg'));
+ const [previous,latest]=sent;
+ const reply={...latest,outcome:'accepted'};
+ const pending={...latest,outcome:'pending'};
+ assert.equal(latest.serial,previous.serial+1);
+ for(const invalid of [
+   {...previous,outcome:'denied',reasonId:'credits'},
+   {...reply,serial:previous.serial}, {...reply,item:previous.item},
+   {...reply,matchId:4}, {...reply,round:0}, {...reply,lifeId:1}, {...reply,controlEpoch:0},
+   {...reply,outcome:'unknown'}, {...reply,outcome:'denied',reasonId:'unknown'},
+ ]){
+   session.receivePurchase(invalid);
+   assert.deepEqual(session.currentPurchase(),pending);
+ }
+ for(const [owner,field,value] of [
+   [state,'round',2],[state,'matchId',6],[self,'lifeId',3],[self,'controlEpoch',2],
+   [state,'roundPhase','active'],[self,'alive',false],[self,'connected',false],
+ ]){
+   const original=owner[field];owner[field]=value;
+   session.receivePurchase(reply);
+   assert.equal(session.currentPurchase(),null,field);
+   assert.deepEqual(session.purchase,pending);
+   owner[field]=original;
+ }
+ session.receivePurchase(reply);
+ assert.equal(session.currentPurchase().outcome,'accepted');
+ const accepted=session.currentPurchase();
+ session.receivePurchase({...reply,outcome:'denied',reasonId:'credits'});
+ assert.equal(session.currentPurchase(),accepted,'a duplicate cannot reverse a confirmed purchase');
+
+ assert.ok(session.classicCommand('buy','rifle'));
+ const late={...sent.at(-1),outcome:'denied',reasonId:'credits'};
+ session.receivePurchase(reply);
+ assert.equal(session.currentPurchase().outcome,'pending');
+ session.receivePurchase(late);
+ assert.equal(session.currentPurchase().outcome,'denied');
+ assert.equal(session.currentPurchase().reasonId,'credits');
+
+ assert.ok(session.classicCommand('buy','armor'));
+ const interrupted={...sent.at(-1),outcome:'accepted'};
+ try{
+   session.beginReconnect();
+   session.receivePurchase(interrupted);
+   assert.equal(session.purchase,null);
+   session.connectionState='connected';
+   session.receivePurchase(interrupted);
+   assert.equal(session.currentPurchase(),null,'rejoining does not resurrect an older purchase');
+ }finally{clearTimeout(session.reconnectTimer);}
+});
+
 test('mobile automatic fire repeats semiautomatic weapons with ordinary release packets',()=>{
  for(const weapon of ['p9','p12','shotgun','sniper','knife']){
   const f=triggerSession(weapon),interval=WEAPONS[weapon].interval;

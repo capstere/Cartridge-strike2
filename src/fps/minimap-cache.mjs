@@ -11,11 +11,11 @@ const LANDMARKS = [
   ['connecting-passage', 'BYGG-G-0001'],
 ];
 const SITES = [
-  {id: 'bomb-site', label: 'Bombplats', roomId: 'I01', letter: 'B', color: '#f5c47c',
+  {id: 'bomb-site', label: 'Bomb site', roomId: 'I01', letter: 'B', color: '#f5c47c',
     align: 'above', point: anchors => anchors.bomb},
-  {id: 'hostage-start', label: 'Gisslanstart', roomId: 'I12', letter: 'G', color: '#b9e6d5',
+  {id: 'hostage-start', label: 'Hostage start', roomId: 'I12', letter: 'H', color: '#b9e6d5',
     align: 'right', point: anchors => anchors.hostages?.[0]},
-  {id: 'rescue-zone', label: 'Räddningszon', roomId: 'I31', letter: 'R', color: '#7ce4cd',
+  {id: 'rescue-zone', label: 'Rescue zone', roomId: 'I31', letter: 'R', color: '#7ce4cd',
     align: 'left', point: anchors => anchors.rescue},
 ];
 

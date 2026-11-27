@@ -97,10 +97,15 @@ try{
     console.log('LAN both pages active before room creation');
   }
   await b.screenshot({path:`test-results/lan/${mobileEngine}-lobby.png`});
+  const roomsBeforeInvalidCode=local.rooms.size;
+  await form(b,{code:'team_one'});
+  const invalidCode=b.locator('#network-status[data-error-id=invalidOptions]');
+  await invalidCode.filter({hasText:'6–64 letters, numbers or hyphens'}).waitFor();
+  assert.equal(local.rooms.size,roomsBeforeInvalidCode,'An invalid new room code cannot allocate a room');
   let id;
   if(protocolPeer)id=a.room.roomId;
   else{await form(a);await joined(a);id=await a.locator('#network-room').inputValue();}
-  await form(b,{id,code:'wrong-123'});await b.locator('#network-status').filter({hasText:'Fel privat'}).waitFor();
+  await form(b,{id,code:'wrong-123'});await b.locator('#network-status').filter({hasText:'Incorrect private room code'}).waitFor();
   assert.equal([...local.rooms][0].clients.length,1,'wrong code cannot allocate the second player');
   assert(await b.evaluate(()=>!__fps.world&&!__fps.renderer&&__fps.renderBudget.stats.rendered===0),
     'wrong code cannot allocate a world on the joining browser');
@@ -160,11 +165,11 @@ try{
     assert(await b.locator('#fatal').isHidden());await until(()=>room.clients.length===1,'leave cleanup');
   }
   await form(b,{id});await joined(b);
-  await local.close();await Promise.all((protocolPeer?[b]:[a,b]).map(p=>p.locator('#network-status').filter({hasText:'Anslutningen bröts'}).waitFor()));
+  await local.close();await Promise.all((protocolPeer?[b]:[a,b]).map(p=>p.locator('#network-status').filter({hasText:'Connection lost'}).waitFor()));
   if(protocolPeer){await until(()=>a.closed,'protocol peer observes server shutdown');assert.deepEqual(a.errors,[]);}
   await until(()=>!local.httpServer.listening,'server stopped');
   local=await createTestServer({lan:true,host,port});
-  await form(b,{id});await b.locator('#network-status').filter({hasText:'finns inte'}).waitFor();
+  await form(b,{id});await b.locator('#network-status').filter({hasText:'Room not found'}).waitFor();
   let fresh;
   if(protocolPeer){a=await createTestPeer(url);fresh=a.room.roomId;}
   else{await form(a);await joined(a);fresh=await a.locator('#network-room').inputValue();}

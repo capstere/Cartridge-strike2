@@ -1,5 +1,6 @@
 // Opt-in post-match observations. All references to runtime instances are weak.
 import {writeFile} from 'node:fs/promises';
+import {closeSync,openSync,writeSync} from 'node:fs';
 import {join} from 'node:path';
 import {setTimeout as delay} from 'node:timers/promises';
 
@@ -27,6 +28,27 @@ export async function installRetentionProbe() {
     observe('AudioSystem',this);observe('AudioContext',this.context);
     return reset.apply(this,args);
   };
+  window.mapGpuListeners=()=>{
+    const renderer=window.mapProbe.last?.deref(), resources=new Set(), totals={};
+    for(const root of [renderer?.scene,renderer?.viewScene])root?.traverse(object=>{
+      if(object.geometry)resources.add(object.geometry);
+      for(const material of [].concat(object.material||[])){
+        resources.add(material);
+        for(const value of Object.values(material))if(value?.isTexture)resources.add(value);
+      }
+    });
+    for(const asset of resources){
+      const kind=asset.isTexture?'texture':asset.isMaterial?'material':'geometry',
+        count=asset._listeners?.dispose?.length||0;
+      const group=totals[kind]??={resources:0,max:0,overTwo:0,examples:[]};
+      group.resources++;group.max=Math.max(group.max,count);
+      if(count>2){
+        group.overTwo++;
+        if(group.examples.length<8)group.examples.push({label:asset.name||asset.type,disposeHandlers:count});
+      }
+    }
+    return totals;
+  };
   window.mapRetention=()=>Object.fromEntries([...registry].map(([kind,b])=>[
     kind,{observed:b.refs.length,reachable:b.refs.filter(ref=>ref.deref()).length},
   ]));
@@ -36,7 +58,7 @@ export async function readRetained(cdp,page) {
   await cdp.send('HeapProfiler.collectGarbage');
   const heap=await cdp.send('Runtime.getHeapUsage'),dom=await cdp.send('Memory.getDOMCounters');
   const runtime=await page.evaluate(()=>({
-    instances:window.mapRetention?.(), resourceTimings:performance.getEntriesByType('resource').length,
+    instances:window.mapRetention?.(), gpuListeners:window.mapGpuListeners?.(), resourceTimings:performance.getEntriesByType('resource').length,
     mountedNodes:document.getElementsByTagName('*').length,
     loadingPanels:document.querySelectorAll('#cs-loading').length,
     loadingDescendants:document.querySelector('#cs-loading')?.getElementsByTagName('*').length||0,
@@ -53,6 +75,8 @@ export async function countLivePrototypes(cdp) {
     Game:"(await import('/src/fps/game.mjs')).Game",
     NetworkSession:"(await import('/src/fps/network/session.mjs')).NetworkSession",
     AudioSystem:"(await import('/src/fps/riposte-audio.mjs')).AudioSystem",
+    threeRenderers:'window.mapProbe.last.deref().renderer.constructor',
+    glContexts:'WebGL2RenderingContext', glPrograms:'WebGLProgram', glShaders:'WebGLShader',
     canvases:'HTMLCanvasElement', audioContexts:'AudioContext',
   };
   const counts={};
@@ -65,6 +89,15 @@ export async function countLivePrototypes(cdp) {
       const {result:length}=await cdp.send('Runtime.callFunctionOn',{objectId:objects.objectId,
         functionDeclaration:'function(){return this.length;}',returnByValue:true});
       counts[key]=length.value;
+      if(key==='canvases'){
+        const {result:detached}=await cdp.send('Runtime.callFunctionOn',{objectId:objects.objectId,
+          functionDeclaration:`function(){
+            const retired=this.filter(c=>c.id==='game'&&!c.isConnected);
+            for(const canvas of retired)canvas.__cs3RetiredCanvasDiagnostic=true;
+            return retired.length;
+          }`,returnByValue:true});
+        counts.detachedGameCanvases=detached.value;
+      }
     } finally {await cdp.send('Runtime.releaseObjectGroup',{objectGroup:group});}
   }
   return counts;
@@ -92,8 +125,20 @@ export async function parkedControl(cdp,page,out,durationMs) {
   for(const fraction of [0,.5,1]) {
     await delay(Math.max(0,durationMs*fraction-(performance.now()-start)));
     samples.push({atMs:Math.round(performance.now()-start),...await readRetained(cdp,page)});
+    await writeFile(join(out,'parked-progress.json'),JSON.stringify({durationMs,samples},null,2)+'\n');
   }
   samples.at(-1).livePrototypes=await countLivePrototypes(cdp);
   await writeRetainedProfile(cdp,out,'parked');
   return samples;
+}
+
+export async function snapshotDetachedCanvases(cdp,out) {
+  // Preserve the object graph only for an explicitly requested diagnostic run.
+  // This private artifact can include page contents. The public receipts use
+  // allocation counts and names, without publishing a browser heap.
+  const file=openSync(join(out,'detached-canvas.heapsnapshot'),'w',0o600);
+  const chunk=({chunk})=>writeSync(file,chunk);
+  cdp.on('HeapProfiler.addHeapSnapshotChunk',chunk);
+  try {await cdp.send('HeapProfiler.takeHeapSnapshot',{reportProgress:false});}
+  finally {cdp.off('HeapProfiler.addHeapSnapshotChunk',chunk);closeSync(file);}
 }
