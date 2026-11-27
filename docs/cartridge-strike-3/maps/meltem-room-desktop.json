@@ -1,0 +1,738 @@
+{
+  "scenario": "meltem",
+  "map": "meltem",
+  "physicalPhone": false,
+  "transport": "TLS loopback",
+  "date": "2026-11-27T12:58:44.297Z",
+  "revision": "1daf1f664c5a5e8f259189ded43c1c88d5d2925b",
+  "buildHash": "35a85e2fc2719aa0d3c1ca6a2a1bf075eb0369402cfc93b8a9a489f644e3edbe",
+  "manifestHash": "993bf251d19329b004fd1d05c878504e69d8dac806d3dbbeee4997621a1343ca",
+  "cpu": "Cortex-A76",
+  "arch": "arm64",
+  "os": "linux",
+  "node": "v26.13.0",
+  "model": "Raspberry Pi 5 Model B Rev 1.1",
+  "warmupMs": 3000,
+  "windowMs": 10000,
+  "scheduledSeconds": 45,
+  "scoreTarget": 150,
+  "args": [
+    "--use-angle=gl-egl",
+    "--ignore-gpu-blocklist",
+    "--enable-unsafe-swiftshader",
+    "--disable-renderer-backgrounding",
+    "--disable-background-timer-throttling",
+    "--disable-backgrounding-occluded-windows",
+    "--host-resolver-rules=MAP 127.0.0.1 127.0.0.1",
+    "--no-proxy-server",
+    "--ozone-platform=wayland"
+  ],
+  "renderedClients": 1,
+  "sdkPeers": 0,
+  "phaseLog": [
+    {
+      "step": "enter waiting room",
+      "elapsedMs": 6424
+    },
+    {
+      "step": "load meltem",
+      "elapsedMs": 33449
+    },
+    {
+      "step": "start match",
+      "elapsedMs": 41754
+    },
+    {
+      "step": "measure active game",
+      "elapsedMs": 47223
+    },
+    {
+      "step": "finish match",
+      "elapsedMs": 57589
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 88242
+    },
+    {
+      "step": "switch meltem",
+      "elapsedMs": 97453
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 101227
+    },
+    {
+      "step": "switch meltem",
+      "elapsedMs": 110454
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 114602
+    },
+    {
+      "step": "switch meltem",
+      "elapsedMs": 124006
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 127869
+    },
+    {
+      "step": "switch meltem",
+      "elapsedMs": 137976
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 142383
+    },
+    {
+      "step": "switch meltem",
+      "elapsedMs": 151354
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 155221
+    },
+    {
+      "step": "switch meltem",
+      "elapsedMs": 164383
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 168486
+    },
+    {
+      "step": "switch meltem",
+      "elapsedMs": 177585
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 181828
+    },
+    {
+      "step": "switch meltem",
+      "elapsedMs": 190982
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 194882
+    },
+    {
+      "step": "switch meltem",
+      "elapsedMs": 204035
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 208105
+    },
+    {
+      "step": "switch meltem",
+      "elapsedMs": 217432
+    },
+    {
+      "step": "reject a damaged level and retry on the saved map",
+      "elapsedMs": 221312
+    },
+    {
+      "step": "complete",
+      "elapsedMs": 233142
+    }
+  ],
+  "browser": "156.0.8078.79",
+  "viewport": {
+    "width": 1024,
+    "height": 576
+  },
+  "signInToFormMs": 2229,
+  "enterToWaitingMs": 27025,
+  "selectMapMs": 8184,
+  "players": {
+    "humanSlots": 1,
+    "bots": 9
+  },
+  "startToPlayableMs": 1529,
+  "controls": {
+    "distanceM": 0.77,
+    "ammoBefore": 30,
+    "ammoAfter": 29,
+    "rightClickAim": true,
+    "team": "analysts"
+  },
+  "measurement": {
+    "client": {
+      "frameIntervalMs": {
+        "n": 405,
+        "min": 17.5,
+        "p50": 23.3,
+        "p95": 34,
+        "p99": 43.4,
+        "max": 61.9
+      },
+      "renderCpuMs": {
+        "n": 406,
+        "min": 15.2,
+        "p50": 19.8,
+        "p95": 27.6,
+        "p99": 35.5,
+        "max": 47.8
+      },
+      "draws": {
+        "n": 406,
+        "min": 451,
+        "p50": 495,
+        "p95": 583,
+        "p99": 587,
+        "max": 587
+      },
+      "triangles": {
+        "n": 406,
+        "min": 437242,
+        "p50": 463667,
+        "p95": 512993,
+        "p99": 513723,
+        "max": 513813
+      },
+      "pixelRatio": {
+        "n": 406,
+        "min": 0.47,
+        "p50": 0.51,
+        "p95": 0.68,
+        "p99": 0.77,
+        "max": 0.77
+      }
+    },
+    "server": {
+      "executionMs": {
+        "n": 606,
+        "min": 0.37,
+        "p50": 1.23,
+        "p95": 6.08,
+        "p99": 12.65,
+        "max": 20.4
+      },
+      "intervalMs": {
+        "n": 605,
+        "min": 0.78,
+        "p50": 16.18,
+        "p95": 18.48,
+        "p99": 32.22,
+        "max": 37.88
+      },
+      "executionOver33": 0,
+      "executionOver50": 0,
+      "intervalOver33": 3,
+      "rttMs": 0,
+      "tick": 2755
+    },
+    "resources": {
+      "projectId": "lvl-meltem",
+      "level": "Meltem",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        478,
+        269
+      ],
+      "quality": "low",
+      "geometries": 479,
+      "textures": 77,
+      "programs": 56,
+      "owners": 2,
+      "disposals": 1,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    }
+  },
+  "sourceGeometry": {
+    "inScene": true,
+    "groups": 293,
+    "triangles": 291400,
+    "projectId": "lvl-meltem"
+  },
+  "completed": {
+    "matchId": 1,
+    "winner": "draw",
+    "reason": "time",
+    "score": {
+      "analysts": 1,
+      "counterAnalysts": 1
+    },
+    "players": [
+      {
+        "id": "analysts-1",
+        "name": "BOT A-02",
+        "team": "analysts",
+        "kills": 1,
+        "deaths": 0
+      },
+      {
+        "id": "analysts-2",
+        "name": "BOT A-03",
+        "team": "analysts",
+        "kills": 0,
+        "deaths": 1
+      },
+      {
+        "id": "analysts-3",
+        "name": "BOT A-04",
+        "team": "analysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "analysts-4",
+        "name": "BOT A-05",
+        "team": "analysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "counterAnalysts-0",
+        "name": "BOT C-01",
+        "team": "counterAnalysts",
+        "kills": 0,
+        "deaths": 1
+      },
+      {
+        "id": "counterAnalysts-1",
+        "name": "BOT C-02",
+        "team": "counterAnalysts",
+        "kills": 1,
+        "deaths": 0
+      },
+      {
+        "id": "counterAnalysts-2",
+        "name": "BOT C-03",
+        "team": "counterAnalysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "counterAnalysts-3",
+        "name": "BOT C-04",
+        "team": "counterAnalysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "counterAnalysts-4",
+        "name": "BOT C-05",
+        "team": "counterAnalysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "analysts-0",
+        "name": "Mapptest",
+        "team": "analysts",
+        "kills": 0,
+        "deaths": 0
+      }
+    ]
+  },
+  "transitions": [
+    {
+      "id": "floor5-prepared",
+      "ms": 8737,
+      "heapUsedBytes": 76710268,
+      "projectId": "lvl-floor5-preppad-20261105",
+      "level": "Unit 05",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 3,
+      "disposals": 2,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "meltem",
+      "ms": 3566,
+      "heapUsedBytes": 41601316,
+      "projectId": "lvl-meltem",
+      "level": "Meltem",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 368,
+      "textures": 59,
+      "programs": 55,
+      "owners": 4,
+      "disposals": 3,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "floor5-prepared",
+      "ms": 8706,
+      "heapUsedBytes": 78422428,
+      "projectId": "lvl-floor5-preppad-20261105",
+      "level": "Unit 05",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 5,
+      "disposals": 4,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "meltem",
+      "ms": 3855,
+      "heapUsedBytes": 43414240,
+      "projectId": "lvl-meltem",
+      "level": "Meltem",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 368,
+      "textures": 59,
+      "programs": 55,
+      "owners": 6,
+      "disposals": 5,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "floor5-prepared",
+      "ms": 8909,
+      "heapUsedBytes": 79940928,
+      "projectId": "lvl-floor5-preppad-20261105",
+      "level": "Unit 05",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 7,
+      "disposals": 6,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "meltem",
+      "ms": 3650,
+      "heapUsedBytes": 44581788,
+      "projectId": "lvl-meltem",
+      "level": "Meltem",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 368,
+      "textures": 59,
+      "programs": 55,
+      "owners": 8,
+      "disposals": 7,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "floor5-prepared",
+      "ms": 9589,
+      "heapUsedBytes": 83649692,
+      "projectId": "lvl-floor5-preppad-20261105",
+      "level": "Unit 05",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 9,
+      "disposals": 8,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "meltem",
+      "ms": 4190,
+      "heapUsedBytes": 46605000,
+      "projectId": "lvl-meltem",
+      "level": "Meltem",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 368,
+      "textures": 59,
+      "programs": 55,
+      "owners": 10,
+      "disposals": 9,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "floor5-prepared",
+      "ms": 8483,
+      "heapUsedBytes": 83023448,
+      "projectId": "lvl-floor5-preppad-20261105",
+      "level": "Unit 05",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 11,
+      "disposals": 10,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "meltem",
+      "ms": 3671,
+      "heapUsedBytes": 45492496,
+      "projectId": "lvl-meltem",
+      "level": "Meltem",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 368,
+      "textures": 59,
+      "programs": 55,
+      "owners": 12,
+      "disposals": 11,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "floor5-prepared",
+      "ms": 8684,
+      "heapUsedBytes": 83698552,
+      "projectId": "lvl-floor5-preppad-20261105",
+      "level": "Unit 05",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 13,
+      "disposals": 12,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "meltem",
+      "ms": 3894,
+      "heapUsedBytes": 46474112,
+      "projectId": "lvl-meltem",
+      "level": "Meltem",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 368,
+      "textures": 59,
+      "programs": 55,
+      "owners": 14,
+      "disposals": 13,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "floor5-prepared",
+      "ms": 8608,
+      "heapUsedBytes": 82819668,
+      "projectId": "lvl-floor5-preppad-20261105",
+      "level": "Unit 05",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 15,
+      "disposals": 14,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "meltem",
+      "ms": 4005,
+      "heapUsedBytes": 47013144,
+      "projectId": "lvl-meltem",
+      "level": "Meltem",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 368,
+      "textures": 59,
+      "programs": 55,
+      "owners": 16,
+      "disposals": 15,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "floor5-prepared",
+      "ms": 8632,
+      "heapUsedBytes": 83786436,
+      "projectId": "lvl-floor5-preppad-20261105",
+      "level": "Unit 05",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 17,
+      "disposals": 16,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "meltem",
+      "ms": 3696,
+      "heapUsedBytes": 48351720,
+      "projectId": "lvl-meltem",
+      "level": "Meltem",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 368,
+      "textures": 59,
+      "programs": 55,
+      "owners": 18,
+      "disposals": 17,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "floor5-prepared",
+      "ms": 8616,
+      "heapUsedBytes": 84658808,
+      "projectId": "lvl-floor5-preppad-20261105",
+      "level": "Unit 05",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 19,
+      "disposals": 18,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "meltem",
+      "ms": 3847,
+      "heapUsedBytes": 48813932,
+      "projectId": "lvl-meltem",
+      "level": "Meltem",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 368,
+      "textures": 59,
+      "programs": 55,
+      "owners": 20,
+      "disposals": 19,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "floor5-prepared",
+      "ms": 8861,
+      "heapUsedBytes": 85520040,
+      "projectId": "lvl-floor5-preppad-20261105",
+      "level": "Unit 05",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 21,
+      "disposals": 20,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "meltem",
+      "ms": 3670,
+      "heapUsedBytes": 49664216,
+      "projectId": "lvl-meltem",
+      "level": "Meltem",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 368,
+      "textures": 59,
+      "programs": 55,
+      "owners": 22,
+      "disposals": 21,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    }
+  ],
+  "damagedMapRejected": true,
+  "retryMap": "floor5-prepared",
+  "status": "PASS"
+}

@@ -1,0 +1,1704 @@
+{
+  "scenario": "meltem",
+  "map": "meltem",
+  "physicalPhone": false,
+  "transport": "TLS loopback",
+  "date": "2026-11-27T13:14:46.294Z",
+  "revision": "3a65284ac241d40bbcc3c4ae2415dca7ed28c487",
+  "buildHash": "e9edf62f74ce7fd6b84bd6f8e5d583e2e1fd7bfc005e45c7404305e24a40064e",
+  "manifestHash": "7c65c81e11d113710a0c2e3432e776e24d3dd03be4bf16f23079dc8dfe07f0d2",
+  "cpu": "Cortex-A76",
+  "arch": "arm64",
+  "os": "linux",
+  "node": "v26.13.0",
+  "model": "Raspberry Pi 5 Model B Rev 1.1",
+  "warmupMs": 3000,
+  "windowMs": 10000,
+  "scheduledSeconds": 45,
+  "scoreTarget": 150,
+  "args": [
+    "--use-angle=gl-egl",
+    "--ignore-gpu-blocklist",
+    "--enable-unsafe-swiftshader",
+    "--disable-renderer-backgrounding",
+    "--disable-background-timer-throttling",
+    "--disable-backgrounding-occluded-windows",
+    "--host-resolver-rules=MAP 127.0.0.1 127.0.0.1",
+    "--no-proxy-server",
+    "--ozone-platform=wayland"
+  ],
+  "renderedClients": 1,
+  "sdkPeers": 0,
+  "phaseLog": [
+    {
+      "step": "enter waiting room",
+      "elapsedMs": 7688
+    },
+    {
+      "step": "load meltem",
+      "elapsedMs": 35742
+    },
+    {
+      "step": "start match",
+      "elapsedMs": 44516
+    },
+    {
+      "step": "measure active game",
+      "elapsedMs": 49962
+    },
+    {
+      "step": "finish match",
+      "elapsedMs": 60338
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 90938
+    },
+    {
+      "step": "switch meltem",
+      "elapsedMs": 101321
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 112135
+    },
+    {
+      "step": "switch meltem",
+      "elapsedMs": 123035
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 127540
+    },
+    {
+      "step": "switch meltem",
+      "elapsedMs": 137874
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 142489
+    },
+    {
+      "step": "switch meltem",
+      "elapsedMs": 152792
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 156910
+    },
+    {
+      "step": "switch meltem",
+      "elapsedMs": 167272
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 178661
+    },
+    {
+      "step": "switch meltem",
+      "elapsedMs": 190172
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 195089
+    },
+    {
+      "step": "switch meltem",
+      "elapsedMs": 206023
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 210542
+    },
+    {
+      "step": "switch meltem",
+      "elapsedMs": 221221
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 225798
+    },
+    {
+      "step": "switch meltem",
+      "elapsedMs": 236670
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 241234
+    },
+    {
+      "step": "switch meltem",
+      "elapsedMs": 252022
+    },
+    {
+      "step": "park on meltem for the same interval as all switches",
+      "elapsedMs": 264081
+    },
+    {
+      "step": "reject a damaged level and retry on the saved map",
+      "elapsedMs": 444766
+    },
+    {
+      "step": "complete",
+      "elapsedMs": 457766
+    }
+  ],
+  "browser": "156.0.8078.79",
+  "viewport": {
+    "width": 1024,
+    "height": 576
+  },
+  "signInToFormMs": 3129,
+  "enterToWaitingMs": 28053,
+  "selectMapMs": 8644,
+  "players": {
+    "humanSlots": 1,
+    "bots": 9
+  },
+  "startToPlayableMs": 1497,
+  "controls": {
+    "distanceM": 0.63,
+    "ammoBefore": 30,
+    "ammoAfter": 29,
+    "rightClickAim": true,
+    "team": "analysts"
+  },
+  "measurement": {
+    "client": {
+      "frameIntervalMs": {
+        "n": 399,
+        "min": 17.8,
+        "p50": 23.3,
+        "p95": 33.9,
+        "p99": 51.6,
+        "max": 184.3
+      },
+      "renderCpuMs": {
+        "n": 400,
+        "min": 15.5,
+        "p50": 19.9,
+        "p95": 26.7,
+        "p99": 35.3,
+        "max": 167.3
+      },
+      "draws": {
+        "n": 400,
+        "min": 450,
+        "p50": 494,
+        "p95": 583,
+        "p99": 586,
+        "max": 586
+      },
+      "triangles": {
+        "n": 400,
+        "min": 437240,
+        "p50": 463665,
+        "p95": 513051,
+        "p99": 513725,
+        "max": 513813
+      },
+      "pixelRatio": {
+        "n": 400,
+        "min": 0.47,
+        "p50": 0.51,
+        "p95": 0.68,
+        "p99": 0.68,
+        "max": 0.77
+      }
+    },
+    "server": {
+      "executionMs": {
+        "n": 608,
+        "min": 0.51,
+        "p50": 1.2,
+        "p95": 4.98,
+        "p99": 9.13,
+        "max": 17.36
+      },
+      "intervalMs": {
+        "n": 607,
+        "min": 1.05,
+        "p50": 16.2,
+        "p95": 17.9,
+        "p99": 32.27,
+        "max": 41.81
+      },
+      "executionOver33": 0,
+      "executionOver50": 0,
+      "intervalOver33": 2,
+      "rttMs": 0,
+      "tick": 2847
+    },
+    "resources": {
+      "projectId": "lvl-meltem",
+      "level": "Meltem",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        478,
+        269
+      ],
+      "quality": "low",
+      "geometries": 479,
+      "textures": 77,
+      "programs": 56,
+      "owners": 2,
+      "disposals": 1,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    }
+  },
+  "sourceGeometry": {
+    "inScene": true,
+    "groups": 293,
+    "triangles": 291400,
+    "projectId": "lvl-meltem"
+  },
+  "completed": {
+    "matchId": 1,
+    "winner": "draw",
+    "reason": "time",
+    "score": {
+      "analysts": 1,
+      "counterAnalysts": 1
+    },
+    "players": [
+      {
+        "id": "analysts-1",
+        "name": "BOT A-02",
+        "team": "analysts",
+        "kills": 1,
+        "deaths": 0
+      },
+      {
+        "id": "analysts-2",
+        "name": "BOT A-03",
+        "team": "analysts",
+        "kills": 0,
+        "deaths": 1
+      },
+      {
+        "id": "analysts-3",
+        "name": "BOT A-04",
+        "team": "analysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "analysts-4",
+        "name": "BOT A-05",
+        "team": "analysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "counterAnalysts-0",
+        "name": "BOT C-01",
+        "team": "counterAnalysts",
+        "kills": 0,
+        "deaths": 1
+      },
+      {
+        "id": "counterAnalysts-1",
+        "name": "BOT C-02",
+        "team": "counterAnalysts",
+        "kills": 1,
+        "deaths": 0
+      },
+      {
+        "id": "counterAnalysts-2",
+        "name": "BOT C-03",
+        "team": "counterAnalysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "counterAnalysts-3",
+        "name": "BOT C-04",
+        "team": "counterAnalysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "counterAnalysts-4",
+        "name": "BOT C-05",
+        "team": "counterAnalysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "analysts-0",
+        "name": "Mapptest",
+        "team": "analysts",
+        "kills": 0,
+        "deaths": 0
+      }
+    ]
+  },
+  "transitions": [
+    {
+      "id": "floor5-prepared",
+      "ms": 9825,
+      "heapUsedBytes": 76743368,
+      "heapCapacityBytes": 78397440,
+      "embedderHeapUsedBytes": 10439592,
+      "backingStorageBytes": 86368059,
+      "documents": 1,
+      "nodes": 2049,
+      "eventListeners": 163,
+      "instances": {
+        "AudioSystem": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "AudioContext": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "NetworkSession": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "Game": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "world": {
+          "observed": 3,
+          "reachable": 1
+        },
+        "navigation": {
+          "observed": 3,
+          "reachable": 1
+        },
+        "prediction": {
+          "observed": 3,
+          "reachable": 1
+        }
+      },
+      "resourceTimings": 250,
+      "mountedNodes": 722,
+      "loadingPanels": 1,
+      "loadingDescendants": 31,
+      "projectId": "lvl-floor5-preppad-20261105",
+      "level": "Unit 05",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 3,
+      "disposals": 2,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "meltem",
+      "ms": 4106,
+      "heapUsedBytes": 41162892,
+      "heapCapacityBytes": 42319872,
+      "embedderHeapUsedBytes": 7810136,
+      "backingStorageBytes": 82408868,
+      "documents": 1,
+      "nodes": 2009,
+      "eventListeners": 163,
+      "instances": {
+        "AudioSystem": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "AudioContext": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "NetworkSession": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "Game": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "world": {
+          "observed": 4,
+          "reachable": 1
+        },
+        "navigation": {
+          "observed": 4,
+          "reachable": 1
+        },
+        "prediction": {
+          "observed": 4,
+          "reachable": 1
+        }
+      },
+      "resourceTimings": 250,
+      "mountedNodes": 721,
+      "loadingPanels": 1,
+      "loadingDescendants": 31,
+      "projectId": "lvl-meltem",
+      "level": "Meltem",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 368,
+      "textures": 59,
+      "programs": 55,
+      "owners": 4,
+      "disposals": 3,
+      "reachableOwners": 1,
+      "liveOwners": 1,
+      "livePrototypes": {
+        "Game": 1,
+        "NetworkSession": 1,
+        "AudioSystem": 1,
+        "canvases": 81,
+        "audioContexts": 1
+      }
+    },
+    {
+      "id": "floor5-prepared",
+      "ms": 10360,
+      "heapUsedBytes": 76743748,
+      "heapCapacityBytes": 79970304,
+      "embedderHeapUsedBytes": 10513936,
+      "backingStorageBytes": 86370580,
+      "documents": 1,
+      "nodes": 2051,
+      "eventListeners": 163,
+      "instances": {
+        "AudioSystem": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "AudioContext": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "NetworkSession": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "Game": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "world": {
+          "observed": 5,
+          "reachable": 1
+        },
+        "navigation": {
+          "observed": 5,
+          "reachable": 1
+        },
+        "prediction": {
+          "observed": 5,
+          "reachable": 1
+        }
+      },
+      "resourceTimings": 250,
+      "mountedNodes": 722,
+      "loadingPanels": 1,
+      "loadingDescendants": 31,
+      "projectId": "lvl-floor5-preppad-20261105",
+      "level": "Unit 05",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 5,
+      "disposals": 4,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "meltem",
+      "ms": 4251,
+      "heapUsedBytes": 41822852,
+      "heapCapacityBytes": 43368448,
+      "embedderHeapUsedBytes": 7943256,
+      "backingStorageBytes": 82411389,
+      "documents": 1,
+      "nodes": 2011,
+      "eventListeners": 163,
+      "instances": {
+        "AudioSystem": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "AudioContext": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "NetworkSession": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "Game": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "world": {
+          "observed": 6,
+          "reachable": 1
+        },
+        "navigation": {
+          "observed": 6,
+          "reachable": 1
+        },
+        "prediction": {
+          "observed": 6,
+          "reachable": 1
+        }
+      },
+      "resourceTimings": 250,
+      "mountedNodes": 721,
+      "loadingPanels": 1,
+      "loadingDescendants": 31,
+      "projectId": "lvl-meltem",
+      "level": "Meltem",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 368,
+      "textures": 59,
+      "programs": 55,
+      "owners": 6,
+      "disposals": 5,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "floor5-prepared",
+      "ms": 9842,
+      "heapUsedBytes": 77954108,
+      "heapCapacityBytes": 79708160,
+      "embedderHeapUsedBytes": 10693048,
+      "backingStorageBytes": 86370580,
+      "documents": 1,
+      "nodes": 2053,
+      "eventListeners": 163,
+      "instances": {
+        "AudioSystem": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "AudioContext": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "NetworkSession": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "Game": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "world": {
+          "observed": 7,
+          "reachable": 1
+        },
+        "navigation": {
+          "observed": 7,
+          "reachable": 1
+        },
+        "prediction": {
+          "observed": 7,
+          "reachable": 1
+        }
+      },
+      "resourceTimings": 250,
+      "mountedNodes": 722,
+      "loadingPanels": 1,
+      "loadingDescendants": 31,
+      "projectId": "lvl-floor5-preppad-20261105",
+      "level": "Unit 05",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 7,
+      "disposals": 6,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "meltem",
+      "ms": 4345,
+      "heapUsedBytes": 43313288,
+      "heapCapacityBytes": 45465600,
+      "embedderHeapUsedBytes": 8128104,
+      "backingStorageBytes": 82411389,
+      "documents": 1,
+      "nodes": 2013,
+      "eventListeners": 163,
+      "instances": {
+        "AudioSystem": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "AudioContext": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "NetworkSession": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "Game": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "world": {
+          "observed": 8,
+          "reachable": 1
+        },
+        "navigation": {
+          "observed": 8,
+          "reachable": 1
+        },
+        "prediction": {
+          "observed": 8,
+          "reachable": 1
+        }
+      },
+      "resourceTimings": 250,
+      "mountedNodes": 721,
+      "loadingPanels": 1,
+      "loadingDescendants": 31,
+      "projectId": "lvl-meltem",
+      "level": "Meltem",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 368,
+      "textures": 59,
+      "programs": 55,
+      "owners": 8,
+      "disposals": 7,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "floor5-prepared",
+      "ms": 9724,
+      "heapUsedBytes": 79578544,
+      "heapCapacityBytes": 81281024,
+      "embedderHeapUsedBytes": 10776472,
+      "backingStorageBytes": 86370585,
+      "documents": 1,
+      "nodes": 2055,
+      "eventListeners": 163,
+      "instances": {
+        "AudioSystem": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "AudioContext": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "NetworkSession": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "Game": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "world": {
+          "observed": 9,
+          "reachable": 1
+        },
+        "navigation": {
+          "observed": 9,
+          "reachable": 1
+        },
+        "prediction": {
+          "observed": 9,
+          "reachable": 1
+        }
+      },
+      "resourceTimings": 250,
+      "mountedNodes": 722,
+      "loadingPanels": 1,
+      "loadingDescendants": 31,
+      "projectId": "lvl-floor5-preppad-20261105",
+      "level": "Unit 05",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 9,
+      "disposals": 8,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "meltem",
+      "ms": 3829,
+      "heapUsedBytes": 44739016,
+      "heapCapacityBytes": 46514176,
+      "embedderHeapUsedBytes": 8208808,
+      "backingStorageBytes": 82411394,
+      "documents": 1,
+      "nodes": 2015,
+      "eventListeners": 163,
+      "instances": {
+        "AudioSystem": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "AudioContext": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "NetworkSession": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "Game": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "world": {
+          "observed": 10,
+          "reachable": 1
+        },
+        "navigation": {
+          "observed": 10,
+          "reachable": 1
+        },
+        "prediction": {
+          "observed": 10,
+          "reachable": 1
+        }
+      },
+      "resourceTimings": 250,
+      "mountedNodes": 721,
+      "loadingPanels": 1,
+      "loadingDescendants": 31,
+      "projectId": "lvl-meltem",
+      "level": "Meltem",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 368,
+      "textures": 59,
+      "programs": 55,
+      "owners": 10,
+      "disposals": 9,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "floor5-prepared",
+      "ms": 9743,
+      "heapUsedBytes": 80799532,
+      "heapCapacityBytes": 82591744,
+      "embedderHeapUsedBytes": 10816648,
+      "backingStorageBytes": 86370585,
+      "documents": 1,
+      "nodes": 2057,
+      "eventListeners": 163,
+      "instances": {
+        "AudioSystem": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "AudioContext": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "NetworkSession": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "Game": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "world": {
+          "observed": 11,
+          "reachable": 1
+        },
+        "navigation": {
+          "observed": 11,
+          "reachable": 1
+        },
+        "prediction": {
+          "observed": 11,
+          "reachable": 1
+        }
+      },
+      "resourceTimings": 250,
+      "mountedNodes": 722,
+      "loadingPanels": 1,
+      "loadingDescendants": 31,
+      "projectId": "lvl-floor5-preppad-20261105",
+      "level": "Unit 05",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 11,
+      "disposals": 10,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "meltem",
+      "ms": 4273,
+      "heapUsedBytes": 43810312,
+      "heapCapacityBytes": 45727744,
+      "embedderHeapUsedBytes": 8252352,
+      "backingStorageBytes": 82411394,
+      "documents": 1,
+      "nodes": 2017,
+      "eventListeners": 163,
+      "instances": {
+        "AudioSystem": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "AudioContext": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "NetworkSession": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "Game": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "world": {
+          "observed": 12,
+          "reachable": 1
+        },
+        "navigation": {
+          "observed": 12,
+          "reachable": 1
+        },
+        "prediction": {
+          "observed": 12,
+          "reachable": 1
+        }
+      },
+      "resourceTimings": 250,
+      "mountedNodes": 721,
+      "loadingPanels": 1,
+      "loadingDescendants": 31,
+      "projectId": "lvl-meltem",
+      "level": "Meltem",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 368,
+      "textures": 59,
+      "programs": 55,
+      "owners": 12,
+      "disposals": 11,
+      "reachableOwners": 1,
+      "liveOwners": 1,
+      "livePrototypes": {
+        "Game": 1,
+        "NetworkSession": 1,
+        "AudioSystem": 1,
+        "canvases": 89,
+        "audioContexts": 1
+      }
+    },
+    {
+      "id": "floor5-prepared",
+      "ms": 10827,
+      "heapUsedBytes": 79401144,
+      "heapCapacityBytes": 81281024,
+      "embedderHeapUsedBytes": 11101360,
+      "backingStorageBytes": 86371129,
+      "documents": 1,
+      "nodes": 2059,
+      "eventListeners": 163,
+      "instances": {
+        "AudioSystem": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "AudioContext": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "NetworkSession": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "Game": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "world": {
+          "observed": 13,
+          "reachable": 1
+        },
+        "navigation": {
+          "observed": 13,
+          "reachable": 1
+        },
+        "prediction": {
+          "observed": 13,
+          "reachable": 1
+        }
+      },
+      "resourceTimings": 250,
+      "mountedNodes": 722,
+      "loadingPanels": 1,
+      "loadingDescendants": 31,
+      "projectId": "lvl-floor5-preppad-20261105",
+      "level": "Unit 05",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 13,
+      "disposals": 12,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "meltem",
+      "ms": 4634,
+      "heapUsedBytes": 44490016,
+      "heapCapacityBytes": 46514176,
+      "embedderHeapUsedBytes": 8512856,
+      "backingStorageBytes": 82411938,
+      "documents": 1,
+      "nodes": 2019,
+      "eventListeners": 163,
+      "instances": {
+        "AudioSystem": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "AudioContext": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "NetworkSession": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "Game": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "world": {
+          "observed": 14,
+          "reachable": 1
+        },
+        "navigation": {
+          "observed": 14,
+          "reachable": 1
+        },
+        "prediction": {
+          "observed": 14,
+          "reachable": 1
+        }
+      },
+      "resourceTimings": 250,
+      "mountedNodes": 721,
+      "loadingPanels": 1,
+      "loadingDescendants": 31,
+      "projectId": "lvl-meltem",
+      "level": "Meltem",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 368,
+      "textures": 59,
+      "programs": 55,
+      "owners": 14,
+      "disposals": 13,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "floor5-prepared",
+      "ms": 10247,
+      "heapUsedBytes": 82470912,
+      "heapCapacityBytes": 85213184,
+      "embedderHeapUsedBytes": 11310848,
+      "backingStorageBytes": 86371564,
+      "documents": 1,
+      "nodes": 2061,
+      "eventListeners": 163,
+      "instances": {
+        "AudioSystem": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "AudioContext": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "NetworkSession": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "Game": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "world": {
+          "observed": 15,
+          "reachable": 1
+        },
+        "navigation": {
+          "observed": 15,
+          "reachable": 1
+        },
+        "prediction": {
+          "observed": 15,
+          "reachable": 1
+        }
+      },
+      "resourceTimings": 250,
+      "mountedNodes": 722,
+      "loadingPanels": 1,
+      "loadingDescendants": 31,
+      "projectId": "lvl-floor5-preppad-20261105",
+      "level": "Unit 05",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 15,
+      "disposals": 14,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "meltem",
+      "ms": 4289,
+      "heapUsedBytes": 46030720,
+      "heapCapacityBytes": 48087040,
+      "embedderHeapUsedBytes": 8685608,
+      "backingStorageBytes": 82412392,
+      "documents": 1,
+      "nodes": 2021,
+      "eventListeners": 163,
+      "instances": {
+        "AudioSystem": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "AudioContext": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "NetworkSession": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "Game": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "world": {
+          "observed": 16,
+          "reachable": 1
+        },
+        "navigation": {
+          "observed": 16,
+          "reachable": 1
+        },
+        "prediction": {
+          "observed": 16,
+          "reachable": 1
+        }
+      },
+      "resourceTimings": 250,
+      "mountedNodes": 721,
+      "loadingPanels": 1,
+      "loadingDescendants": 31,
+      "projectId": "lvl-meltem",
+      "level": "Meltem",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 368,
+      "textures": 59,
+      "programs": 55,
+      "owners": 16,
+      "disposals": 15,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "floor5-prepared",
+      "ms": 9998,
+      "heapUsedBytes": 81298020,
+      "heapCapacityBytes": 83378176,
+      "embedderHeapUsedBytes": 11384512,
+      "backingStorageBytes": 86371129,
+      "documents": 1,
+      "nodes": 2063,
+      "eventListeners": 163,
+      "instances": {
+        "AudioSystem": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "AudioContext": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "NetworkSession": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "Game": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "world": {
+          "observed": 17,
+          "reachable": 1
+        },
+        "navigation": {
+          "observed": 17,
+          "reachable": 1
+        },
+        "prediction": {
+          "observed": 17,
+          "reachable": 1
+        }
+      },
+      "resourceTimings": 250,
+      "mountedNodes": 722,
+      "loadingPanels": 1,
+      "loadingDescendants": 31,
+      "projectId": "lvl-floor5-preppad-20261105",
+      "level": "Unit 05",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 17,
+      "disposals": 16,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "meltem",
+      "ms": 4274,
+      "heapUsedBytes": 46324076,
+      "heapCapacityBytes": 48349184,
+      "embedderHeapUsedBytes": 8778792,
+      "backingStorageBytes": 82411938,
+      "documents": 1,
+      "nodes": 2023,
+      "eventListeners": 163,
+      "instances": {
+        "AudioSystem": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "AudioContext": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "NetworkSession": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "Game": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "world": {
+          "observed": 18,
+          "reachable": 1
+        },
+        "navigation": {
+          "observed": 18,
+          "reachable": 1
+        },
+        "prediction": {
+          "observed": 18,
+          "reachable": 1
+        }
+      },
+      "resourceTimings": 250,
+      "mountedNodes": 721,
+      "loadingPanels": 1,
+      "loadingDescendants": 31,
+      "projectId": "lvl-meltem",
+      "level": "Meltem",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 368,
+      "textures": 59,
+      "programs": 55,
+      "owners": 18,
+      "disposals": 17,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "floor5-prepared",
+      "ms": 10183,
+      "heapUsedBytes": 82134368,
+      "heapCapacityBytes": 83902464,
+      "embedderHeapUsedBytes": 11490928,
+      "backingStorageBytes": 86371129,
+      "documents": 1,
+      "nodes": 2065,
+      "eventListeners": 163,
+      "instances": {
+        "AudioSystem": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "AudioContext": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "NetworkSession": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "Game": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "world": {
+          "observed": 19,
+          "reachable": 1
+        },
+        "navigation": {
+          "observed": 19,
+          "reachable": 1
+        },
+        "prediction": {
+          "observed": 19,
+          "reachable": 1
+        }
+      },
+      "resourceTimings": 250,
+      "mountedNodes": 722,
+      "loadingPanels": 1,
+      "loadingDescendants": 31,
+      "projectId": "lvl-floor5-preppad-20261105",
+      "level": "Unit 05",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 19,
+      "disposals": 18,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "meltem",
+      "ms": 4289,
+      "heapUsedBytes": 47218408,
+      "heapCapacityBytes": 49135616,
+      "embedderHeapUsedBytes": 8894392,
+      "backingStorageBytes": 82411938,
+      "documents": 1,
+      "nodes": 2025,
+      "eventListeners": 163,
+      "instances": {
+        "AudioSystem": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "AudioContext": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "NetworkSession": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "Game": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "world": {
+          "observed": 20,
+          "reachable": 1
+        },
+        "navigation": {
+          "observed": 20,
+          "reachable": 1
+        },
+        "prediction": {
+          "observed": 20,
+          "reachable": 1
+        }
+      },
+      "resourceTimings": 250,
+      "mountedNodes": 721,
+      "loadingPanels": 1,
+      "loadingDescendants": 31,
+      "projectId": "lvl-meltem",
+      "level": "Meltem",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 368,
+      "textures": 59,
+      "programs": 55,
+      "owners": 20,
+      "disposals": 19,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "floor5-prepared",
+      "ms": 10171,
+      "heapUsedBytes": 83126256,
+      "heapCapacityBytes": 85737472,
+      "embedderHeapUsedBytes": 11566000,
+      "backingStorageBytes": 86371129,
+      "documents": 1,
+      "nodes": 2067,
+      "eventListeners": 163,
+      "instances": {
+        "AudioSystem": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "AudioContext": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "NetworkSession": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "Game": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "world": {
+          "observed": 21,
+          "reachable": 1
+        },
+        "navigation": {
+          "observed": 21,
+          "reachable": 1
+        },
+        "prediction": {
+          "observed": 21,
+          "reachable": 1
+        }
+      },
+      "resourceTimings": 250,
+      "mountedNodes": 722,
+      "loadingPanels": 1,
+      "loadingDescendants": 31,
+      "projectId": "lvl-floor5-preppad-20261105",
+      "level": "Unit 05",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 21,
+      "disposals": 20,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "meltem",
+      "ms": 4175,
+      "heapUsedBytes": 48119624,
+      "heapCapacityBytes": 49922048,
+      "embedderHeapUsedBytes": 8954000,
+      "backingStorageBytes": 82411938,
+      "documents": 1,
+      "nodes": 2027,
+      "eventListeners": 163,
+      "instances": {
+        "AudioSystem": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "AudioContext": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "NetworkSession": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "Game": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "world": {
+          "observed": 22,
+          "reachable": 1
+        },
+        "navigation": {
+          "observed": 22,
+          "reachable": 1
+        },
+        "prediction": {
+          "observed": 22,
+          "reachable": 1
+        }
+      },
+      "resourceTimings": 250,
+      "mountedNodes": 721,
+      "loadingPanels": 1,
+      "loadingDescendants": 31,
+      "projectId": "lvl-meltem",
+      "level": "Meltem",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 368,
+      "textures": 59,
+      "programs": 55,
+      "owners": 22,
+      "disposals": 21,
+      "reachableOwners": 1,
+      "liveOwners": 1,
+      "livePrototypes": {
+        "Game": 1,
+        "NetworkSession": 1,
+        "AudioSystem": 1,
+        "canvases": 99,
+        "audioContexts": 1
+      }
+    }
+  ],
+  "parked": [
+    {
+      "atMs": 1,
+      "heapUsedBytes": 47344232,
+      "heapCapacityBytes": 49659904,
+      "embedderHeapUsedBytes": 8961640,
+      "backingStorageBytes": 82419090,
+      "documents": 1,
+      "nodes": 2027,
+      "eventListeners": 163,
+      "instances": {
+        "AudioSystem": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "AudioContext": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "NetworkSession": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "Game": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "world": {
+          "observed": 22,
+          "reachable": 1
+        },
+        "navigation": {
+          "observed": 22,
+          "reachable": 1
+        },
+        "prediction": {
+          "observed": 22,
+          "reachable": 1
+        }
+      },
+      "resourceTimings": 250,
+      "mountedNodes": 721,
+      "loadingPanels": 1,
+      "loadingDescendants": 31
+    },
+    {
+      "atMs": 86572,
+      "heapUsedBytes": 47213828,
+      "heapCapacityBytes": 49922048,
+      "embedderHeapUsedBytes": 8958264,
+      "backingStorageBytes": 82415369,
+      "documents": 1,
+      "nodes": 2027,
+      "eventListeners": 163,
+      "instances": {
+        "AudioSystem": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "AudioContext": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "NetworkSession": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "Game": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "world": {
+          "observed": 22,
+          "reachable": 1
+        },
+        "navigation": {
+          "observed": 22,
+          "reachable": 1
+        },
+        "prediction": {
+          "observed": 22,
+          "reachable": 1
+        }
+      },
+      "resourceTimings": 250,
+      "mountedNodes": 721,
+      "loadingPanels": 1,
+      "loadingDescendants": 31
+    },
+    {
+      "atMs": 173146,
+      "heapUsedBytes": 47290556,
+      "heapCapacityBytes": 49922048,
+      "embedderHeapUsedBytes": 9015488,
+      "backingStorageBytes": 82408841,
+      "documents": 1,
+      "nodes": 2027,
+      "eventListeners": 163,
+      "instances": {
+        "AudioSystem": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "AudioContext": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "NetworkSession": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "Game": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "world": {
+          "observed": 22,
+          "reachable": 1
+        },
+        "navigation": {
+          "observed": 22,
+          "reachable": 1
+        },
+        "prediction": {
+          "observed": 22,
+          "reachable": 1
+        }
+      },
+      "resourceTimings": 250,
+      "mountedNodes": 721,
+      "loadingPanels": 1,
+      "loadingDescendants": 31,
+      "livePrototypes": {
+        "Game": 1,
+        "NetworkSession": 1,
+        "AudioSystem": 1,
+        "canvases": 99,
+        "audioContexts": 1
+      }
+    }
+  ],
+  "damagedMapRejected": true,
+  "retryMap": "floor5-prepared",
+  "status": "PASS"
+}

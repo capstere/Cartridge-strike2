@@ -11,6 +11,8 @@ const { chromium }=require(path.join(root,'frontline/source/tools/dev/node_modul
 const [kind,profile='desktop',repeats='3',offset='0']=process.argv.slice(2);
 if(!['fps','frontline'].includes(kind)||!['desktop','touch'].includes(profile))throw Error('Usage: node compare.cjs fps|frontline desktop|touch [repeats]');
 const touch=profile==='touch', cs2=kind==='fps';
+const level=process.env.CS3_BENCH_LEVEL;
+if(level && (!cs2 || !/^[a-z0-9-]{1,48}$/.test(level)))throw Error('Invalid published CS2 benchmark level.');
 const mime={'.html':'text/html','.mjs':'text/javascript','.js':'text/javascript','.json':'application/json','.css':'text/css','.ogg':'audio/ogg','.mp3':'audio/mpeg','.png':'image/png','.jpg':'image/jpeg','.webp':'image/webp','.wasm':'application/wasm','.svg':'image/svg+xml','.woff2':'font/woff2'};
 const server=http.createServer((req,res)=>{
   const url=new URL(req.url,'http://127.0.0.1');
@@ -61,9 +63,10 @@ async function run(ctx,base,i,version,cacheWarm){
   const capture=()=>page.evaluate(()=>performance.now());
   const mark=async(s)=>{row.startup[s]=await capture();console.log(kind,profile,i,s,Math.round(row.startup[s]));};
   page.setDefaultTimeout(140000);
-  page.on('pageerror',e=>row.errors.push(e.message.slice(0,200)));
+  page.on('pageerror',e=>{row.errors.push(e.message.slice(0,200));if(level)console.error(e.stack);});
+  if(level)page.on('console',message=>{if(message.type()==='error')console.error(message.text().slice(0,500));});
   try{
-    await page.goto(base+'/'+kind+'/',{waitUntil:'domcontentloaded',timeout:120000});
+    await page.goto(base+'/'+kind+'/'+(level?'?level='+level:''),{waitUntil:'domcontentloaded',timeout:120000});
     const menu=page.locator(cs2?'#start':'#scr-main [data-go=play]');
     if(touch && !cs2){
       const installChoice=page.locator('#pwaOffer:not(.hidden) #poHelp');
@@ -79,7 +82,13 @@ async function run(ctx,base,i,version,cacheWarm){
       if(await mode.isVisible())await mode.click();
       await page.waitForFunction(()=>!document.querySelector('#start').disabled);
       await mark('startButton');await menu.click();
-      await page.waitForFunction(()=>!document.querySelector('#hud').hidden&&document.getElementById('cs-loading')?.hidden);
+      await page.waitForFunction(()=>{
+        const fatal=document.querySelector('#fatal');
+        if(fatal&&!fatal.hidden)throw Error(fatal.innerText);
+        const load=document.querySelector('#cs-loading.is-error');
+        if(load&&!load.hidden)throw Error(load.innerText);
+        return !document.querySelector('#hud').hidden&&document.getElementById('cs-loading')?.hidden;
+      });
       if(await page.locator('#resume').isVisible())await page.locator('#resume').click();
     }else{
       await menu.click();await page.locator('#playGrid button').filter({hasText:/solo/i}).first().click();
@@ -111,6 +120,13 @@ async function run(ctx,base,i,version,cacheWarm){
     await controls(page);
     row.action=await page.evaluate(()=>{cs3Baseline.mode='off';return {frames:cs3Baseline.actions,audio:cs3Baseline.audio,inputs:cs3Baseline.inputs};});
     row.memory=await page.evaluate(()=>performance.memory&&({usedHeap:performance.memory.usedJSHeapSize,totalHeap:performance.memory.totalJSHeapSize}));
+    if(level){
+      row.selectedLevel=level;
+      await page.screenshot({path:path.join(output,[level,profile,i].join('-')+'.jpg'),quality:85});
+      await page.keyboard.press('Escape');
+      if(await page.locator('#restart').isVisible())await page.locator('#restart').click();
+      row.returnedToLobby=await page.locator('#start').isVisible();
+    }
     row.after=environment();row.status='measured';
   }catch(err){row.status='incomplete';row.error=String(err.message).slice(0,680);row.visible=await page.locator('body').innerText({timeout:2000}).then(s=>s.slice(0,350)).catch(()=>null);}
   finally{fs.writeFileSync(path.join(output,[kind,profile,i].join('-')+'.json'),JSON.stringify(row,null,2));await page.close();}

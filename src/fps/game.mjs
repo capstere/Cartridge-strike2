@@ -137,7 +137,8 @@ export class Game {
     }
     s.hostages = (this.config.networkSlice && this.config.mode !== 'classic' ? [] : this.world.anchors.hostages).map((p, i) => ({ ...point(p), id: `hostage-${i}`, name: `Hostage ${i + 1}`, height: 1.6, radius: this.config.radius, vy: 0, onGround: true, rescued: false, escortId: null, path: [], pathAt: 0, distanceWalked: 0 }));
     const carrier = this.actors.find(a => a.team === 'counterAnalysts');
-    s.bomb = { status: carrier?'carried':'dropped', carrierId: carrier?.id??null, ...point(carrier??this.world.anchors.bomb), deadline: Infinity, nextBeep: Infinity };
+    const bombLocation = carrier ?? this.world.anchors.bomb ?? (this.config.mode === 'endless' ? this.world.anchors.counterAnalysts[0] : null);
+    s.bomb = { status: carrier?'carried':'dropped', carrierId: carrier?.id??null, ...point(bombLocation), deadline: Infinity, nextBeep: Infinity };
     for (const actor of this.actors) if (actor.bot) actor.bot.shop();
     prepareActionRound(this);
     this.world.setElevatorProgress?.(s.phase==='buy'?0:1);
