@@ -17,65 +17,196 @@
         "eventId": 6,
         "tick": 75,
         "ammoBefore": 20,
-        "ammoAfter": 19
+        "ammoAfter": 19,
+        "tacticalInterrupted": true,
+        "emptyRefill": 20,
+        "reserveBefore": 80,
+        "reserveAfter": 60,
+        "reloadEvents": [
+          {
+            "weapon": "p9",
+            "eventId": 9,
+            "time": 1.2833333333333337
+          },
+          {
+            "weapon": "p9",
+            "eventId": 12,
+            "time": 1.4666666666666663
+          }
+        ]
       },
       {
         "weapon": "p12",
         "actionId": "analysts-0:1:0:2",
-        "eventId": 10,
-        "tick": 93,
+        "eventId": 14,
+        "tick": 197,
         "ammoBefore": 12,
-        "ammoAfter": 11
+        "ammoAfter": 11,
+        "tacticalInterrupted": true,
+        "emptyRefill": 12,
+        "reserveBefore": 72,
+        "reserveAfter": 60,
+        "reloadEvents": [
+          {
+            "weapon": "p12",
+            "eventId": 17,
+            "time": 3.3333333333333264
+          },
+          {
+            "weapon": "p12",
+            "eventId": 20,
+            "time": 3.516666666666659
+          }
+        ]
       },
       {
         "weapon": "cr4",
         "actionId": "analysts-0:1:0:3",
-        "eventId": 14,
-        "tick": 112,
+        "eventId": 22,
+        "tick": 320,
         "ammoBefore": 30,
-        "ammoAfter": 29
+        "ammoAfter": 29,
+        "tacticalInterrupted": true,
+        "emptyRefill": 30,
+        "reserveBefore": 90,
+        "reserveAfter": 60,
+        "reloadEvents": [
+          {
+            "weapon": "cr4",
+            "eventId": 25,
+            "time": 5.33333333333332
+          },
+          {
+            "weapon": "cr4",
+            "eventId": 28,
+            "time": 5.533333333333319
+          }
+        ]
       },
       {
         "weapon": "ar47",
         "actionId": "analysts-0:1:0:4",
-        "eventId": 18,
-        "tick": 129,
+        "eventId": 30,
+        "tick": 473,
         "ammoBefore": 30,
-        "ammoAfter": 29
+        "ammoAfter": 29,
+        "tacticalInterrupted": true,
+        "emptyRefill": 30,
+        "reserveBefore": 90,
+        "reserveAfter": 60,
+        "reloadEvents": [
+          {
+            "weapon": "ar47",
+            "eventId": 33,
+            "time": 7.9333333333333105
+          },
+          {
+            "weapon": "ar47",
+            "eventId": 36,
+            "time": 8.149999999999984
+          }
+        ]
       },
       {
         "weapon": "smg",
         "actionId": "analysts-0:1:0:5",
-        "eventId": 22,
-        "tick": 144,
+        "eventId": 38,
+        "tick": 645,
         "ammoBefore": 30,
-        "ammoAfter": 29
+        "ammoAfter": 29,
+        "tacticalInterrupted": true,
+        "emptyRefill": 30,
+        "reserveBefore": 120,
+        "reserveAfter": 90,
+        "reloadEvents": [
+          {
+            "weapon": "smg",
+            "eventId": 41,
+            "time": 10.783333333333449
+          },
+          {
+            "weapon": "smg",
+            "eventId": 44,
+            "time": 11.000000000000126
+          }
+        ]
       },
       {
         "weapon": "shotgun",
         "actionId": "analysts-0:1:0:6",
-        "eventId": 26,
-        "tick": 159,
+        "eventId": 46,
+        "tick": 783,
         "ammoBefore": 8,
-        "ammoAfter": 7
+        "ammoAfter": 7,
+        "tacticalInterrupted": true,
+        "emptyRefill": 8,
+        "reserveBefore": 32,
+        "reserveAfter": 24,
+        "reloadEvents": [
+          {
+            "weapon": "shotgun",
+            "eventId": 63,
+            "time": 13.10000000000023
+          },
+          {
+            "weapon": "shotgun",
+            "eventId": 66,
+            "time": 13.30000000000024
+          }
+        ]
       },
       {
         "weapon": "sniper",
         "actionId": "analysts-0:1:0:7",
-        "eventId": 44,
-        "tick": 212,
+        "eventId": 68,
+        "tick": 971,
         "ammoBefore": 5,
-        "ammoAfter": 4
+        "ammoAfter": 4,
+        "tacticalInterrupted": true,
+        "emptyRefill": 5,
+        "reserveBefore": 25,
+        "reserveAfter": 20,
+        "reloadEvents": [
+          {
+            "weapon": "sniper",
+            "eventId": 71,
+            "time": 16.20000000000036
+          },
+          {
+            "weapon": "sniper",
+            "eventId": 74,
+            "time": 16.40000000000035
+          }
+        ]
       },
       {
         "weapon": "bazooka",
         "actionId": "analysts-0:1:0:8",
-        "eventId": 48,
-        "tick": 289,
+        "eventId": 76,
+        "tick": 1174,
         "ammoBefore": 1,
-        "ammoAfter": 0
+        "ammoAfter": 0,
+        "tacticalInterrupted": false,
+        "emptyRefill": 1,
+        "reserveBefore": 5,
+        "reserveAfter": 4,
+        "reloadEvents": [
+          {
+            "weapon": "bazooka",
+            "eventId": 79,
+            "time": 19.566666666666837
+          }
+        ]
       }
-    ]
+    ],
+    "reloadQualification": {
+      "build": "55dbca6e1f72c611eb42fe5913f62027f71753bbeed997e5803a4659d9f8dfbe",
+      "fixture": "Each loadout starts with its full magazine. After one SDK shot, all multi-round magazines are tactically reloaded, interrupted with the knife, and recovered without moving reserve. Empty magazines are then seeded in the private room and normally reloaded.",
+      "sameEventIDsAndTimes": 15,
+      "tacticalInterruptions": 7,
+      "completedOnBothSeats": 8,
+      "invalidInputs": 0
+    }
   },
   "families": [
     {
@@ -882,7 +1013,7 @@
   },
   "firstIntegratedPass": {
     "runtimeBuild": "2c2c7059bde71c204bae56f6cb8ac251e132026dc3ce0fb57d04b898eca23bbb",
-    "nativeInput": "Chromium touch on Raspberry Pi V3D, 844 \u00d7 390 CSS, DPR 0.75",
+    "nativeInput": "Chromium touch on Raspberry Pi V3D, 844 × 390 CSS, DPR 0.75",
     "screenSubmissions": 227,
     "lastSubmissionMs": 7348.5,
     "audioAndSimulationEvents": [
@@ -926,7 +1057,7 @@
     "rawRoomSha256": "d3b154aa6cd3c84eacda82c0599c115aede0bdaa32f2238aaa5d968e890412d3"
   },
   "recordedFamilyRuntime": "082b9a98eaa391615c3f5fd52b0382e75dd491f6535df8621f853bb38cedd0f0",
-  "familyShotCapture": "Native 844 \u00d7 390 CSS; both primary and pistol reload samples, and all decoded POV buffers",
+  "familyShotCapture": "Native 844 × 390 CSS; both primary and pistol reload samples, and all decoded POV buffers",
   "media": [
     {
       "file": "v6-touch.webm",
@@ -1128,7 +1259,7 @@
         "firstMs": 3592.2,
         "lastMs": 3907.8,
         "peakRush": 0.979,
-        "prompt": "R \u00b7 RELOAD"
+        "prompt": "R · RELOAD"
       },
       "audioClockEvents": [
         {
@@ -1354,7 +1485,7 @@
     },
     {
       "item": "he",
-      "warning": "HE \u00b7 DETONATION IN HAND",
+      "warning": "HE · DETONATION IN HAND",
       "secondsRemaining": 0.0867,
       "outwardPathVisible": false,
       "holderToBlastM": 0.0,

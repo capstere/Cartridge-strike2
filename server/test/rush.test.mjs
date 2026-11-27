@@ -193,15 +193,23 @@ test('interrupting a cartridge with a rifle switch needs a fresh trigger on the 
  }
 });
 
-test('each firearm spends one authoritative round and delivers the same action to both SDK seats',{timeout:30000},async t=>{
+test('each firearm spends one authoritative round and both SDK seats see cancellation and empty reloads',{timeout:60000},async t=>{
  const local=await createLocalServer({testMatch:{continuous:true},port:0});
  let host,observer;
  t.after(async()=>{await Promise.allSettled([host?.leave(),observer?.leave()]);await local.close();});
  const client=new Client(local.url,{headers:{Origin:local.url}});
  host=await ready(await client.create('private-fps',options));observer=await ready(await client.joinById(host.roomId,options));
  const room=[...local.rooms][0],game=room.sim.game,seat=room.seats.get(host.sessionId),actor=seat.actor;
- const peers=[host,observer],received=[[],[]],proof=[];
- peers.forEach((peer,i)=>peer.onMessage('events',batch=>received[i].push(...batch.filter(e=>e.type==='shot' && e.actorId===actor.id))));
+ const peers=[host,observer],received=[[],[]],reloads=[[],[]],proof=[];
+ let selection=0,reloadId=0;
+ const both=check=>peers.every(peer=>check(peer.state.actors.get(actor.id)));
+ const select=slot=>host.send('select',{slot,serial:++selection,lifeId:actor.lifeId,controlEpoch:seat.epoch});
+ peers.forEach((peer,i)=>peer.onMessage('events',batch=>{
+   for(const event of batch)if(event.actorId===actor.id){
+     if(event.type==='shot')received[i].push(event);
+     if(event.type==='reload')reloads[i].push({weapon:event.weapon,eventId:event.eventId,time:event.time});
+   }
+ }));
  await until(()=>Number.isFinite(seat.rttAt),'measured SDK clock');
  const weapons=['p9','p12','cr4','ar47','smg','shotgun','sniper','bazooka'];
  for(const [index,weapon] of weapons.entries()){
@@ -209,11 +217,11 @@ test('each firearm spends one authoritative round and delivers the same action t
    // The private-room loadout is the fixture. Selection, trigger and release all
    // traverse the normal SDK/authority path, including real hit queries.
    actor.inventory[slot]=game.weaponItem(weapon);
-   host.send('select',{slot,serial:fireId,lifeId:actor.lifeId,controlEpoch:seat.epoch});
+   select(slot);
    await until(()=>peers.every(peer=>peer.state.actors.get(actor.id).weapon===weapon),'both seats see '+weapon);
    await until(()=>game.state.time>=actor.nextShot,weapon+' ready on authority');
    const before=game.item(actor).ammo;
-   send(host,{fire:true,fireEdge:true,holdThrow:true,fireId,shotYaw:Math.PI,shotPitch:.3});
+   send(host,{fire:true,fireEdge:true,holdThrow:false,fireId,shotYaw:Math.PI,shotPitch:.3});
    send(host,{fire:false,fireEdge:false,holdThrow:false,fireId});
    await until(()=>received.every(events=>events.length>index),weapon+' shot confirmed on both seats');
    const a=received[0][index],b=received[1][index];
@@ -221,7 +229,28 @@ test('each firearm spends one authoritative round and delivers the same action t
    assert.equal(a.actionId,b.actionId);assert.equal(a.eventId,b.eventId);assert.equal(a.tick,b.tick);
    assert.equal(game.item(actor).ammo,before-1);
    await until(()=>peers.every(peer=>peer.state.actors.get(actor.id).ammo===before-1),weapon+' replicated one debit');
-   proof.push({weapon,actionId:a.actionId,eventId:a.eventId,tick:a.tick,ammoBefore:before,ammoAfter:before-1});
+   const item=game.item(actor),reserve=item.reserve;
+   const reload=()=>send(host,{reloadId:++reloadId,fireId,fire:false,fireEdge:false,holdThrow:false});
+   if(before>1){
+     reload();
+     await until(()=>both(s=>s.weapon===weapon && s.reloadUntil>game.state.time && s.ammo===before-1),weapon+' tactical reload appears on both seats');
+     select('knife');
+     await until(()=>both(s=>s.weapon==='knife' && !s.reloadUntil),weapon+' reload interrupted on both seats');
+     select(slot);
+     await until(()=>both(s=>s.weapon===weapon && !s.reloadUntil && s.ammo===before-1 && s.reserve===reserve),weapon+' retains untransferred ammunition');
+   }
+   // Seed an empty magazine for each family. The SDK starts the reload and
+   // the authority's ordinary deadline debits reserve and fills both views.
+   item.ammo=0;
+   await until(()=>both(s=>s.ammo===0 && s.reserve===reserve),weapon+' empty magazine fixture reached both seats');
+   reload();
+   await until(()=>both(s=>s.reloadUntil>game.state.time && s.ammo===0),weapon+' empty reload begins');
+   await until(()=>both(s=>!s.reloadUntil && s.ammo===before && s.reserve===reserve-before),weapon+' refills at the authority deadline');
+   const completed=reloads[0].filter(e=>e.weapon===weapon);
+   assert.equal(completed.length,before>1?2:1);
+   assert.deepEqual(completed,reloads[1].filter(e=>e.weapon===weapon));
+   proof.push({weapon,actionId:a.actionId,eventId:a.eventId,tick:a.tick,ammoBefore:before,ammoAfter:before-1,
+     tacticalInterrupted:before>1,emptyRefill:item.ammo,reserveBefore:reserve,reserveAfter:item.reserve,reloadEvents:completed});
  }
  await delay(90);assert(received.every(events=>events.length===weapons.length));assert.equal(room.metrics.invalid,0);
  t.diagnostic(JSON.stringify(proof));

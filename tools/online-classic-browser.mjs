@@ -10,6 +10,26 @@ import {enterTouchMatch, resumeDesktop} from './network-browser-resume.mjs';
 const local=await createLocalServer({port:0,testMatch:{countdownSeconds:.15}});
 const browsers=[],pages=[],errors=[];
 const out=process.env.CS3_HANDLING_OUT;
+const interactionTrace=[];
+let interactionGesture='before plant';
+function observeInteraction(room,actor){
+  const original=room.fixedTick;
+  const seat=[...room.seats.values()].find(s=>s.actor===actor);
+  let latestPacket=room.clock.elapsedTime;
+  room.fixedTick=function(){
+    const input=room.inputs.get(seat.client?.sessionId);
+    if(input?.size)latestPacket=room.clock.elapsedTime;
+    const previous=actor.action?.start;
+    const value=original.call(this);
+    if(previous!==actor.action?.start){
+      interactionTrace.push({gesture:interactionGesture,time:room.sim.game.state.time,
+        type:actor.action?.type||'',position:[actor.x,actor.y,actor.z],moving:actor.moving,
+        onGround:actor.onGround,lastInputAgeMs:room.clock.elapsedTime-latestPacket,
+        heldForMs:Math.max(0,seat.interactUntil-room.clock.elapsedTime),alive:actor.alive});
+    }
+    return value;
+  };
+}
 async function watchHandling(page){
   const cdp=await page.context().newCDPSession(page);
   try{
@@ -21,7 +41,7 @@ async function watchHandling(page){
       window.handlingEvents=[];
       session.room.onMessage('events',batch=>{
         for(const {type,eventId,time,actionId,actorId,round,weapon} of batch)
-          if(['shot','switch','reload','plant','defuse','rescued','bomb-planted'].includes(type))handlingEvents.push({type,eventId,time,actionId,actorId,round,weapon});
+          if(['shot','switch','reload','plant','defuse','rescued','planted'].includes(type))handlingEvents.push({type,eventId,time,actionId,actorId,round,weapon});
       });
       return true;
     }`});
@@ -124,14 +144,18 @@ try{
   finally{await desktop.keyboard.up('w');}
   await until(()=>h.rescued&&h.distanceWalked>1,'visible follower reached rescue');
   for(const p of [desktop,mobile])await p.waitForFunction(()=>document.querySelector('#hostage-status').textContent.includes('1/'));
-  Object.assign(carrier,game.world.anchors.bomb);
+  const site=game.world.anchors.bomb;
+  Object.assign(carrier,{x:site.x,y:site.y??0,z:site.z});
+  if(out)observeInteraction(room,carrier);
   await desktop.waitForFunction(()=>document.querySelector('#prompt-text').textContent.includes('Plant'));
   if(out){
+    interactionGesture='short press';
     await desktop.keyboard.down('e');
     try{await until(()=>carrier.action?.type==='plant','interrupted plant starts');}
-    finally{await desktop.keyboard.up('e');}
+    finally{interactionGesture='short release';await desktop.keyboard.up('e');}
     await until(()=>!carrier.action && game.bomb.status==='carried','released plant retains the carried objective');
   }
+  interactionGesture='full press';
   await desktop.keyboard.down('e');
   try{await until(()=>carrier.action?.type==='plant','desktop hold starts');await until(()=>game.bomb.status==='planted','desktop plant finishes');}
   finally{await desktop.keyboard.up('e');}
@@ -166,8 +190,9 @@ try{
     const records=await Promise.all(pages.map(page=>page.evaluate(()=>handlingEvents)));
     assert.deepEqual(records[0],records[1],'both rooms observe identical authoritative handling events');
     assert.equal(new Set(records[0].map(e=>e.eventId)).size,records[0].length);
-    for(const [type,count] of Object.entries({shot:1,plant:2,defuse:1,rescued:1}))assert.equal(records[0].filter(e=>e.type===type).length,count,type);
-    writeFileSync(join(out,'classic.json'),JSON.stringify({authorityAmmo:pistol.ammo,round:game.state.round,records},null,2));
+    writeFileSync(join(out,'classic.json'),JSON.stringify({authorityAmmo:pistol.ammo,round:game.state.round,records,interactionTrace},null,2));
+    for(const [type,count] of Object.entries({shot:1,plant:2,planted:1,defuse:1,rescued:1}))
+      assert.equal(records[0].filter(e=>e.type===type).length,count,type+' '+JSON.stringify(interactionTrace));
   }
   assert.deepEqual(errors,[]);console.log('PASS Classic two rendered clients, desktop and mobile buys, plant, touch defuse, authoritative result and survivor touch reload during the next buy phase.');
 }catch(error){

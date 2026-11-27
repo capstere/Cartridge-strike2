@@ -21,12 +21,38 @@ A separate keyboard and mouse Endless session on the same integrated build selec
 
 ![Native empty and tactical reloads, bolt and pump travel, launcher and knife](integrated-family-frames.webp)
 
-Two connected SDK seats saw identical shot action IDs and event IDs for all eight firearms and the same authoritative one-round debit. In a separate 250 ms round-trip configuration with 20 ms jitter, a short manual Rush tap produced one accepted shot and one debit. All 80 combined simulation, grip, physical-effect, foley, input and room checks passed on this integrated runtime. At the following revision the complete 14-test sender fixture passed after scoping the HE hold bit to an equipped, stocked cartridge. Real SDK tests then confirmed that early and cooked HE interruptions still require a new trigger press after the rifle returns. Both seat and simulation tests use the ordinary rifle fire level after the switch. [Authority tests](../../../../server/test/rush.test.mjs)
+Two connected SDK seats saw identical shot action IDs and event IDs for all eight firearms and the same authoritative one-round debit. On p16 build `55dbca6e`, both seats also received the same fifteen reload event IDs and simulation times. Selecting the knife interrupted seven tactical reloads without moving ammunition. All eight weapons completed an empty reload on the authority, with matching magazine and reserve quantities on both seats. The one-round launcher only has an empty reload. The test seeded the empty magazines between scenarios and sent each reload through the SDK. [Per-weapon receipts](integrated-handling.json)
+
+In a separate 250 ms round-trip configuration with 20 ms jitter, a short manual Rush tap produced one accepted shot and one debit. All 80 combined simulation, grip, physical-effect, foley, input and room checks passed on this integrated runtime. At the following revision the complete 14-test sender fixture passed after scoping the HE hold bit to an equipped, stocked cartridge. Real SDK tests then confirmed that early and cooked HE interruptions still require a new trigger press after the rifle returns. Both seat and simulation tests use the ordinary rifle fire level after the switch. [Authority tests](../../../../server/test/rush.test.mjs)
 
 The real touch cartridge selector held and returned both smoke and flash to the CR4. Both retained their full 1.8 s fuse until launch. The guide endpoint matched each simulated detonation within 0.03 m. With 0.087 s left on a held HE, the display showed **HE · DETONATION IN HAND**, removed the outward trajectory and applied the eventual blast at the holder's location. [Touch cartridge probe](../../../../tools/handling-cartridge-probe.mjs)
 
 Solo supplies smoke, flash and HE. The current private Classic shop and private Endless equipment rules supply HE. The room replicates that cartridge's fuse and release. The visual flash overlap and its ringing are a Solo measurement. Native touch measurements use Chromium multitouch emulation. The focused gamepad fixture supplies standard controller axes and buttons. Physical phone and controller checks remain open.
 
+
+## One continuous recording of all thirteen held models
+
+On the native Pi, Play → Solo → Classic → Counter Analysts opened the round with the player carrying the mission bomb. The 50.414-second recording follows ordinary keyboard and mouse input from the two sidearms through the long guns, launcher, knife, three cartridges and the mission bomb. The fixture supplies each two-round loadout and a clear firing lane. Every shot, switch, tactical reload interruption, empty refill, pin pull, throw and objective completion uses the game’s own code. The last input starts a three-second plant on the site. [Watch the uncut recording](all-held-families.webm) · [Seek times, events, decoded sources and file checksum](all-held-families.json)
+
+The camera records the live WebGL canvas, 633 × 292, at up to 15 frames per second. It captures 723 VP8 video packets and the running game's 48 kHz Opus master audio in one MediaRecorder. The V6 recordings above include the HTML HUD and show the mobile controls. Remuxing added a seek index without re-encoding. All three videos live under documentation and are excluded from the runtime file list. [Recording driver](../../../../tools/handling-family-sequence.mjs)
+
+| Start | Held model | Start | Held model |
+| ---: | --- | ---: | --- |
+| 0.63 s | Sidearm A | 4.99 s | Sidearm B |
+| 9.42 s | Pulse Carbine | 14.48 s | Arc Rifle |
+| 19.84 s | Pulse SMG | 24.31 s | Breach Shotgun |
+| 30.47 s | Scout Rifle | 37.04 s | Rocket Launcher |
+| 40.66 s | Knife | 41.43 s | Smoke cartridge |
+| 42.78 s | Flash cartridge | 44.07 s | HE cartridge |
+| 45.59 s | Mission bomb | 49.96 s | Plant completed |
+
+## Classic on two rendered clients
+
+On the Pi, a desktop Counter Analyst bought HE and received the English full-slot response on a second purchase. A touch Analyst bought armor and fired one sidearm round. The desktop player selected and inspected the mission bomb, returned to the sidearm, escorted a hostage, released an early planting attempt and completed a second hold. The touch player saw defuse progress, finished the defuse and reloaded the surviving sidearm in the following buy phase. Both seats received identical event IDs and times for each observed action. [Classic event and input trace](classic-two-seats.json) · [Normal two-renderer fixture](../../../../tools/online-classic-browser.mjs)
+
+The short hold started at simulation time 23.200 s and ended at 23.267 s. The second started at 23.350 s and completed at 26.350 s. The actor remained grounded and stationary throughout. An earlier run completed the entire playable journey and saw three starts for those two gestures. Its fixture had inadvertently copied the site radius onto the player capsule and did not retain the input trace. The corrected fixture copies only position and still requires exactly two starts and one completion. The earlier extra start could not be attributed conclusively.
+
+![Desktop carried mission bomb and touch round result from the same room](classic-two-seats.webp)
 
 ## Matched Pi route
 

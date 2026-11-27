@@ -58,12 +58,15 @@ try{
   Object.assign(host,crossing.pose,{spawnProtectedUntil:game.state.time+30});
   const stagedLife=host.lifeId;
   await desktop.waitForFunction(({x,z,yaw})=>{
-    const actor=reviewSession.view.player;
-    return Math.hypot(actor.x-x,actor.z-z)<.12 && Math.abs(actor.yaw-yaw)<.01 && Math.abs(actor.pitch)<.01;
+    const actor=reviewSession.room.state.actors.get(reviewSession.localPlayerId);
+    const angle=Math.atan2(Math.sin(actor.yaw-yaw),Math.cos(actor.yaw-yaw));
+    return Math.hypot(actor.x-x,actor.z-z)<.12 && Math.abs(angle)<.01 && Math.abs(actor.pitch)<.01;
   },crossing.pose);
   await resumeDesktop(desktop);
   // A real resume gesture restores pointer lock. Align the live camera after
   // reacquisition; its previous rendered angle can belong to another life.
+  await desktop.waitForFunction(()=>reviewSession.enabled);
+  await desktop.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
   await desktop.evaluate(({yaw,pitch})=>{
     const actor=reviewSession.view.player,scale=.0022;
     const heading=Math.atan2(Math.sin(actor.yaw-yaw),Math.cos(actor.yaw-yaw));

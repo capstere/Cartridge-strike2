@@ -13,7 +13,9 @@ const server=await createLocalServer({port:0}),profiles=process.argv.slice(2);
 console.log('Private capture directory',out);
 let browser;
 const records=[],handling=[];
+const realtime=!!(process.env.LIVE_SEQUENCE || process.env.FAMILY_SEQUENCE);
 async function play(touch) {
+ const selectedMode=process.env.FAMILY_SEQUENCE?'classic':'endless';
  const context=await browser.newContext({viewport:{width:844,height:390},deviceScaleFactor:.75,
    hasTouch:touch,isMobile:touch,locale:'en-US'});
  const page=await context.newPage();page.setDefaultTimeout(90000);
@@ -22,15 +24,16 @@ async function play(touch) {
    await page.addInitScript(()=>localStorage.setItem('cartridge-settings',JSON.stringify({
      mode:'endless',graphics:'low',mobileAutoFire:false,autoReload:false,wanderers:false,firefight:false,loadout:'cr4'
    })));
-   await page.goto(server.url+'/fps/?test'+(process.env.LIVE_SEQUENCE?'&realtime':''),{waitUntil:'domcontentloaded'});
+   await page.goto(server.url+'/fps/?test'+(realtime?'&realtime':''),{waitUntil:'domcontentloaded'});
    await page.locator('[data-go=play]:visible').click();
    await page.locator('[data-go=solo]:visible').click();
-   await page.locator('#lb-mode-seg [data-value=endless]').click();
+   await page.locator('#lb-mode-seg [data-value='+selectedMode+']').click();
+   if(process.env.FAMILY_SEQUENCE)await page.locator('[data-team=counterAnalysts]').click();
    await page.waitForFunction(()=>window.__fps && !document.querySelector('#start').disabled);
    await page.locator('#start').click();
    await page.waitForFunction(()=>window.__fps?.game?.player && document.getElementById('cs-loading')?.hidden);
    if(await page.locator('#resume').isVisible())await page.locator('#resume').click();
-   assert.equal(await page.evaluate(()=>__fps.game.state.mode),'endless');
+   assert.equal(await page.evaluate(()=>__fps.game.state.mode),selectedMode);
    if(!touch)await page.waitForFunction(()=>document.pointerLockElement?.id==='game');
    await page.evaluate(live=>{
      const f=window.__fps;if(!live)f.stopFrameLoop();
@@ -43,7 +46,13 @@ async function play(touch) {
      g.emit=(kind,actor,detail)=>{const e=emit(kind,actor,detail);if(kind==='shot' && actor===g.player)rushEvidence.shots.push(e.time);return e;};
      const play=f.audio.play.bind(f.audio);
      f.audio.play=event=>{if(event?.type==='shot' && event.actorId===g.player.id)rushEvidence.audio.push(event.time);return play(event);};
-   },!!process.env.LIVE_SEQUENCE);
+   },realtime);
+   if(process.env.FAMILY_SEQUENCE){
+     assert(!touch,'family film uses keyboard and mouse');
+     const {captureFamilySequence}=await import('./handling-family-sequence.mjs');
+     await captureFamilySequence(page,out);
+     return;
+   }
    if(process.env.LIVE_SEQUENCE){
      const {captureLiveSequence}=await import('./handling-sequence-probe.mjs');
      await captureLiveSequence(page,out,touch);
