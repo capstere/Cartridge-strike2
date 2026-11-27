@@ -1,3 +1,5 @@
+import {CoastalAmbience, coastalMaps} from './coastal-ambience.mjs';
+
 /** Local Web Audio presentation. Logical hearing belongs to Game, including at volume 0.
  * Kenney CC0 samples and modifications: docs/fps-assets.json and THIRD_PARTY_NOTICES.md.
  * All scheduled sources are owned, bounded and stopped on pause/round reset.
@@ -131,8 +133,9 @@ export class AudioSystem {
     if (!this.context || this.context.state !== 'running' || !this.volume || listener?.ambient === false || this.settings.ambient === false) {
       this.stopAmbient(); return;
     }
-    if(this.world?.referenceId==='meltem'){
-      this.updateSeasideAmbient();
+    const coast = this.world?.referenceId;
+    if (Object.hasOwn(coastalMaps, coast)) {
+      this.updateSeasideAmbient(coast);
       return;
     }
     const room = this.world?.roomAt?.(this.listener?.x,this.listener?.z);
@@ -174,34 +177,18 @@ export class AudioSystem {
     this.ambient.push({source,gain,filter,position,volume,cutoff,nodes:[gain,filter,panner]});
   }
 
-  updateSeasideAmbient(){
-    if(this.ambientRoom!=='meltem-sea'){
-      this.stopAmbient();this.ambientRoom='meltem-sea';
-      const media=new Audio(new URL('../../assets/fps/maps/meltem/sea.mp3',import.meta.url).href);
-      media.loop=true;media.preload='auto';
-      const ctx=this.context,source=ctx.createMediaElementSource(media),filter=ctx.createBiquadFilter(),gain=ctx.createGain();
-      gain.gain.value=0;filter.type='lowpass';source.connect(filter).connect(gain).connect(this.master);
-      this.seaside={media,source,filter,gain};
-      media.play().catch(()=>{}); // a paused or canceled load can abort its pending play
+  updateSeasideAmbient(mapId) {
+    if (this.seaside?.mapId !== mapId) {
+      this.stopAmbient();
+      const coarse = globalThis.matchMedia?.('(any-pointer: coarse)').matches ?? false;
+      this.seaside = new CoastalAmbience(this.context, this.worldOutput?.() ?? this.master, mapId, coarse);
+      this.ambientRoom = mapId;
     }
-    const {gain,filter}=this.seaside,position=this.listener;
-    if(!position)return;
-    // Riposte's 05c-ambiance shore-distance curve, with an overhead occlusion
-    // query for interiors. Update only four times per second.
-    const now=this.context.currentTime;
-    if(this.seaside.next>now)return;
-    this.seaside.next=now+.25;
-    let t=Math.max(0,Math.min(1,(position.x+30-3)/32));t=t*t*(3-2*t);
-    const inside=!!this.world.raycast({x:position.x,y:(position.y??0)+.15,z:position.z},{x:0,y:1,z:0},6,{vision:true});
-    gain.gain.setTargetAtTime(.55*(inside?.55:1)*(1-.85*t),now,.25);
-    filter.frequency.setTargetAtTime(Math.min(inside?1100:18000,18000-15500*t),now,.25);
+    this.seaside.update(this.listener, this.world);
   }
+
   stopAmbient(){
-    if(this.seaside){
-      const {media,source,filter,gain}=this.seaside;
-      media.pause();media.removeAttribute('src');media.load();
-      source.disconnect();filter.disconnect();gain.disconnect();this.seaside=null;
-    }
+    this.seaside?.dispose(); this.seaside = null;
     for(const item of this.ambient){try{item.source.stop();}catch{}item.source.disconnect();for(const node of item.nodes)node.disconnect();}
     this.ambient.length=0;this.ambientRoom=null;
   }
