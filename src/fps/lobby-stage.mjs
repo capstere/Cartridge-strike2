@@ -32,7 +32,13 @@ function buildSeg(){
   }
   syncSeg();
 }
-function syncSeg(){for(const b of seg.children)b.setAttribute('aria-checked',String(b.dataset.value===modeSelect.value));}
+function syncSeg(){
+  for(const b of seg.children){
+    b.disabled = [...modeSelect.options].find(option=>option.value===b.dataset.value)?.disabled || false;
+    b.setAttribute('aria-checked',String(b.dataset.value===modeSelect.value));
+  }
+}
+menu.addEventListener('cs-solo-selection',syncSeg);
 modeSelect.addEventListener('change',syncSeg);buildSeg();setTimeout(syncSeg,0);
 
 const charSelect=$('player-character');

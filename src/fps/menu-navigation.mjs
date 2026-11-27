@@ -1,6 +1,7 @@
 // Screen history and keyboard focus adapted from Riposte 09e-menus uiGo/uiBack
 // and 09ea-liste lmStep. Copyright (c) 2026 BenDBSS. See licenses/riposte-MIT.txt.
-import {selectedMapName} from './english-ui.mjs';
+import {UI_EN, selectedMapName} from './english-ui.mjs';
+import {loadSoloManifest, resolveSoloSelection, soloCatalog, soloMapURL} from './solo-maps.mjs';
 import {FAMILY_ROOM_PATH} from '../../shared/multiplayer/family-room.mjs';
 import {createFullscreenController} from './fullscreen.mjs';
 
@@ -87,32 +88,102 @@ function mountMenu() {
     event.preventDefault();
     if (screen === 'options') previous();
   });
-  document.getElementById('choose-floor5').onclick = () => {
-    const currentLevel = query.get('level');
-    if (!currentLevel || currentLevel === 'floor5-prepared') previous();
-    else {
-      const url = new URL(location.href);
-      url.searchParams.set('level', 'floor5-prepared');
-      url.searchParams.set('screen', 'solo');
-      location.assign(url);
-    }
-  };
-  for (const element of menu.querySelectorAll('[data-map-name]')) {
-    element.textContent = selectedMapName(query);
+  const mode = document.getElementById('game-mode');
+  const loading = document.getElementById('loading');
+  const mapList = document.getElementById('solo-map-list');
+  const listStatus = document.getElementById('map-list-status');
+  const notice = document.getElementById('solo-map-notice');
+  const random = document.getElementById('random-map');
+  let selection, entries = [];
+
+  function decorate(card, entry) {
+    card.classList.toggle('map-art', Boolean(entry?.preview));
+    if (entry?.preview) card.style.setProperty('--cs-map-art', `url("../${entry.preview}")`);
+    else card.style.removeProperty('--cs-map-art');
   }
   function updateMapLabel() {
-    const loading = document.getElementById('loading');
-    for (const tile of menu.querySelectorAll('[data-map-name]')) {
-      tile.textContent = selectedMapName(query, loading.dataset.mapName);
+    if (screen === 'network') return;
+    const display = selection?.id === 'preview' ? loading.dataset.mapName || selection.name : selection?.name || loading.dataset.mapName;
+    for (const tile of menu.querySelectorAll('[data-map-name]')) tile.textContent = selectedMapName(new URLSearchParams(location.search), display);
+    if (selection) {
+      const tile = menu.querySelector('.map-tile');
+      tile.classList.remove('image-floor');
+      decorate(tile, selection);
     }
-    const map = query.get('level');
-    const selected = !map || map === 'floor5-prepared';
-    document.getElementById('choose-floor5').setAttribute('aria-pressed', String(selected));
-    menu.querySelector('.map-tile').classList.toggle('image-floor', selected || map === 'classic-floor5');
   }
-  const loading = document.getElementById('loading');
+  function applySelection(value) {
+    selection = value;
+    const url = new URL(location.href);
+    // A corrected deep link is shareable and the explanation remains visible.
+    if (value.notice) {
+      url.searchParams.set('level',value.id);
+      url.searchParams.set('mode',value.mode);
+      history.replaceState(history.state,'',url);
+    }
+    const html = document.documentElement;
+    if (value.preview) html.style.setProperty('--cs-load-art', `url("../${value.preview}")`);
+    else html.style.removeProperty('--cs-load-art');
+    html.toggleAttribute('data-cs-map-art',Boolean(value.preview));
+    notice.textContent = value.notice;
+    notice.hidden = !value.notice;
+    for (const option of mode.options) option.disabled = !value.modes.includes(option.value);
+    updateMapLabel();
+  }
+  menu.addEventListener('cs-solo-selection', event => applySelection(event.detail));
   new MutationObserver(updateMapLabel).observe(loading, {attributes:true, attributeFilter:['data-map-name']});
   updateMapLabel();
+
+  function choose(entry) {
+    const nextMode = entry.modes.includes(mode.value) ? mode.value : entry.modes[0];
+    if (selection?.id === entry.id && nextMode === mode.value) return previous();
+    const next = soloMapURL(location.href,{id:entry.id,mode:nextMode},{
+      team:menu.dataset.side,seed:document.getElementById('seed').value,
+    });
+    location.replace(next);
+  }
+  async function showMaps() {
+    try {
+      const manifest = await loadSoloManifest();
+      if (screen !== 'maps') return;
+      let hasPrivate = false;
+      try { hasPrivate = Boolean(localStorage.getItem('cartridge-level-preview')); } catch {}
+      entries = soloCatalog(manifest, hasPrivate);
+      selection ??= resolveSoloSelection(manifest, new URLSearchParams(location.search), mode.value);
+      mapList.replaceChildren();
+      for (const entry of entries) {
+        const card = document.createElement('button'), title = document.createElement('strong'), detail = document.createElement('span');
+        card.type = 'button'; card.className = 'route-card'; card.dataset.mapId = entry.id;
+        card.id = entry.id === 'floor5-prepared' ? 'choose-floor5' : 'choose-' + entry.id;
+        card.setAttribute('aria-pressed',String(entry.id === selection.id));
+        title.textContent = entry.name;
+        detail.textContent = entry.id === 'preview' ? 'Saved on this device' : entry.modes.map(id => UI_EN.modes[id].name).join(' · ');
+        card.append(title,detail);
+        decorate(card,entry);
+        card.onclick = () => choose(entry);
+        mapList.append(card);
+      }
+      random.hidden = !entries.some(entry => entry.random && entry.modes.includes(mode.value));
+      listStatus.hidden = entries.length > 0;
+      listStatus.textContent = 'No Solo maps are available.';
+    } catch {
+      listStatus.hidden = false;
+      listStatus.textContent = 'The map list could not be loaded. Return to Solo and reopen Maps to retry.';
+    }
+  }
+  random.onclick = () => {
+    const choices = entries.filter(entry => entry.random && entry.modes.includes(mode.value));
+    if (choices.length) choose(choices[Math.floor(Math.random() * choices.length)]);
+  };
+  menu.addEventListener('cs-menu-screen', event => {
+    if (event.detail.screen === 'maps') showMaps();
+  });
+  mode.addEventListener('change', () => {
+    const url = new URL(location.href);
+    if (url.searchParams.has('mode')) {
+      url.searchParams.set('mode', mode.value);
+      history.replaceState(history.state,'',url);
+    }
+  });
 
   const local = ['localhost','127.0.0.1','[::1]'].includes(location.hostname) ||
     /^(?:10\.|192\.168\.|172\.(?:1[6-9]|2\d|3[01])\.)/.test(location.hostname) || location.hostname.endsWith('.local');

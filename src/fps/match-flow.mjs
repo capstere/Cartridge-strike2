@@ -26,7 +26,10 @@ track.volume = .55;
 track.src = '../audio/Preparation.mp3';
 const music = {
   track,
-  wanted: (() => { try { return sessionStorage.getItem(MUSIC_KEY) !== 'off'; } catch { return true; } })(),
+  wanted: (() => {
+    try { return (localStorage.getItem(MUSIC_KEY) ?? sessionStorage.getItem(MUSIC_KEY)) !== 'off'; }
+    catch { return true; }
+  })(),
   allowed() { return this.wanted && !menu.hidden && !flow.active && !document.hidden; },
   stop() { track.pause(); },
   sync() {
@@ -50,7 +53,9 @@ function addMusicButton() {
   musicBtn.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path class="cs-wave" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/><path class="cs-x" d="M16 9l5 6M21 9l-5 6"/></svg><span></span>';
   musicBtn.addEventListener('click', () => {
     music.wanted = !music.wanted;
-    try { sessionStorage.setItem(MUSIC_KEY, music.wanted ? 'on' : 'off'); } catch {}
+    const preference = music.wanted ? 'on' : 'off';
+    try { localStorage.setItem(MUSIC_KEY, preference); } catch {}
+    try { sessionStorage.setItem(MUSIC_KEY, preference); } catch {}
     music.sync(); syncButton();
   });
   tools.prepend(musicBtn); syncButton();

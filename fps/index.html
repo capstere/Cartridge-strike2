@@ -81,6 +81,7 @@
       <header class="lb-intro intro">
         <p class="lb-tag eyebrow"><span class="status-dot"></span>Floor 5 Laboratory</p>
         <h1 class="lb-title" id="setup-title" tabindex="-1">Solo match</h1>
+        <p id="solo-map-notice" role="status" hidden></p>
         <p class="lb-lead lead">Choose a team and mode.</p>
         <div class="mission-strip" hidden><div><span></span></div><div><span></span></div></div>
       </header>
@@ -105,6 +106,8 @@
     </section>
 
     <aside class="lb-right" data-panel="setup" hidden>
+      <button type="button" class="map-tile image-floor" data-go="maps"><span>Map</span><strong data-map-name>Floor 5 Laboratory</strong><i aria-hidden="true">↗</i></button>
+      <dl class="solo-roster" aria-label="Solo roster"><div><dt>Analysts</dt><dd id="roster-analysts">You + 4 bots</dd></div><div><dt>Counter Analysts</dt><dd id="roster-counter">5 bots</dd></div></dl>
       <div class="lb-plate">
         <p class="lb-plate-k">Operator · <span id="lb-team-name">Analysts</span></p>
         <h2 id="lb-op-name">Default operator</h2>
@@ -113,20 +116,18 @@
           <p id="character-status" role="status"></p><div class="character-actions"><button id="delete-character" type="button" class="text-link" hidden>Delete local copy</button></div>
         </div>
       </div>
-      <button type="button" class="map-tile image-floor" data-go="maps"><span>Map</span><strong data-map-name>Floor 5 Laboratory</strong><i aria-hidden="true">↗</i></button>
-      <dl class="solo-roster" aria-label="Solo roster"><div><dt>Analysts</dt><dd id="roster-analysts">You + 4 bots</dd></div><div><dt>Counter Analysts</dt><dd id="roster-counter">5 bots</dd></div></dl>
       <dl class="lb-brief">
-        <div><dt>Map</dt><dd>Floor 5 Laboratory</dd></div>
+        <div><dt>Map</dt><dd data-map-name>Floor 5 Laboratory</dd></div>
         <div><dt>Format</dt><dd>5 vs 5</dd></div>
         <div class="lb-brief-obj"><dt>Objective</dt><dd id="lb-objective">Defend the laboratory and defuse the bomb.</dd></div>
       </dl>
     </aside>
 
     <section class="route-panel sub-panel" data-panel="maps" aria-labelledby="maps-title" hidden>
-      <h1 id="maps-title" tabindex="-1">Solo maps</h1><div class="route-cards">
-        <button type="button" id="choose-floor5" class="route-card image-floor"><strong>Floor 5 Laboratory</strong><span>Classic rounds · Endless Action</span></button>
-        <button type="button" class="route-card image-arena" disabled><strong>Compact Arena</strong><span>Team Deathmatch in private rooms only.</span></button>
-      </div>
+      <h1 id="maps-title" tabindex="-1">Solo maps</h1>
+      <p id="map-list-status" role="status">Loading available maps…</p>
+      <div id="solo-map-list" class="route-cards" aria-label="Available Solo maps"></div>
+      <button type="button" id="random-map" class="route-action" hidden>Random map</button>
     </section>
     <details class="mm-more lb-drawer" id="mm-settings" hidden><summary><span>Options and controls</span><b aria-hidden="true">×</b></summary>
       <label class="seed-row">Match seed <input id="seed" type="number" value="42" min="1" max="999999" aria-label="Match seed"></label>

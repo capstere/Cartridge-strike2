@@ -1,0 +1,24 @@
+{
+  "commit": "31de9f85f2cecddc611338f256d24a1c86048e63",
+  "browser": "156.0.8078.79",
+  "scenarios": [
+    {
+      "input": "desktop",
+      "locale": "sv-SE",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "completed": true
+    },
+    {
+      "input": "touch",
+      "locale": "fr-FR",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "completed": true
+    }
+  ]
+}

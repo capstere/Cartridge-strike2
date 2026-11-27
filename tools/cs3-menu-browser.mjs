@@ -25,7 +25,7 @@ async function run(input) {
   const startedAt = new Date().toISOString();
   page.on('pageerror', err => errors.push(err.message));
   await context.addInitScript(() => {
-    localStorage.setItem('cartridge-settings', JSON.stringify({graphics:'low',volume:0}));
+    if (!localStorage.getItem('cartridge-settings')) localStorage.setItem('cartridge-settings', JSON.stringify({graphics:'low',volume:0}));
   });
   const snap = async name => {
     if (output) await page.screenshot({path:join(output,input+'-'+name+'.jpg'),type:'jpeg',quality:75,timeout:30000});
@@ -42,6 +42,10 @@ async function run(input) {
     assert.equal(await page.locator('html').getAttribute('lang'),'en');
     assert.equal(await route(),'main');
     assert.ok(await page.locator('.cs-rotate').isHidden());
+    const music = page.getByRole('button',{name:'Mute menu music'});
+    await press(music);
+    assert.equal(await page.getByRole('button',{name:'Enable menu music'}).getAttribute('aria-pressed'),'false');
+    assert.equal(await page.evaluate(() => localStorage.getItem('cs-lobby-music')),'off');
     await go('play'); assert.equal(await route(),'play');
     assert.equal(await page.getByRole('button',{name:/Public matches/}).isEnabled(),false);
     await go('friends'); assert.equal(await route(),'friends');
@@ -64,29 +68,53 @@ async function run(input) {
     await go('solo'); assert.equal(await route(),'solo');
     await page.locator('.map-tile').click();
     await page.locator('#choose-floor5[aria-pressed="true"]').waitFor();
-    assert.equal(await page.getByRole('button',{name:/Compact Arena/}).isEnabled(),false);
+    assert.equal(await page.locator('#solo-map-list [data-map-id=compact-arena]').count(),0);
+    assert.equal(await page.locator('#solo-map-list [data-map-id=synthetic-demo]').count(),0);
+    await page.locator('#random-map').waitFor();
+    const hasMeltem = !!await page.locator('#choose-meltem').count();
+    if (process.env.CS3_VERIFY_MELTEM === '1') assert.ok(hasMeltem,'Meltem must be qualified in the tested manifest');
     await snap('maps');
     await press(page.locator('#choose-floor5')); await page.locator('#setup-title').waitFor();
     await press(page.locator('[data-team="counterAnalysts"]'));
     assert.equal(await page.locator('#roster-counter').textContent(),'You + 4 bots');
     await snap('solo');
-    await press(page.locator('#start'));
-    await page.locator('#hud').waitFor({timeout:120000});
-    await page.locator('#cs-loading').waitFor({state:'hidden',timeout:120000});
-    if (!touch && !(await page.locator('#pause').isHidden())) await press(page.locator('#resume'));
-    assert.match(await page.locator('#round-label').textContent(), /round\s+1/i);
-    await snap('match');
-    if (await page.locator('#pause').isHidden()) {
-      if (touch) await press(page.locator('[data-mobile-action="pause"]'));
-      else await page.keyboard.press('Escape');
+    async function playMatch(label, picture) {
+      await press(page.locator('#start'));
+      await page.locator('#hud').waitFor({timeout:120000});
+      await page.locator('#cs-loading').waitFor({state:'hidden',timeout:120000});
+      if (!touch && !(await page.locator('#pause').isHidden())) await press(page.locator('#resume'));
+      assert.match(await page.locator('#round-label').textContent(), label);
+      await snap(picture);
+      if (await page.locator('#pause').isHidden()) {
+        if (touch) await press(page.locator('[data-mobile-action="pause"]'));
+        else await page.keyboard.press('Escape');
+      }
+      await press(page.locator('#restart'));
+      await page.locator('#setup-title').waitFor();
     }
-    await press(page.locator('#restart'));
-    await page.locator('#setup-title').waitFor();
+    await playMatch(/round\s+1/i,'match');
+    if (hasMeltem) {
+      await press(page.locator('.map-tile'));
+      await press(page.locator('#choose-meltem'));
+      await page.waitForURL(url => url.searchParams.get('level') === 'meltem' && url.searchParams.get('mode') === 'endless');
+      await page.waitForFunction(() => document.querySelector('#lb-mode-seg [data-value="classic"]')?.disabled);
+      assert.equal(await page.locator('#game-mode').inputValue(),'endless');
+      assert.equal(await page.locator('.map-tile [data-map-name]').textContent(),'Meltem');
+      assert.equal(await page.locator('#roster-counter').textContent(),'You + 4 bots');
+      await snap('meltem-setup');
+      await playMatch(/endless action/i,'meltem-match');
+      const unsupported = new URL(page.url());
+      unsupported.searchParams.set('mode','classic');
+      await page.goto(unsupported.href,{waitUntil:'domcontentloaded'});
+      await page.locator('#solo-map-notice').waitFor();
+      assert.match(await page.locator('#solo-map-notice').textContent(),/Meltem.*does not support.*Floor 5/i);
+      assert.equal(new URL(page.url()).searchParams.get('level'),'floor5-prepared');
+    }
     await back(); await page.locator('#play-title').waitFor();
     await back(); await page.locator('#home-title').waitFor();
     assert.deepEqual(errors,[]);
     assert.equal(await page.evaluate(() => typeof window.__fps), 'undefined');
-    evidence.push({input,locale:touch?'fr-FR':'sv-SE',menuViewport:viewport,matchViewport:page.viewportSize(),startedAt,completedAt:new Date().toISOString()});
+    evidence.push({input,locale:touch?'fr-FR':'sv-SE',menuViewport:viewport,matchViewport:page.viewportSize(),maps:hasMeltem?['floor5-prepared','meltem']:['floor5-prepared'],startedAt,completedAt:new Date().toISOString()});
   } catch (error) {
     console.error(input, page.url(), await route(), errors);
     await snap('failure').catch(() => {});

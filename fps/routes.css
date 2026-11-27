@@ -7,6 +7,8 @@
 #menu .cs-quick { color: #f6cc80 }
 #menu .route-panel :is(a,button):focus-visible, #menu :is(.lb-icon,.route-back,.cs-quick,.map-tile,.lb-brand):focus-visible { outline: 3px solid #f6c464; outline-offset: 3px }
 #menu .route-panel h1:focus, #setup-title:focus { outline: none }
+#menu[data-screen=outfits] [data-panel=outfits] { pointer-events: none }
+#menu[data-screen=outfits] .route-details { pointer-events: auto }
 #menu .home-panel { align-self: stretch; display: flex; align-items: center; padding: 20px clamp(24px,7vw,110px); pointer-events: none }
 .home-copy { width: min(39vw,420px); pointer-events: auto }
 .home-copy h1 { margin: 0 0 25px; color: #f4f5ed; font: 800 clamp(55px,7.8vw,140px)/.78 var(--lb-display); text-transform: uppercase; letter-spacing: -.045em; text-shadow: 0 3px 32px #06090a }
@@ -35,6 +37,8 @@
 #menu .route-card[aria-pressed=true]::after { content: 'Selected'; color: #ffe0a5; font: 650 14px var(--lb-display) }
 #menu .image-floor { background-image: linear-gradient(0deg,#111922 2%,#142637d4 50%,#13212f33),url('../assets/fps/maps/floor5-prepared.jpg') }
 #menu .image-arena { background-image: linear-gradient(0deg,#151b22 2%,#1a2934d4 50%,#13212f33),url('../assets/fps/maps/compact-arena.jpg') }
+#menu .map-art { background-image: linear-gradient(0deg,#111922 2%,#142637d4 50%,#13212f33),var(--cs-map-art) }
+#menu #solo-map-notice { color:#ffce7e; line-height:1.45 }
 #menu :is(a,button).route-card:not(:disabled):hover, #menu .map-tile:hover { border-color: #e8ba65 }
 #menu .route-details { max-width: 580px; padding: 22px; background: #101921ed }
 #menu .route-details h2 { margin: 8px 0; font: 700 32px var(--lb-display) }
@@ -55,6 +59,9 @@ html.touch-fps #menu .lb-foot { display: flex }
 #menu[data-screen=options] .lb-drawer[open] { position: relative !important; grid-column: 1/-1; grid-row: 2; inset: auto; width: min(100%,750px); max-width: 100%; height: 100%; min-height: 0; transform: none; display: block; margin-inline: auto; padding: 18px 22px; overflow: auto; box-sizing: border-box; background: #101821f5 }
 #menu[data-screen=options] .lb-drawer summary { min-height: 44px }
 #menu[data-screen=solo] .lb-left, #menu[data-screen=network] .lb-left, #menu[data-screen=solo] .lb-right { min-height: 0; overflow-y: auto }
+#menu[data-screen=solo] .lb-launch { position: sticky; bottom: 0; z-index: 3; padding-block: 5px; background: linear-gradient(0deg,#0b121bf5 58%,transparent) }
+#menu[data-screen=solo] .lb-left { scroll-padding-bottom: 75px }
+#menu .lb-seg button:disabled { cursor: default; opacity: .45; text-decoration: line-through }
 #menu .lb-block .lb-label b:only-child { background: none; padding: 0; color: inherit; font: inherit }
 
 @media (orientation: landscape) and (max-height: 520px) {
