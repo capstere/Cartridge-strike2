@@ -1,0 +1,162 @@
+{
+  "run": "pulse7-observer",
+  "gesture": [
+    {
+      "type": "pointerdown",
+      "ms": 0.0,
+      "trusted": true,
+      "target": "interact"
+    },
+    {
+      "type": "pointerup",
+      "ms": 7577.1,
+      "trusted": true,
+      "target": "interact"
+    }
+  ],
+  "clears": [],
+  "action": [
+    {
+      "time": 23.833,
+      "before": "",
+      "after": "defuse",
+      "input": true,
+      "heldLeaseMs": 180,
+      "inputAgeMs": 1.1,
+      "hp": 100,
+      "ground": true,
+      "moving": 0,
+      "range": 0
+    },
+    {
+      "time": 24.917,
+      "before": "defuse",
+      "after": "",
+      "input": false,
+      "heldLeaseMs": -15,
+      "inputAgeMs": 194.6,
+      "hp": 100,
+      "ground": true,
+      "moving": 0,
+      "range": 0
+    },
+    {
+      "time": 24.95,
+      "before": "",
+      "after": "defuse",
+      "input": true,
+      "heldLeaseMs": 180,
+      "inputAgeMs": 0.2,
+      "hp": 100,
+      "ground": true,
+      "moving": 0,
+      "range": 0
+    },
+    {
+      "time": 25.417,
+      "before": "defuse",
+      "after": "",
+      "input": false,
+      "heldLeaseMs": -3,
+      "inputAgeMs": 183.1,
+      "hp": 100,
+      "ground": true,
+      "moving": 0,
+      "range": 0
+    },
+    {
+      "time": 25.45,
+      "before": "",
+      "after": "defuse",
+      "input": true,
+      "heldLeaseMs": 180,
+      "inputAgeMs": 0.3,
+      "hp": 100,
+      "ground": true,
+      "moving": 0,
+      "range": 0
+    },
+    {
+      "time": 26.267,
+      "before": "defuse",
+      "after": "",
+      "input": false,
+      "heldLeaseMs": -17,
+      "inputAgeMs": 197.3,
+      "hp": 100,
+      "ground": true,
+      "moving": 0,
+      "range": 0
+    },
+    {
+      "time": 26.3,
+      "before": "",
+      "after": "defuse",
+      "input": true,
+      "heldLeaseMs": 180,
+      "inputAgeMs": 0.3,
+      "hp": 100,
+      "ground": true,
+      "moving": 0,
+      "range": 0
+    },
+    {
+      "time": 31.3,
+      "before": "defuse",
+      "after": "",
+      "input": true,
+      "heldLeaseMs": 180,
+      "inputAgeMs": 0.4,
+      "hp": 100,
+      "ground": true,
+      "moving": 0,
+      "range": 0
+    }
+  ],
+  "frames": 308,
+  "framesIntervalMs": {
+    "p50": 17.2,
+    "p95": 37.4,
+    "p99": 187.8,
+    "max": 244.7
+  },
+  "renderCallMs": {
+    "p50": 11.4,
+    "p95": 16.9,
+    "p99": 74.6,
+    "max": 86.6
+  },
+  "heldReceiveIntervalMs": {
+    "p50": 16.3,
+    "p95": 48.27,
+    "p99": 177.75,
+    "max": 228.99
+  },
+  "serverTickIntervalMs": {
+    "p50": 16.36,
+    "p95": 19.78,
+    "p99": 32.07,
+    "max": 34.79
+  },
+  "serverTickCostMs": {
+    "p50": 0.79,
+    "p95": 3.16,
+    "p99": 6.12,
+    "max": 15.77
+  },
+  "serverSlowTicksOver16ms": 0,
+  "invalidInputs": 0,
+  "longTasksMs": [
+    226,
+    127,
+    130,
+    199,
+    102,
+    104,
+    171,
+    125,
+    227,
+    140,
+    57
+  ]
+}

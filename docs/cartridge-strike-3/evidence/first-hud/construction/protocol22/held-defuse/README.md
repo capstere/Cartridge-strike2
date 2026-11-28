@@ -1,0 +1,34 @@
+# Classic held defuse under rendering load
+
+One emulated touch completed a five-second defuse with one authoritative start in the normal Raspberry Pi run and in the sustained 4× CPU challenge. A short 7× CPU challenge reproduced the earlier symptom. During each restart the browser still owned the touch, but sent no fresh input within the 180 ms authority window. Both peers received the same distinct server events. The uninstrumented earlier trial recorded only the carrier’s plant transitions, so the cause of its two guest defuse starts remains unproven. See the [original Classic evidence](../classic-touch/README.md).
+
+## Setup
+
+Runner revision `5391344ce3c5a4a64848040ec6bbd55ddcf24958`, protocol 22, build `57abdeb88d66e26154d5c721208510dce5971edee07394ba30405daa54642d87`. Raspberry Pi 5 Rev 1.1, Chromium 156.0.8078.79, Node 26.13.0. Two separate headless Chromium processes used local EGL on the Pi and a loopback room. Floor 5 Classic, two humans, zero bots, low graphics, desktop 820 × 480 and touch-emulated 844 × 390, both with device scale 0.5. A fresh process ran each complete match. Purchase, hostage rescue, deliberately interrupted then completed plant, and the attacker's death preceded the measurement. The defender remained on the bomb with a real Chromium touch held until the room declared the result. The render loop and the server tick advanced continuously. Physical-phone qualification remains open.
+
+Measurements span the first through the last held input consumed in the defuse. Per-run summaries include p50/p95/p99/max. SDK catch-up can send several frames per server tick. Server cost measures execution inside the fixed tick. Server interval measures elapsed time between starts. Frame interval measures client calls to normal input/prediction. The rendered client, simulated CPU throttling, loopback and Pi server share the host, so the transport timing applies to loopback.
+
+| Run | Starts | Touch down to up | Client frame p95 / max (ms) | Held input dequeue p95 / max (ms) | Server execution p95 / max (ms) | Server interval p95 / max (ms) |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Normal control | 1 | 5.071 s | 34.4 / 56.1 | 34.16 / 53.78 | 3.71 / 10.35 | 18.54 / 33.30 |
+| Sustained 4× emulated CPU | 1 | 5.279 s | 135.4 / 148.7 | 114.54 / 145.12 | 1.92 / 5.13 | 18.10 / 33.05 |
+| 7× pulse, control | 5 | 7.902 s | 43.7 / 311.8 | 49.45 / 298.05 | 3.00 / 11.51 | 19.16 / 34.82 |
+| 7× pulse, layout observer candidate | 4 | 7.577 s | 37.4 / 244.7 | 48.27 / 228.99 | 3.16 / 15.77 | 19.78 / 34.79 |
+
+Zero invalid inputs and zero ticks exceeding 16.67 ms of execution in all four measured windows. One trusted down and one trusted up reached the interaction button in each window, with no intermediate pointer cancellation, loss of capture or control clear. The original exact one-start assertion passed in the first two runs and failed in both 7× runs. Each completed one round result followed by the next buy-phase touch reload. Both 7× runs started CPU sampling and applied the same requested 1.65 s pulse about 0.8 s into the gesture. Protocol response and scheduling delays made the observed acknowledgement windows 1.96 and 1.76 s respectively.
+
+## Causal trace
+
+The 7× control emitted starts with IDs 27, 29, 30, 32 and 34. At all four cancellations the actor was alive, stationary, grounded and at zero range, with no reload. `Game.interact` received a false interaction level on that authoritative tick. The most recently dequeued valid held input was 194.5, 192.7, 183.3 or 194.4 ms old. Across the corresponding gaps the SDK made no send for 215.0, 261.9, 301.9 or 276.0 ms. Each next fresh client send reached a server input dequeue 2.8–13.7 ms later, including scheduling to the next fixed tick. This establishes client input starvation for this reproduction.
+
+The candidate changed only minimap visibility measurement. The original HUD forced layout with `getClientRects()` after periodic DOM writes. A CPU sample attributed about 378 ms to the minimap read over the control profile. The candidate used ResizeObserver to track CSS layout and kept immediate redraw on an explicit map toggle. It removed the sampled read from periodic HUD work. The actual tactical map opened at 448 px wide, closed at 224 px and stayed at 17 draws while hidden skips increased from 229 to 231. Both result screenshots showed the same objective verdict, health, weapon, ammo and touch controls. The candidate still restarted the action three times. The rejected patch used build `3b566ec9213c23ad63fefa255d163c2f73b651cdafb1cc313f9e77ced41c9daa` and is retained only as a comparison.
+
+The server continues to cancel a silent client after 180 ms and to honor explicit release. The portable Classic test now checks silence cancellation, a new start followed by explicit release, and a successful fresh hold. Both peers must see the same three unique starts. The original browser event census remains intact. The focused test passed in 13.71 s using `node --import ./server/register-shared.mjs --test --test-name-pattern='Classic economy, timed objectives' server/test/online-classic.test.mjs`.
+
+## Reproduction and next measurement
+
+Each run contains the server/client event list, a compressed time-aligned trace and a summary. The 7× directories also contain V8 profiles and touch verdict screenshots. The server websocket observer in the 7× control counted only unmodified input type 19. Timed packets also use a header modifier. Use the SDK send timestamps and the validated server dequeues for that control. The candidate observer recorded both message forms.
+
+For the temporary instruments in an isolated copy of the corrected runner, use `gzip -dc diagnostic.patch.gz | git apply -` from the repository root, supplying the actual path to the compressed patch. Set `CHROMIUM_PATH=/usr/bin/chromium`, `FPS_NETWORK_ANGLE=gl-egl`, and `CS3_HANDLING_OUT` to an existing output directory before running `node --import ./server/register-shared.mjs tools/online-classic-browser.mjs`. The stress pair adds `CS3_DEFUSE_CPU_RATE=7 CS3_DEFUSE_CPU_PULSE_MS=1650 CS3_DEFUSE_PROFILE=1`. The candidate also exercises the tactical map after the verdict with `CS3_DEFUSE_MAP_TOGGLE=1`. Check the run log and event census even when the game itself reaches a result.
+
+The remaining release question is how often a real foreground device starves control sampling under ordinary co-player and scene transitions. Collect the same pointer, SDK send, server dequeue and action transitions on an unthrottled repeat and on physical mobile hardware. To distinguish a delayed animation frame from an unresponsive browser event loop, bracket patch callbacks, task opportunities, layout, paint and GPU presentation around every gap over 150 ms. A transport change would require evidence that fresh control state is available in those gaps, plus explicit release, silence, disconnect and life/round checks.

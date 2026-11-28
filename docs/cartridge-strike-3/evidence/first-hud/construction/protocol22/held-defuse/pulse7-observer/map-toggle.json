@@ -1,0 +1,30 @@
+{
+  "closed": {
+    "draws": 8,
+    "skips": 220,
+    "cache": 1,
+    "width": 224,
+    "visible": false
+  },
+  "expanded": {
+    "draws": 10,
+    "skips": 226,
+    "cache": 2,
+    "width": 448,
+    "visible": true
+  },
+  "compact": {
+    "draws": 17,
+    "skips": 229,
+    "cache": 2,
+    "width": 224,
+    "visible": false
+  },
+  "parked": {
+    "draws": 17,
+    "skips": 231,
+    "cache": 2,
+    "width": 224,
+    "visible": false
+  }
+}

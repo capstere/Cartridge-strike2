@@ -61,8 +61,26 @@ test('Classic economy, timed objectives, new lives, reserved seats and rematch',
  await until(()=>own(host).controlEpoch>deadEpoch,'dead player reconnects');
  assert.equal(own(host).alive,false);assert.equal(a.lifeId,deadLife);assert.equal(a.money,500);
  assert.equal(g.phase,'active');assert.equal(g.bomb.status,'planted');
- at(b,g.bomb);send(defender,{interact:true});await until(()=>b.action?.type==='defuse','defuse begins');send(defender,{interact:false});await until(()=>!b.action,'defuse interrupted');
- await hold(defender,()=>host.state.roundReason==='defuse','defuse completed');
+ const starts=[[],[]];
+ for(const [index,peer] of [host,defender].entries()){
+   peer.onMessage('events',batch=>{
+     for(const event of batch){
+       if(event.type==='defuse' && event.round===1 && event.actorId===b.id)starts[index].push(event.eventId);
+     }
+   });
+ }
+ at(b,g.bomb);send(defender,{interact:true});
+ await until(()=>b.action?.type==='defuse','first defuse begins');
+ await until(()=>!b.action,'silent defender loses defuse authority');
+ assert.equal(g.bomb.status,'planted');assert.equal(g.phase,'active');
+ send(defender,{interact:true});await until(()=>b.action?.type==='defuse','fresh input begins a new defuse');
+ send(defender,{interact:false});await until(()=>!b.action,'explicit release interrupts defuse');
+ assert.equal(g.bomb.status,'planted');assert.equal(g.phase,'active');
+ await hold(defender,()=>host.state.roundReason==='defuse','uninterrupted defuse completes');
+ await until(()=>starts.every(received=>received.length>=3),'both peers observe all three starts');
+ assert.deepEqual(starts[0],starts[1]);
+ assert.equal(starts[0].length,3,'each distinct gesture or renewed authorization starts only once');
+ assert.equal(new Set(starts[0]).size,3);
  const prior=a.lifeId;await until(()=>host.state.round===2&&host.state.roundPhase==='buy','next round');
  assert(a.alive&&a.lifeId>prior);assert.equal(own(late).alive,true);assert.equal(g.actors.length,3);
  assert.equal(a.money,1900);assert.equal(a.inventory.he,0);host.send('classic',old);await delay(70);assert.equal(a.money,1900);
