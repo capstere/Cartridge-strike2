@@ -42,3 +42,12 @@ test('dynamic resolution can restore native scale and use a 30 FPS frame-time ta
  res.enabled=false;assert(res.update(14,55,60));assert.equal(res.scale,1);
  assert.equal(res.update(20,55,60),false);
 });
+
+test('controller navigation skips unsupported Solo modes and disabled option groups',async()=>{
+ const {changePadOption}=await import('../src/fps/gamepad-controls.mjs');
+ const make=(disabled=false,group=false)=>({disabled,closest:()=>group?{}:null});
+ const select={options:[make(true),make(),make(false,true),make()],selectedIndex:1};
+ assert(changePadOption(select,1,false));assert.equal(select.selectedIndex,3);
+ assert(!changePadOption(select,1,false));assert(changePadOption(select,1,true));assert.equal(select.selectedIndex,1);
+ select.options[3].disabled=true;assert(!changePadOption(select,1,true));
+});

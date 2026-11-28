@@ -60,16 +60,33 @@ function nextControl(controls,current,dx,dy) {
   return best;
 }
 
+function focusable(el) {
+  if(el.tabIndex<0||el.closest('[hidden],[inert],[aria-hidden="true"]'))return false;
+  const rect=el.getBoundingClientRect(),style=getComputedStyle(el);
+  return rect.width>2 && rect.height>2 && style.visibility==='visible' && Number(style.opacity)>0 && style.pointerEvents!=='none';
+}
+
+export function changePadOption(select,direction,wrap) {
+  const options=Array.from(select.options),allowed=options.filter(option=>!option.disabled&&!option.closest('optgroup[disabled]'));
+  if(!allowed.length)return false;
+  const i=allowed.indexOf(options[select.selectedIndex]);
+  const next=wrap?(i+direction+allowed.length)%allowed.length:Math.max(0,Math.min(allowed.length-1,i+direction));
+  const index=options.indexOf(allowed[next]);
+  if(index===select.selectedIndex)return false;
+  select.selectedIndex=index;
+  return true;
+}
+
 export function navigateGamepad(scope,pad,back) {
   if (!scope || !pad?.pressedEdges) return;
   const edge=i=>Boolean(pad.pressedEdges&(1<<i));
   if(edge(1)||edge(9)){back();return;}
   const dx=Number(edge(15))-Number(edge(14)),dy=Number(edge(13))-Number(edge(12));
   if(!dx&&!dy&&!edge(0))return;
-  const controls=[...scope.querySelectorAll('button:not(:disabled),a[href],select:not(:disabled),input:not(:disabled),summary,textarea')].filter(el=>el.tabIndex>=0&&el.getClientRects().length&&getComputedStyle(el).visibility!=='hidden');
+  const controls=[...scope.querySelectorAll('button:not(:disabled),a[href],select:not(:disabled),input:not(:disabled),summary,textarea')].filter(focusable);
   const cur=document.activeElement;
   if(dx&&controls.includes(cur)&&(cur.tagName==='SELECT'||cur.type==='range')){
-    if(cur.tagName==='SELECT')cur.selectedIndex=Math.max(0,Math.min(cur.options.length-1,cur.selectedIndex+dx));
+    if(cur.tagName==='SELECT'){if(!changePadOption(cur,dx,false))return;}
     else if(dx>0)cur.stepUp();else cur.stepDown();
     for(const name of ['input','change'])cur.dispatchEvent(new Event(name,{bubbles:true}));
     return;
@@ -77,7 +94,7 @@ export function navigateGamepad(scope,pad,back) {
   if(dx||dy){nextControl(controls,cur,dx,dy)?.focus();return;}
   if(!controls.includes(cur)){controls[0]?.focus();return;}
   if(cur.tagName==='SELECT'){
-    cur.selectedIndex=(cur.selectedIndex+1)%cur.options.length;
+    if(!changePadOption(cur,1,true))return;
     for(const name of ['input','change'])cur.dispatchEvent(new Event(name,{bubbles:true}));
   }else cur.click();
 }

@@ -1,3 +1,4 @@
+import {canOfferInstall} from '../../ui/cs-install.mjs';
 import {normalizeTouchProfile,TOUCH_DEFAULTS,touchHelp,touchSettingsMarkup,displaySettingsMarkup,describeGraphics,PresentationPacer,groupControlSettings} from './mobile-profile.mjs';
 import {applyTouchLayout,editTouchLayout} from './mobile-layout.mjs';
 import {countdownHud, ForegroundCountdownClock} from './deployment-countdown.mjs';
@@ -326,7 +327,7 @@ if(networkMode){for(const input of $(target).querySelectorAll('[data-setting]'))
 $(target).insertAdjacentHTML('beforeend',touchSettingsMarkup(settings)+displaySettingsMarkup(settings));
 describeGraphics($(target),renderer,settings);
 groupControlSettings($(target));
-if(window.isSecureContext && 'serviceWorker' in navigator && !(matchMedia('(display-mode: standalone)').matches||navigator.standalone))
+if(canOfferInstall())
  $(target).insertAdjacentHTML('beforeend','<div><button type="button" data-install-game>Install game</button><p class="setting-note" data-install-note role="status"></p></div>');
 $(target).querySelector('[data-layout-edit]').onclick=()=>editTouchLayout(mobile.root,settings,saveSettings,()=>{mobile.applyProfile();mobile.setAutoFire(settings.mobileAutoFire);tactical.syncTrigger();settingsPanel(target);});
 $(target).querySelector('[data-look-reset]').onclick=()=>{
@@ -717,7 +718,14 @@ document.addEventListener('pointerlockchange',()=>{if(mobile.enabled)return;if(d
 function updateMode(){settings.mode=$('game-mode').value;$('loadout-row').hidden=settings.mode!=='endless';$('mode-description').textContent=settings.mode==='endless'?'Respawn in three seconds. Press B for a free loadout. Optional control zones bring teams together. Play as long as you like.':'Plant or defuse the bomb, rescue the hostages, or eliminate the opposing team. First to five rounds wins. One life per round.';saveSettings();}
 // A viewport rotation can cover the game with the portrait prompt without blur.
 // Freeze combat/audio and require an explicit resume after either orientation change.
-matchMedia('(orientation: portrait)').addEventListener('change',()=>{if(!mobile.enabled)return;clearInput();if(!modal)showPause();});
+function interruptOrientation(){
+ if (!mobile.enabled)return;
+ if (game && !modal)showPause();
+ else mobile.clear();
+}
+window.addEventListener('orientationchange',interruptOrientation);
+screen.orientation?.addEventListener?.('change',interruptOrientation);
+matchMedia('(orientation: portrait)').addEventListener('change',interruptOrientation);
 $('game-mode').value=['classic','endless'].includes(settings.mode)?settings.mode:'classic';$('loadout').value=settings.loadout||'smg';$('game-mode').onchange=updateMode;$('loadout').onchange=()=>{settings.loadout=$('loadout').value;saveSettings();};
 $('radio-options').innerHTML=RADIO.map((r,i)=>`<div><kbd>${i+1}</kbd><span>${r.text}<small>${r.label}</small></span></div>`).join('');updateMode();
 

@@ -24,7 +24,7 @@ try{
  const go=async name=>{await p.locator('[data-go="'+name+'"]:visible').first().focus();await tap(0);};
  await go('options');await p.locator('#menu[data-screen=options]').waitFor();await tap(1);await p.locator('#menu[data-screen=main]').waitFor();
  await go('play');await go('solo');await p.locator('#lb-mode-seg [data-value=endless]').click();
- await p.locator('.map-tile').click();await p.locator('#choose-compact-arena').click();
+ await p.locator('.map-tile').click();await p.locator('#choose-meltem').click();
  await p.locator('#start').focus();await tap(0);await p.locator('#hud').waitFor();
  await p.waitForFunction(()=>!__fps.modal&&!__fps.game.warmupRemaining&&__fps.game.phase==='active');
  const state=()=>p.evaluate(()=>{const a=__fps.game.player;return {x:a.x,z:a.z,weight:a.rushWeight,yaw:a.yaw,ammo:__fps.game.item(a).ammo,time:__fps.game.state.time,modal:__fps.modal};});

@@ -105,3 +105,9 @@ html[data-hud=full] #mobile-controls.mobile-auto-fire.manual-trigger-visible .mo
 .control-settings-group output{margin-inline-start:auto;color:#cbd9e8;font-variant-numeric:tabular-nums}
 .control-settings-group select,.control-settings-group input[type=range]{max-width:55%}
 .control-settings-group button{min-height:44px;margin:4px}
+.touch-layout-editor button,.control-settings-group button{
+  color:#eef2f7;background:#233443;border:1px solid #788d9b;border-radius:4px;padding:5px 10px;font:inherit
+}
+.touch-layout-editor footer [data-save]{color:#07111c;background:#83b5ff;border-color:#a7ccff;font-weight:700}
+.touch-layout-editor button:focus-visible,.control-settings-group button:focus-visible{outline:2px solid #e8a33d;outline-offset:2px}
+.touch-layout-editor .touch-layout-surface button{padding:1px 4px}

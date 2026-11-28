@@ -18,10 +18,15 @@ try {
   });
   const p=await ctx.newPage(),errors=[];
   p.on('pageerror',error=>errors.push(error.message));p.setDefaultTimeout(90000);
+  const phase=async label=>{
+    console.log(new Date().toISOString(),label);
+    if(output)await writeFile(join(output,'mobile-progress.json'),JSON.stringify({phase:label,...result},null,2)+'\n');
+  };
   const press=locator=>locator.tap(),go=id=>press(p.locator('[data-go="'+id+'"]:visible').first());
   const set=(name,value)=>p.locator('#menu-settings [data-setting="'+name+'"]').selectOption(value);
   const snap=async name=>{if(output)await p.screenshot({path:join(output,name+'.jpg'),type:'jpeg',quality:80});};
   await p.goto(origin+'/fps/?test=1&realtime=1',{waitUntil:'domcontentloaded'});
+  await phase('Options opened');
   await go('options');
   async function range(key,steps){
     const input=p.locator('#menu-settings [data-setting="'+key+'"]');
@@ -33,6 +38,7 @@ try {
   await range('announcementVolume',0);
   const trackAfter=await p.evaluate(()=>__csFlow.music.track.volume);
   assert(Math.abs(trackBefore-.2)<.001&&Math.abs(trackAfter-.2)<.001);
+  await p.waitForFunction(()=>!!window.__fps?.settings && document.querySelector('#loading').hidden);
   await snap('sound-settings');
   await range('fieldOfView',22);await range('zoomSensitivity',11);
   await p.locator('#menu-settings [data-setting=invertLookY]').check();
@@ -49,16 +55,19 @@ try {
   assert.match(await editor.locator('[role=status]').textContent(),/Unsupported/);
   await editor.locator('textarea').fill(JSON.stringify(profile));await press(editor.locator('[data-import]'));
   await snap('touch-layout');await press(editor.getByRole('button',{name:'Save layout'}));
+  await phase('Reloading saved layout');
   await p.reload();await p.locator('#menu-settings [data-setting=touchMode]').waitFor();
   assert.equal(await p.locator('#menu-settings [data-setting=touchRun]').inputValue(),'button');
   assert.equal(await p.locator('#menu-settings [data-setting=touchStick]').inputValue(),'fixed');
   assert(await p.locator('#menu-settings [data-setting=touchQuickShot]').isChecked());
   result.persisted=profile;
+  await p.waitForFunction(()=>!!window.__fps?.settings);
   result.audio=await p.evaluate(()=>({master:__fps.settings.volume,music:__fps.settings.menuMusicVolume,announcements:__fps.settings.announcementVolume,track:__csFlow.music.track.volume}));
   assert.deepEqual(result.audio,{master:.5,music:.4,announcements:0,track:.2});
   await press(p.locator('#route-back'));await go('play');await go('solo');
   await press(p.locator('#lb-mode-seg [data-value=endless]'));await press(p.locator('.map-tile'));
-  await press(p.locator('#choose-compact-arena'));await p.locator('#loadout').selectOption('sniper');
+  await press(p.locator('#choose-meltem'));await p.locator('#loadout').selectOption('sniper');
+  await phase('Deploying in Meltem');
   await press(p.locator('#start'));await p.locator('#hud').waitFor();await p.locator('#cs-loading').waitFor({state:'hidden'});
   if(await p.locator('#resume').isVisible())await press(p.locator('#resume'));
   await p.waitForFunction(()=>!__fps.modal&&!__fps.game.warmupRemaining&&__fps.game.phase==='active'&&__fps.game.player.weapon==='sniper');
@@ -66,7 +75,7 @@ try {
   const send=async(type)=>cd.send('Input.dispatchTouchEvent',{type,touchPoints:[...points.values()]});
   const down=async(id,pos)=>{points.set(id,{id,...pos});await send('touchStart');};
   const move=async(id,x,y)=>{const pos=points.get(id);pos.x+=x;pos.y+=y;await send('touchMove');};
-  const up=async id=>{points.delete(id);await send('touchEnd');};
+  const up=async id=>{const released=points.get(id);assert(released);points.delete(id);await cd.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[released]});};
   const center=async selector=>{
     const b=await p.locator(selector).boundingBox();assert(b&&b.width>0&&b.height>0,selector);
     return {x:b.x+b.width/2,y:b.y+b.height/2};
@@ -80,6 +89,7 @@ try {
       goldRing:m.stick.classList.contains('rushing'),reticleOpacity:Number(getComputedStyle(document.querySelector('#crosshair')).opacity),
       weaponY:__fps.renderer.weaponModel?.position.y,weaponRoll:__fps.renderer.weaponModel?.rotation.z,buffer:[gl.drawingBufferWidth,gl.drawingBufferHeight]};
   });
+  await phase('Checking fixed stick and Run');
   const start=await observe();const stick=await center('[data-mobile-stick]');
   await down(1,stick);await move(1,0,-65);
   await p.waitForFunction(()=>__fps.mobile.input().forward>.8);
@@ -89,6 +99,7 @@ try {
   await down(2,await center('[data-mobile-action=crouch]'));await p.waitForFunction(()=>__fps.game.player.slideUntil>__fps.game.state.time,{},{timeout:2500});
   result.slide=await observe();await up(2);await up(1);
   await p.waitForFunction(()=>__fps.game.player.rushWeight<.1);
+  await phase('Checking three-pointer scout release');
   const fire=await center('[data-mobile-action=fire]'),look=await center('[data-mobile-look]');
   look.x=844*.55;look.y=390*.35;
   const previous=await observe();
@@ -103,15 +114,30 @@ try {
   await down(3,fire);await p.waitForFunction(()=>!!__fps.tactical.scopeHold);
   points.clear();await send('touchCancel');const cancelled=await observe();
   assert(!cancelled.scopeHeld&&cancelled.ammo===released.ammo);result.cancel=cancelled;
+  await phase('Checking rotation and cancel');
   await down(1,stick);await move(1,0,-30);await p.setViewportSize({width:390,height:844});
   await p.waitForFunction(()=>__fps.modal==='pause');result.rotation=await observe();
   assert(result.rotation.paused&&result.rotation.stick===null&&result.rotation.look===null&&!result.rotation.manualFire);
   await p.setViewportSize({width:932,height:430});await press(p.locator('#resume'));points.clear();
   await p.waitForFunction(()=>!__fps.modal&&__fps.game.player.alive);
-  await press(p.locator('#mobile-more'));await press(p.locator('[data-mobile-action=grenade]'));
-  await p.waitForFunction(()=>__fps.game.player.weapon==='he');
+  await phase('Checking grenade hold and release');
+  result.grenadeSelection=[];
+  for(const weapon of ['smoke','flash','he']){
+    await press(p.locator('#mobile-more'));await press(p.locator('[data-mobile-action=grenade]'));
+    await p.waitForFunction(id=>__fps.game.player.weapon===id,weapon,{timeout:5000});
+    result.grenadeSelection.push(weapon);
+  }
   const throwButton=p.getByRole('button',{name:'Throw selected grenade'});
-  await down(4,await center('[data-mobile-action=fire]'));await p.waitForFunction(()=>!!__fps.game.player.cartridge?.deadline);
+  await p.waitForFunction(()=>{
+    const f=__fps,a=f.game.player;return a.alive&&a.weapon==='he'&&f.tactical.weapon==='he'&&!a.action&&f.game.state.time>a.nextShot;
+  });
+  const throwAt=await center('[data-mobile-action=fire]');
+  const hit=await p.evaluate(({x,y})=>{const el=document.elementFromPoint(x,y);return {action:el?.closest('[data-mobile-action]')?.dataset.mobileAction,tag:el?.tagName,id:el?.id};},throwAt);
+  assert.equal(hit.action,'fire',JSON.stringify({throwAt,hit}));
+  await down(4,throwAt);
+  result.grenadePress=await observe();await phase('HE trigger pressed');
+  assert(result.grenadePress.manualFire,'Physical pointer reaches the held Throw control');
+  await p.waitForFunction(()=>!!__fps.game.player.cartridge?.deadline,null,{timeout:5000});
   result.grenadeHeld=await observe();assert(await throwButton.isVisible());await snap('grenade-held');
   await up(4);await p.waitForFunction(()=>!__fps.game.player.cartridge);
   result.grenadeReleased=await observe();assert(result.grenadeReleased.time>start.time&&result.grenadeReleased.frame>start.frame);
@@ -128,6 +154,7 @@ try {
     return {draws:draws.length,updates:updates.length,p50Ms:percentile(.5),p95Ms:percentile(.95),alive:alive.every(Boolean),fov:engine.camera.fov,powerSaving:__fps.settings.powerSaving,
       gpu:engine.renderer.getContext().getParameter(engine.renderer.getContext().getExtension('WEBGL_debug_renderer_info').UNMASKED_RENDERER_WEBGL)};
   });
+  await phase('Measuring ordinary frame cadence');
   result.ordinary=await profileWindow();
   await press(p.locator('[data-mobile-action=pause]'));
   await p.locator('#pause-settings [data-setting=powerSaving]').check();
@@ -140,6 +167,7 @@ try {
   assert(result.ordinary.draws>=115&&result.powerSaving.draws<result.powerSaving.updates);
   assert.equal(result.powerSaving.fov,82);
   // V4/V6: the same contact enters and leaves the gold Rush ring in ordinary gameplay.
+  await phase('Checking floating-stick threshold');
   const floatingZone=await p.locator('[data-mobile-stick-zone]').boundingBox();
   const neutral={x:floatingZone.x+.37*floatingZone.width,y:floatingZone.y+.60*floatingZone.height};
   await down(1,neutral);await move(1,0,-24);

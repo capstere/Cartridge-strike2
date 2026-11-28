@@ -1226,8 +1226,8 @@
     },
     {
       "path": "fps/sw.js",
-      "bytes": 2202,
-      "sha256": "ecf3158449ad5402dc03a7919ed158cdfba5ba4c4a840163f9e67ace6d5a705f"
+      "bytes": 2589,
+      "sha256": "1dd09df7d25b5ebbd39a34c306377d60acc3cbb9d220dfc24536d034cd2c4689"
     },
     {
       "path": "fps/type.css",
@@ -2522,7 +2522,7 @@
     {
       "path": "shared/multiplayer/build.mjs",
       "bytes": 660,
-      "sha256": "ac865207781d3183420f48d7a959c2eda9d2d2284abb0351e6239b27b3daed1a"
+      "sha256": "bf624959e7ec4f5f988c24657dcaec860fb88804351296c824ccd4c827a1fef2"
     },
     {
       "path": "shared/multiplayer/collision-contract.mjs",
@@ -2542,7 +2542,7 @@
     {
       "path": "shared/multiplayer/map-build.mjs",
       "bytes": 2831,
-      "sha256": "953c6b588fc28adcb0dbe0e9bc99340fd77f8ec27df37c1f689156a4512576f4"
+      "sha256": "66bcc64b32f4052068f9e315cccd958bdd5ea6e812bf25110f311c36ec3a2f08"
     },
     {
       "path": "shared/multiplayer/maps.mjs",
@@ -2611,8 +2611,8 @@
     },
     {
       "path": "src/fps/app.mjs",
-      "bytes": 66749,
-      "sha256": "2006e6cc3b9d6251b45a959c12beed4c8ff0a4b2005b6e94db8820ed41a74e1b"
+      "bytes": 66902,
+      "sha256": "7f8b72ea554a3731f1583cb1d626068279be26f9b79f417a7e7530e96a80a150"
     },
     {
       "path": "src/fps/audio.mjs",
@@ -2846,8 +2846,8 @@
     },
     {
       "path": "src/fps/gamepad-controls.mjs",
-      "bytes": 4152,
-      "sha256": "c7ec52c28bc604c9ebe0b074e9f4fc8c0ce6de99f63b4b6fe6100dfc83f0dc12"
+      "bytes": 4863,
+      "sha256": "9c87f733b4af7ca247202c9ea90d9d76c4c6632a5473c88dd62481f2624909cb"
     },
     {
       "path": "src/fps/glass-visuals.mjs",
@@ -3326,13 +3326,13 @@
     },
     {
       "path": "ui/cs-install.mjs",
-      "bytes": 1744,
-      "sha256": "f764fb3ce10303c52362cadcf7a21ec687b9aba108bb545a8a3cd1130b1f4b9a"
+      "bytes": 1874,
+      "sha256": "6d72183411804c0268b0483c9c18904d05d53bd24aa4894ca66a803138f128d8"
     },
     {
       "path": "ui/cs-mobile.css",
-      "bytes": 8327,
-      "sha256": "2fde9864f48abea1daf92bbc02cfbb70e58021c7caec8ea6d6d3c5ab5939ec21"
+      "bytes": 8808,
+      "sha256": "00dfe9f10ed96c5a9e8ae225d8e22b340028989f3e28def38ff6963cb883610a"
     },
     {
       "path": "ui/cs-mobile.mjs",
@@ -3585,7 +3585,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 81874496,
+  "bytes": 81876358,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

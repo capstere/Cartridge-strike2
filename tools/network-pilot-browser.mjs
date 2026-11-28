@@ -64,6 +64,31 @@ async function open(mobile){
   assert.equal(await page.locator('#network-endpoint').inputValue(),origin);
   const cookies=await context.cookies();
   assert(cookies.some(c=>c.name==='__Host-cs2_pilot'&&c.secure&&c.httpOnly));
+  if (mobile && fixture) {
+    await page.waitForFunction(async () => {
+      const registration=await navigator.serviceWorker.getRegistration();
+      return registration?.active?.state==='activated' && !!navigator.serviceWorker.controller;
+    },undefined,{timeout:30000});
+    const stored=await page.evaluate(async()=>{
+      const paths=[];
+      for(const cacheName of await caches.keys()){
+        const cache=await caches.open(cacheName);
+        for(const entry of await cache.keys())paths.push(new URL(entry.url).pathname);
+      }
+      return paths;
+    });
+    assert.deepEqual(stored,[],'Private pilot responses stay out of the install cache');
+    const offlinePage=await context.newPage();
+    try {
+      await context.setOffline(true);
+      const response=await offlinePage.goto(origin+'/fps/',{waitUntil:'domcontentloaded'});
+      assert.equal(response.status(),503);
+      await offlinePage.getByRole('heading',{name:/offline/i}).waitFor();
+    } finally {
+      await context.setOffline(false);
+      await offlinePage.close();
+    }
+  }
   const renderer=await page.evaluate(()=>{
     if(!isSecureContext||typeof window.__fps!=='undefined')throw Error('Expected normal secure multiplayer launch');
     const gl=document.getElementById('game').getContext('webgl2');

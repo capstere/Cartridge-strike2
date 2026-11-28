@@ -21,7 +21,11 @@ self.addEventListener('install',event=>event.waitUntil((async()=>{
   } catch { /* No public cache is required for installation. */ }
 })()));
 self.addEventListener('activate',event=>event.waitUntil((async()=>{
-  for (const name of await caches.keys()) if (name.startsWith(prefix)&&name!==cacheName)await caches.delete(name);
+  try {
+    for (const name of await caches.keys()) {
+      if (name.startsWith(prefix) && name!==cacheName)await caches.delete(name);
+    }
+  } catch { /* A restricted store can still use the embedded offline page. */ }
   await self.clients.claim();
 })()));
 self.addEventListener('fetch',event=>{
@@ -29,8 +33,13 @@ self.addEventListener('fetch',event=>{
   if (req.method!=='GET' || req.mode!=='navigate')return;
   const url=new URL(req.url);
   if (url.search || url.hash || (url.href!==scope.href && url.href!==new URL('index.html',scope).href))return;
-  event.respondWith(fetch(req).catch(async()=>{
-    const cached=await caches.match(offline,{cacheName});
-    return cached||new Response(fallback,{status:503,headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'}});
+  // Reopening the game must check the network even if a static host lets the
+  // HTTP cache reuse yesterday's HTML. The fallback alone is safe offline.
+  event.respondWith(fetch(req,{cache:'no-store'}).catch(async()=>{
+    try {
+      const cached=await caches.match(offline,{cacheName});
+      if (cached)return cached;
+    } catch { /* Cache Storage may be unavailable in this browser. */ }
+    return new Response(fallback,{status:503,headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'}});
   }));
 });
