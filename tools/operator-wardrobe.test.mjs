@@ -59,10 +59,28 @@ test('the four publicly equipped kits fit either original rig, preserve team pro
         const view=privateCharacterAppearance('remote-6','analysts');
         assert.equal(view.glove.color.getHex(),outfit.glove);
         assert.equal(view.sleeve.color.getHex(),outfit.shirt);
-        let disposed=0;
-        for (const mesh of [near,far]) mesh.geometry.addEventListener('dispose',()=>disposed++);
+        // Force allocation of the real cloned skin's GPU palette and observe
+        // every geometry, material, owned texture and palette on teardown.
+        const owned=new Set([...avatar.ownedGeometry,...avatar.materials.values()]);
+        for (const material of avatar.materials.values()) {
+          if (material.userData.ownedTexture) owned.add(material.userData.ownedTexture);
+        }
+        for (const skeleton of avatar.skeletons) {
+          skeleton.computeBoneTexture();
+          owned.add(skeleton.boneTexture);
+        }
+        const released=new Set();
+        for (const resource of owned) resource.addEventListener('dispose',()=>released.add(resource));
+        const sourceGeometry=avatar.meshes.find(mesh=>mesh.isSkinnedMesh).geometry;
+        let disposedSource=false;
+        const onUnexpectedDispose=()=>{disposedSource=true;};
+        sourceGeometry.addEventListener('dispose',onUnexpectedDispose);
         disposeAvatar(avatar);
-        assert.equal(disposed,2);
+        disposeAvatar(avatar);
+        sourceGeometry.removeEventListener('dispose',onUnexpectedDispose);
+        assert.equal(released.size,owned.size);
+        assert.equal(disposedSource,false);
+        assert.ok(avatar.skeletons.every(skeleton=>skeleton.boneTexture===null));
       }
       setNetworkOutfit('remote-6','invalid-skin');
       assert.equal(characterVisualSignature('analysts','remote-6'),'original');

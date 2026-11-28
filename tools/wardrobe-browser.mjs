@@ -69,7 +69,11 @@ try {
         const avatar = renderer.actorModel(game.player).userData.avatar;
         const ally = game.actors.find(a=>a!==game.player && a.team===game.player.team);
         const view = renderer.weaponModel.userData.characterAppearance;
-        return {outfit:avatar.outfitId,ally:renderer.actorModel(ally).userData.avatar.outfitId,
+        const fabric=avatar.meshes.find(m=>m.material?.name==='jacket-fabric')?.material;
+        const sleeve=view?.profile.sleeve;
+        return {fabricMatches:!!fabric?.map && fabric.map===sleeve?.map,
+          swatch:[fabric?.map?.image?.width,fabric?.map?.image?.height],glove:view?.profile.glove.color.getHex(),
+          hasKit:!!avatar.root.getObjectByName('operator-kit-shotgun-near'),outfit:avatar.outfitId,ally:renderer.actorModel(ally).userData.avatar.outfitId,
           shirt:avatar.meshes.find(m=>m.material?.name==='jacket-fabric')?.material.color.getHex(),
           sleeve:view?.profile.sleeve.color.getHex(),
           handTargets:view?.targets.filter(t=>t.role==='hand').length,locale:document.documentElement.lang};
@@ -77,6 +81,10 @@ try {
       assert.equal(observed.outfit,'shotgun');
       assert.equal(observed.ally,'issued');
       assert.equal(observed.shirt,observed.sleeve);
+      assert.equal(observed.fabricMatches,true);
+      assert.deepEqual(observed.swatch,[64,64]);
+      assert.equal(observed.glove,0x4a463e);
+      assert.equal(observed.hasKit,true);
       assert.ok(observed.handTargets>0);
       assert.equal(observed.locale,'en');
       assert.deepEqual(errors,[]);
