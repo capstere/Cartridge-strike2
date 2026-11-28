@@ -11,7 +11,7 @@ const cookie=(req,name)=>(req.headers.cookie||'').split(/;\s*/).find(s=>s.starts
 const setCookie=(res,name,token)=>res.appendHeader('Set-Cookie',name+'='+(token||'')+'; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age='+(token?2592000:0));
 const actions={
   register:['username','displayName','password'],login:['username','password'],recover:['username','recoveryCode','newPassword'],
-  password:['password','newPassword'],'recovery-code':['password'],profile:['displayName'],logout:[],delete:['password'],
+  password:['password','newPassword'],'recovery-code':['password'],profile:['displayName'],arsenal:['profile'],logout:[],delete:['password'],
   invites:['room'],exchange:['code'],forget:['room'],revoke:['room'],
 };
 const assets=new Map([
@@ -181,7 +181,8 @@ export function accountAccess(config,active){
     else if(action==='logout'){store.logout(ctx.token,ctx.origin);result={token:null};}
     else{
       if(!user)fail(401,'Sign in to change your account.');
-      if(action==='profile')store.rename(user,input.displayName);
+      if(action==='arsenal')store.saveArsenal(user.id,input.profile);
+      else if(action==='profile')store.rename(user,input.displayName);
       else result=await store.change(action,user,input,ctx.origin,ctx.token);
     }
     directory?.reconcile();

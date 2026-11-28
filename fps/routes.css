@@ -89,7 +89,9 @@ html.touch-fps #menu .lb-foot { display: flex }
   #menu .route-card { min-height: 104px }
   #menu .lb-tools { gap: 2px }
   #menu .lb-icon, #menu .cs-quick, #menu #menu-fullscreen { padding-inline: 7px; font-size: 13px }
-  #menu[data-screen=solo], #menu[data-screen=network] { grid-template-rows: auto auto auto auto }
+  #menu.lobby:not([hidden]):is([data-screen=solo],[data-screen=network]) {
+    grid-template-rows: repeat(4,max-content); align-content:start
+  }
   #menu[data-screen=solo] .lb-left, #menu[data-screen=network] .lb-left { grid-row: 2; grid-column: 1; overflow: visible }
   #menu[data-screen=solo] .lb-right, #menu[data-screen=network] .lb-right { grid-row: 3; grid-column: 1; overflow: visible }
   #menu[data-screen=solo] .lb-foot, #menu[data-screen=network] .lb-foot { grid-row: 4 }
@@ -123,3 +125,35 @@ html #mobile-controls .mobile-stick.active.rushing::after { border-style: solid;
 #menu [data-outfit-challenges] summary { cursor:pointer; min-height:32px }
 #menu [data-outfit-challenges] ul { margin:4px 0; padding-left:18px }
 #menu [data-outfit-challenges] ul li { list-style:disc; border:0; padding:3px 0 }
+
+#menu[data-screen=classes] [data-panel=classes] { display:flex;flex-direction:column;height:100%;min-height:0;box-sizing:border-box }
+#menu [data-panel=classes] h1 { margin-bottom:4px }
+#menu .arsenal-progress { margin:0 0 12px;color:#c4ced5 }
+#menu .arsenal-workshop { display:grid;grid-template-columns:minmax(155px,1fr) minmax(250px,2.2fr);gap:clamp(10px,2vw,30px);min-height:0;max-width:1120px;flex:1;color:#f4f1e6 }
+#menu .arsenal-slots,#menu .arsenal-detail { overflow:auto;overscroll-behavior:contain;min-width:0;padding:6px;pointer-events:auto }
+#menu .arsenal-detail { background:#0e1924ea;padding:clamp(10px,2vw,23px) }
+#menu .arsenal-slots h2,#menu .arsenal-detail h3 { color:#e6ba66;font:700 16px var(--lb-display);text-transform:uppercase;letter-spacing:.08em;margin:8px 0 }
+#menu .arsenal-slots button,#menu .arsenal-rack button,#menu .arsenal-actions button,#menu .arsenal-rotate button { min-height:44px;color:#f4f4ed;background:#101d28;border:1px solid #70818b;text-align:left;padding:6px 10px }
+#menu .arsenal-slots button { width:100%;display:grid;gap:2px;margin-bottom:4px }
+#menu .arsenal-slots button[aria-pressed=true],#menu .arsenal-rack button[aria-pressed=true] { border:2px solid #e5b655;background:#302b20 }
+#menu .arsenal-slots small { color:#d3dbe0 }
+#menu .arsenal-detail h2 { font:700 clamp(22px,3vw,38px) var(--lb-display);margin:0 }
+#menu .arsenal-detail p { margin:6px 0 10px }
+#menu .arsenal-rack { display:grid;grid-template-columns:3fr 2fr;gap:6px }
+#menu .arsenal-rack button { position:relative;padding:0 7px 7px;min-width:0 }
+#menu .arsenal-rack canvas { display:block;width:100%;height:auto;aspect-ratio:2.6;touch-action:pan-y }
+#menu .arsenal-rotate { display:flex;gap:5px;margin:5px 0 }
+#menu .arsenal-rotate button { text-align:center;width:44px;font-size:20px }
+#menu [data-class-stats] dl { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:8px 0 }
+#menu [data-class-stats] dl div { padding:5px 0;border-top:1px solid #6a7a83 }
+#menu [data-class-stats] dt { font-size:13px;color:#c6d4da } #menu [data-class-stats] dd { margin:2px 0;font-weight:700 }
+#menu [data-class-editor] fieldset { margin:8px 0;border:1px solid #687b85;padding:8px;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px }
+#menu [data-class-editor] label { display:grid;gap:3px }
+#menu [data-class-editor] input,#menu [data-class-editor] select { width:100%;box-sizing:border-box;min-height:44px;color:#f4f4ed;background:#172735;border:1px solid #778a97;padding:4px }
+#menu .arsenal-actions { display:flex;align-items:center;gap:8px;flex-wrap:wrap }
+#menu .arsenal-actions [data-class-equip] { background:#e8bc64;color:#111921;font-weight:bold }
+@media(max-width:600px) and (orientation:portrait) {
+  #menu .arsenal-workshop { display:block;overflow:auto }
+  #menu .arsenal-slots { max-height:170px;margin-bottom:8px }
+  #menu .arsenal-detail { overflow:visible }
+}

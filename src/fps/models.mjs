@@ -1,4 +1,11 @@
 import {WEAPONS} from './config.mjs';
+import {syncWeaponFittings,releaseWeaponFittings} from './weapon-fittings.mjs';
+export {syncWeaponFittings,releaseWeaponFittings};
+export function syncActorWeaponFittings(model,actor){
+  const item=actor?.inventory?.[WEAPONS[actor.weapon]?.slot];
+  syncWeaponFittings(model,item);
+}
+
 import {kitWeapon} from './strike-kit-timing.mjs';
 import {makeKitWeapon,animateKitWeapon,disposeKitModels} from './strike-kit-models.mjs?v=6.1.2';
 import {upgradeViewSurfaces,disposeViewSurfaces} from './view-surface.mjs';
@@ -25,7 +32,7 @@ const sightLines = {
   sniper: [.165,-.425,.165,-.055]
 };
 function alignSights(model,amount,pitchKick) {
-  const line=sightLines[model.userData.id];
+  const line=model.userData.opticSight || sightLines[model.userData.id];
   if(!line || amount<=0)return;
   const [frontY,frontZ,rearY,rearZ]=line;
   const pitch=Math.atan((rearY-frontY)/(rearZ-frontZ));
@@ -39,6 +46,7 @@ export function makeWeapon(id='p9',options={}) {
   const hero=options.viewmodel!==false&&kitWeapon(id);
   const model=hero?makeKitWeapon(id):primitiveWeapon(id,options);
   if(options.viewmodel!==false){if(!hero)upgradeViewSurfaces(model);model.userData.presentationMotion=createViewMotion();}
+  syncWeaponFittings(model,{...options,id});
   return model;
 }
 export function animateWeapon(model,actor,time,dt,options={}) {
@@ -115,7 +123,11 @@ export function makeActor(team,id,isHostage=false) {
   return model;
 }
 export function animateActor(model,actor,time,dt,options={}) {
+  const oldWeapon=model.userData.weaponModel;
   primitiveActorAnimation(model,actor,time,dt,options);
+  const weapon=model.userData.weaponModel;
+  if (oldWeapon && oldWeapon!==weapon) releaseWeaponFittings(oldWeapon);
+  if (weapon) syncActorWeaponFittings(weapon,actor);
   if(model.userData.avatar){
     if(model.userData.avatar.death){model.userData.avatar.death=null;model.userData.avatar.time=-1;model.userData.avatar.activeBase=null;model.userData.avatar.activeUpper=null;}
     syncAuthoredActor(model,actor,time,options);return;

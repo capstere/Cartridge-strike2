@@ -1,4 +1,5 @@
 import {BONUSES,activeBonus,bonusTick,bonusOrigin,eligibleBonusKill,earnBonusKill,ordinaryCombatDamage,createBonusState,clearActorBonus,stepActorBonuses,requestActorBonus,visibleUav} from './bonuses.mjs';
+import {applyClassPurchase,equippedDefinition,quoteClass} from './arsenal.mjs';
 import {purchaseReasons} from './game-english.mjs';
 import {resetRush,interruptRush,rushReady,queueShot,takeReadyShot} from './rush.mjs';
 import {moveActor,moveBody} from './movement.mjs';
@@ -108,7 +109,7 @@ export class Game {
       const controllerType = this.controllers ? this.controllers.get(id) ?? 'unoccupied' : isPlayer && !this.autoplay ? 'human' : 'bot';
       if (this.config.networkSlice && controllerType !== 'human') continue;
       this.actors.push({ id: `${side}-${i}`, name: isPlayer ? 'You' : `${side === 'analysts' ? 'A' : 'C'}-${String(i + 1).padStart(2, '0')}`, team: side, index: i, isPlayer, controllerType,
-        bonus:createBonusState(), money: this.config.startMoney, kills: 0, deaths: 0, alive: false, x: 0, y: 0, z: 0, radius: this.config.radius, height: this.config.standingHeight });
+        arsenalClass:isPlayer&&!this.config.networkSlice?this.config.arsenalClass:null, bonus:createBonusState(), money: this.config.startMoney, kills: 0, deaths: 0, alive: false, x: 0, y: 0, z: 0, radius: this.config.radius, height: this.config.standingHeight });
     }
     this.warmupRemaining=0;
     this.beginRound();
@@ -165,7 +166,7 @@ export class Game {
     return { primary: null, pistol: this.weaponItem(id), knife: { id: 'knife', ammo: Infinity, reserve: 0 }, smoke: 0, flash: 0, he: 0 };
   }
   weaponItem(id) { const w = WEAPONS[id]; return { id, ammo: w.magazine, reserve: w.reserve }; }
-  item(actor = this.player) { const w = WEAPONS[actor.weapon]; return actor.inventory[w?.slot] ?? null; }
+  item(actor = this.player) { const w = equippedDefinition(actor); return actor.inventory[w?.slot] ?? null; }
   pause(value = true) { this.state.paused = Boolean(value); this.accumulator = 0; this.firePress = null; this.crouchEdge=false; for (const a of this.actors) { a.bonusRequest=null;this.interruptCartridge(a);interruptRush(a,this.state.time);a.waitTriggerRelease=false; a.fireHeld = false; a.interactHeld = false; a.jumpHeld = false; a.action = null; } }
   advanceWarmup(dt,input) {
     if(!this.warmupRemaining)return false;
@@ -232,7 +233,7 @@ export class Game {
       this.moveActor(actor, controls, dt);
       if(this.config.networkSlice && !actor.bot){
         actor.aiming=!!controls.aim && rushReady(actor) && canAim(actor.weapon) && !actor.reloadUntil && !actor.action;
-        actor.aimAmount=actor.aiming?advanceAim(actor.aimAmount||0,true,dt):0;
+        actor.aimAmount=actor.aiming?advanceAim(actor.aimAmount||0,true,dt/(equippedDefinition(actor)?.adsTime||1)):0;
       }
       const shot=takeReadyShot(actor,s.time);
       if(!actor.bot && WEAPONS[actor.weapon]?.slot==='grenade'){
@@ -272,20 +273,23 @@ export class Game {
   inBuyZone(actor = this.player) { return this.world.anchors[actor.team].some(p => distance(actor, p) <= this.config.buyRadius); }
   buy(id, actor = this.player) {
     const reject = reasonId => ({ ok: false, reasonId, reason: purchaseReasons[reasonId] });
-    if (this.config.networkSlice && (this.config.mode!=='classic' || !['smg','ar47','cr4','shotgun','sniper','bazooka','armor','he'].includes(id))) return reject('unavailableInMode');
+    if (this.config.networkSlice && (this.config.mode!=='classic' || !['smg','ar47','cr4','shotgun','sniper','bazooka','armor','he','class'].includes(id))) return reject('unavailableInMode');
     if(this.warmupRemaining)return reject('buyTime');
-    const w = WEAPONS[id];
-    if (!w || !w.cost) return reject('unavailable');
+    const quote=id==='class'&&actor?.arsenalClass?quoteClass(actor):null;
+    const w=quote?{slot:'class',cost:quote.cost}:WEAPONS[id];
+    if (!w || (!quote && !w.cost)) return reject('unavailable');
     if(this.config.networkSlice&&!actor?.alive)return reject('nextRound');
     if (!actor?.alive || (this.phase !== 'buy' && !(isEndless(this)&&this.phase==='active'))) return reject('buyTime');
     if (!isEndless(this)&&!this.inBuyZone(actor)) return reject('buyZone');
+    if(quote&&!quote.items.length)return reject('alreadyOwned');
     if (w.team && w.team !== actor.team) return reject('wrongTeam');
     if (!isEndless(this)&&actor.money < w.cost) return reject('credits');
     if (w.slot === 'grenade' && actor.inventory[id] >= w.limit) return reject('grenadeFull');
     if (w.slot === 'armor' && actor.armor >= 100) return reject('armorFull');
     if (w.slot === 'primary' && actor.inventory.primary?.id === id) return reject('alreadyOwned');
     if(!isEndless(this))actor.money -= w.cost;
-    if (w.slot === 'grenade') actor.inventory[id]++;
+    if (quote)applyClassPurchase(this,actor,quote);
+    else if (w.slot === 'grenade') actor.inventory[id]++;
     else if (w.slot === 'armor') actor.armor = 100;
     else { if (actor.inventory.primary) this.dropItem(actor, actor.inventory.primary); actor.inventory.primary = this.weaponItem(id); actor.loadout=id; this.select(id, actor); }
     this.emit('buy', actor, { item: id }); return { ok: true };
@@ -318,7 +322,7 @@ export class Game {
   reload(actor = this.player) {
     if(this.warmupRemaining)return false;
     if (!actor?.alive || actor.reloadUntil || !['buy', 'active'].includes(this.phase)) return false;
-    const item = this.item(actor), w = WEAPONS[actor.weapon];
+    const item = this.item(actor), w = equippedDefinition(actor);
     if (!item || !w.reload || item.ammo >= w.magazine || !item.reserve) return false;
     actor.pendingShot=null;actor.slideBuffer=0;
     const duration=w.reload*(activeBonus(actor,bonusTick(this.state.time))==='rage'?BONUSES[1].reloadScale:1);
@@ -332,21 +336,21 @@ export class Game {
     if (!actor.reloadUntil || this.state.time + EPS < actor.reloadUntil) return;
     const item = this.item(actor);
     if (item && typeof item === 'object') {
-      const amount = Math.min(WEAPONS[actor.weapon].magazine - item.ammo, item.reserve);
+      const amount = Math.min(equippedDefinition(actor).magazine - item.ammo, item.reserve);
       item.ammo += amount;
       item.reserve -= amount;
     }
     actor.reloadUntil=actor.reloadStartedAt=actor.reloadDuration=0;
   }
-  dropItem(actor, item) { if(this.config.networkSlice)return; this.state.drops.push({ ...point(actor), id: `drop-${++this.eventSerial}`, type: 'weapon', createdAt:this.state.time, item: { ...item } }); }
+  dropItem(actor, item) { this.state.drops.push({ ...point(actor), id: `drop-${++this.eventSerial}`, type: 'weapon', createdAt:this.state.time, item: { ...item } }); }
   drop(actor = this.player) {
     if(this.warmupRemaining)return false;
-    if(this.config.networkSlice && (this.config.mode!=='classic'||this.bomb.carrierId!==actor?.id))return false;
+    if(this.config.networkSlice && this.bomb.carrierId!==actor?.id && WEAPONS[actor?.weapon]?.slot!=='primary')return false;
     if (!actor?.alive || !['buy', 'active'].includes(this.phase)) return false;
-    if ((actor.weapon === 'bomb'||this.config.networkSlice) && this.bomb.carrierId === actor.id) {
+    if ((actor.weapon === 'bomb'||(this.config.networkSlice&&!isEndless(this))) && this.bomb.carrierId === actor.id) {
       Object.assign(this.bomb, { status: 'dropped', carrierId: null, ...point(actor) }); this.select(actor.inventory.primary?.id ?? actor.inventory.pistol?.id ?? 'knife', actor); actor.action = null; this.emit('drop', actor, { item: 'bomb' }); return true;
     }
-    const w = WEAPONS[actor.weapon];
+    const w = equippedDefinition(actor);
     if (w.slot !== 'primary' && w.slot !== 'pistol') return false;
     this.dropItem(actor, this.item(actor)); actor.inventory[w.slot] = null;
     this.select(actor.inventory.pistol ? 'pistol' : 'knife', actor); return true;
@@ -359,7 +363,7 @@ export class Game {
   reticleTarget(actor = this.player, yaw = actor?.yaw, pitch = actor?.pitch) {
     if (!actor?.alive || this.phase !== 'active' || this.state.paused ||
         actor.action || actor.reloadUntil || actor.flash >= .8) return null;
-    const w = WEAPONS[actor.weapon], item = this.item(actor);
+    const w = equippedDefinition(actor), item = this.item(actor);
     if (!w || !['primary', 'pistol', 'knife'].includes(w.slot) ||
         w.projectile || (w.slot !== 'knife' && (!item || item.ammo <= 0))) return null;
     if (!Number.isFinite(yaw) || !Number.isFinite(pitch)) return null;
@@ -390,7 +394,7 @@ export class Game {
 
   fire(actor = this.player, pressed = true, shot = actor) {
     if(this.warmupRemaining)return false;
-    const w = WEAPONS[actor.weapon];
+    const w = equippedDefinition(actor);
     if (this.phase !== 'active' || !actor.alive || !rushReady(actor) || actor.reloadUntil || this.state.time + EPS < actor.nextShot || actor.action) return false;
     if (!w || w.slot === 'bomb' || (!w.automatic && !pressed && !actor.bot)) return false;
     actor.nextShot = this.state.time + w.interval;
@@ -399,14 +403,14 @@ export class Game {
     if (w.slot !== 'knife' && (!item || item.ammo <= 0)) { this.emit('empty', actor); return false; }
     if (w.slot !== 'knife') item.ammo--;
     const origin = eye(actor), spread = shotSpread(actor, w);
-    actor.recoil += w.recoil;
-    this.emit('shot', actor, { weapon: actor.weapon, yaw: shot.yaw, pitch: shot.pitch, targetId: actor.bot?.target?.entity?.id,
+    actor.recoil += w.recoil*(w.bipod&&actor.crouching&&actor.moving<.1 ? .35 : 1);
+    this.emit('shot', actor, { weapon: actor.weapon, ...(w.silent?{suppressed:true}:{}), yaw: shot.yaw, pitch: shot.pitch, targetId: actor.bot?.target?.entity?.id,
       detectedAt: actor.bot?.target?.detectedAt, reactionAt: actor.bot?.target?.reactionAt });
     actor.spawnProtectedUntil=0;
     if (actor.bot) actor.bot.onShot();
     if(w.projectile){launchRocket(this,actor,direction(shot.yaw,shot.pitch));return true;}
     for (let i = 0; i < w.pellets; i++) {
-      const dir = direction(shot.yaw + (this.random() - .5) * spread, shot.pitch + (this.random() - .5) * spread);
+      const dir = direction(shot.yaw + (this.random() - .5) * spread * (w.horizontalRecoil||1), shot.pitch + (this.random() - .5) * spread);
       // The room may supply read-only historical hitboxes/collision context.
       // Weapon cadence, RNG, ammunition and deferred damage stay in this Game.
       const {wall,point:hitPoint,victim,head} = this.hitscanQuery
@@ -419,7 +423,7 @@ export class Game {
         this.emit('impact', null, { ...hitPoint, sourceId: actor.id, surface: wall.material ?? 'wall', surfaceId: wall.id, normal: wall.normal, direction: dir });
         const shattered=this.world.glass?.breakAt(wall);if(shattered){this.onGlassBreak?.(shattered.paneId);this.emit('glass-break',null,{...shattered,sourceId:actor.id});}
       }
-      this.emit('tracer', actor, { from: origin, to: hitPoint, weapon: actor.weapon });
+      if(!w.silent)this.emit('tracer', actor, { from: origin, to: hitPoint, weapon: actor.weapon });
     }
     return true;
   }
@@ -571,9 +575,9 @@ export class Game {
   }
   interaction(actor = this.player, targetId = null) {
     if (!actor?.alive || this.phase !== 'active') return null;
-    if(isEndless(this))return null;
     const b = this.bomb, range = this.config.interactDistance;
     const reaches = target => distance(actor, target) < range && this.world.segmentClear(eye(actor), { ...point(target), y: (target.y ?? 0) + .4 }, { vision: false });
+    if(isEndless(this))return this.pickupNear(actor);
     if (actor.team === 'analysts' && b.status === 'planted' && reaches(b)) return { type: 'defuse', target: b, duration: this.config.defuseTime };
     if (actor.team === 'counterAnalysts') {
       if (b.carrierId === actor.id && distance(actor, this.world.anchors.bomb) <= this.world.anchors.bomb.radius && actor.onGround && (!this.config.networkSlice || this.world.segmentClear(eye(actor),{...point(this.world.anchors.bomb),y:.4},{vision:false}))) return { type: 'plant', target: b, duration: this.config.plantTime };
@@ -582,21 +586,29 @@ export class Game {
         .sort((a, c) => distance(actor, a) - distance(actor, c)).find(reaches);
       if (hostage) return { type: 'escort', target: hostage };
     }
-    const drop = this.state.drops.find(reaches);
+    return this.pickupNear(actor);
+  }
+  pickupNear(actor){
+    const drop=this.state.drops.find(item=>
+      Math.hypot(item.x-actor.x,(item.y??0)-actor.y,item.z-actor.z)<this.config.interactDistance &&
+      this.world.segmentClear(eye(actor),{x:item.x,y:(item.y??0)+.4,z:item.z},{vision:false}));
     return drop ? { type: 'pickupWeapon', target: drop } : null;
   }
   prompt(actor = this.player) {
-    if(this.config.networkSlice && this.config.mode!=='classic')return '';
+    if(this.config.networkSlice && this.config.mode!=='classic'&&!this.state.drops.length)return '';
     if (!actor?.alive) return 'Eliminated · spectate a surviving teammate';
     if (this.phase === 'buy') return 'B · Buy equipment';
     const action = this.interaction(actor);
     if (!action) return '';
-    return { plant: 'Hold E · Plant in '+missionRoomName(this.world), defuse: 'Hold E · Defuse', pickupBomb: 'E · Pick up bomb', escort: action.target.escortId ? 'E · Stop escort' : 'E · Start escort', pickupWeapon: `E · Pick up ${WEAPONS[action.target.item?.id]?.name ?? 'weapon'}` }[action.type];
+    if(action.type==='pickupWeapon'){
+      const item=action.target.item;return `E · Pick up ${WEAPONS[item.id].name} · ${item.ammo}/${item.reserve}`;
+    }
+    return { plant: 'Hold E · Plant in '+missionRoomName(this.world), defuse: 'Hold E · Defuse', pickupBomb: 'E · Pick up bomb', escort: action.target.escortId ? 'E · Stop escort' : 'E · Start escort' }[action.type];
   }
   interact(actor, input) {
-    if(this.config.networkSlice && this.config.mode!=='classic')return;
+    if(isEndless(this)&&!this.state.drops.length)return;
     const interaction = input.interact && (!this.config.networkSlice||!actor.reloadUntil) ? this.interaction(actor, input.interactTarget) : null;
-    if (!interaction) { actor.action = null;if(input.interact){const door=this.world.doors?.nearest(actor);if(door)this.world.doors.request(door,this.state.time,actor);} return; }
+    if (!interaction) { actor.action = null;if(input.interact&&(!this.config.networkSlice||!isEndless(this))){const door=this.world.doors?.nearest(actor);if(door)this.world.doors.request(door,this.state.time,actor);} return; }
     if (interaction.duration) {
       if (actor.moving > .15 || !actor.onGround) { actor.action = null; return; }
       if (!actor.action || actor.action.type !== interaction.type) {

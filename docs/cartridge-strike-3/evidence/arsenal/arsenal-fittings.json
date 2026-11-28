@@ -1,0 +1,101 @@
+{
+  "driver": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+  "cells": [
+    {
+      "label": "Original",
+      "painted": 7440,
+      "changed": 0
+    },
+    {
+      "label": "Desert",
+      "painted": 7440,
+      "changed": 5782
+    },
+    {
+      "label": "Woodland",
+      "painted": 7440,
+      "changed": 5780
+    },
+    {
+      "label": "Urban",
+      "painted": 7440,
+      "changed": 5799
+    },
+    {
+      "label": "Snow",
+      "painted": 7440,
+      "changed": 5801
+    },
+    {
+      "label": "Tiger",
+      "painted": 7440,
+      "changed": 5758
+    },
+    {
+      "label": "Cobalt",
+      "painted": 7440,
+      "changed": 5764
+    },
+    {
+      "label": "Ember",
+      "painted": 7440,
+      "changed": 5738
+    },
+    {
+      "label": "Gold",
+      "painted": 7440,
+      "changed": 5759
+    },
+    {
+      "label": "Diamond",
+      "painted": 7430,
+      "changed": 5801
+    },
+    {
+      "label": "Holographic",
+      "painted": 7440,
+      "changed": 5801
+    },
+    {
+      "label": "Red dot",
+      "painted": 7532,
+      "changed": 3851
+    },
+    {
+      "label": "Holographic sight",
+      "painted": 7463,
+      "changed": 4862
+    },
+    {
+      "label": "Combat optic",
+      "painted": 7541,
+      "changed": 5542
+    },
+    {
+      "label": "Suppressor / grip",
+      "painted": 6117,
+      "changed": 5789
+    },
+    {
+      "label": "Short / stock removal",
+      "painted": 6803,
+      "changed": 7574
+    },
+    {
+      "label": "Extended magazine",
+      "painted": 6738,
+      "changed": 5621
+    }
+  ],
+  "distinct": 17,
+  "memory": [
+    {
+      "geometries": 415,
+      "textures": 127
+    },
+    {
+      "geometries": 415,
+      "textures": 127
+    }
+  ]
+}

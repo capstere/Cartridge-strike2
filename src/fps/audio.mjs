@@ -351,6 +351,7 @@ export class AudioSystem {
         break;
       }
       case 'shot': {
+        if(event.suppressed){this.noise(sound,.075,.12,1150);this.tone(sound,112,.08,.10,'triangle',44);break;}
         const name = String(event.weapon || 'pistol').toLowerCase();
         if (name.includes('knife')) { this.noise(sound, .12, .2, 2800); break; }
         const sniper = /sniper|scope|long|precision/.test(name), shotgun = /shot|pump/.test(name);

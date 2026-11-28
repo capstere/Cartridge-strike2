@@ -26,18 +26,18 @@ test('versioned migration, live WAL backup, isolated restore and authoritative r
   assert.equal(before.stats.matches,2);assert.equal(before.stats.kills,6);assert.equal(before.stats.xp,110);
   db.close();
   const v1=new DatabaseSync(source);
-  v1.exec('DROP TABLE public_grants; DROP TABLE public_blocks; DROP TABLE public_reports; DROP TABLE credential_attempts; DROP INDEX grants_invite; PRAGMA user_version=1');v1.close();
+  v1.exec('DROP TABLE arsenals; DROP TABLE weapon_progress; DROP TABLE public_grants; DROP TABLE public_blocks; DROP TABLE public_reports; DROP TABLE credential_attempts; DROP INDEX grants_invite; PRAGMA user_version=1');v1.close();
   const oldCopy=join(dir,'v1.sqlite');
   assert.deepEqual(await copyAccountDatabase('backup',source,oldCopy),{version:1});
   db=new AccountStore(source);
-  assert.equal(db.db.prepare('PRAGMA user_version').get().user_version,3);
+  assert.equal(db.db.prepare('PRAGMA user_version').get().user_version,4);
   assert.deepEqual(db.profile(db.userFor(account.token,origin)),before);
   await Promise.all([copyAccountDatabase('backup',source,backup),Promise.resolve().then(()=>db.recordMatch(first,'tdm','floor-5',[result]))]);
   assert.equal((await stat(backup)).mode&0o777,0o600);
   const content=await readFile(backup);
   for(const proof of [profile.password,account.token,account.recoveryCode,invite.shortCode,invite.token,device.token])assert(!content.includes(proof));
   await assert.rejects(copyAccountDatabase('restore',backup,source),/new isolated/);
-  assert.deepEqual(await copyAccountDatabase('restore',backup,restore),{version:3});
+  assert.deepEqual(await copyAccountDatabase('restore',backup,restore),{version:4});
   const recovered=new AccountStore(restore);
   recovered.recordMatch(second,'classic','floor-5',[result]);
   assert.deepEqual(recovered.profile(recovered.userFor(account.token,origin)),before);
@@ -85,4 +85,28 @@ test('strict expiry, origin, rotation, revocation, credential attempt and hashin
   now+=30*86400000;assert.equal(db.userFor(rotated.token,origin),undefined);assert.equal(db.deviceFor(device.token,origin),undefined);
   db.clean();assert.equal(db.db.prepare('SELECT count(*) AS n FROM sessions').get().n,0);
   db.close();
+});
+
+test('server-owned XP unlocks private class slots and fittings across restart and isolated restore',async t=>{
+  const {defaultArsenal}=await import('../../src/fps/arsenal.mjs');
+  const dir=await mkdtemp(join(tmpdir(),'cs3-arsenal-store-'));t.after(()=>rm(dir,{recursive:true,force:true}));
+  const file=join(dir,'accounts.sqlite'),clone=join(dir,'restore.sqlite');
+  let store=new AccountStore(file);
+  try{
+    const origin='https://arsenal.example.test',account=await store.register({username:'class_player',displayName:'Class Player',password:randomBytes(24).toString('hex')},origin);
+    const user=store.userFor(account.token,origin);
+    const profile={...defaultArsenal(),selected:'custom-1'};
+    profile.slots[0]={name:'Harbor',primary:{id:'smg',attachments:['red'],camo:'desert'},secondary:{id:'sidearm',attachments:[],camo:null},equipment:'flash'};
+    assert.throws(()=>store.saveArsenal(user.id,profile),{status:400});
+    store.db.prepare('INSERT INTO rewards(instance,event,user_id,kind,xp) VALUES(?,?,?,?,?)').run(randomUUID(),'fixture',user.id,'match',2000);
+    assert.throws(()=>store.saveArsenal(user.id,profile),{status:400});
+    store.db.prepare('INSERT INTO weapon_progress(user_id,weapon,xp) VALUES(?,?,?)').run(user.id,'smg',2000);
+    store.saveArsenal(user.id,profile);
+    await copyAccountDatabase('backup',file,clone);
+    store.close();store=new AccountStore(clone);
+    const restored=store.profile(store.userFor(account.token,origin));
+    assert.deepEqual(restored.arsenal,profile);assert.equal(restored.entitlements.weaponLevels.smg,3);
+    assert.equal(restored.entitlements.weaponLevels.cr4,undefined);
+    assert.equal(store.profile(null).arsenal,null);
+  }finally{store.close();}
 });

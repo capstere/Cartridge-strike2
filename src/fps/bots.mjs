@@ -130,7 +130,7 @@ export class BotController {
       // Riposte botEars checks distance and floor separation before testing
       // obstacles. An unheard footstep cannot reveal a player on another deck.
       if (event.type === 'step' && Math.abs(actor.y - event.y) > 3.5) continue;
-      const radius = event.type === 'shot' ? 38 : event.type === 'step' ? (event.mode === 'run' || event.mode === 'rush' ? 12 : event.mode === 'sneak' ? 2.5 : 2) : event.type === 'he' ? 45 : 7;
+      const radius = event.type === 'shot' ? (event.suppressed ? 6 : 38) : event.type === 'step' ? (event.mode === 'run' || event.mode === 'rush' ? 12 : event.mode === 'sneak' ? 2.5 : 2) : event.type === 'he' ? 45 : 7;
       const range = Math.hypot(actor.x - event.x, actor.y - event.y, actor.z - event.z);
       if (range > radius) continue;
       const clear = game.world.segmentClear(eye(actor), { x: event.x, y: event.y + 1, z: event.z }, { vision: false });

@@ -38,8 +38,17 @@ async function observe(page){
 }
 try{
   const desktop=await lobby(false),mobile=await lobby(true);
+  await desktop.evaluate(async()=>{
+    const {defaultArsenal,saveArsenal}=await import('/src/fps/arsenal.mjs');
+    saveArsenal({...defaultArsenal(),selected:'scout'});
+  });
   await desktop.locator('[data-create=true]').click();
+  await desktop.waitForFunction(()=>document.querySelector('#room-kit')?.textContent?.includes('Scout ·'));
+  assert.match(await desktop.locator('#room-kit').innerText(),/Scout · .+ · Knife · 1 Smoke Cartridge/);
+  assert.equal(await desktop.locator('#room-primary').inputValue(),'sniper');
   await desktop.locator('#room-primary').selectOption('ar47');
+  await desktop.waitForFunction(()=>document.querySelector('#room-kit')?.textContent?.endsWith('1 HE Cartridge'));
+  assert.doesNotMatch(await desktop.locator('#room-kit').innerText(),/Scout|Smoke Cartridge/);
   await desktop.locator('#room-ready').click();await desktop.locator('#room-start').click();
   await waitForActiveHud(desktop);
   if(await desktop.locator('#pause').isHidden())await desktop.keyboard.press('Escape');

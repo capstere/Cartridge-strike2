@@ -2,7 +2,7 @@ import {roomModeration} from './room-moderation.mjs';
 import {roomInvitation} from './room-invitation.mjs';
 import {accessText as en} from '../../../shared/multiplayer/access-english.mjs';
 import {NETWORK_MAPS,networkMap} from '../../../shared/multiplayer/maps.mjs';
-import {onlinePrimaries} from '../action-rules.mjs';
+import {defaultOnlineCartridge,onlinePrimaries} from '../action-rules.mjs';
 import {DIFFICULTIES,WEAPONS} from '../config.mjs';
 import {FAMILY_ROOM_PATH} from '../../../shared/multiplayer/family-room.mjs';
 import {BOT_COUNTS,CLASSIC_WINS,TDM_KILLS,TDM_MINUTES} from '../../../shared/multiplayer/rules.mjs';
@@ -246,8 +246,10 @@ export function roomUi({leave,resume,activate}){
         $('room-primary').dataset.team=self.team;
         $('room-primary').replaceChildren(...onlinePrimaries(self.team).map(id=>new Option(WEAPONS[id].name,id)));
       }
-      $('room-primary').value=self.loadout;
-      $('room-kit').textContent=en.secondary(WEAPONS[self.pistol].name);
+      const kit=s.classChoice?.team===self.team?s.classChoice.kit:null;
+      $('room-primary').value=kit?.primary.id??self.loadout;
+      $('room-kit').textContent=en.deploymentKit(kit?.name,WEAPONS[kit?.secondary.id??self.pistol].name,
+        WEAPONS[kit?.equipment??defaultOnlineCartridge].name);
     }
     $('room-team-label').hidden=!waiting;$('room-team').value=self?.team||'analysts';
     $('room-ready').hidden=!waiting;$('room-ready').textContent=self?.playerReady?en.notReady:en.ready;

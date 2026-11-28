@@ -84,13 +84,18 @@ export class MatchLifecycle {
   command(client,m){
     const r=this.room,s=r.seats.get(client.sessionId),state=this.state;
     const keys=m?.kind==='botDifficulty'?['kind','matchId','controlEpoch','botDifficulty','serial']:
+      m?.kind==='class'?['kind','matchId','controlEpoch','profile']:
       m?.kind==='settings'?['kind','matchId','controlEpoch',...lobbySettingKeys]:
       m?.kind==='residents'?['kind','matchId','controlEpoch','zombies','danceman']:
       ['kind','matchId','controlEpoch','ready','team','primary','zombies','danceman','friendlyFire'];
     if(r.changingMap||!s?.ready||!s.connected||s.client!==client||(r.familyRoom&&s.revoked)||!m||m.matchId!==state.matchId||m.controlEpoch!==s.epoch||
       Object.keys(m).some(k=>!keys.includes(k)))return;
     const lobbyHost=state.phase==='waiting'&&state.ownerId===client.sessionId;
-    if(!r.classic&&m.kind==='loadout'&&['waiting','active'].includes(state.phase)&&onlinePrimaries(s.actor.team).includes(m.primary))s.actor.loadout=m.primary;
+    if(m.kind==='class'&&['waiting','active'].includes(state.phase)){
+      r.applySeatClass(s,s.actor,m.profile);r.sendClass(s);
+    }else if(!r.classic&&m.kind==='loadout'&&['waiting','active'].includes(state.phase)&&onlinePrimaries(s.actor.team).includes(m.primary)){
+      s.actor.loadout=m.primary;s.loadout=m.primary;s.arsenalProfile=null;s.actor.arsenalClass=null;r.sendClass(s);
+    }
     else if(m.kind==='ready'&&state.phase==='waiting'&&typeof m.ready==='boolean')s.playerReady=m.ready;
     else if(m.kind==='team'&&state.phase==='waiting')r.changeTeam(client,m.team);
     else if(m.kind==='settings'){
@@ -220,7 +225,7 @@ export class MatchLifecycle {
     Object.assign(this.state,{phase:'results',winner,reason,remainingSeconds:0,resultsAtMs:this.now,
       results:JSON.stringify({matchId:this.state.matchId,winner,reason,score:{...score},players:g.actors.map(a=>({id:a.id,name:a.name,team:a.team,kills:a.kills,deaths:a.deaths}))})});
     r.finishAccountMatch?.(winner);
-    g.state.paused=true;g.state.projectiles=[];g.state.grenades=[];
+    g.state.paused=true;g.state.projectiles=[];g.state.grenades=[];g.state.smokes=[];g.state.drops=[];
     for(const actor of g.actors){clearActorBonus(actor);resetRush(actor);actor.reloadUntil=actor.reloadStartedAt=actor.reloadDuration=0;actor.cartridge=null;actor.waitTriggerRelease=false;}
     for(const [sid,seat] of r.seats){seat.enabled=false;seat.holdThrow=false;r.inputs.get(sid).clear();}
   }

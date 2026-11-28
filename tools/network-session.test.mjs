@@ -174,6 +174,20 @@ test('automatic fire never launches explosives while their manual trigger remain
  }
 });
 
+test('class cartridges use authoritative stock even while the displayed loadout is stale',()=>{
+ for(const [weapon,field] of [['smoke','smoke'],['flash','flashCount']]){
+  const f=triggerSession(weapon);
+  f.session.view.player={weapon,inventory:{[weapon]:0}};
+  f.self.handling={[field]:1};
+  f.frame({fire:true,autoFire:true});
+  assert.equal(f.wire.at(-1).data.holdThrow,false);assert.equal(f.session.fireId,0);
+  f.frame({fire:true});
+  assert.equal(f.wire.at(-1).data.holdThrow,true);assert.equal(f.session.fireId,1);
+  f.frame({fire:false});f.self.handling[field]=0;f.session.view.player.inventory[weapon]=1;
+  f.frame({fire:true});assert.equal(f.wire.at(-1).data.holdThrow,false);assert.equal(f.session.fireId,1);
+ }
+});
+
 test('only a currently stocked HE sends a manual hold through weapon or seat changes',()=>{
  const f=triggerSession('he');
  f.frame({fire:true});assert.equal(f.wire.at(-1).data.holdThrow,true);

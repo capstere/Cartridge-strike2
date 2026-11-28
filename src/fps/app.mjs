@@ -7,6 +7,8 @@ import {loadSoloManifest, resolveSoloSelection} from './solo-maps.mjs';
 import {UI_EN} from './english-ui.mjs';
 import {roundReasons, purchaseLabel} from './game-english.mjs';
 import {GAME_NAME,COMPLEX_NAME,roomDisplayName,missionRoomName} from './player-names.mjs';
+import {selectedArsenal,localArsenalProfile,refreshArsenalAccount} from './arsenal-menu.mjs';
+import {quoteClass} from './arsenal.mjs';
 import {setupCharacterMenu} from './character-selection.mjs';
 import {loadPrivateCharacter,characterHash,SavedCharacterError} from './private-character-store.mjs';
 import {currentOutfit,clearNetworkOutfits,loadCharacterLibrary,installPrivateCharacter,setPrivateCharacterActors} from './character-library.mjs?v=6.1.2';
@@ -376,14 +378,35 @@ function shopBalance(player, free) {
 }
 function showBuy(){if(holdingDeployment())return;if(!game.player?.alive||(game.phase!=='buy'&&!isEndless(game))){notify('The shop opens in the next buy phase.');return;}modal='buy';mobile.show(false);shopMessage(null,'');if(networkSession)networkSession.purchase=null;clearInput();game.pause(true);audio.reset();$('buy').hidden=false;unlockMouse();refreshShop();}
 function closeBuy(){if(networkSession){resume();return;}window.__csFlow?.fullscreen?.resume();modal=null;$('buy').hidden=true;clearInput();game.pause(false);audio.unlock();mobile.show(true,game.player?.alive);requestMouse();}
+function showClassOffer(){
+ const shop=$('shop'),player=game.player;
+ let button=shop.querySelector('[data-item=class]');
+ if(game.state.mode!=='classic'||!player?.arsenalClass){button?.remove();return;}
+ if(!button){
+   button=document.createElement('button');button.type='button';button.dataset.item='class';shop.prepend(button);
+   button.onclick=()=>{
+     const result=game.buy('class');
+     if(!networkSession){const outcome=result.ok?'accepted':'denied';shopMessage(outcome,purchaseLabel(outcome,'Equipped class',result.reasonId));}
+     refreshShop();
+   };
+ }
+ const quote=quoteClass(player);
+ button.textContent=player.arsenalClass.name+' class · '+(quote.items.length?quote.cost+' ¤':'Equipped');
+ button.disabled=!quote.items.length||quote.cost>player.money||game.phase!=='buy';
+}
+function carriedGrenades(inventory){
+ const result=[];
+ for(const id of ['he','smoke','flash'])if(inventory[id]>0)result.push(inventory[id]+' '+WEAPONS[id].name);
+ return result.join(' · ')||'No grenades';
+}
 function refreshShop(){
  shopBalance(game.player,isEndless(game));
  if(networkSession&&game.state.mode==='classic'){
    const p=game.player;
    $('buy').dataset.team=p.team;
-   setText('buy-note','Buy time · '+Math.max(0,Math.ceil(game.state.buyDeadline-game.state.time))+' s · '+[p.inventory.primary?.id,p.inventory.pistol.id,'knife'].filter(Boolean).map(id=>WEAPONS[id].name).join(' · ')+' · '+p.armor+' armor · '+p.inventory.he+' HE');
+   setText('buy-note','Buy time · '+Math.max(0,Math.ceil(game.state.buyDeadline-game.state.time))+' s · '+[p.inventory.primary?.id,p.inventory.pistol.id,'knife'].filter(Boolean).map(id=>WEAPONS[id].name).join(' · ')+' · '+p.armor+' armor · '+carriedGrenades(p.inventory));
    const receipt=networkSession.currentPurchase();
-   if(receipt)shopMessage(receipt.outcome,purchaseLabel(receipt.outcome,WEAPONS[receipt.item]?.name,receipt.reasonId));
+   if(receipt)shopMessage(receipt.outcome,purchaseLabel(receipt.outcome,receipt.item==='class'?'Equipped class':WEAPONS[receipt.item]?.name,receipt.reasonId));
    else shopMessage(null,game.phase!=='buy'?'The buy phase is over.':networkSession.notice||'');
    if($('shop').dataset.kit!==p.team){
      $('shop').dataset.kit=p.team;
@@ -393,13 +416,13 @@ function refreshShop(){
        button.onclick=()=>game.buy(id);return button;
      }));
    }
-   return;
+   showClassOffer();return;
  }
  delete $('shop').dataset.kit;
  if(networkSession){
    const p=game.player;
    $('buy').dataset.team=p.team;
-   setText('buy-note','Changes apply at your next respawn. Equipped · '+WEAPONS[p.inventory.primary.id].name+' and '+WEAPONS[p.inventory.pistol.id].name+' · knife · '+p.inventory.he+' HE.');
+   setText('buy-note','Changes apply at your next respawn. Equipped · '+[p.inventory.primary?.id,p.inventory.pistol?.id,'knife'].filter(Boolean).map(id=>WEAPONS[id].name).join(' · ')+' · '+carriedGrenades(p.inventory)+'.');
    $('shop').replaceChildren(...onlinePrimaries(game.team).map(id=>{
      const button=document.createElement('button');button.dataset.item=id;
      button.textContent=WEAPONS[id].name+(p.loadout===id?' · SELECTED':'');
@@ -422,9 +445,10 @@ function refreshShop(){
    };
    return button;
  }));
+ showClassOffer();
 }
 
-function start(selected=team,overrides={},autoplay=false){foregroundCountdown.suspend();deployment.reset();team=rehearsalMode?'analysts':selected;setPrivateCharacterActors(rehearsalMode?['analysts-0','analysts-1']:[team+'-0']);clearInput();audio.reset();renderer.resetTransient();combatHud.reset();recoil.reset();resetAutoAim();game=new Game(world,{team,seed:Number($('seed').value)||42,config:{mobile:settings.mobile,mode:settings.mode,firefight:settings.firefight,friendlyFire:settings.friendlyFire,hostageDamage:true,wanderers:settings.wanderers,loadout:settings.loadout,...overrides},autoplay,difficulty:overrides.difficulty||settings.difficulty});game.start(team);if(game.warmupRemaining){game.drainEvents();lastFrame=0;}for(const actor of game.actors)renderer.actorModel(actor);modal=null;lastRound=game.warmupRemaining?game.state.round:0;lastPhase=game.phase;spectateIndex=0;feed=[];yaw=game.player.yaw;pitch=game.player.pitch;for(const id of ['menu','pause','buy','match-end','scoreboard'])$(id).hidden=true;$('hud').hidden=false;setText('notification','');mobile.show(true,game.player?.alive);updateHud();return game;}
+function start(selected=team,overrides={},autoplay=false){foregroundCountdown.suspend();deployment.reset();team=rehearsalMode?'analysts':selected;setPrivateCharacterActors(rehearsalMode?['analysts-0','analysts-1']:[team+'-0']);clearInput();audio.reset();renderer.resetTransient();combatHud.reset();recoil.reset();resetAutoAim();game=new Game(world,{team,seed:Number($('seed').value)||42,config:{mobile:settings.mobile,mode:settings.mode,firefight:settings.firefight,friendlyFire:settings.friendlyFire,hostageDamage:true,wanderers:settings.wanderers,loadout:settings.loadout,...(settings.useArsenal!==false?{arsenalClass:selectedArsenal(team)}:{}),...overrides},autoplay,difficulty:overrides.difficulty||settings.difficulty});game.start(team);if(game.warmupRemaining){game.drainEvents();lastFrame=0;}for(const actor of game.actors)renderer.actorModel(actor);modal=null;lastRound=game.warmupRemaining?game.state.round:0;lastPhase=game.phase;spectateIndex=0;feed=[];yaw=game.player.yaw;pitch=game.player.pitch;for(const id of ['menu','pause','buy','match-end','scoreboard'])$(id).hidden=true;$('hud').hidden=false;setText('notification','');mobile.show(true,game.player?.alive);updateHud();return game;}
 async function joinNetwork(options){
  if(!networkMode)throw Error('Open the local multiplayer lobby first.');
  const generation=++networkJoinGeneration;
@@ -445,7 +469,7 @@ async function joinNetwork(options){
   networkUi?.status(accessEnglish.loadingMap(networkMap(id).name));if(game===session.view)onlineRoomUi?.update(session);
  },onMatch:()=>{if(networkSession===session&&game===session.view)networkPhase();},onConnection:status=>{if(networkSession!==session)return;countdownSession=null;deployment.suspend();clearInput();audio.reset();renderer?.resetTransient();recoil.reset();if(status==='reconnecting')showPause();$('pause').querySelector('p:not(.eyebrow)').textContent=status==='reconnecting'?accessEnglish.reconnectingHelp:accessEnglish.reconnected;},onDisconnect:message=>{if(networkSession!==session)return;newMatch();networkUi?.status(connectionMessage(message),connectionFailure(message));}});
  networkSession=session;
- try{await session.connect(options);if(session.room.state.mode==='classic')await renderer.prepareClassic();if(generation!==networkJoinGeneration){await session.dispose();throw Error('Join cancelled.');}}
+ try{await session.connect({...options,arsenalProfile:localArsenalProfile()});if(session.room.state.mode==='classic')await renderer.prepareClassic();if(generation!==networkJoinGeneration){await session.dispose();throw Error('Join cancelled.');}}
  catch(e){await session.dispose();if(networkSession===session)networkSession=null;throw e;}
  game=session.view;applyNetworkMode();
  team=game.team;setPrivateCharacterActors([]);modal=null;lastRound=game.state.round;lastPhase='active';spectateIndex=0;feed=[];
@@ -566,7 +590,7 @@ function updateHud(){bonusHud.update(game, !!modal || radioOpen || teamRadioOpen
    if(p.pending)setText('respawn-status','Connected · you will play next round');
    if(modal==='buy')refreshShop();
  }
- if(notificationUntil<s.time)setText('notification','');feed=feed.filter(f=>f.until>s.time);updateKillfeed(); if(networkSession&&game.state.mode!=='classic'){if(modal==='buy'&&$('shop').dataset.selected!==p.loadout){$('shop').dataset.selected=p.loadout;refreshShop();}onlineRoomUi?.update(networkSession);setText('timer',timer(holdingDeployment()?networkSession.room.state.durationSeconds:networkSession.room.state.remainingSeconds));setText('round-label','TEAM DEATHMATCH · '+networkSession.room.state.scoreTarget+' KILLS');setText('phase',networkSession.status||'CONNECTING');setText('money','B · EQUIPMENT');setText('bomb-status','4 · HE · FIRE TO THROW');setText('hostage-status','The match continues in menus · Esc or Pause to leave');setText('respawn-status',`RESPAWN ${Math.max(0,(p.respawnAt||s.time)-s.time).toFixed(1)} s`);}
+ if(notificationUntil<s.time)setText('notification','');feed=feed.filter(f=>f.until>s.time);updateKillfeed(); if(networkSession&&game.state.mode!=='classic'){if(modal==='buy'&&$('shop').dataset.selected!==p.loadout){$('shop').dataset.selected=p.loadout;refreshShop();}onlineRoomUi?.update(networkSession);setText('timer',timer(holdingDeployment()?networkSession.room.state.durationSeconds:networkSession.room.state.remainingSeconds));setText('round-label','TEAM DEATHMATCH · '+networkSession.room.state.scoreTarget+' KILLS');setText('phase',networkSession.status||'CONNECTING');setText('money','B · EQUIPMENT');setText('bomb-status',p.inventory.he||p.inventory.smoke||p.inventory.flash?'4 · '+carriedGrenades(p.inventory)+' · Fire to throw':'No grenades');setText('hostage-status','The match continues in menus · Esc or Pause to leave');setText('respawn-status',`RESPAWN ${Math.max(0,(p.respawnAt||s.time)-s.time).toFixed(1)} s`);}
  if(holdingDeployment()){setText('phase','DEPLOYING');setText('reload-text','');$('prompt').hidden=true;$('spawn-protection').hidden=true;}
  if(board)scoreboard();minimap();setText('perf',`${renderer.stats.fps} FPS`);focusHud.update();
 }
@@ -732,7 +756,25 @@ function interruptOrientation(){
 window.addEventListener('orientationchange',interruptOrientation);
 screen.orientation?.addEventListener?.('change',interruptOrientation);
 matchMedia('(orientation: portrait)').addEventListener('change',interruptOrientation);
-$('game-mode').value=['classic','endless'].includes(settings.mode)?settings.mode:'classic';$('loadout').value=settings.loadout||'smg';$('game-mode').onchange=updateMode;$('loadout').onchange=()=>{settings.loadout=$('loadout').value;saveSettings();};
+function syncClassLoadout(){
+ const select=$('loadout'),kit=selectedArsenal(team);
+ let option=select.querySelector('option[value="class"]');
+ if(!kit){option?.remove();select.value=settings.loadout||'smg';return;}
+ if(!option){option=new Option('','class');select.add(option);}
+ option.textContent='Class · '+kit.name;option.dataset.primary=kit.primary.id;
+ select.value=settings.useArsenal!==false?'class':settings.loadout;
+}
+$('game-mode').value=['classic','endless'].includes(settings.mode)?settings.mode:'classic';
+$('game-mode').onchange=updateMode;syncClassLoadout();
+$('loadout').onchange=()=>{
+ settings.useArsenal=$('loadout').value==='class';
+ if(!settings.useArsenal)settings.loadout=$('loadout').value;
+ saveSettings();
+};
+$('menu').addEventListener('cs-class-equipped',()=>{settings.useArsenal=true;syncClassLoadout();saveSettings();});
+$('menu').addEventListener('cs-team-selected',syncClassLoadout);
+$('menu').addEventListener('cs-class-identity',syncClassLoadout);
+const arsenalAccountReady=refreshArsenalAccount().then(syncClassLoadout);
 $('radio-options').innerHTML=RADIO.map((r,i)=>`<div><kbd>${i+1}</kbd><span>${r.text}<small>${r.label}</small></span></div>`).join('');updateMode();
 
 const characterQuery=new URLSearchParams(location.search);
@@ -758,6 +800,7 @@ try{
   loadingStage('assets');
   await Promise.all([renderer.assetsReady,audio.prepareFloorAudio()]);grenadeAssist=new GrenadeAssist(renderer,settings);
  }
+ await arsenalAccountReady;
  loadingStage('ready');$('loading').hidden=true;$('start').disabled=characterSelectionFailed||networkMode;
  claimControllerForGame();raf=requestAnimationFrame(frame);if(testMode){globalThis.__fps={stopFrameLoop(){cancelAnimationFrame(raf);raf=0;},get game(){return game;},get network(){return networkSession;},joinNetwork,get world(){return world;},get renderer(){return renderer;},audio,settings,start(selected,config={},autoplay=false){start(selected,config,autoplay);return this.snapshot();},step(controls=null,dt=1/60){tactical.update(dt);game.update(dt,controls??input(dt));yaw=game.player.yaw;pitch=game.player.pitch;consumeEvents();tactical.render(renderer);grenadeAssist.update(game,viewActor(),modal);renderer.render(game,viewActor(),dt);presentViewEffects();updateHud();return this.snapshot();},snapshot(){return JSON.parse(JSON.stringify({...game.state,player:game.player,actors:game.actors.map(({bot,...rest})=>rest),hostages:game.hostages},(k,v)=>k==='bot'?undefined:v));},render(){tactical.render(renderer);grenadeAssist.update(game,viewActor(),modal);renderer.render(game,viewActor(),1/60);updateHud();},pause(value){game.pause(value);},input,showBuy,newMatch,get modal(){return modal;},mobile,recoil,tactical,get grenadeAssist(){return grenadeAssist;},focusHud,renderBudget,minimapCache};}}
 catch(error){fatal(error);}

@@ -1,0 +1,52 @@
+{
+  "runtime": "1ac88e31ba8f2aa7460034ae3c16f741e2527fb3fbcae199ffcd58681df393c9",
+  "localRevision": "6ce0bda880a5d57b32718933b78238b662573ed5",
+  "driver": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+  "uniqueModels": 17,
+  "gpuAfterEachPass": [
+    {
+      "geometries": 404,
+      "textures": 126
+    },
+    {
+      "geometries": 404,
+      "textures": 126
+    }
+  ],
+  "workshop": {
+    "guest": {
+      "primary": {
+        "pixels": 5975,
+        "hash": 915046480
+      },
+      "sidearm": {
+        "pixels": 6034,
+        "hash": 1521321342
+      },
+      "rotated": {
+        "pixels": 6432,
+        "hash": 23399560
+      }
+    },
+    "account": {
+      "bare": {
+        "pixels": 7440,
+        "hash": 2844112286
+      },
+      "fitted": {
+        "pixels": 6010,
+        "hash": 1987924293
+      }
+    },
+    "deployed": {
+      "id": "ar47",
+      "camo": "desert",
+      "attachments": [
+        "red",
+        "sil"
+      ],
+      "smoke": 1,
+      "renderer": "WebKit WebGL"
+    }
+  }
+}

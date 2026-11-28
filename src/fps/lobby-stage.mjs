@@ -4,6 +4,8 @@
 import {UI_EN} from './english-ui.mjs';
 import * as T from '../../vendor/three/three.module.js';
 import {getCharacterOverride} from './character-overrides.mjs?v=6.1.2';
+import {mountArsenal} from './arsenal-menu.mjs';
+import {arsenalPreview} from './arsenal-preview.mjs';
 import {mountWardrobe} from './wardrobe-menu.mjs';
 import {syncAuthoredActor} from './character-actors.mjs?v=6.1.2';
 import {makeWeapon} from './models.mjs?v=6.1.2';
@@ -60,9 +62,18 @@ window.addEventListener('keydown', event => {
 });
 
 /* ---------- 3D operator stage ---------- */
+let lobbyRenderer=null,weaponRack=null;
+function getLobbyRenderer(){
+  if(!lobbyRenderer){
+    lobbyRenderer=new T.WebGLRenderer({canvas,antialias:true,alpha:true,powerPreference:'low-power'});
+    lobbyRenderer.setPixelRatio(Math.min(devicePixelRatio||1,1.5));
+    lobbyRenderer.outputColorSpace=T.SRGBColorSpace;
+    lobbyRenderer.toneMapping=T.ACESFilmicToneMapping;lobbyRenderer.toneMappingExposure=1.05;
+  }
+  return lobbyRenderer;
+}
 function makeStage(){
-  const renderer=new T.WebGLRenderer({canvas,antialias:true,alpha:true,powerPreference:'low-power'});
-  renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.5));renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;
+  const renderer=getLobbyRenderer();
   const scene=new T.Scene(),camera=new T.PerspectiveCamera(24,1,.1,50);camera.position.set(0,1.18,6.1);camera.lookAt(0,.92,0);
   scene.add(new T.HemisphereLight(0xbfd2ff,0x0a0d14,.9));
   const key=new T.DirectionalLight(0xffffff,2.3);key.position.set(-2.4,3.2,3.4);scene.add(key);
@@ -85,7 +96,7 @@ function makeStage(){
   turntable.userData.marker = new T.Object3D();
   // Use the same world model, grip and support-hand solver as a live actor.
   function poseArmed(operator,time) {
-    const id = $('loadout').value || 'smg';
+    const id = $('loadout').selectedOptions[0]?.dataset.primary || $('loadout').value || 'smg';
     if (turntable.userData.weaponModel?.userData.id !== id) {
       weaponSocket.clear();
       const weapon = makeWeapon(id,{viewmodel:false});
@@ -116,7 +127,7 @@ function makeStage(){
   tileCamera.lookAt(0,.88,0);
   function drawNextPortrait() {
     if (menu.dataset.screen !== 'outfits' || !avatar) return;
-    const weapon = $('loadout').value || 'smg';
+    const weapon = $('loadout').selectedOptions[0]?.dataset.primary || $('loadout').value || 'smg';
     if (thumbnailTeam !== team || thumbnailWeapon !== weapon) {
       thumbnailTeam = team;
       thumbnailWeapon = weapon;
@@ -211,10 +222,18 @@ async function boot(){
   // Wait until app.mjs finished loading the level and any private character design.
   await new Promise(r=>{const ok=()=>$('loading').hidden||$('loading').style.display==='none';if(ok())return r();const mo=new MutationObserver(()=>{if(ok()){mo.disconnect();r();}});mo.observe($('loading'),{attributes:true});});
   if (!$('fatal').hidden) return;
-  try{await loadCharacterLibrary();stage=makeStage();syncTeam();}catch(e){console.warn('Lobby preview unavailable:',e.message);}
+  try{await loadCharacterLibrary();stage=makeStage();syncTeam();arsenal.draw();}catch(e){console.warn('Lobby preview unavailable:',e.message);}
 }
 const wardrobe = mountWardrobe({selected:currentOutfit,savedDesign:()=>Boolean(charSelect.value || getCharacterOverride('player',menu.dataset.side+'-0')),
   equip(id){const saved=equipOutfit(id);stage?.setTeam(menu.dataset.side,true);return saved;},
   rotate(direction){stage?.rotate(direction);}
+});
+const arsenal=mountArsenal({
+  team:()=>menu.dataset.side||'analysts',
+  draw:(tile,spec,yaw)=>{
+    weaponRack??=arsenalPreview(getLobbyRenderer());
+    weaponRack.draw(tile,spec,yaw);
+  },
+  clear:()=>weaponRack?.clear()
 });
 syncTeam();boot();

@@ -56,6 +56,13 @@ export async function createLocalServer(options={}) {
       this.seats.get(client.sessionId).credential=options.credential;
       if(options.credential.legacy)accounts.store.remember(options.credential.device,this.familyRoom?FAMILY_ROOM_ALIAS:this.roomId);
     }
+    arsenalRights(seat){
+      return testMatch?.arsenalEntitlements ?? (accounts&&accounts.store.arsenalEntitlements(seat.credential?.user));
+    }
+    savedArsenal(seat){
+      const user=seat.credential?.user;
+      return user&&accounts?.store.arsenalFor(user);
+    }
     beginAccountMatch(){
       if(accounts)this.accountMatch=new MatchCredits(this.seats.values());
     }

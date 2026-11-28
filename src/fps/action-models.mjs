@@ -4,6 +4,7 @@ import {mergeGeometries} from '../../vendor/three/addons/utils/BufferGeometryUti
 import {RoundedBoxGeometry} from '../../vendor/three/addons/geometries/RoundedBoxGeometry.js';
 export function buildBazookaParts(parent){
  const mats={body:new T.MeshStandardMaterial({color:0x52614c,roughness:.62,metalness:.32}),steel:new T.MeshStandardMaterial({color:0x707c7d,roughness:.35,metalness:.8}),dark:new T.MeshStandardMaterial({color:0x172024,roughness:.82}),gold:new T.MeshStandardMaterial({color:0xc7a660,roughness:.5,metalness:.35}),glass:new T.MeshStandardMaterial({color:0x4ab0ba,emissive:0x226678,emissiveIntensity:.4,roughness:.2,metalness:.4})};
+ mats.body.userData.camoPaint=true;
  const rigid=new T.Group();parent.add(rigid);
  const add=(geo,mat,x,y,z,rx=0)=>{const m=new T.Mesh(geo,mat);m.position.set(x,y,z);m.rotation.x=rx;rigid.add(m);return m;};
  const box=(x,y,z,w,h,d,mat)=>add(new RoundedBoxGeometry(w,h,d,2,.008),mat,x,y,z);

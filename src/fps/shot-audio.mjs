@@ -16,11 +16,11 @@ export const shotTakes = [...firstShotTakes, ...[...nearBanks, ...farBanks].map(
 export function shotSound(event, listener, listenerId) {
   const weapon = banks[event.weapon];
   if (!Object.hasOwn(banks,event.weapon) || !listener) return null;
-  if (event.actorId != null && event.actorId === listenerId) return {bank:`g_${weapon}_pov`, delay:0, gain:.55};
+  if (event.actorId != null && event.actorId === listenerId) return {bank:`g_${weapon}_pov`, delay:0, gain:event.suppressed ? .18 : .55};
   const pos = event.position || event;
   const distance = Math.hypot((pos.x || 0) - listener.x, (pos.y || 0) - listener.y, (pos.z || 0) - listener.z);
   const bank = distance < 40 ? `g_${weapon}_near` : `g_far_${families[weapon]}`;
-  return {bank, delay:Math.min(distance / 343, .5), gain:.42};
+  return {bank, delay:Math.min(distance / 343, .5), gain:event.suppressed ? .09 : .42};
 }
 
 // Some MP3 decoders keep a short encoder delay. Locate the measured attack in

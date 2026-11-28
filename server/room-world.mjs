@@ -64,7 +64,7 @@ export async function changeRoomMap(room, client, settings) {
     room.teamComms.dispose();
     room.lag.dispose();
     room.bots.clear();
-    for (const field of ['doors', 'actors', 'brokenGlass', 'residents', 'hostages', 'grenades', 'projectiles']) room.state[field].clear();
+    for (const field of ['doors', 'actors', 'brokenGlass', 'residents', 'hostages', 'drops', 'smokes', 'grenades', 'projectiles']) room.state[field].clear();
     Object.assign(room.state, settings, {worldRevision: room.state.worldRevision + 1, round: 0, roundPhase: '',
       deadline: 0, buyDeadline: 0, resultDeadline: 0, roundReason: '', roundWinner: '', bombStatus: '',
       carrierId: '', bombX: 0, bombY: 0, bombZ: 0, bombDeadline: 0});

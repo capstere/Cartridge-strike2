@@ -7,6 +7,7 @@
  * This system affects the human player's sightline, so uncontrolled bursts
  * climb off the target; short bursts partly return toward the start point.
  */
+import {equippedDefinition} from './arsenal.mjs';
 export const RECOIL = Object.freeze({
   cat: Object.freeze({
     ar: { mul: 1.55, back: .70 },
@@ -76,6 +77,10 @@ export class PlayerRecoil {
     } else {
       drift = (random() - .5) * 2 * d.h;
     }
+    const def=equippedDefinition(actor,weapon);
+    const braced=def?.bipod&&actor.crouching&&actor.moving<.1 ? .35 : 1;
+    rise*=(def?.verticalRecoil||1)*(def?.kick||1)*braced;
+    drift*=(def?.horizontalRecoil||1)*(def?.kick||1)*braced;
     this.pending = Math.min(1.5, this.pending + rise);
     return { pitch: rise, yaw: drift * mult };
   }
