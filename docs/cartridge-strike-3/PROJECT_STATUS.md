@@ -1,22 +1,30 @@
 # Persistent project status
 
-**CS3-00 and CS3-01 are verified. Handling and multiplayer accounts are in final CI. Map qualification is in progress.** Jesper authorized the complete program and gated production release. [PR #47](https://github.com/capstere/Cartridge-strike2/pull/47) merged at `5364240599164c0aee278bb0ac2a35d662c3a818` after [all eight jobs](https://github.com/capstere/Cartridge-strike2/actions/runs/45976270665) passed on `f1f363963cd082c6cc1b0f6289c3f9b616064e83`. The reviewed draft head and merge preserve the CS2 game runtime. Development and its evidence live on the integration branch `develop/cartridge-strike-3`. The Pi remains on its verified CS2 release.
+**CS3-00, CS3-01, CS3-02 and CS3-04 are verified. Characters, killstreaks and map qualification are active.** Jesper authorized the complete program and gated production release. [PR #47](https://github.com/capstere/Cartridge-strike2/pull/47) merged at `5364240599164c0aee278bb0ac2a35d662c3a818` after [all eight jobs](https://github.com/capstere/Cartridge-strike2/actions/runs/45976270665) passed on `f1f363963cd082c6cc1b0f6289c3f9b616064e83`. The reviewed draft head and merge preserve the CS2 game runtime. Development and its evidence live on the integration branch `develop/cartridge-strike-3`. The Pi remains on its verified CS2 release.
 
 | ID | State | Next action |
 | --- | --- | --- |
 | CS3-00 | VERIFIED | Independent recovery, architecture and performance review passed. See [measurements](baseline/performance/README.md) and [recovery](baseline/recovery.json). |
 | CS3-01 | VERIFIED | English guest and private flows, access recovery, Classic buy/results and first-person countdown independently accepted. [All eight checks on the final head](https://github.com/capstere/Cartridge-strike2/actions/runs/46017902821) passed. |
-| CS3-02 | REVIEW | The independent reviewer accepted the complete handling package. Verify all eight [final checks](https://github.com/capstere/Cartridge-strike2/actions/runs/46031863063) and merge [#57](https://github.com/capstere/Cartridge-strike2/pull/57). |
-| CS3-03 | NOT_STARTED | Wait for CS3-00, CS3-01, CS3-02 |
-| CS3-04 | REVIEW | The independent reviewer accepted persistent accounts, private/public room entry and recovery. Verify all nine [final checks](https://github.com/capstere/Cartridge-strike2/actions/runs/46031933296) and combine [#55](https://github.com/capstere/Cartridge-strike2/pull/55) with the current development protocol. |
-| CS3-05 | NOT_STARTED | Wait for CS3-00, CS3-02 |
+| CS3-02 | VERIFIED | Independent handling review and all eight [checks](https://github.com/capstere/Cartridge-strike2/actions/runs/46031863063) passed. [PR #57](https://github.com/capstere/Cartridge-strike2/pull/57) merged on development. Additional Floor 5 render work continues. |
+| CS3-03 | IN_PROGRESS | Adapt the existing operator rig and reference wardrobe preview on `cs3/03-character-wardrobe`. Verify saved characters, first-person arms and directional animation. |
+| CS3-04 | VERIFIED | [PR #55](https://github.com/capstere/Cartridge-strike2/pull/55) merged after independent review and [nine passing jobs](https://github.com/capstere/Cartridge-strike2/actions/runs/46129743025). |
+| CS3-05 | IN_PROGRESS | [PR #58](https://github.com/capstere/Cartridge-strike2/pull/58) exercises authoritative 3/5/8 awards, private UAV, Rage and Immortal in solo and two-client rooms. Complete rendered input, balance, stress and independent review. |
 | CS3-06 | NOT_STARTED | Wait for CS3-01, CS3-02, CS3-05 |
-| CS3-07 | IN_PROGRESS | Meltem merged on development in [#52](https://github.com/capstere/Cartridge-strike2/pull/52). Qualify native visibility, audio, low-tier cost and repeatable cleanup on Kervénec and Tephra in [#56](https://github.com/capstere/Cartridge-strike2/pull/56). |
+| CS3-07 | REVIEW | Independent reviewer accepted [native map qualification](maps/README.md). Development integration requires all final hosted jobs on [#56](https://github.com/capstere/Cartridge-strike2/pull/56). |
 | CS3-08 | NOT_STARTED | Wait for CS3-00, CS3-02, CS3-07 |
 | CS3-09 | NOT_STARTED | Wait for CS3-01, CS3-03, CS3-04 |
 | CS3-10 | NOT_STARTED | Wait for CS3-04, CS3-05, CS3-07, CS3-08, CS3-09 |
 | CS3-11 | NOT_STARTED | Wait for CS3-03, CS3-05, CS3-06, CS3-07, CS3-08, CS3-09, CS3-10 |
 | CS3-12 | NOT_STARTED | Wait for CS3-01, CS3-02, CS3-03, CS3-04, CS3-05, CS3-06, CS3-07, CS3-08, CS3-09, CS3-10, CS3-11 |
+
+## November 28 development checkpoint
+
+The live Pi still runs the verified CS2 revision. Its private backup passed an isolated restoration rehearsal. PR #55 preserved the latest 02/03/05 states and its native protocol 17 account runtime. Both original PR heads had nine green jobs. The account branch was reconciled with current development and independently reviewed before its nine final checks passed.
+
+The native map review for #56 accepted the 20-change four-map lifecycle, matching 175.121-second parked control, reversible Kervénec quality switch, signs and real damaged-map recovery. Six disposed audio owners matched their originating maps, all resource counts returned to zero and Node exited naturally in 458 ms. Reconcile #56 with this account merge, compare both parent runtime allowlists and require the final hosted jobs before starting CS3-08.
+
+Floor 5 remains under measurement. On the Pi, the candidate reproduced all world and weapon pixels across 24 original/candidate views. Continuously running input and presented frames are measured separately. Native Pi Chromium touch emulation and a physical handset are separate evidence categories.
 
 Update tasks.json in sync with this document. Allowed states NOT_STARTED / IN_PROGRESS / BLOCKED / REVIEW / VERIFIED. For each task maintain exact SHA, actual changed files, reference symbols, commands/results, evidence, known gaps, next executable action. Before context compaction or reset save this state and the lead's decisions. Do not infer progress from task descriptions. Gate changes only with explicit owner approval and preparation PR review; record approval/PR/merge SHA. Do not begin implementation merely because preparation files are merged.
 
@@ -105,6 +113,15 @@ Independent review accepted CS3-02 on protocol 17 build `3dd1934bc5609860e7448c2
 Independent review accepted CS3-04 on the reviewed protocol 16 account branch, subject to its final hosted run. The actual account/QR and first-time/remembered family WebKit/Chromium journeys passed together in the previous hosted run. The release candidate preserves startup and cancellation while its optional, same-origin font sheet is stalled. That specific regression and the full nine-job suite run on `c36017025c012d4806301b05af1932f72ab2abcf`. Reconcile the manifest and compatibility fingerprints with the current protocol before integrating. [Hosted account and family job](https://github.com/capstere/Cartridge-strike2/actions/runs/46030374990/job/140612532358).
 
 In a native graded Tephra match, all 6,180 pixels of the sampled ash lane rose above luma 12. Native median frame time was 23.8 ms and authority p95 was 6.28 ms. Four-map switches 4, 12 and 20 retained one game, one network session, one audio system and zero detached game canvases. The equal 155.584-second parked control and Low/Standard detail check still require their final receipts. The separate Floor 5 door-refraction trial improved median frame time from 63–72 to 31–32 ms, with final image-parity and repeated input sampling pending. CS2 production health at 16:11 UTC showed zero rooms and players on the original build. [Map qualification](https://github.com/capstere/Cartridge-strike2/pull/56).
+
+
+### November 27, 16:38 UTC
+
+CS3-02 merged on development at `f789655c55cb431b2916a8052200383b0d22d228`. All eight checks passed on the independently accepted `4ce7aaa56aa9201a4c4ca13e6cb8975315763af4`. CS3-03 and CS3-05 now have every dependency verified. Their focused implementation branches start from that merge. [Slide evidence](evidence/rush/buffered-slide.json) · [Completed workflow](https://github.com/capstere/Cartridge-strike2/actions/runs/46031863063).
+
+The nine-job account run exposed a real connection leak in the isolated TLS proxy after the rendered Meltem match and reconnect had succeeded. Closing an HTTPS request before the upstream response reproduced the open socket. The corrected proxy owns pending requests, upgraded sockets and its keep-alive pool. It releases them on client abort, authority restart and shutdown. The focused test passed and a real Colyseus restart and shutdown drained naturally in 986 ms under the existing three-second check. The game server and credentials are unaffected. [Account PR](https://github.com/capstere/Cartridge-strike2/pull/55).
+
+Map diagnostics traced the one extra Meltem GPU allocation to the wood deck of an existing source boat drifting into view. Compared at the same visible boat phase, the first two visits both uploaded 448 geometries. The full protocol 17 map/room recovery test is running. The indexed signs preserve 44 static boards, 93 decals and 17 marked hulls. Actual drawn pixels confirmed the Kiosk, Tavern and Menu source faces. [Map PR](https://github.com/capstere/Cartridge-strike2/pull/56).
 
 
 ## CS3-00 execution

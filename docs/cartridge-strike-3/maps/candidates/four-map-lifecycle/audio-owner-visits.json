@@ -1,0 +1,264 @@
+{
+  "date": "2026-11-28T09:17:40.075Z",
+  "revision": "ea3b3c39206e2d908279b9432b7d821a46c31adb",
+  "buildHash": "b575ba6a76c3d1a9253c370b2a2ef3ed2e2b44c5d51c5711615bd488621e2384",
+  "manifestHash": "ae08377a8b14c51ecbdee8a8ddf2770a694347070701f36643afed062e9e2889",
+  "status": "PASS",
+  "model": "Raspberry Pi 5 Model B Rev 1.1",
+  "browser": "156.0.8078.79",
+  "node": "v26.13.0",
+  "physicalPhone": false,
+  "transport": "TLS loopback",
+  "viewport": {
+    "width": 1024,
+    "height": 576
+  },
+  "scheduledSeconds": 45,
+  "players": {
+    "humanSlots": 1,
+    "bots": 9
+  },
+  "controls": {
+    "distanceM": 0.7,
+    "ammoBefore": 30,
+    "ammoAfter": 29,
+    "rightClickAim": true,
+    "team": "analysts"
+  },
+  "phaseLog": [
+    {
+      "step": "enter waiting room",
+      "elapsedMs": 3954
+    },
+    {
+      "step": "load tephra",
+      "elapsedMs": 29643
+    },
+    {
+      "step": "start match",
+      "elapsedMs": 39056
+    },
+    {
+      "step": "measure active game",
+      "elapsedMs": 45295
+    },
+    {
+      "step": "finish match",
+      "elapsedMs": 55673
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 85948
+    },
+    {
+      "step": "switch meltem",
+      "elapsedMs": 95698
+    },
+    {
+      "step": "switch embruns",
+      "elapsedMs": 100112
+    },
+    {
+      "step": "switch tephra",
+      "elapsedMs": 105051
+    },
+    {
+      "step": "hear meltem during active play",
+      "elapsedMs": 108626
+    },
+    {
+      "step": "hear embruns during active play",
+      "elapsedMs": 158771
+    },
+    {
+      "step": "reject a damaged level and retry on the saved map",
+      "elapsedMs": 212699
+    },
+    {
+      "step": "complete",
+      "elapsedMs": 224466
+    }
+  ],
+  "retiredGameCanvases": 0,
+  "damagedMapRejected": true,
+  "retryMap": "floor5-prepared",
+  "audio": {
+    "peakVoices": 14,
+    "peakBytes": 16325124,
+    "opened": [
+      {
+        "serial": 1,
+        "id": "tephra"
+      },
+      {
+        "serial": 2,
+        "id": "tephra"
+      },
+      {
+        "serial": 3,
+        "id": "meltem"
+      },
+      {
+        "serial": 4,
+        "id": "meltem"
+      },
+      {
+        "serial": 5,
+        "id": "embruns"
+      },
+      {
+        "serial": 6,
+        "id": "embruns"
+      }
+    ],
+    "closed": [
+      {
+        "serial": 1,
+        "id": "tephra",
+        "bytes": 0,
+        "voices": 0,
+        "banks": 0
+      },
+      {
+        "serial": 2,
+        "id": "tephra",
+        "bytes": 0,
+        "voices": 0,
+        "banks": 0
+      },
+      {
+        "serial": 3,
+        "id": "meltem",
+        "bytes": 0,
+        "voices": 0,
+        "banks": 0
+      },
+      {
+        "serial": 4,
+        "id": "meltem",
+        "bytes": 0,
+        "voices": 0,
+        "banks": 0
+      },
+      {
+        "serial": 5,
+        "id": "embruns",
+        "bytes": 0,
+        "voices": 0,
+        "banks": 0
+      },
+      {
+        "serial": 6,
+        "id": "embruns",
+        "bytes": 0,
+        "voices": 0,
+        "banks": 0
+      }
+    ],
+    "audibleMaps": [
+      "tephra",
+      "meltem",
+      "embruns"
+    ],
+    "decodeErrors": [],
+    "map": "embruns"
+  },
+  "teardown": {
+    "naturalExit": true,
+    "elapsedMs": 458,
+    "activeResources": [
+      "PipeWrap",
+      "PipeWrap"
+    ],
+    "liveReferenced": [
+      {
+        "type": "PIPEWRAP",
+        "stack": [
+          "at Pipe.emitInitNative (node:internal/async_hooks:208:43)",
+          "at createHandle (node:net:199:12)",
+          "at new Socket (node:net:704:20)",
+          "at createWritableStdioStream (node:internal/bootstrap/switches/is_main_thread:83:18)",
+          "at process.getStdout [as stdout] (node:internal/bootstrap/switches/is_main_thread:153:12)",
+          "at new Worker (node:internal/worker:314:42)",
+          "at new InternalWorker (node:internal/worker:651:5)",
+          "at new AsyncLoaderHookWorker (node:internal/modules/esm/hooks:527:20)",
+          "at getAsyncLoaderHookWorker (node:internal/modules/esm/hooks:793:29)"
+        ]
+      },
+      {
+        "type": "PIPEWRAP",
+        "stack": [
+          "at Pipe.emitInitNative (node:internal/async_hooks:208:43)",
+          "at createHandle (node:net:199:12)",
+          "at new Socket (node:net:704:20)",
+          "at createWritableStdioStream (node:internal/bootstrap/switches/is_main_thread:83:18)",
+          "at process.getStderr [as stderr] (node:internal/bootstrap/switches/is_main_thread:175:12)",
+          "at new Worker (node:internal/worker:319:42)",
+          "at new InternalWorker (node:internal/worker:651:5)",
+          "at new AsyncLoaderHookWorker (node:internal/modules/esm/hooks:527:20)",
+          "at getAsyncLoaderHookWorker (node:internal/modules/esm/hooks:793:29)"
+        ]
+      }
+    ]
+  },
+  "tree": "852985a5abb5ca44605eeffe8700bba5ff4ffc39",
+  "protocolVersion": 17,
+  "switchPairs": 2,
+  "allVariants": true,
+  "audioEnabled": true,
+  "transitions": [
+    {
+      "id": "floor5-prepared",
+      "level": "Unit 05",
+      "ms": 9171,
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "liveOwners": 1,
+      "reachableOwners": 1
+    },
+    {
+      "id": "meltem",
+      "level": "Meltem",
+      "ms": 4196,
+      "geometries": 448,
+      "textures": 64,
+      "programs": 60,
+      "liveOwners": 1,
+      "reachableOwners": 1
+    },
+    {
+      "id": "embruns",
+      "level": "Kervénec Harbor",
+      "ms": 4712,
+      "geometries": 308,
+      "textures": 64,
+      "programs": 60,
+      "liveOwners": 1,
+      "reachableOwners": 1
+    },
+    {
+      "id": "tephra",
+      "level": "Tephra",
+      "ms": 3305,
+      "geometries": 375,
+      "textures": 65,
+      "programs": 59,
+      "liveOwners": 1,
+      "reachableOwners": 1
+    }
+  ],
+  "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+  "frameIntervalMs": {
+    "n": 368,
+    "min": 17.8,
+    "p50": 24.6,
+    "p95": 40.1,
+    "p99": 72.9,
+    "max": 157.8
+  },
+  "score": {
+    "analysts": 1,
+    "counterAnalysts": 2
+  }
+}

@@ -93,17 +93,26 @@ async function observe(withAudio) {
   if(withAudio){
     const loaded=performance.getEntriesByType('resource').find(r=>new URL(r.name).pathname.endsWith('/src/fps/coastal-ambience.mjs'));
     const {CoastalAmbience}=await import(loaded?.name||'/src/fps/coastal-ambience.mjs');
-    const sample=observed.audio={peakVoices:0,peakBytes:0,closed:[]};
+    const sample=observed.audio={peakVoices:0,peakBytes:0,opened:[],closed:[],audibleMaps:[],decodeErrors:[]};
+    const owners=new WeakMap();
     const update=CoastalAmbience.prototype.update,dispose=CoastalAmbience.prototype.dispose;
     CoastalAmbience.prototype.update=function(...args){
+      if (!owners.has(this)) {
+        const owner={serial:sample.opened.length+1,id:args[1].referenceId};
+        owners.set(this,owner);
+        sample.opened.push(owner);
+      }
       const value=update.apply(this,args);
       sample.map=this.mapId;sample.peakVoices=Math.max(sample.peakVoices,this.voices.size);
-      sample.peakBytes=Math.max(sample.peakBytes,this.bytes);sample.decodeErrors=[...this.loadErrors];
+      sample.peakBytes=Math.max(sample.peakBytes,this.bytes);if (this.bytes && this.voices.size && !sample.audibleMaps.includes(this.mapId)) sample.audibleMaps.push(this.mapId);
       return value;
     };
     CoastalAmbience.prototype.dispose=function(){
       try{return dispose.call(this);}
-      finally{sample.closed.push({id:this.mapId,bytes:this.bytes,voices:this.voices.size,banks:this.banks.size});}
+      finally{
+        sample.decodeErrors.push(...this.loadErrors);
+        sample.closed.push({serial:owners.get(this)?.serial,id:this.mapId,bytes:this.bytes,voices:this.voices.size,banks:this.banks.size});
+      }
     };
   }
   const draw = Renderer.prototype.render, dispose = Renderer.prototype.dispose;
@@ -487,6 +496,22 @@ try {
       assert.equal(row.geometries,first.geometries,'Stable waiting-room geometry count for '+row.id);
       assert.equal(row.textures,first.textures,'Stable waiting-room texture count for '+row.id);
     }
+    if (audible && process.env.FPS_MAP_ALL_VARIANTS==='1') {
+      // Waiting-room map selection can leave the audio context suspended. Enter
+      // each additional soundscape through the real controls before checking disposal.
+      for (const id of cycle.filter(id=>id!==floor && id!==map)) {
+        mark('hear '+id+' during active play');
+        await selectMap(id);
+        await page.locator('#room-ready').click();
+        await page.locator('#room-start').click();
+        await waitForActiveHud(page);
+        await resumeDesktop(page);
+        await page.waitForFunction(id=>mapProbe.audio.audibleMaps.includes(id),id);
+        await page.locator('#room-rematch').click();
+        await until(()=>room.state.phase==='waiting','Audible round returned to its lobby');
+      }
+      await selectMap(map);
+    }
     mark('reject a damaged level and retry on the saved map');
     const route='**/levels/floor5-prepared.json';
     await page.route(route,r=>r.fulfill({status:200,contentType:'application/json',body:'{}'}));
@@ -510,10 +535,15 @@ try {
   await until(()=>fixture.authority.rooms.size===0,'All sockets and simulation released');
   if(audible&&spec.reference){
     result.audio=await page.evaluate(()=>mapProbe.audio);
-    assert.equal(result.audio.map,map);assert.ok(result.audio.peakBytes>0&&result.audio.peakVoices>0);
+    assert.ok(result.audio.peakBytes>0&&result.audio.peakVoices>0);
     assert.deepEqual(result.audio.decodeErrors,[]);
     assert.ok(result.audio.closed.length>0);
-    for(const owner of result.audio.closed)assert.deepEqual(owner,{id:map,bytes:0,voices:0,banks:0});
+    const visitedMaps=new Set([map,...(result.transitions??[]).map(row=>row.id)]);
+    const expectedMaps=[...visitedMaps].filter(id=>id!==floor);
+    assert.deepEqual([...result.audio.audibleMaps].sort(),[...expectedMaps].sort());
+    for (const owner of result.audio.opened) assert(expectedMaps.includes(owner.id),'Audio owner belongs to a visited soundscape');
+    assert.deepEqual(result.audio.closed,result.audio.opened.map(owner=>({...owner,bytes:0,voices:0,banks:0})),
+      'Each world audio owner is disposed once in visit order with no retained samples, voices or banks');
   }
   assert.deepEqual(errors,[]);
   await browser.close();browser=null;
