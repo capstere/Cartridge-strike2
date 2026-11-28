@@ -140,7 +140,9 @@ try {
   await host.locator('#room-leave').click();
   await host.goto(fixture.origin+'/fps/?network=internet');
   await host.locator('#network-name').fill('Open match host');
-  await host.locator('#network-code').fill(secret());
+  // Account passwords allow base64url. Private room codes accept letters, digits and hyphens.
+  const roomCode = randomBytes(24).toString('hex');
+  await host.locator('#network-code').fill(roomCode);
   await host.locator('[data-create=true]').click();
   await host.locator('#room-public-tools').click();
   const dialog=host.getByRole('dialog');
