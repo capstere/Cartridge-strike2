@@ -1,3 +1,4 @@
+import {BONUSES,activeBonus,bonusTick} from './bonuses.mjs';
 import {RUSH,SLIDE,endSlide,beginBufferedSlide,wantsRush,advanceRush} from './rush.mjs';
 import {zombiePosition} from './zombie-poses.mjs';
 
@@ -12,8 +13,13 @@ const clamp = (x, min, max) => Math.max(min, Math.min(max, x));
 export function moveActor(game, actor, input, dt, effects = true) {
   if (Number.isFinite(input.yaw)) actor.yaw = input.yaw;
   if (Number.isFinite(input.pitch)) actor.pitch = clamp(input.pitch, -1.49, 1.49);
-  const time=game.state.time,runSpeed=game.config.runSpeed;
+  const time=game.state.time;
+  const speedScale=activeBonus(actor,bonusTick(time))==='rage'?BONUSES[1].moveScale:1;
+  const runSpeed=game.config.runSpeed*speedScale;
   const started=beginBufferedSlide(actor,input,time,dt,runSpeed);
+  // Store the base slide speed. Activation or expiry mid-slide must take
+  // effect on exactly the same movement tick in prediction and authority.
+  if(started)actor.slideSpeed/=speedScale;
   if(started && effects)game.emit('slide',actor,{surface:game.world.materialAt(actor.x,actor.z)});
   const sliding=actor.slideUntil>time;
   const slideJump=sliding && input.jump && !actor.jumpHeld && actor.onGround &&
@@ -28,7 +34,7 @@ export function moveActor(game, actor, input, dt, effects = true) {
   if (magnitude > 1) { forward /= magnitude; strafe /= magnitude; }
   const rush = wantsRush(actor,input,forward,time) && !sliding;
   const mode = rush ? 'rush' : actor.crouching ? 'crouch' : input.sneak ? 'sneak' : 'run';
-  const speed = rush ? game.config.runSpeed*RUSH.speed : actor.crouching ? game.config.crouchSpeed : input.sneak ? game.config.sneakSpeed : actor.bot ? game.config.botSpeed : game.config.runSpeed;
+  const speed = speedScale*(rush ? game.config.runSpeed*RUSH.speed : actor.crouching ? game.config.crouchSpeed : input.sneak ? game.config.sneakSpeed : actor.bot ? game.config.botSpeed : game.config.runSpeed);
   let dx = (-Math.sin(actor.yaw) * forward + Math.cos(actor.yaw) * strafe) * speed * dt;
   let dz = (-Math.cos(actor.yaw) * forward - Math.sin(actor.yaw) * strafe) * speed * dt;
   if(actor.slideBuffer>0 && !actor.onGround && !magnitude){
@@ -46,7 +52,7 @@ export function moveActor(game, actor, input, dt, effects = true) {
       }
     }
     const end=game.config.crouchSpeed,remaining=(actor.slideUntil-time)/SLIDE.duration;
-    const distance=(end+(actor.slideSpeed-end)*remaining**1.35)*dt;
+    const distance=(end+(actor.slideSpeed-end)*remaining**1.35)*speedScale*dt;
     dx=distance*actor.travelDirX;dz=distance*actor.travelDirZ;
   }
   if (input.moveWorld) { dx = input.moveWorld.x; dz = input.moveWorld.z; }
@@ -61,7 +67,7 @@ export function moveActor(game, actor, input, dt, effects = true) {
   if (result.ceiling && actor.vy > 0) actor.vy = 0;
   if (effects && !wasGrounded && actor.onGround) game.emit('land', actor, { surface: game.world.materialAt(actor.x, actor.z) });
   const moved = distance(actor, before); actor.moving = moved / dt; actor.distanceWalked += moved;
-  advanceRush(actor,rush,dt,game.config.runSpeed);
+  advanceRush(actor,rush,dt,runSpeed);
   if((actor.rushing || (actor.slideBuffer>0 && !sliding)) && moved>.001){
     actor.travelDirX=(actor.x-before.x)/moved;actor.travelDirZ=(actor.z-before.z)/moved;
   }

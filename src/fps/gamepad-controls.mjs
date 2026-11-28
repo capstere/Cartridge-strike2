@@ -35,7 +35,7 @@ export class GamepadControls {
     const [strafe,y]=stick(pad.axes[0],pad.axes[1],false),[lookX,lookY]=stick(pad.axes[2],pad.axes[3],true);
     const forward=y===0?0:-y,fire=down(7),aim=down(6);
     this.sprint=(this.sprint||edge(10)) && forward>.3 && !aim && !fire;
-    return {forward,strafe,lookX,lookY,fire,firePress:edge(7),aim,
+    return {pressedEdges:mask & ~old,forward,strafe,lookX,lookY,fire,firePress:edge(7),aim,
       sprint:this.sprint,jump:down(0),crouch:down(1),crouchEdge:edge(1),reload:edge(2),swap:edge(3),
       interact:down(4),cartridge:edge(5),inspect:edge(14)};
   }

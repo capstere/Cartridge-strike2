@@ -1,3 +1,4 @@
+import {bonusOrigin} from './bonuses.mjs';
 import {resetRush} from './rush.mjs';
 import {controlObjective,combatSpawnCandidates,activeControl} from './combat-flow.mjs';
 /** Arcade rules. Simulation time only; visual/audio systems never own damage or respawns. */
@@ -76,7 +77,7 @@ export function respawnActor(g,a){
   reloadUntil:0,nextShot:g.state.time+.15,flashUntil:0,flash:0,flashStart:0,action:null,moving:0,distanceWalked:0,recoil:0,
   lastStep:g.state.time,fireHeld:false,interactHeld:false,jumpHeld:false,hurtTime:-Infinity,hurtDirection:null,deathAt:null,deathCause:null,deathVariant:'',
   respawnAt:null,spawnProtectedUntil:g.state.time+g.config.spawnProtection,blockedBy:null});
- if(g.config.networkSlice)a.lifeId=(a.lifeId||0)+1;
+ a.lifeId=(a.lifeId||0)+1;
  equipEndless(g,a);a.bot=a.controllerType==='bot'?new BotController(g,a):null;
  for(const other of g.actors){const memory=other.bot?.memory;if(memory?.hasRecord(a))memory.deleteRecord(a);}
  g.emit('respawn',a,{protection:g.config.spawnProtection});return true;
@@ -139,7 +140,7 @@ export function friendlyLineClear(bot){
 /** Segment/AABB sweep is shared for bullets and projectiles by the core caller. */
 export function launchRocket(g,actor,dir){
  const owner={ownerId:actor.id,ownerLifeId:actor.lifeId??0,team:actor.team,ownerName:actor.name};
- const p={...eye(actor),id:`rocket-${++g.eventSerial}`,ownerId:actor.id,team:actor.team,
+ const p={bonusOrigin:bonusOrigin(g,actor),...eye(actor),id:`rocket-${++g.eventSerial}`,ownerId:actor.id,team:actor.team,
   ...(g.config.networkSlice?{ownerLifeId:owner.ownerLifeId,ownerName:owner.ownerName}:{}),
   vx:dir.x*22,vy:dir.y*22,vz:dir.z*22,born:g.state.time,until:g.state.time+4};
  // Keep the original actor and control generation out of projected state.
@@ -169,7 +170,7 @@ export function updateRockets(g,dt,rayActor){
     const center={...(a.kind==='zombie'?zombiePosition(a,a.bodyTime):pos(a)),y:a.y+a.height*.55};const distance=Math.hypot(center.x-origin.x,center.y-origin.y,center.z-origin.z);
     if(distance>=radius&&a!==hit)continue;
     if(a!==hit&&!g.world.segmentClear(origin,center,{vision:false}))continue;
-    g.pendingDamage.push({target:a,amount:a===hit?WEAPONS.bazooka.damage:135*Math.max(0,1-distance/radius),source:owner,projectileOwner,rocketId:projectileOwner?r.id:undefined,kind:'bazooka',point:center,sourcePosition:origin});
+    g.pendingDamage.push({target:a,amount:a===hit?WEAPONS.bazooka.damage:135*Math.max(0,1-distance/radius),source:owner,bonusOrigin:r.bonusOrigin,projectileOwner,rocketId:projectileOwner?r.id:undefined,kind:'bazooka',point:center,sourcePosition:origin});
    }
   }else remaining.push(r);
  }

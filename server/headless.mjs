@@ -43,7 +43,6 @@ export class AuthoritativeSimulation {
       for (const [id, input] of inputs) {
         const actor = this.game.actors.find(a => a.id === id);
         if (input.select) this.game.select(input.select, actor);
-        if (input.reload) this.game.reload(actor);
       }
     }
     this.game.stepActors(inputs);

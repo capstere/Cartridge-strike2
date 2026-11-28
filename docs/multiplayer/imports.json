@@ -1,6 +1,7 @@
 {
   "src/fps/rush.mjs": [],
   "src/fps/movement.mjs": [
+    "src/fps/bonuses.mjs",
     "src/fps/rush.mjs",
     "src/fps/zombie-poses.mjs"
   ],
@@ -28,10 +29,11 @@
   ],
   "vendor/yuka/yuka.module.js": [],
   "src/fps/action-rules.mjs": [
-    "src/fps/rush.mjs",
+    "src/fps/bonuses.mjs",
     "src/fps/bots.mjs",
     "src/fps/combat-flow.mjs",
     "src/fps/config.mjs",
+    "src/fps/rush.mjs",
     "src/fps/zombie-poses.mjs"
   ],
   "src/fps/riposte-fps-math.mjs": [],
@@ -70,6 +72,7 @@
   "src/fps/game.mjs": [
     "src/fps/action-rules.mjs",
     "src/fps/body-recovery.mjs",
+    "src/fps/bonuses.mjs",
     "src/fps/bot-tactics.mjs",
     "src/fps/bots.mjs",
     "src/fps/combat-flow.mjs",
@@ -255,5 +258,6 @@
     "src/fps/physics.mjs"
   ],
   "src/fps/game-english.mjs": [],
-  "shared/sha256.mjs": []
+  "shared/sha256.mjs": [],
+  "src/fps/bonuses.mjs": []
 }

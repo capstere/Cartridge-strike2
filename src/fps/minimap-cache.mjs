@@ -292,6 +292,18 @@ export class MinimapCache {
     const ctx = this.context, l = this.layer(world,expanded);
     ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
     ctx.drawImage(l.canvas,0,0);
+    const blips = game.uavBlips?.();
+    if (blips?.length) {
+      ctx.save();
+      ctx.fillStyle = '#ff976a';
+      for (const {x,z,alpha} of blips) {
+        ctx.globalAlpha = alpha;
+        ctx.beginPath();
+        ctx.arc(l.ox+(x-l.xmin)*l.scale,l.oz+(z-l.zmin)*l.scale,expanded ? 3.5 : 2.4,0,Math.PI*2);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
     if (world.networkSlice) {
       const ping=game.teamPing;
       if(ping?.anchor&&ping.expiresAt>game.state.time){
