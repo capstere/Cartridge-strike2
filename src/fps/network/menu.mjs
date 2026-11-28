@@ -42,7 +42,7 @@ export function networkMenu(join,activate=()=>{},internet=false,cancel=()=>{}){
     $('network-map').replaceChildren(...NETWORK_MAPS.map(map=>new Option(map.name,map.id)));
     $('network-map').value=DEFAULT_MAP_ID;
     const modeList=new Intl.ListFormat('en',{style:'long',type:'disjunction'});
-    const describeFormat=()=>{brief[1].textContent=$('network-mode').value==='ffa'?'Up to 10 players · Private room':en.privateTeams;};
+    const describeFormat=()=>{brief[1].textContent=$('network-mode').value==='ffa'?en.privateIndividuals:en.privateTeams;};
     $('network-mode').addEventListener('change',describeFormat);
     const selectMap=()=>{
       const map=networkMap($('network-map').value),current=$('network-mode').value;

@@ -38,9 +38,10 @@ async function open(viewport={width:1280,height:720},mobile=false,endpoint=local
    'Floor 5 Laboratory','5v5 · Private room','Team Deathmatch, Classic, Free-for-All, or Domination',
  ]);
  await page.locator('#network-mode').selectOption('ffa');
- assert.equal(await page.locator('.lb-brief dd').nth(1).innerText(),'Up to 10 players · Private room');
+ assert.equal(await page.locator('#menu .eyebrow').textContent(),'Local multiplayer');
+ assert.equal(await page.locator('.lb-brief dd').nth(1).textContent(),'Up to 10 players · Private room');
  await page.locator('#network-mode').selectOption('tdm');
- assert.equal(await page.locator('.lb-brief dd').nth(1).innerText(),'5v5 · Private room');
+ assert.equal(await page.locator('.lb-brief dd').nth(1).textContent(),'5v5 · Private room');
  assert.deepEqual(levelRequests,[],'no LevelProject requested before room admission');
  assert(await page.evaluate(()=>!__fps.world&&!__fps.renderer&&__fps.renderBudget.stats.rendered===0));
  return page;
