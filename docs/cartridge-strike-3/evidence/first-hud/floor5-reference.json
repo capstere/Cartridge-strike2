@@ -1,0 +1,1060 @@
+{
+  "build": "1ac88e31ba8f2aa7460034ae3c16f741e2527fb3fbcae199ffcd58681df393c9",
+  "protocol": 21,
+  "map": "floor5-prepared",
+  "players": 2,
+  "bots": 0,
+  "movement": 0.14000000000000407,
+  "ticks": 35,
+  "waiting": [
+    {
+      "pose": [
+        "analysts-0",
+        -20.541,
+        0,
+        -30.03999,
+        3.141592653589793,
+        "smg"
+      ],
+      "driver": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "calls": 295,
+      "geometry": 281,
+      "textures": 110,
+      "scissorTest": false,
+      "width": 672,
+      "height": 378
+    },
+    {
+      "pose": [
+        "counterAnalysts-0",
+        28.00054,
+        0,
+        30.43484,
+        3.141592653589793,
+        "smg"
+      ],
+      "driver": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "calls": 40,
+      "geometry": 125,
+      "textures": 82,
+      "scissorTest": false,
+      "width": 480,
+      "height": 270
+    }
+  ],
+  "desktop": {
+    "firstHud": 33187.6,
+    "nextRaf": 35437.6,
+    "gap": 2250,
+    "firstVisibleCallback": 33279.299999952316,
+    "markers": [
+      [
+        "join requested",
+        12753.5
+      ],
+      [
+        "loadWorld",
+        16984.100000023842,
+        "floor5-prepared",
+        1
+      ],
+      [
+        "waiting ready",
+        35740.200000047684
+      ]
+    ],
+    "warmWindows": [
+      [
+        26421.700000047684,
+        31180.399999976158
+      ]
+    ],
+    "joinToHud": 20434.1,
+    "loadingWorstRaf": 3399.800000000003,
+    "loadingWorstInput": 3383.100000023842,
+    "detailed": true,
+    "documentVisible": true,
+    "viewport": [
+      896,
+      504,
+      0.75
+    ],
+    "inputs": [
+      {
+        "handler": 33278.5,
+        "stamp": 33209.799999952316,
+        "delay": 68.70000004768372
+      },
+      {
+        "handler": 35482.89999997616,
+        "stamp": 33309.299999952316,
+        "delay": 2173.600000023842
+      }
+    ],
+    "frames": [
+      [
+        33054.3,
+        16.700000000004366
+      ],
+      [
+        33071,
+        16.69999999999709
+      ],
+      [
+        33087.6,
+        16.599999999998545
+      ],
+      [
+        33104.3,
+        16.700000000004366
+      ],
+      [
+        33137.6,
+        33.299999999995634
+      ],
+      [
+        33154.3,
+        16.700000000004366
+      ],
+      [
+        33171,
+        16.69999999999709
+      ],
+      [
+        33187.6,
+        16.599999999998545
+      ],
+      [
+        35437.6,
+        2250
+      ],
+      [
+        35504.2,
+        66.59999999999854
+      ],
+      [
+        35537.6,
+        33.400000000001455
+      ],
+      [
+        35581.7,
+        44.099999999998545
+      ],
+      [
+        35598.4,
+        16.700000000004366
+      ],
+      [
+        35615.1,
+        16.69999999999709
+      ],
+      [
+        35650.5,
+        35.400000000001455
+      ],
+      [
+        35683.9,
+        33.400000000001455
+      ],
+      [
+        35707.2,
+        23.299999999995634
+      ],
+      [
+        35724,
+        16.80000000000291
+      ],
+      [
+        35740.6,
+        16.599999999998545
+      ],
+      [
+        35757.3,
+        16.700000000004366
+      ],
+      [
+        35790.6,
+        33.299999999995634
+      ],
+      [
+        35826.5,
+        35.900000000001455
+      ],
+      [
+        35843.2,
+        16.69999999999709
+      ],
+      [
+        35859.8,
+        16.60000000000582
+      ],
+      [
+        35911.5,
+        51.69999999999709
+      ],
+      [
+        35928.1,
+        16.599999999998545
+      ]
+    ],
+    "spans": [
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 33347.60000002384,
+        "end": 33628.799999952316
+      },
+      {
+        "layer": "gl",
+        "name": "getShaderInfoLog",
+        "start": 33630.799999952316,
+        "end": 33635.89999997616
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 33640.200000047684,
+        "end": 33647.700000047684
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 33649.89999997616,
+        "end": 33734.60000002384
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 33736.60000002384,
+        "end": 33816
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 33817.700000047684,
+        "end": 33917.299999952316
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 33918.700000047684,
+        "end": 33990.39999997616
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 33996,
+        "end": 34007.5
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 34024.5,
+        "end": 34088.5
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 34089.700000047684,
+        "end": 34169.700000047684
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 34171.700000047684,
+        "end": 34241.200000047684
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 34242.200000047684,
+        "end": 34304.5
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 34316.39999997616,
+        "end": 34402.799999952316
+      },
+      {
+        "layer": "gl",
+        "name": "texSubImage2D",
+        "start": 34404.10000002384,
+        "end": 34411.700000047684
+      },
+      {
+        "layer": "gl",
+        "name": "texSubImage2D",
+        "start": 34414.5,
+        "end": 34422.299999952316
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 34424.799999952316,
+        "end": 34510.200000047684
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 34512.200000047684,
+        "end": 34593.10000002384
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 34600.60000002384,
+        "end": 34621.60000002384
+      },
+      {
+        "layer": "gl",
+        "name": "getShaderInfoLog",
+        "start": 34629.799999952316,
+        "end": 34635.5
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 34637.89999997616,
+        "end": 34643.700000047684
+      },
+      {
+        "layer": "three",
+        "name": "world",
+        "start": 33321.299999952316,
+        "end": 34649.799999952316
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 34665.799999952316,
+        "end": 34737.200000047684
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 34738.89999997616,
+        "end": 34844.700000047684
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 34846.10000002384,
+        "end": 34918.10000002384
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 34919.299999952316,
+        "end": 35011.60000002384
+      },
+      {
+        "layer": "gl",
+        "name": "getShaderInfoLog",
+        "start": 35011.60000002384,
+        "end": 35016.299999952316
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 35019.299999952316,
+        "end": 35425.799999952316
+      },
+      {
+        "layer": "three",
+        "name": "weapon",
+        "start": 34649.89999997616,
+        "end": 35427.39999997616
+      },
+      {
+        "layer": "game",
+        "name": "renderer",
+        "start": 33285.39999997616,
+        "end": 35427.700000047684
+      },
+      {
+        "layer": "raf",
+        "name": "frame",
+        "stamp": 33187.6,
+        "start": 33279.39999997616,
+        "end": 35430.89999997616
+      },
+      {
+        "layer": "three",
+        "name": "world",
+        "start": 35485.200000047684,
+        "end": 35506.10000002384
+      },
+      {
+        "layer": "game",
+        "name": "renderer",
+        "start": 35484.60000002384,
+        "end": 35507.299999952316
+      },
+      {
+        "layer": "raf",
+        "name": "frame",
+        "stamp": 35437.6,
+        "start": 35483,
+        "end": 35509
+      },
+      {
+        "layer": "three",
+        "name": "world",
+        "start": 35553.700000047684,
+        "end": 35586.799999952316
+      },
+      {
+        "layer": "game",
+        "name": "renderer",
+        "start": 35553.200000047684,
+        "end": 35588.10000002384
+      },
+      {
+        "layer": "raf",
+        "name": "frame",
+        "stamp": 35537.6,
+        "start": 35552,
+        "end": 35588.200000047684
+      },
+      {
+        "layer": "three",
+        "name": "world",
+        "start": 35658.700000047684,
+        "end": 35682.5
+      },
+      {
+        "layer": "game",
+        "name": "renderer",
+        "start": 35654.60000002384,
+        "end": 35684.5
+      },
+      {
+        "layer": "raf",
+        "name": "frame",
+        "stamp": 35650.5,
+        "start": 35652.5,
+        "end": 35691.60000002384
+      },
+      {
+        "layer": "three",
+        "name": "world",
+        "start": 35774.39999997616,
+        "end": 35791
+      },
+      {
+        "layer": "game",
+        "name": "renderer",
+        "start": 35773.700000047684,
+        "end": 35792.5
+      },
+      {
+        "layer": "raf",
+        "name": "frame",
+        "stamp": 35757.3,
+        "start": 35771.799999952316,
+        "end": 35795.5
+      },
+      {
+        "layer": "three",
+        "name": "world",
+        "start": 35867.700000047684,
+        "end": 35898.10000002384
+      },
+      {
+        "layer": "game",
+        "name": "renderer",
+        "start": 35864.799999952316,
+        "end": 35900.299999952316
+      },
+      {
+        "layer": "raf",
+        "name": "frame",
+        "stamp": 35859.8,
+        "start": 35862.799999952316,
+        "end": 35905.299999952316
+      }
+    ],
+    "tasks": [
+      {
+        "kind": "longtask",
+        "start": 33189.39999997616,
+        "duration": 64
+      },
+      {
+        "kind": "longtask",
+        "start": 33274.299999952316,
+        "duration": 2200
+      },
+      {
+        "kind": "long-animation-frame",
+        "start": 33186.89999997616,
+        "duration": 2255.7000000476837,
+        "renderStart": 33278.60000002384,
+        "layoutStart": 35441.299999952316,
+        "scripts": [
+          [
+            "TimerHandler:setTimeout",
+            "",
+            "",
+            33189.5,
+            64.60000002384186
+          ],
+          [
+            "FrameRequestCallback",
+            "",
+            "",
+            33279.39999997616,
+            2161.899999976158
+          ]
+        ]
+      },
+      {
+        "kind": "longtask",
+        "start": 35651.799999952316,
+        "duration": 50
+      },
+      {
+        "kind": "longtask",
+        "start": 35771.299999952316,
+        "duration": 55
+      },
+      {
+        "kind": "long-animation-frame",
+        "start": 35641,
+        "duration": 56.700000047683716,
+        "renderStart": 35652,
+        "layoutStart": 35691.799999952316,
+        "scripts": [
+          [
+            "FrameRequestCallback",
+            "",
+            "",
+            35652.5,
+            39.200000047683716
+          ]
+        ]
+      },
+      {
+        "kind": "longtask",
+        "start": 35861.299999952316,
+        "duration": 61
+      },
+      {
+        "kind": "long-animation-frame",
+        "start": 35748.89999997616,
+        "duration": 51.800000071525574,
+        "renderStart": 35771.5,
+        "layoutStart": 35795.60000002384,
+        "scripts": [
+          [
+            "FrameRequestCallback",
+            "",
+            "",
+            35771.799999952316,
+            23.800000071525574
+          ]
+        ]
+      },
+      {
+        "kind": "long-animation-frame",
+        "start": 35851.5,
+        "duration": 66.70000004768372,
+        "renderStart": 35862.5,
+        "layoutStart": 35905.39999997616,
+        "scripts": [
+          [
+            "FrameRequestCallback",
+            "",
+            "",
+            35862.700000047684,
+            42.699999928474426
+          ]
+        ]
+      }
+    ]
+  },
+  "emulated": {
+    "firstHud": 41993.5,
+    "nextRaf": 44535,
+    "gap": 2541.5,
+    "firstVisibleCallback": 42086.10000002384,
+    "markers": [
+      [
+        "join requested",
+        25302.299999952316
+      ],
+      [
+        "loadWorld",
+        25951.5,
+        "floor5-prepared",
+        1
+      ],
+      [
+        "waiting ready",
+        44916.10000002384
+      ]
+    ],
+    "warmWindows": [
+      [
+        37035.299999952316,
+        41926.799999952316
+      ]
+    ],
+    "joinToHud": 16691.200000047684,
+    "loadingWorstRaf": 3799.899999999998,
+    "loadingWorstInput": 3775.600000023842,
+    "detailed": true,
+    "documentVisible": true,
+    "viewport": [
+      640,
+      360,
+      0.75
+    ],
+    "inputs": [
+      {
+        "handler": 41996.60000002384,
+        "stamp": 41965.700000047684,
+        "delay": 30.899999976158142
+      },
+      {
+        "handler": 42085.39999997616,
+        "stamp": 42067,
+        "delay": 18.399999976158142
+      },
+      {
+        "handler": 44593.39999997616,
+        "stamp": 42167.5,
+        "delay": 2425.899999976158
+      }
+    ],
+    "frames": [
+      [
+        41848.3,
+        16.700000000004366
+      ],
+      [
+        41881.6,
+        33.299999999995634
+      ],
+      [
+        41898.2,
+        16.599999999998545
+      ],
+      [
+        41914.9,
+        16.700000000004366
+      ],
+      [
+        41931.6,
+        16.69999999999709
+      ],
+      [
+        41943.5,
+        11.900000000001455
+      ],
+      [
+        41960.2,
+        16.69999999999709
+      ],
+      [
+        41976.9,
+        16.700000000004366
+      ],
+      [
+        41993.5,
+        16.599999999998545
+      ],
+      [
+        44535,
+        2541.5
+      ],
+      [
+        44618,
+        83
+      ],
+      [
+        44634.6,
+        16.599999999998545
+      ],
+      [
+        44711,
+        76.40000000000146
+      ],
+      [
+        44744.3,
+        33.30000000000291
+      ],
+      [
+        44761,
+        16.69999999999709
+      ],
+      [
+        44777.2,
+        16.19999999999709
+      ],
+      [
+        44793.9,
+        16.700000000004366
+      ],
+      [
+        44810.5,
+        16.599999999998545
+      ],
+      [
+        44827,
+        16.5
+      ],
+      [
+        44844.8,
+        17.80000000000291
+      ],
+      [
+        44861.4,
+        16.599999999998545
+      ],
+      [
+        44872.1,
+        10.69999999999709
+      ],
+      [
+        44906.9,
+        34.80000000000291
+      ],
+      [
+        44923.5,
+        16.599999999998545
+      ],
+      [
+        44940.2,
+        16.69999999999709
+      ],
+      [
+        44962.2,
+        22
+      ],
+      [
+        44978.9,
+        16.700000000004366
+      ],
+      [
+        45013.2,
+        34.299999999995634
+      ],
+      [
+        45029.9,
+        16.700000000004366
+      ]
+    ],
+    "spans": [
+      {
+        "layer": "gl",
+        "name": "texSubImage2D",
+        "start": 42496.299999952316,
+        "end": 42517.5
+      },
+      {
+        "layer": "gl",
+        "name": "texSubImage2D",
+        "start": 42517.700000047684,
+        "end": 42544
+      },
+      {
+        "layer": "gl",
+        "name": "texSubImage2D",
+        "start": 42544.299999952316,
+        "end": 42559.200000047684
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 42560.299999952316,
+        "end": 42665
+      },
+      {
+        "layer": "gl",
+        "name": "texSubImage2D",
+        "start": 42666.10000002384,
+        "end": 42694.89999997616
+      },
+      {
+        "layer": "gl",
+        "name": "texSubImage2D",
+        "start": 42695.10000002384,
+        "end": 42741.5
+      },
+      {
+        "layer": "gl",
+        "name": "texSubImage2D",
+        "start": 42741.700000047684,
+        "end": 42762.5
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 42763.10000002384,
+        "end": 42854.5
+      },
+      {
+        "layer": "gl",
+        "name": "texSubImage2D",
+        "start": 42855.39999997616,
+        "end": 42878.60000002384
+      },
+      {
+        "layer": "gl",
+        "name": "texSubImage2D",
+        "start": 42879.5,
+        "end": 42906.700000047684
+      },
+      {
+        "layer": "gl",
+        "name": "texSubImage2D",
+        "start": 42906.799999952316,
+        "end": 42921.60000002384
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 42922.799999952316,
+        "end": 43016.200000047684
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 43019.700000047684,
+        "end": 43084
+      },
+      {
+        "layer": "gl",
+        "name": "texSubImage2D",
+        "start": 43101.39999997616,
+        "end": 43109.5
+      },
+      {
+        "layer": "gl",
+        "name": "texSubImage2D",
+        "start": 43112.700000047684,
+        "end": 43120.799999952316
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 43121.200000047684,
+        "end": 43125.39999997616
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 43129.700000047684,
+        "end": 43197.799999952316
+      },
+      {
+        "layer": "three",
+        "name": "world",
+        "start": 42483.299999952316,
+        "end": 43200.89999997616
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 43207.89999997616,
+        "end": 43266.299999952316
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 43272.10000002384,
+        "end": 43421.39999997616
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 43425,
+        "end": 43584.10000002384
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 43595.89999997616,
+        "end": 43734.700000047684
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 43738.299999952316,
+        "end": 43892.10000002384
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 43900.10000002384,
+        "end": 44389.10000002384
+      },
+      {
+        "layer": "gl",
+        "name": "getShaderInfoLog",
+        "start": 44389.10000002384,
+        "end": 44491.299999952316
+      },
+      {
+        "layer": "gl",
+        "name": "getShaderInfoLog",
+        "start": 44491.299999952316,
+        "end": 44502.700000047684
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramParameter",
+        "start": 44502.700000047684,
+        "end": 44514.700000047684
+      },
+      {
+        "layer": "three",
+        "name": "weapon",
+        "start": 43201,
+        "end": 44516.299999952316
+      },
+      {
+        "layer": "game",
+        "name": "renderer",
+        "start": 42093.89999997616,
+        "end": 44516.5
+      },
+      {
+        "layer": "raf",
+        "name": "frame",
+        "stamp": 41993.5,
+        "start": 42086.10000002384,
+        "end": 44519.799999952316
+      },
+      {
+        "layer": "three",
+        "name": "world",
+        "start": 44597,
+        "end": 44602.60000002384
+      },
+      {
+        "layer": "game",
+        "name": "renderer",
+        "start": 44595.89999997616,
+        "end": 44604.200000047684
+      },
+      {
+        "layer": "raf",
+        "name": "frame",
+        "stamp": 44535,
+        "start": 44593.799999952316,
+        "end": 44606.700000047684
+      },
+      {
+        "layer": "three",
+        "name": "world",
+        "start": 44731.200000047684,
+        "end": 44735.200000047684
+      },
+      {
+        "layer": "game",
+        "name": "renderer",
+        "start": 44727.60000002384,
+        "end": 44737.299999952316
+      },
+      {
+        "layer": "raf",
+        "name": "frame",
+        "stamp": 44711,
+        "start": 44726.299999952316,
+        "end": 44740.5
+      },
+      {
+        "layer": "three",
+        "name": "world",
+        "start": 44830.5,
+        "end": 44835.39999997616
+      },
+      {
+        "layer": "game",
+        "name": "renderer",
+        "start": 44828.799999952316,
+        "end": 44837.60000002384
+      },
+      {
+        "layer": "raf",
+        "name": "frame",
+        "stamp": 44827,
+        "start": 44827.700000047684,
+        "end": 44841.5
+      },
+      {
+        "layer": "three",
+        "name": "world",
+        "start": 44943.10000002384,
+        "end": 44947.200000047684
+      },
+      {
+        "layer": "game",
+        "name": "renderer",
+        "start": 44941.799999952316,
+        "end": 44951.299999952316
+      },
+      {
+        "layer": "raf",
+        "name": "frame",
+        "stamp": 44940.2,
+        "start": 44941,
+        "end": 44956.10000002384
+      }
+    ],
+    "tasks": [
+      {
+        "kind": "longtask",
+        "start": 41999.60000002384,
+        "duration": 63
+      },
+      {
+        "kind": "longtask",
+        "start": 42064.299999952316,
+        "duration": 2517
+      },
+      {
+        "kind": "long-animation-frame",
+        "start": 41997.39999997616,
+        "duration": 2544.5,
+        "renderStart": 42085.39999997616,
+        "layoutStart": 44537.5,
+        "scripts": [
+          [
+            "TimerHandler:setTimeout",
+            "",
+            "",
+            41999.700000047684,
+            63.59999990463257
+          ],
+          [
+            "FrameRequestCallback",
+            "",
+            "",
+            42086.10000002384,
+            2451.399999976158
+          ]
+        ]
+      },
+      {
+        "kind": "long-animation-frame",
+        "start": 44660.10000002384,
+        "duration": 86.89999997615814,
+        "renderStart": 44726.10000002384,
+        "layoutStart": 44745.799999952316,
+        "scripts": [
+          [
+            "FrameRequestCallback",
+            "",
+            "",
+            44726.299999952316,
+            14.200000047683716
+          ]
+        ]
+      }
+    ]
+  }
+}
