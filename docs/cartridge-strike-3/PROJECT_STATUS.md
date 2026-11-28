@@ -24,7 +24,7 @@
 
 The live Pi still runs the verified CS2 revision. Its private backup passed an isolated restoration rehearsal. PR #55 preserved the latest 02/03/05 states and its native protocol 17 account runtime. Both original PR heads had nine green jobs. The account branch was reconciled with current development and independently reviewed before its nine final checks passed.
 
-The native map review for #56 accepted the 20-change four-map lifecycle, matching 175.121-second parked control, reversible Kervénec quality switch, signs and real damaged-map recovery. Six disposed audio owners matched their originating maps, all resource counts returned to zero and Node exited naturally in 458 ms. Reconcile #56 with this account merge, compare both parent runtime allowlists and require the final hosted jobs before starting CS3-08.
+The native map review for #56 accepted the 20-change four-map lifecycle, matching 175.121-second parked control, reversible Kervénec quality switch, signs and real damaged-map recovery. Six disposed audio owners matched their originating maps, all resource counts returned to zero and Node exited naturally in 458 ms. Its reconciled build preserved both parent allowlists, and all nine corrected-head jobs passed before CS3-08 opened.
 
 Floor 5 remains under measurement. On the Pi, the candidate reproduced all world and weapon pixels across 24 original/candidate views. Continuously running input and presented frames are measured separately. Native Pi Chromium touch emulation and a physical handset are separate evidence categories.
 
