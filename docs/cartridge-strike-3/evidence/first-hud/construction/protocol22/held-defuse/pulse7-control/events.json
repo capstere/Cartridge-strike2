@@ -1,0 +1,288 @@
+{
+  "authorityAmmo": 20,
+  "round": 2,
+  "records": [
+    [
+      {
+        "type": "shot",
+        "eventId": 6,
+        "time": 11.350000000000144,
+        "actionId": "analysts-0:2:1:1",
+        "actorId": "analysts-0",
+        "round": 1,
+        "weapon": "p9"
+      },
+      {
+        "type": "switch",
+        "eventId": 9,
+        "time": 11.533333333333486,
+        "actionId": "",
+        "actorId": "counterAnalysts-0",
+        "round": 1,
+        "weapon": "bomb"
+      },
+      {
+        "type": "switch",
+        "eventId": 10,
+        "time": 12.483333333333533,
+        "actionId": "",
+        "actorId": "counterAnalysts-0",
+        "round": 1,
+        "weapon": "p12"
+      },
+      {
+        "type": "rescued",
+        "eventId": 15,
+        "time": 16.55000000000034,
+        "actionId": "",
+        "actorId": "hostage-0",
+        "round": 1
+      },
+      {
+        "type": "plant",
+        "eventId": 16,
+        "time": 18.016666666666925,
+        "actionId": "",
+        "actorId": "counterAnalysts-0",
+        "round": 1
+      },
+      {
+        "type": "plant",
+        "eventId": 17,
+        "time": 18.15000000000025,
+        "actionId": "",
+        "actorId": "counterAnalysts-0",
+        "round": 1
+      },
+      {
+        "type": "planted",
+        "eventId": 18,
+        "time": 21.15000000000008,
+        "actionId": "",
+        "actorId": "counterAnalysts-0",
+        "round": 1
+      },
+      {
+        "type": "defuse",
+        "eventId": 27,
+        "time": 23.56666666666661,
+        "actionId": "",
+        "actorId": "analysts-0",
+        "round": 1
+      },
+      {
+        "type": "defuse",
+        "eventId": 29,
+        "time": 24.633333333333216,
+        "actionId": "",
+        "actorId": "analysts-0",
+        "round": 1
+      },
+      {
+        "type": "defuse",
+        "eventId": 30,
+        "time": 25.19999999999985,
+        "actionId": "",
+        "actorId": "analysts-0",
+        "round": 1
+      },
+      {
+        "type": "defuse",
+        "eventId": 32,
+        "time": 25.716666666666487,
+        "actionId": "",
+        "actorId": "analysts-0",
+        "round": 1
+      },
+      {
+        "type": "defuse",
+        "eventId": 34,
+        "time": 26.349999999999785,
+        "actionId": "",
+        "actorId": "analysts-0",
+        "round": 1
+      },
+      {
+        "type": "reload",
+        "eventId": 42,
+        "time": 32.64999999999943,
+        "actionId": "",
+        "actorId": "analysts-0",
+        "round": 2,
+        "weapon": "p9"
+      }
+    ],
+    [
+      {
+        "type": "shot",
+        "eventId": 6,
+        "time": 11.350000000000144,
+        "actionId": "analysts-0:2:1:1",
+        "actorId": "analysts-0",
+        "round": 1,
+        "weapon": "p9"
+      },
+      {
+        "type": "switch",
+        "eventId": 9,
+        "time": 11.533333333333486,
+        "actionId": "",
+        "actorId": "counterAnalysts-0",
+        "round": 1,
+        "weapon": "bomb"
+      },
+      {
+        "type": "switch",
+        "eventId": 10,
+        "time": 12.483333333333533,
+        "actionId": "",
+        "actorId": "counterAnalysts-0",
+        "round": 1,
+        "weapon": "p12"
+      },
+      {
+        "type": "rescued",
+        "eventId": 15,
+        "time": 16.55000000000034,
+        "actionId": "",
+        "actorId": "hostage-0",
+        "round": 1
+      },
+      {
+        "type": "plant",
+        "eventId": 16,
+        "time": 18.016666666666925,
+        "actionId": "",
+        "actorId": "counterAnalysts-0",
+        "round": 1
+      },
+      {
+        "type": "plant",
+        "eventId": 17,
+        "time": 18.15000000000025,
+        "actionId": "",
+        "actorId": "counterAnalysts-0",
+        "round": 1
+      },
+      {
+        "type": "planted",
+        "eventId": 18,
+        "time": 21.15000000000008,
+        "actionId": "",
+        "actorId": "counterAnalysts-0",
+        "round": 1
+      },
+      {
+        "type": "defuse",
+        "eventId": 27,
+        "time": 23.56666666666661,
+        "actionId": "",
+        "actorId": "analysts-0",
+        "round": 1
+      },
+      {
+        "type": "defuse",
+        "eventId": 29,
+        "time": 24.633333333333216,
+        "actionId": "",
+        "actorId": "analysts-0",
+        "round": 1
+      },
+      {
+        "type": "defuse",
+        "eventId": 30,
+        "time": 25.19999999999985,
+        "actionId": "",
+        "actorId": "analysts-0",
+        "round": 1
+      },
+      {
+        "type": "defuse",
+        "eventId": 32,
+        "time": 25.716666666666487,
+        "actionId": "",
+        "actorId": "analysts-0",
+        "round": 1
+      },
+      {
+        "type": "defuse",
+        "eventId": 34,
+        "time": 26.349999999999785,
+        "actionId": "",
+        "actorId": "analysts-0",
+        "round": 1
+      },
+      {
+        "type": "reload",
+        "eventId": 42,
+        "time": 32.64999999999943,
+        "actionId": "",
+        "actorId": "analysts-0",
+        "round": 2,
+        "weapon": "p9"
+      }
+    ]
+  ],
+  "interactionTrace": [
+    {
+      "gesture": "short press",
+      "time": 18.016666666666925,
+      "type": "plant",
+      "position": [
+        -31.5,
+        0,
+        -8.5
+      ],
+      "moving": 0,
+      "onGround": true,
+      "lastInputAgeMs": 0,
+      "heldForMs": 180,
+      "alive": true
+    },
+    {
+      "gesture": "short release",
+      "time": 18.100000000000254,
+      "type": "",
+      "position": [
+        -31.5,
+        0,
+        -8.5
+      ],
+      "moving": 0,
+      "onGround": true,
+      "lastInputAgeMs": 0,
+      "heldForMs": 0,
+      "alive": true
+    },
+    {
+      "gesture": "full press",
+      "time": 18.15000000000025,
+      "type": "plant",
+      "position": [
+        -31.5,
+        0,
+        -8.5
+      ],
+      "moving": 0,
+      "onGround": true,
+      "lastInputAgeMs": 0,
+      "heldForMs": 180,
+      "alive": true
+    },
+    {
+      "gesture": "full press",
+      "time": 21.15000000000008,
+      "type": "",
+      "position": [
+        -31.5,
+        0,
+        -8.5
+      ],
+      "moving": 0,
+      "onGround": true,
+      "lastInputAgeMs": 0,
+      "heldForMs": 180,
+      "alive": true
+    }
+  ]
+}

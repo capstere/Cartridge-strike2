@@ -1,0 +1,39 @@
+diff --git a/src/fps/app.mjs b/src/fps/app.mjs
+index 5d5a71b..f497f6c 100644
+--- a/src/fps/app.mjs
++++ b/src/fps/app.mjs
+@@ -52,6 +52,12 @@ const renderBudget=new RenderBudget();
+ const presentationPacer=new PresentationPacer();
+ const minimapCache=new MinimapCache($('minimap'));
+ const minimapPanel=$('minimap').closest('.map-panel');
++// CSS decides whether the compact or expanded panel occupies space. Reading its
++// rectangles after every HUD update forces layout while controls are held.
++let minimapPanelVisible=false;
++new ResizeObserver(([entry])=>{
++ minimapPanelVisible=entry.contentRect.width>0 && entry.contentRect.height>0;
++}).observe(minimapPanel);
+ const settings={grenadeGuide:true,grenadeWarning:true,mobileAutoFire:!networkMode,sensitivity:.0022,volume:.55,reducedMotion:false,reducedFlash:true,difficulty:'casual',graphics:'standard',blood:'standard',mode:'classic',firefight:true,combatSounds:true,friendlyFire:true,wanderers:true,radioVoice:true,loadout:'smg'};
+ let storedSettings={};
+ try{storedSettings=JSON.parse(localStorage.getItem('cartridge-settings')||'{}')||{};Object.assign(settings,storedSettings);}catch{}
+@@ -315,7 +321,11 @@ function setMapExpanded(expanded){
+  document.documentElement.classList.toggle('hud-map-open',expanded);
+  $('map-legend').hidden=!networkMode||!expanded;
+  $('minimap').width=expanded?448:224;$('minimap').height=expanded?316:158;
+- if(game?.player)minimap();
++ if(game?.player){
++  // An explicit toggle redraws immediately, before resize notifications run.
++  minimapPanelVisible=minimapPanel.getClientRects().length>0;
++  minimap();
++ }
+ }
+ const htmlCache=new Map();
+ const setHtml=(id,value)=>{if(htmlCache.get(id)!==value){$(id).innerHTML=value;htmlCache.set(id,value);}};
+@@ -590,7 +600,7 @@ function scoreboard(){
+ }
+ function minimap(){
+  const visible=!document.hidden&&!$('hud').hidden&&(!networkMode||!modal)
+-   &&!!minimapPanel.getClientRects().length;
++   &&minimapPanelVisible;
+  minimapCache.draw(world,game,mapExpanded,visible);
+ }
+ function classicObjective(state,player){
