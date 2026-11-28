@@ -1,6 +1,6 @@
 # Cartridge-Strike 3 development
 
-Current CS3 work is [match progression PR #66](https://github.com/capstere/Cartridge-strike2/pull/66). Ten packages are verified. The [lead handover](docs/cartridge-strike-3/CODEX_HANDOVER.md) records active verification and release dependencies.
+Current CS3 work is content extensibility on `cs3/11-content-pipeline`. Eleven packages are verified. [Match presentation and progression #66](https://github.com/capstere/Cartridge-strike2/pull/66) merged after twelve passing jobs. See the [lead handover](docs/cartridge-strike-3/CODEX_HANDOVER.md) for the open Floor 5 touch check and release dependencies.
 
 
 Jesper authorized dependency-ordered CS3 development and release after CS3-12. Preparation [PR #47](https://github.com/capstere/Cartridge-strike2/pull/47) and the private recovery and baseline package are verified. The Pi continues to serve its measured CS2 release.

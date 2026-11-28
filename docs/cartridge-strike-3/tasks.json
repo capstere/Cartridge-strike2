@@ -323,14 +323,24 @@
       "scope": "Bounded filtered killcam/final replay, spectator, scoreboard/results, FFA and Domination, server XP/challenges/unlocks; preserve existing modes.",
       "tests": "match-lifecycle-browser, online-match/classic, replay, FFA/domination win rules, trusted XP idempotency. V5 killer card → scoped replay → legal respawn or Classic spectator, skip/timeout/disconnect and clean local HUD; V6 assist, kill and headshot credit exactly once.",
       "exit": "Real replays, new modes verified, no information leaks or double rewards.",
-      "status": "IN_PROGRESS",
+      "status": "VERIFIED",
       "branch": "cs3/10-match-progression",
       "baseline": "20e8b20dfe3f07abca32b81e88442f6cbc6e5aad",
       "pullRequests": [
         66
       ],
       "reviewHead": "dc6a8d6b123c1f63a92aedc690474ffdf463ffde",
-      "pendingRun": 46152682878
+      "verifiedHead": "dc6a8d6b123c1f63a92aedc690474ffdf463ffde",
+      "verifiedRun": 46152682878,
+      "mergedSlices": [
+        "4c83eaa7665f13fa84377670e2c93c585aca817f"
+      ],
+      "evidence": [
+        "evidence/competitive/README.md",
+        "evidence/competitive/first-replay/README.md",
+        "evidence/competitive/solo/README.md"
+      ],
+      "independentReview": "Accepted the signed and guest reward flows, two-browser FFA and Domination, ordinary Solo, eleven wardrobe models, historical render and audio, results, settings and all five private-room menus. Both clicked and naturally expired final replays reached results in the hosted macOS run."
     },
     {
       "id": "CS3-11",
@@ -349,7 +359,9 @@
       "scope": "Consolidate versioned registries, examples, migration, validated additions for character/rig/weapon/attachment/map/mode/bonus/audio/outfit/bot/theme/progression; no parallel editor.",
       "tests": "schema negative/positive tests, import sample and runtime smoke, build reproducibility",
       "exit": "Adding example content without unrelated gameplay edits. New registries reference the already exercised interfaces and include a build/allowlist closure check.",
-      "status": "NOT_STARTED"
+      "status": "IN_PROGRESS",
+      "branch": "cs3/11-content-pipeline",
+      "baseline": "4c83eaa7665f13fa84377670e2c93c585aca817f"
     },
     {
       "id": "CS3-12",
