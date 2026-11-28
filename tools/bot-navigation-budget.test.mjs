@@ -80,3 +80,28 @@ test('cover probes use the roof elevation and respect a teammate’s active cove
   const other=tacticalPosition(bot,actor,{threat,cover:true});
   assert(Math.hypot(first.x-other.x,first.z-other.z)>=.75);
 });
+
+test('an injured bot finishes its reserved cover move facing its last sighting without blind fire',()=>{
+  const game=new Game(world,{autoplay:true,seed:93,config:{mode:'endless',botVision:0}}).start();
+  const actor=game.actors[0],bot=actor.bot,now=game.state.time=10;
+  actor.hp=20;const point={x:actor.x+1,y:actor.y,z:actor.z};
+  bot.coverMove={point,until:now+1,threat:{x:actor.x+4,y:actor.y+1,z:actor.z+2}};
+  bot.nextDecision=0;
+  const input=bot.update(1/60);
+  assert.equal(bot.mode,'combat');assert.equal(bot.target,null);assert.deepEqual(bot.goal,point);
+  assert(!input.fire);
+  game.state.time+=2;bot.update(1/60);assert.equal(bot.mode,'objective');
+});
+
+test('a layered route leaves overlapping bodies outward and can pass a teammate on a different floor',async()=>{
+  const {referenceNavigation}=await import('../src/fps/reference-navigation.mjs');
+  const nav=referenceNavigation({
+    x:[-.6,-.6,2,2],y:[4,4,4,4],z:[0,1,1,0],offsets:[0,1,3,5,6],
+    adj:[1,0,2,1,3,2],cost:[1,1,2.6,2.6,1,1],kind:[0,0,0,0,0,0],
+  },{groundHeight:(x,z,y)=>y,canOccupy:()=>true});
+  const start={x:0,y:4,z:0},end={x:2,y:4,z:0},body={x:.15,z:0,y:4,radius:.44};
+  const route=nav.findPath(start,end,{blockers:[body]});
+  assert(route.length>1);assert(route[0].x<=start.x);
+  assert.deepEqual(route.at(-1),end);
+  assert.deepEqual(nav.findPath(start,end,{blockers:[{...body,y:0}]}),[end]);
+});

@@ -1,16 +1,16 @@
 # Persistent project status
 
-**CS3-00, 01, 02, 04 and 07 are verified. Characters, killstreaks and bot navigation are active.** Jesper authorized the complete program and gated production release. [PR #47](https://github.com/capstere/Cartridge-strike2/pull/47) merged at `5364240599164c0aee278bb0ac2a35d662c3a818` after [all eight jobs](https://github.com/capstere/Cartridge-strike2/actions/runs/45976270665) passed on `f1f363963cd082c6cc1b0f6289c3f9b616064e83`. The reviewed draft head and merge preserve the CS2 game runtime. Development and its evidence live on the integration branch `develop/cartridge-strike-3`. The Pi remains on its verified CS2 release.
+**Verified packages include CS3-00, CS3-01, CS3-02, CS3-04, CS3-05, CS3-07.** Jesper authorized the complete program and gated production release. [PR #47](https://github.com/capstere/Cartridge-strike2/pull/47) merged at `5364240599164c0aee278bb0ac2a35d662c3a818` after [all eight jobs](https://github.com/capstere/Cartridge-strike2/actions/runs/45976270665) passed on `f1f363963cd082c6cc1b0f6289c3f9b616064e83`. The reviewed draft head and merge preserve the CS2 game runtime. Development and its evidence live on the integration branch `develop/cartridge-strike-3`. The Pi remains on its verified CS2 release.
 
 | ID | State | Next action |
 | --- | --- | --- |
 | CS3-00 | VERIFIED | Independent recovery, architecture and performance review passed. See [measurements](baseline/performance/README.md) and [recovery](baseline/recovery.json). |
 | CS3-01 | VERIFIED | English guest and private flows, access recovery, Classic buy/results and first-person countdown independently accepted. [All eight checks on the final head](https://github.com/capstere/Cartridge-strike2/actions/runs/46017902821) passed. |
 | CS3-02 | VERIFIED | Independent handling review and all eight [checks](https://github.com/capstere/Cartridge-strike2/actions/runs/46031863063) passed. [PR #57](https://github.com/capstere/Cartridge-strike2/pull/57) merged on development. Additional Floor 5 render work continues. |
-| CS3-03 | IN_PROGRESS | Adapt the existing operator rig and reference wardrobe preview on `cs3/03-character-wardrobe`. Verify saved characters, first-person arms and directional animation. |
+| CS3-03 | IN_PROGRESS | [PR #59](https://github.com/capstere/Cartridge-strike2/pull/59) merged after ten hosted jobs, private saved-operator and wardrobe/camera tests. Qualify the cold first-sightline fix and cleanup before starting CS3-09. |
 | CS3-04 | VERIFIED | [PR #55](https://github.com/capstere/Cartridge-strike2/pull/55) merged after independent review and [nine passing jobs](https://github.com/capstere/Cartridge-strike2/actions/runs/46129743025). |
-| CS3-05 | IN_PROGRESS | [PR #58](https://github.com/capstere/Cartridge-strike2/pull/58) exercises authoritative 3/5/8 awards, private UAV, Rage and Immortal in solo and two-client rooms. Complete rendered input, balance, stress and independent review. |
-| CS3-06 | NOT_STARTED | Wait for CS3-01, CS3-02, CS3-05 |
+| CS3-05 | VERIFIED | [PR #58](https://github.com/capstere/Cartridge-strike2/pull/58) merged at e67f32af after [ten hosted jobs](https://github.com/capstere/Cartridge-strike2/actions/runs/46133071502) passed. [Native acceptance](evidence/streaks/protocol-20/README.md) and independent review passed. |
+| CS3-06 | IN_PROGRESS | Adapt the reference mobile layout, input options and gamepad behavior, including cancellation and rotation. |
 | CS3-07 | VERIFIED | [Map qualification](maps/README.md), independent review and [all nine hosted jobs](https://github.com/capstere/Cartridge-strike2/actions/runs/46133947108) passed on aac2e576. |
 | CS3-08 | IN_PROGRESS | Measure existing bot navigation tails on Floor 5 and the qualified reference maps, then adapt source route budgeting and verify playable objective behavior. |
 | CS3-09 | NOT_STARTED | Wait for CS3-01, CS3-03, CS3-04 |
@@ -22,9 +22,11 @@
 
 [PR #56](https://github.com/capstere/Cartridge-strike2/pull/56) merged at 7e980312 after all nine jobs, including separate four-map desktop and touch journeys. [Floor 5 PR #60](https://github.com/capstere/Cartridge-strike2/pull/60) followed at dba7c40e with nine green jobs. Its runtime matches the reviewed 700-file renderer build. See the [input measurements](evidence/rush/latency/input-delivery.md) for the normal running game and the remaining emulated-touch and handset gaps. CS3-08 is now eligible and active.
 
+[Wardrobe #59](https://github.com/capstere/Cartridge-strike2/pull/59) merged at 9e9da21a, followed by [authoritative streaks #58](https://github.com/capstere/Cartridge-strike2/pull/58) at e67f32af. Both published heads passed all ten hosted jobs. The production-independent development build contains 706 runtime files, including every previous parent path. The reviewer accepted the CS3-05 authority, UI and audiovisual exit. Human balance and physical-device checks remain open release work. CS3-03 remains active for the severe cold operator render, and CS3-09 waits for its verification. CS3-06 can now proceed independently.
+
 The live Pi still runs the verified CS2 revision. Its private backup passed an isolated restoration rehearsal. PR #55 preserved the latest 02/03/05 states and its native protocol 17 account runtime. Both original PR heads had nine green jobs. The account branch was reconciled with current development and independently reviewed before its nine final checks passed.
 
-The native map review for #56 accepted the 20-change four-map lifecycle, matching 175.121-second parked control, reversible Kervénec quality switch, signs and real damaged-map recovery. Six disposed audio owners matched their originating maps, all resource counts returned to zero and Node exited naturally in 458 ms. Reconcile #56 with this account merge, compare both parent runtime allowlists and require the final hosted jobs before starting CS3-08.
+The native map review for #56 accepted the 20-change four-map lifecycle, matching 175.121-second parked control, reversible Kervénec quality switch, signs and real damaged-map recovery. Six disposed audio owners matched their originating maps, all resource counts returned to zero and Node exited naturally in 458 ms. Its reconciled build preserved both parent allowlists, and all nine corrected-head jobs passed before CS3-08 opened.
 
 Floor 5 remains under measurement. On the Pi, the candidate reproduced all world and weapon pixels across 24 original/candidate views. Continuously running input and presented frames are measured separately. Native Pi Chromium touch emulation and a physical handset are separate evidence categories.
 

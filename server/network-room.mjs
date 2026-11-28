@@ -1,3 +1,4 @@
+import {receiveBonus,flushBonuses} from './bonus-channel.mjs';
 import {queueShot,interruptRush} from '../src/fps/rush.mjs';
 import {Room,ServerError} from '@colyseus/core';
 import {createHash,timingSafeEqual,randomBytes} from 'node:crypto';
@@ -10,6 +11,7 @@ import {projectClassic} from './classic-round.mjs';
 import {DEFAULT_NETWORK_BOT_DIFFICULTY,ROOM_CAPACITY,RECONNECT_SECONDS,copyPose,safeName} from '../shared/multiplayer/rules.mjs';
 import {checkContract,TEAM_COMMS_TYPE,validateNetworkInput,wireInput} from '../shared/multiplayer/protocol.mjs';
 import {CONTRACT,MAP_CONTRACTS} from '../shared/multiplayer/build.mjs';
+import {publicOutfitId} from '../src/fps/operator-outfits.mjs';
 import {NetworkInput,ActorState,HandlingState,RoomState,GrenadeState,ResidentState,RocketState} from './network-schema.mjs';
 
 import {DOOR_FIELDS} from '../shared/multiplayer/world.mjs';
@@ -72,6 +74,7 @@ export class NetworkRoom extends Room {
       // A slow previous load can finish after the room adopted another map.
       if((message?.worldRevision??1)!==this.state.worldRevision)return;
       try{checkContract(message,MAP_CONTRACTS[this.state.mapId]);}catch(e){client.send('problem',e.message);client.leave(4009);return;}
+      seat.outfitId = publicOutfitId(message?.outfitId);
       if(seat.pending&&['waiting','countdown'].includes(this.state.phase)){
         // A new Classic seat may finish loading before the first live tick.
         // Keep its bot until this acknowledgement or the next round boundary.
@@ -95,12 +98,13 @@ export class NetworkRoom extends Room {
       if(this.familyRoom)this.match.ownership();
       this.project();
     });
+    this.onMessage('bonus',(client,message)=>receiveBonus(this,client,message));
     this.onMessage('controls',(client,message)=>{
       const seat=this.seats.get(client.sessionId);
       if(!seat?.ready||!seat.connected||seat.client!==client||message?.lifeId!==seat.actor.lifeId||
         (message.controlEpoch??0)!==seat.epoch||typeof message.enabled!=='boolean')return;
       if(seat.enabled===message.enabled)return;
-      this.sim.game.interruptCartridge(seat.actor);seat.holdThrow=false;seat.actor.waitTriggerRelease=false;interruptRush(seat.actor,this.sim.game.state.time);seat.enabled=message.enabled;seat.interactUntil=0;seat.actor.action=null;seat.aim=false;seat.trigger=false;seat.actor.aimAmount=0;this.inputs.get(client.sessionId).clear();
+      seat.actor.bonusRequest=null;this.sim.game.interruptCartridge(seat.actor);seat.holdThrow=false;seat.actor.waitTriggerRelease=false;interruptRush(seat.actor,this.sim.game.state.time);seat.enabled=message.enabled;seat.interactUntil=0;seat.actor.action=null;seat.aim=false;seat.trigger=false;seat.actor.aimAmount=0;this.inputs.get(client.sessionId).clear();
       if(!seat.enabled)this.teamComms.prune();
     });
     this.onMessage('select',(client,m)=>{
@@ -271,7 +275,7 @@ export class NetworkRoom extends Room {
       // ws buffers writes when a peer stops reading. Bound that transport queue
       // too, rather than retaining an unlimited stream of snapshots/events.
       if(client.ref.readyState===1&&client.ref.bufferedAmount>MAX_BUFFERED_BYTES){
-        if(seat){seat.enabled=false;seat.revoked=true;}buffer.clear();
+        if(seat){seat.enabled=false;seat.revoked=true;if(seat.actor)seat.actor.bonusRequest=null;}buffer.clear();
         this.metrics.backpressure++;client.ref.terminate();continue;
       }
       this.metrics.maxQueue=Math.max(this.metrics.maxQueue,buffer.size);
@@ -349,6 +353,7 @@ export class NetworkRoom extends Room {
     const patched=super.broadcastPatch();
     // A private signal needs the recipient's latest schema and the original socket.
     this.teamComms?.flush();
+    if(this.seats)flushBonuses(this);
     return patched;
   }
   project() {
@@ -373,7 +378,9 @@ export class NetworkRoom extends Room {
     for(const seat of this.participants())if(seat.ready){
       const a=seat.actor,s=this.state.actors.get(a.id);
       s.handling??=new HandlingState();copyPose(s,a);
-      Object.assign(s.handling,{cartridgeStart:a.cartridge?.started||0,cartridgeRelease:a.cartridge?.releaseAt||0,
+      const effect=a.bonus?.active;
+      const visible=effect?.id==='rage' || effect?.id==='immortal';
+      Object.assign(s.handling,{outfitId:seat.outfitId || 'issued',reloadStartedAt:a.reloadStartedAt||0,reloadDuration:a.reloadDuration||0,bonusId:visible?effect.id:'',bonusStart:visible?effect.startTick:0,bonusEnd:visible?effect.endTick:0,cartridgeStart:a.cartridge?.started||0,cartridgeRelease:a.cartridge?.releaseAt||0,
         cartridgeFuse:a.cartridge?.deadline||0,waitTriggerRelease:!!a.waitTriggerRelease});
       if(!a.alive&&!seat.diedAtMs)seat.diedAtMs=this.clock.elapsedTime;
       s.playerReady=seat.playerReady;s.connected=seat.connected;s.controlEpoch=seat.epoch;s.lifeStartedAt=seat.lifeStartedAt;s.diedAtMs=seat.diedAtMs;
@@ -409,7 +416,7 @@ export class NetworkRoom extends Room {
     const seat=this.seats.get(client.sessionId);if(!seat||seat.client!==client)return;
     if(!seat.ready)this.state.actors.get(seat.waitId).connected=false;
     this.releaseObjectives(seat.actor,false);seat.interactUntil=0;
-    seat.enabled=false;seat.aim=seat.trigger=false;if(seat.actor){this.sim.game.interruptCartridge(seat.actor);seat.holdThrow=false;seat.actor.waitTriggerRelease=false;seat.actor.aimAmount=0;interruptRush(seat.actor,this.sim.game.state.time);}seat.connected=false;seat.playerReady=false;this.inputs.get(client.sessionId).clear();
+    seat.enabled=false;seat.aim=seat.trigger=false;if(seat.actor){seat.actor.bonusRequest=null;this.sim.game.interruptCartridge(seat.actor);seat.holdThrow=false;seat.actor.waitTriggerRelease=false;seat.actor.aimAmount=0;interruptRush(seat.actor,this.sim.game.state.time);}seat.connected=false;seat.playerReady=false;this.inputs.get(client.sessionId).clear();
     this.sim.controllers.unbind(client.sessionId);this.metrics.drops++;this.project();
     // Protocol violations, payload limits and server shutdown never reserve a seat.
     if(seat.admitted&&!seat.revoked&&[1000,1001,1005,1006].includes(code))this.allowReconnection(client,RECONNECT_SECONDS).catch(()=>{});

@@ -2,7 +2,7 @@ import {missionRoomName} from './player-names.mjs';
 import {headshotSpace} from './headshot-pose.mjs';
 import {syncWeaponAppearance} from './view-character-appearance.mjs?v=6.1.2';
 import {refreshActorCharacter} from './character-actors.mjs?v=6.1.2';
-import {privateCharacterAppearance} from './character-library.mjs?v=6.1.2';
+import {privateCharacterAppearance,setNetworkOutfit} from './character-library.mjs?v=6.1.2';
 import { FrameTimeWindow } from './frame-time-window.mjs';
 import { AdaptiveResolution } from './adaptive-resolution.mjs';
 import { TracerBatch } from './tracer-batch.mjs';
@@ -117,6 +117,7 @@ export class Renderer{
   if(changed&&shadows){this.renderer.shadowMap.needsUpdate=true;this.shadowAt=t;}
  }
  actorModel(a){
+  if (a.outfitId) setNetworkOutfit(a.id,a.outfitId);
   let model=this.actors.get(a.id);if(model){refreshActorCharacter(model,a.team,a.id);return model;}
   model=makeActor(a.team||'hostage',a.id,!a.team);model.traverse(o=>{if(o.isMesh)o.castShadow=false;});this.actors.set(a.id,model);this.scene.add(model);
   const shadow=new THREE.Mesh(new THREE.PlaneGeometry(.62,.62),this.contactMaterial);shadow.rotation.x=-Math.PI/2;this.scene.add(shadow);model.userData.contact=shadow;return model;
@@ -171,7 +172,7 @@ export class Renderer{
   if(dead){model.visible=this.corpsePose(model,a,corpseTime);continue;}
   model.userData.fall=null;model.position.set(a.x,a.y||0,a.z);model.rotation.set(0,a.yaw||0,0);
   const previousWeapon=model.userData.weaponModel;
-  animateActor(model,a,t,dt,{cameraYaw:this.camera.rotation.y,shotAt:model.userData.shotAt??-Infinity});
+  animateActor(model,a,t,dt,{cameraYaw:this.camera.rotation.y,distanceSquared:this.camera.position.distanceToSquared(model.position),shotAt:model.userData.shotAt??-Infinity});
   if(previousWeapon!==model.userData.weaponModel)model.userData.weaponModel?.traverse(o=>{if(o.isMesh)o.castShadow=false;});
  }
  for(const g of s.grenades){let model=this.grenades.get(g.id);if(!model){model=createThrownCartridge(g,t);this.grenades.set(g.id,model);this.scene.add(model);}updateThrownCartridge(model,g,t);}for(const [id,m]of this.grenades)if(!s.grenades.some(g=>g.id===id)){this.disposeTransient(m);this.grenades.delete(id);}
@@ -215,7 +216,7 @@ export class Renderer{
    this.wallTarget=hit?Math.max(0,Math.min(1,(.62-hit.distance)/.35)):0;
  }
  this.wallAmount=(this.wallAmount||0)+((this.wallTarget||0)-(this.wallAmount||0))*(1-Math.exp(-14*dt));
- if(this.weaponModel){syncWeaponAppearance(this.weaponModel,privateCharacterAppearance(p.id,p.team));this.recoil*=Math.exp(-dt*18);const pose=animateWeapon(this.weaponModel,p,t,dt,{inspecting:Number.isFinite(this.inspectAt)&&t>=this.inspectAt&&t<this.inspectUntil,nearWall:this.wallAmount,reducedMotion:this.settings.reducedMotion,recoil:this.recoil,shotAt:this.shotAt??-Infinity,switchAt:this.switchAt,throwAt:this.throwAt??-Infinity,swingAt:this.swingAt??-Infinity});this.weaponModel.visible=p.alive!==false&&s.phase!=='menu'&&!(p.weapon==='sniper'&&p.aimAmount>.92);this.muzzle.visible=this.weaponModel.visible&&t<(this.muzzleUntil||0);this.weaponModel.updateMatrixWorld(true);const muzzle=pose?.muzzle||this.weaponModel.userData.muzzle||new THREE.Vector3(0,.08,-.4);this.muzzle.position.copy(pose?.muzzle||this.weaponModel.localToWorld(muzzle.clone()));this.muzzle.rotation.z=t*83;}
+ if(this.weaponModel){if(p.outfitId)setNetworkOutfit(p.id,p.outfitId);syncWeaponAppearance(this.weaponModel,privateCharacterAppearance(p.id,p.team));this.recoil*=Math.exp(-dt*18);const pose=animateWeapon(this.weaponModel,p,t,dt,{inspecting:Number.isFinite(this.inspectAt)&&t>=this.inspectAt&&t<this.inspectUntil,nearWall:this.wallAmount,reducedMotion:this.settings.reducedMotion,recoil:this.recoil,shotAt:this.shotAt??-Infinity,switchAt:this.switchAt,throwAt:this.throwAt??-Infinity,swingAt:this.swingAt??-Infinity});this.weaponModel.visible=p.alive!==false&&s.phase!=='menu'&&!(p.weapon==='sniper'&&p.aimAmount>.92);this.muzzle.visible=this.weaponModel.visible&&t<(this.muzzleUntil||0);this.weaponModel.updateMatrixWorld(true);const muzzle=pose?.muzzle||this.weaponModel.userData.muzzle||new THREE.Vector3(0,.08,-.4);this.muzzle.position.copy(pose?.muzzle||this.weaponModel.localToWorld(muzzle.clone()));this.muzzle.rotation.z=t*83;}
  this.facilityScene?.update(this.camera);this.renderer.info.reset();this.renderer.autoClear=true;this.renderer.render(this.scene,this.camera);if(this.weaponModel?.visible){this.renderer.autoClear=false;this.renderer.clearDepth();this.renderer.render(this.viewScene,this.viewCamera);}this.stats.drawCalls=this.renderer.info.render.calls;this.stats.triangles=this.renderer.info.render.triangles;const now=performance.now();this.stats.fps=this.frameTimes.push(now-this.lastFrame);this.stats.resolutionScale=this.resScale;this.stats.pixelRatio=this.renderer.getPixelRatio();this.lastFrame=now;
  }
  smokeOpacity(actor,smokes){let value=0;for(const sm of smokes){const d=Math.hypot(actor.x-sm.x,actor.z-sm.z);if(d<(sm.radius||3)&&this.world.segmentClear({x:actor.x,y:(actor.y||0)+1,z:actor.z},{x:sm.x,y:Math.max(.5,sm.y),z:sm.z},{vision:false}))value=Math.max(value,Math.min(.97,((sm.radius||3)-d)*.8));}return value;}

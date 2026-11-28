@@ -2,7 +2,7 @@ import {CARTRIDGE} from './grenade-physics.mjs';
 import { createThrowableCartridge, disposeThrowableCartridges } from './throwable-cartridge.mjs';
 import {buildBazookaParts} from './action-models.mjs';
 import {fitPresentationHands, poseViewHands, refitViewArms, disposePresentationHands} from './presentation-hands.mjs';
-import {envelope, reloadIsEmpty} from './strike-kit-timing.mjs';
+import {envelope, reloadIsEmpty, reloadPhase} from './strike-kit-timing.mjs';
 // Original Cartridge Strike models. No Valve art or downloaded character assets.
 // All dimensions are metres; cosmetic meshes never participate in gameplay RNG,
 // collision, aim, ammunition or timers. Three.js r180 provides bevels and merging.
@@ -583,7 +583,7 @@ export function makeActor(team, id, isHostage = false) {
 
 function mechanisms(model, actor, time, shotAt) {
   const d = model.userData, spec = WEAPONS[d.id], duration = spec?.reload || 1;
-  const reloading = actor.reloadUntil > time, progress = reloading ? clamp(1 - (actor.reloadUntil - time) / duration) : 0;
+  const reloading = actor.reloadUntil > time, progress = reloadPhase(actor,d.id,time,duration);
   const reach = reloading ? pulse(progress, .05, .33, .88) : 0;
   if(reloading && d.reloadToken!==actor.reloadUntil){
     d.reloadToken=actor.reloadUntil;d.emptyReload=reloadIsEmpty(actor,d.id);

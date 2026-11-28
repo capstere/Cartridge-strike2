@@ -1,3 +1,4 @@
+import {bonusSlot} from '../bonuses.mjs';
 import {purchaseReasons} from '../game-english.mjs';
 import {RUSH,rushReady} from '../rush.mjs';
 import {networkEndpoint} from './connection.mjs';
@@ -32,8 +33,12 @@ function discardSlideRequest(session){
   if(predicted)predicted.slideBuffer=0;
   if(session.view?.player)session.view.player.slideBuffer=0;
 }
+function publicBonus(s){
+  const handling=s.handling;
+  return handling?.bonusId?{id:handling.bonusId,startTick:handling.bonusStart,endTick:handling.bonusEnd}:null;
+}
 function actorView(s,localId){
-  const a={id:s.id,name:s.name,team:s.team,index:Number(s.id.split('-').at(-1)),isPlayer:s.id===localId,controllerType:s.bot?'bot':'human',bot:null,
+  const a={outfitId:s.handling?.outfitId || 'issued',reloadStartedAt:s.handling?.reloadStartedAt||0,reloadDuration:s.handling?.reloadDuration||0,bonusEffect:publicBonus(s),id:s.id,name:s.name,team:s.team,index:Number(s.id.split('-').at(-1)),isPlayer:s.id===localId,controllerType:s.bot?'bot':'human',bot:null,
     cartridge:s.handling?.cartridgeStart?{type:s.weapon,started:s.handling.cartridgeStart,releaseAt:s.handling.cartridgeRelease,deadline:s.handling.cartridgeFuse}:null,
     pending:!!s.pending,radius:NETWORK_CONFIG.radius,weapon:s.weapon,lastWeapon:s.lastWeapon,loadout:s.loadout,aimAmount:s.aimAmount,aiming:s.aiming,money:s.money,flash:0,action:s.actionType?{type:s.actionType,start:s.actionStart,duration:s.actionDuration}:null,
     inventory:{primary:s.primary?{id:s.primary,ammo:s.primaryAmmo,reserve:s.primaryReserve}:null,pistol:{id:s.pistol,ammo:s.pistolAmmo,reserve:s.pistolReserve},knife:{id:'knife',ammo:Infinity,reserve:0},smoke:0,flash:0,he:s.he}};
@@ -47,18 +52,27 @@ function actorView(s,localId){
 
 /** A Game-shaped presentation only. Never advances Game combat/rules locally. */
 export class NetworkSession {
-  constructor(world,{loadWorld,onLoading=()=>{},onCombatAudio,onRocketAudio,onDisconnect=()=>{},onConnection=()=>{},onMatch=()=>{}}={}){
+  constructor(world,{outfitId='issued',loadWorld,onLoading=()=>{},onCombatAudio,onRocketAudio,onDisconnect=()=>{},onConnection=()=>{},onMatch=()=>{}}={}){
     this.loadWorld=loadWorld;this.onLoading=onLoading;this.worldRevision=0;
     this.onCombatAudio=onCombatAudio;this.onRocketAudio=onRocketAudio;this.onMatch=onMatch;this.matchId=0;this.matchPhase='';this.world=world;this.onDisconnect=onDisconnect;this.onConnection=onConnection;this.connectionState='connecting';this.controlEpoch=0;this.closed=false;this.enabled=true;
     this.events=[];this.seenEvent=0;this.predictedShots=new Map();this.actionTimes=new Map();this.remote=new Map();this.residents=new Map();this.projectiles=new Map();this.unsub=[];
     this.fireId=0;this.reloadId=0;this.trigger=false;this.nextCosmetic=0;this.lifeId=0;this.lastPatch=0;
     this.metrics={sent:0,replays:0,adopts:0,resets:0,cosmeticShots:0,confirmedShots:0,suppressedShots:0,corrections:[],adoptionDistance:[],shotLatency:[],hitLatency:[],maxPending:0,reconnects:0};
+    this.outfitId=outfitId;
     this.view=new Game(world,{config:NETWORK_CONFIG,localPlayerId:null,controllers:{}});
     Object.assign(this.view.state,{mode:'endless',phase:'menu',round:1,projectiles:[],wanderers:[],orders:{}});
     // Presentation recoil gets its own RNG, never the authority's stream.
     this.view.random=seededRandom(81);this.view.network=true;
     this.view.pause=value=>this.setInputEnabled(!value);
     this.view.reload=()=>{if(!this.closed&&this.enabled&&this.view.player?.alive){this.reloadId++;return true;}return false;};
+    this.bonusSerial=0;this.privateBonus=null;
+    this.view.requestBonus=slot=>{
+      const self=this.teamCommsActor(),item=bonusSlot(slot),state=this.room?.state;
+      if(!this.enabled || !self || !item || !this.view.player?.bonus?.charges[item.id] || this.view.player.bonus.active)return false;
+      this.room.send('bonus',{actorId:self.id,slot,serial:++this.bonusSerial,matchId:state.matchId,round:state.round,
+        worldRevision:state.worldRevision,lifeId:self.lifeId,controlEpoch:self.controlEpoch});
+      return true;
+    };
     this.selectId=0;this.botDifficultySerial=0;
     this.teamAnchors=new Map();
     this.teamCommsSerial=0;
@@ -81,6 +95,19 @@ export class NetworkSession {
     this.view.buy=id=>this.classicCommand('buy',id)?{ok:true,pending:true}:{ok:false,reasonId:'nextRound',reason:purchaseReasons.nextRound};
     this.view.drainEvents=()=>this.drainEvents();
     this.view.update=()=>{throw Error('NetworkSession owns input; the client cannot step Game.');};
+  }
+  applyPrivateBonus(message=this.privateBonus){
+    const state=this.room?.state,self=state?.actors.get(this.localPlayerId);
+    if(!message || !self?.ready || !self.connected || self.pending || self.sessionId!==this.room.sessionId ||
+       message.actorId!==self.id || message.matchId!==state.matchId || message.round!==state.round ||
+       message.worldRevision!==state.worldRevision || message.lifeId!==self.lifeId || message.controlEpoch!==self.controlEpoch)return;
+    this.privateBonus=message;
+    this.bonusSerial=Math.max(this.bonusSerial,message.bonus.lastSerial);
+    const player=this.view.player;
+    if(player && player.id===self.id && player.lifeId===self.lifeId && player.controlEpoch===self.controlEpoch){
+      player.bonus=message.bonus;
+      player.uavSamples=message.samples;
+    }
   }
   classicCommand(kind,item){
     const a=this.view.player,s=this.room?.state;
@@ -188,6 +215,7 @@ export class NetworkSession {
     this.joiningRoom=null;this.room=room;this.familyAlias=room.name===FAMILY_ROOM_ALIAS?FAMILY_ROOM_ALIAS:'';
     Object.assign(room.reconnection,{enabled:true,minUptime:0,minDelay:150,maxDelay:1000,maxRetries:30,maxEnqueuedMessages:0});
     this.unsub.push(room.onMessage('problem',message=>{this.problem=String(message);}));
+    this.unsub.push(room.onMessage('bonusState',message=>this.applyPrivateBonus(message)));
     this.unsub.push(room.onMessage('purchase',message=>this.receivePurchase(message)));
     this.unsub.push(room.onMessage('notice',message=>{this.notice=String(message);}));
     this.unsub.push(room.onMessage('events',events=>{if(this.worldRevision===room.state.worldRevision)this.receiveEvents(events);}));
@@ -233,7 +261,7 @@ export class NetworkSession {
     for(const door of this.doorSchemas||[])this.predict.detach(door);
     this.doorSchemas=[];this.worldSchema=null;this.glassCount=undefined;
     this.matchMode=null;this.matchPhase='';this.matchId=0;
-    this.events=[];this.clearTeamComms();this.teamAnchors.clear();this.receivedTeamComms.clear();
+    this.privateBonus=null;this.events=[];this.clearTeamComms();this.teamAnchors.clear();this.receivedTeamComms.clear();
     this.predictedShots.clear();this.actionTimes.clear();
     this.view.state.actors=[];
   }
@@ -274,7 +302,7 @@ export class NetworkSession {
     if(!mine?.ready){
       if(mine&&this.sentReadyRevision!==state.worldRevision&&(this.connectionState!=='reconnecting'||this.awaitingSnapshot)){
         this.sentReadyRevision=state.worldRevision;
-        this.room.send('ready',{...MAP_CONTRACTS[state.mapId],worldRevision:state.worldRevision});
+        this.room.send('ready',{...MAP_CONTRACTS[state.mapId],outfitId:this.outfitId,worldRevision:state.worldRevision});
       }
       return;
     }
@@ -339,6 +367,7 @@ export class NetworkSession {
     this.view.state.grenades=[...state.grenades.values()];
     applyNetworkWorld(this.world.doors,state);
     this.view.state.actors=ready.map(s=>actorView(s,this.localPlayerId));
+    this.applyPrivateBonus();
     this.view.state.score={analysts:state.analysts,counterAnalysts:state.counterAnalysts};
     this.view.state.time=newMatch?state.time:Math.max(this.view.state.time??0,state.time);
     const self=state.actors.get(this.localPlayerId);
@@ -394,7 +423,8 @@ export class NetworkSession {
           w.dynamics.adopt(this.room.state);
           copyPose(w.actor,s);
           if(!this.enabled)w.actor.slideBuffer=0;
-          w.actor.reloadUntil=s.reloadUntil;w.actor.cartridge=s.handling?.cartridgeStart || null;w.actor.action=s.actionType?{type:s.actionType}:null;w.actor.alive=s.alive;w.actor.lifeId=s.lifeId;w.game.state.time=this.room.state.time;
+          w.actor.reloadStartedAt=s.handling?.reloadStartedAt||0;w.actor.reloadDuration=s.handling?.reloadDuration||0;
+          w.actor.bonusEffect=publicBonus(s);w.actor.reloadUntil=s.reloadUntil;w.actor.cartridge=s.handling?.cartridgeStart || null;w.actor.action=s.actionType?{type:s.actionType}:null;w.actor.alive=s.alive;w.actor.lifeId=s.lifeId;w.game.state.time=this.room.state.time;
           w.game.hostages=this.view.hostages;
           w.game.state.zombies=[...this.residents.values()].map(({schema:s})=>({id:s.id,x:s.x,y:s.y,z:s.z,height:s.height,radius:s.radius,alive:s.alive}));
           w.game.actors=[w.actor,...[...this.room.state.actors.values()].filter(a=>a.ready&&a.id!==s.id).map(a=>actorView(a,null))];
@@ -590,6 +620,8 @@ export class NetworkSession {
     if(this.closed||this.connectionState==='reconnecting')return;
     this.crouchEdge=false;this.firePress=null;this.pendingCosmetic=null;
     discardSlideRequest(this);
+    this.privateBonus=null;
+    if(this.view.player){this.view.player.bonus=null;this.view.player.uavSamples=null;}
     this.connectionState='reconnecting';this.purchase=null;this.enabled=false;this.view.state.paused=true;
     this.events=[];this.clearTeamComms();this.status='Reconnecting… Your seat is reserved for 15 seconds. The match continues.';
     this.onConnection('reconnecting');
@@ -612,7 +644,7 @@ export class NetworkSession {
     clearInterval(this.watchdog);this.watchdog=null;clearTimeout(this.joinTimer);this.joinTimer=null;this.joinAbort?.abort();this.mapAbort?.abort();
     for(const off of this.unsub)if(typeof off==='function')off();this.unsub=[];
     this.predict?.dispose();this.prediction=null;this.predict=null;this.remote.clear();
-    this.events=[];this.clearTeamComms();this.teamAnchors.clear();this.receivedTeamComms.clear();this.predictedShots.clear();this.actionTimes?.clear();this.view.state.actors=[];this.view.state.phase='menu';
+    this.privateBonus=null;this.events=[];this.clearTeamComms();this.teamAnchors.clear();this.receivedTeamComms.clear();this.predictedShots.clear();this.actionTimes?.clear();this.view.state.actors=[];this.view.state.phase='menu';
     const room=this.room||this.joiningRoom;this.room=null;this.joiningRoom=null;this.input=null;
     if(leave&&room){room.reconnection.enabled=false;return room.leave().catch(()=>{});}
   }

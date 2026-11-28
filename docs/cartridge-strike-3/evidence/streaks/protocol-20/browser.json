@@ -1,0 +1,76 @@
+{
+  "build": "5d3875bbbda009d9d1c63ce4d8e06227d5493745a1cc4c63c12935f5278a34fb",
+  "protocol": 20,
+  "fresh": [
+    [
+      "UAV0/3",
+      "Rage0/5",
+      "Immortal0/8"
+    ],
+    [
+      "UAV0/3",
+      "Rage0/5",
+      "Immortal0/8"
+    ]
+  ],
+  "touchTargets": [
+    {
+      "name": "UAV",
+      "x": 196.2734375,
+      "y": 268,
+      "w": 51.09375,
+      "h": 44,
+      "inside": true,
+      "hit": true,
+      "enabled": true
+    },
+    {
+      "name": "Rage",
+      "x": 250.3671875,
+      "y": 268,
+      "w": 51.09375,
+      "h": 44,
+      "inside": true,
+      "hit": true,
+      "enabled": true
+    },
+    {
+      "name": "Immortal",
+      "x": 304.4609375,
+      "y": 268,
+      "w": 67.265625,
+      "h": 44,
+      "inside": true,
+      "hit": true,
+      "enabled": true
+    }
+  ],
+  "active": 900,
+  "reconnected": {
+    "epochAdvanced": true,
+    "endTickPreserved": true
+  },
+  "receivers": [
+    {
+      "onlyOwn": true,
+      "samples": 6,
+      "markers": 89,
+      "tones": 1,
+      "feedback": [
+        "Opponent is Immortal"
+      ]
+    },
+    {
+      "onlyOwn": true,
+      "samples": 0,
+      "markers": 0,
+      "tones": 2,
+      "feedback": [
+        "Immortal · hit blocked"
+      ]
+    }
+  ],
+  "deathCarry": true,
+  "spent": true,
+  "errors": []
+}

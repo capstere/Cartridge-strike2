@@ -97,3 +97,29 @@ html.touch-fps #menu .lb-foot { display: flex }
 /* Ring diameter is 1.15 × the base stick, matching the Rush entry threshold. */
 html #mobile-controls .mobile-stick.active::after { content: ''; position: absolute; inset: -7.5%; border-radius: 50%; border: 2px dashed #c4d5df8a; border-bottom-color: transparent; pointer-events: none }
 html #mobile-controls .mobile-stick.active.rushing::after { border-style: solid; border-color: #ffd36c; border-bottom-color: transparent; box-shadow: 0 -3px 12px #e1a73b65 }
+
+#menu[data-screen=outfits] .wardrobe-grid { display:grid; grid-template-columns:minmax(0,2fr) minmax(0,3fr); gap:12px; height:calc(100% - 64px); min-height:140px }
+#menu[data-screen=outfits] .wardrobe-stage { position:relative; border:1px solid #b6c6d644 }
+#menu[data-screen=outfits] .wardrobe-turn { position:absolute; bottom:4px; inset-inline:4px; display:flex; align-items:center; justify-content:space-between; font:14px var(--lb-body); color:#eee }
+#menu .wardrobe-turn button, #menu .wardrobe-list { pointer-events:auto }
+#menu .wardrobe-turn button { width:44px; height:44px; background:#111b22cc; color:white; border:1px solid #626d75; font-size:24px }
+#menu .wardrobe-list { overflow:auto; padding:4px; background:#101921e8 }
+#menu [data-outfit-choices], #menu [data-outfit-challenges] { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:5px; padding:0; margin:0 }
+#menu [data-outfit] { display:grid; text-align:left; padding:10px; color:#eef2f4; background:#202a33; border:1px solid #6c7883; min-height:50px }
+#menu [data-outfit] strong { font:700 19px var(--lb-display) }
+#menu [data-outfit][aria-pressed=true] { border-color:#f5bf64; box-shadow:inset 3px 0 #f5bf64 }
+#menu [data-outfit][aria-pressed=true]::after { content:'Selected';color:#ffcc78 }
+#menu .wardrobe-list h2 {font:700 18px var(--lb-display);margin:12px 0 5px}
+#menu [data-outfit-challenges] li {list-style:none;padding:7px;color:#bbc2c6;border:1px solid #505965}
+@media(max-width:580px){#menu [data-outfit-choices],#menu [data-outfit-challenges]{grid-template-columns:1fr}#menu .wardrobe-turn span{display:none}}
+
+#menu [data-outfit] { grid-template-columns: minmax(38px,28%) 1fr; column-gap:8px; align-items:center }
+#menu [data-outfit] canvas { width:100%; height:auto; grid-column:1; grid-row:1 / span 3; background:radial-gradient(ellipse at center,#4e5960,#182129) }
+#menu [data-outfit] :is(strong,span), #menu [data-outfit]::after { grid-column:2 }
+
+#menu[data-screen=outfits] #lobby-stage.is-ready { opacity:1!important }
+#menu[data-screen=outfits] .wardrobe-stage { min-height:160px }
+
+#menu [data-outfit-challenges] summary { cursor:pointer; min-height:32px }
+#menu [data-outfit-challenges] ul { margin:4px 0; padding-left:18px }
+#menu [data-outfit-challenges] ul li { list-style:disc; border:0; padding:3px 0 }

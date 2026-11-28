@@ -21,10 +21,12 @@ export function referenceNavigation(spec,terrain){
     if(kind[k])continue;
     graph.addEdge(new NavEdge(p.id,adj[k],cost[k]));edges++;
   }
-  function clear(a,b,r=.202){
+  const clear=(a,b,r)=>clearSteps(a,b,r).next().value;
+  function* clearSteps(a,b,r=.202,stepped=false){
     const d=Math.hypot(b.x-a.x,b.z-a.z),steps=Math.max(1,Math.ceil(d/.15));
     let floor=a.y??0;
     for(let i=0;i<=steps;i++){
+      if(stepped&&i>0&&i%24===0)yield;
       const t=i/steps,px=a.x+(b.x-a.x)*t,pz=a.z+(b.z-a.z)*t;
       const support=terrain.groundHeight(px,pz,floor,r);
       if(Math.abs(support-floor)>.47||!terrain.canOccupy(px,pz,r,1.7,support))return false;
@@ -32,7 +34,19 @@ export function referenceNavigation(spec,terrain){
     }
     return Math.abs(floor-(b.y??floor))<.5;
   }
-  function* nearestSteps(p,stepped=false){
+  function clearOfBodies(a,b,blockers,allowExit=false){
+    const dx=b.x-a.x,dz=b.z-a.z,lengthSq=dx*dx+dz*dz;
+    return blockers.every(o=>{
+      const t=lengthSq?Math.max(0,Math.min(1,((o.x-a.x)*dx+(o.z-a.z)*dz)/lengthSq)):0;
+      const y=(a.y??0)+t*((b.y??a.y??0)-(a.y??0));
+      if(Math.abs((o.y??0)-y)>=1.65)return true;
+      const r=o.radius??.42;
+      if(Math.hypot(o.x-a.x-t*dx,o.z-a.z-t*dz)>=r-1e-7)return true;
+      return allowExit&&Math.hypot(a.x-o.x,a.z-o.z)<r&&Math.hypot(b.x-o.x,b.z-o.z)>=r&&
+        (a.x-o.x)*dx+(a.z-o.z)*dz>=0;
+    });
+  }
+  function* nearestSteps(p,stepped=false,blockers=[],allowExit=false){
     let probes=0;
     if(!p)return null;
     for(const range of [1.5,3.5,6]){
@@ -41,7 +55,7 @@ export function referenceNavigation(spec,terrain){
       choices.sort((a,b)=>distance(a)-distance(b));
       for(const n of choices){
         if(stepped&&++probes%8===0)yield;
-        if(clear(p,n))return n;
+        if(clearOfBodies(p,n,blockers,allowExit)&&(yield* clearSteps(p,n,undefined,stepped)))return n;
       }
     }
     return null;
@@ -54,11 +68,9 @@ export function referenceNavigation(spec,terrain){
   }
   function* pathSteps(from,to,{avoid=[],blockers=[],stepped=false}={}){
     if(!from||!to)return [];
-    const legal=(a,b)=>!blockers.some(o=>Math.abs((o.y??0)-a.y)<1.65&&
-      distanceSegment(o.x,o.z,[a.x,a.z],[b.x,b.z])<(o.radius??.42)&&
-      Math.hypot(a.x-o.x,a.z-o.z)>=(o.radius??.42));
-    if(!avoid.length&&legal(from,to)&&clear(from,to))return [point(to)];
-    const start=yield* nearestSteps(from,stepped),end=yield* nearestSteps(to,stepped);
+    const legal=(a,b,allowExit=false)=>clearOfBodies(a,b,blockers,allowExit);
+    if(!avoid.length&&legal(from,to,true)&&(yield* clearSteps(from,to,undefined,stepped)))return [point(to)];
+    const start=yield* nearestSteps(from,stepped,blockers,true),end=yield* nearestSteps(to,stepped,blockers);
     if(!start||!end)return [];
     const weighted=avoid.length||blockers.length;
     const key=start.id+':'+end.id;let ids=weighted?null:cache.get(key);
@@ -85,7 +97,7 @@ export function referenceNavigation(spec,terrain){
       let next=Math.min(i+8,raw.length-1);
       while(next>i+1){
         if(stepped&&++probes%5===0)yield;
-        if(legal(raw[i],raw[next])&&clear(raw[i],raw[next]))break;
+        if(legal(raw[i],raw[next],i===0)&&(yield* clearSteps(raw[i],raw[next],undefined,stepped)))break;
         next--;
       }
       out.push(point(raw[next]));i=next;

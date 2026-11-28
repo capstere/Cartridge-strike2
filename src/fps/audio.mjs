@@ -383,6 +383,11 @@ export class AudioSystem {
         for (let i = 0; i < 3; i++) this.tone(sound, [440, 554, 659][i], .25, .12, 'triangle', [440, 554, 659][i], i * .13); break;
       case 'round': this.tone(sound, 660, .16, .12); break;
       case 'impact': this.sample('impactMetal_light_000', sound, .14, varied); break;
+      case 'immune':
+        if (this.settings.combatSounds !== false && [event.actorId,event.sourceId].includes(this.listenerId)) {
+          this.tone({...sound,actorId:this.listenerId},760,.09,.08,'triangle',390);
+        }
+        break;
       case 'hit': if(event.sourceId === this.listenerId)this.tone({...sound,actorId:this.listenerId}, 1700, .045, .07); break;
       case 'damage':
         if(event.actorId !== this.listenerId) return;

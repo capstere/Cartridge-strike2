@@ -55,7 +55,8 @@ export function createNavigation(data,physics,{spacing=.70,radius=ACTOR_RADIUS+.
     if(key){if(clearanceCache.size>=clearanceStats.limit)clearanceCache.delete(clearanceCache.keys().next().value);clearanceCache.set(key,result);clearanceStats.size=clearanceCache.size;}
     return result;
   }
-  function clear(a,b,r=radius){
+  const clear=(a,b,r)=>clearSteps(a,b,r).next().value;
+  function* clearSteps(a,b,r=radius,stepped=false){
     // Static capsule clearance is symmetric. Preserve every coordinate bit in
     // the key: rounding could accidentally permit a wall-edge penetration.
     // Dynamic actors are resolved separately by Game and never enter this cache.
@@ -65,7 +66,11 @@ export function createNavigation(data,physics,{spacing=.70,radius=ACTOR_RADIUS+.
       if(clearanceStats.limit){const first=a.x<b.x||a.x===b.x&&a.z<=b.z;const p=first?a:b,q=first?b:a;key=`${r}:${p.x},${p.z}:${q.x},${q.z}`;const cached=clearanceCache.get(key);if(cached!==undefined){clearanceStats.hits++;return cached;}}
     }
     const distance=Math.hypot(b.x-a.x,b.z-a.z),steps=Math.max(1,Math.ceil(distance/.075));
-    for(let i=0;i<=steps;i++){if(cacheClearance)clearanceStats.samples++;if(!physics.canOccupy(a.x+(b.x-a.x)*i/steps,a.z+(b.z-a.z)*i/steps,r))return remember(key,false);}
+    for(let i=0;i<=steps;i++){
+      if(stepped&&i>0&&i%32===0)yield;
+      if(cacheClearance)clearanceStats.samples++;
+      if(!physics.canOccupy(a.x+(b.x-a.x)*i/steps,a.z+(b.z-a.z)*i/steps,r))return remember(key,false);
+    }
     return remember(key,true);
   }
   const pointKey=(x,z)=>`${x.toFixed(3)},${z.toFixed(3)}`;
@@ -159,7 +164,7 @@ export function createNavigation(data,physics,{spacing=.70,radius=ACTOR_RADIUS+.
       const choices=[...index.nearby(point.x,point.z,distance)].sort((a,b)=>Math.hypot(a.x-point.x,a.z-point.z)-Math.hypot(b.x-point.x,b.z-point.z));
       for(const n of choices){
         if(stepped&&++probes%8===0)yield;
-        if((n.id<baseNodeCount||activeGlassNodes.has(n.id))&&bodiesClear(point,n,blockers,allowExit)&&clear(point,n,ACTOR_RADIUS))return n;
+        if((n.id<baseNodeCount||activeGlassNodes.has(n.id))&&bodiesClear(point,n,blockers,allowExit)&&(yield* clearSteps(point,n,ACTOR_RADIUS,stepped)))return n;
       }
     }
     return null;
@@ -171,7 +176,7 @@ export function createNavigation(data,physics,{spacing=.70,radius=ACTOR_RADIUS+.
   }
   function* pathSteps(from,to,{avoid=[],blockers=[],stepped=false}={}){
     if(!from||!to||![from.x,from.z,to.x,to.z].every(Number.isFinite))return [];
-    if(!avoid.length&&bodiesClear(from,to,blockers,true)&&clear(from,to,ACTOR_RADIUS))return [{x:to.x,z:to.z}];
+    if(!avoid.length&&bodiesClear(from,to,blockers,true)&&(yield* clearSteps(from,to,ACTOR_RADIUS,stepped)))return [{x:to.x,z:to.z}];
     // Each endpoint must connect via a swept capsule. Reject an obstructed
     // endpoint once instead of testing it against every nearby graph node.
     if(!physics.canOccupy(from.x,from.z,ACTOR_RADIUS)||!physics.canOccupy(to.x,to.z,ACTOR_RADIUS))return [];
@@ -201,9 +206,9 @@ export function createNavigation(data,physics,{spacing=.70,radius=ACTOR_RADIUS+.
       // A bounded lookahead smooths routes without expensive full-map visibility sweeps.
       for(let i=Math.min(raw.length-1,current+32);i>current+1;i--){
         if(stepped&&++probes%5===0)yield;
-        if(bodiesClear(raw[current],raw[i],blockers,current===0)&&(!avoid.length||weightedCost(raw[current],raw[i])<=(costs[i]-costs[current])*1.08)&&clear(raw[current],raw[i],ACTOR_RADIUS+.001)){next=i;break;}
+        if(bodiesClear(raw[current],raw[i],blockers,current===0)&&(!avoid.length||weightedCost(raw[current],raw[i])<=(costs[i]-costs[current])*1.08)&&(yield* clearSteps(raw[current],raw[i],ACTOR_RADIUS+.001,stepped))){next=i;break;}
       }
-      if(physics.dynamicPassages?.()&&!clear(raw[current],raw[next],ACTOR_RADIUS))return [];
+      if(physics.dynamicPassages?.()&&!(yield* clearSteps(raw[current],raw[next],ACTOR_RADIUS,stepped)))return [];
       path.push(raw[next]);current=next;
     }
     return path;

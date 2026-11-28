@@ -131,7 +131,9 @@ export class BotController {
       // Defusing and planting keep priority once in progress; fighting cannot
       // repeatedly reset the last second of a valid objective interaction.
       const readyToPlant = game.bomb.carrierId === actor.id && game.interaction(actor)?.type === 'plant';
-      const nextMode = actor.action || readyToPlant ? 'objective' : this.target ? 'combat' : this.shouldInvestigate() ? 'investigate' : 'objective';
+      const holdingCover=this.coverMove?.until>now&&!this.urgentObjective()&&
+        (actor.reloadUntil>now||actor.hp<this.coverHealth());
+      const nextMode = actor.action || readyToPlant ? 'objective' : this.target || holdingCover ? 'combat' : this.shouldInvestigate() ? 'investigate' : 'objective';
       if (this.teamOrder && (nextMode !== 'objective' || !this.canFollowTeamOrder())) this.setTeamOrder(null);
       this.nextDecision = now + game.config.botDecisionInterval*this.style.cadence;
       if (nextMode !== this.mode) { this.mode = nextMode; this.machine.changeTo(nextMode); }
@@ -164,8 +166,11 @@ export class BotController {
       const waiting=game.actors.find(a=>a!==actor&&a.alive&&a.team===actor.team&&a.blockedBy===actor.id&&a.bot?.stuckTime>.55);
       if(waiting)this.recoverPosition(waiting);
     }
-    if (this.goal && distance(actor,this.goal)>.3 && !input.interact && now>=this.departAt && now>=this.nextRecovery && (this.stuckTime>.55||now-this.lastProgress>1.4))this.recoverPosition();
-    if (this.goal && distance(actor,this.goal)>.3 && now - this.lastProgress > 1.2 && now - this.lastReplan > 1.2) {
+    // A stationary bot awaiting an admitted search is still making planning
+    // progress. Only physical obstruction should start its side-step recovery.
+    const waitingForRoute=!this.path.length&&(this.routeJobs.movement||this.routeJobs.tactical)&&!actor.blockedBy;
+    if (!waitingForRoute && this.goal && distance(actor,this.goal)>.3 && !input.interact && now>=this.departAt && now>=this.nextRecovery && (this.stuckTime>.55||now-this.lastProgress>1.4))this.recoverPosition();
+    if (!waitingForRoute && this.goal && distance(actor,this.goal)>.3 && now - this.lastProgress > 1.2 && now - this.lastReplan > 1.2) {
       this.nextPath = 0; this.path = []; this.replans++; this.lastReplan = now;
       // Retry from the current physical capsule. Never teleport or disable
       // collision when a path is blocked by another agent or furniture.
@@ -344,10 +349,22 @@ export class BotController {
     if(now<q.ready||distance(this.actor,q.point)<.65){this.setGoal(null);this.lookToward(q.point,.22*Math.sin(now+this.style.angle));}
     else this.setGoal(q.point);
   }
+  // The reference's morale and role vary the decision to stay in cover.
+  // Use the actor's existing seeded preference, including after respawn.
+  coverHealth(){return 48+(1-this.style.preference)*22;}
   planCombat() {
     const { game, actor, target } = this, now = game.state.time;
     actor.aiState = 'strid';
-    if (!target?.visible) return;
+    if (!target?.visible) {
+      // Reload or recover behind the reserved cover while facing the last
+      // sighting. A hidden actor supplies neither aim updates nor permission to fire.
+      const cover=this.coverMove;
+      if(cover?.until>now){
+        this.setGoal(distance(actor,cover.point)>.25?cover.point:null);
+        this.lookToward(cover.threat);
+      }
+      return;
+    }
     const point = { x: target.lastSensedPosition.x, y: target.lastSensedPosition.y, z: target.lastSensedPosition.z };
     const approach=game.world.layeredTerrain?(target.lastKnownGround??point):point;
     const profile = this.profile, focus = Math.min(1, (target.focusTime ?? 0) / profile.settleTime);
@@ -376,9 +393,9 @@ export class BotController {
     if (actor.team === 'counterAnalysts' && ['objective','flank'].includes(actor.aiRole) && flankGoal && actor.hp > 35 && d > 5) this.setGoal(flankGoal);
     if(now>=target.reactionAt&&now>=this.nextCover&&d>3&&!actor.action){
       this.nextCover=now+1.7+game.random()*2;
-      if(actor.hp<65||actor.reloadUntil||['flank','support'].includes(actor.aiRole)){
+      if(actor.hp<this.coverHealth()||actor.reloadUntil>now||['flank','support'].includes(actor.aiRole)){
         const p=tacticalPosition(this,actor,{threat:point,cover:true,radius:1.2+this.style.preference});
-        this.coverMove=distance(actor,p)>.3?{point:p,until:now+1.5}:null;
+        this.coverMove=distance(actor,p)>.3?{point:p,threat:point,until:now+1+(1-this.style.preference)*1.2}:null;
       }
     }
     if(this.coverMove?.until>now&&distance(actor,this.coverMove.point)>.25)this.setGoal(this.coverMove.point);
@@ -529,18 +546,22 @@ export class BotController {
       // Keep a legal static corridor while walking it. A blocked body,
       // changed gate, elevator/glass change or displaced actor gets a fresh path.
       if(this.nextPath>0&&this.path.length&&sameGoal&&this.pathEpoch===(nav.queryEpoch??revision)&&
-          !this.stuckTime&&nav.clear(actor,this.path[0])){
+          !this.stuckTime&&this.pathOrigin&&distanceSegment(actor.x,actor.z,
+            [this.pathOrigin.x,this.pathOrigin.z],[this.path[0].x,this.path[0].z])<.04){
         this.nextPath=now+this.style.pathInterval;
       }else{
         if(this.navigationRevision!==revision)this.path=[];
         const path=this.advanceRoute('movement',destination,{blockers:this.localBlockers()});
         if(path){
-          this.path=path;this.pathGoal=position(destination);this.pathEpoch=nav.queryEpoch??revision;
+          this.path=path;this.pathOrigin=position(actor);this.pathGoal=position(destination);this.pathEpoch=nav.queryEpoch??revision;
           this.navigationRevision=revision;this.nextPath=now+this.style.pathInterval;
         }
       }
     }
-    while (this.path.length && distance(actor, this.path[0]) < .055) this.path.shift();
+    while(this.path.length&&distance(actor,this.path[0])<.055&&
+        (!game.world.layeredTerrain||Math.abs(actor.y-this.path[0].y)<.5)){
+      this.pathOrigin=this.path.shift();
+    }
     const waypoint = this.path[0]; if (!waypoint) return;
     const d = distance(actor, waypoint); if (!d) return;
     this.vehicle.position.set(actor.x, 0, actor.z); this.vehicle.velocity.set(0, 0, 0);
