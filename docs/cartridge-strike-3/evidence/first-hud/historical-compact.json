@@ -1,0 +1,187 @@
+[
+  {
+    "capture": "cs3-cold-original-turn",
+    "build": "5d3875bbbda009d9d1c63ce4d8e06227d5493745a1cc4c63c12935f5278a34fb",
+    "rawSHA256": "73ba2d1dc3820de6c372cbdee3b957135c41cf671d1830843d594bf28ed87027",
+    "desktop": {
+      "hudStampMs": 18691.8,
+      "followingRafStampMs": 20275.1,
+      "gapMs": 1583.3,
+      "sourcesAndCallbacksMs": [
+        [
+          18732.3,
+          18757.1
+        ],
+        [
+          18832.7,
+          20325.4
+        ]
+      ],
+      "peakPointerDelayMs": 1492.7
+    },
+    "emulated": {
+      "hudStampMs": 14815,
+      "followingRafStampMs": 17766.2,
+      "gapMs": 2951.2,
+      "sourcesAndCallbacksMs": [
+        [
+          14851.7,
+          14883.3
+        ],
+        [
+          14951.4,
+          17841.7
+        ]
+      ],
+      "peakPointerDelayMs": 2890.3
+    }
+  },
+  {
+    "capture": "cs3-b9-breacher",
+    "build": "b9d7ad66c75286cc4f16aeeadb1208a348e40bc5f1f4015237aae8e6049ba8ab",
+    "rawSHA256": "216e6df13854d68abcf6ff887dfb7ef7c47afb7ae098b2cbc6ded616230fb2f9",
+    "desktop": {
+      "hudStampMs": 22496.6,
+      "followingRafStampMs": 23963.3,
+      "gapMs": 1466.7,
+      "sourcesAndCallbacksMs": [
+        [
+          22477.9,
+          22480.8
+        ],
+        [
+          22577.8,
+          24017.7
+        ]
+      ],
+      "peakPointerDelayMs": 1439.9
+    },
+    "emulated": {
+      "hudStampMs": 24090.3,
+      "followingRafStampMs": 26727.9,
+      "gapMs": 2637.6,
+      "sourcesAndCallbacksMs": [
+        [
+          24106.3,
+          24158.7
+        ],
+        [
+          24206.9,
+          26788.6
+        ]
+      ],
+      "peakPointerDelayMs": 2581.7
+    }
+  },
+  {
+    "capture": "cs3-b9-known-ghillie",
+    "build": "b9d7ad66c75286cc4f16aeeadb1208a348e40bc5f1f4015237aae8e6049ba8ab",
+    "rawSHA256": "08397289cf3a751e6ff5410d9aea801f0c19f00fc1fc8509ae41a6cf1db992fd",
+    "desktop": {
+      "hudStampMs": 22131.8,
+      "followingRafStampMs": 23615.1,
+      "gapMs": 1483.3,
+      "sourcesAndCallbacksMs": [
+        [
+          22181.4,
+          22200.3
+        ],
+        [
+          22279,
+          23669
+        ]
+      ],
+      "peakPointerDelayMs": 1390
+    },
+    "emulated": {
+      "hudStampMs": 23966,
+      "followingRafStampMs": 26577.8,
+      "gapMs": 2611.8,
+      "sourcesAndCallbacksMs": [
+        [
+          23958.4,
+          24042.2
+        ],
+        [
+          24063.5,
+          26639.1
+        ]
+      ],
+      "peakPointerDelayMs": 2575.6
+    }
+  },
+  {
+    "capture": "cs3-b9-late-ghillie",
+    "build": "b9d7ad66c75286cc4f16aeeadb1208a348e40bc5f1f4015237aae8e6049ba8ab",
+    "rawSHA256": "2b69c2b27ed3ae35399a3fe264f67bc4d68cf4be5c99d18b5b1dea8ef5e5da1a",
+    "desktop": {
+      "hudStampMs": 34305.2,
+      "followingRafStampMs": 36005.2,
+      "gapMs": 1700,
+      "sourcesAndCallbacksMs": [
+        [
+          34357.7,
+          34402.7
+        ],
+        [
+          34459.1,
+          36081.1
+        ]
+      ],
+      "peakPointerDelayMs": 1622.0
+    },
+    "emulated": {
+      "hudStampMs": 10441.7,
+      "followingRafStampMs": 12683.6,
+      "gapMs": 2241.9,
+      "sourcesAndCallbacksMs": [
+        [
+          10452.4,
+          10513.7
+        ],
+        [
+          10551,
+          12739.4
+        ]
+      ],
+      "peakPointerDelayMs": 2188.4
+    }
+  },
+  {
+    "capture": "cs3-b9-relocated",
+    "build": "b9d7ad66c75286cc4f16aeeadb1208a348e40bc5f1f4015237aae8e6049ba8ab",
+    "rawSHA256": "4b5252b287c83219c7e34ddb170d4f15e8e70e39e0b103bdace61a3ed022e6f0",
+    "desktop": {
+      "hudStampMs": 23842,
+      "followingRafStampMs": 25408.6,
+      "gapMs": 1566.6,
+      "sourcesAndCallbacksMs": [
+        [
+          23832.9,
+          23900.1
+        ],
+        [
+          23933,
+          25464.8
+        ]
+      ],
+      "peakPointerDelayMs": 1531.8
+    },
+    "emulated": {
+      "hudStampMs": 24850.9,
+      "followingRafStampMs": 27313.8,
+      "gapMs": 2462.9,
+      "sourcesAndCallbacksMs": [
+        [
+          24882,
+          24915.9
+        ],
+        [
+          24983.3,
+          27363.8
+        ]
+      ],
+      "peakPointerDelayMs": 2380.5
+    }
+  }
+]

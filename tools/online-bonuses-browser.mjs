@@ -13,6 +13,9 @@ import {respawnActor} from '../src/fps/action-rules.mjs';
 import {waitForActiveHud,resumeDesktop,enterTouchMatch} from './network-browser-resume.mjs';
 const {createLocalServer}=await import('../server/local-server.mjs');
 const output=process.env.CS3_BONUS_EVIDENCE;
+const admissionMap=process.env.CS3_FIRST_HUD_MAP;
+const admission=admissionMap?await import('./first-hud-admission.mjs'):null;
+if(admissionMap)assert(output&&process.env.CS3_BONUS_COLD_FOCUS&&['compact-arena','floor5-prepared'].includes(admissionMap));
 const coldOutfit=process.env.CS3_BONUS_COLD_OUTFIT||'shotgun';
 assert(['shotgun','sniper'].includes(coldOutfit));
 const result={build:CONTRACT.buildHash,protocol:CONTRACT.protocolVersion};
@@ -35,6 +38,7 @@ async function open(touch){
   pages.push(page);page.setDefaultTimeout(35000);
   page.on('pageerror',e=>errors.push(e.message));
   await page.addInitScript(()=>localStorage.setItem('cartridge-settings',JSON.stringify({graphics:'low',ambient:false,volume:.35,mobileAutoFire:false})));
+  if(admission)await page.addInitScript(admission.startAdmissionTrace,process.env.CS3_FIRST_HUD_STAGES==='1');
   if(process.env.CS3_BONUS_COLD_FOCUS)await page.addInitScript(()=>{
     const result=window.coldStartup={first:performance.now(),last:null,maxGap:0,above100:0,above250:0,intervals:0,markers:[],raf:[],input:[]};
     function frame(now){
@@ -82,6 +86,7 @@ async function open(touch){
       return snapshot.apply(this,args);
     };
   });
+  if(admission)await page.evaluate(admission.installAdmissionStages);
   await page.locator('#network-code').fill('streak-room');
   await page.locator('#network-name').fill(touch?'Touch player':'Desktop player');
   await page.locator('#network-team').selectOption(touch?'counterAnalysts':'analysts');
@@ -121,11 +126,11 @@ function award(game,winner,loser,count){
     assert(game.damage(loser,500,winner,'smg',{head:true}));assert(!loser.alive);assert(respawnActor(game,loser));
   }
 }
-try{
+qualification:try{
   if(output)await mkdir(output,{recursive:true});
   const desktop=await open(false),touch=await open(true);
   const late=process.env.CS3_BONUS_COLD_LATE==='1',host=late?touch:desktop,guest=late?desktop:touch;
-  await host.locator('#network-map').selectOption('compact-arena');
+  await host.locator('#network-map').selectOption(admissionMap||'compact-arena');
   await host.locator('#network-fill-bots').uncheck();
   const mark=async(page,label)=>{
     if(process.env.CS3_BONUS_COLD_FOCUS)await page.evaluate(s=>window.coldStartup.markers.push([s,performance.now()]),label);
@@ -141,6 +146,48 @@ try{
   };
   await monitorInput(desktop);await monitorInput(touch);
   const press=(page,id)=>page===touch?page.locator(id).tap():page.locator(id).click();
+  if(process.env.CS3_FIRST_HUD_LIFECYCLE==='1'){
+    assert(admission&&host===desktop);
+    const targetMap=admissionMap==='compact-arena'?'floor5-prepared':'compact-arena';
+    let switchMap;const advanced=new Promise(resolve=>{switchMap=resolve;});
+    await guest.exposeFunction('changeMapWhileWarming',()=>{switchMap();});
+    await guest.evaluate(admission.observeAdmissionLifetime);
+    await press(host,'[data-create=true]');
+    await host.locator('#room-ready').waitFor();
+    const room=[...server.rooms][0];
+    const enterExistingRoom=async()=>{await guest.locator('#network-room').fill(room.roomId);await press(guest,'[data-create=false]');};
+    const active=async number=>guest.waitForFunction(n=>window.admissionLife?.entries.length===n&&admissionLife.active===n,number);
+    await enterExistingRoom();await active(1);
+    await guest.locator('form button[type=button]:visible').filter({hasText:/cancel/i}).tap();
+    await guest.waitForFunction(()=>admissionLife.entries[0].finished&&document.querySelector('#network-status').dataset.errorId==='joinCancelled');
+    await enterExistingRoom();await advanced;
+    await host.locator('#room-map').selectOption(targetMap);
+    await guest.locator('#room-ready').waitFor({timeout:100000});
+    await guest.waitForFunction(map=>streakSession.room.state.mapId===map&&streakSession.worldRevision===streakSession.room.state.worldRevision&&streakSession.view.player?.id&&streakSession.room.state.actors.get(streakSession.localPlayerId)?.ready,targetMap,{timeout:100000});
+    const replacement=await guest.evaluate(()=>({map:streakSession.room.state.mapId,revision:streakSession.worldRevision,
+      actor:streakSession.view.player?.id,ready:!!streakSession.room.state.actors.get(streakSession.localPlayerId)?.ready}));
+    assert.equal(replacement.map,targetMap);assert(replacement.actor&&replacement.ready&&replacement.revision>1);
+    await guest.locator('#room-leave').tap();
+    await guest.waitForFunction(()=>streakSession.closed&&document.querySelector('#hud').hidden);
+    await guest.evaluate(()=>{admissionLife.failNextFence=true;});
+    await enterExistingRoom();await guest.locator('#room-ready').waitFor({timeout:75000});
+    const lifecycle=await guest.evaluate(()=>JSON.parse(JSON.stringify(admissionLife)));
+    assert.equal(lifecycle.entries.length,3);assert(lifecycle.entries[0].aborted&&lifecycle.entries[0].closed);
+    assert(lifecycle.entries[1].aborted&&!lifecycle.entries[1].closed);
+    assert(lifecycle.failedFence);assert.equal(lifecycle.created,lifecycle.deleted);
+    assert(lifecycle.entries.every(e=>e.finished&&e.remainingFences===0&&e.uncovered===0&&e.scissorLeaks===0));
+    assert(lifecycle.entries[1].frames>0);
+    const old=lifecycle.retired.find(r=>r.owner===lifecycle.entries[1].owner);
+    assert(old?.disposed&&old.lost&&old.fences===0);
+    const image=await guest.evaluate(admission.captureWaitingFrame);
+    await writeFile(join(output,'rejoined-world.png'),Buffer.from(image.image,'base64'));
+    delete image.image;
+    await guest.locator('#room-leave').tap();
+    assert.deepEqual(errors,[]);
+    await writeFile(join(output,'lifecycle.json'),JSON.stringify({...result,replacement,lifecycle,rejoined:image},null,2)+'\n');
+    console.log('Native cancelled warm-up, host map replacement and optional GPU error recovered');
+    break qualification;
+  }
   await mark(host,'join requested');
   await press(host,'[data-create=true]');await press(host,'#room-ready');
   const room=[...server.rooms][0];
@@ -148,10 +195,36 @@ try{
   await mark(host,'waiting ready');await mark(guest,'join requested');
   await press(guest,'[data-create=false]');await press(guest,'#room-ready');
   await mark(guest,'waiting ready');
+  const waiting=[];
+  if(admission)for(const [i,page] of pages.entries()){
+    const {image,...meta}=await page.evaluate(admission.captureWaitingFrame);
+    await writeFile(join(output,(i?'emulated':'desktop')+'-waiting.png'),Buffer.from(image,'base64'));
+    waiting.push(meta);
+  }
   console.log('Both players joined and entered ready state');
   await press(host,'#room-start');await waitForActiveHud(desktop);await enterTouchMatch(touch);
   if(await desktop.locator('#pause').isHidden()&&!await desktop.evaluate(()=>!!document.pointerLockElement))await desktop.keyboard.press('Escape');
   if(await desktop.locator('#resume').isVisible())await resumeDesktop(desktop);
+  if(admission){
+    for(const timer of inputTimers)clearInterval(timer);
+    const human=[...room.seats.values()].find(seat=>seat.actor.name==='Desktop player').actor;
+    const initial=[human.x,human.z],tick=room.state.tick;
+    await desktop.bringToFront();
+    if(await desktop.locator('#pause').isVisible())await resumeDesktop(desktop);
+    await desktop.keyboard.down('w');
+    try{await wait(()=>Math.hypot(human.x-initial[0],human.z-initial[1])>.08,'ordinary live movement after ready');}
+    finally{await desktop.keyboard.up('w');}
+    assert(room.state.tick>tick);
+    assert.deepEqual(errors,[]);
+    const receipts=await Promise.all(pages.map(page=>page.evaluate(admission.admissionReceipt)));
+    const report={...result,map:room.state.mapId,players:room.seats.size,bots:room.bots.size,
+      movement:Math.hypot(human.x-initial[0],human.z-initial[1]),ticks:room.state.tick-tick,
+      waiting,desktop:receipts[0],emulated:receipts[1]};
+    assert.equal(report.map,admissionMap);assert.equal(report.players,2);assert.equal(report.bots,0);
+    await writeFile(join(output,'first-hud.json'),JSON.stringify(report,null,2)+'\n');
+    console.log('Native first HUD',report.map,receipts.map(r=>Math.round(r.gap)),report.movement);
+    break qualification;
+  }
   await Promise.all([observe(desktop),observe(touch)]);
   await mark(desktop,'active input');await mark(touch,'active input');for(const timer of inputTimers)clearInterval(timer);
   console.log('Both game HUDs active');
@@ -224,6 +297,7 @@ try{
   if(output)await writeFile(join(output,'browser.json'),JSON.stringify(result,null,2)+'\n');
   console.log(JSON.stringify(result));
 }catch(error){
+  if(output&&process.env.CS3_FIRST_HUD_LIFECYCLE==='1')await writeFile(join(output,'incomplete-lifecycle.json'),JSON.stringify(await Promise.all(pages.map(page=>page.evaluate(()=>({life:window.admissionLife,ready:document.querySelector('#room-ready')?.disabled,status:document.querySelector('#network-status')?.textContent,actor:window.streakSession?.view?.player?.id,revision:window.streakSession?.worldRevision})).catch(()=>null))),null,2));
   for(const page of pages){
     console.error(await page.evaluate(()=>({url:location.pathname,modal:window.__fps?.modal,phase:window.streakSession?.view?.phase,
       hud:document.querySelector('#bonus-controls')?.textContent,lock:document.pointerLockElement?.id,

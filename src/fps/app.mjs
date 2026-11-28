@@ -469,7 +469,18 @@ async function joinNetwork(options){
   networkUi?.status(accessEnglish.loadingMap(networkMap(id).name));if(game===session.view)onlineRoomUi?.update(session);
  },onMatch:()=>{if(networkSession===session&&game===session.view)networkPhase();},onConnection:status=>{if(networkSession!==session)return;countdownSession=null;deployment.suspend();clearInput();audio.reset();renderer?.resetTransient();recoil.reset();if(status==='reconnecting')showPause();$('pause').querySelector('p:not(.eyebrow)').textContent=status==='reconnecting'?accessEnglish.reconnectingHelp:accessEnglish.reconnected;},onDisconnect:message=>{if(networkSession!==session)return;newMatch();networkUi?.status(connectionMessage(message),connectionFailure(message));}});
  networkSession=session;
- try{await session.connect({...options,arsenalProfile:localArsenalProfile()});if(session.room.state.mode==='classic')await renderer.prepareClassic();if(generation!==networkJoinGeneration){await session.dispose();throw Error('Join cancelled.');}}
+ try{
+  await session.connect({...options,arsenalProfile:localArsenalProfile()});
+  if(session.room.state.mode==='classic')await renderer.prepareClassic();
+  // The live frame can initialize these materials if the optional GPU preparation fails.
+  try{await renderer.prepareSpawnFrame(session.view,session.mapAbort?.signal);}
+  catch(error){console.warn('Skipped optional spawn rendering preparation.',error);}
+  if(generation!==networkJoinGeneration)throw Error('Join cancelled.');
+  // A host can replace the map while a guest prepares the old seat. Wait for the
+  // current revision and its own actor before copying the spawn camera or showing the HUD.
+  await session.waitForSpawn();
+  if(generation!==networkJoinGeneration)throw Error('Join cancelled.');
+ }
  catch(e){await session.dispose();if(networkSession===session)networkSession=null;throw e;}
  game=session.view;applyNetworkMode();
  team=game.team;setPrivateCharacterActors([]);modal=null;lastRound=game.state.round;lastPhase='active';spectateIndex=0;feed=[];
