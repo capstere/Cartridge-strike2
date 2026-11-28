@@ -2497,7 +2497,7 @@
     {
       "path": "shared/multiplayer/build.mjs",
       "bytes": 660,
-      "sha256": "5cb4dd4acb5e4150f157e9962c1b3178856a7e9bb40196384e79169cede6d380"
+      "sha256": "f5b89884be4c48e8148a59c629337f7c697e4345f40c79bf350cdbaa0b7c10c2"
     },
     {
       "path": "shared/multiplayer/collision-contract.mjs",
@@ -2517,7 +2517,7 @@
     {
       "path": "shared/multiplayer/map-build.mjs",
       "bytes": 2831,
-      "sha256": "28fd7cd6f584932f4d636d41e4b91628fbe48359ae067f052000bf7561da38d3"
+      "sha256": "4fc9e3db3cf9e43bf26806e31db42c229fb2e215fcf2cf70e97f95d4dad58ebd"
     },
     {
       "path": "shared/multiplayer/maps.mjs",
@@ -2586,8 +2586,8 @@
     },
     {
       "path": "src/fps/app.mjs",
-      "bytes": 62595,
-      "sha256": "db0fb879be389adeec7a2d8a9bc68ff0dfd274a8f9388c21c58a7b805df3c6b3"
+      "bytes": 62650,
+      "sha256": "28646e0337415b7b4ace39c933aee2da076866ebe5be6d68780d9040fcb8d16b"
     },
     {
       "path": "src/fps/audio.mjs",
@@ -2621,8 +2621,8 @@
     },
     {
       "path": "src/fps/bots.mjs",
-      "bytes": 39239,
-      "sha256": "036462fd12eae5c8e41989761b049c1e9a750ba837fa05a312b4194b0703cd9d"
+      "bytes": 39676,
+      "sha256": "83e08ae7398d5ead22513b91bbe0d51715d436dd9aa43d3199cc450036d007bd"
     },
     {
       "path": "src/fps/business-hostage.mjs",
@@ -2651,8 +2651,8 @@
     },
     {
       "path": "src/fps/character-library.mjs",
-      "bytes": 27728,
-      "sha256": "31f0fd97236f34f3031b93aaeb40b66c8503947e2edd285f982ab3942125f24c"
+      "bytes": 28005,
+      "sha256": "e1fcba96c2ba6965364ad210a99cc5d611babdc977dccd8805b99baa577732c7"
     },
     {
       "path": "src/fps/character-overrides.mjs",
@@ -3076,13 +3076,13 @@
     },
     {
       "path": "src/fps/render-engine.mjs",
-      "bytes": 34101,
-      "sha256": "1f5f944320186b3663ee177281e57c7f93e554004d1a8a0af519fae25be369be"
+      "bytes": 34432,
+      "sha256": "5917634be91cd7ad30143b033911b910236015f9cb1895399e824079e3391b17"
     },
     {
       "path": "src/fps/render.mjs",
-      "bytes": 22572,
-      "sha256": "5b5f9e8ecb4b2beaa19a28a9048dc306ecafd225b625a53f29ff4b7aac79a8e7"
+      "bytes": 30783,
+      "sha256": "00df482b654b88250e692880f364f802a28e9c97c18a1cebe525ff97b917b265"
     },
     {
       "path": "src/fps/riposte-audio.mjs",
@@ -3540,7 +3540,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 81830897,
+  "bytes": 81840208,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

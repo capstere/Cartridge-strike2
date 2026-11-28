@@ -10,7 +10,7 @@ const output=process.env.CS3_NAV_EVIDENCE||'test-results/bot-navigation';
 await mkdir(output,{recursive:true});
 const native=process.env.CHROMIUM_PATH;
 const browser=await chromium.launch({executablePath:native,headless:process.env.FPS_NETWORK_HEADED!=='1',
-  args:native?['--ozone-platform=wayland','--use-angle=gl-egl','--disable-dev-shm-usage']:
+  args:native?['--ozone-platform=wayland','--use-gl=angle','--use-angle=gl-egl','--disable-dev-shm-usage']:
     ['--use-angle=swiftshader','--enable-unsafe-swiftshader','--disable-dev-shm-usage']});
 const evidence=[];
 try{
@@ -37,6 +37,10 @@ try{
           const bots=game.actors.filter(a=>a.bot);
           if(!bots.length)return value;
           const t=game.state.time,wall=performance.now();
+          if(!trace.renderer){
+            const gl=this.renderer.getContext(),debug=gl.getExtension('WEBGL_debug_renderer_info');
+            trace.renderer=gl.getParameter(debug?.UNMASKED_RENDERER_WEBGL??gl.RENDERER);
+          }
           trace.started??=t;trace.frames++;trace.activeSeconds=t-trace.started;
           if(wall-trace.lastSample>=400){
             trace.lastSample=wall;

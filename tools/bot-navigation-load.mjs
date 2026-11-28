@@ -55,7 +55,7 @@ for(const profile of values.profiles.split(','))for(const seed of values.seeds.s
   assert.equal(game.actors.filter(a=>a.bot).length,9);
   const tickWork=[],tickRoute=[],tickStarts=[],botStartsPerTick=[],sliceTimes=[],requestWork=[],responseTicks=[],slowQueries=[];
   let tick=0,starts=0,botStarts=0,spent=0,finished=0,empty=0,shots=0,kills=0,earlyShots=0;
-  const objectives={plants:0,defuses:0,rescues:0,results:[]};
+  const objectives={plantStarts:0,defuseStarts:0,plants:0,defuses:0,rescues:0,results:[]};
   const behavior={observations:0,moving:0,investigating:0,coverReserved:0,stuckOverHalfSecond:0};
   function observe(owner){
     const original=owner.findPath;
@@ -112,8 +112,10 @@ for(const profile of values.profiles.split(','))for(const seed of values.seeds.s
     for(const event of events){
       if(event.type==='shot'){shots++;if(event.reactionAt>event.time+1e-7)earlyShots++;}
       if(event.type==='kill')kills++;
-      if(event.type==='plant')objectives.plants++;
-      if(event.type==='defuse')objectives.defuses++;
+      if(event.type==='plant')objectives.plantStarts++;
+      if(event.type==='planted')objectives.plants++;
+      if(event.type==='defuse')objectives.defuseStarts++;
+      if(event.type==='result'&&event.reason==='defuse')objectives.defuses++;
       if(event.type==='rescued')objectives.rescues++;
       if(event.type==='result')objectives.results.push({winner:event.winner,reason:event.reason,at:event.time});
     }

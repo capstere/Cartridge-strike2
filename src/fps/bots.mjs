@@ -484,7 +484,10 @@ export class BotController {
       if(Array.isArray(job.query)){this.routeJobs[kind]=null;return job.query;}
     }
     let result;
-    for(let i=0;i<10;i++){
+    // The denser prepared floor charges more collision and weighting work per
+    // checkpoint. Leave the remainder of its tick for physics and controls.
+    const limit=g.world.tactical?.kind==='floor5'?3:10;
+    for(let i=0;i<limit;i++){
       result=job.query.next();
       if(result.done)break;
     }
@@ -580,7 +583,15 @@ export class BotController {
     }
     let destination = outbound && this.routePlan?.gates.length ? this.routePlan.gates[0] : this.goal;
     if (this.routePlan && (game.bomb.status === 'planted' || game.hostages.some(h => h.escortId === actor.id) || !floor5&&this.mode === 'objective' && this.goal?.x > -15)) this.routePlan.gates = [];
-    if(this.yieldPoint){if(now<this.yieldUntil)destination=this.yieldPoint;else{this.yieldPoint=null;this.yieldDirect=false;this.nextPath=0;}}
+    if(this.yieldPoint){
+      if(now<this.yieldUntil)destination=this.yieldPoint;
+      else{
+        this.yieldPoint=null;this.yieldDirect=false;this.nextPath=0;
+        // Time deliberately spent parked after a sidestep is not a stall on
+        // the resumed route. Give the escort a chance to take its first step.
+        this.lastProgress=now;
+      }
+    }
     if(this.yieldPoint&&this.yieldDirect)this.path=[this.yieldPoint];
     else if(destination&&(now>=this.nextPath||this.navigationRevision!==(game.world.navigation?.revision||0))){
       const nav=game.world.navigation,revision=nav?.revision||0;

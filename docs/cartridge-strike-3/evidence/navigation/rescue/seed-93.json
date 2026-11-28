@@ -1,0 +1,347 @@
+{
+  "before": "f78b94988681afa64e6dee013db28ea6af7dd516",
+  "map": "floor5-prepared",
+  "seed": 93,
+  "scenario": "rescue",
+  "traceBefore": [
+    {
+      "t": 51.61666666666502,
+      "operation": "route",
+      "kind": "movement",
+      "target": [
+        27.8,
+        0,
+        33.2
+      ],
+      "p": [
+        [
+          -16.1,
+          0,
+          -21
+        ],
+        [
+          -15.4,
+          0,
+          -12.6
+        ]
+      ],
+      "stuck": 0,
+      "block": null,
+      "opts": [
+        [
+          -18.24,
+          0,
+          -21.68
+        ]
+      ]
+    },
+    {
+      "t": 51.61666666666502,
+      "operation": "recover",
+      "block": null,
+      "stuck": 0,
+      "elapsed": 1.7333333333332348,
+      "path": 20,
+      "nextPath": 53.07046775947315,
+      "clear": true,
+      "to": [
+        27.8,
+        0,
+        33.2
+      ],
+      "yieldUntil": 51.28928572579599
+    },
+    {
+      "t": 51.633333333331684,
+      "operation": "route",
+      "kind": "movement",
+      "target": [
+        -18.74,
+        0,
+        -22.45
+      ],
+      "p": [
+        [
+          -18.74,
+          0,
+          -22.45
+        ]
+      ],
+      "stuck": 0,
+      "block": null,
+      "opts": [
+        [
+          -18.24,
+          0,
+          -21.68
+        ]
+      ]
+    },
+    {
+      "t": 53.09999999999827,
+      "operation": "route",
+      "kind": "movement",
+      "target": [
+        -18.74,
+        0,
+        -22.45
+      ],
+      "p": [
+        [
+          -18.74,
+          0,
+          -22.45
+        ]
+      ],
+      "stuck": 0,
+      "block": null,
+      "opts": []
+    },
+    {
+      "t": 53.1333333333316,
+      "operation": "route",
+      "kind": "movement",
+      "target": [
+        -18.74,
+        0,
+        -22.45
+      ],
+      "p": [
+        [
+          -18.74,
+          0,
+          -22.45
+        ]
+      ],
+      "stuck": 0,
+      "block": null,
+      "opts": []
+    },
+    {
+      "t": 53.56666666666491,
+      "operation": "route",
+      "kind": "movement",
+      "target": [
+        27.8,
+        0,
+        33.2
+      ],
+      "p": [
+        [
+          -16.8,
+          0,
+          -21.7
+        ],
+        [
+          -15.4,
+          0,
+          -12.6
+        ]
+      ],
+      "stuck": 0,
+      "block": null,
+      "opts": []
+    },
+    {
+      "t": 53.56666666666491,
+      "operation": "recover",
+      "block": null,
+      "stuck": 0,
+      "elapsed": 1.666666666666572,
+      "path": 20,
+      "nextPath": 55.02046775947304,
+      "clear": true,
+      "to": [
+        27.8,
+        0,
+        33.2
+      ],
+      "yieldUntil": 53.25595239246255
+    },
+    {
+      "t": 53.583333333331574,
+      "operation": "route",
+      "kind": "movement",
+      "target": [
+        -19.08,
+        0,
+        -21.86
+      ],
+      "p": [
+        [
+          -19.08,
+          0,
+          -21.86
+        ]
+      ],
+      "stuck": 0,
+      "block": null,
+      "opts": []
+    },
+    {
+      "t": 55.03333333333149,
+      "operation": "route",
+      "kind": "movement",
+      "target": [
+        -19.08,
+        0,
+        -21.86
+      ],
+      "p": [
+        [
+          -19.08,
+          0,
+          -21.86
+        ]
+      ],
+      "stuck": 0,
+      "block": null,
+      "opts": []
+    },
+    {
+      "t": 55.5166666666648,
+      "operation": "route",
+      "kind": "movement",
+      "target": [
+        27.8,
+        0,
+        33.2
+      ],
+      "p": [
+        [
+          -16.8,
+          0,
+          -21.7
+        ],
+        [
+          -15.4,
+          0,
+          -12.6
+        ]
+      ],
+      "stuck": 0,
+      "block": null,
+      "opts": []
+    },
+    {
+      "t": 55.5166666666648,
+      "operation": "recover",
+      "block": null,
+      "stuck": 0,
+      "elapsed": 1.716666666666569,
+      "path": 20,
+      "nextPath": 56.97046775947293,
+      "clear": true,
+      "to": [
+        27.8,
+        0,
+        33.2
+      ],
+      "yieldUntil": 55.205952392462436
+    }
+  ],
+  "beforeOutcome": {
+    "events": [
+      [
+        45.4,
+        [
+          [
+            "hostage",
+            "hostage-0",
+            "counterAnalysts-1",
+            null
+          ]
+        ]
+      ],
+      [
+        46.3,
+        [
+          [
+            "hostage",
+            "hostage-1",
+            "counterAnalysts-3",
+            null
+          ]
+        ]
+      ],
+      [
+        88,
+        [
+          [
+            "rescued",
+            "hostage-0",
+            null,
+            null
+          ]
+        ]
+      ],
+      [
+        121,
+        [
+          [
+            "result",
+            null,
+            null,
+            "timeout"
+          ]
+        ]
+      ]
+    ],
+    "escortReplans": 59
+  },
+  "afterOutcome": {
+    "events": [
+      [
+        45.4,
+        [
+          [
+            "hostage",
+            "hostage-0",
+            "counterAnalysts-1",
+            null
+          ]
+        ]
+      ],
+      [
+        46.3,
+        [
+          [
+            "hostage",
+            "hostage-1",
+            "counterAnalysts-3",
+            null
+          ]
+        ]
+      ],
+      [
+        96.7,
+        [
+          [
+            "rescued",
+            "hostage-0",
+            null,
+            null
+          ]
+        ]
+      ],
+      [
+        102.8,
+        [
+          [
+            "rescued",
+            "hostage-1",
+            null,
+            null
+          ],
+          [
+            "result",
+            null,
+            null,
+            "rescue"
+          ]
+        ]
+      ]
+    ],
+    "escortReplans": 8
+  }
+}

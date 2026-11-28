@@ -156,3 +156,18 @@ test('native roof sidesteps retain support and exclude lower-deck bodies and res
   const goal={x:actor.x+1,y:actor.y,z:actor.z};bot.setGoal(goal);
   bot.pathBlocker=null;bot.yieldPoint=null;bot.recoverPosition(other);assert.equal(bot.pathBlocker,null);
 });
+
+test('an unobstructed bot resumes its route when its deliberate sidestep wait ends',()=>{
+  const game=new Game(world,{autoplay:true,seed:93,config:{mode:'endless'}}).start();
+  const actor=game.actors[0],bot=actor.bot;
+  for(const a of game.actors)a.alive=a===actor;
+  Object.assign(actor,{x:-19.5,y:3.4,z:18.5,blockedBy:null});
+  const goal={x:actor.x+.8,y:actor.y,z:actor.z};
+  assert(world.navigation.clear(actor,goal));
+  game.state.time=10;bot.mode='investigate';bot.nextDecision=20;bot.setGoal(goal);
+  bot.lastProgress=7;bot.lastPosition={x:actor.x,y:actor.y,z:actor.z};
+  bot.yieldPoint={...bot.lastPosition};bot.yieldUntil=9.99;
+  const input=bot.update(1/60);
+  assert(input.moveWorld?.x>0);assert.equal(bot.yieldPoint,null);
+  assert.deepEqual(bot.path.at(-1),goal);
+});
