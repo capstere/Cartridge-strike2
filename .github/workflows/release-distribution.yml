@@ -57,3 +57,47 @@ jobs:
     steps:
       - id: deploy
         uses: actions/deploy-pages@v4
+  public-recovery:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Rehearse a clean CS2 Pages rollback in a separate checkout
+        run: |
+          previous=5364240599164c0aee278bb0ac2a35d662c3a818
+          git fetch --no-tags --depth=1 origin "$previous"
+          python3 deploy/online/pages-recovery.py "$previous" HEAD "$PWD/_cs2-recovery"
+      - uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./_cs2-recovery
+          destination: ./_restored-site
+      - run: python3 tools/verify-pages.py _cs2-recovery _restored-site
+  pages-cache-upgrade:
+    if: github.event_name == 'pull_request'
+    runs-on: macos-15
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: server/.node-version
+      - name: Visit CS2, update the site and deploy Scout with the same browser profile
+        env:
+          FPS_NETWORK_ANGLE: metal
+        run: |
+          previous=5364240599164c0aee278bb0ac2a35d662c3a818
+          git fetch --no-tags --depth=1 origin "$previous"
+          git worktree add --detach "$RUNNER_TEMP/cs2" "$previous"
+          npm ci --prefix frontline/source/tools/dev
+          node frontline/source/tools/dev/node_modules/playwright-core/cli.js install chromium
+          node tools/release-visual-cache.mjs "$RUNNER_TEMP/cs2" "$PWD" test-results/cache-upgrade
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cs2-pages-cache-upgrade
+          path: test-results/cache-upgrade
+          if-no-files-found: error

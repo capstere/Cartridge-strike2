@@ -74,6 +74,7 @@ try {
   const deploy = page.getByRole('button',{name:'Deploy',exact:true});
   assert(await deploy.isHidden());
   await photograph('loading',load);
+  assert.equal(await page.locator('#csl-tip').innerText(),'Open the tactical map during play to see your position and plan a route.');
   report.scenes.at(-1).art = await load.evaluate(el=>getComputedStyle(el).backgroundImage);
   assert.match(report.scenes.at(-1).art,/meltem\.webp/);
   report.loadControl = 'The driver released the single Meltem JSON response after recording the cold loading state.';

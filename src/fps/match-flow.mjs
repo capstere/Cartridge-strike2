@@ -20,13 +20,7 @@ const html = document.documentElement;
 const fullscreen = createFullscreenController(document);
 const menu = $('menu'), startBtn = $('start'), engineNote = $('loading'), fatalBox = $('fatal');
 const MUSIC_KEY = 'cs-lobby-music';
-const TIPS = [
-  'Buy equipment in your spawn zone during the buy phase.',
-  'Hold E to plant, defuse or escort a hostage.',
-  'Press M for the tactical map or hold Tab for the scoreboard.',
-  'Hold Shift to sneak. Crouch to steady your aim.',
-  'Press 4 to cycle cartridge grenades. Press 5 to equip the objective bomb.',
-];
+const mapTip = 'Open the tactical map during play to see your position and plan a route.';
 
 /* A single streaming element belongs to the lobby for the lifetime of this page. */
 const track = new Audio();
@@ -140,7 +134,7 @@ const flow = {
     ui.root.classList.toggle('csl-floor5', ['floor5-prepared','classic-floor5',null].includes(new URLSearchParams(location.search).get('level')));
     ui.map.textContent = s.map; ui.mode.textContent = s.mode.toUpperCase();
     ui.team.textContent = s.teamName; ui.shield.textContent = s.team === 'counterAnalysts' ? 'CA' : 'A';
-    ui.brief.textContent = s.brief; ui.tip.textContent = TIPS[(this.attempt + Math.floor(Math.random() * TIPS.length)) % TIPS.length];
+    ui.brief.textContent = s.brief; ui.tip.textContent = mapTip;
     ui.ready.hidden = true; ui.root.setAttribute('aria-labelledby','csl-map'); html.classList.remove('cs-deploy-ready');
     ui.error.hidden = true; ui.cancel.hidden = false; ui.root.classList.remove('is-error', 'is-out');
     ui.root.hidden = false; html.classList.add('cs-loading-open');
