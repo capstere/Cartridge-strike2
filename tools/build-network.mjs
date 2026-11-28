@@ -43,7 +43,11 @@ const fontFiles=['fps/type.css',...Array.from(fontCss.toString().matchAll(/url\(
   ...['barlow','barlow-condensed','jetbrains-mono'].map(family=>'vendor/fonts/'+family+'/LICENSE.txt')];
 const accountFiles=[...fontFiles,'fps/account.html','fps/account.css','src/fps/account-profile.mjs','src/fps/network/room-invitation.mjs','src/fps/network/room-moderation.mjs',
   'vendor/qrcode-generator/qrcode.mjs','licenses/qrcode-generator-MIT.txt'];
-const frontendFiles=['src/fps/wardrobe-menu.mjs','src/fps/operator-outfits.mjs','src/fps/operator-equipment.mjs','src/fps/operator-locomotion.mjs',...deploymentFiles,...accountFiles,'src/fps/game-english.mjs','src/fps/english-ui.mjs','src/fps/solo-maps.mjs','src/fps/menu-navigation.mjs','fps/routes.css','furniture-editor/build/environment-art.mjs'];
+const mobileInterfaceFiles=[
+  'src/fps/mobile-profile.mjs','src/fps/mobile-layout.mjs','src/fps/sound-levels.mjs','ui/cs-install.mjs',
+  'fps/app.webmanifest','fps/sw.js','fps/offline.html','fps/icon-192.png','fps/icon-512.png',
+];
+const frontendFiles=[...mobileInterfaceFiles,'src/fps/wardrobe-menu.mjs','src/fps/operator-outfits.mjs','src/fps/operator-equipment.mjs','src/fps/operator-locomotion.mjs',...deploymentFiles,...accountFiles,'src/fps/game-english.mjs','src/fps/english-ui.mjs','src/fps/solo-maps.mjs','src/fps/menu-navigation.mjs','fps/routes.css','furniture-editor/build/environment-art.mjs'];
 const rushPresentation=['src/fps/bonus-hud.mjs','src/fps/door-visuals.mjs','src/fps/frosted-door.mjs','src/fps/project-visibility.mjs',
   'src/fps/mobile-controls.mjs','src/fps/gamepad-controls.mjs','src/fps/presentation-hands.mjs',
   'src/fps/strike-kit-models.mjs','src/fps/strike-kit-timing.mjs','src/fps/strike-kit-audio.mjs','src/fps/model-primitives.mjs','src/fps/view-surface.mjs',

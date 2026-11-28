@@ -1,3 +1,6 @@
+import {canOfferInstall} from '../../ui/cs-install.mjs';
+import {normalizeTouchProfile,TOUCH_DEFAULTS,touchHelp,touchSettingsMarkup,displaySettingsMarkup,describeGraphics,PresentationPacer,groupControlSettings} from './mobile-profile.mjs';
+import {applyTouchLayout,editTouchLayout} from './mobile-layout.mjs';
 import {countdownHud, ForegroundCountdownClock} from './deployment-countdown.mjs';
 import {MATCH_DEFAULTS} from '../../shared/multiplayer/rules.mjs';
 import {loadSoloManifest, resolveSoloSelection} from './solo-maps.mjs';
@@ -20,7 +23,7 @@ import { Renderer } from './render.mjs?v=floor5-environment-1';
 import { AudioSystem } from './riposte-audio.mjs';
 import {RADIO,isEndless} from './action-rules.mjs';
 import {BonusHud} from './bonus-hud.mjs';
-import {GamepadControls} from './gamepad-controls.mjs';
+import {sharedGamepad as gamepad,claimControllerForGame,installLobbyController,pollControllerMenu} from './gamepad-controls.mjs';
 import { MobileControls, isTouchDevice } from './mobile-controls.mjs';
 import { PlayerRecoil } from './riposte-recoil.mjs';
 import { TacticalControls } from './tactical-controls.mjs';
@@ -41,6 +44,7 @@ import {connectionFailure, connectionMessage, MapLoadError} from './network/conn
 import {roomUi} from './network/room-ui.mjs';
 const touchDevice=isTouchDevice();
 const renderBudget=new RenderBudget();
+const presentationPacer=new PresentationPacer();
 const minimapCache=new MinimapCache($('minimap'));
 const minimapPanel=$('minimap').closest('.map-panel');
 const settings={grenadeGuide:true,grenadeWarning:true,mobileAutoFire:!networkMode,sensitivity:.0022,volume:.55,reducedMotion:false,reducedFlash:true,difficulty:'casual',graphics:'standard',blood:'standard',mode:'classic',firefight:true,combatSounds:true,friendlyFire:true,wanderers:true,radioVoice:true,loadout:'smg'};
@@ -48,7 +52,10 @@ let storedSettings={};
 try{storedSettings=JSON.parse(localStorage.getItem('cartridge-settings')||'{}')||{};Object.assign(settings,storedSettings);}catch{}
 if(typeof settings.mobileAutoFire!=='boolean')settings.mobileAutoFire=!networkMode;
 if(touchDevice&&!Object.hasOwn(storedSettings,'graphics'))settings.graphics='low';
-settings.mobile=touchDevice;
+normalizeTouchProfile(settings);
+for(const key of ['menuMusicVolume','announcementVolume'])settings[key]=Number.isFinite(settings[key])?Math.max(0,Math.min(1,settings[key])):1;
+settings.powerSaving=settings.powerSaving===true;settings.ambientOcclusion=settings.ambientOcclusion!==false;settings.dynamicResolution=settings.dynamicResolution!==false;
+settings.mobile=settings.touchMode==='on'||(settings.touchMode==='auto'&&touchDevice);
 for(const [key,allowed] of Object.entries({difficulty:['casual','normal','hard'],graphics:['standard','low'],blood:['off','reduced','standard']}))if(!allowed.includes(settings[key]))settings[key]=allowed[key].includes('casual')?'casual':'standard';
 let world,game,renderer,audio,team='analysts',yaw=0,pitch=0,modal='menu',keys=new Set(),fire=false,board=false,mapExpanded=false,spectateIndex=0,notificationUntil=0,feed=[],lastRound=0,lastPhase='menu',lastFrame=0,hudAt=0,raf=0;
 let radioOpen=false,radioUntil=0;
@@ -190,7 +197,7 @@ function showDeployment(now){
  const needsTouchAudio=mobile.enabled && during && audio.volume>0 && audio.context?.state!=='running';
  const gestureLabel=needsTouchAudio?'Enable match audio':'Enable mouse look';
  if(mouseLookButton.textContent!==gestureLabel)mouseLookButton.textContent=gestureLabel;
- showMouseLook(needsTouchAudio || !!(during || active && state && !testMode) && !mobile.enabled && document.pointerLockElement!==$('game'));
+ showMouseLook(needsTouchAudio || !!(during || active && state && !testMode) && !mobile.enabled && !gamepad.active && document.pointerLockElement!==$('game'));
 }
 let firePress=null,crouchPress=false;
 function recordFirePress(){
@@ -198,7 +205,6 @@ function recordFirePress(){
    firePress ??= {yaw,pitch,weapon:game.player.weapon,life:game.player.lifeId,epoch:game.player.controlEpoch,round:game.state.round};
  }
 }
-const gamepad=new GamepadControls();
 const bonusHud = new BonusHud($('bonus-controls'),settings,requestBonus);
 function requestBonus(slot) {
   if (!modal && !radioOpen && !teamRadioOpen && !holdingDeployment() && game?.player?.alive && game.phase === 'active') {
@@ -206,10 +212,12 @@ function requestBonus(slot) {
   }
 }
 const mobile=new MobileControls({
-  onFirePress:recordFirePress,
+  settings,onFirePress:recordFirePress,
+  scopeTrigger:phase=>tactical?.scopedTrigger(phase),
+  cancelThrow(){if (WEAPONS[game?.player?.weapon]?.slot==='grenade' && !modal && !holdingDeployment()) showPause();},
   onModeChange(touch) { settings.mobile = touch; clearInput(); },
   root:$('mobile-controls'),
-  onLook(dx,dy){if(modal||teamRadioOpen||!game?.player?.alive)return;const k=settings.sensitivity*2.15*(tactical?.lookScale(true,yaw,pitch)??1);const before=pitch;yaw-=dx*k;pitch=Math.max(-1.49,Math.min(1.49,pitch-dy*k));recoil.counter(pitch-before);},
+  onLook(dx,dy){if(modal||teamRadioOpen||!game?.player?.alive)return;const k=settings.sensitivity*2.15*settings.touchLookSensitivity*(tactical?.lookScale(true,yaw,pitch)??1);const before=pitch;yaw-=dx*k;pitch=Math.max(-1.49,Math.min(1.49,pitch-dy*k*(settings.invertLookY?-1:1)));recoil.counter(pitch-before);},
   onAction(action){
     if(!game||teamRadioOpen)return;
     if(action==='restart'){restartMatch();return;}
@@ -231,6 +239,7 @@ focusHud=new FocusHud({
  settings,mobile,getGame:()=>game,getModal:()=>modal||teamRadioOpen||holdingDeployment(),onMap:toggleMap,onStats:showPause,onInspect:()=>renderer?.requestInspect(game),
  onRadio:networkMode?toggleTeamRadio:null,networkMode
 });
+applyTouchLayout(mobile.root,settings.touchLayout);
 function selectTeamRadio(index){
  teamRadioSelection=(index+teamRadioChoices.length)%teamRadioChoices.length;
  const selected=teamRadioButtons.children[teamRadioSelection];
@@ -307,14 +316,36 @@ const htmlCache=new Map();
 const setHtml=(id,value)=>{if(htmlCache.get(id)!==value){$(id).innerHTML=value;htmlCache.set(id,value);}};
 const setText=(id,value)=>{if($(id).textContent!==String(value))$(id).textContent=value;};
 function updateKillfeed(){const text=feed.map(f=>f.text),key=JSON.stringify(text);if(htmlCache.get('killfeed')===key)return;htmlCache.set('killfeed',key);$('killfeed').replaceChildren(...text.map(textContent=>Object.assign(document.createElement('div'),{textContent})));}
-function saveSettings(){focusHud?.applyMode();try{localStorage.setItem('cartridge-settings',JSON.stringify(settings));}catch{}audio?.setVolume(settings.volume);}
+function saveSettings(){focusHud?.applyMode();try{localStorage.setItem('cartridge-settings',JSON.stringify(settings));}catch{}audio?.setVolume(settings.volume);window.dispatchEvent(new CustomEvent('cs-sound-settings',{detail:{volume:settings.volume,menuMusicVolume:settings.menuMusicVolume,announcementVolume:settings.announcementVolume}}));}
 function difficultyText(){const active=game?.state.difficulty||settings.difficulty,pending=game?.state.pendingDifficulty;return modal!=='menu'&&game?.phase!=='menu'&&game?.player?`Active · ${DIFFICULTIES[active].name}${pending?` · ${DIFFICULTIES[pending].name} next round`:''}`:DIFFICULTIES[settings.difficulty].description;}
 function settingsPanel(target){const select=(key,values)=>`<select aria-label="${key==='difficulty'?'Difficulty':key==='graphics'?'Graphics':'Blood'}" data-setting="${key}">${values.map(([value,label])=>`<option value="${value}" ${settings[key]===value?'selected':''}>${label}</option>`).join('')}</select>`;
-$(target).innerHTML=`<label class="setting">Difficulty ${select('difficulty',[['casual','Casual · recommended'],['normal','Normal'],['hard','Hard']])}</label><p class="setting-note" data-difficulty-note>${difficultyText()}</p><label class="setting">Graphics ${select('graphics',[['standard','Standard'],['low','Low · reduced resolution and shadows']])}</label><label class="setting">Blood ${select('blood',[['standard','Full'],['reduced','Reduced'],['off','Off']])}</label><label class="setting">Mouse sensitivity <input aria-label="Mouse sensitivity" data-setting="sensitivity" type="range" min="0.0006" max="0.006" step="0.0001" value="${settings.sensitivity}"></label><label class="setting">Volume <input aria-label="Volume" data-setting="volume" type="range" min="0" max="1" step="0.05" value="${settings.volume}"></label><label class="setting">Control zones in Endless <input aria-label="Control zones in Endless" data-setting="firefight" type="checkbox" ${settings.firefight?'checked':''}></label><p class="setting-note">Fight over a zone that moves every minute. Takes effect next match. Turn off for free-roaming Endless.</p><label class="setting">Hit and elimination sounds <input data-setting="combatSounds" type="checkbox" ${settings.combatSounds?'checked':''}></label><label class="setting">Friendly fire <input data-setting="friendlyFire" type="checkbox" ${settings.friendlyFire?'checked':''}></label><label class="setting">Wandering dwarves <input data-setting="wanderers" type="checkbox" ${settings.wanderers?'checked':''}></label><label class="setting">Radio voices <input data-setting="radioVoice" type="checkbox" ${settings.radioVoice?'checked':''}></label><label class="setting">Reduced motion <input data-setting="reducedMotion" type="checkbox" ${settings.reducedMotion?'checked':''}></label><label class="setting">Reduced flash and ringing <input data-setting="reducedFlash" type="checkbox" ${settings.reducedFlash?'checked':''}></label>${mobile.enabled?`<label class="setting">Mobile auto-fire <input aria-label="Mobile auto-fire" data-setting="mobileAutoFire" type="checkbox" ${settings.mobileAutoFire?'checked':''}></label><p class="setting-note" data-mobile-fire-note>Fire when the reticle settles on a visible opponent. Turn off to use the Fire button. Grenades and rockets always use manual fire.</p>`:''}`;
+$(target).innerHTML=`<label class="setting">Difficulty ${select('difficulty',[['casual','Casual · recommended'],['normal','Normal'],['hard','Hard']])}</label><p class="setting-note" data-difficulty-note>${difficultyText()}</p><label class="setting">Graphics ${select('graphics',[['standard','Standard'],['low','Low · reduced resolution and shadows']])}</label><label class="setting">Blood ${select('blood',[['standard','Full'],['reduced','Reduced'],['off','Off']])}</label><label class="setting">Mouse sensitivity <input aria-label="Mouse sensitivity" data-setting="sensitivity" type="range" min="0.0006" max="0.006" step="0.0001" value="${settings.sensitivity}"></label><label class="setting">Volume <input aria-label="Volume" data-setting="volume" type="range" min="0" max="1" step="0.05" value="${settings.volume}"></label><label class="setting">Control zones in Endless <input aria-label="Control zones in Endless" data-setting="firefight" type="checkbox" ${settings.firefight?'checked':''}></label><p class="setting-note">Fight over a zone that moves every minute. Takes effect next match. Turn off for free-roaming Endless.</p><label class="setting">Hit and elimination sounds <input data-setting="combatSounds" type="checkbox" ${settings.combatSounds?'checked':''}></label><label class="setting">Friendly fire <input data-setting="friendlyFire" type="checkbox" ${settings.friendlyFire?'checked':''}></label><label class="setting">Wandering dwarves <input data-setting="wanderers" type="checkbox" ${settings.wanderers?'checked':''}></label><label class="setting">Radio voices <input data-setting="radioVoice" type="checkbox" ${settings.radioVoice?'checked':''}></label><label class="setting">Reduced motion <input data-setting="reducedMotion" type="checkbox" ${settings.reducedMotion?'checked':''}></label><label class="setting">Reduced flash and ringing <input data-setting="reducedFlash" type="checkbox" ${settings.reducedFlash?'checked':''}></label>${(mobile.touchCapable || mobile.enabled)?`<label class="setting">Mobile auto-fire <input aria-label="Mobile auto-fire" data-setting="mobileAutoFire" type="checkbox" ${settings.mobileAutoFire?'checked':''}></label><p class="setting-note" data-mobile-fire-note>Fire when the reticle settles on a visible opponent. Turn off to use the Fire button. Grenades and rockets always use manual fire.</p>`:''}`;
 bonusHud.settings($(target),settings,saveSettings);
 $(target).insertAdjacentHTML('beforeend',tactical.settingsMarkup()+grenadeSettingsMarkup(settings)+focusHudSettings(settings));
-if(networkMode){for(const input of $(target).querySelectorAll('[data-setting]'))if(!['graphics','blood','sensitivity','volume','combatSounds','reducedMotion','reducedFlash','hudMode','radioVoice','mobileAutoFire'].includes(input.dataset.setting)){input.disabled=true;const label=input.closest('label');if(label)label.hidden=true;}for(const note of $(target).querySelectorAll('.setting-note'))note.hidden=!note.hasAttribute('data-mobile-fire-note');}
-$(target).querySelectorAll('[data-setting]').forEach(input=>input.oninput=()=>{settings[input.dataset.setting]=input.tagName==='SELECT'?input.value:input.type==='checkbox'?input.checked:Number(input.value);if(input.dataset.setting==='difficulty')game?.setDifficulty(settings.difficulty);if(input.dataset.setting==='mobileAutoFire'){mobile.setAutoFire(settings.mobileAutoFire);tactical.syncTrigger();resetAutoAim();}if(game&&!networkMode&&['friendlyFire','wanderers'].includes(input.dataset.setting))game.config[input.dataset.setting]=settings[input.dataset.setting];saveSettings();document.querySelectorAll('[data-difficulty-note]').forEach(n=>n.textContent=difficultyText());});}
+if(networkMode){for(const input of $(target).querySelectorAll('[data-setting]'))if(!['graphics','blood','sensitivity','volume','combatSounds','reducedMotion','reducedFlash','hudMode','radioVoice','mobileAutoFire','mobileAimAssist'].includes(input.dataset.setting)){input.disabled=true;const label=input.closest('label');if(label)label.hidden=true;}for(const note of $(target).querySelectorAll('.setting-note'))note.hidden=!note.hasAttribute('data-mobile-fire-note');}
+$(target).insertAdjacentHTML('beforeend',touchSettingsMarkup(settings)+displaySettingsMarkup(settings));
+describeGraphics($(target),renderer,settings);
+groupControlSettings($(target));
+if(canOfferInstall())
+ $(target).insertAdjacentHTML('beforeend','<div><button type="button" data-install-game>Install game</button><p class="setting-note" data-install-note role="status"></p></div>');
+$(target).querySelector('[data-layout-edit]').onclick=()=>editTouchLayout(mobile.root,settings,saveSettings,()=>{mobile.applyProfile();mobile.setAutoFire(settings.mobileAutoFire);tactical.syncTrigger();settingsPanel(target);});
+$(target).querySelector('[data-look-reset]').onclick=()=>{
+ for(const key of ['fieldOfView','zoomSensitivity','touchLookSensitivity','invertLookY'])settings[key]=TOUCH_DEFAULTS[key];
+ saveSettings();settingsPanel(target);
+};
+$(target).querySelectorAll('[data-setting]').forEach(input=>input.oninput=()=>{settings[input.dataset.setting]=input.tagName==='SELECT'?input.value:input.type==='checkbox'?input.checked:Number(input.value);if(input.dataset.setting==='graphics')for(const panel of document.querySelectorAll('#menu-settings,#pause-settings'))describeGraphics(panel,renderer,settings);
+if(['menuMusicVolume','announcementVolume'].includes(input.dataset.setting))input.parentElement.querySelector('output').value=Math.round(settings[input.dataset.setting]*100)+'%';
+if(Object.hasOwn(TOUCH_DEFAULTS,input.dataset.setting)){
+ mobile.clear();mobile.applyProfile();tactical.reset();tactical.syncTrigger();
+ const output=input.parentElement.querySelector('output');if(output)output.value=String(settings[input.dataset.setting]);
+}
+for (const help of document.querySelectorAll('[data-touch-help]')) help.textContent=touchHelp(settings);
+if(input.dataset.setting==='difficulty')game?.setDifficulty(settings.difficulty);if(input.dataset.setting==='mobileAutoFire'){mobile.setAutoFire(settings.mobileAutoFire);tactical.syncTrigger();resetAutoAim();}if(game&&!networkMode&&['friendlyFire','wanderers'].includes(input.dataset.setting))game.config[input.dataset.setting]=settings[input.dataset.setting];saveSettings();document.querySelectorAll('[data-difficulty-note]').forEach(n=>n.textContent=difficultyText());
+if(input.dataset.setting==='touchMode' && !mobile.touchCapable){
+ for(const id of ['menu-settings','pause-settings'])settingsPanel(id);
+ $(target).querySelector('[data-setting=touchMode]').focus();
+}
+});}
 settingsPanel('menu-settings');settingsPanel('pause-settings');
 function clearInput(){bonusHud.root.hidden=true;keys.clear();gamepad.clear();crouchPress=false;fire=false;firePress=null;mobile.clear();tactical?.reset();grenadeAssist?.reset();focusHud?.reset();resetAutoAim();radioOpen=false;teamRadioOpen=false;teamRadioMenu.hidden=true;if($('radio-menu'))$('radio-menu').hidden=true;if(game?.player){game.player.fireHeld=false;game.player.interactHeld=false;game.player.action=null;}}
 function unlockMouse(){
@@ -323,7 +354,7 @@ function unlockMouse(){
  showMouseLook(false);
  if(document.pointerLockElement)document.exitPointerLock();
 }
-function requestMouse(){if(mobile.enabled)return;try{const result=$('game').requestPointerLock();result?.catch(()=>{showPause();$('pause').querySelector('p:not(.eyebrow)').textContent='Mouse capture failed. Open the game in its own browser tab and select Resume.';});}catch{showPause();}}
+function requestMouse(){if(mobile.enabled||gamepad.active)return;try{const result=$('game').requestPointerLock();result?.catch(()=>{showPause();$('pause').querySelector('p:not(.eyebrow)').textContent='Mouse capture failed. Open the game in its own browser tab and select Resume.';});}catch{showPause();}}
 function notify(text,duration=3){setText('notification',text);notificationUntil=(game?.state.time||0)+duration;}
 function syncFullscreenToggle(){const button=$('fullscreen-toggle'),hint=$('fullscreen-hint'),fs=window.__csFlow?.fullscreen;if(!button)return;button.hidden=!fs?.supported;if(fs?.supported)button.textContent=fs.active?'EXIT FULLSCREEN':'ENTER FULLSCREEN';if(hint)hint.hidden=!!fs?.supported;}
 function showPause(){foregroundCountdown.suspend();if(networkSession&&!['countdown','active'].includes(networkSession.room?.state.phase))return;if(!game||['menu','match'].includes(game.phase)||modal==='menu')return;modal='pause';mobile.show(false);$('pause').querySelector('p:not(.eyebrow)').textContent=networkSession?`Room ${networkSession.room.roomId} · Friendly fire: ${networkSession.room.state.friendlyFire?'On':'Off'} · Bot difficulty ${DIFFICULTIES[game.state.difficulty].name} · The match continues and you can still take damage.`:'Round timers and bots are paused.';clearInput();game.pause(true);audio.reset();$('pause').hidden=false;$('buy').hidden=true;$('scoreboard').hidden=true;board=false;unlockMouse();settingsPanel('pause-settings');syncFullscreenToggle();}
@@ -540,14 +571,15 @@ function updateHud(){bonusHud.update(game, !!modal || radioOpen || teamRadioOpen
  if(board)scoreboard();minimap();setText('perf',`${renderer.stats.fps} FPS`);focusHud.update();
 }
 function input(dt=1/60){
- if(modal||teamRadioOpen||!game.player?.alive){gamepad.clear();firePress=null;crouchPress=false;resetAutoAim();return {};}
+ if(modal||teamRadioOpen||!game.player?.alive){if(!modal)gamepad.clear();firePress=null;crouchPress=false;resetAutoAim();return {};}
  yaw+=((keys.has('ArrowLeft')?1:0)-(keys.has('ArrowRight')?1:0))*1.7*dt;
  const touch=mobile.enabled?mobile.input():null,pad=gamepad.read();
+ if(pad?.pause){showPause();return {};}
  const holding=holdingDeployment();
  tactical.padAim=!holding && !!pad?.aim;
  if(pad){
    const scale=3.4*dt*(holding?1:tactical.lookScale(false,yaw,pitch)),before=pitch;
-   yaw-=pad.lookX*scale;pitch=Math.max(-1.49,Math.min(1.49,pitch-pad.lookY*scale));recoil.counter(pitch-before);
+   yaw-=pad.lookX*scale;pitch=Math.max(-1.49,Math.min(1.49,pitch-pad.lookY*scale*(settings.invertLookY?-1:1)));recoil.counter(pitch-before);
  }
  if(holding){firePress=null;crouchPress=false;return {yaw,pitch};}
  if(pad){
@@ -563,7 +595,7 @@ function input(dt=1/60){
  const f=(keys.has('KeyW')||keys.has('ArrowUp')?1:0)-(keys.has('KeyS')||keys.has('ArrowDown')?1:0);
  const x=(keys.has('KeyD')?1:0)-(keys.has('KeyA')?1:0);
  let autoFire=false;autoFireTarget=null;
- if(mobile.enabled&&settings.mobileAutoFire&&!focusHud?.expanded&&!fire&&!touch?.fire&&!pad?.fire&&game.phase==='active'){
+ if(mobile.enabled&&settings.mobileAutoFire&&!(settings.touchQuickShot&&game.player.weapon==='sniper')&&!focusHud?.expanded&&!fire&&!touch?.fire&&!pad?.fire&&game.phase==='active'){
    const target=game.reticleTarget(game.player,yaw,pitch);
    if(target){
      autoFireTarget=target.id;
@@ -608,7 +640,22 @@ function consumeEvents(){audio.game=game;const events=game.drainEvents();combatH
    }
  }
 if(game.phase!==lastPhase){if(['result','match'].includes(game.phase)){audio.reset();}lastPhase=game.phase;}if(game.state.round!==lastRound){lastRound=game.state.round;audio.reset();renderer.resetTransient();recoil.reset();yaw=game.player.yaw;pitch=game.player.pitch;clearInput();}for(const event of events){if(event.type==='respawn'&&event.actorId===game.player.id){clearInput();recoil.reset();yaw=game.player.yaw;pitch=0;renderer.lastWeapon='';}if(event.type==='radio'&&!event.teamPrivate){setText('radio-caption',`RADIO · ${event.text}`);radioUntil=game.state.time+3.4;radioOpen=false;$('radio-menu').hidden=true;}if(event.type==='kill'){if(event.actorId===game.player.id){fire=false;radioOpen=false;$('radio-menu').hidden=true;if(!isEndless(game))unlockMouse();}const killer=game.actors.find(a=>a.id===event.sourceId),victim=game.actors.find(a=>a.id===event.actorId);feed.push({text:`${killer?.name||event.sourceName||'—'}  ▸  ${victim?.name||event.targetName||'—'}`,until:game.state.time+5});}if(event.type==='planted')notify('Bomb planted in '+missionRoomName(world)+'.',4);if(event.type==='rescued')notify('A hostage reached the rescue zone.',3);}const effectEvents=['result','match'].includes(game.phase)?events.filter(e=>['result','match','kill','rocket-launch','rocket-explosion'].includes(e.type)):events;renderer.events(events,game);const view=viewActor();if(view)audio.handle(networkSession?effectEvents.filter(e=>!e.audioPresented):effectEvents,{...view,y:view.y+view.height-.12,ambient:['buy','active'].includes(game.phase)&&!game.state.paused,floorAudioReady:!modal&&$('cs-loading').hidden},game.state.time);return events;}
+window.addEventListener('pointerdown',()=>{gamepad.active=false;},{capture:true});
+window.addEventListener('keydown',e=>{if(e.isTrusted)gamepad.active=false;},{capture:true});
+function pollMenuController(){
+ if(!modal)return;
+ const panel=({pause:'pause',buy:'buy',online:'online-room',match:'match-end'})[modal]||'menu';
+ pollControllerMenu(panel,modal==='menu'?undefined:()=>{
+   if(modal==='pause')resume();
+   if(modal==='buy')closeBuy();
+ });
+}
+function loadingControllerFrame(){
+ pollMenuController();
+ raf=requestAnimationFrame(loadingControllerFrame);
+}
 function frame(now){try{
+ pollMenuController();
  if(networkMode&&(!renderer||!grenadeAssist||networkSession&&(!networkSession.view.player||networkSession.worldRevision!==networkSession.room?.state.worldRevision||game!==networkSession.view))){
   lastFrame=now;raf=requestAnimationFrame(frame);return;
  }
@@ -628,21 +675,29 @@ function frame(now){try{
   game.update(holding?foregroundCountdown.advance(now):dt,(testMode&&globalThis.__fps?.liveControls)||input(dt));
   if(holding&&!holdingDeployment())clearInput();
  }
- consumeEvents();tactical.render(renderer);grenadeAssist.update(game,viewActor(),modal);renderer.render(game,viewActor(),dt);presentViewEffects();if(now-hudAt>100){updateHud();hudAt=now;}
+ consumeEvents();
+ const renderDt=presentationPacer.sample(now,settings.powerSaving&&!modal,dt);
+ if(renderDt!==null){
+   renderer.adaptiveResolution.enabled=settings.dynamicResolution;
+   renderer.adaptiveResolution.targetMs=settings.powerSaving?1000/30:1000/60;
+   if(renderer.visualDepth)renderer.visualDepth.enabled=settings.ambientOcclusion;
+   tactical.render(renderer);grenadeAssist.update(game,viewActor(),modal);renderer.render(game,viewActor(),renderDt);presentViewEffects();
+ }
+ if(now-hudAt>100){updateHud();hudAt=now;}
  // Present the cue only after the first-person scene has actually been drawn.
  // On a cold GPU the first shader compilation can block for several seconds.
  const presentedAt=performance.now();
- if(!networkSession && !modal && !document.hidden && holdingDeployment())foregroundCountdown.presented(presentedAt);
+ if(renderDt!==null && !networkSession && !modal && !document.hidden && holdingDeployment())foregroundCountdown.presented(presentedAt);
  showDeployment(presentedAt);
  raf=requestAnimationFrame(frame);}catch(e){fatal(e);}}
-function fatal(error){cancelAnimationFrame(raf);grenadeAssist?.reset();$('fatal').hidden=false;$('fatal').querySelector('pre').textContent=error.stack||String(error);$('loading').hidden=true;console.error(error);}
+function fatal(error){claimControllerForGame();cancelAnimationFrame(raf);raf=requestAnimationFrame(loadingControllerFrame);grenadeAssist?.reset();$('fatal').hidden=false;$('fatal').querySelector('pre').textContent=error.stack||String(error);$('loading').hidden=true;console.error(error);}
 team = document.querySelector('.team-option.selected').dataset.team;
 for (const option of document.querySelectorAll('[data-team]')) option.addEventListener('click', () => { team = option.dataset.team; });
 function launchMatch(event){
  if(networkMode || modal!=='menu' || !audio || !$('loading').hidden || characterSelectionFailed || !$('fatal').hidden)return;
  mobile.attemptLandscape();
  start(document.querySelector('.team-option.selected').dataset.team,{deploymentSeconds:testMode?0:MATCH_DEFAULTS.countdownSeconds});
- if(!mobile.enabled && navigator.userActivation && !navigator.userActivation.isActive && !event?.detail?.fullscreenRequested){
+ if(!mobile.enabled && !gamepad.active && navigator.userActivation && !navigator.userActivation.isActive && !event?.detail?.fullscreenRequested){
    showPause();$('pause').querySelector('p:not(.eyebrow)').textContent='Match ready. Select Resume to begin.';
    $('resume').focus();return;
  }
@@ -660,7 +715,7 @@ $('fullscreen-toggle').onclick=()=>{window.__csFlow?.fullscreen?.toggle();syncFu
 document.addEventListener('fullscreenchange',()=>{syncFullscreenToggle();if(mobile.enabled&&document.fullscreenElement)mobile.attemptLandscape();window.dispatchEvent(new Event('resize'));});syncFullscreenToggle();
 window.addEventListener('keydown',e=>{if(!holdingDeployment()&&teamRadioKey(e))return;if(!modal&&['Tab','Space','Escape','ControlLeft','ControlRight'].includes(e.code))e.preventDefault();if(e.code==='Escape'){if(radioOpen){radioOpen=false;$('radio-menu').hidden=true;return;}if(modal==='buy')closeBuy();else if(!modal)showPause();return;}if(modal)return;if(holdingDeployment()){if(['ArrowLeft','ArrowRight'].includes(e.code)){e.preventDefault();keys.add(e.code);if((e.code==='ControlLeft'||e.code==='ControlRight')&&game.player?.alive)crouchPress=true;}return;}if(!networkMode&&e.code==='KeyZ'&&game.player?.alive){radioOpen=!radioOpen;$('radio-menu').hidden=!radioOpen;return;}if(radioOpen&&/^Digit[1-6]$/.test(e.code)){const result=game.radio(RADIO[Number(e.code.slice(-1))-1]?.id);if(!result)notify('Radio busy. Try again shortly.');return;}if(!networkMode&&e.code==='Enter'&&!game.player?.alive&&!isEndless(game)){restartMatch();return;}if(e.code==='Tab'){board=true;$('scoreboard').hidden=false;scoreboard();return;}if(e.repeat)return;const bonusIndex=bonusHud.keys.indexOf(e.code);if(bonusIndex>=0){requestBonus(bonusIndex+1);return;}keys.add(e.code);if((e.code==='ControlLeft'||e.code==='ControlRight')&&game.player?.alive)crouchPress=true;if(e.code==='KeyB'){showBuy();return;}if(e.code==='KeyR')game.reload();if(e.code==='KeyQ')game.select('last');if(e.code==='KeyG')game.drop();if(/^Digit[1-5]$/.test(e.code))game.select(e.code.slice(-1));if(e.code==='KeyM'){toggleMap();return;}if(!game.player.alive&&['ArrowLeft','ArrowRight'].includes(e.code)){const count=game.actors.filter(a=>a.alive&&a.team===game.team).length;spectateIndex=(spectateIndex+(e.code==='ArrowLeft'?-1:1)+count)%Math.max(1,count);}});
 window.addEventListener('keyup',e=>{keys.delete(e.code);if(e.code==='Tab'){board=false;$('scoreboard').hidden=true;}});
-window.addEventListener('mousemove',e=>{if(document.pointerLockElement!==$('game')||modal||teamRadioOpen||!game.player?.alive)return;const k=settings.sensitivity*tactical.lookScale(false,yaw,pitch);yaw-=e.movementX*k;const before=pitch;pitch=Math.max(-1.49,Math.min(1.49,pitch-e.movementY*k));recoil.counter(pitch-before);});
+window.addEventListener('mousemove',e=>{if(document.pointerLockElement!==$('game')||modal||teamRadioOpen||!game.player?.alive)return;const k=settings.sensitivity*tactical.lookScale(false,yaw,pitch);yaw-=e.movementX*k;const before=pitch;pitch=Math.max(-1.49,Math.min(1.49,pitch-e.movementY*k*(settings.invertLookY?-1:1)));recoil.counter(pitch-before);});
 document.addEventListener('mousedown',e=>{if(e.target!==$('game')||e.button!==0||modal||teamRadioOpen)return;if(document.pointerLockElement!==$('game')){resume();return;}if(holdingDeployment())return;if(!fire)recordFirePress();fire=true;});window.addEventListener('mouseup',e=>{if(e.button===0)fire=false;});window.addEventListener('contextmenu',e=>e.preventDefault());
 document.addEventListener('pointerlockerror',()=>{if(!mobile.enabled&&!modal){showPause();$('pause').querySelector('p:not(.eyebrow)').textContent='Mouse capture failed. Open the game in its own tab and select Resume again.';}});
 window.addEventListener('offline',()=>networkSession?.interruptConnection());
@@ -669,13 +724,21 @@ document.addEventListener('pointerlockchange',()=>{if(mobile.enabled)return;if(d
 function updateMode(){settings.mode=$('game-mode').value;$('loadout-row').hidden=settings.mode!=='endless';$('mode-description').textContent=settings.mode==='endless'?'Respawn in three seconds. Press B for a free loadout. Optional control zones bring teams together. Play as long as you like.':'Plant or defuse the bomb, rescue the hostages, or eliminate the opposing team. First to five rounds wins. One life per round.';saveSettings();}
 // A viewport rotation can cover the game with the portrait prompt without blur.
 // Freeze combat/audio and require an explicit resume after either orientation change.
-if(mobile.touchCapable)matchMedia('(orientation: portrait)').addEventListener('change',()=>{if(!mobile.enabled)return;clearInput();if(!modal)showPause();});
+function interruptOrientation(){
+ if (!mobile.enabled)return;
+ if (game && !modal)showPause();
+ else mobile.clear();
+}
+window.addEventListener('orientationchange',interruptOrientation);
+screen.orientation?.addEventListener?.('change',interruptOrientation);
+matchMedia('(orientation: portrait)').addEventListener('change',interruptOrientation);
 $('game-mode').value=['classic','endless'].includes(settings.mode)?settings.mode:'classic';$('loadout').value=settings.loadout||'smg';$('game-mode').onchange=updateMode;$('loadout').onchange=()=>{settings.loadout=$('loadout').value;saveSettings();};
 $('radio-options').innerHTML=RADIO.map((r,i)=>`<div><kbd>${i+1}</kbd><span>${r.text}<small>${r.label}</small></span></div>`).join('');updateMode();
 
 const characterQuery=new URLSearchParams(location.search);
 if(!window.__csFlow && !rehearsalMode && characterQuery.get('team')==='counterAnalysts')team='counterAnalysts';
 if(characterQuery.has('seed'))$('seed').value=String(Math.min(999999,Math.max(1,Number(characterQuery.get('seed'))||42)));
+installLobbyController();
 try{
  loadingStage('level');
  audio=new AudioSystem(null,settings);
@@ -696,7 +759,7 @@ try{
   await Promise.all([renderer.assetsReady,audio.prepareFloorAudio()]);grenadeAssist=new GrenadeAssist(renderer,settings);
  }
  loadingStage('ready');$('loading').hidden=true;$('start').disabled=characterSelectionFailed||networkMode;
- raf=requestAnimationFrame(frame);if(testMode){globalThis.__fps={stopFrameLoop(){cancelAnimationFrame(raf);raf=0;},get game(){return game;},get network(){return networkSession;},joinNetwork,get world(){return world;},get renderer(){return renderer;},audio,settings,start(selected,config={},autoplay=false){start(selected,config,autoplay);return this.snapshot();},step(controls=null,dt=1/60){tactical.update(dt);game.update(dt,controls??input(dt));yaw=game.player.yaw;pitch=game.player.pitch;consumeEvents();tactical.render(renderer);grenadeAssist.update(game,viewActor(),modal);renderer.render(game,viewActor(),dt);presentViewEffects();updateHud();return this.snapshot();},snapshot(){return JSON.parse(JSON.stringify({...game.state,player:game.player,actors:game.actors.map(({bot,...rest})=>rest),hostages:game.hostages},(k,v)=>k==='bot'?undefined:v));},render(){tactical.render(renderer);grenadeAssist.update(game,viewActor(),modal);renderer.render(game,viewActor(),1/60);updateHud();},pause(value){game.pause(value);},input,showBuy,newMatch,get modal(){return modal;},mobile,recoil,tactical,get grenadeAssist(){return grenadeAssist;},focusHud,renderBudget,minimapCache};}}
+ claimControllerForGame();raf=requestAnimationFrame(frame);if(testMode){globalThis.__fps={stopFrameLoop(){cancelAnimationFrame(raf);raf=0;},get game(){return game;},get network(){return networkSession;},joinNetwork,get world(){return world;},get renderer(){return renderer;},audio,settings,start(selected,config={},autoplay=false){start(selected,config,autoplay);return this.snapshot();},step(controls=null,dt=1/60){tactical.update(dt);game.update(dt,controls??input(dt));yaw=game.player.yaw;pitch=game.player.pitch;consumeEvents();tactical.render(renderer);grenadeAssist.update(game,viewActor(),modal);renderer.render(game,viewActor(),dt);presentViewEffects();updateHud();return this.snapshot();},snapshot(){return JSON.parse(JSON.stringify({...game.state,player:game.player,actors:game.actors.map(({bot,...rest})=>rest),hostages:game.hostages},(k,v)=>k==='bot'?undefined:v));},render(){tactical.render(renderer);grenadeAssist.update(game,viewActor(),modal);renderer.render(game,viewActor(),1/60);updateHud();},pause(value){game.pause(value);},input,showBuy,newMatch,get modal(){return modal;},mobile,recoil,tactical,get grenadeAssist(){return grenadeAssist;},focusHud,renderBudget,minimapCache};}}
 catch(error){fatal(error);}
 
 window.addEventListener('pagehide',event=>{if(!event.persisted){cancelAnimationFrame(raf);networkJoinGeneration++;networkSession?.dispose();grenadeAssist?.dispose();audio?.dispose();renderer?.dispose();}});

@@ -1,0 +1,59 @@
+{
+  "loadingActions": [
+    "Cancel with A",
+    "Cancel with B",
+    "Back after timeout",
+    "Retry with A and automatic launch"
+  ],
+  "soloFocus": [
+    "lb-brand",
+    "team-option selected",
+    "team-option",
+    "route-back",
+    "lb-brand",
+    "team-option selected",
+    "team-option"
+  ],
+  "device": "Simulated standard Gamepad API controller",
+  "focus": [
+    "CARTRIDGE//STRIKE 3",
+    "Music on"
+  ],
+  "before": {
+    "x": -23.5,
+    "z": 42.5,
+    "weight": 0,
+    "yaw": 0,
+    "ammo": 30,
+    "time": 0.41666666666666663,
+    "modal": null
+  },
+  "running": {
+    "x": -23.30398976270242,
+    "z": 40.27116331088161,
+    "weight": 0.9744384667934857,
+    "yaw": -0.164093667443343,
+    "ammo": 30,
+    "time": 0.8000000000000008,
+    "modal": null
+  },
+  "shot": {
+    "x": -23.2660774587915,
+    "z": 40.05750082654669,
+    "weight": 0.030160947935319166,
+    "yaw": -0.1710141567122577,
+    "ammo": 29,
+    "time": 1.1500000000000008,
+    "modal": null
+  },
+  "reconnected": {
+    "x": -23.2660774587915,
+    "z": 40.05750082654669,
+    "weight": 0,
+    "yaw": -0.1710141567122577,
+    "ammo": 29,
+    "time": 1.6166666666666658,
+    "modal": null
+  },
+  "errors": []
+}
