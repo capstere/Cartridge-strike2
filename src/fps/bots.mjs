@@ -486,7 +486,7 @@ export class BotController {
     let result;
     // The denser prepared floor charges more collision and weighting work per
     // checkpoint. Leave the remainder of its tick for physics and controls.
-    const limit=g.world.tactical?.kind==='floor5'?3:10;
+    const limit=g.world.doors?.elevators?.cabins.length?3:10;
     for(let i=0;i<limit;i++){
       result=job.query.next();
       if(result.done)break;

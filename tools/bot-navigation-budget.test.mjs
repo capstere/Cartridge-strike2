@@ -171,3 +171,18 @@ test('an unobstructed bot resumes its route when its deliberate sidestep wait en
   assert(input.moveWorld?.x>0);assert.equal(bot.yieldPoint,null);
   assert.deepEqual(bot.path.at(-1),goal);
 });
+
+test('prepared elevator navigation takes three checkpoints per seat while layered Meltem takes ten',()=>{
+  const floor=createWorld({levelProject:JSON.parse(readFileSync(new URL('../levels/floor5-prepared.json',import.meta.url)))});
+  for(const [map,limit] of [[floor,3],[world,10]]){
+    let checkpoints=0;
+    const actor={team:'analysts',index:0,alive:true,x:0,y:0,z:0};
+    const game={config:{fixedStep:1/60},state:{time:0},actors:[actor],world:{
+      doors:map.doors,navigation:map.navigation,
+      findPath(){return (function*(){while(true){checkpoints++;yield;}})();},
+    }};
+    actor.bot=Object.assign(Object.create(BotController.prototype),{game,actor,routeJobs:{tactical:null,movement:null},lastRouteTick:-1});
+    assert.equal(actor.bot.advanceRoute('movement',{x:1,y:0,z:0},{blockers:[]}),null);
+    assert.equal(checkpoints,limit);
+  }
+});
