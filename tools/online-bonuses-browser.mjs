@@ -58,7 +58,7 @@ async function open(touch){
   await page.locator('[data-go=friends]').click();
   await page.locator('[data-lan-link]').click();
   await page.locator('#network-code').waitFor();
-  if(touch&&process.env.CS3_BONUS_COLD_RETIRE==='1')await page.evaluate(recordWarmOwner);
+  if(process.env.CS3_BONUS_COLD_RETIRE==='1')await page.evaluate(recordWarmOwner);
   await page.evaluate(async()=>{
     const {NetworkSession}=await import('/src/fps/network/session.mjs');
     const snapshot=NetworkSession.prototype.snapshot;
@@ -163,6 +163,9 @@ try{
   result.fresh=await Promise.all(pages.map(p=>p.locator(controls).allTextContents()));
   game.config.spawnProtection=0;
   award(game,b,a,8);award(game,a,b,8);
+  // This fixture changes life IDs outside the ordinary fixed tick. Publish the
+  // public actor projection before the next patch can flush private rewards.
+  room.project();
   await wait(async()=>await key(desktop,1).isEnabled()&&await key(touch,3).isEnabled(),'confirmed unlocks on both HUDs');
   await touch.setViewportSize({width:568,height:320});
   result.touchTargets=await hitTargets(touch);
@@ -195,7 +198,7 @@ try{
   if(await desktop.locator('#resume').isVisible())await resumeDesktop(desktop);
   await wait(async()=>await key(desktop,1).getAttribute('data-state')==='spent','HUD shows Used after UAV expires',22000);
   const life=a.lifeId;
-  a.spawnProtectedUntil=0;assert(game.damage(a,500,b,'smg'));
+  a.spawnProtectedUntil=0;assert(game.damage(a,500,b,'smg'));room.project();
   await wait(()=>desktop.locator('#bonus-controls').isHidden(),'dead player controls hidden');
   await wait(()=>a.alive&&a.lifeId>life,'respawned');
   await wait(async()=>await key(desktop,2).getAttribute('data-state')==='ready'&&await key(desktop,1).getAttribute('data-state')==='locked','carried Rage and reset UAV progress after death');
@@ -216,7 +219,7 @@ try{
     finally{room.fixedTick=fixed;}
     if(output&&ticks.length)await writeFile(join(output,'server-ticks.json'),JSON.stringify(ticks));
   }
-  if(process.env.CS3_BONUS_COLD_RETIRE==='1')await retireRemoteOutfit(touch,host,room,seat,output);
+  if(process.env.CS3_BONUS_COLD_RETIRE==='1')await retireRemoteOutfit(desktop,touch,host,room,seat,output);
   result.deathCarry=true;result.spent=true;result.errors=errors;assert.deepEqual(errors,[]);
   if(output)await writeFile(join(output,'browser.json'),JSON.stringify(result,null,2)+'\n');
   console.log(JSON.stringify(result));

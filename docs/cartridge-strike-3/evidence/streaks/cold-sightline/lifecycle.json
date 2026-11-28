@@ -1,0 +1,422 @@
+{
+  "build": "b9d7ad66c75286cc4f16aeeadb1208a348e40bc5f1f4015237aae8e6049ba8ab",
+  "protocol": 20,
+  "landscapeToPortrait": {
+    "during": true,
+    "size": {
+      "screen": [
+        384,
+        640
+      ],
+      "canvas": [
+        288,
+        480
+      ],
+      "buffer": [
+        288,
+        480
+      ],
+      "viewport": [
+        0,
+        0,
+        288,
+        480
+      ],
+      "aspect": 0.6,
+      "viewAspect": 0.6,
+      "scissor": false,
+      "defaultTarget": true
+    }
+  },
+  "admitted": {
+    "screen": [
+      384,
+      640
+    ],
+    "canvas": [
+      288,
+      480
+    ],
+    "buffer": [
+      288,
+      480
+    ],
+    "viewport": [
+      0,
+      0,
+      288,
+      480
+    ],
+    "aspect": 0.6,
+    "viewAspect": 0.6,
+    "scissor": false,
+    "defaultTarget": true
+  },
+  "portraitToLandscape": {
+    "during": true,
+    "size": {
+      "screen": [
+        640,
+        360
+      ],
+      "canvas": [
+        480,
+        270
+      ],
+      "buffer": [
+        480,
+        270
+      ],
+      "viewport": [
+        0,
+        0,
+        480,
+        270
+      ],
+      "aspect": 1.7777777777777777,
+      "viewAspect": 1.7777777777777777,
+      "scissor": false,
+      "defaultTarget": true
+    }
+  },
+  "roomsAfterCancel": 0,
+  "retry": {
+    "screen": [
+      640,
+      360
+    ],
+    "canvas": [
+      480,
+      270
+    ],
+    "buffer": [
+      480,
+      270
+    ],
+    "viewport": [
+      0,
+      0,
+      480,
+      270
+    ],
+    "aspect": 1.7777777777777777,
+    "viewAspect": 1.7777777777777777,
+    "scissor": false,
+    "defaultTarget": true
+  },
+  "roomsAfterLeave": 0,
+  "entries": [
+    {
+      "i": 0,
+      "map": "lvl-compact-arena",
+      "issued": true,
+      "start": 5595.5,
+      "fences": 18,
+      "deletes": 18,
+      "tileListenersAtStart": 0,
+      "end": 10438.800000071526,
+      "retained": 17,
+      "cloneCount": 1,
+      "remainingCloneListeners": [
+        0
+      ],
+      "remainingTileListeners": 0,
+      "finalDimensions": {
+        "screen": [
+          384,
+          640
+        ],
+        "canvas": [
+          288,
+          480
+        ],
+        "buffer": [
+          288,
+          480
+        ],
+        "viewport": [
+          0,
+          0,
+          288,
+          480
+        ],
+        "aspect": 0.6,
+        "viewAspect": 0.6,
+        "scissor": false,
+        "defaultTarget": true
+      },
+      "aborted": true,
+      "dimensionsAtAbort": {
+        "screen": [
+          384,
+          640
+        ],
+        "canvas": [
+          288,
+          480
+        ],
+        "buffer": [
+          288,
+          480
+        ],
+        "viewport": [
+          0,
+          0,
+          288,
+          480
+        ],
+        "aspect": 0.6,
+        "viewAspect": 0.6,
+        "scissor": false,
+        "defaultTarget": true
+      },
+      "disposed": true,
+      "keptLibrary": true,
+      "contextLost": true,
+      "heldAfter": 0,
+      "retainedMatListeners": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "i": 1,
+      "map": "lvl-meltem",
+      "issued": true,
+      "start": 16323.800000071526,
+      "fences": 3,
+      "deletes": 3,
+      "tileListenersAtStart": 0,
+      "aborted": true,
+      "dimensionsAtAbort": {
+        "screen": [
+          640,
+          360
+        ],
+        "canvas": [
+          480,
+          270
+        ],
+        "buffer": [
+          480,
+          270
+        ],
+        "viewport": [
+          0,
+          0,
+          480,
+          270
+        ],
+        "aspect": 1.7777777777777777,
+        "viewAspect": 1.7777777777777777,
+        "scissor": false,
+        "defaultTarget": true
+      },
+      "end": 16852.100000023842,
+      "retained": 0,
+      "cloneCount": 1,
+      "remainingCloneListeners": [
+        0
+      ],
+      "remainingTileListeners": 0,
+      "finalDimensions": {
+        "screen": [
+          640,
+          360
+        ],
+        "canvas": [
+          480,
+          270
+        ],
+        "buffer": [
+          480,
+          270
+        ],
+        "viewport": [
+          0,
+          0,
+          480,
+          270
+        ],
+        "aspect": 1.7777777777777777,
+        "viewAspect": 1.7777777777777777,
+        "scissor": false,
+        "defaultTarget": true
+      },
+      "disposed": true,
+      "keptLibrary": true,
+      "contextLost": true,
+      "heldAfter": 0,
+      "retainedMatListeners": []
+    },
+    {
+      "i": 2,
+      "map": "lvl-compact-arena",
+      "issued": true,
+      "start": 19045.300000071526,
+      "fences": 18,
+      "deletes": 18,
+      "tileListenersAtStart": 0,
+      "end": 19472.800000071526,
+      "retained": 17,
+      "cloneCount": 1,
+      "remainingCloneListeners": [
+        0
+      ],
+      "remainingTileListeners": 0,
+      "finalDimensions": {
+        "screen": [
+          640,
+          360
+        ],
+        "canvas": [
+          480,
+          270
+        ],
+        "buffer": [
+          480,
+          270
+        ],
+        "viewport": [
+          0,
+          0,
+          480,
+          270
+        ],
+        "aspect": 1.7777777777777777,
+        "viewAspect": 1.7777777777777777,
+        "scissor": false,
+        "defaultTarget": true
+      },
+      "aborted": true,
+      "dimensionsAtAbort": {
+        "screen": [
+          640,
+          360
+        ],
+        "canvas": [
+          480,
+          270
+        ],
+        "buffer": [
+          480,
+          270
+        ],
+        "viewport": [
+          0,
+          0,
+          480,
+          270
+        ],
+        "aspect": 1.7777777777777777,
+        "viewAspect": 1.7777777777777777,
+        "scissor": false,
+        "defaultTarget": true
+      },
+      "disposed": true,
+      "keptLibrary": true,
+      "contextLost": true,
+      "heldAfter": 0,
+      "retainedMatListeners": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "i": 3,
+      "map": "lvl-meltem",
+      "issued": true,
+      "start": 21775.900000095367,
+      "fences": 18,
+      "deletes": 18,
+      "tileListenersAtStart": 0,
+      "end": 25382.800000071526,
+      "retained": 17,
+      "cloneCount": 1,
+      "remainingCloneListeners": [
+        0
+      ],
+      "remainingTileListeners": 0,
+      "finalDimensions": {
+        "screen": [
+          640,
+          360
+        ],
+        "canvas": [
+          480,
+          270
+        ],
+        "buffer": [
+          480,
+          270
+        ],
+        "viewport": [
+          0,
+          0,
+          480,
+          270
+        ],
+        "aspect": 1.7777777777777777,
+        "viewAspect": 1.7777777777777777,
+        "scissor": false,
+        "defaultTarget": true
+      },
+      "aborted": true,
+      "dimensionsAtAbort": {
+        "screen": [
+          640,
+          360
+        ],
+        "canvas": [
+          480,
+          270
+        ],
+        "buffer": [
+          480,
+          270
+        ],
+        "viewport": [
+          0,
+          0,
+          480,
+          270
+        ],
+        "aspect": 1.7777777777777777,
+        "viewAspect": 1.7777777777777777,
+        "scissor": false,
+        "defaultTarget": true
+      }
+    }
+  ],
+  "errors": []
+}
