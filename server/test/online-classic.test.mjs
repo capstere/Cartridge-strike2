@@ -69,12 +69,37 @@ test('Classic economy, timed objectives, new lives, reserved seats and rematch',
      }
    });
  }
+ // Observe each real SDK frame on its authority tick. Polling the action alone
+ // cannot distinguish an immediate release from a lease that expired later.
+ const seat=r.seats.get(defender.sessionId),buffer=r.inputs.get(defender.sessionId);
+ const admissions=[],fixedTick=r.fixedTick;
+ const observer=t.mock.method(r,'fixedTick',function(){
+   const frame=buffer.size ? buffer.peek().at(-1) : null;
+   const now=this.clock.elapsedTime,previousDeadline=seat.interactUntil,invalid=this.metrics.invalid;
+   const result=fixedTick.call(this);
+   if(frame && buffer.size===0 && this.metrics.invalid===invalid && seat.lastSampleTick===frame.sampleTick){
+     admissions.push({held:frame.interact,now,previousDeadline,deadline:seat.interactUntil,action:b.action?.type});
+   }
+   return result;
+ });
  at(b,g.bomb);send(defender,{interact:true});
- await until(()=>b.action?.type==='defuse','first defuse begins');
+ await until(()=>admissions.length===1,'first held input accepted');
+ const first=admissions[0];
+ assert.equal(first.held,true);assert.equal(first.action,'defuse');
+ assert.equal(first.deadline,first.now+180);
  await until(()=>!b.action,'silent defender loses defuse authority');
+ assert(r.clock.elapsedTime>=first.deadline);
  assert.equal(g.bomb.status,'planted');assert.equal(g.phase,'active');
- send(defender,{interact:true});await until(()=>b.action?.type==='defuse','fresh input begins a new defuse');
- send(defender,{interact:false});await until(()=>!b.action,'explicit release interrupts defuse');
+ send(defender,{interact:true});await until(()=>admissions.length===2,'fresh held input accepted');
+ const renewed=admissions[1];
+ assert.equal(renewed.held,true);assert.equal(renewed.action,'defuse');
+ assert.equal(renewed.deadline,renewed.now+180);
+ send(defender,{interact:false});await until(()=>admissions.length===3,'release input accepted');
+ observer.mock.restore();
+ const release=admissions[2];
+ assert.equal(release.held,false);assert.equal(release.previousDeadline,renewed.deadline);
+ assert(release.now<release.previousDeadline,'release arrives before passive expiry');
+ assert.equal(release.deadline,0);assert.equal(release.action,undefined);
  assert.equal(g.bomb.status,'planted');assert.equal(g.phase,'active');
  await hold(defender,()=>host.state.roundReason==='defuse','uninterrupted defuse completes');
  await until(()=>starts.every(received=>received.length>=3),'both peers observe all three starts');
