@@ -83,3 +83,33 @@ export CHROMIUM_PATH=/usr/bin/chromium FPS_NETWORK_HEADED=1 FPS_NETWORK_ANGLE=gl
 node tools/bot-navigation-live.mjs
 node tools/bot-tactics-browser.mjs
 ```
+
+## Real private-room socket load
+
+The two-client 90-second TDM run used the real Colyseus protocol, an isolated localhost server, eight bots and the final integrated runtime. Both human clients fired 38 shots and the bots fired 74. The room registered seven combat respawns and a grenade throw. Its 5,402 ticks took 4.55 ms at p99 and 13.64 ms at maximum. All seats left and zero rooms remained. A preliminary 45-second window had failed the compound activity assertion before the complete run. [Two-client socket measurements](accepted/sockets.json)
+
+An initial 180-second Classic run completed two rounds with 62 bot shots, but its one human client fired zero shots. In a 90-second TDM trial, all four humans fired and six bots recorded 33 shots, but the room recorded zero throws. The load client had been sending new reload commands while holding an HE grenade with zero magazine and zero reserve. The authority correctly rejected simultaneous reload and trigger requests. Fixture commit 1d3fe3c requires reserve ammunition before requesting reload. Its 45-second Classic diagnostic threw the grenade and recorded 82 human shots. This shorter run ended before the first completed round and cannot satisfy the original 180-second acceptance. The original assertions and production runtime are unchanged. [Matched wire samples](accepted/load-client.json)
+
+The published checkout at 8dd1cd4a52cd5ac001384fc471bf56c9980c7b8f passed both complete socket runs on the Pi using the corrected fixture from that checkout. It used protocol 20 and build 6730ad4ed569c6997c3a7059cd6ed3910b4a19f1c32185bab84475b77a6b70c7. The dedicated server and real protocol clients ran in separate processes on loopback. [Published-head receipts, input queues, five-second samples and slow ticks](accepted/published-sockets.json)
+
+| Mode and seats | Window | Human shots | Bot shots | Throws | Whole-run tick p99 / max | Result |
+| --- | --- | ---: | ---: | ---: | ---: | --- |
+| Classic, one human and nine bots | 180 s / 10,804 ticks | 200 | 54 | 14 | 4.205 / 38.030 ms | Two round transitions, one plant and one defuse |
+| TDM, four humans and six bots | 90 s / 5,403 ticks | 150 per client | 44 | 7 | 5.190 / 90.920 ms | Three combat respawns |
+
+Both rooms reached zero after the last client left. Neither run recorded backpressure or a dropped connection. The maximum observed server input queue was five in both runs. Classic counted two rejected input messages over the room lifetime. Each run had one tick over 33 ms. The TDM outlier included 20.93 ms in actor movement and the existing instrumentation does not attribute the rest. These results support the gameplay and room-lifecycle checks. The 90.92 ms TDM tick is retained for the release performance review.
+
+Run from the published revision, one process group at a time on the Pi. The reports include environment, activity, input queues, empty-room cleanup and full tick statistics.
+
+```sh
+mkdir -p test-results/bot-navigation
+export CS2_LOAD_AI=1 CS2_LOAD_RTTS=0
+CS2_LOAD_MODE=classic CS2_LOAD_COUNTS=1 CS2_LOAD_SECONDS=180 \
+  CS2_LOAD_OUTPUT=test-results/bot-navigation/load-classic-1.json \
+  nice -n 10 node --import ./server/register-shared.mjs tools/network-load.mjs
+CS2_LOAD_MODE=tdm CS2_LOAD_COUNTS=4 CS2_LOAD_SECONDS=90 \
+  CS2_LOAD_OUTPUT=test-results/bot-navigation/load-tdm-4.json \
+  nice -n 10 node --import ./server/register-shared.mjs tools/network-load.mjs
+```
+
+Both commands exited successfully with the original assertions for ten active seats, nine or six bots respectively, client shots, bot movement and shots, Classic rounds or TDM combat respawns, a throw, bounded input queues and empty-room disposal.

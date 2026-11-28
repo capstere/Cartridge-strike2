@@ -1,5 +1,8 @@
 # Lead Codex assignment — Cartridge-Strike 3
 
+
+Resume the November 28 package runs from [PR #62](https://github.com/capstere/Cartridge-strike2/pull/62), [PR #63](https://github.com/capstere/Cartridge-strike2/pull/63) and [PR #64](https://github.com/capstere/Cartridge-strike2/pull/64). Use the latest measurements and open gates in [project status](PROJECT_STATUS.md). Keep one heavy Pi run active. Verify the native partner scenarios, final hosted heads and independent review before closing each package.
+
 **Owner authorization recorded.** Jesper approved PR #47 at `f1f36396`. Preparation merged at `5364240599164c0aee278bb0ac2a35d662c3a818`. The authorization covers development and eventual release after the documented gates. Resume from `develop/cartridge-strike-3` and the first eligible unfinished row in [tasks.json](tasks.json). Read [project status](PROJECT_STATUS.md) for current measurements and open checks.
 
 Run `node docs/cartridge-strike-3/verify-program.mjs` after updating the manifest and status table. It lists the packages whose dependencies permit work and reports inconsistent status or dependency cycles. Open focused pull requests against `develop/cartridge-strike-3`. These run the full FPS regression workflow. The final release PR targets `main`.

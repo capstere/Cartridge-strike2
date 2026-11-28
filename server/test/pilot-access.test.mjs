@@ -108,6 +108,20 @@ test('pilot login, protected assets, room admission and upgrades follow the acti
   const script = await get(asset,authorized);
   assert.equal(script.status,200);
   assert.match(script.headers['cache-control'],/private, no-store/);
+  const installAssets = [
+    ['/fps/app.webmanifest', /^application\/manifest\+json\b/],
+    ['/fps/sw.js', /^(?:text|application)\/javascript\b/],
+    ['/fps/offline.html', /^text\/html\b/],
+    ['/fps/icon-192.png', /^image\/png\b/],
+    ['/fps/icon-512.png', /^image\/png\b/],
+  ];
+  for (const [path, type] of installAssets) {
+    assert.equal((await get(path)).status, 401, path);
+    const file = await get(path, authorized);
+    assert.equal(file.status, 200, path);
+    assert.match(file.headers['content-type'], type, path);
+    assert.match(file.headers['cache-control'], /private, no-store/, path);
+  }
   assert.equal((await get('/health',authorized)).status,404);
   assert.equal((await get('/__healthcheck',authorized)).status,404);
   assert.equal((await get('/server/package.json',authorized)).status,404);
