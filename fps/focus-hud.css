@@ -208,3 +208,8 @@ html #mobile-controls .mobile-stick[data-mobile-stick].active.rushing::after{bor
   .replay-strip .eyebrow{font-size:.62rem}.replay-strip strong{font-size:1.05rem}.replay-strip p{margin:.12rem 0;font-size:.75rem}
   .replay-strip button{background:#192225e8;pointer-events:auto}
 }
+
+@media (pointer:fine){
+  html[data-hud=clean].hud-inventory-peek:has(#bonus-controls:not([hidden])) .inventory{bottom:54px}
+  html[data-hud=full] #bonus-controls:not([hidden]){bottom:calc(62px + env(safe-area-inset-bottom))}
+}

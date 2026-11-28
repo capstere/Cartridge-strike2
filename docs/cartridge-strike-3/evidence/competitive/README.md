@@ -30,3 +30,9 @@ The [timing regression](../../../../server/test/replay.test.mjs) exercises those
 On the corrected runtime `a1698a9f`, the victim saw the scope at 813 ms, then at 2,071 ms the renderer drew the lethal marker at full opacity and began one 1.6 s Scout Rifle buffer at volume 0.55. The viewer still belonged to the original dead life. The victim's subsequent life cleared playback. The compositor selector was updated to read the unobstructed side masks after the compact replay moved its controls into the lower corners.
 
 The [timing comparison](timing-comparison.json) preserves the receipt, first and subsequent scoped frames, terminal WebGL marker and Web Audio observations from both diagnostic runs. The complete passing report includes every sampled playback update.
+
+## Final results, Solo and earned outfits
+
+The [signed final verdicts](verdicts/summary.json) show the individual winner and both account receipts in the initial mobile viewport. [Free-for-All](verdicts/mobile-ffa-results.jpg) lists individual points. [Domination](verdicts/mobile-dom-results.jpg) credits the successful capture to Coast and displays the team’s final score. The [native Solo journey](solo/README.md) exercised Free-for-All, Domination and a second Free-for-All on Floor 5 using actual inputs, and verified fresh actors and zone cleanup on each return.
+
+The [wardrobe result](wardrobe/earned-wardrobe.json) records 11 distinct portraits, all six earned outfits, equipped Yellow Vest in Solo and guest fallback on logout. The [first- and third-person swatch measurements](wardrobe/wardrobe-run.json) used separate textures with matching pixels on the real loaded rig.

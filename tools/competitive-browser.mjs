@@ -35,43 +35,92 @@ async function shot(p,name){await p.screenshot({path:join(output,name+'.jpg'),ty
 // scope frame inside the victim's measured replay interval.
 async function recordDeath(page){
  const cdp=await page.context().newCDPSession(page),frames=[];
+ let total=0,still;
  cdp.on('Page.screencastFrame',e=>{
   cdp.send('Page.screencastFrameAck',{sessionId:e.sessionId}).catch(()=>{});
-  if(frames.length<150)frames.push({at:e.metadata.timestamp*1000,jpeg:e.data});
+  total++;
+  // Keep the latest frames: a delayed input or cold first draw must not fill
+  // the evidence buffer with pre-shot pixels and evict the actual replay.
+  frames.push({at:e.metadata.timestamp*1000,jpeg:e.data,source:'screencast'});
+  if(frames.length>300)frames.shift();
  });
  await cdp.send('Page.startScreencast',{format:'jpeg',quality:84,maxWidth:844,maxHeight:390,everyNthFrame:1});
- return async events=>{
-  await cdp.send('Page.stopScreencast');await cdp.detach();
-  const first=events.find(e=>e.title==='ELIMINATION REPLAY'&&e.scoped);
-  assert(first,'victim showed historical scope');
-  // CSS puts a black optic mask around the circular historical viewport.
-  // Discard transition frames that still show the ordinary full-width HUD.
-  let best=null,bestScore=-1;
-  for(const f of frames.filter(f=>f.at>=first.at-60&&f.at<=first.at+3000)){
-   const score=await page.evaluate(async jpeg=>{
-    const bytes=Uint8Array.from(atob(jpeg),c=>c.charCodeAt(0));
-    const image=await createImageBitmap(new Blob([bytes],{type:'image/jpeg'}));
-    const c=new OffscreenCanvas(image.width,image.height),ctx=c.getContext('2d');ctx.drawImage(image,0,0);image.close();
-    const maxAt=(x,y)=>Math.max(...ctx.getImageData(Math.floor(x*c.width),Math.floor(y*c.height),1,1).data.slice(0,3));
-    // The compact replay puts labels and Skip in the bottom corners.
-    // Sample the uninterrupted left/right optic mask above those controls.
-    if(![[.12,.26],[.88,.26],[.12,.48],[.88,.48],[.12,.64],[.88,.64]].every(([x,y])=>maxAt(x,y)<24))return -1;
-    const {data}=ctx.getImageData(c.width*.45,c.height*.32,c.width*.1,c.height*.22);
-    let count=0,sum=0,squares=0;
-    for(let i=0;i<data.length;i+=16){
-     const v=Math.max(data[i],data[i+1],data[i+2]);count++;sum+=v;squares+=v*v;
+ return {
+  visible(){
+   // Request from the compositor while Playwright sees the real scoped overlay.
+   // Its reply may arrive after respawn; the same pixel checks apply to both sources.
+   const at=Date.now();
+   still=cdp.send('Page.captureScreenshot',{format:'jpeg',quality:84,fromSurface:true})
+    .then(({data})=>({source:'visible-surface',at,until:Date.now(),jpeg:data})).catch(()=>null);
+  },
+  async finish(events){
+   const visible=await still;
+   await cdp.send('Page.stopScreencast');await cdp.detach();
+   const first=events.find(e=>e.title==='ELIMINATION REPLAY'&&e.scoped);
+   assert(first,'victim showed historical scope');
+   const timeline=await page.evaluate(()=>window.competitiveFeedback.timing.filter(f=>f.kind==='death'));
+   const start=timeline.findIndex(f=>f.stage==='replay'&&f.scoped);
+   const end=timeline.slice(start+1).find(f=>f.stage!=='replay'||!f.scoped);
+   assert(start>=0&&end,'historical scoped interval ended before returning to live play');
+   const from=timeline[start].at,to=end.at;
+   const metrics=report.deathCapture={frames:total,retained:frames.length,from,to,overlayAt:first.at,
+    optic:first.optic,label:first.label,firstCompositorAt:frames[0]?.at,lastCompositorAt:frames.at(-1)?.at,candidates:[]};
+   if(visible)frames.push(visible);
+   let best,nearest;
+   for(const f of frames){
+    const inside=f.at<=to&&(f.until??f.at)>=from;
+    if(!inside){
+     if(!nearest||Math.abs(f.at-from)<Math.abs(nearest.at-from))nearest=f;
+     continue;
     }
-    // Prefer a textured scene at the confirmed shot over transitional sky/walls.
-    return sum/count>12?squares/count-(sum/count)**2:-1;
-   },f.jpeg);
-   if(score>=0&&score>=bestScore){best=f;bestScore=score;}
+    const measured=await page.evaluate(inspectScope,{jpeg:f.jpeg,optic:first.optic,label:first.label});
+    metrics.candidates.push({source:f.source,at:f.at,until:f.until,...measured});
+    if(measured.mask.every(v=>v<24)&&measured.accentFraction>.18&&measured.mean>12&&measured.variance>=10&&(!best||measured.variance>best.variance)){
+     best={...f,variance:measured.variance};
+    }
+   }
+   if(best){
+    await writeFile(join(output,'mobile-scoped-death.jpg'),Buffer.from(best.jpeg,'base64'));
+    return Object.assign(metrics,{source:best.source,scopeOffsetMs:Math.round(best.at-from),centreVariance:Math.round(best.variance)});
+   }
+   // Persist a small, real sample for diagnosing missing frames separately from
+   // incorrect mask/geometry measurements, even when the acceptance gate fails.
+   const candidates=frames.filter(f=>f.at<=to&&(f.until??f.at)>=from);
+   for(const [i,f] of [candidates[0],candidates.at(-1),nearest].entries()){
+    if(f)await writeFile(join(output,'death-capture-diagnostic-'+i+'.jpg'),Buffer.from(f.jpeg,'base64'));
+   }
+   throw Error('No composited scoped death frame between the reported replay and respawn');
   }
-  if(best){
-   await writeFile(join(output,'mobile-scoped-death.jpg'),Buffer.from(best.jpeg,'base64'));
-   return {frames:frames.length,scopeOffsetMs:Math.round(best.at-first.at),centreVariance:Math.round(bestScore)};
-  }
-  throw Error('No composited scoped death frame between the reported replay and respawn');
  };
+}
+// Evaluate the actual JPEG against the observed optic bounds, normalized to
+// its viewport. The controls in compact landscape occupy the bottom corners.
+async function inspectScope({jpeg,optic,label}){
+ const bytes=Uint8Array.from(atob(jpeg),c=>c.charCodeAt(0));
+ const image=await createImageBitmap(new Blob([bytes],{type:'image/jpeg'}));
+ const c=new OffscreenCanvas(image.width,image.height),ctx=c.getContext('2d');ctx.drawImage(image,0,0);image.close();
+ const at=(x,y)=>Math.max(...ctx.getImageData(Math.floor(x*c.width),Math.floor(y*c.height),1,1).data.slice(0,3));
+ const mask=[];
+ for(const y of [.20,.50,.68]){
+  const row=optic.y+optic.height*y;
+  for(const x of [optic.x*.5,(1+optic.x+optic.width)*.5])mask.push(at(x,row));
+ }
+ // The historical killer label has a copper left border. The live sniper
+ // scope can show the same mask and character, but lacks this replay strip.
+ const edge=ctx.getImageData(c.width*label.x,c.height*(label.y+label.height*.2),
+  Math.max(1,Math.ceil(label.border*c.width)),Math.max(1,Math.floor(c.height*label.height*.6))).data;
+ let copper=0;
+ for(let i=0;i<edge.length;i+=4){
+  if(edge[i]>110&&edge[i]>1.35*edge[i+1]&&edge[i+1]>1.1*edge[i+2]&&edge[i+2]<155)copper++;
+ }
+ const {data}=ctx.getImageData(c.width*(optic.x+optic.width*.35),c.height*(optic.y+optic.height*.24),
+  c.width*optic.width*.30,c.height*optic.height*.38);
+ let count=0,sum=0,squares=0;
+ for(let i=0;i<data.length;i+=16){
+  const value=Math.max(data[i],data[i+1],data[i+2]);count++;sum+=value;squares+=value*value;
+ }
+ const mean=sum/count;
+ return {size:[c.width,c.height],mask,accentFraction:copper*4/edge.length,mean,variance:squares/count-mean*mean};
 }
 async function open(mobile){
  const browser=await chromium.launch({channel:native?undefined:'chromium',executablePath:native||undefined,
@@ -95,7 +144,14 @@ async function open(mobile){
      killer:document.querySelector('#replay-killer').textContent,scoped:!overlay.querySelector('.replay-optic').hidden};
     const previous=seen.at(-1);
     if(seen.length<64&&(!previous||Object.keys(frame).some(k=>previous[k]!==frame[k]))){
-     seen.push({...frame,at:performance.timeOrigin+performance.now()});
+     const rect=overlay.querySelector('.replay-optic').getBoundingClientRect();
+     const optic={x:rect.x/innerWidth,y:rect.y/innerHeight,width:rect.width/innerWidth,height:rect.height/innerHeight};
+     const strip=overlay.querySelector('.replay-strip');
+     const labelNode=parseFloat(getComputedStyle(strip).borderLeftWidth)>0?strip:strip.firstElementChild;
+     const bounds=labelNode.getBoundingClientRect();
+     const label={x:bounds.x/innerWidth,y:bounds.y/innerHeight,height:bounds.height/innerHeight,
+      border:parseFloat(getComputedStyle(labelNode).borderLeftWidth)/innerWidth};
+     seen.push({...frame,optic,label,at:performance.timeOrigin+performance.now()});
     }
    });
    observer.observe(overlay,{subtree:true,attributes:true,childList:true,characterData:true});
@@ -131,7 +187,7 @@ async function observeFeedback(page){
    const packet=this.packet,prior=this.lastClipTime,previousAt=this.lastPresentedAt;
    const result=advance.call(this,scope,now);
    if(packet?.clip&&feedback.timing.length<700){
-    feedback.timing.push({kind:packet.kind,elapsed:Math.round(now-this.started),step:Math.round(now-previousAt),stage:result?.stage??'cut',
+    feedback.timing.push({kind:packet.kind,at:performance.timeOrigin+now,scoped:result?.scoped,elapsed:Math.round(now-this.started),step:Math.round(now-previousAt),stage:result?.stage??'cut',
      budget:scope?.respawnRemaining,life:scope?.lifeId,alive:scope?.alive,cardMs:this.cardDuration,offset:this.offset,
      prior,current:result?.time,hit:packet.clip.hitTime,strength:result?.hitStrength,shots:result?.audioShots?.length});
    }
@@ -292,13 +348,14 @@ try{
    source:[a.x,a.y,a.z],target:[b.x,b.y,b.z],protected:b.spawnProtectedUntil,at:game.state.time}));
   assert(a.inventory.primary.ammo<ammo,'server consumed a real round');
  }
- await scope();const finishDeath=await recordDeath(touch);await eliminate(1);
+ await scope();const captureDeath=await recordDeath(touch);await eliminate(1);
  await touch.locator('#replay-view[data-stage=replay] .replay-optic:visible').waitFor({timeout:10000});
+ captureDeath.visible();
  await until(()=>victim.actor.alive&&victim.actor.lifeId>oldLife,'server respawn');
  await touch.locator('#replay-view').waitFor({state:'hidden'});
  assert(game.world.canOccupy(victim.actor.x,victim.actor.z,victim.actor.radius,victim.actor.height,victim.actor.y));
  const first=await touch.evaluate(()=>window.competitiveCards);
- const deathCapture=await finishDeath(first);
+ const deathCapture=await captureDeath.finish(first);
  assert(first.some(f=>f.stage==='card'&&f.killer==='Coast')&&first.some(f=>f.stage==='replay'&&f.scoped));
  assert.equal((await host.evaluate(()=>window.competitiveCards)).length,0,'private death replay reached only the victim');
  await host.mouse.up({button:'right'});await scope();await eliminate(2);await host.mouse.up({button:'right'});

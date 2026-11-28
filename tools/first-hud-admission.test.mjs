@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {Renderer} from '../src/fps/render.mjs';
-import {Scene, PerspectiveCamera, Mesh, BoxGeometry, MeshBasicMaterial, Vector4} from '../vendor/three/three.module.js';
+import {createReplayHitMarker,replayLighting} from '../src/fps/replay-render.mjs';
+import {Group, PointLight, SpotLight, HemisphereLight, DirectionalLight, Scene, PerspectiveCamera, Mesh, BoxGeometry, MeshBasicMaterial, Vector4} from '../vendor/three/three.module.js';
 
 function fixture({compile,extension=true,program,wait,fence,draw,count=1}={}){
   const draws=[],compiles=[],rect=new Vector4(4,8,620,310);let scissorTest=false,deleted=0;const meshes=[];
@@ -86,4 +87,28 @@ test('a replacement room world waits for the matching local camera actor or a cl
   session.view.player=actor;await ready;
   session.room.state.worldRevision=3;session.closed=true;
   await assert.rejects(NetworkSession.prototype.waitForSpawn.call(session),/closed before spawn/i);
+});
+
+
+test('historical light variants match authored daylight and omit live occupants, flashes and moving fixture lights',()=>{
+  const source=new Scene(),occupant=new Group(),flash=new PointLight(0xff0000,5);
+  flash.position.set(140,12,38);occupant.add(flash);source.add(occupant,new SpotLight());
+  const sky=new HemisphereLight(),sun=new DirectionalLight();sun.position.set(2,4,8);
+  sun.add(new Mesh());source.add(sky,sun);source.environmentIntensity=.72;
+  const scene=replayLighting(source,{effectPoint:true});
+  assert.deepEqual(scene.children.filter(n=>n.isLight).map(n=>n.type).sort(),['DirectionalLight','HemisphereLight','PointLight']);
+  assert.equal(scene.environmentIntensity,.72);
+  const copy=scene.children.find(n=>n.isDirectionalLight),muted=scene.children.find(n=>n.isPointLight);
+  assert.notEqual(copy,sun);assert.deepEqual(copy.position.toArray(),[2,4,8]);assert.equal(copy.children.length,0);
+  assert.equal(muted.intensity,0);assert.deepEqual(muted.position.toArray(),[0,0,0]);
+  assert.equal(scene.getObjectById(occupant.id),undefined);
+  const view=new Scene();view.add(new HemisphereLight(),new DirectionalLight(),new DirectionalLight());
+  assert.deepEqual(replayLighting(view).children.filter(n=>n.isLight).map(n=>n.type),['HemisphereLight','DirectionalLight','DirectionalLight']);
+});
+
+test('the historical screen-space marker shares the bounded admission pass before first use',async()=>{
+  const f=fixture();f.owner.replayHitMarker=createReplayHitMarker();await f.prepare();
+  assert.deepEqual(f.compiles,['world','weapon','historical-hit']);
+  assert.deepEqual(f.draws.map(r=>r.scene),f.compiles);
+  f.owner.replayHitMarker.geometry.dispose();f.owner.replayHitMarker.material.dispose();
 });

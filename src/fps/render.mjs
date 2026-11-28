@@ -1,3 +1,4 @@
+import {createReplayHitMarker,disposeReplayRender} from './replay-render.mjs';
 import {DominationFlags} from './domination-flags.mjs';
 import {combatOpponents} from './bonuses.mjs';
 import {OUTFITS} from './operator-outfits.mjs';
@@ -124,6 +125,7 @@ export class Renderer extends EngineRenderer {
       if(scene===this.viewScene)this.applyInspection();
       return this.nativeRender(scene,camera);
     };
+    this.replayHitMarker=createReplayHitMarker();
     this.viewFill=new THREE.DirectionalLight(0xb5d8ee,.75);this.viewFill.position.set(2,.5,-1);this.viewScene.add(this.viewFill);
     this.scene.environmentIntensity=.72;
     this.combatVisuals=new CombatVisuals(this.scene,world,settings);
@@ -250,6 +252,7 @@ export class Renderer extends EngineRenderer {
     this.nativeRender=(scene,camera)=>{passes.push([scene,camera]);};
     try{scissored(()=>this.render(game,game.player,0));}
     finally{this.nativeRender=draw;}
+    if(this.replayHitMarker)passes.push([this.replayHitMarker.scene,this.replayHitMarker.camera]);
     // Three.compile traverses invisible objects too. Link only the drawables
     // visible to the spawn cameras; use their actual scene as the lighting target.
     // The borrowed objects retain their parents, skeletons and instance attributes.
@@ -521,6 +524,7 @@ export class Renderer extends EngineRenderer {
   }
   dispose({keepCharacterLibrary=false}={}){
     if(this.presentationDisposed)return;this.presentationDisposed=true;
+    disposeReplayRender(this);this.replayHitMarker.geometry.dispose();this.replayHitMarker.material.dispose();
     if(keepCharacterLibrary)releaseMapGpuResources([this.scene,this.viewScene,...this.weaponCache.values()]);
     this.dominationFlags?.dispose();
     this.referenceScene?.dispose();this.zombieVisuals?.dispose();this.floorEnvironment?.dispose();this.glassVisuals?.dispose();this.detailScene?.dispose();this.doorVisuals?.dispose();this.riposteProps?.dispose();

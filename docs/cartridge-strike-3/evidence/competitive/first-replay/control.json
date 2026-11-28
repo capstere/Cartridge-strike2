@@ -1,0 +1,5736 @@
+{
+  "runtimeHead": "61fdb3710fff3e936dcf0c9de10eb1363490bfe2",
+  "driverSha256": "178235415b3a0e7ba65dc59ecc7204d666d4ca47ec3e5aeb207fb665a17a9f05",
+  "node": "v26.13.0",
+  "buildHash": "cb5b3c6c43cf087ea635746206dd3d4cca9d2859106df24a62e28f388f9303fb",
+  "protocol": 22,
+  "angle": "gl-egl",
+  "headless": false,
+  "desktop": "keyboard and mouse",
+  "touch": "Chromium emulated landscape",
+  "scenarios": [
+    {
+      "mode": "ffa",
+      "map": "compact-arena",
+      "uniform": "analysts",
+      "verdicts": [
+        [
+          {
+            "id": "room-title",
+            "text": "Coast wins",
+            "top": 53,
+            "bottom": 98.59375,
+            "visible": true
+          },
+          {
+            "id": "room-earned",
+            "text": "Account rewards · 55 XP · 0 assists · 2 headshots · Scout Rifle +300 XP",
+            "top": 141.59375,
+            "bottom": 162.59375,
+            "visible": true
+          }
+        ],
+        [
+          {
+            "id": "room-title",
+            "text": "Coast wins",
+            "top": 53,
+            "bottom": 98.59375,
+            "visible": true
+          },
+          {
+            "id": "room-earned",
+            "text": "Account rewards · 0 XP · 0 assists · 0 headshots",
+            "top": 141.59375,
+            "bottom": 162.59375,
+            "visible": true
+          }
+        ]
+      ],
+      "deathCapture": {
+        "frames": 23,
+        "scopeOffsetMs": 552,
+        "centreVariance": 653
+      },
+      "deathFrames": [
+        {
+          "stage": "card",
+          "title": "ELIMINATED BY",
+          "killer": "Coast",
+          "scoped": false,
+          "at": 1795872810632.8
+        },
+        {
+          "stage": "replay",
+          "title": "ELIMINATION REPLAY",
+          "killer": "Coast",
+          "scoped": true,
+          "at": 1795872812513.8
+        }
+      ],
+      "finalFrames": [
+        [
+          {
+            "stage": "replay",
+            "title": "FINAL ELIMINATION",
+            "killer": "Coast",
+            "scoped": true,
+            "at": 1795872822752.7
+          }
+        ],
+        [
+          {
+            "stage": "replay",
+            "title": "FINAL ELIMINATION",
+            "killer": "Coast",
+            "scoped": true,
+            "at": 1795872820723.7
+          }
+        ]
+      ],
+      "credits": [
+        "Account rewards · 55 XP · 0 assists · 2 headshots · Scout Rifle +300 XP",
+        "Account rewards · 0 XP · 0 assists · 0 headshots"
+      ],
+      "profiles": [
+        {
+          "stats": {
+            "matches": 1,
+            "kills": 2,
+            "deaths": 0,
+            "wins": 1,
+            "xp": 55
+          },
+          "weapons": [
+            {
+              "id": "sniper",
+              "xp": 300,
+              "name": "Scout Rifle",
+              "level": 1
+            }
+          ],
+          "challenges": [
+            {
+              "id": "nPompe",
+              "count": 0
+            },
+            {
+              "id": "nBrut",
+              "count": 0
+            },
+            {
+              "id": "nFfa",
+              "count": 1
+            },
+            {
+              "id": "tPrec",
+              "count": 2
+            },
+            {
+              "id": "tLoin",
+              "count": 0
+            },
+            {
+              "id": "tUav",
+              "count": 0
+            },
+            {
+              "id": "fSil",
+              "count": 0
+            },
+            {
+              "id": "fAcc",
+              "count": 0
+            },
+            {
+              "id": "fCartes",
+              "count": 1
+            },
+            {
+              "id": "rPm",
+              "count": 0
+            },
+            {
+              "id": "rMouv",
+              "count": 0
+            },
+            {
+              "id": "rDouble",
+              "count": 0
+            },
+            {
+              "id": "vFa",
+              "count": 0
+            },
+            {
+              "id": "vPist",
+              "count": 0
+            },
+            {
+              "id": "vDom",
+              "count": 0
+            },
+            {
+              "id": "gParties",
+              "count": 0
+            },
+            {
+              "id": "gVict",
+              "count": 0
+            },
+            {
+              "id": "gElim",
+              "count": 0
+            }
+          ]
+        },
+        {
+          "stats": {
+            "matches": 1,
+            "kills": 0,
+            "deaths": 2,
+            "wins": 0,
+            "xp": 0
+          },
+          "weapons": [],
+          "challenges": [
+            {
+              "id": "nPompe",
+              "count": 0
+            },
+            {
+              "id": "nBrut",
+              "count": 0
+            },
+            {
+              "id": "nFfa",
+              "count": 1
+            },
+            {
+              "id": "tPrec",
+              "count": 0
+            },
+            {
+              "id": "tLoin",
+              "count": 0
+            },
+            {
+              "id": "tUav",
+              "count": 0
+            },
+            {
+              "id": "fSil",
+              "count": 0
+            },
+            {
+              "id": "fAcc",
+              "count": 0
+            },
+            {
+              "id": "fCartes",
+              "count": 1
+            },
+            {
+              "id": "rPm",
+              "count": 0
+            },
+            {
+              "id": "rMouv",
+              "count": 0
+            },
+            {
+              "id": "rDouble",
+              "count": 0
+            },
+            {
+              "id": "vFa",
+              "count": 0
+            },
+            {
+              "id": "vPist",
+              "count": 0
+            },
+            {
+              "id": "vDom",
+              "count": 0
+            },
+            {
+              "id": "gParties",
+              "count": 0
+            },
+            {
+              "id": "gVict",
+              "count": 0
+            },
+            {
+              "id": "gElim",
+              "count": 0
+            }
+          ]
+        }
+      ],
+      "oldLife": 2,
+      "respawnLife": 3,
+      "legalRespawn": {
+        "x": 29.399999999999995,
+        "y": 0,
+        "z": 4.8999999999999995,
+        "lifeId": 3,
+        "capsuleClear": true,
+        "overlaps": false
+      }
+    },
+    {
+      "mode": "dom",
+      "map": "compact-arena",
+      "flags": [
+        {
+          "CylinderGeometry": [
+            {
+              "x": 7.699999809265137,
+              "y": 1.399999976158142,
+              "z": 8.399999618530273,
+              "scale": 1
+            },
+            {
+              "x": 15.399999618530273,
+              "y": 1.399999976158142,
+              "z": 7.699999809265137,
+              "scale": 1
+            },
+            {
+              "x": 22.399999618530273,
+              "y": 1.399999976158142,
+              "z": 9.800000190734863,
+              "scale": 1
+            }
+          ],
+          "PlaneGeometry": [
+            {
+              "x": 7.699999809265137,
+              "y": 0.5,
+              "z": 8.399999618530273,
+              "scale": 0.9999999982477368
+            },
+            {
+              "x": 15.399999618530273,
+              "y": 0.5,
+              "z": 7.699999809265137,
+              "scale": 0.9999999753887924
+            },
+            {
+              "x": 22.399999618530273,
+              "y": 0.5,
+              "z": 9.800000190734863,
+              "scale": 0.9999999778684439
+            }
+          ],
+          "RingGeometry": [
+            {
+              "x": 7.699999809265137,
+              "y": 0.04500000178813934,
+              "z": 8.399999618530273,
+              "scale": 2.243312120437622
+            },
+            {
+              "x": 15.399999618530273,
+              "y": 0.04500000178813934,
+              "z": 7.699999809265137,
+              "scale": 2.243312120437622
+            },
+            {
+              "x": 22.399999618530273,
+              "y": 0.04500000178813934,
+              "z": 9.800000190734863,
+              "scale": 2.243312120437622
+            }
+          ]
+        },
+        {
+          "CylinderGeometry": [
+            {
+              "x": 7.699999809265137,
+              "y": 1.399999976158142,
+              "z": 8.399999618530273,
+              "scale": 1
+            },
+            {
+              "x": 15.399999618530273,
+              "y": 1.399999976158142,
+              "z": 7.699999809265137,
+              "scale": 1
+            },
+            {
+              "x": 22.399999618530273,
+              "y": 1.399999976158142,
+              "z": 9.800000190734863,
+              "scale": 1
+            }
+          ],
+          "PlaneGeometry": [
+            {
+              "x": 7.699999809265137,
+              "y": 0.5,
+              "z": 8.399999618530273,
+              "scale": 1.000000028905193
+            },
+            {
+              "x": 15.399999618530273,
+              "y": 0.5,
+              "z": 7.699999809265137,
+              "scale": 0.9999999825782703
+            },
+            {
+              "x": 22.399999618530273,
+              "y": 0.5,
+              "z": 9.800000190734863,
+              "scale": 1.0000000177586976
+            }
+          ],
+          "RingGeometry": [
+            {
+              "x": 7.699999809265137,
+              "y": 0.04500000178813934,
+              "z": 8.399999618530273,
+              "scale": 2.243312120437622
+            },
+            {
+              "x": 15.399999618530273,
+              "y": 0.04500000178813934,
+              "z": 7.699999809265137,
+              "scale": 2.243312120437622
+            },
+            {
+              "x": 22.399999618530273,
+              "y": 0.04500000178813934,
+              "z": 9.800000190734863,
+              "scale": 2.243312120437622
+            }
+          ]
+        }
+      ],
+      "verdicts": [
+        [
+          {
+            "id": "room-title",
+            "text": "Analysts win",
+            "top": 53,
+            "bottom": 98.59375,
+            "visible": true
+          },
+          {
+            "id": "room-earned",
+            "text": "Account rewards · 25 XP · 0 assists · 0 headshots",
+            "top": 141.59375,
+            "bottom": 162.59375,
+            "visible": true
+          }
+        ],
+        [
+          {
+            "id": "room-title",
+            "text": "Analysts win",
+            "top": 53,
+            "bottom": 98.59375,
+            "visible": true
+          },
+          {
+            "id": "room-earned",
+            "text": "Account rewards · 0 XP · 0 assists · 0 headshots",
+            "top": 141.59375,
+            "bottom": 162.59375,
+            "visible": true
+          }
+        ]
+      ],
+      "walked": 1.521739362633756,
+      "results": {
+        "matchId": 2,
+        "winner": "analysts",
+        "reason": "score",
+        "score": {
+          "analysts": 2,
+          "counterAnalysts": 0
+        },
+        "players": [
+          {
+            "id": "analysts-0",
+            "name": "Coast",
+            "team": "analysts",
+            "kills": 0,
+            "deaths": 0,
+            "points": 75,
+            "captures": 1
+          },
+          {
+            "id": "counterAnalysts-0",
+            "name": "Harbor",
+            "team": "counterAnalysts",
+            "kills": 0,
+            "deaths": 0,
+            "points": 0,
+            "captures": 0
+          }
+        ]
+      },
+      "credits": [
+        "Account rewards · 25 XP · 0 assists · 0 headshots",
+        "Account rewards · 0 XP · 0 assists · 0 headshots"
+      ],
+      "profiles": [
+        {
+          "stats": {
+            "matches": 2,
+            "kills": 2,
+            "deaths": 0,
+            "wins": 2,
+            "xp": 80
+          },
+          "weapons": [
+            {
+              "id": "sniper",
+              "xp": 300,
+              "name": "Scout Rifle",
+              "level": 1
+            }
+          ],
+          "challenges": [
+            {
+              "id": "nPompe",
+              "count": 0
+            },
+            {
+              "id": "nBrut",
+              "count": 0
+            },
+            {
+              "id": "nFfa",
+              "count": 1
+            },
+            {
+              "id": "tPrec",
+              "count": 2
+            },
+            {
+              "id": "tLoin",
+              "count": 0
+            },
+            {
+              "id": "tUav",
+              "count": 0
+            },
+            {
+              "id": "fSil",
+              "count": 0
+            },
+            {
+              "id": "fAcc",
+              "count": 0
+            },
+            {
+              "id": "fCartes",
+              "count": 1
+            },
+            {
+              "id": "rPm",
+              "count": 0
+            },
+            {
+              "id": "rMouv",
+              "count": 0
+            },
+            {
+              "id": "rDouble",
+              "count": 0
+            },
+            {
+              "id": "vFa",
+              "count": 0
+            },
+            {
+              "id": "vPist",
+              "count": 0
+            },
+            {
+              "id": "vDom",
+              "count": 1
+            },
+            {
+              "id": "gParties",
+              "count": 0
+            },
+            {
+              "id": "gVict",
+              "count": 0
+            },
+            {
+              "id": "gElim",
+              "count": 0
+            }
+          ]
+        },
+        {
+          "stats": {
+            "matches": 2,
+            "kills": 0,
+            "deaths": 2,
+            "wins": 0,
+            "xp": 0
+          },
+          "weapons": [],
+          "challenges": [
+            {
+              "id": "nPompe",
+              "count": 0
+            },
+            {
+              "id": "nBrut",
+              "count": 0
+            },
+            {
+              "id": "nFfa",
+              "count": 1
+            },
+            {
+              "id": "tPrec",
+              "count": 0
+            },
+            {
+              "id": "tLoin",
+              "count": 0
+            },
+            {
+              "id": "tUav",
+              "count": 0
+            },
+            {
+              "id": "fSil",
+              "count": 0
+            },
+            {
+              "id": "fAcc",
+              "count": 0
+            },
+            {
+              "id": "fCartes",
+              "count": 1
+            },
+            {
+              "id": "rPm",
+              "count": 0
+            },
+            {
+              "id": "rMouv",
+              "count": 0
+            },
+            {
+              "id": "rDouble",
+              "count": 0
+            },
+            {
+              "id": "vFa",
+              "count": 0
+            },
+            {
+              "id": "vPist",
+              "count": 0
+            },
+            {
+              "id": "vDom",
+              "count": 0
+            },
+            {
+              "id": "gParties",
+              "count": 0
+            },
+            {
+              "id": "gVict",
+              "count": 0
+            },
+            {
+              "id": "gElim",
+              "count": 0
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "chromium": "156.0.8078.79",
+  "clients": [
+    {
+      "viewport": [
+        960,
+        600
+      ],
+      "framebuffer": [
+        720,
+        450
+      ],
+      "renderer": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)"
+    },
+    {
+      "viewport": [
+        844,
+        390
+      ],
+      "framebuffer": [
+        633,
+        292
+      ],
+      "renderer": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)"
+    }
+  ],
+  "feedback": [
+    {
+      "audio": [
+        {
+          "title": "FINAL ELIMINATION",
+          "weapon": "sniper",
+          "actor": "analysts-0",
+          "at": 2.783,
+          "volume": 0.55,
+          "duration": 1.6
+        }
+      ],
+      "marker": [
+        {
+          "title": "FINAL ELIMINATION",
+          "opacity": 0.8712499997445523,
+          "vertices": 24
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "opacity": 0.2830357142857136,
+          "vertices": 24
+        }
+      ],
+      "liveHits": [
+        "kill"
+      ],
+      "hitLabels": [
+        "ELIMINATED"
+      ],
+      "warnings": [],
+      "batches": {
+        "CylinderGeometry": [
+          {
+            "x": 7.699999809265137,
+            "y": 1.399999976158142,
+            "z": 8.399999618530273,
+            "scale": 1
+          },
+          {
+            "x": 15.399999618530273,
+            "y": 1.399999976158142,
+            "z": 7.699999809265137,
+            "scale": 1
+          },
+          {
+            "x": 22.399999618530273,
+            "y": 1.399999976158142,
+            "z": 9.800000190734863,
+            "scale": 1
+          }
+        ],
+        "PlaneGeometry": [
+          {
+            "x": 7.699999809265137,
+            "y": 0.5,
+            "z": 8.399999618530273,
+            "scale": 0.9999999982477368
+          },
+          {
+            "x": 15.399999618530273,
+            "y": 0.5,
+            "z": 7.699999809265137,
+            "scale": 0.9999999753887924
+          },
+          {
+            "x": 22.399999618530273,
+            "y": 0.5,
+            "z": 9.800000190734863,
+            "scale": 0.9999999778684439
+          }
+        ],
+        "RingGeometry": [
+          {
+            "x": 7.699999809265137,
+            "y": 0.04500000178813934,
+            "z": 8.399999618530273,
+            "scale": 2.243312120437622
+          },
+          {
+            "x": 15.399999618530273,
+            "y": 0.04500000178813934,
+            "z": 7.699999809265137,
+            "scale": 2.243312120437622
+          },
+          {
+            "x": 22.399999618530273,
+            "y": 0.04500000178813934,
+            "z": 9.800000190734863,
+            "scale": 2.243312120437622
+          }
+        ]
+      },
+      "timing": [
+        {
+          "kind": "final",
+          "elapsed": 0,
+          "step": 0,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": null,
+          "current": 0,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 18,
+          "step": 18,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0,
+          "current": 0.0135,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2338,
+          "step": 2320,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.0135,
+          "current": 1.7532000000178813,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2409,
+          "step": 71,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.7532000000178813,
+          "current": 1.806375,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2459,
+          "step": 50,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.806375,
+          "current": 1.843875,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2498,
+          "step": 40,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.843875,
+          "current": 1.8738000000715256,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2525,
+          "step": 27,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.8738000000715256,
+          "current": 1.8939750000536442,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2541,
+          "step": 16,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.8939750000536442,
+          "current": 1.9056750000715257,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2615,
+          "step": 74,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.9056750000715257,
+          "current": 1.9614750000536443,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2654,
+          "step": 38,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.9614750000536443,
+          "current": 1.990125,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2698,
+          "step": 44,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.990125,
+          "current": 2.023125,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2716,
+          "step": 19,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.023125,
+          "current": 2.037150000035763,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2735,
+          "step": 19,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.037150000035763,
+          "current": 2.0511750000715256,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2751,
+          "step": 16,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.0511750000715256,
+          "current": 2.063475000053644,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2788,
+          "step": 36,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.063475000053644,
+          "current": 2.0907000000178813,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2820,
+          "step": 32,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.0907000000178813,
+          "current": 2.1147000000178813,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2833,
+          "step": 14,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.1147000000178813,
+          "current": 2.124825000017881,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2879,
+          "step": 46,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.124825000017881,
+          "current": 2.159325000017881,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2934,
+          "step": 55,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.159325000017881,
+          "current": 2.2002000000178814,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2961,
+          "step": 27,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.2002000000178814,
+          "current": 2.2206750000715254,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2983,
+          "step": 22,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.2206750000715254,
+          "current": 2.2369500000178815,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3045,
+          "step": 63,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.2369500000178815,
+          "current": 2.2838250000178815,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3059,
+          "step": 13,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.2838250000178815,
+          "current": 2.293875,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3086,
+          "step": 27,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.293875,
+          "current": 2.314275000035763,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3119,
+          "step": 34,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.314275000035763,
+          "current": 2.339400000035763,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3229,
+          "step": 110,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.339400000035763,
+          "current": 2.4216750000715255,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3282,
+          "step": 53,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.4216750000715255,
+          "current": 2.4612000000178815,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3304,
+          "step": 23,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.4612000000178815,
+          "current": 2.478150000035763,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3315,
+          "step": 11,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.478150000035763,
+          "current": 2.486100000053644,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3331,
+          "step": 16,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.486100000053644,
+          "current": 2.4984000000357627,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3350,
+          "step": 19,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.4984000000357627,
+          "current": 2.5127250000536443,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3380,
+          "step": 30,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.5127250000536443,
+          "current": 2.5351500000357627,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3395,
+          "step": 15,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.5351500000357627,
+          "current": 2.5465500000715258,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3414,
+          "step": 19,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.5465500000715258,
+          "current": 2.5605,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3429,
+          "step": 15,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.5605,
+          "current": 2.5714500000178813,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3449,
+          "step": 20,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.5714500000178813,
+          "current": 2.5864500000178814,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3485,
+          "step": 37,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.5864500000178814,
+          "current": 2.6139000000357626,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3516,
+          "step": 31,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.6139000000357626,
+          "current": 2.6369250000715256,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3529,
+          "step": 13,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.6369250000715256,
+          "current": 2.646600000053644,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3545,
+          "step": 16,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.646600000053644,
+          "current": 2.658600000053644,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3559,
+          "step": 15,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.658600000053644,
+          "current": 2.669475000053644,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3584,
+          "step": 25,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.669475000053644,
+          "current": 2.6882250000536443,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3608,
+          "step": 24,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.6882250000536443,
+          "current": 2.706150000035763,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3626,
+          "step": 18,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.706150000035763,
+          "current": 2.719725000053644,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3643,
+          "step": 17,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.719725000053644,
+          "current": 2.7321750000715257,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3657,
+          "step": 14,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.7321750000715257,
+          "current": 2.74275,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3682,
+          "step": 25,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.74275,
+          "current": 2.7615,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3707,
+          "step": 25,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.7615,
+          "current": 2.779950000017881,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3735,
+          "step": 28,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.779950000017881,
+          "current": 2.8010250000357626,
+          "hit": 2.783,
+          "strength": 0.8712499997445523,
+          "shots": 1
+        },
+        {
+          "kind": "final",
+          "elapsed": 3845,
+          "step": 110,
+          "stage": "replay",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.8010250000357626,
+          "current": 2.883375,
+          "hit": 2.783,
+          "strength": 0.2830357142857136,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3973,
+          "step": 128,
+          "stage": "cut",
+          "life": 2,
+          "alive": true,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.883375,
+          "hit": 2.783
+        }
+      ],
+      "draws": [
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 2204,
+          "linked": 15,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 4,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 7,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 6,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 6,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 8,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 4,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 7,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 6,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 3,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 8,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 3,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 8,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 5,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 5,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 4,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 9,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 5,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 4,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 4,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 5,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 10,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 16,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 14,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 16,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 6,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 3,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 6,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 6,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 9,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 3,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 6,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 3,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 8,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 3,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 4,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 7,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 3,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 4,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 5,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 7,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 3,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 3,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 7,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 3,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 3,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 4,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 8,
+          "linked": 0,
+          "programs": 108
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 70,
+          "linked": 2,
+          "programs": 110
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 12,
+          "linked": 0,
+          "programs": 110
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 1,
+          "linked": 0,
+          "programs": 110
+        }
+      ]
+    },
+    {
+      "audio": [
+        {
+          "title": "ELIMINATION REPLAY",
+          "weapon": "sniper",
+          "actor": "analysts-0",
+          "at": 2.733,
+          "volume": 0.55,
+          "duration": 1.6
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "weapon": "sniper",
+          "actor": "analysts-0",
+          "at": 2.783,
+          "volume": 0.55,
+          "duration": 1.6
+        }
+      ],
+      "marker": [
+        {
+          "title": "ELIMINATION REPLAY",
+          "opacity": 1,
+          "vertices": 24
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "opacity": 0.9451785715562956,
+          "vertices": 24
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "opacity": 0.3269642859697338,
+          "vertices": 24
+        }
+      ],
+      "liveHits": [],
+      "hitLabels": [],
+      "warnings": [],
+      "batches": {
+        "CylinderGeometry": [
+          {
+            "x": 7.699999809265137,
+            "y": 1.399999976158142,
+            "z": 8.399999618530273,
+            "scale": 1
+          },
+          {
+            "x": 15.399999618530273,
+            "y": 1.399999976158142,
+            "z": 7.699999809265137,
+            "scale": 1
+          },
+          {
+            "x": 22.399999618530273,
+            "y": 1.399999976158142,
+            "z": 9.800000190734863,
+            "scale": 1
+          }
+        ],
+        "PlaneGeometry": [
+          {
+            "x": 7.699999809265137,
+            "y": 0.5,
+            "z": 8.399999618530273,
+            "scale": 1.000000028905193
+          },
+          {
+            "x": 15.399999618530273,
+            "y": 0.5,
+            "z": 7.699999809265137,
+            "scale": 0.9999999825782703
+          },
+          {
+            "x": 22.399999618530273,
+            "y": 0.5,
+            "z": 9.800000190734863,
+            "scale": 1.0000000177586976
+          }
+        ],
+        "RingGeometry": [
+          {
+            "x": 7.699999809265137,
+            "y": 0.04500000178813934,
+            "z": 8.399999618530273,
+            "scale": 2.243312120437622
+          },
+          {
+            "x": 15.399999618530273,
+            "y": 0.04500000178813934,
+            "z": 7.699999809265137,
+            "scale": 2.243312120437622
+          },
+          {
+            "x": 22.399999618530273,
+            "y": 0.04500000178813934,
+            "z": 9.800000190734863,
+            "scale": 2.243312120437622
+          }
+        ]
+      },
+      "timing": [
+        {
+          "kind": "death",
+          "elapsed": 0,
+          "step": 0,
+          "stage": "card",
+          "budget": 2.9833333333333325,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 38,
+          "step": 38,
+          "stage": "card",
+          "budget": 2.93333333333333,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 96,
+          "step": 58,
+          "stage": "card",
+          "budget": 2.8833333333333275,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 104,
+          "step": 8,
+          "stage": "card",
+          "budget": 2.8833333333333275,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 170,
+          "step": 66,
+          "stage": "card",
+          "budget": 2.7833333333333226,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 180,
+          "step": 11,
+          "stage": "card",
+          "budget": 2.7833333333333226,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 186,
+          "step": 6,
+          "stage": "card",
+          "budget": 2.7833333333333226,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 203,
+          "step": 16,
+          "stage": "card",
+          "budget": 2.7833333333333226,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 219,
+          "step": 16,
+          "stage": "card",
+          "budget": 2.7166666666666526,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 236,
+          "step": 17,
+          "stage": "card",
+          "budget": 2.7166666666666526,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 253,
+          "step": 17,
+          "stage": "card",
+          "budget": 2.7166666666666526,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 272,
+          "step": 19,
+          "stage": "card",
+          "budget": 2.66666666666665,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 322,
+          "step": 50,
+          "stage": "card",
+          "budget": 2.66666666666665,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 331,
+          "step": 9,
+          "stage": "card",
+          "budget": 2.6166666666666476,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 336,
+          "step": 5,
+          "stage": "card",
+          "budget": 2.6166666666666476,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 353,
+          "step": 17,
+          "stage": "card",
+          "budget": 2.6166666666666476,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 369,
+          "step": 16,
+          "stage": "card",
+          "budget": 2.5499999999999776,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 386,
+          "step": 17,
+          "stage": "card",
+          "budget": 2.5499999999999776,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 402,
+          "step": 17,
+          "stage": "card",
+          "budget": 2.5499999999999776,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 419,
+          "step": 17,
+          "stage": "card",
+          "budget": 2.499999999999975,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 436,
+          "step": 17,
+          "stage": "card",
+          "budget": 2.499999999999975,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 452,
+          "step": 17,
+          "stage": "card",
+          "budget": 2.499999999999975,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 471,
+          "step": 18,
+          "stage": "card",
+          "budget": 2.4499999999999726,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 486,
+          "step": 15,
+          "stage": "card",
+          "budget": 2.4499999999999726,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 508,
+          "step": 22,
+          "stage": "card",
+          "budget": 2.4499999999999726,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 522,
+          "step": 14,
+          "stage": "card",
+          "budget": 2.4166666666666377,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 536,
+          "step": 14,
+          "stage": "card",
+          "budget": 2.4166666666666377,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 552,
+          "step": 16,
+          "stage": "card",
+          "budget": 2.4166666666666377,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 570,
+          "step": 18,
+          "stage": "card",
+          "budget": 2.366666666666635,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 586,
+          "step": 16,
+          "stage": "card",
+          "budget": 2.366666666666635,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 602,
+          "step": 16,
+          "stage": "card",
+          "budget": 2.366666666666635,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 619,
+          "step": 17,
+          "stage": "card",
+          "budget": 2.3166666666666327,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 636,
+          "step": 17,
+          "stage": "card",
+          "budget": 2.3166666666666327,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 654,
+          "step": 19,
+          "stage": "card",
+          "budget": 2.3166666666666327,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 670,
+          "step": 15,
+          "stage": "card",
+          "budget": 2.26666666666663,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 688,
+          "step": 19,
+          "stage": "card",
+          "budget": 2.26666666666663,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 703,
+          "step": 14,
+          "stage": "card",
+          "budget": 2.26666666666663,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 719,
+          "step": 17,
+          "stage": "card",
+          "budget": 2.2166666666666277,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 736,
+          "step": 17,
+          "stage": "card",
+          "budget": 2.2166666666666277,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 752,
+          "step": 17,
+          "stage": "card",
+          "budget": 2.2166666666666277,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 769,
+          "step": 16,
+          "stage": "card",
+          "budget": 2.166666666666625,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 786,
+          "step": 17,
+          "stage": "card",
+          "budget": 2.166666666666625,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8296666666666674,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 802,
+          "step": 17,
+          "stage": "replay",
+          "budget": 2.166666666666625,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 0.8296666666666674,
+          "prior": null,
+          "current": 0.8317666666905092,
+          "hit": 2.733,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "death",
+          "elapsed": 1988,
+          "step": 1186,
+          "stage": "replay",
+          "budget": 2.1166666666666227,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 1.5453999999761583,
+          "prior": 0.8317666666905092,
+          "current": 2.733,
+          "hit": 2.733,
+          "strength": 1,
+          "shots": 1
+        },
+        {
+          "kind": "death",
+          "elapsed": 2503,
+          "step": 516,
+          "stage": "cut",
+          "budget": 0.949999999999898,
+          "life": 2,
+          "alive": false,
+          "cardMs": 800,
+          "offset": 1.5453999999761583,
+          "prior": 2.733,
+          "hit": 2.733
+        },
+        {
+          "kind": "final",
+          "elapsed": 0,
+          "step": 0,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": null,
+          "current": 0,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 15,
+          "step": 15,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0,
+          "current": 0.01125,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 282,
+          "step": 267,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.01125,
+          "current": 0.2115,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 322,
+          "step": 40,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.2115,
+          "current": 0.2417999999821186,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 337,
+          "step": 15,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.2417999999821186,
+          "current": 0.2529000000357628,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 360,
+          "step": 23,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.2529000000357628,
+          "current": 0.27,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 372,
+          "step": 12,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.27,
+          "current": 0.27929999998211863,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 395,
+          "step": 23,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.27929999998211863,
+          "current": 0.2964000000357628,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 412,
+          "step": 17,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.2964000000357628,
+          "current": 0.30915000003576276,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 423,
+          "step": 11,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.30915000003576276,
+          "current": 0.3175499999821186,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 442,
+          "step": 18,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.3175499999821186,
+          "current": 0.33127500003576277,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 456,
+          "step": 14,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.33127500003576277,
+          "current": 0.3419249999821186,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 586,
+          "step": 131,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.3419249999821186,
+          "current": 0.4397999999821186,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 604,
+          "step": 17,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.4397999999821186,
+          "current": 0.45277500003576276,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 629,
+          "step": 25,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.45277500003576276,
+          "current": 0.4716749999821186,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 636,
+          "step": 7,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.4716749999821186,
+          "current": 0.4770750000178814,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 654,
+          "step": 18,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.4770750000178814,
+          "current": 0.4907999999821186,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 668,
+          "step": 13,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.4907999999821186,
+          "current": 0.500625,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 692,
+          "step": 24,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.500625,
+          "current": 0.5187750000357628,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 715,
+          "step": 23,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.5187750000357628,
+          "current": 0.5361749999821186,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 726,
+          "step": 11,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.5361749999821186,
+          "current": 0.5443499999642372,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 752,
+          "step": 27,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.5443499999642372,
+          "current": 0.5642999999821187,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 785,
+          "step": 32,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.5642999999821187,
+          "current": 0.5885250000357628,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 792,
+          "step": 7,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.5885250000357628,
+          "current": 0.594,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 801,
+          "step": 9,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.594,
+          "current": 0.6006749999821186,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 822,
+          "step": 21,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.6006749999821186,
+          "current": 0.6165750000178813,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 841,
+          "step": 19,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.6165750000178813,
+          "current": 0.6308250000178814,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 860,
+          "step": 18,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.6308250000178814,
+          "current": 0.644625,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 868,
+          "step": 8,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.644625,
+          "current": 0.6508499999642372,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 885,
+          "step": 17,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.6508499999642372,
+          "current": 0.6635250000357628,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 901,
+          "step": 16,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.6635250000357628,
+          "current": 0.6755999999642373,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 918,
+          "step": 17,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.6755999999642373,
+          "current": 0.6883499999642372,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 937,
+          "step": 19,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.6883499999642372,
+          "current": 0.7026749999821186,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 975,
+          "step": 38,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.7026749999821186,
+          "current": 0.7313250000178814,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1000,
+          "step": 25,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.7313250000178814,
+          "current": 0.7499249999821186,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1017,
+          "step": 17,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.7499249999821186,
+          "current": 0.7629749999642372,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1031,
+          "step": 14,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.7629749999642372,
+          "current": 0.7733250000178814,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1048,
+          "step": 17,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.7733250000178814,
+          "current": 0.7858499999642372,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1059,
+          "step": 11,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.7858499999642372,
+          "current": 0.7939500000178814,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1071,
+          "step": 12,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.7939500000178814,
+          "current": 0.8029500000178814,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1095,
+          "step": 24,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.8029500000178814,
+          "current": 0.8209500000178814,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1105,
+          "step": 10,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.8209500000178814,
+          "current": 0.8285999999642372,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1121,
+          "step": 16,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.8285999999642372,
+          "current": 0.8404500000178814,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1140,
+          "step": 19,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.8404500000178814,
+          "current": 0.8549249999821186,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1167,
+          "step": 27,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.8549249999821186,
+          "current": 0.8751749999821186,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1174,
+          "step": 7,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.8751749999821186,
+          "current": 0.880125,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1188,
+          "step": 14,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.880125,
+          "current": 0.8907000000178814,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1202,
+          "step": 14,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.8907000000178814,
+          "current": 0.901125,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1218,
+          "step": 17,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.901125,
+          "current": 0.9137999999821186,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1235,
+          "step": 16,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.9137999999821186,
+          "current": 0.9259500000178814,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1251,
+          "step": 16,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.9259500000178814,
+          "current": 0.9381749999821186,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1268,
+          "step": 17,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.9381749999821186,
+          "current": 0.9508499999642372,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1288,
+          "step": 20,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.9508499999642372,
+          "current": 0.965625,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1304,
+          "step": 16,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.965625,
+          "current": 0.9777000000178814,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1318,
+          "step": 14,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.9777000000178814,
+          "current": 0.9883499999642372,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1340,
+          "step": 23,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 0.9883499999642372,
+          "current": 1.0052999999821186,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1351,
+          "step": 11,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.0052999999821186,
+          "current": 1.01325,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1368,
+          "step": 17,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.01325,
+          "current": 1.0260750000178813,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1384,
+          "step": 16,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.0260750000178813,
+          "current": 1.0380750000178813,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1402,
+          "step": 18,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.0380750000178813,
+          "current": 1.0513499999642373,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1426,
+          "step": 24,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.0513499999642373,
+          "current": 1.0693499999642373,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1437,
+          "step": 11,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.0693499999642373,
+          "current": 1.0775999999642372,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1452,
+          "step": 15,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.0775999999642372,
+          "current": 1.088625,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1468,
+          "step": 17,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.088625,
+          "current": 1.1010750000178815,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1485,
+          "step": 17,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.1010750000178815,
+          "current": 1.1135999999642372,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1501,
+          "step": 17,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.1135999999642372,
+          "current": 1.1260499999821185,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1525,
+          "step": 23,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.1260499999821185,
+          "current": 1.143375,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1539,
+          "step": 14,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.143375,
+          "current": 1.153875,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1551,
+          "step": 13,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.153875,
+          "current": 1.1633250000178814,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1568,
+          "step": 17,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.1633250000178814,
+          "current": 1.1760750000178815,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1586,
+          "step": 18,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.1760750000178815,
+          "current": 1.1892000000178813,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1601,
+          "step": 16,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.1892000000178813,
+          "current": 1.2009749999642372,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1618,
+          "step": 17,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.2009749999642372,
+          "current": 1.2134249999821185,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1634,
+          "step": 16,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.2134249999821185,
+          "current": 1.2257249999642372,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1651,
+          "step": 17,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.2257249999642372,
+          "current": 1.2383250000178814,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1668,
+          "step": 17,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.2383250000178814,
+          "current": 1.2509249999821186,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1685,
+          "step": 17,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.2509249999821186,
+          "current": 1.2635250000357627,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1714,
+          "step": 29,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.2635250000357627,
+          "current": 1.285125,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1723,
+          "step": 9,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.285125,
+          "current": 1.2919500000178814,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1735,
+          "step": 12,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.2919500000178814,
+          "current": 1.3009500000178813,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1751,
+          "step": 17,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.3009500000178813,
+          "current": 1.3133250000178813,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1771,
+          "step": 20,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.3133250000178813,
+          "current": 1.3280250000357627,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1785,
+          "step": 14,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.3280250000357627,
+          "current": 1.3388250000178814,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1802,
+          "step": 17,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.3388250000178814,
+          "current": 1.3512000000178814,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1818,
+          "step": 17,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.3512000000178814,
+          "current": 1.3637999999821186,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1834,
+          "step": 16,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.3637999999821186,
+          "current": 1.3757249999642371,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1851,
+          "step": 17,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.3757249999642371,
+          "current": 1.3884000000357628,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1869,
+          "step": 18,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.3884000000357628,
+          "current": 1.4015250000357629,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1892,
+          "step": 23,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.4015250000357629,
+          "current": 1.4187000000178813,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1901,
+          "step": 9,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.4187000000178813,
+          "current": 1.4255999999642373,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1918,
+          "step": 17,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.4255999999642373,
+          "current": 1.4383499999642373,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1935,
+          "step": 17,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.4383499999642373,
+          "current": 1.4510250000357627,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1951,
+          "step": 17,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.4510250000357627,
+          "current": 1.4634000000357628,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1968,
+          "step": 17,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.4634000000357628,
+          "current": 1.4758499999642372,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 1985,
+          "step": 17,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.4758499999642372,
+          "current": 1.4885250000357628,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2002,
+          "step": 17,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.4885250000357628,
+          "current": 1.501125,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2018,
+          "step": 17,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.501125,
+          "current": 1.5135,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2035,
+          "step": 17,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.5135,
+          "current": 1.525875,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2052,
+          "step": 17,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.525875,
+          "current": 1.538849999964237,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2075,
+          "step": 23,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.538849999964237,
+          "current": 1.5563250000178814,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2085,
+          "step": 9,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.5563250000178814,
+          "current": 1.563375,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2101,
+          "step": 17,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.563375,
+          "current": 1.5758250000178813,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2118,
+          "step": 17,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.5758250000178813,
+          "current": 1.5885750000178813,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2135,
+          "step": 17,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.5885750000178813,
+          "current": 1.6010250000357629,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2152,
+          "step": 17,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.6010250000357629,
+          "current": 1.6139249999821186,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2168,
+          "step": 16,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.6139249999821186,
+          "current": 1.6258499999642373,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2185,
+          "step": 17,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.6258499999642373,
+          "current": 1.6386749999821186,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2202,
+          "step": 17,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.6386749999821186,
+          "current": 1.6512000000178815,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2221,
+          "step": 19,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.6512000000178815,
+          "current": 1.6656749999821185,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2237,
+          "step": 16,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.6656749999821185,
+          "current": 1.6775999999642373,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2267,
+          "step": 30,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.6775999999642373,
+          "current": 1.70025,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2299,
+          "step": 32,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.70025,
+          "current": 1.7240250000357629,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2321,
+          "step": 22,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.7240250000357629,
+          "current": 1.7405250000357628,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2335,
+          "step": 14,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.7405250000357628,
+          "current": 1.7510999999642372,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2353,
+          "step": 18,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.7510999999642372,
+          "current": 1.7645999999642372,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2371,
+          "step": 18,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.7645999999642372,
+          "current": 1.7781749999821186,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2396,
+          "step": 25,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.7781749999821186,
+          "current": 1.7971500000357628,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2422,
+          "step": 25,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.7971500000357628,
+          "current": 1.816125,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2476,
+          "step": 54,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.816125,
+          "current": 1.856625,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2503,
+          "step": 28,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.856625,
+          "current": 1.87725,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2514,
+          "step": 11,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.87725,
+          "current": 1.8855,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2536,
+          "step": 22,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.8855,
+          "current": 1.9021500000357627,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2553,
+          "step": 17,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.9021500000357627,
+          "current": 1.9149749999642371,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2573,
+          "step": 20,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.9149749999642371,
+          "current": 1.929900000035763,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2605,
+          "step": 32,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.929900000035763,
+          "current": 1.9535250000357627,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2627,
+          "step": 22,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.9535250000357627,
+          "current": 1.9700999999642372,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2644,
+          "step": 17,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.9700999999642372,
+          "current": 1.9827750000357627,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2701,
+          "step": 58,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 1.9827750000357627,
+          "current": 2.0260499999821184,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2729,
+          "step": 27,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.0260499999821184,
+          "current": 2.0465999999642372,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2776,
+          "step": 47,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.0465999999642372,
+          "current": 2.081775000035763,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2796,
+          "step": 20,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.081775000035763,
+          "current": 2.0970750000178815,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2822,
+          "step": 26,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.0970750000178815,
+          "current": 2.1167999999821188,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 2878,
+          "step": 56,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.1167999999821188,
+          "current": 2.1584249999821186,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3023,
+          "step": 145,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.1584249999821186,
+          "current": 2.266875,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3112,
+          "step": 90,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.266875,
+          "current": 2.3341500000357627,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3176,
+          "step": 64,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.3341500000357627,
+          "current": 2.3819249999821186,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3202,
+          "step": 26,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.3819249999821186,
+          "current": 2.4013499999642374,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3222,
+          "step": 20,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.4013499999642374,
+          "current": 2.4162750000357627,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3291,
+          "step": 69,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.4162750000357627,
+          "current": 2.467875,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3310,
+          "step": 19,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.467875,
+          "current": 2.4824249999821184,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3325,
+          "step": 15,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.4824249999821184,
+          "current": 2.493375,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3345,
+          "step": 20,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.493375,
+          "current": 2.5085250000357626,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3379,
+          "step": 34,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.5085250000357626,
+          "current": 2.534325000017881,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3401,
+          "step": 22,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.534325000017881,
+          "current": 2.55075,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3419,
+          "step": 18,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.55075,
+          "current": 2.5641749999821184,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3437,
+          "step": 19,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.5641749999821184,
+          "current": 2.5780499999821185,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3451,
+          "step": 14,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.5780499999821185,
+          "current": 2.5881749999821184,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3497,
+          "step": 46,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.5881749999821184,
+          "current": 2.6229749999642373,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3511,
+          "step": 14,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.6229749999642373,
+          "current": 2.633174999982119,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3522,
+          "step": 11,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.633174999982119,
+          "current": 2.641125,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3535,
+          "step": 14,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.641125,
+          "current": 2.651474999964237,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3551,
+          "step": 16,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.651474999964237,
+          "current": 2.6631749999821186,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3568,
+          "step": 17,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.6631749999821186,
+          "current": 2.675625,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3593,
+          "step": 26,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.675625,
+          "current": 2.6950499999821185,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3606,
+          "step": 12,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.6950499999821185,
+          "current": 2.704275000035763,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3619,
+          "step": 14,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.704275000035763,
+          "current": 2.7145499999821188,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3638,
+          "step": 18,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.7145499999821188,
+          "current": 2.7282000000178814,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3651,
+          "step": 13,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.7282000000178814,
+          "current": 2.73825,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3682,
+          "step": 31,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.73825,
+          "current": 2.7617249999642373,
+          "hit": 2.783,
+          "strength": 0,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 3721,
+          "step": 39,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.7617249999642373,
+          "current": 2.7906749999821185,
+          "hit": 2.783,
+          "strength": 0.9451785715562956,
+          "shots": 1
+        },
+        {
+          "kind": "final",
+          "elapsed": 3836,
+          "step": 115,
+          "stage": "replay",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.7906749999821185,
+          "current": 2.877224999964237,
+          "hit": 2.783,
+          "strength": 0.3269642859697338,
+          "shots": 0
+        },
+        {
+          "kind": "final",
+          "elapsed": 4039,
+          "step": 202,
+          "stage": "cut",
+          "budget": 3,
+          "life": 3,
+          "alive": false,
+          "cardMs": 0,
+          "offset": 0,
+          "prior": 2.877224999964237,
+          "hit": 2.783
+        }
+      ],
+      "draws": [
+        {
+          "title": "ELIMINATION REPLAY",
+          "pass": "scene",
+          "duration": 1101,
+          "linked": 10,
+          "programs": 75
+        },
+        {
+          "title": "ELIMINATION REPLAY",
+          "pass": "scene",
+          "duration": 439,
+          "linked": 6,
+          "programs": 81
+        },
+        {
+          "title": "ELIMINATION REPLAY",
+          "pass": "scene",
+          "duration": 32,
+          "linked": 2,
+          "programs": 83
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 150,
+          "linked": 6,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 12,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 6,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 2,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 6,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 11,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 9,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 5,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 5,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 9,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 21,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 10,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 3,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 4,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 5,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 5,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 3,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 6,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 6,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 4,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 4,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 3,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 4,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 3,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 9,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 3,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 4,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 5,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 5,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 9,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 5,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 9,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 5,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 7,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 8,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 8,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 7,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 8,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 2,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 6,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 8,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 7,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 8,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 3,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 3,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 4,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 5,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 4,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 4,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 3,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 3,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 7,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 3,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 4,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 4,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 4,
+          "linked": 0,
+          "programs": 81
+        },
+        {
+          "title": "FINAL ELIMINATION",
+          "pass": "scene",
+          "duration": 4,
+          "linked": 0,
+          "programs": 81
+        }
+      ]
+    }
+  ],
+  "passed": true,
+  "pageErrors": []
+}

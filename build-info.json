@@ -1166,8 +1166,8 @@
     },
     {
       "path": "fps/focus-hud.css",
-      "bytes": 18004,
-      "sha256": "5e3230f8b82eaf102d2306c059a8d1c42809ce5026faede32b5edf4338e33780"
+      "bytes": 18232,
+      "sha256": "3903bef280f0a401fea358477129c240292e9cab7c0acab47447b230b95358a5"
     },
     {
       "path": "fps/hud.css",
@@ -1186,8 +1186,8 @@
     },
     {
       "path": "fps/index.html",
-      "bytes": 22086,
-      "sha256": "fda5d330e7dfcaf924db8920b4bd03d32184d8a78cd7271804b02918c0c255a6"
+      "bytes": 22123,
+      "sha256": "d1c4bba2c96b757e1b19646706267deaad707f52762b8d8b9ec2233bca873eed"
     },
     {
       "path": "fps/lobby.css",
@@ -2522,7 +2522,7 @@
     {
       "path": "shared/multiplayer/build.mjs",
       "bytes": 660,
-      "sha256": "3ee4da8d62da8909ad0f4e18e7a6589c3806e3da1cd5b4b98e19fb246d0e2923"
+      "sha256": "f3657e9cf82e1c8e400bfc1d1f7cc9039e766251b79e32eec7091f996b4fcd73"
     },
     {
       "path": "shared/multiplayer/collision-contract.mjs",
@@ -2542,7 +2542,7 @@
     {
       "path": "shared/multiplayer/map-build.mjs",
       "bytes": 2831,
-      "sha256": "eea9c3fd3973dc0b21c114f5da2b9f6fde9c52ca88c5742340deb59c555f108e"
+      "sha256": "4a1a30fe4cabdc4b707269af2d7950960ca5d1520653b023582b4a515cd91c34"
     },
     {
       "path": "shared/multiplayer/maps.mjs",
@@ -2616,8 +2616,8 @@
     },
     {
       "path": "src/fps/app.mjs",
-      "bytes": 75243,
-      "sha256": "8de9f07691a8510e1b01888337082676920095ff8ff9f931f37efa576231ca47"
+      "bytes": 75613,
+      "sha256": "bdddf2780a7a03e1acd0aadd7fc804d554f92549c4dda4bbe60cb7db502aecd5"
     },
     {
       "path": "src/fps/arsenal-menu.mjs",
@@ -3016,8 +3016,8 @@
     },
     {
       "path": "src/fps/network/room-ui.mjs",
-      "bytes": 21672,
-      "sha256": "f6c60912686ff1567c85af3ad7d62cbb198159c3f97a0c631742af3920df0df6"
+      "bytes": 21760,
+      "sha256": "457822afccac7aebe7e30a3532fa0641f0bf9d107c84309340c9cec5a0bfe21f"
     },
     {
       "path": "src/fps/network/session.mjs",
@@ -3151,8 +3151,8 @@
     },
     {
       "path": "src/fps/render.mjs",
-      "bytes": 35449,
-      "sha256": "b4b1f5d978298ca54656693a6b386212c5e3c52fb1bbc8ac1bac90de589dbb8c"
+      "bytes": 35788,
+      "sha256": "ab566c356d66979570594d23a2ee0137d1484a4afd8580fa307f311c2a8b0bff"
     },
     {
       "path": "src/fps/replay-playback.mjs",
@@ -3161,8 +3161,8 @@
     },
     {
       "path": "src/fps/replay-render.mjs",
-      "bytes": 6196,
-      "sha256": "4db168be72337e4b48b1842b61eff92fdf082afdb6e3dfa0768d0765d38d8da1"
+      "bytes": 7257,
+      "sha256": "0ecec4348439f879a40c772420cb1ec35d78c1e11ed4ce36bd1248a18fd3b0f8"
     },
     {
       "path": "src/fps/riposte-audio.mjs",
@@ -3640,7 +3640,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 82007640,
+  "bytes": 82009763,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

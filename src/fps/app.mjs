@@ -576,13 +576,14 @@ function timer(value){const sec=Math.max(0,Math.ceil(value));return `${Math.floo
 function scoreboard(){
  const mode=game.state.mode,individual=mode==='ffa',rankedMode=individual||mode==='dom';
  setText('board-round',rankedMode?MODE_NAMES[mode].toUpperCase():networkSession?(isEndless(game)?'TEAM DEATHMATCH · 5v5':'CLASSIC · ROUND '+game.state.round):isEndless(game)?'ENDLESS · ELIMINATIONS':'ROUND '+game.state.round);
+ setText('board-help',individual?'Hold Tab · Ranked by eliminations, fewest deaths, then points':mode==='dom'?'Hold Tab · Capture and hold zones to score for your team':'Hold Tab · Hostages are listed separately from the teams');
  const key=JSON.stringify([mode,!!networkSession,game.state.score,game.actors.map(a=>[a.id,a.name,a.team,a.isPlayer,a.controllerType,a.alive,a.connected,a.kills,a.deaths,a.combat?.points??a.points,a.money])]);
  if(htmlCache.get('score-tables')===key)return;htmlCache.set('score-tables',key);
  const root=$('score-tables');root.replaceChildren();
  for(const [id,name] of (individual?[[null,'Individual standings']]:Object.entries(TEAMS))){
   const title=document.createElement('h3');title.className=id==='counterAnalysts'?'counter':'';title.textContent=name;const score=document.createElement('span');score.style.float='right';score.textContent=id?game.state.score[id]:'';title.append(score);root.append(title);
-  const table=document.createElement('table');table.innerHTML=`<thead><tr><th>PLAYER</th><th>K</th><th>D</th>${rankedMode||networkSession&&isEndless(game)?'':'<th>CREDITS</th>'}<th>STATUS</th></tr></thead>`;const body=document.createElement('tbody');
-  for(const a of rankPlayers(individual?game.actors:game.actors.filter(a=>a.team===id))){const row=document.createElement('tr');row.className=(a.isPlayer?'me ':'')+(!a.alive?'dead':'');for(const value of [a.name+(a.isPlayer?' · you':a.controllerType==='human'?'':' · bot'),a.kills,a.deaths,...(rankedMode||networkSession&&isEndless(game)?[]:[a.money]),networkSession&&a.connected===false?'Reconnecting':a.alive?'In play':'Eliminated']){const td=document.createElement('td');td.textContent=String(value);row.append(td);}body.append(row);}table.append(body);root.append(table);
+  const table=document.createElement('table');table.innerHTML=`<thead><tr><th>PLAYER</th><th>K</th><th>D</th>${rankedMode?'<th>POINTS</th>':''}${rankedMode||networkSession&&isEndless(game)?'':'<th>CREDITS</th>'}<th>STATUS</th></tr></thead>`;const body=document.createElement('tbody');
+  for(const a of rankPlayers(individual?game.actors:game.actors.filter(a=>a.team===id))){const row=document.createElement('tr');row.className=(a.isPlayer?'me ':'')+(!a.alive?'dead':'');for(const value of [a.name+(a.isPlayer?(a.name==='You'?'':' · you'):a.controllerType==='human'?'':' · bot'),a.kills,a.deaths,...(rankedMode?[a.combat?.points??a.points??0]:[]),...(rankedMode||networkSession&&isEndless(game)?[]:[a.money]),networkSession&&a.connected===false?'Reconnecting':a.alive?'In play':'Eliminated']){const td=document.createElement('td');td.textContent=String(value);row.append(td);}body.append(row);}table.append(body);root.append(table);
  }
 }
 function minimap(){
@@ -649,6 +650,7 @@ function updateHud(){bonusHud.update(game, !!modal || radioOpen || teamRadioOpen
  setText('score-name-a',individual?'YOU':'ANALYSTS');setText('score-name-ca',individual?'LEADER':'COUNTER ANALYSTS');
  const zones=$('zone-control');zones.hidden=!domination||!!modal||s.phase!=='active'||!p.alive;
  if(!zones.hidden){
+   $('objectives').hidden=true;
    const labels=(s.zones||[]).map(z=>[z.id,zoneCaption(z,p.team),Math.min(100,Math.round(Math.abs(z.progress)*100))]);
    const key=JSON.stringify(labels);
    if(zones.dataset.state!==key){

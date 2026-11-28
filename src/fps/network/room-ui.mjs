@@ -41,10 +41,12 @@ export function roomUi({leave,resume,activate}){
   #online-room .room-controls select:disabled{opacity:1;color:#edf2e8;background:#182625;border-color:#52716d}
   #online-room .room-controls .room-wide{grid-column:1/-1}
   #online-room .room-settings p{margin:8px 0 0;font-size:13px;line-height:1.35}
-  #online-room[data-phase=results] :is(.room-settings,.room-options,#room-rules,.room-map-card,#room-identity,#room-help){display:none}
+  #online-room[data-phase=results] :is(#room-rules,.room-map-card,#room-identity,#room-help){display:none}
   #online-room[data-phase=results] .room-card{display:flex;flex-direction:column}
   #online-room[data-phase=results] .room-header{display:contents}
   #online-room[data-phase=results] .room-header .room-actions{order:3}
+  #online-room[data-phase=results] .room-settings{order:4}
+  #online-room[data-phase=results] .room-options{order:5}
   #online-room[data-phase=results] #room-title{margin:0 0 6px}
   #online-room[data-phase=results] :is(#room-earned,#room-result-summary){margin:4px 0 8px}
   #online-room[data-phase=results] #room-notice:empty{display:none}

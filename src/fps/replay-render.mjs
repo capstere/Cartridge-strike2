@@ -5,19 +5,36 @@ import {makeWeapon,animateWeapon,releaseWeaponFittings} from './models.mjs?v=6.1
 import {outfitDefinition} from './operator-outfits.mjs';
 
 const stages=new WeakMap();
+// Use the admitted map and weapon lighting variants. Only copy authored light
+// values: a live effect light can contain another player's most recent position.
+export function replayLighting(source,{effectPoint=false}={}){
+  const scene=new T.Scene();
+  scene.environment=source.environment;scene.environmentIntensity=source.environmentIntensity;
+  scene.environmentRotation.copy(source.environmentRotation);scene.fog=source.fog;
+  scene.background=source.background;scene.backgroundIntensity=source.backgroundIntensity;
+  scene.backgroundRotation.copy(source.backgroundRotation);scene.backgroundBlurriness=source.backgroundBlurriness;
+  for(const light of source.children){
+    let copy;
+    if(light.isHemisphereLight)copy=new T.HemisphereLight(light.color,light.groundColor,light.intensity);
+    else if(light.isDirectionalLight){
+      copy=new T.DirectionalLight(light.color,light.intensity);
+      copy.target.position.copy(light.target.position);scene.add(copy.target);
+    }else if(light.isAmbientLight)copy=new T.AmbientLight(light.color,light.intensity);
+    else continue;
+    copy.position.copy(light.position);copy.layers.mask=light.layers.mask;scene.add(copy);
+  }
+  if(effectPoint)scene.add(new T.PointLight(0xffffff,0));
+  return scene;
+}
 function build(renderer,frame){
-  const scene=new T.Scene(),target=new T.Group(),weaponSocket=new T.Group(),camera=renderer.camera.clone(false);
+  const scene=replayLighting(renderer.scene,{effectPoint:Boolean(renderer.actionVisuals?.light)}),target=new T.Group(),weaponSocket=new T.Group(),camera=renderer.camera.clone(false);
   const avatar=createAuthoredAvatar(frame.victimTeam,frame.victimId,false,{
     ignoreOverrides:true,previewOutfit:outfitDefinition(frame.victimOutfit)});
   const rig=new T.Group();
   rig.add(avatar.holder,weaponSocket);target.add(rig);
   Object.assign(target.userData,{avatar,frame:rig,weaponSocket,marker:new T.Object3D()});
-  const view=new T.Scene(),viewCamera=renderer.viewCamera.clone(false);
-  const gunLight=new T.DirectionalLight(0xffe7c8,2.1);gunLight.position.set(-1,2,1);
-  view.add(new T.HemisphereLight(0xe2eff7,0x6c665b,1.45),gunLight);
-  scene.add(new T.HemisphereLight(0xd6e5ee,0x899298,1.35),target);
-  scene.environment=renderer.scene.environment;view.environment=renderer.viewScene.environment;
-  scene.fog=renderer.scene.fog;scene.background=renderer.scene.background;
+  const view=replayLighting(renderer.viewScene),viewCamera=renderer.viewCamera.clone(false);
+  scene.name='historical-map';view.name='historical-view';scene.add(target);
   // Borrow immutable map roots without reparenting them or traversing the live
   // scene for actors. Project batches update their own camera-dependent bounds.
   const roots=[renderer.referenceScene?.root,renderer.projectFurniture,renderer.detailScene?.root,
@@ -41,7 +58,7 @@ function equip(object,old,id,viewmodel,cache){
   if(!viewmodel)weapon.scale.setScalar(.85);
   object.add(weapon);return weapon;
 }
-function hitMarker(){
+export function createReplayHitMarker(){
   // Four small screen-space strokes leave the scope centre unobstructed.
   const vertices=[];
   for(const [dx,dy] of [[1,1],[-1,1],[1,-1],[-1,-1]]){
@@ -52,15 +69,14 @@ function hitMarker(){
   const geometry=new T.BufferGeometry();
   geometry.setAttribute('position',new T.Float32BufferAttribute(vertices,3));
   const material=new T.MeshBasicMaterial({color:0xf8ad8c,transparent:true,depthTest:false,depthWrite:false,side:T.DoubleSide,toneMapped:false});
-  const scene=new T.Scene(),camera=new T.OrthographicCamera(-1,1,1,-1,0,2);
-  camera.position.z=1;scene.add(new T.Mesh(geometry,material));
+  const scene=new T.Scene(),camera=new T.OrthographicCamera(-16,16,16,-16,0,2);
+  scene.name='historical-hit';camera.position.z=1;camera.updateMatrixWorld();scene.add(new T.Mesh(geometry,material));
   return {scene,camera,geometry,material};
 }
 export function disposeReplayRender(renderer){
   const s=stages.get(renderer);
   if(!s)return;
   releaseWeaponFittings(s.target.userData.weaponModel);releaseWeaponFittings(s.gun);s.gun?.removeFromParent();
-  s.hit?.geometry.dispose();s.hit?.material.dispose();
   disposeAvatar(s.target.userData.avatar);stages.delete(renderer);
 }
 /** Draw the two recorded participants. All live actor, objective, projectile,
@@ -96,7 +112,7 @@ export function drawReplay(renderer,frame){
       gpu.autoClear=false;gpu.clearDepth();renderer.nativeRender(s.view,viewCamera);
     }
     if(frame.hitStrength>0){
-      const hit=s.hit??=hitMarker(),width=gpu.domElement.clientWidth,height=gpu.domElement.clientHeight;
+      const hit=renderer.replayHitMarker,width=gpu.domElement.clientWidth,height=gpu.domElement.clientHeight;
       Object.assign(hit.camera,{left:-width/2,right:width/2,top:height/2,bottom:-height/2});
       hit.camera.updateProjectionMatrix();hit.material.opacity=frame.hitStrength;
       gpu.autoClear=false;renderer.nativeRender(hit.scene,hit.camera);
