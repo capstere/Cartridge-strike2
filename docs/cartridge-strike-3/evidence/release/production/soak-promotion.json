@@ -1,0 +1,121 @@
+{
+  "revision": "ea4467672af055c013380e7542be32cc1a32a27f",
+  "sourceSha256": "7e2bc9b75941f9ed63dfdeea37f3515470577424baeb1ffdabd0af8fbdd25338",
+  "contract": {
+    "protocolVersion": 22,
+    "protocolHash": "5eeffd9db724492b606bbb7607d3ab933d430fa428db326ecf82861ccd64c469",
+    "configHash": "c0d2d00526fd8f58106a6232eec122f5c8f699b5ec91ebc0643a8ac420ff21c5",
+    "buildHash": "aec199fd40e814a4df3b4ff04a49b25277aca6fd2788375a32d801bb11d1420b",
+    "tickRate": 60,
+    "patchMs": 50,
+    "mapId": "floor5-prepared",
+    "mapHash": "1dd0ec97a14f5a4cab6448e9a8f4b5da091b71a3caa63b575ef58ef1426b9ef0",
+    "collisionHash": "a5351e073a01ac95466acf4346acf9812f4265224e56712ce3e889085a42b6d9"
+  },
+  "environment": {
+    "node": "v26.13.0",
+    "platform": "linux",
+    "arch": "x64",
+    "cpu": "AMD EPYC 9V74 80-Core Processor",
+    "cores": 4
+  },
+  "hardware": "NOT RUN",
+  "transport": {
+    "configuredRttMs": 0,
+    "jitterMs": 0,
+    "loss": "NOT RUN: ordered WebSocket delay, no packet dropping"
+  },
+  "elapsedSeconds": 1800.2883296339999,
+  "sampleCount": 350,
+  "updates": 106740,
+  "joins": 20,
+  "reconnects": 30,
+  "distinctSessionIds": 30,
+  "matchIdAtEnd": 52,
+  "combatRespawns": 2717,
+  "finalClientsShots": [
+    2511,
+    2554,
+    3622,
+    3659,
+    4396,
+    4286,
+    5305,
+    5359,
+    8123,
+    5449
+  ],
+  "finalClientsHits": [
+    2361,
+    2347,
+    2060,
+    2190,
+    1745,
+    1895,
+    1720,
+    1783,
+    1267,
+    714
+  ],
+  "emptyRoomsAfterLastLeave": 0,
+  "maxObservedInput": 2,
+  "maxHistory": 64,
+  "maxClientPending": 19,
+  "serverMetrics": {
+    "invalid": 0,
+    "maxQueue": 12,
+    "coalesced": 31439,
+    "ticks": 107071,
+    "events": 192842,
+    "reconnects": 30,
+    "drops": 30,
+    "backpressure": 0
+  },
+  "wholeRunExecutionMs": {
+    "n": 106740,
+    "p50": 0.44703400001162663,
+    "p95": 1.03839399991557,
+    "p99": 1.9134940000076313,
+    "max": 6.662665999960154,
+    "above33": 0,
+    "above50": 0,
+    "above100": 0
+  },
+  "wholeRunIntervalMs": {
+    "n": 106740,
+    "p50": 16.26498300000094,
+    "p95": 17.549165999982506,
+    "p99": 32.59993200004101,
+    "max": 254.90857600001618,
+    "above33": 578,
+    "above50": 329,
+    "above100": 226
+  },
+  "eventLoopMs": {
+    "n": 171699,
+    "p50": 10.199039,
+    "p95": 11.190271,
+    "p99": 11.608063,
+    "max": 256.507903
+  },
+  "serverCpuPercentOfOneCore": 9.614826811391389,
+  "retainedHeapBytes": {
+    "firstSixPeak": 72251848,
+    "lastSixPeak": 74675464
+  },
+  "finalMemoryBytes": {
+    "rss": 269373440,
+    "heapTotal": 149778432,
+    "heapUsed": 74584232,
+    "external": 6364575,
+    "arrayBuffers": 472156
+  },
+  "perPlayerOutboundBytesPerSecond": 45163.781135286226,
+  "perPlayerInboundBytesPerSecond": 625.4275948280499,
+  "hostedArtifact": {
+    "run": 46166226749,
+    "job": 141044242471,
+    "artifactId": 15273081220,
+    "zipSHA256": "cb45eda0f316d5b552e046915a9c509f3b765c42f0d8ec7195f2f2c88e0b8fdf"
+  }
+}

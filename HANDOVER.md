@@ -1,6 +1,8 @@
 # Cartridge-Strike 3 development
 
-Current CS3 work is CS3-12 on `cs3/12-release`. Twelve packages are verified. [Content extensibility #68](https://github.com/capstere/Cartridge-strike2/pull/68) merged after thirteen successful jobs. The [lead handover](docs/cartridge-strike-3/CODEX_HANDOVER.md) lists the outstanding staging and release gates. CS2 is active on the Pi.
+Cartridge-Strike 3 is live on GitHub Pages and the existing Pi. All 13 packages are verified. [Production receipt](docs/cartridge-strike-3/evidence/release/production/README.md) · [Project status](docs/cartridge-strike-3/PROJECT_STATUS.md) · [CS2 recovery](docs/cartridge-strike-3/BACKUP_AND_ROLLBACK.md)
+
+## Earlier development checkpoints
 
 
 Jesper authorized dependency-ordered CS3 development and release after CS3-12. Preparation [PR #47](https://github.com/capstere/Cartridge-strike2/pull/47) and the private recovery and baseline package are verified. The Pi continues to serve its measured CS2 release.

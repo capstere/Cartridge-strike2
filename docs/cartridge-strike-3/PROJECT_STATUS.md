@@ -1,6 +1,6 @@
 # Persistent project status
 
-**CS3-00 through CS3-11 are verified.** Jesper authorized the complete program and gated production release. [PR #47](https://github.com/capstere/Cartridge-strike2/pull/47) merged at `5364240599164c0aee278bb0ac2a35d662c3a818` after [all eight jobs](https://github.com/capstere/Cartridge-strike2/actions/runs/45976270665) passed on `f1f363963cd082c6cc1b0f6289c3f9b616064e83`. The reviewed draft head and merge preserve the CS2 game runtime. Development and its evidence live on the integration branch `develop/cartridge-strike-3`. The Pi remains on its verified CS2 release.
+**All 13 packages are verified.** Cartridge-Strike 3 is live on GitHub Pages and the existing Raspberry Pi at protocol 22. The previous CS2 release and its recovery state are retained. [Production verification](evidence/release/production/README.md) · [Release PR #72](https://github.com/capstere/Cartridge-strike2/pull/72)
 
 | ID | State | Next action |
 | --- | --- | --- |
@@ -16,7 +16,7 @@
 | CS3-09 | VERIFIED | [Class workshop, authority and native fitted models](evidence/arsenal/README.md) and [eleven passing hosted jobs](https://github.com/capstere/Cartridge-strike2/actions/runs/46143587002). |
 | CS3-10 | VERIFIED | [Competitive gameplay and rewards](evidence/competitive/README.md), independent review and [12 passing jobs](https://github.com/capstere/Cartridge-strike2/actions/runs/46152682878). Merged at 4c83eaa7. |
 | CS3-11 | VERIFIED | [Joined content exports](content/joined-after-floor5.json), independent review and [all 13 hosted jobs](https://github.com/capstere/Cartridge-strike2/actions/runs/46157414997). Merged at 25decefc. |
-| CS3-12 | REVIEW | [Release #70](https://github.com/capstere/Cartridge-strike2/pull/70) and [measurement evidence #71](https://github.com/capstere/Cartridge-strike2/pull/71). [Exact Pi stage](evidence/release/staged-pi.json), [visual and cache results](evidence/release/visual-acceptance.md), [internet multiplayer](evidence/release/network.md), [systemd rollback](evidence/release/manager.md) and [matched shot timing](evidence/release/performance-authority.md) passed. Final hosted soak, release review, main PR and monitored activation remain. |
+| CS3-12 | VERIFIED | Two independent 30-minute runs, full hosted matrix, production Pages, real named HTTPS/WSS gameplay and retained CS2 rollback verified. [Production evidence](evidence/release/production/README.md) |
 
 ## November 28 content pipeline and Floor 5 checkpoint
 

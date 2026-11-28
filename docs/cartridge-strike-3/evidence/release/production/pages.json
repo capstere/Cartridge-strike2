@@ -1,0 +1,422 @@
+{
+  "utc": "2026-11-28T17:10:57.618180+00:00",
+  "reviewedRevision": "ea4467672af055c013380e7542be32cc1a32a27f",
+  "site": "https://capstere.github.io/Cartridge-strike2/",
+  "checks": [
+    {
+      "path": "/",
+      "freshURL": false,
+      "status": 200,
+      "sha256": "8b8f074937db55776dbf390875469c65852f33f304f55307d57e4e1eef491696",
+      "passed": true
+    },
+    {
+      "path": "fps/",
+      "freshURL": false,
+      "status": 200,
+      "sha256": "8ebdefe189ca502585ab5cae4fda4e2b402d8fec2721824faacb1bed121b8035",
+      "passed": true
+    },
+    {
+      "path": "build-info.json",
+      "freshURL": false,
+      "status": 200,
+      "sha256": "87d2f3177e22bac3b00143dc92947e972b7d08fcb80611c83742ed5a59ea239b",
+      "passed": true
+    },
+    {
+      "path": "src/fps/app.mjs",
+      "freshURL": false,
+      "status": 200,
+      "sha256": "ceb179752f9eb67d57fa087c07427c035a8b012418b6c2f36cbf423bade676d3",
+      "passed": true
+    },
+    {
+      "path": "src/fps/match-flow.mjs",
+      "freshURL": false,
+      "status": 200,
+      "sha256": "58c61f0f958688c70cb967d1ddcdea13029ab11ac61694e8c21a6da59fe2c531",
+      "passed": true
+    },
+    {
+      "path": "shared/multiplayer/build.mjs",
+      "freshURL": false,
+      "status": 200,
+      "sha256": "40f3894af2139552820f98e9a5e1b0bb0e4b91c24540821dba4975d556b3feba",
+      "passed": true
+    },
+    {
+      "path": "fps/match-loading.css",
+      "freshURL": false,
+      "status": 200,
+      "sha256": "ec4a8c6741004c589fe159dcc89d605ac0a7e2fec4ce2b4faa92bfdb02206093",
+      "passed": true
+    },
+    {
+      "path": "assets/fps/maps/meltem.webp",
+      "freshURL": false,
+      "status": 200,
+      "sha256": "b8615c919c93e004394f67afc84cfa8c48473c90348b5aebbc37ab4144daa3db",
+      "passed": true
+    },
+    {
+      "path": "credits.html",
+      "freshURL": false,
+      "status": 200,
+      "sha256": "27ff8cbe3ffa31d0925865ea9f8c0ab4c74f48ec9759817b7c42fec342ed8c87",
+      "passed": true
+    },
+    {
+      "path": "IMG_8150.PNG",
+      "freshURL": false,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "IMG_8151.PNG",
+      "freshURL": false,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "IMG_8152.PNG",
+      "freshURL": false,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "IMG_8153.PNG",
+      "freshURL": false,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "IMG_8154.PNG",
+      "freshURL": false,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "IMG_8155.PNG",
+      "freshURL": false,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "IMG_8156.PNG",
+      "freshURL": false,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "IMG_8157.PNG",
+      "freshURL": false,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "IMG_8158.PNG",
+      "freshURL": false,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "IMG_8159.PNG",
+      "freshURL": false,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "IMG_8160.PNG",
+      "freshURL": false,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "IMG_8161.PNG",
+      "freshURL": false,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "IMG_8162.PNG",
+      "freshURL": false,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "IMG_8163.PNG",
+      "freshURL": false,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "IMG_8164.PNG",
+      "freshURL": false,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "IMG_8165.PNG",
+      "freshURL": false,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "ScreenRecording_11-27-2026 09-56-51_1 2.zip",
+      "freshURL": false,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "ScreenRecording_11-27-2026 09-56-51_1 4.zip",
+      "freshURL": false,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "ScreenRecording_11-27-2026 09-56-51_1 5.zip",
+      "freshURL": false,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "ScreenRecording_11-27-2026 09-56-51_1 6.zip",
+      "freshURL": false,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "ScreenRecording_11-27-2026 09-56-51_1.zip",
+      "freshURL": false,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "frontline/source/src/99-start.js",
+      "freshURL": false,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "server/account-store.mjs",
+      "freshURL": false,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "deploy/online/manage.py",
+      "freshURL": false,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "/",
+      "freshURL": true,
+      "status": 200,
+      "sha256": "8b8f074937db55776dbf390875469c65852f33f304f55307d57e4e1eef491696",
+      "passed": true
+    },
+    {
+      "path": "fps/",
+      "freshURL": true,
+      "status": 200,
+      "sha256": "8ebdefe189ca502585ab5cae4fda4e2b402d8fec2721824faacb1bed121b8035",
+      "passed": true
+    },
+    {
+      "path": "build-info.json",
+      "freshURL": true,
+      "status": 200,
+      "sha256": "87d2f3177e22bac3b00143dc92947e972b7d08fcb80611c83742ed5a59ea239b",
+      "passed": true
+    },
+    {
+      "path": "src/fps/app.mjs",
+      "freshURL": true,
+      "status": 200,
+      "sha256": "ceb179752f9eb67d57fa087c07427c035a8b012418b6c2f36cbf423bade676d3",
+      "passed": true
+    },
+    {
+      "path": "src/fps/match-flow.mjs",
+      "freshURL": true,
+      "status": 200,
+      "sha256": "58c61f0f958688c70cb967d1ddcdea13029ab11ac61694e8c21a6da59fe2c531",
+      "passed": true
+    },
+    {
+      "path": "shared/multiplayer/build.mjs",
+      "freshURL": true,
+      "status": 200,
+      "sha256": "40f3894af2139552820f98e9a5e1b0bb0e4b91c24540821dba4975d556b3feba",
+      "passed": true
+    },
+    {
+      "path": "fps/match-loading.css",
+      "freshURL": true,
+      "status": 200,
+      "sha256": "ec4a8c6741004c589fe159dcc89d605ac0a7e2fec4ce2b4faa92bfdb02206093",
+      "passed": true
+    },
+    {
+      "path": "assets/fps/maps/meltem.webp",
+      "freshURL": true,
+      "status": 200,
+      "sha256": "b8615c919c93e004394f67afc84cfa8c48473c90348b5aebbc37ab4144daa3db",
+      "passed": true
+    },
+    {
+      "path": "credits.html",
+      "freshURL": true,
+      "status": 200,
+      "sha256": "27ff8cbe3ffa31d0925865ea9f8c0ab4c74f48ec9759817b7c42fec342ed8c87",
+      "passed": true
+    },
+    {
+      "path": "IMG_8150.PNG",
+      "freshURL": true,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "IMG_8151.PNG",
+      "freshURL": true,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "IMG_8152.PNG",
+      "freshURL": true,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "IMG_8153.PNG",
+      "freshURL": true,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "IMG_8154.PNG",
+      "freshURL": true,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "IMG_8155.PNG",
+      "freshURL": true,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "IMG_8156.PNG",
+      "freshURL": true,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "IMG_8157.PNG",
+      "freshURL": true,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "IMG_8158.PNG",
+      "freshURL": true,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "IMG_8159.PNG",
+      "freshURL": true,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "IMG_8160.PNG",
+      "freshURL": true,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "IMG_8161.PNG",
+      "freshURL": true,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "IMG_8162.PNG",
+      "freshURL": true,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "IMG_8163.PNG",
+      "freshURL": true,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "IMG_8164.PNG",
+      "freshURL": true,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "IMG_8165.PNG",
+      "freshURL": true,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "ScreenRecording_11-27-2026 09-56-51_1 2.zip",
+      "freshURL": true,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "ScreenRecording_11-27-2026 09-56-51_1 4.zip",
+      "freshURL": true,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "ScreenRecording_11-27-2026 09-56-51_1 5.zip",
+      "freshURL": true,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "ScreenRecording_11-27-2026 09-56-51_1 6.zip",
+      "freshURL": true,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "ScreenRecording_11-27-2026 09-56-51_1.zip",
+      "freshURL": true,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "frontline/source/src/99-start.js",
+      "freshURL": true,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "server/account-store.mjs",
+      "freshURL": true,
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "deploy/online/manage.py",
+      "freshURL": true,
+      "status": 404,
+      "passed": true
+    }
+  ],
+  "passed": true
+}
