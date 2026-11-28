@@ -1,0 +1,70 @@
+{
+  "control-1": {
+    "outcome": "PASS",
+    "logSHA256": "5efc59be6a77632228bd69ae81cb5bd51c2fc2d54d57107c6f93c8bb446f02f2",
+    "round": 2,
+    "authorityAmmo": 20,
+    "clientsAgree": true,
+    "events": {
+      "shot": 1,
+      "switch": 2,
+      "rescued": 1,
+      "plant": 2,
+      "planted": 1,
+      "defuse": 1,
+      "reload": 1
+    }
+  },
+  "review-1": {
+    "outcome": "PASS",
+    "logSHA256": "455c3f568f48347e9145efe81b0065db3dcc6c7d4fd9982286e70a9a41fd25ce",
+    "round": 2,
+    "authorityAmmo": 20,
+    "clientsAgree": true,
+    "events": {
+      "shot": 1,
+      "switch": 2,
+      "rescued": 1,
+      "plant": 2,
+      "planted": 1,
+      "defuse": 1,
+      "reload": 1
+    }
+  },
+  "old-rotate": {
+    "outcome": "FAIL",
+    "logSHA256": "5bf8425dab6b47fbf01f3fc0c5ffe3c7432b5343791ced2cf6d28892f1f509a2"
+  },
+  "new-rotate": {
+    "outcome": "PASS",
+    "logSHA256": "7fe65fec1bb3c185b94da87c10ce5ce255f13aac29a3b24b22ec7db6d0739b32",
+    "round": 2,
+    "authorityAmmo": 20,
+    "clientsAgree": true,
+    "events": {
+      "shot": 1,
+      "switch": 2,
+      "rescued": 1,
+      "plant": 2,
+      "planted": 1,
+      "defuse": 1,
+      "reload": 1
+    }
+  },
+  "final-clean": {
+    "outcome": "FAIL",
+    "logSHA256": "12aa021960413c1f44ac0c9f5e3417d7e93c826bda2a05c123aede9314bb22cc",
+    "round": 2,
+    "authorityAmmo": 20,
+    "clientsAgree": true,
+    "events": {
+      "shot": 1,
+      "switch": 2,
+      "rescued": 1,
+      "plant": 2,
+      "planted": 1,
+      "defuse": 2,
+      "reload": 1
+    }
+  }
+}

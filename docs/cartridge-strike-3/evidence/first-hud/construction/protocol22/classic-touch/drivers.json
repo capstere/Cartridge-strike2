@@ -1,0 +1,18 @@
+[
+  {
+    "driver": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+    "viewport": [
+      820,
+      480
+    ],
+    "dpr": 0.5
+  },
+  {
+    "driver": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+    "viewport": [
+      844,
+      390
+    ],
+    "dpr": 0.5
+  }
+]
