@@ -361,7 +361,12 @@
       "exit": "Adding example content without unrelated gameplay edits. New registries reference the already exercised interfaces and include a build/allowlist closure check.",
       "status": "IN_PROGRESS",
       "branch": "cs3/11-content-pipeline",
-      "baseline": "4c83eaa7665f13fa84377670e2c93c585aca817f"
+      "baseline": "4c83eaa7665f13fa84377670e2c93c585aca817f",
+      "pullRequests": [
+        68
+      ],
+      "reviewHead": "ca7975c9c3cd915f44d3d99670655bab735bf35d",
+      "pendingRun": 46155885993
     },
     {
       "id": "CS3-12",
