@@ -122,11 +122,12 @@ try {
   await p.waitForFunction(()=>!__fps.modal&&__fps.game.player.alive);
   await phase('Checking grenade hold and release');
   result.grenadeSelection=[];
-  for(const weapon of ['smoke','flash','he']){
+  const equipHE=async()=>{for(const weapon of ['smoke','flash','he']){
     await press(p.locator('#mobile-more'));await press(p.locator('[data-mobile-action=grenade]'));
     await p.waitForFunction(id=>__fps.game.player.weapon===id,weapon,{timeout:5000});
-    result.grenadeSelection.push(weapon);
-  }
+    result.grenadeSelection.push(weapon);await phase('Selected '+weapon);
+  }};
+  await equipHE();
   const throwButton=p.getByRole('button',{name:'Throw selected grenade'});
   await p.waitForFunction(()=>{
     const f=__fps,a=f.game.player;return a.alive&&a.weapon==='he'&&f.tactical.weapon==='he'&&!a.action&&f.game.state.time>a.nextShot;
@@ -140,6 +141,10 @@ try {
   await p.waitForFunction(()=>!!__fps.game.player.cartridge?.deadline,null,{timeout:5000});
   result.grenadeHeld=await observe();assert(await throwButton.isVisible());await snap('grenade-held');
   await up(4);await p.waitForFunction(()=>!__fps.game.player.cartridge);
+  result.thrown=await p.evaluate(()=>{
+    const g=__fps.game,projectile=g.state.grenades.find(v=>v.type==='he'&&v.ownerId===g.player.id);
+    return projectile&&{vx:projectile.vx,vz:projectile.vz,deadline:projectile.deadline};
+  });assert(result.thrown&&Math.hypot(result.thrown.vx,result.thrown.vz)>0);
   result.grenadeReleased=await observe();assert(result.grenadeReleased.time>start.time&&result.grenadeReleased.frame>start.frame);
   const profileWindow=()=>p.evaluate(async()=>{
     const engine=__fps.renderer,game=__fps.game,originalDraw=engine.render,originalUpdate=game.update;
@@ -177,6 +182,28 @@ try {
   const sprinting=await observe();assert(sprinting.goldRing&&sprinting.reticleOpacity<.5);await snap('ring-rush');
   await up(1);await p.waitForFunction(()=>__fps.game.player.rushWeight<.05);
   const recovered=await observe();assert(!recovered.goldRing);result.stickThreshold={walking,sprinting,recovered};
+  await phase('Rearming through the shop for same-aspect rotation');
+  await press(p.locator('#mobile-more'));await press(p.locator('[data-mobile-action=buy]'));
+  await press(p.locator('#shop [data-item=he]'));
+  await p.waitForFunction(()=>document.querySelector('#buy-message').dataset.outcome==='accepted');
+  await press(p.locator('#return-buy'));await equipHE();
+  await p.waitForFunction(()=>{const f=__fps,a=f.game.player;return a.alive&&f.tactical.weapon==='he'&&!a.action&&f.game.state.time>a.nextShot;});
+  await down(4,await center('[data-mobile-action=fire]'));
+  await p.waitForFunction(()=>!!__fps.game.player.cartridge?.deadline,null,{timeout:5000});
+  result.sameAspect=await p.evaluate(()=>{
+    const g=__fps.game,deadline=g.player.cartridge.deadline,viewport=[innerWidth,innerHeight];
+    // Many devices rotate landscape-primary → landscape-secondary without a viewport resize.
+    window.dispatchEvent(new Event('orientationchange'));window.dispatchEvent(new Event('orientationchange'));
+    const matches=g.state.grenades.filter(v=>v.type==='he'&&v.ownerId===g.player.id&&v.deadline===deadline);
+    const dropped=matches[0];
+    return {source:'simulated OS orientation notification',viewport,modal:__fps.modal,paused:g.state.paused,
+      held:!!g.player.cartridge,manualFire:__fps.mobile.state.fire,deadline,matchingDrops:matches.length,
+      drop:dropped&&{vx:dropped.vx,vy:dropped.vy,vz:dropped.vz,deadline:dropped.deadline}};
+  });
+  const rotated=result.sameAspect;
+  assert.equal(rotated.modal,'pause');assert(rotated.paused&&!rotated.held&&!rotated.manualFire);
+  assert.equal(rotated.matchingDrops,1);assert.deepEqual(rotated.drop,{vx:0,vy:0,vz:0,deadline:rotated.deadline});
+  points.clear();await send('touchCancel');
   assert.deepEqual(errors,[]);result.errors=errors;
   if(output)await writeFile(join(output,'mobile-profile.json'),JSON.stringify(result,null,2)+'\n');
   console.log(JSON.stringify(result));await ctx.close();

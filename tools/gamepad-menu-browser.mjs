@@ -11,7 +11,7 @@ try{
  const phase=label=>console.log(new Date().toISOString(),label);
  const errors=[];p.on('pageerror',e=>errors.push(e.message));
  await p.addInitScript(()=>{
-   localStorage.setItem('cartridge-settings',JSON.stringify({graphics:'low',volume:0,reducedMotion:true}));
+   if(!localStorage.getItem('cartridge-settings'))localStorage.setItem('cartridge-settings',JSON.stringify({graphics:'low',volume:0,reducedMotion:true}));
    const pad=window.testPad={id:'Standard test controller',mapping:'standard',connected:true,axes:[0,0,0,0],buttons:Array.from({length:17},()=>({value:0,pressed:false}))};
    Object.defineProperty(navigator,'getGamepads',{value:()=>[pad.connected?pad:null]});
  });
@@ -23,11 +23,27 @@ try{
  await tap(15);const second=await p.evaluate(()=>document.activeElement.textContent.trim());assert(first&&second&&second!==first);
  // Set initial focus as a keyboard player can, then activate with A. Normal route handles the action.
  const go=async name=>{await p.locator('[data-go="'+name+'"]:visible').first().focus();await tap(0);};
- phase('Checking Options and Back');await go('options');await p.locator('#menu[data-screen=options]').waitFor();await tap(1);await p.locator('#menu[data-screen=main]').waitFor();
+ phase('Checking Options and Back');await go('options');await p.locator('#menu[data-screen=options]').waitFor();
+ const autoFire=p.locator('#menu-settings [data-setting=mobileAutoFire]'),touchMode=p.locator('#menu-settings [data-setting=touchMode]');
+ assert.equal(await autoFire.count(),0);
+ await touchMode.selectOption('on');assert.equal(await autoFire.count(),1);
+ await touchMode.selectOption('auto');assert.equal(await autoFire.count(),0);
+ assert(await touchMode.evaluate(el=>el===document.activeElement));
+ const profile=p.locator('#menu-settings [data-setting=touchStick]');await profile.focus();
+ assert.equal(await profile.inputValue(),'floating');await tap(15);assert.equal(await profile.inputValue(),'fixed');
+ await tap(14);assert.equal(await profile.inputValue(),'floating');await tap(1);await p.locator('#menu[data-screen=main]').waitFor();
  phase('Opening Solo');await go('play');await go('solo');await p.locator('#lb-mode-seg [data-value=endless]').click();
  await p.locator('.map-tile').click();await p.locator('#choose-meltem').click();
  await p.waitForFunction(()=>!!window.__fps&&document.getElementById('loading').hidden&&!document.getElementById('start').disabled);
  await frames();
+ const mode=p.locator('#game-mode');assert.equal(await mode.inputValue(),'endless');
+ assert(await mode.locator('option[value=classic]').isDisabled());
+ const soloFocus=[];
+ for(const direction of [13,13,15,12,14,13,15]){
+   await tap(direction);soloFocus.push(await p.evaluate(()=>document.activeElement.id||document.activeElement.getAttribute('class')));
+ }
+ assert(!soloFocus.includes('game-mode'),'The transparent backing select must never win controller focus');
+ assert.equal(await mode.inputValue(),'endless');
  await p.locator('#start').focus();assert.equal(await p.evaluate(()=>document.activeElement.id),'start');
  phase('Starting Meltem with A');await tap(0);await p.locator('#hud').waitFor();
  await p.waitForFunction(()=>!__fps.modal&&!__fps.game.warmupRemaining&&__fps.game.phase==='active');
@@ -63,7 +79,7 @@ try{
  await hold(0,1);await reloaded;await p.waitForFunction(()=>!!window.__csFlow?.flow.active);
  await tap(1);await p.locator('#cs-loading').waitFor({state:'hidden',timeout:3000});
  const loadingActions=['Cancel with A','Cancel with B','Back after timeout','Retry with A and automatic launch'];
- const sample={loadingActions,device:'Simulated standard Gamepad API controller',focus:[first,second],before,running,shot,reconnected,errors};
+ const sample={loadingActions,soloFocus,device:'Simulated standard Gamepad API controller',focus:[first,second],before,running,shot,reconnected,errors};
  assert.deepEqual(errors,[]);if(output){await mkdir(output,{recursive:true});await writeFile(join(output,'gamepad.json'),JSON.stringify(sample,null,2)+'\n');}
  console.log(JSON.stringify(sample));
 }finally{await browser.close();}

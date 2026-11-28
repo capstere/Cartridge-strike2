@@ -44,9 +44,19 @@ try{
  assert(receipt.cached.every(url=>url===origin+'/fps/offline.html'));assert.equal(receipt.active,'activated');
  phase('Disconnecting worker and page from origin');
  reachable=false;gateway.closeAllConnections();
- await ctx.setOffline(true);const offlineResponse=await page.goto(origin+'/fps/index.html',{waitUntil:'domcontentloaded'});
- console.log('Offline navigation',offlineResponse.status(),await page.title(),await page.locator('h1').first().innerText({timeout:5000}));
- await page.getByRole('heading',{name:/offline/i}).waitFor();receipt.offline=await page.locator('main').innerText();
+ await ctx.setOffline(true);
+ receipt.offlineEntries=[];
+ for(const url of [receipt.start,new URL('index.html',receipt.start).href]){
+   const fresh=await ctx.newPage();
+   try {
+     const response=await fresh.goto(url,{waitUntil:'domcontentloaded',timeout:15000});
+     const heading=await fresh.locator('h1').first().innerText({timeout:5000});
+     console.log('Fresh offline navigation',new URL(url).pathname,response.status(),heading);
+     assert.match(heading,/offline/i);
+     assert.equal(response.fromServiceWorker(),true,'Offline content must be supplied by the installed worker');
+     receipt.offlineEntries.push({path:new URL(url).pathname,status:response.status(),worker:response.fromServiceWorker(),text:await fresh.locator('main').innerText()});
+   }finally{await fresh.close();}
+ }
  phase('Checking offline invitation bypass');let privateBypassed=false;
  try{await page.goto(origin+'/fps/?network=internet&room=TEST',{waitUntil:'domcontentloaded',timeout:10000});}
  catch{privateBypassed=true;}
