@@ -25,10 +25,30 @@ Serve the exact built checkout. Set `FPS_TEST_ORIGIN`, `CHROMIUM_PATH=/usr/bin/c
 - `node tools/mobile-pwa-browser.mjs` checks an installation at the supplied origin. Repeat with a repository subpath. The fixture disconnects page and service-worker traffic from the origin before checking recovery.
 - Existing package checks include `tools/mobile-reliability-browser.mjs` and `tools/online-autofire-browser.mjs`.
 
-This checkpoint covers the rows above. Native grenade hold/release and interruption, floating-stick thresholds, the 30 Hz rendering cap, controller play and offline recovery are tracked separately. No physical controller or handset was connected for this run.
+No physical controller or handset was connected for this run.
 
 ## Installed web app
 
 The native Pi browser opened the public deployment at both the root and a repository subpath on build `227ed715ceb839fcacfc8f4d9d14ccfa2a5972ae6521094455ec1a947476a9cf`, revision `1b2515e781a750748488229ac7bd8b3a41ffbe4a`. The browser activated and updated each worker and cached only that scope's public `offline.html`. With browser and worker connections disconnected, opening the manifest start URL and the explicit index in separate fresh tabs produced the English recovery page in all four cases. The browser confirmed the service worker supplied every response. An offline invitation produced a network failure. Restoring connectivity reopened the live menu.
 
 The [root receipt](p20-pwa-root.json) and [repository subpath receipt](p20-pwa-pages.json) preserve the exact scopes, cache contents, navigation responses and recovery results. These public HTTP loopback checks ran in Chromium's secure localhost context. The authenticated pilot has a separate HTTPS fixture.
+
+## Continuous touch play on the corrected build
+
+The Pi ran the complete Meltem Endless sequence on the Broadcom V3D 7.1.10.2 through ANGLE at `9c1e4f2ad321460aa8f225ffd4991e2c406f1abe`, build `e7c935555c864eeb1f34a5938b8d4de88440e84d544d4a68e3157d3cefd0c863`. The player remained alive in both pacing windows.
+
+| Scenario | Observation |
+| --- | --- |
+| Rotate with the original movement finger down | The game paused and cleared game ownership before the original emulated contact lifted in Chromium. After Resume, a fresh manual throw reached the correct control. The receipt includes capture-phase pointer IDs, CSS coordinates, targets, viewport geometry and scale. |
+| V2 manual cartridge | Smoke, flash and HE cycled in the normal HUD. The player held HE, obtained a live fuse and released it with horizontal velocity (0.97, −8.83). The ordinary shop then supplied a second cartridge. [Held cartridge and active Throw button](grenade-held.jpg) |
+| Same-aspect orientation interruption | At 932 × 430 CSS pixels, two simulated orientation notifications paused a held HE. Exactly one projectile retained the original 18.670 s deadline and had zero velocity on all axes. The trigger, held cartridge and active owner cleared. |
+| V4/V6 stick threshold | The same floating stick contact advanced from walk to sprint. Rush weight changed from 0 to 0.723 and the reticle opacity from 1 to 0. On release, the ring disappeared and the weapon recovered, with the reticle back at 0.93 at the sampled frame. [Gold ring and lowered rifle](ring-rush.jpg) |
+| IMG_8156 power saving | For 120 display callbacks at FOV 82°, ordinary play made 120 game updates and 120 draws, with 23.2 ms median and 32.9 ms p95 between draws. With the 30 FPS option, the game still updated 120 times and drew 70 times, with 33.6 ms median and 44.0 ms p95 between draws. The measurement covers Meltem in this session. Floor 5 has a separate performance investigation. |
+
+The [full touch receipt](p20-touch-verified.json) includes both calibration windows, movement, scoped firing, neutralization, profiles and pointer activity. The [layout editor](touch-layout.jpg) shows the saved-controls UI from this run. The test recorded zero page errors. Inspect the earlier samples for the initial implementation and the complete receipt for the corrected build.
+
+## Standard controller on the corrected build
+
+A virtual standard Gamepad API controller drove the same native Pi browser and corrected build. The D-pad reached visible menu controls, skipped the backing mode select on Endless-only Meltem, and changed the actual stick selector in Options. A launched Meltem, both sticks moved and looked, and L3 brought Rush weight to 0.974. The right trigger took the SMG from 30 rounds to 29. Start paused and resumed. Reconnecting with the trigger held kept the magazine at 29 until the player released the trigger.
+
+The fixture then held the engine module request, including after Retry reloaded the page. The controller could open the loading overlay, focus and activate Cancel with A, dismiss it with B, return after an actual timeout, retry with A and dismiss the new loading overlay. The [controller receipt](p20-gamepad-verified.json) records movement, ammunition, visited Solo controls and loading actions. No physical gamepad was attached.

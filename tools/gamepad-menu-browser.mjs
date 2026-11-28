@@ -14,11 +14,25 @@ try{
  await p.addInitScript(()=>{
    if(!localStorage.getItem('cartridge-settings'))localStorage.setItem('cartridge-settings',JSON.stringify({graphics:'low',volume:0,reducedMotion:true}));
    const pad=window.testPad={id:'Standard test controller',mapping:'standard',connected:true,axes:[0,0,0,0],buttons:Array.from({length:17},()=>({value:0,pressed:false}))};
-   window.testPolls=0;Object.defineProperty(navigator,'getGamepads',{value:()=>{window.testPolls++;return [pad.connected?pad:null];}});
+   window.testPolls=0;window.testButtonMask=0;
+   Object.defineProperty(navigator,'getGamepads',{value:()=>{
+     window.testPolls++;
+     window.testButtonMask=pad.buttons.reduce((mask,button,i)=>button.pressed?mask|(1<<i):mask,0);
+     return [pad.connected?pad:null];
+   }});
  });
  const frames=()=>p.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))));
  const hold=(i,value)=>p.evaluate(([i,value])=>{Object.assign(testPad.buttons[i],{value,pressed:value>.5});},[i,value]);
- const tap=async i=>{await hold(i,1);await frames();await hold(i,0);await frames();};
+ const pollAfter=async mask=>{
+   const previous=await p.evaluate(()=>testPolls);
+   await p.waitForFunction(({previous,mask})=>testPolls>previous&&testButtonMask===mask,{previous,mask},{timeout:3000});
+ };
+ const tap=async i=>{
+   // Each edge is sampled by the gamepad API. Mode changes and modal transitions
+   // require one neutral sample before a fresh press, just like pad reconnect.
+   await pollAfter(0);await hold(i,1);await pollAfter(1<<i);await frames();
+   await hold(i,0);await pollAfter(0);await frames();
+ };
  phase('Opening the game');await p.goto(base+'/fps/?test=1&realtime=1');await p.waitForFunction(()=>!!window.__fps);
  await tap(13);const first=await p.evaluate(()=>document.activeElement.textContent.trim());
  await tap(15);const second=await p.evaluate(()=>document.activeElement.textContent.trim());assert(first&&second&&second!==first);
@@ -31,6 +45,7 @@ try{
  await touchMode.selectOption('auto');assert.equal(await autoFire.count(),0);
  assert(await touchMode.evaluate(el=>el===document.activeElement));
  const profile=p.locator('#menu-settings [data-setting=touchStick]');await profile.focus();
+ assert(await profile.evaluate(el=>el===document.activeElement));
  assert.equal(await profile.inputValue(),'floating');await tap(15);assert.equal(await profile.inputValue(),'fixed');
  await tap(14);assert.equal(await profile.inputValue(),'floating');await tap(1);await p.locator('#menu[data-screen=main]').waitFor();
  phase('Opening Solo');await go('play');await go('solo');await p.locator('#lb-mode-seg [data-value=endless]').click();
@@ -85,7 +100,7 @@ try{
 }catch(error){
  if(output&&activePage&&!activePage.isClosed()){
    await mkdir(output,{recursive:true});
-   const status=await activePage.evaluate(()=>({url:location.pathname+location.search,focus:document.activeElement.id,screen:document.querySelector('#menu')?.dataset.screen,
+   const status=await activePage.evaluate(()=>({url:location.pathname+location.search,focus:document.activeElement.id,focusedSetting:document.activeElement.dataset.setting,polls:window.testPolls,lastMask:window.testButtonMask,screen:document.querySelector('#menu')?.dataset.screen,
      phase:window.__fps?.game?.phase,modal:window.__fps?.modal,stage:document.querySelector('#loading').dataset.stage,
      flow:{active:window.__csFlow?.flow.active,failed:window.__csFlow?.flow.failed,reason:document.querySelector('#csl-err-text')?.textContent}})).catch(()=>null);
    console.log('Last controller state',JSON.stringify(status));await writeFile(join(output,'failed-pad.json'),JSON.stringify({message:error.message,status},null,2)+'\n');
