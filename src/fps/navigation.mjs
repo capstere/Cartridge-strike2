@@ -1,5 +1,45 @@
-import { AStar, Graph, NavNode, NavEdge, Vector3 } from '../../vendor/yuka/yuka.module.js';
+import { AStar, Graph, NavNode, NavEdge, Vector3, PriorityQueue, HeuristicPolicyEuclid } from '../../vendor/yuka/yuka.module.js';
 import { ACTOR_RADIUS, STANDING_HEIGHT, SpatialIndex, polygonBounds, distanceSegment } from './physics.mjs';
+
+// Live searches retain the native graph, costs and Yuka priority ordering. Like
+// Riposte's findPath, each needs a frontier, best costs and parent links. Yield
+// at fixed work intervals so a difficult route cannot consume a whole tick.
+export function* routeNodeIds(graph,start,end,stepped){
+  if(!stepped){
+    const search=new AStar(graph,start,end).search();
+    return search.found?search.getPath():[];
+  }
+  const frontier=new PriorityQueue((a,b)=>a.cost-b.cost);
+  const costs=new Map([[start,0]]),parents=new Map(),closed=new Set(),edges=[];
+  frontier.push({index:start,cost:0});
+  let work=0;
+  while(frontier.length){
+    if(++work===48){work=0;yield;}
+    const id=frontier.pop().index;
+    if(closed.has(id))continue;
+    if(id===end){
+      const path=[end];
+      while(path[path.length-1]!==start)path.push(parents.get(path[path.length-1]));
+      return path.reverse();
+    }
+    closed.add(id);
+    graph.getEdgesOfNode(id,edges);
+    for(const edge of edges){
+      if(closed.has(edge.to))continue;
+      const cost=costs.get(id)+edge.cost;
+      if(cost>=(costs.get(edge.to)??Infinity))continue;
+      costs.set(edge.to,cost);parents.set(edge.to,id);
+      frontier.push({index:edge.to,cost:cost+HeuristicPolicyEuclid.calculate(graph,edge.to,end)});
+    }
+  }
+  return [];
+}
+
+export function finishRoute(iterator){
+  let result;
+  do{result=iterator.next();}while(!result.done);
+  return result.value;
+}
 
 /** Yuka navigation graph generated from accepted routes + collision-validated floor samples.
  * All edges are swept with the actor footprint. The old reviewed routes provide samples
@@ -113,20 +153,29 @@ export function createNavigation(data,physics,{spacing=.70,radius=ACTOR_RADIUS+.
     return allowExit&&Math.hypot(a.x-p.x,a.z-p.z)<p.radius&&Math.hypot(b.x-p.x,b.z-p.z)>=p.radius&&
       (a.x-p.x)*(b.x-a.x)+(a.z-p.z)*(b.z-a.z)>=0;
   });
-  function nearest(point,blockers=[],allowExit=false){
+  function* nearestSteps(point,blockers=[],allowExit=false,stepped=false){
+    let probes=0;
     for(const distance of [1.2,2.6,5.2,10]){
       const choices=[...index.nearby(point.x,point.z,distance)].sort((a,b)=>Math.hypot(a.x-point.x,a.z-point.z)-Math.hypot(b.x-point.x,b.z-point.z));
-      for(const n of choices)if((n.id<baseNodeCount||activeGlassNodes.has(n.id))&&bodiesClear(point,n,blockers,allowExit)&&clear(point,n,ACTOR_RADIUS))return n;
+      for(const n of choices){
+        if(stepped&&++probes%8===0)yield;
+        if((n.id<baseNodeCount||activeGlassNodes.has(n.id))&&bodiesClear(point,n,blockers,allowExit)&&clear(point,n,ACTOR_RADIUS))return n;
+      }
     }
     return null;
   }
-  function findPath(from,to,{avoid=[],blockers=[]}={}){
+  const nearest=(...args)=>finishRoute(nearestSteps(...args));
+  function findPath(from,to,options={}){
+    const query=pathSteps(from,to,options);
+    return options.stepped?query:finishRoute(query);
+  }
+  function* pathSteps(from,to,{avoid=[],blockers=[],stepped=false}={}){
     if(!from||!to||![from.x,from.z,to.x,to.z].every(Number.isFinite))return [];
     if(!avoid.length&&bodiesClear(from,to,blockers,true)&&clear(from,to,ACTOR_RADIUS))return [{x:to.x,z:to.z}];
     // Each endpoint must connect via a swept capsule. Reject an obstructed
     // endpoint once instead of testing it against every nearby graph node.
     if(!physics.canOccupy(from.x,from.z,ACTOR_RADIUS)||!physics.canOccupy(to.x,to.z,ACTOR_RADIUS))return [];
-    const start=nearest(from,blockers,true),end=nearest(to,blockers);if(!start||!end||component[start.id]!==component[end.id])return [];
+    const start=yield* nearestSteps(from,blockers,true,stepped),end=yield* nearestSteps(to,blockers,false,stepped);if(!start||!end||component[start.id]!==component[end.id])return [];
     // Tactical costs are private to this query. They never mutate the shared
     // Yuka graph, remove valid edges, or change the collision footprint.
     const penalty=(x,z)=>1+Math.min(12,avoid.reduce((sum,p)=>{
@@ -143,20 +192,24 @@ export function createNavigation(data,physics,{spacing=.70,radius=ACTOR_RADIUS+.
       graph.getEdgesOfNode(id,out);let count=0;for(const e of out)if(bodiesClear(nodes[e.from],nodes[e.to],blockers))out[count++]=avoid.length?new NavEdge(e.from,e.to,weightedCost(nodes[e.from],nodes[e.to])):e;out.length=count;return out;
     }}:graph;
     const key=`${start.id}:${end.id}`;let ids=custom?null:cache.get(key);
-    if(!ids){const search=new AStar(queryGraph,start.id,end.id).search();if(!search.found)return [];ids=search.getPath();if(!custom){if(cache.size>512)cache.clear();cache.set(key,ids);}}
+    if(!ids){ids=yield* routeNodeIds(queryGraph,start.id,end.id,stepped);if(!ids.length)return [];if(!custom){if(cache.size>512)cache.clear();cache.set(key,ids);}}
     const raw=[{x:from.x,z:from.z},...ids.map(id=>({x:nodes[id].x,z:nodes[id].z})),{x:to.x,z:to.z}],path=[];
     const costs=[0];if(avoid.length)for(let i=1;i<raw.length;i++)costs[i]=costs[i-1]+weightedCost(raw[i-1],raw[i]);
-    let current=0;
+    let current=0,probes=0;
     while(current<raw.length-1){
       let next=current+1;
       // A bounded lookahead smooths routes without expensive full-map visibility sweeps.
-      for(let i=Math.min(raw.length-1,current+32);i>current+1;i--)if(bodiesClear(raw[current],raw[i],blockers,current===0)&&(!avoid.length||weightedCost(raw[current],raw[i])<=(costs[i]-costs[current])*1.08)&&clear(raw[current],raw[i],ACTOR_RADIUS+.001)){next=i;break;}
+      for(let i=Math.min(raw.length-1,current+32);i>current+1;i--){
+        if(stepped&&++probes%5===0)yield;
+        if(bodiesClear(raw[current],raw[i],blockers,current===0)&&(!avoid.length||weightedCost(raw[current],raw[i])<=(costs[i]-costs[current])*1.08)&&clear(raw[current],raw[i],ACTOR_RADIUS+.001)){next=i;break;}
+      }
       if(physics.dynamicPassages?.()&&!clear(raw[current],raw[next],ACTOR_RADIUS))return [];
       path.push(raw[next]);current=next;
     }
     return path;
   }
-  const invalidate=()=>{cache.clear();clearanceCache.clear();clearanceStats.size=0;};
+  let queryEpoch=0;
+  const invalidate=()=>{queryEpoch++;cache.clear();clearanceCache.clear();clearanceStats.size=0;};
   const baseEdges=new Set(edgeKeys),addedEdges=new Map(),baseNodeCount=nodes.length,activeGlassNodes=new Set();
   const statistics={nodes:nodes.length,edges:edgeKeys.size,components,buildMs:Math.round(performance.now()-started),clearance:clearanceStats,glassUpdates:0,library:'Yuka Graph/NavNode/NavEdge/AStar'};
   function updateGlass({pane,reset=false}={}){
@@ -179,5 +232,5 @@ export function createNavigation(data,physics,{spacing=.70,radius=ACTOR_RADIUS+.
     }
     labelComponents();revision++;statistics.glassUpdates++;Object.assign(statistics,{nodes:nodes.length,edges:edgeKeys.size,components});
   }
-  return {findPath,clear,nearest,nodes,graph,invalidate,updateGlass,get revision(){return revision;},statistics};
+  return {findPath,clear,nearest,nodes,graph,invalidate,updateGlass,get queryEpoch(){return queryEpoch;},get revision(){return revision;},statistics};
 }

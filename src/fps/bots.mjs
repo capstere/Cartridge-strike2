@@ -33,6 +33,8 @@ export class BotController {
     this.target = null; this.records = []; this.heardSerial = 0; this.nextGrenade = game.state.time + 5;
     this.stuckTime = 0; this.replans = 0; this.lastPosition = position(actor); this.lastProgress = game.state.time; this.lastReplan = game.state.time;
     this.command = {}; this.distanceTravelled = 0;
+    this.routeJobs = {tactical:null,movement:null};
+    this.lastRouteTick = -1;
     this.routePlan = null; this.routeStarted = false; this.lastContactReport = -Infinity;
     this.style={angle:game.random()*Math.PI*2,preference:game.random(),cadence:.9+game.random()*.25,
       pace:.88+game.random()*.12,hold:2.8+game.random()*3.8,inspect:2+game.random()*2.5,pathInterval:1.05+game.random()*.65};
@@ -84,6 +86,7 @@ export class BotController {
           this.lastContactReport = now;
         }
         record.timeLastSensed = now; record.lastSensedPosition.set(enemy.x, enemy.y + enemy.height * .6, enemy.z);
+        record.lastKnownGround=position(enemy);
         record.senseKey='seen:'+enemy.id+':'+record.detectedAt;
       }
       if (record.visible && !visible && this.burstTargetId === enemy.id) { this.burstRemaining = 0; this.burstUntil = 0; this.nextBurstAt = Math.max(this.nextBurstAt, now + .15); }
@@ -95,13 +98,21 @@ export class BotController {
       const sourceId = event.actorId ?? event.ownerId;
       if (event.serial <= this.heardSerial || !sourceId || event.team === actor.team) continue;
       const enemy = enemies.find(a => a.id === sourceId); if (!enemy || enemy.kind==='zombie' || event.ownerLifeId!==undefined&&event.ownerLifeId!==enemy.lifeId) continue;
+      // Riposte botEars checks distance and floor separation before testing
+      // obstacles. An unheard footstep cannot reveal a player on another deck.
+      if (event.type === 'step' && Math.abs(actor.y - event.y) > 3.5) continue;
+      const radius = event.type === 'shot' ? 38 : event.type === 'step' ? (event.mode === 'run' || event.mode === 'rush' ? 12 : event.mode === 'sneak' ? 2.5 : 2) : event.type === 'he' ? 45 : 7;
+      const range = Math.hypot(actor.x - event.x, actor.y - event.y, actor.z - event.z);
+      if (range > radius) continue;
       const clear = game.world.segmentClear(eye(actor), { x: event.x, y: event.y + 1, z: event.z }, { vision: false });
-      let radius = event.type === 'shot' ? 38 : event.type === 'step' ? (event.mode === 'run' ? 12 : event.mode === 'sneak' ? 2.5 : 2) : event.type === 'he' ? 45 : 7;
-      if (!clear) radius *= .28;
-      if (distance(actor, event) <= radius) {
+      if (clear || range <= radius * .28) {
         const record = this.memory.getRecord(enemy);
         record.timeLastSensed = now;
-        if (!record.visible){record.lastSensedPosition.set(event.x, event.y + 1, event.z);record.senseKey='sound:'+event.serial;}
+        if (!record.visible){
+          record.lastSensedPosition.set(event.x, event.y + 1, event.z);
+          record.lastKnownGround=position(event);
+          record.senseKey='sound:'+event.serial;
+        }
       }
     }
     this.heardSerial = game.eventSerial;
@@ -218,7 +229,11 @@ export class BotController {
     this.routePlan = this.routeBlocked = this.actor.aiLane = null;
   }
   setGoal(goal) {
-    if (!goal) { this.goal = null; this.path = []; return; }
+    if (!goal) {
+      this.goal = null; this.path = [];
+      this.routeJobs.tactical = this.routeJobs.movement = null;
+      return;
+    }
     const goalY=this.game.world.layeredTerrain ? goal.y??this.actor.y : undefined;
     if (!this.goal || distance(this.goal, goal) > .5 || (goalY!==undefined && Math.abs(goalY-this.goal.y)>.5)){
       this.nextPath = 0;this.lastProgress=this.game.state.time;
@@ -314,12 +329,12 @@ export class BotController {
     if(!r||this.urgentObjective()){g.squadTactics?.release(this);return false;}
     const key=r.senseKey||r.timeLastSensed;
     if(this.inquiry?.entityId===r.entity.id&&now<=this.inquiry.until){
-      this.inquiry.key=key;this.inquiry.point=position(r.lastSensedPosition);
+      this.inquiry.key=key;this.inquiry.point=position(r.lastKnownGround??r.lastSensedPosition);
     }else if(this.inquiry?.key!==key&&now>=(this.inquiry?.cooldown??0)){
       // Sound reports do not grant vision or a firing target. Only a bounded
       // number of actual hearers leave their task to inspect a snapshot.
       const accepted=g.squadTactics?.claim(this,r)??true;
-      this.inquiry={key,entityId:r.entity.id,point:position(r.lastSensedPosition),accepted,ready:now+.25+g.random()*.65,until:now+this.style.inspect+1,cooldown:now+this.style.inspect+3};
+      this.inquiry={key,entityId:r.entity.id,point:position(r.lastKnownGround??r.lastSensedPosition),accepted,ready:now+.25+g.random()*.65,until:now+this.style.inspect+1,cooldown:now+this.style.inspect+3};
     }
     if(!this.inquiry?.accepted||now>this.inquiry.until){g.squadTactics?.release(this);return false;}
     return true;
@@ -334,6 +349,7 @@ export class BotController {
     actor.aiState = 'strid';
     if (!target?.visible) return;
     const point = { x: target.lastSensedPosition.x, y: target.lastSensedPosition.y, z: target.lastSensedPosition.z };
+    const approach=game.world.layeredTerrain?(target.lastKnownGround??point):point;
     const profile = this.profile, focus = Math.min(1, (target.focusTime ?? 0) / profile.settleTime);
     const hurt = Math.max(0, 1 - (now - actor.hurtTime) / profile.hurtRecovery);
     const aim = aimAt(actor, point), range = distance(actor, point);
@@ -346,11 +362,11 @@ export class BotController {
     if (!game.world.segmentClear(eye(actor), point, { vision: false })) {
       // Intact clear glazing permits perception but still stops bullets. Follow
       // the floor navigation through its door rather than firing forever at it.
-      this.command.fire = false; this.setGoal(point); return;
+      this.command.fire = false; this.setGoal(approach); return;
     }
     if (equipped.slot === 'bomb') game.select(actor.inventory.primary ? 'primary' : 'pistol', actor);
     if (equipped.slot === 'grenade') { this.aimGoal.pitch = .08; this.setGoal(null); return; }
-    if (equipped.slot === 'knife' && d > 1.3 || d > 22) this.setGoal(point);
+    if (equipped.slot === 'knife' && d > 1.3 || d > 22) this.setGoal(approach);
     else this.setGoal(null);
     // The objective carrier/flanker can cross a distant firing angle toward its
     // assigned entrance instead of every bot stopping at the first visible
@@ -396,18 +412,39 @@ export class BotController {
     game.emit('route', actor, { lane: chosen.laneId, role: actor.aiRole, plannedLength: chosen.length });
     this.nextPath = 0;
   }
-  navigationTurn(){
-    if(!this.game.config.networkSlice)return true;
-    // Spread expensive searches over ten fixed steps. Perception, steering,
-    // combat and objective interactions still run at their original cadence.
-    const slot=this.actor.index*2+(this.actor.team==='counterAnalysts'?1:0);
-    return Math.round(this.game.state.time/this.game.config.fixedStep)%10===slot;
+  advanceRoute(kind,destination,options){
+    const {game:g,actor:a}=this,nav=g.world.navigation;
+    const epoch=nav.queryEpoch??nav.revision,blocker=options.blockers[0];
+    let job=this.routeJobs[kind];
+    if(job&&(job.epoch!==epoch||job.blocker!==blocker||distance(job.goal,destination)>.55||
+        Math.abs(job.goal.y-(destination.y??0))>.5)){
+      this.routeJobs[kind]=job=null;
+    }
+    const tick=Math.round(g.state.time/g.config.fixedStep);
+    const seat=a.index*2+(a.team==='counterAnalysts'?1:0);
+    // One new request and up to four continuing slices per fixed step across
+    // the ten seats. Both tactical and movement queries share the actor's turn.
+    if(this.lastRouteTick===tick||(tick+10-seat)%10>=(job?4:1))return null;
+    this.lastRouteTick=tick;
+    if(!job){
+      const goal=position(destination),from=position(a);
+      const query=kind==='tactical'?nav.findPath(from,goal,{...options,stepped:true}):
+        g.world.findPath(from,goal,{...options,stepped:true});
+      if(Array.isArray(query))return query;
+      this.routeJobs[kind]=job={goal,from,epoch,blocker,query};
+    }
+    const result=job.query.next();
+    if(!result.done)return null;
+    this.routeJobs[kind]=null;
+    const path=result.value;
+    if(path.length&&distance(a,job.from)>.1&&!nav.clear(a,path[0]))return [];
+    return path;
   }
   chooseFloorRoute(){
     const {game:g,actor:a}=this,w=g.world,now=g.state.time,tactical=w.tactical,key=this.goal&&tactical.targetKey(this.goal);
     const escort=g.hostages.some(h=>h.escortId===a.id);
-    if(this.mode!=='objective')return;
-    if(!key||g.bomb.status==='planted'||escort){this.routePlan=null;return;}
+    if(this.mode!=='objective'){this.routeJobs.tactical=null;return;}
+    if(!key||g.bomb.status==='planted'||escort){this.routePlan=null;this.routeJobs.tactical=null;return;}
     const contacts=g.squadTactics?.contacts(a.team)||[],newRisk=contacts.some(c=>c.at>(this.routePlan?.at??now)&&this.routePlan?.gates.some(p=>distance(c,p)<5));
     const revision=w.navigation.revision;
     if(this.routePlan?.key===key&&this.routePlan.revision===revision&&!this.routeBlocked&&(!newRisk||now<this.nextRouteChoice))return;
@@ -415,9 +452,10 @@ export class BotController {
     const spawn=w.anchors[a.team][a.index],atSpawn=distance(a,spawn)<4&&!w.glass?.brokenCount&&!this.routeBlocked;
     let choices=atSpawn?tactical.choices(a.team,key):[];
     if(!choices.length){
-      if(!this.navigationTurn())return;
       const avoid=[...contacts,...(this.routeBlocked?[this.routeBlocked]:[])];
-      const path=w.navigation.findPath(a,this.goal,{avoid,blockers:this.localBlockers()});this.routeSearches++;
+      const path=this.advanceRoute('tactical',this.goal,{avoid,blockers:this.localBlockers()});
+      if(!path)return;
+      this.routeSearches++;
       choices=path.length?[{id:'adaptive',path,length:path.reduce((s,p,i)=>s+distance(i?path[i-1]:a,p),0)}]:[];
     }
     if(!choices.length){this.nextRouteChoice=now+2;return;}
@@ -484,9 +522,23 @@ export class BotController {
     if (this.routePlan && (game.bomb.status === 'planted' || game.hostages.some(h => h.escortId === actor.id) || !floor5&&this.mode === 'objective' && this.goal?.x > -15)) this.routePlan.gates = [];
     if(this.yieldPoint){if(now<this.yieldUntil)destination=this.yieldPoint;else{this.yieldPoint=null;this.yieldDirect=false;this.nextPath=0;}}
     if(this.yieldPoint&&this.yieldDirect)this.path=[this.yieldPoint];
-    else if (this.navigationTurn() && (game.state.time >= this.nextPath || this.navigationRevision !== (game.world.navigation?.revision||0))) {
-      this.navigationRevision=game.world.navigation?.revision||0;
-      this.path = game.world.findPath(actor, destination,{blockers:this.localBlockers()}); this.nextPath = now + this.style.pathInterval;
+    else if(destination&&(now>=this.nextPath||this.navigationRevision!==(game.world.navigation?.revision||0))){
+      const nav=game.world.navigation,revision=nav?.revision||0;
+      const sameGoal=this.pathGoal&&distance(this.pathGoal,destination)<.15&&
+        Math.abs(this.pathGoal.y-(destination.y??0))<.45;
+      // Keep a legal static corridor while walking it. A blocked body,
+      // changed gate, elevator/glass change or displaced actor gets a fresh path.
+      if(this.nextPath>0&&this.path.length&&sameGoal&&this.pathEpoch===(nav.queryEpoch??revision)&&
+          !this.stuckTime&&nav.clear(actor,this.path[0])){
+        this.nextPath=now+this.style.pathInterval;
+      }else{
+        if(this.navigationRevision!==revision)this.path=[];
+        const path=this.advanceRoute('movement',destination,{blockers:this.localBlockers()});
+        if(path){
+          this.path=path;this.pathGoal=position(destination);this.pathEpoch=nav.queryEpoch??revision;
+          this.navigationRevision=revision;this.nextPath=now+this.style.pathInterval;
+        }
+      }
     }
     while (this.path.length && distance(actor, this.path[0]) < .055) this.path.shift();
     const waypoint = this.path[0]; if (!waypoint) return;

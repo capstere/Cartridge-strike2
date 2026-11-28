@@ -1,6 +1,7 @@
 // Riposte's deterministic multi-storey cells and directed walk edges are
 // exported after buildNav. CS2's Yuka A* searches those exact connections.
-import {AStar,Graph,NavEdge,NavNode,Vector3} from '../../vendor/yuka/yuka.module.js';
+import {Graph,NavEdge,NavNode,Vector3} from '../../vendor/yuka/yuka.module.js';
+import {finishRoute,routeNodeIds} from './navigation.mjs';
 import {SpatialIndex,distanceSegment} from './physics.mjs';
 
 export function referenceNavigation(spec,terrain){
@@ -31,24 +32,33 @@ export function referenceNavigation(spec,terrain){
     }
     return Math.abs(floor-(b.y??floor))<.5;
   }
-  function nearest(p){
+  function* nearestSteps(p,stepped=false){
+    let probes=0;
     if(!p)return null;
     for(const range of [1.5,3.5,6]){
       const choices=[...cells.nearby(p.x,p.z,range)];
       const distance=n=>Math.hypot(n.x-p.x,n.z-p.z,2*(n.y-(p.y??0)));
       choices.sort((a,b)=>distance(a)-distance(b));
-      for(const n of choices)if(clear(p,n))return n;
+      for(const n of choices){
+        if(stepped&&++probes%8===0)yield;
+        if(clear(p,n))return n;
+      }
     }
     return null;
   }
+  const nearest=p=>finishRoute(nearestSteps(p));
   const point=p=>({x:p.x,y:p.y??0,z:p.z});
-  function findPath(from,to,{avoid=[],blockers=[]}={}){
+  function findPath(from,to,options={}){
+    const query=pathSteps(from,to,options);
+    return options.stepped?query:finishRoute(query);
+  }
+  function* pathSteps(from,to,{avoid=[],blockers=[],stepped=false}={}){
     if(!from||!to)return [];
     const legal=(a,b)=>!blockers.some(o=>Math.abs((o.y??0)-a.y)<1.65&&
       distanceSegment(o.x,o.z,[a.x,a.z],[b.x,b.z])<(o.radius??.42)&&
       Math.hypot(a.x-o.x,a.z-o.z)>=(o.radius??.42));
     if(!avoid.length&&legal(from,to)&&clear(from,to))return [point(to)];
-    const start=nearest(from),end=nearest(to);
+    const start=yield* nearestSteps(from,stepped),end=yield* nearestSteps(to,stepped);
     if(!start||!end)return [];
     const weighted=avoid.length||blockers.length;
     const key=start.id+':'+end.id;let ids=weighted?null:cache.get(key);
@@ -66,13 +76,18 @@ export function referenceNavigation(spec,terrain){
         }
         out.length=count;
       }}:graph;
-      const search=new AStar(query,start.id,end.id).search();if(!search.found)return [];
-      ids=search.getPath();if(!weighted){if(cache.size>=256)cache.clear();cache.set(key,ids);}
+      ids=yield* routeNodeIds(query,start.id,end.id,stepped);if(!ids.length)return [];
+      if(!weighted){if(cache.size>=256)cache.clear();cache.set(key,ids);}
     }
     const raw=[point(from),...ids.map(id=>nodes[id]),point(to)],out=[];
+    let probes=0;
     for(let i=0;i<raw.length-1;){
       let next=Math.min(i+8,raw.length-1);
-      while(next>i+1&&(!legal(raw[i],raw[next])||!clear(raw[i],raw[next])))next--;
+      while(next>i+1){
+        if(stepped&&++probes%5===0)yield;
+        if(legal(raw[i],raw[next])&&clear(raw[i],raw[next]))break;
+        next--;
+      }
       out.push(point(raw[next]));i=next;
     }
     return out;
