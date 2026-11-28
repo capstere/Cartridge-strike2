@@ -10,6 +10,7 @@ import {projectClassic} from './classic-round.mjs';
 import {DEFAULT_NETWORK_BOT_DIFFICULTY,ROOM_CAPACITY,RECONNECT_SECONDS,copyPose,safeName} from '../shared/multiplayer/rules.mjs';
 import {checkContract,TEAM_COMMS_TYPE,validateNetworkInput,wireInput} from '../shared/multiplayer/protocol.mjs';
 import {CONTRACT,MAP_CONTRACTS} from '../shared/multiplayer/build.mjs';
+import {publicOutfitId} from '../src/fps/operator-outfits.mjs';
 import {NetworkInput,ActorState,HandlingState,RoomState,GrenadeState,ResidentState,RocketState} from './network-schema.mjs';
 
 import {DOOR_FIELDS} from '../shared/multiplayer/world.mjs';
@@ -72,6 +73,7 @@ export class NetworkRoom extends Room {
       // A slow previous load can finish after the room adopted another map.
       if((message?.worldRevision??1)!==this.state.worldRevision)return;
       try{checkContract(message,MAP_CONTRACTS[this.state.mapId]);}catch(e){client.send('problem',e.message);client.leave(4009);return;}
+      seat.outfitId = publicOutfitId(message?.outfitId);
       if(seat.pending&&['waiting','countdown'].includes(this.state.phase)){
         // A new Classic seat may finish loading before the first live tick.
         // Keep its bot until this acknowledgement or the next round boundary.
@@ -89,6 +91,7 @@ export class NetworkRoom extends Room {
       else if(!respawnActor(this.sim.game,actor)){this.sim.game.state.actors.pop();client.send('problem','No safe spawn is available.');client.leave(4008);return;}
       if(this.sim.game.world.networkDynamics.elevatorOpenAt<0)this.sim.game.world.networkDynamics.elevatorOpenAt=this.sim.game.state.time;
       seat.admitted=true;seat.ready=true;seat.enabled=true;seat.actor=actor;seat.deadline=Infinity;
+      this.accountMatch?.admit(seat);
       seat.lifeStartedAt=this.clock.elapsedTime;seat.diedAtMs=0;
       if(!seat.pending)this.sim.controllers.bind(client.sessionId,actor.id);
       if(this.familyRoom)this.match.ownership();
@@ -372,7 +375,7 @@ export class NetworkRoom extends Room {
     for(const seat of this.participants())if(seat.ready){
       const a=seat.actor,s=this.state.actors.get(a.id);
       s.handling??=new HandlingState();copyPose(s,a);
-      Object.assign(s.handling,{cartridgeStart:a.cartridge?.started||0,cartridgeRelease:a.cartridge?.releaseAt||0,
+      Object.assign(s.handling,{outfitId:seat.outfitId || 'issued',cartridgeStart:a.cartridge?.started||0,cartridgeRelease:a.cartridge?.releaseAt||0,
         cartridgeFuse:a.cartridge?.deadline||0,waitTriggerRelease:!!a.waitTriggerRelease});
       if(!a.alive&&!seat.diedAtMs)seat.diedAtMs=this.clock.elapsedTime;
       s.playerReady=seat.playerReady;s.connected=seat.connected;s.controlEpoch=seat.epoch;s.lifeStartedAt=seat.lifeStartedAt;s.diedAtMs=seat.diedAtMs;

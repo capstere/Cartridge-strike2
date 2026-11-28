@@ -1,5 +1,7 @@
 import {networkMap} from '../shared/multiplayer/maps.mjs';
 import {isIP} from 'node:net';
+import {dirname,isAbsolute,join,resolve} from 'node:path';
+import {fileURLToPath} from 'node:url';
 import {pilotConfig} from './pilot-access.mjs';
 import {familyRoomConfig} from './family-room.mjs';
 import {matchPreferenceKeys,matchPreferences} from './match-preferences.mjs';
@@ -10,20 +12,30 @@ export function privateIPv4(address) {
   return a===10 || a===172&&b>=16&&b<=31 || a===192&&b===168;
 }
 const loopback=ip=>ip==='::1'||ip==='127.0.0.1';
-export function hostingConfig({lan=false,host,port=2567,publicOrigin,publicOriginFile,pilotInvite,familyPassword,familyStateFile}={}) {
+export function hostingConfig({lan=false,host,port=2567,publicOrigin,publicOriginFile,pilotInvite,familyPassword,familyStateFile,accountDb,publicListing=false}={}) {
   if(typeof lan!=='boolean')throw Error('LAN must be explicitly enabled.');
   if(!Number.isInteger(port)||port<0||port>65535)throw Error('PORT must be an integer between 0 and 65535.');
   host??='127.0.0.1';
   if(lan?!privateIPv4(host):host!=='127.0.0.1')throw Error(lan?
     'CS2_LAN_HOST must be the Pi\'s private IPv4 address (10.x, 172.16–31.x or 192.168.x); wildcard/public binds are disabled.':
     'Local mode binds only 127.0.0.1. Set CS2_LAN=1 and CS2_LAN_HOST explicitly to enable LAN.');
-  return {lan,host,port,...pilotConfig({lan,publicOrigin,publicOriginFile,pilotInvite}),
-    ...familyRoomConfig({familyPassword,familyStateFile,pilotInvite})};
+  const pilot=pilotConfig({lan,publicOrigin,publicOriginFile,pilotInvite});
+  const family=familyRoomConfig({familyPassword,familyStateFile,pilotInvite});
+  accountDb??=familyStateFile&&join(dirname(familyStateFile),'cs3-accounts.sqlite');
+  if(accountDb!==undefined){
+    const release=fileURLToPath(new URL('../',import.meta.url));
+    if(!pilotInvite||typeof accountDb!=='string'||!isAbsolute(accountDb)||resolve(accountDb).startsWith(release)||
+       [familyStateFile,publicOriginFile].filter(Boolean).some(file=>resolve(file)===resolve(accountDb)))throw Error('Accounts require HTTPS pilot mode and a separate absolute database path outside the release.');
+  }
+  if(typeof publicListing!=='boolean'||publicListing&&!accountDb)throw Error('Public listing requires private account storage.');
+  const accounts = accountDb ? {accountDb,publicListing} : {};
+  return {lan,host,port,...pilot,...family,...accounts};
 }
 export function configFromEnv(env) {
   if(env.CS2_LAN!==undefined&&!['0','1'].includes(env.CS2_LAN))throw Error('CS2_LAN must be 0 or 1.');
+  if(env.CS3_PUBLIC_LISTING!==undefined&&!['0','1'].includes(env.CS3_PUBLIC_LISTING))throw Error('CS3_PUBLIC_LISTING must be 0 or 1.');
   if(env.PORT!==undefined&&(!/^\d+$/.test(env.PORT)||Number(env.PORT)<1))throw Error('PORT must be between 1 and 65535.');
-  return hostingConfig({publicOrigin:env.CS2_PUBLIC_ORIGIN,publicOriginFile:env.CS2_PUBLIC_ORIGIN_FILE,pilotInvite:env.CS2_PILOT_INVITE,
+  return hostingConfig({accountDb:env.CS3_ACCOUNT_DB,publicListing:env.CS3_PUBLIC_LISTING==='1',publicOrigin:env.CS2_PUBLIC_ORIGIN,publicOriginFile:env.CS2_PUBLIC_ORIGIN_FILE,pilotInvite:env.CS2_PILOT_INVITE,
     familyPassword:env.CS2_FAMILY_ROOM_PASSWORD,familyStateFile:env.CS2_FAMILY_ROOM_STATE,
     lan:env.CS2_LAN==='1',host:env.CS2_LAN_HOST||undefined,port:env.PORT===undefined?2567:Number(env.PORT)});
 }
@@ -65,13 +77,18 @@ export function rejectHttp(res,status,error) {
 
 // Read before Colyseus' router: its Express callback is AFTER matchmaking and
 // cannot protect that route. Count actual bytes, including chunked requests.
-export async function readAdmission(req) {
+export async function readJson(req) {
   if(!/^application\/json(?:;|$)/i.test(req.headers['content-type']||'')||req.headers['content-encoding'])throw Object.assign(Error('Expected an uncompressed JSON request.'),{status:415});
   if(Number(req.headers['content-length'])>4096)throw Object.assign(Error('Request too large.'),{status:413});
   const chunks=[];let size=0;
   for await(const chunk of req){size+=chunk.length;if(size>4096)throw Object.assign(Error('Request too large.'),{status:413});chunks.push(chunk);}
   let body;try{body=JSON.parse(Buffer.concat(chunks).toString('utf8'));}catch{throw Object.assign(Error('Malformed JSON.'),{status:400});}
-  if(!body||Array.isArray(body)||typeof body!=='object'||Object.keys(body).some(k=>!['name','code','contract','team','fillBots','mapId','mode','zombies','danceman',...matchPreferenceKeys].includes(k))||
+  if(!body||Array.isArray(body)||typeof body!=='object')throw Object.assign(Error('Expected a JSON object.'),{status:400});
+  return body;
+}
+export async function readAdmission(req) {
+  const body=await readJson(req);
+  if(Object.keys(body).some(k=>!['name','code','contract','team','fillBots','mapId','mode','zombies','danceman',...matchPreferenceKeys].includes(k))||
     !matchPreferences(body)||['zombies','danceman'].some(key=>body[key]!==undefined&&typeof body[key]!=='boolean')||
     (body.mapId!==undefined&&!networkMap(body.mapId))||
     (body.mode!==undefined&&!['tdm','classic'].includes(body.mode))||

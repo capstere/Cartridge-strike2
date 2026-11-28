@@ -1,3 +1,4 @@
+import {accountRequest} from '../account-profile.mjs';
 import {accessText as en} from '../../../shared/multiplayer/access-english.mjs';
 import {NETWORK_MAPS,DEFAULT_MAP_ID,networkMap} from '../../../shared/multiplayer/maps.mjs';
 import {connectionFailure} from './connection.mjs';
@@ -52,6 +53,36 @@ export function networkMenu(join,activate=()=>{},internet=false,cancel=()=>{}){
     if(sharedRoom&&/^[A-Za-z0-9_-]{1,32}$/.test(sharedRoom))$('network-room').value=sharedRoom;
     if(internet)$('network-status').textContent=en.shareInternet;
   }
+  let rememberedRooms = [];
+  const rememberedHint = document.createElement('p');
+  rememberedHint.hidden = true;
+  rememberedHint.textContent = 'This device remembers access to this room. Enter your player name to join.';
+  code.closest('label').after(rememberedHint);
+  function reflectRoomAccess() {
+    const scope = family ? FAMILY_ROOM_ALIAS : $('network-room').value.trim();
+    const remembered = rememberedRooms.includes(scope);
+    code.required = !remembered;
+    rememberedHint.hidden = !remembered;
+    if (family) {
+      code.closest('label').hidden = remembered;
+      show.closest('label').hidden = remembered;
+      if (remembered) code.value = '';
+    }
+  }
+  async function refreshRoomAccess() {
+    if (!internet) return;
+    try {
+      const account = await accountRequest('/api/account');
+      document.documentElement.toggleAttribute('data-public-rooms',!!account.features?.publicMatches && !!account.user);
+      rememberedRooms = Array.isArray(account.rooms) ? account.rooms : [];
+      const name = $('network-name');
+      if (account.user && !name.dataset.edited && (!name.value || name.value === 'Player')) name.value = account.user.displayName;
+      reflectRoomAccess();
+    } catch { /* The regular pilot password form also works on older servers. */ }
+  }
+  $('network-name').addEventListener('input', () => { $('network-name').dataset.edited='1'; });
+  $('network-room')?.addEventListener('input',reflectRoomAccess);
+  refreshRoomAccess();
   const cancelJoin=document.createElement('button');
   cancelJoin.type='button';cancelJoin.hidden=true;cancelJoin.textContent=en.cancel;
   form.querySelector('button[type=submit]').parentElement.append(cancelJoin);
@@ -59,6 +90,7 @@ export function networkMenu(join,activate=()=>{},internet=false,cancel=()=>{}){
   form.onsubmit=async e=>{
     e.preventDefault();const create=e.submitter?.dataset.create==='true';
     const roomId=$('network-room')?.value.trim();
+    if(create && code.value.length < 6){code.required=true;code.reportValidity();reflectRoomAccess();return;}
     if(!family&&!create&&!roomId){status(en.requireRoom);return;}
     activate();
     for(const b of form.querySelectorAll('button'))b.disabled=true;
@@ -73,6 +105,7 @@ export function networkMenu(join,activate=()=>{},internet=false,cancel=()=>{}){
         const session=await join({...common,create,roomId,mapId:$('network-map').value,mode:$('network-mode').value,fillBots:$('network-fill-bots').checked,team:$('network-team').value});
         $('network-room').value=session.room.roomId;status(en.roomId(session.room.roomId));
       }
+      refreshRoomAccess();
     }catch(error){
       const failure=connectionFailure(error);
       status(failure.message, failure);

@@ -184,6 +184,7 @@ export class MatchLifecycle {
           // Ordinary mid-match respawns retain their own short draw delay.
           for(const actor of this.room.sim.game.actors)actor.nextShot=this.room.sim.game.state.time;
         }
+        this.room.beginAccountMatch?.();
         s.phase='active';this.deadline=this.now+this.tdmDuration*1000;
         this.room.sim.game.state.paused=false;
         if(!this.room.classic)this.room.sim.game.world.networkDynamics.elevatorOpenAt=this.room.sim.game.state.time;
@@ -215,6 +216,7 @@ export class MatchLifecycle {
     const winner=forced||(score.analysts===score.counterAnalysts?'draw':score.analysts>score.counterAnalysts?'analysts':'counterAnalysts');
     Object.assign(this.state,{phase:'results',winner,reason,remainingSeconds:0,resultsAtMs:this.now,
       results:JSON.stringify({matchId:this.state.matchId,winner,reason,score:{...score},players:g.actors.map(a=>({id:a.id,name:a.name,team:a.team,kills:a.kills,deaths:a.deaths}))})});
+    r.finishAccountMatch?.(winner);
     g.state.paused=true;g.state.projectiles=[];g.state.grenades=[];
     for(const actor of g.actors){resetRush(actor);actor.cartridge=null;actor.waitTriggerRelease=false;}
     for(const [sid,seat] of r.seats){seat.enabled=false;seat.holdThrow=false;r.inputs.get(sid).clear();}

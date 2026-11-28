@@ -3,7 +3,12 @@
 // Purely presentational — team/mode/character state stays owned by app.mjs.
 import {UI_EN} from './english-ui.mjs';
 import * as T from '../../vendor/three/three.module.js';
-import {loadCharacterLibrary,createAuthoredAvatar,animateAuthored,disposeAvatar,setPrivateCharacterActors} from './character-library.mjs?v=6.1.2';
+import {getCharacterOverride} from './character-overrides.mjs?v=6.1.2';
+import {mountWardrobe} from './wardrobe-menu.mjs';
+import {syncAuthoredActor} from './character-actors.mjs?v=6.1.2';
+import {makeWeapon} from './models.mjs?v=6.1.2';
+import {OUTFITS} from './operator-outfits.mjs';
+import {currentOutfit,equipOutfit,loadCharacterLibrary,createAuthoredAvatar,animateAuthored,disposeAvatar,setPrivateCharacterActors} from './character-library.mjs?v=6.1.2';
 
 const $=id=>document.getElementById(id);
 const menu=$('menu'),canvas=$('lobby-stage'),reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -74,10 +79,28 @@ function makeStage(){
   const turntable=new T.Group();scene.add(turntable);
 
   let avatar=null,team=null,yaw=Math.PI-.32,dragYaw=0,dragging=false,lastX=0,t0=performance.now(),last=t0;
-  // Use the rig's relaxed upper-body idle for this unarmed operator preview.
+  const weaponSocket = new T.Group();
+  turntable.add(weaponSocket);
+  turntable.userData.weaponSocket = weaponSocket;
+  turntable.userData.marker = new T.Object3D();
+  // Use the same world model, grip and support-hand solver as a live actor.
+  function poseArmed(operator,time) {
+    const id = $('loadout').value || 'smg';
+    if (turntable.userData.weaponModel?.userData.id !== id) {
+      weaponSocket.clear();
+      const weapon = makeWeapon(id,{viewmodel:false});
+      weapon.scale.setScalar(.85);
+      weaponSocket.add(weapon);
+      turntable.userData.weaponModel = weapon;
+    }
+    actor.weapon = id;
+    turntable.userData.avatar = operator;
+    syncAuthoredActor(turntable,actor,time);
+  }
   const actor={x:0,z:0,y:0,yaw:0,moving:0,onGround:true,crouching:false,height:1.8,weapon:'knife',reloadUntil:-1,alive:true};
-  function setTeam(next){
-    if(next===team&&avatar)return;team=next;const col=ACCENT[next]||ACCENT.analysts;
+  let thumbnailTeam, thumbnailIndex = 0;
+  function setTeam(next,force=false){
+    if(next===team&&avatar&&!force)return;team=next;const col=ACCENT[next]||ACCENT.analysts;
     rimA.color.setHex(col);rimB.color.setHex(col);ringMat.color.setHex(col);ring2.material.color.setHex(col);
     try{
       setPrivateCharacterActors([next+'-0']);
@@ -87,9 +110,59 @@ function makeStage(){
       avatar=fresh;turntable.add(fresh.holder);canvas.classList.add('is-ready');
     }catch(e){console.warn('Lobby preview unavailable:',e.message);}
   }
+  // One bounded tile per menu frame. Restore the live viewport before presenting it.
+  const tileCamera = new T.PerspectiveCamera(26, 96/112, .1, 15);
+  tileCamera.position.set(0,1.25,4.4);
+  tileCamera.lookAt(0,.88,0);
+  function drawNextPortrait() {
+    if (menu.dataset.screen !== 'outfits' || !avatar) return;
+    if (thumbnailTeam !== team) {thumbnailTeam = team; thumbnailIndex = 0;}
+    const outfit = OUTFITS[thumbnailIndex];
+    if (!outfit) return;
+    thumbnailIndex++;
+    const tile = wardrobe.get(outfit.id).querySelector('canvas');
+    const preview = createAuthoredAvatar(team,team+'-0',false,{ignoreOverrides:true,previewOutfit:outfit});
+    const oldYaw = turntable.rotation.y;
+    avatar.holder.visible = false;
+    turntable.add(preview.holder);
+    turntable.rotation.y = yaw;
+    weaponSocket.visible = true;
+    const viewport = renderer.getViewport(new T.Vector4());
+    const ratio = renderer.getPixelRatio();
+    try {
+      poseArmed(preview,0);
+      renderer.setScissorTest(true);
+      renderer.setViewport(0,0,tile.width/ratio,tile.height/ratio);
+      renderer.setScissor(0,0,tile.width/ratio,tile.height/ratio);
+      renderer.render(scene,tileCamera);
+      const context = tile.getContext('2d');
+      context.clearRect(0,0,tile.width,tile.height);
+      context.drawImage(canvas,0,canvas.height-tile.height,tile.width,tile.height,0,0,tile.width,tile.height);
+    } finally {
+      renderer.setScissorTest(false);
+      renderer.setViewport(viewport);
+      turntable.remove(preview.holder);
+      disposeAvatar(preview);
+      turntable.rotation.y = oldYaw;
+      avatar.holder.visible = true;
+    }
+  }
   function resize(){
     const w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);camera.aspect=w/h;
-    const centre=menu.dataset.screen==='main'?(w/h>1.1?.72:.63):w<=760?.5:w<=1100?.66:.535;camera.setViewOffset(w,h,-(centre-.5)*w,0,w,h);camera.updateProjectionMatrix();
+    let centreX = menu.dataset.screen === 'main' ? (w/h > 1.1 ? .72 : .63)*w
+      : (w <= 760 ? .5 : w <= 1100 ? .66 : .535)*w;
+    let centreY = h/2;
+    camera.zoom = 1;
+    if (menu.dataset.screen === 'outfits') {
+      const region = document.querySelector('.wardrobe-stage').getBoundingClientRect();
+      if (region.width && region.height) {
+        centreX = region.left + region.width/2;
+        centreY = region.top + (region.height-44)/2;
+        camera.zoom = Math.max(.15,Math.min(1.6,(region.height-58)/(.7*h),region.width/(.4*h)));
+      }
+    }
+    camera.setViewOffset(w,h,w/2-centreX,h/2-centreY,w,h);
+    camera.updateProjectionMatrix();
   }
   addEventListener('resize',resize);menu.addEventListener('cs-menu-screen',resize);resize();
   canvas.style.pointerEvents='auto';canvas.style.cursor='grab';
@@ -110,14 +183,22 @@ function makeStage(){
     requestAnimationFrame(frame);
     const dt=Math.min(.05,(now-last)/1000),time=(now-t0)/1000;last=now;
     const sway=reduced?0:Math.sin(time*.35)*.18;
-    if(!dragging)dragYaw*=.985;
+    if(!dragging && menu.dataset.screen!=='outfits')dragYaw*=.985;
     turntable.rotation.y=yaw+sway+dragYaw;
     ring2.rotation.z=reduced?0:time*.25;
-    if(avatar){try{animateAuthored(avatar,actor,time);}catch{avatar.mixer?.update(dt);}}
+    drawNextPortrait();
+    weaponSocket.visible = menu.dataset.screen === 'outfits';
+    if (avatar) {
+      if (weaponSocket.visible) poseArmed(avatar,reduced ? 0 : time);
+      else {
+        actor.weapon = 'knife';
+        animateAuthored(avatar,actor,time);
+      }
+    }
     renderer.render(scene,camera);
   }
   wake();
-  return {setTeam};
+  return {setTeam,rotate:direction=>{dragYaw+=direction*Math.PI/6;}};
 }
 
 let stage=null;
@@ -127,4 +208,8 @@ async function boot(){
   if (!$('fatal').hidden) return;
   try{await loadCharacterLibrary();stage=makeStage();syncTeam();}catch(e){console.warn('Lobby preview unavailable:',e.message);}
 }
+const wardrobe = mountWardrobe({selected:currentOutfit,savedDesign:()=>Boolean(charSelect.value || getCharacterOverride('player',menu.dataset.side+'-0')),
+  equip(id){const saved=equipOutfit(id);stage?.setTeam(menu.dataset.side,true);return saved;},
+  rotate(direction){stage?.rotate(direction);}
+});
 syncTeam();boot();

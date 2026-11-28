@@ -73,7 +73,7 @@
       "scope": "First prove CR4 and P9 hip → Rush → release/ADS/short fire in both normal input paths and under reconciliation. Extend to slide, reload/inspect/switch, grenade hold/return and remaining held models. Preserve manual/auto-fire and saved bindings.",
       "tests": "RECORDING_REVIEW V2/V4/V6, input tick → legal shot → ammo/FX, near/far A/V onset, pause/cancel. Use view-arms-capture, recoil-autofire, online-equipment and the sprint-reload reticle fixture.",
       "exit": "Readable camera and grips, distinct supported poses, no lost tap or duplicate shot/foley. Fixed-step client/server/offline trace and synchronized video per weapon family.",
-      "status": "REVIEW",
+      "status": "VERIFIED",
       "branch": "cs3/02-buffered-slide",
       "pullRequests": [
         49,
@@ -84,12 +84,15 @@
       "mergedSlices": [
         "1a0e1fab3ed2fe53f9764470039a89ebe5943598",
         "6fda2c88a07cd7e27cdda616beaead230d7e76ce",
-        "cac3d3d3d148a0a2c40c9f42ea3aa6206892141f"
+        "cac3d3d3d148a0a2c40c9f42ea3aa6206892141f",
+        "f789655c55cb431b2916a8052200383b0d22d228"
       ],
       "evidence": [
         "evidence/rush/README.md",
         "evidence/audio/README.md",
-        "evidence/rush/integration.md"
+        "evidence/rush/integration.md",
+        "evidence/rush/buffered-slide.json",
+        "evidence/rush/all-held-families.json"
       ],
       "workBranches": [
         "cs3/02-handling",
@@ -97,9 +100,9 @@
         "cs3/02-buffered-slide",
         "cs3/02-rush-latency"
       ],
-      "reviewHead": "4ce7aaa56aa9201a4c4ca13e6cb8975315763af4",
-      "reviewRun": 46031863063,
-      "independentReview": "Package accepted against its recorded runtime, subject to the integrated hosted checks."
+      "independentReview": "Accepted p17 buffered input and decoded local and remote audio, 13 held items, recorded near/far and V6 handling, and parity with the fixed-step simulation.",
+      "verifiedHead": "4ce7aaa56aa9201a4c4ca13e6cb8975315763af4",
+      "verifiedRun": 46031863063
     },
     {
       "id": "CS3-03",
@@ -114,7 +117,9 @@
       "scope": "Canonical rig adapter, existing GLB, directional blending, IK, death/ragdoll visual and LOD; outfit previews, original skins; separately assess joint hitboxes.",
       "tests": "saved-character-browser, view-grips, view-character-appearance, headshot-landing; rig fixtures/video",
       "exit": "Existing imports and arms matching; visual/authority separation.",
-      "status": "NOT_STARTED"
+      "status": "IN_PROGRESS",
+      "baseline": "f789655c55cb431b2916a8052200383b0d22d228",
+      "branch": "cs3/03-character-wardrobe"
     },
     {
       "id": "CS3-04",
@@ -134,9 +139,8 @@
       "pullRequests": [
         55
       ],
-      "reviewHead": "c36017025c012d4806301b05af1932f72ab2abcf",
-      "reviewRun": 46031933296,
-      "independentReview": "Package accepted against its recorded runtime, subject to the integrated hosted checks."
+      "reviewHead": "1dd34063a04599ada44d1017f1576d5dcdbf52bc",
+      "independentReview": "Accepted the protocol 17 integration. A genuine fixture TCP cleanup failure was reproduced and corrected. Verify final hosted checks."
     },
     {
       "id": "CS3-05",
@@ -150,7 +154,9 @@
       "scope": "Implement dedicated spec 3/5/8 and 15/15/8; shared pure transitions, kill attribution, authoritative command and own radar, HUD/action binding, audio.",
       "tests": "state tests, invalid input cases, two-client online, offline parity, delayed projectiles, exact durations. Split-screen observer/recipient check on a fresh join and reconnect, including mixed assist/kill/headshot signals.",
       "exit": "All bonus rules proven, no unauthorized activation/stacking; UI confirmed.",
-      "status": "NOT_STARTED"
+      "status": "IN_PROGRESS",
+      "baseline": "f789655c55cb431b2916a8052200383b0d22d228",
+      "branch": "cs3/05-authoritative-streaks"
     },
     {
       "id": "CS3-06",

@@ -44,8 +44,10 @@ let changed=false, joined=false, original;
 const report={url:link,revision:expected,buildHash:CONTRACT.buildHash,physicalPhone:false,browser:browser.version(),initialRooms:0};
 const control=key=>page.locator('#room-'+key);
 async function connect(){
-  await page.locator('#network-name').fill('Kartkontroll');
-  await page.locator('#network-code').fill(password);
+  await page.locator('#network-name').fill('Map check');
+  const passwordField=page.locator('#network-code');
+  if (await passwordField.isVisible()) await passwordField.fill(password);
+  else assert.equal(await passwordField.evaluate(input=>input.required),false,'Returning family device can join without re-entering its password');
   await page.locator('[data-create=false]').tap(); joined=true;
   await control('start').waitFor();
   await until(async()=>{const h=await health();return h.players===1&&h.rooms===1;},'One family-room member');
@@ -80,7 +82,7 @@ async function leave() {
     if(!await page.locator('#restart').isVisible())await page.locator('[data-mobile-action=pause]').tap();
     await page.locator('#restart').tap();
   }
-  await page.locator('#network-code').waitFor();joined=false;
+  await page.locator('#network-name').waitFor();joined=false;
 }
 try {
   await page.goto(link,{waitUntil:'domcontentloaded'});await page.locator('[name=invite]').fill(invite);await page.locator('button[type=submit]').tap();

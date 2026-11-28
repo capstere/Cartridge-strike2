@@ -1,3 +1,4 @@
+import {rememberedFamilyForm} from './test-helpers/remembered-family.mjs';
 // Rendered multiplayer play and measurements. Start in the repo root.
 // FPS_MAP_CASE=desktop|mobile|four|floor|meltem|meltemTouch node tools/multimap-browser.mjs
 import {verifyMapProcessExit} from './multimap-teardown.mjs';
@@ -441,18 +442,20 @@ try {
     await page.route(route,r=>r.fulfill({status:200,contentType:'application/json',body:'{}'}));
     try {
       await page.locator('#room-map').selectOption(floor);
-      await page.locator('#network-code').waitFor();
+      await rememberedFamilyForm(page);
       await page.locator('#network-status').filter({hasText:/mismatch|version/i}).waitFor();
       await until(()=>fixture.authority.rooms.size===0,'Failed map load released its seat');
       assert(await page.locator('#fatal').isHidden());
     } finally {await page.unroute(route);}
-    await page.locator('#network-code').fill(fixture.familyPassword);
+    await rememberedFamilyForm(page);
     await page.locator('[data-create=false]').click();
     await page.locator('#room-ready').waitFor(); room=[...fixture.authority.rooms][0];
     await acknowledge(floor);
     result.damagedMapRejected=true; result.retryMap=room.state.mapId;
   }
-  await page.locator('#room-leave').click(); await page.locator('#network-code').waitFor();
+  await page.locator('#room-leave').click();
+  if (spec.family) await rememberedFamilyForm(page);
+  else await page.locator('#network-code').waitFor();
   for(const p of peers) await p.pages()[0].evaluate(()=>mapPeerRoom.leave());
   await until(()=>fixture.authority.rooms.size===0,'All sockets and simulation released');
   assert.deepEqual(errors,[]);
