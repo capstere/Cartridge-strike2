@@ -1,0 +1,88 @@
+{
+  "build": "7fe8e3d51f8615772a6963edf12500b60d37d2e94b816bf18e8fdef4a2f3a9d6",
+  "protocol": 21,
+  "replacement": {
+    "map": "compact-arena",
+    "revision": 2,
+    "actor": "counterAnalysts-0",
+    "ready": true
+  },
+  "lifecycle": {
+    "entries": [
+      {
+        "owner": 1,
+        "revision": 1,
+        "map": "floor5-prepared",
+        "frames": 10,
+        "uncovered": 0,
+        "scissorLeaks": 0,
+        "aborted": true,
+        "closed": true,
+        "finished": true,
+        "prepared": false,
+        "remainingFences": 0
+      },
+      {
+        "owner": 1,
+        "revision": 1,
+        "map": "floor5-prepared",
+        "frames": 4,
+        "uncovered": 0,
+        "scissorLeaks": 0,
+        "aborted": true,
+        "closed": false,
+        "finished": true,
+        "prepared": false,
+        "remainingFences": 0
+      },
+      {
+        "owner": 2,
+        "revision": 2,
+        "map": "compact-arena",
+        "frames": 0,
+        "uncovered": 0,
+        "scissorLeaks": 0,
+        "aborted": false,
+        "closed": false,
+        "finished": true,
+        "prepared": false,
+        "remainingFences": 0
+      }
+    ],
+    "retired": [
+      {
+        "owner": 1,
+        "lost": true,
+        "disposed": true,
+        "memory": {
+          "geometries": 0,
+          "textures": 1
+        },
+        "fences": 0
+      }
+    ],
+    "created": 3,
+    "deleted": 3,
+    "active": 0,
+    "failNextFence": false,
+    "ownerSequence": 2,
+    "failedFence": true
+  },
+  "rejoined": {
+    "pose": [
+      "counterAnalysts-0",
+      27.4,
+      0,
+      10.25,
+      1.570796,
+      "smg"
+    ],
+    "driver": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+    "calls": 109,
+    "geometry": 194,
+    "textures": 59,
+    "scissorTest": false,
+    "width": 480,
+    "height": 270
+  }
+}

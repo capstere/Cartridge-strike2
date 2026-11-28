@@ -1,0 +1,450 @@
+{
+  "floor5-1": {
+    "map": "floor5-prepared",
+    "reference": "2438ef6bd351251749c2e957a9c003150a19428563031cbb93b67f3ebb444cc5",
+    "candidate": "2438ef6bd351251749c2e957a9c003150a19428563031cbb93b67f3ebb444cc5",
+    "protocol": 21,
+    "movementMeters": [
+      0.21699999999999875,
+      0.3254999999999981
+    ],
+    "rawSHA256": [
+      "3d4d25b0d77ed54786df5b000db113e16d2fd84b1f923e4c5f577f057c660389",
+      "b178672b9ef168b3e4391c737e9cd2ebe76146a0cd2163340198e14f601416a5"
+    ],
+    "desktop": {
+      "original": {
+        "joinToVisibleHudMs": 22492.6,
+        "joinToReadyClickMs": 22992.8,
+        "worstLoadingRafMs": 3483.1,
+        "worstLoadingPointerMs": 3463.2,
+        "firstPostHudRafMs": 116.7,
+        "longestPostHudPointerMs": 53.8,
+        "postHudPointerCount": 1
+      },
+      "candidate": {
+        "joinToVisibleHudMs": 22753.7,
+        "joinToReadyClickMs": 23247.1,
+        "worstLoadingRafMs": 883.3,
+        "worstLoadingPointerMs": 819.4,
+        "firstPostHudRafMs": 116.6,
+        "longestPostHudPointerMs": 3.7,
+        "postHudPointerCount": 2
+      },
+      "driver": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "pose": [
+        "analysts-0",
+        -20.541,
+        0,
+        -30.03999,
+        3.141592653589793,
+        "smg"
+      ],
+      "canvas": [
+        [
+          672,
+          378
+        ],
+        [
+          672,
+          378
+        ]
+      ],
+      "draws": [
+        295,
+        295
+      ],
+      "rgbMeanAbsoluteError": [
+        0.358,
+        0.398,
+        0.4
+      ],
+      "pixelsOver15Of255": 0.743
+    },
+    "emulated": {
+      "original": {
+        "joinToVisibleHudMs": 18570.0,
+        "joinToReadyClickMs": 18847.8,
+        "worstLoadingRafMs": 3683.2,
+        "worstLoadingPointerMs": 3667.8,
+        "firstPostHudRafMs": 100,
+        "longestPostHudPointerMs": 58.9,
+        "postHudPointerCount": 2
+      },
+      "candidate": {
+        "joinToVisibleHudMs": 18772.5,
+        "joinToReadyClickMs": 19044.4,
+        "worstLoadingRafMs": 1240.6,
+        "worstLoadingPointerMs": 1202.8,
+        "firstPostHudRafMs": 100,
+        "longestPostHudPointerMs": 63.1,
+        "postHudPointerCount": 1
+      },
+      "driver": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "pose": [
+        "counterAnalysts-0",
+        28.00054,
+        0,
+        30.43484,
+        3.141592653589793,
+        "smg"
+      ],
+      "canvas": [
+        [
+          480,
+          270
+        ],
+        [
+          480,
+          270
+        ]
+      ],
+      "draws": [
+        40,
+        40
+      ],
+      "rgbMeanAbsoluteError": [
+        0.225,
+        0.224,
+        0.212
+      ],
+      "pixelsOver15Of255": 0.283
+    }
+  },
+  "floor5-2": {
+    "map": "floor5-prepared",
+    "reference": "2438ef6bd351251749c2e957a9c003150a19428563031cbb93b67f3ebb444cc5",
+    "candidate": "2438ef6bd351251749c2e957a9c003150a19428563031cbb93b67f3ebb444cc5",
+    "protocol": 21,
+    "movementMeters": [
+      0.21699999999999875,
+      0.21699999999999875
+    ],
+    "rawSHA256": [
+      "5a323554a7d85f32bfe1ee994ab587e23aab973b57092d25e5aa0cc1cc600839",
+      "83ed0cf87d53dfca5d8351d49ed72b7b65e2a5b01bd567b23c6d77b5c38bdf06"
+    ],
+    "desktop": {
+      "original": {
+        "joinToVisibleHudMs": 22103.0,
+        "joinToReadyClickMs": 22608.7,
+        "worstLoadingRafMs": 3299.9,
+        "worstLoadingPointerMs": 3263,
+        "firstPostHudRafMs": 100,
+        "longestPostHudPointerMs": 66.1,
+        "postHudPointerCount": 2
+      },
+      "candidate": {
+        "joinToVisibleHudMs": 22326.3,
+        "joinToReadyClickMs": 22865.8,
+        "worstLoadingRafMs": 916.6,
+        "worstLoadingPointerMs": 888.8,
+        "firstPostHudRafMs": 116.7,
+        "longestPostHudPointerMs": 22.4,
+        "postHudPointerCount": 2
+      },
+      "driver": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "pose": [
+        "analysts-0",
+        -20.541,
+        0,
+        -30.03999,
+        3.141592653589793,
+        "smg"
+      ],
+      "canvas": [
+        [
+          672,
+          378
+        ],
+        [
+          672,
+          378
+        ]
+      ],
+      "draws": [
+        295,
+        295
+      ],
+      "rgbMeanAbsoluteError": [
+        0.146,
+        0.159,
+        0.16
+      ],
+      "pixelsOver15Of255": 0.21
+    },
+    "emulated": {
+      "original": {
+        "joinToVisibleHudMs": 17900.4,
+        "joinToReadyClickMs": 18186.4,
+        "worstLoadingRafMs": 3550,
+        "worstLoadingPointerMs": 3532.3,
+        "firstPostHudRafMs": 83.2,
+        "longestPostHudPointerMs": 61.8,
+        "postHudPointerCount": 2
+      },
+      "candidate": {
+        "joinToVisibleHudMs": 18139.1,
+        "joinToReadyClickMs": 18419.3,
+        "worstLoadingRafMs": 1153,
+        "worstLoadingPointerMs": 1101.5,
+        "firstPostHudRafMs": 100.1,
+        "longestPostHudPointerMs": 8.9,
+        "postHudPointerCount": 2
+      },
+      "driver": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "pose": [
+        "counterAnalysts-0",
+        28.00054,
+        0,
+        30.43484,
+        3.141592653589793,
+        "smg"
+      ],
+      "canvas": [
+        [
+          480,
+          270
+        ],
+        [
+          480,
+          270
+        ]
+      ],
+      "draws": [
+        40,
+        40
+      ],
+      "rgbMeanAbsoluteError": [
+        0.003,
+        0.004,
+        0.004
+      ],
+      "pixelsOver15Of255": 0.003
+    }
+  },
+  "floor5-clean": {
+    "map": "floor5-prepared",
+    "reference": "2438ef6bd351251749c2e957a9c003150a19428563031cbb93b67f3ebb444cc5",
+    "candidate": "7fe8e3d51f8615772a6963edf12500b60d37d2e94b816bf18e8fdef4a2f3a9d6",
+    "protocol": 21,
+    "movementMeters": [
+      0.21699999999999875,
+      0.21699999999999875
+    ],
+    "rawSHA256": [
+      "f18340c09c5368015f635d3a67c9812f3dc08790c1761dc673f9b657771f75c1",
+      "7958755efe485162c391cc511469380c55883b4799ad855a761da46ed23591c4"
+    ],
+    "desktop": {
+      "original": {
+        "joinToVisibleHudMs": 23040.0,
+        "joinToReadyClickMs": 23561.9,
+        "worstLoadingRafMs": 3466.5,
+        "worstLoadingPointerMs": 3433.8,
+        "firstPostHudRafMs": 116.6,
+        "longestPostHudPointerMs": 13.8,
+        "postHudPointerCount": 2
+      },
+      "candidate": {
+        "joinToVisibleHudMs": 22266.8,
+        "joinToReadyClickMs": 22741.6,
+        "worstLoadingRafMs": 966.5,
+        "worstLoadingPointerMs": 834.6,
+        "firstPostHudRafMs": 100,
+        "longestPostHudPointerMs": 27.2,
+        "postHudPointerCount": 1
+      },
+      "driver": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "pose": [
+        "analysts-0",
+        -20.541,
+        0,
+        -30.03999,
+        3.141592653589793,
+        "smg"
+      ],
+      "canvas": [
+        [
+          672,
+          378
+        ],
+        [
+          672,
+          378
+        ]
+      ],
+      "draws": [
+        295,
+        295
+      ],
+      "rgbMeanAbsoluteError": [
+        0.764,
+        0.875,
+        0.965
+      ],
+      "pixelsOver15Of255": 1.63
+    },
+    "emulated": {
+      "original": {
+        "joinToVisibleHudMs": 18653.6,
+        "joinToReadyClickMs": 18927.4,
+        "worstLoadingRafMs": 3716.5,
+        "worstLoadingPointerMs": 3651.5,
+        "firstPostHudRafMs": 83.4,
+        "longestPostHudPointerMs": 15.2,
+        "postHudPointerCount": 2
+      },
+      "candidate": {
+        "joinToVisibleHudMs": 18329.0,
+        "joinToReadyClickMs": 18605.2,
+        "worstLoadingRafMs": 1279.1,
+        "worstLoadingPointerMs": 1184.1,
+        "firstPostHudRafMs": 83.3,
+        "longestPostHudPointerMs": 18.9,
+        "postHudPointerCount": 2
+      },
+      "driver": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "pose": [
+        "counterAnalysts-0",
+        28.00054,
+        0,
+        30.43484,
+        3.141592653589793,
+        "smg"
+      ],
+      "canvas": [
+        [
+          480,
+          270
+        ],
+        [
+          480,
+          270
+        ]
+      ],
+      "draws": [
+        40,
+        40
+      ],
+      "rgbMeanAbsoluteError": [
+        0.89,
+        0.885,
+        0.849
+      ],
+      "pixelsOver15Of255": 0.977
+    }
+  },
+  "compact": {
+    "map": "compact-arena",
+    "reference": "2438ef6bd351251749c2e957a9c003150a19428563031cbb93b67f3ebb444cc5",
+    "candidate": "2438ef6bd351251749c2e957a9c003150a19428563031cbb93b67f3ebb444cc5",
+    "protocol": 21,
+    "movementMeters": [
+      0.4339999999999922,
+      0.4339999999999922
+    ],
+    "rawSHA256": [
+      "24bf7d0d03f7088501a259ad5e3804ec86b1a3f3eb1eb84252d1a72c9063034b",
+      "51c1956b5faabccff8fb10ccf8bbcbb35facff0920b8ce3c2254e73e759e25bf"
+    ],
+    "desktop": {
+      "original": {
+        "joinToVisibleHudMs": 12687.3,
+        "joinToReadyClickMs": 13243.3,
+        "worstLoadingRafMs": 516.7,
+        "worstLoadingPointerMs": 476.8,
+        "firstPostHudRafMs": 83.3,
+        "longestPostHudPointerMs": 22.4,
+        "postHudPointerCount": 1
+      },
+      "candidate": {
+        "joinToVisibleHudMs": 13561.1,
+        "joinToReadyClickMs": 14014.3,
+        "worstLoadingRafMs": 516.6,
+        "worstLoadingPointerMs": 515.3,
+        "firstPostHudRafMs": 83.3,
+        "longestPostHudPointerMs": 71.1,
+        "postHudPointerCount": 1
+      },
+      "driver": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "pose": [
+        "analysts-0",
+        2.6,
+        0,
+        7.75,
+        -1.570796,
+        "smg"
+      ],
+      "canvas": [
+        [
+          672,
+          378
+        ],
+        [
+          672,
+          378
+        ]
+      ],
+      "draws": [
+        98,
+        98
+      ],
+      "rgbMeanAbsoluteError": [
+        1.046,
+        0.906,
+        0.665
+      ],
+      "pixelsOver15Of255": 1.595
+    },
+    "emulated": {
+      "original": {
+        "joinToVisibleHudMs": 11983.1,
+        "joinToReadyClickMs": 12593.3,
+        "worstLoadingRafMs": 835,
+        "worstLoadingPointerMs": 822.9,
+        "firstPostHudRafMs": 83.4,
+        "longestPostHudPointerMs": 7.6,
+        "postHudPointerCount": 2
+      },
+      "candidate": {
+        "joinToVisibleHudMs": 11940.6,
+        "joinToReadyClickMs": 12277.4,
+        "worstLoadingRafMs": 880,
+        "worstLoadingPointerMs": 861.3,
+        "firstPostHudRafMs": 167.6,
+        "longestPostHudPointerMs": 86.3,
+        "postHudPointerCount": 3
+      },
+      "driver": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "pose": [
+        "counterAnalysts-0",
+        27.4,
+        0,
+        10.25,
+        1.570796,
+        "smg"
+      ],
+      "canvas": [
+        [
+          480,
+          270
+        ],
+        [
+          480,
+          270
+        ]
+      ],
+      "draws": [
+        109,
+        109
+      ],
+      "rgbMeanAbsoluteError": [
+        0.124,
+        0.1,
+        0.072
+      ],
+      "pixelsOver15Of255": 0.167
+    }
+  }
+}

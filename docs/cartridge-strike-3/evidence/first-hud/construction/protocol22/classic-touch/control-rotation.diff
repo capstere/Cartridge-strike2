@@ -1,0 +1,14 @@
+--- a/tools/network-browser-resume.mjs
++++ b/tools/network-browser-resume.mjs
+@@ -8,6 +8,11 @@
+   await waitForActiveHud(page);
+   if(await page.locator('#pause').isVisible())await page.locator('#resume').tap();
+   await page.locator('#pause').waitFor({state:'hidden'});
++  const viewport=page.viewportSize();
++  await page.setViewportSize({width:viewport.height,height:viewport.width});
++  await page.locator('#pause:not([hidden])').waitFor({state:'attached'});
++  await page.setViewportSize(viewport);
++  await page.waitForFunction(()=>matchMedia('(orientation: landscape)').matches);
+   await page.locator('#mobile-controls').waitFor();
+ }
+ 

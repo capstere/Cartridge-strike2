@@ -1,6 +1,7 @@
 // Run against an isolated build in which the example is actually installed.
 import assert from 'node:assert/strict';
-import {mkdir,writeFile} from 'node:fs/promises';
+import {mkdir,readFile,writeFile} from 'node:fs/promises';
+import {exportPrivateFixtureBytes} from './appearance-export-fixture.mjs';
 import {join} from 'node:path';
 import {chromium} from '../frontline/source/tools/dev/node_modules/playwright-core/index.mjs';
 
@@ -80,31 +81,52 @@ try{
 
   // Insert a real legacy v1 IndexedDB row in a fresh origin before the game's
   // first library open. The ordinary menu must migrate and load its model.
-  await page.close();
+  // The authoring exporter is intentionally absent from the packaged pilot.
+  // Supply that one local module only while constructing the synthetic design.
+  const exporterPath='/vendor/three/addons/exporters/GLTFExporter.js';
+  const fixtureUrl=new URL(exporterPath,origin).href;
+  const exporter=await readFile(new URL('..'+exporterPath,import.meta.url));
+  let exported;
+  await page.route(fixtureUrl,route=>route.fulfill({contentType:'text/javascript',body:exporter}));
+  try{exported=Buffer.from(await page.evaluate(exportPrivateFixtureBytes)).toString('base64');}
+  finally{await page.unroute(fixtureUrl);await page.close();}
   const privateContext=await browser.newContext(options);
   const saved=await privateContext.newPage();saved.setDefaultTimeout(90000);
   saved.on('pageerror',e=>report.errors.push(e.message));
   await saved.goto(origin+'/robots.txt');
-  const legacy=await saved.evaluate(async()=>{
-    const bytes=await (await fetch('/assets/fps/models/quaternius-operator-male.glb')).arrayBuffer();
-    const sha256=[...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))].map(v=>v.toString(16).padStart(2,'0')).join('');
-    const id=crypto.randomUUID(),created=Date.now()-60000;
+  const legacy=await saved.evaluate(async encoded=>{
+    const source=await (await fetch('/assets/fps/models/quaternius-operator-male.glb')).arrayBuffer();
+    const bytes=Uint8Array.from(atob(encoded),c=>c.charCodeAt(0)).buffer;
+    const digest=async buffer=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',buffer))].map(v=>v.toString(16).padStart(2,'0')).join('');
+    const sha256=await digest(bytes),sourceHash=await digest(source);
+    const id=crypto.randomUUID(),unsupported=crypto.randomUUID(),created=Date.now()-60000;
     await new Promise((ok,fail)=>{
       const r=indexedDB.open('cartridge-private-characters',1);
       r.onupgradeneeded=()=>r.result.createObjectStore('drafts',{keyPath:'id'});
       r.onerror=()=>fail(r.error);
       r.onsuccess=()=>{const db=r.result,t=db.transaction('drafts','readwrite');
-        t.objectStore('drafts').put({id,schema:1,name:'Legacy crew member',bytes,sha256,sourceHash:sha256,created,updated:created,projectId:null});
+        const drafts=t.objectStore('drafts');
+        drafts.put({id,schema:1,name:'Legacy crew member',bytes,sha256,sourceHash,created,updated:created,projectId:null});
+        drafts.put({id:unsupported,schema:1,name:'Unfitted source rig',bytes:source,sha256:sourceHash,sourceHash,created,updated:created,projectId:null});
         t.oncomplete=()=>{db.close();ok();};t.onerror=()=>fail(t.error);
       };
     });
-    localStorage.setItem('cartridge-operator-outfit','harbor-crew');return {id,sha256,created};
-  });
+    localStorage.setItem('cartridge-operator-outfit','harbor-crew');return {id,sha256,created,unsupported,sourceHash};
+  },exported);
+  assert.notEqual(legacy.sha256,legacy.sourceHash);
+  // The original naked rig lacks the fitted shoes and shirt vertex colors.
+  // Keep the legitimate error and original local bytes when it is selected.
+  await saved.goto(url+'&avatar='+legacy.unsupported,{waitUntil:'domcontentloaded'});
+  await saved.locator('#lobby-stage.is-ready').waitFor();
+  const reason=await saved.locator('#character-status').textContent();
+  assert.match(reason,/could not be loaded|incompatible|unsupported/i);
+  assert(await saved.locator('#start').isDisabled());report.unsupported={startDisabled:true,reason};
   await saved.goto(url+'&avatar='+legacy.id,{waitUntil:'domcontentloaded'});
   await saved.locator('#lobby-stage.is-ready').waitFor();
   report.legacyMenu=await saved.evaluate(()=>({screen:document.querySelector('#menu').dataset.screen,
     selection:document.querySelector('#player-character').selectedOptions[0]?.textContent,
     status:document.querySelector('#character-status').textContent,wardrobe:document.querySelector('[data-panel=outfits] [role=status]').textContent}));
+  assert.match(report.legacyMenu.status,/Legacy crew member.*Saved locally/);
   await saved.locator('[data-panel=outfits] [role=status]').filter({hasText:'Your saved character supplies its own outfit and sleeves.'}).waitFor();
   assert(await saved.locator('[data-outfit=harbor-crew]').isDisabled());
   report.saved=await saved.evaluate(async expected=>{

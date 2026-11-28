@@ -2,6 +2,10 @@
 
 ## Authoring and distribution
 
+The [default export](content/default-pilot.json) and [installed Harbor Crew export](content/installed-pilot.json) each admitted two clients. Installing the sample changed the catalog from 160 to 161 entries. It preserved the same 728 public paths and the 27 additional pilot files. The installed build also rendered its normal wardrobe, Solo and a compatible stored private appearance on Pi V3D. See the [native images and lifecycle receipt](content/appearance.md).
+
+After integrating the Floor 5 admission merge, both fresh exports passed again. Both clients observed the registered outfit, the compatible saved row retained its original bytes and deployed privately, and the unsupported stock rig displayed its recovery message. The [joined evidence](content/joined-after-floor5.json) records both build identities and the real browser observations.
+
 The build derives its catalog from the same definitions the game and room authority use. Stable IDs identify content across saves, while the catalog version and SHA-256 digest identify the reviewed set of definitions and assets. The digest participates in every multiplayer map's compatibility hash. The runtime manifest records the catalog version, digest and entry count. The [catalog guide](content/catalog.md) covers the twelve content types and five checked package examples.
 
 To exercise an addition in a disposable checkout, validate and install the [Harbor Crew appearance](content/appearance.md). Its palette uses the shipped Quaternius rigs, kit and textures. The importer verifies both rig fingerprints, the required animations and the attribution before registering it. Regenerate the multiplayer build and run the two-client smoke. Existing private character data stays in the player's browser.

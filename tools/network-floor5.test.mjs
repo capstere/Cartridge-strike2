@@ -1,6 +1,8 @@
 import {glassCrossing} from './network-glass-fixture.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {createRoomLevelWorld} from '../src/fps/world.mjs';
 import {createHash} from 'node:crypto';
 import {loadHeadlessWorld,createHeadlessSimulation} from '../server/headless.mjs';
 import {NETWORK_CONFIG,NETWORK_MAP,copyPose} from '../shared/multiplayer/rules.mjs';
@@ -18,6 +20,27 @@ function route(w,d){
   if(clear)return {along,range};
  }throw Error('No static route '+d.id);
 }
+test('the private client can cancel construction and retry with the complete published Floor 5 world',async()=>{
+ const source=new URL('../levels/floor5-prepared.json',import.meta.url);
+ const project=JSON.parse(await readFile(source,'utf8'));
+ const cancelled=new AbortController();
+ const pending=createRoomLevelWorld(project,cancelled.signal);
+ cancelled.abort();
+ await assert.rejects(pending,{name:'AbortError'});
+ const world=await createRoomLevelWorld(project,new AbortController().signal);
+ const {world:authority}=await loadHeadlessWorld('floor5-prepared');
+ assert.equal(createHash('sha256').update(collisionContract(world)).digest('hex'),CONTRACT.collisionHash);
+ assert.deepEqual(world.navigation.nodes.map(p=>[p.x,p.z]),authority.navigation.nodes.map(p=>[p.x,p.z]));
+ assert.equal(world.navigation.statistics.edges,authority.navigation.statistics.edges);
+ for(const team of ['analysts','counterAnalysts']){
+  for(const target of ['bomb','hostages']){
+   assert.deepEqual(world.tactical.choices(team,target),authority.tactical.choices(team,target));
+  }
+ }
+ assert.notEqual(world.doors,authority.doors);
+ assert.notEqual(world.glass,authority.glass);
+});
+
 test('published Floor 5 contract includes resolved collision, all doors and spawn cabins',async()=>{
  const {world:w,sourceHash}=await loadHeadlessWorld(NETWORK_MAP);
  assert.equal(NETWORK_MAP,'floor5-prepared');assert.equal(sourceHash,CONTRACT.mapHash);assert.equal(hash(w),CONTRACT.collisionHash);

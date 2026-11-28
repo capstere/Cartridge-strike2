@@ -1,0 +1,33 @@
+{
+  "status": "PASS",
+  "build": "5a98d417664e6831d1c0314a698924c2f4554bb22d58de806851b09ec97a5dd1",
+  "content": {
+    "version": 1,
+    "digest": "6e6a76f6cece04471023d91b5e5a9280305889f7b7a6d1627953d2f473382d02",
+    "entries": 161,
+    "managedFiles": []
+  },
+  "publicFiles": 728,
+  "privateFiles": 27,
+  "clients": 2,
+  "replicatedOutfit": "harbor-crew",
+  "rendered": true,
+  "savedCharacter": {
+    "name": "Legacy crew member",
+    "unchanged": true,
+    "bytes": 2374724,
+    "selected": "harbor-crew",
+    "schema": 1,
+    "deployed": {
+      "private": true,
+      "signature": "private"
+    }
+  },
+  "unsupportedSource": {
+    "startDisabled": true,
+    "reason": "The selected character could not be loaded. Choose the default operator or another compatible saved character."
+  },
+  "physicalPhone": false,
+  "platform": "Raspberry Pi 5, native V3D, Chromium emulated touch",
+  "pageErrors": []
+}
