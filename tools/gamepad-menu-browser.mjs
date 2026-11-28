@@ -66,8 +66,11 @@ try{
  assert.equal(await p.evaluate(()=>document.activeElement.id),'csl-deploy');
  await tap(1);await p.locator('#cs-loading').waitFor({state:'hidden'});
  assert.equal(await p.evaluate(()=>document.activeElement.id),'start');
- await tap(0);await p.locator('#csl-deploy').waitFor();await tap(0);
- await p.locator('#hud').waitFor();
+ await tap(0);await p.locator('#csl-deploy').waitFor();
+ // The first submitted world frame can compile shaders. HUD visibility proves the A edge
+ // was consumed. Release it before measuring ordinary running-controller polling.
+ await hold(0,1);await p.locator('#hud').waitFor();await hold(0,0);
+ await p.waitForFunction(()=>testButtonMask===0);
  await p.waitForFunction(()=>!__fps.modal&&!__fps.game.warmupRemaining&&__fps.game.phase==='active');
  const state=()=>p.evaluate(()=>{const a=__fps.game.player;return {x:a.x,z:a.z,weight:a.rushWeight,yaw:a.yaw,ammo:__fps.game.item(a).ammo,time:__fps.game.state.time,modal:__fps.modal};});
  phase('Checking stick and trigger');const before=await state();await p.evaluate(()=>{testPad.axes[1]=-1;testPad.axes[2]=.35;});await tap(10);

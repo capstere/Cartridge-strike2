@@ -160,15 +160,16 @@ async function selectedLevel(){
    if(!saved)throw Error('No private level preview is saved in this browser.');
    project=parseProject(saved);
    if(project.name)selection.name=project.name;
- }else if(selection.file){
-   const response=await fetch('../'+selection.file);
-   if(!response.ok)throw Error('The level file could not be loaded. Reload to try again.');
-   project=englishPublishedFixtures(parseProject(await response.text()));
  }
  $('game-mode').value=selection.mode;
  updateMode();
  loadingStage('level',selection.name);
  $('menu').dispatchEvent(new CustomEvent('cs-solo-selection',{detail:selection}));
+ if(selection.file){
+   const response=await fetch('../'+selection.file);
+   if(!response.ok)throw Error('The level file could not be loaded. Reload to try again.');
+   project=englishPublishedFixtures(parseProject(await response.text()));
+ }
  return project;
 }
 function nameWorld(){

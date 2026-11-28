@@ -1,0 +1,91 @@
+{
+  "commit": "ae79abe4f31f7210b8fcbc5e5ce4cacafb53cfd0",
+  "started": "2026-11-28T15:40:40.522Z",
+  "build": "e52226e22acd0cc49583683ecf340e31ff108943e46a3d4f9bc8ed8e3c8bf984",
+  "protocol": 22,
+  "browser": "156.0.8078.79",
+  "viewport": {
+    "width": 932,
+    "height": 430
+  },
+  "device": "Raspberry Pi, Wayland native Chromium. CDP emulated touch.",
+  "locale": "sv-SE",
+  "scenes": [
+    {
+      "name": "news",
+      "path": "news.jpg",
+      "sha256": "abf5446827dfb18025b54c3067d6ec9e5ca0f5c7fb9edb02099d1cd453f50977",
+      "ms": 5766,
+      "text": "What’s new\nNovember 28, 2026\nClasses, Rush and new match modes\n\nCartridge-Strike 3 · Build e52226e22acd\n\nChoose your class before deploying in Solo. Build forward speed to Rush, then crouch to slide. Touch players can use the stick edge or a dedicated Run button.\n\nPlay Free-for-All for individual points, or contest capture zones in Domination. Open Classes to inspect your equipment and Outfits to change your operator.\n\nNovember 27, 2026\nNew match menus\n\nChoose Solo or With friends from Play. Quick join takes you directly to the family room. Your saved characters are available in Solo setup."
+    },
+    {
+      "name": "sound",
+      "path": "sound.jpg",
+      "sha256": "80349640fc48f2df1db1b6515f76a3b3c4a18bd857eb40ebb07e988ad79d6232",
+      "ms": 9039,
+      "text": "Sound\nVolume\nMenu music volume\n100%\nAnnouncement volume\n100%\nHit and elimination sounds\nRadio voices"
+    },
+    {
+      "name": "display",
+      "path": "display.jpg",
+      "sha256": "168ecdeab96a2dcae94ae9a2ba5f95559b7b5a863db1ea8d0cdc08b439bcb9cc",
+      "ms": 9123,
+      "text": "Display\nGraphics\nStandard\nLow · reduced resolution and shadows\nPower saving · 30 FPS cap\nAmbient occlusion\nDynamic resolution\nField of view (degrees)\n76\nReduced motion\nReduced flash and ringing\n\nAmbient occlusion is unavailable here. Low quality uses direct rendering. Dynamic resolution adjusts the render buffer during play. Sun rays and animated grass are unavailable in this renderer."
+    },
+    {
+      "name": "touch",
+      "path": "touch.jpg",
+      "sha256": "319a173471a74c82f817f11b2b6c1b7a6f3924a840e7894d4c6b5624486e81df",
+      "ms": 9242,
+      "text": "Touch and aim\nTouch controls\nAutomatic\nOn\nOff\nMovement stick\nFloating\nFixed\nRun control\nPush past the ring\nRun button\nMobile auto-fire\nLight aim assist\nDouble-tap to aim\nScout rifle fires on release\nMouse sensitivity\nTouch look sensitivity\n1\nZoom sensitivity\n1\nInvert vertical look\n\nFire when the reticle settles on a visible opponent. Turn off to use the Fire button. Grenades and rockets always use manual fire.\n\nEdit touch layoutReset look settings\n\nPush the stick past its ring to run. Press Crouch while running to slide. Auto-fire follows a visible target. Tap Aim to toggle, or hold it for temporary aim. Double-tap the look area to toggle aim. Hold Throw to prepare a grenade and release to throw.\n\nGamepad: move with the left stick, look with the right, press L3 to run, B to crouch, LT to aim and RT to fire. Start pauses. Use the D-pad and A to navigate menus. Bonus buttons follow the bindings above."
+    },
+    {
+      "name": "look",
+      "path": "look.jpg",
+      "sha256": "40353b0d5e197a08e7fea2870ba8ca5802252cb14bfde947896cece9e1bc6ee1",
+      "ms": 9349,
+      "text": "Touch and aim\nTouch controls\nAutomatic\nOn\nOff\nMovement stick\nFloating\nFixed\nRun control\nPush past the ring\nRun button\nMobile auto-fire\nLight aim assist\nDouble-tap to aim\nScout rifle fires on release\nMouse sensitivity\nTouch look sensitivity\n1\nZoom sensitivity\n1\nInvert vertical look\n\nFire when the reticle settles on a visible opponent. Turn off to use the Fire button. Grenades and rockets always use manual fire.\n\nEdit touch layoutReset look settings\n\nPush the stick past its ring to run. Press Crouch while running to slide. Auto-fire follows a visible target. Tap Aim to toggle, or hold it for temporary aim. Double-tap the look area to toggle aim. Hold Throw to prepare a grenade and release to throw.\n\nGamepad: move with the left stick, look with the right, press L3 to run, B to crouch, LT to aim and RT to fire. Start pauses. Use the D-pad and A to navigate menus. Bonus buttons follow the bindings above."
+    },
+    {
+      "name": "help",
+      "path": "help.jpg",
+      "sha256": "2b7b091f5d5ee163c003793d67d60cbe0c384ea1383d776db6745d9ed3407265",
+      "ms": 9444,
+      "text": "Touch and aim\nTouch controls\nAutomatic\nOn\nOff\nMovement stick\nFloating\nFixed\nRun control\nPush past the ring\nRun button\nMobile auto-fire\nLight aim assist\nDouble-tap to aim\nScout rifle fires on release\nMouse sensitivity\nTouch look sensitivity\n1\nZoom sensitivity\n1\nInvert vertical look\n\nFire when the reticle settles on a visible opponent. Turn off to use the Fire button. Grenades and rockets always use manual fire.\n\nEdit touch layoutReset look settings\n\nPush the stick past its ring to run. Press Crouch while running to slide. Auto-fire follows a visible target. Tap Aim to toggle, or hold it for temporary aim. Double-tap the look area to toggle aim. Hold Throw to prepare a grenade and release to throw.\n\nGamepad: move with the left stick, look with the right, press L3 to run, B to crouch, LT to aim and RT to fire. Start pauses. Use the D-pad and A to navigate menus. Bonus buttons follow the bindings above."
+    },
+    {
+      "name": "solo",
+      "path": "solo.jpg",
+      "sha256": "10fd22521080ef875c798991ecf72fa5902d43e8c7f9d909e72c71267e63457e",
+      "ms": 3042,
+      "text": "SOLO MATCH"
+    },
+    {
+      "name": "loading",
+      "path": "loading.jpg",
+      "sha256": "b1d73148954f3eb3077cac928aa4cabf33ad794e768e9f4c1a1a195db6388505",
+      "ms": 3536,
+      "text": "CARTRIDGE\n//STRIKE\nENDLESS ACTION\n\nMAP\n\nMELTEM\n\nA\nTEAM\nANALYSTS\n\nFight through the whitewashed village, from the stepped terraces to the waterfront.\n\nTIPS\nPress 4 to cycle cartridge grenades. Press 5 to equip the objective bomb.\n\nLOADING THE MAP\nCANCEL · RETURN TO LOBBY",
+      "art": "linear-gradient(90deg, rgba(8, 18, 28, 0.933) 7%, rgba(10, 21, 34, 0.74) 50%, rgba(23, 36, 52, 0.506)), url(\"http://127.0.0.1:18762/assets/fps/maps/meltem.webp\")"
+    },
+    {
+      "name": "deploy",
+      "path": "deploy.jpg",
+      "sha256": "524b80b3f80550de7959fe3fe874803c67b5ff3b4b054aa74bb2fcc954d9a62b",
+      "ms": 13057,
+      "text": "Meltem · Analysts\n\nChoose your class\nDeployment loadout\nPulse SMG\nBreach Shotgun\nScout Rifle\nRocket Launcher\nAssault\nRaider\nScout\nBreacher\n\nScout Rifle · Sidearm A\n\nDeploy"
+    },
+    {
+      "name": "hud",
+      "path": "hud.jpg",
+      "sha256": "b87b683af30f2f3ab6f4627cfee704e37917ba09a5fd1fd6b9f03a34ab9ef5cc",
+      "ms": 18997,
+      "text": "MATCH BEGINS IN\n5\n0\nANALYSTS\n5 ALIVE\nENDLESS ACTION ∞\n0:00\nCOUNTER ANALYSTS\n5 ALIVE\n0\n×\n+\n100\n60 armor\nSCOUT RIFLE\n5 / 25\nPier · RENDEZVOUS\nCAPTURE · 44 m\n↑ 44 m · moves in 60 s\nA 0 · CA 0"
+    }
+  ],
+  "errors": [],
+  "loadControl": "The driver released the single Meltem JSON response after recording the cold loading state.",
+  "confirmedClass": "Scout",
+  "deployedWeapon": "SCOUT RIFLE",
+  "finished": "2026-11-28T15:41:11.076Z"
+}

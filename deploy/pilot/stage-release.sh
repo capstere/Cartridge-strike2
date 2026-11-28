@@ -9,9 +9,12 @@ prefix=/opt/cartridge-strike2-pilot/releases
 if (( $# == 0 )); then
     sudo -n install -d -m 0755 "$prefix"
     release="$prefix/$revision"
+    ops="/opt/cartridge-strike2-pilot/operations/$revision"
+    sudo -n install -d -m 0755 "$(dirname "$ops")"
     privileged=(sudo -n)
 elif [[ $# == 2 && $1 == --export-to && $2 == /* ]]; then
     release=$2
+    ops="$release.ops"
     privileged=()
 else
     echo 'Usage: bash deploy/pilot/stage-release.sh [--export-to /absolute/stage]' >&2
@@ -35,15 +38,30 @@ git -C "$repo" archive "$revision" -- . ':(exclude)frontline' ':(exclude)IMG_*.P
     node tools/runtime-distribution.mjs pilot "$workspace/pilot"
 )
 npm ci --prefix "$workspace/pilot/server" --offline --omit=dev --ignore-scripts --no-audit --no-fund
-if "${privileged[@]}" test -e "$release"; then
-    "${privileged[@]}" diff --no-dereference -qr "$workspace/pilot" "$release"
-else
-    incoming=$("${privileged[@]}" mktemp -d "$(dirname "$release")/.incoming.XXXXXXXX")
-    "${privileged[@]}" cp -a "$workspace/pilot/." "$incoming/"
-    if (( ${#privileged[@]} )); then sudo -n chown -R root:root "$incoming"; fi
-    "${privileged[@]}" chmod 0755 "$incoming"
-    # Concurrent attempts can stage the same immutable revision. Never replace it.
-    "${privileged[@]}" mv -Tn "$incoming" "$release"
-    "${privileged[@]}" diff --no-dereference -qr "$workspace/pilot" "$release"
-fi
-echo "Verified $revision at $release"
+mkdir -p "$workspace/ops"/{deploy/online,tools,server}
+cp "$workspace/source"/deploy/online/{manage.py,prepare-rollback.mjs,tunnel.py} "$workspace/ops/deploy/online/"
+cp "$workspace/source/tools/network-pilot-probe.mjs" "$workspace/ops/tools/"
+ln -s "$release/server/node_modules" "$workspace/ops/server/node_modules"
+printf '%s\n' "$revision" > "$workspace/ops/REVISION"
+publish_tree() {
+    local source=$1 target=$2
+    if ! "${privileged[@]}" test -e "$target"; then
+        incoming=$("${privileged[@]}" mktemp -d "$(dirname "$target")/.incoming.XXXXXXXX")
+        "${privileged[@]}" cp -a "$source/." "$incoming/"
+        if (( ${#privileged[@]} )); then sudo -n chown -Rh root:root "$incoming"; fi
+        "${privileged[@]}" chmod 0755 "$incoming"
+        "${privileged[@]}" mv -Tn "$incoming" "$target"
+        "${privileged[@]}" rm -rf -- "$incoming"
+        incoming=''
+    fi
+    "${privileged[@]}" diff --no-dereference -qr "$source" "$target"
+    if (( ${#privileged[@]} )); then
+        if [[ -n "$(sudo -n find -P "$target" \( ! -uid 0 -o ! -gid 0 -o \( ! -type l -perm /022 \) \) -print -quit)" ]]; then
+            echo "Expected a root-owned, read-only deployment tree." >&2
+            return 1
+        fi
+    fi
+}
+publish_tree "$workspace/pilot" "$release"
+publish_tree "$workspace/ops" "$ops"
+echo "Verified $revision at $release with operations at $ops"
