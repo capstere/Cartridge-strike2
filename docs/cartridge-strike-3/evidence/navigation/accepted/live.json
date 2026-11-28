@@ -1,0 +1,504 @@
+{
+  "rawSha256": "2e1f895ab57f2c27cccc19cb7c71ce2e4057817ab2509c2f9b541a886404f2da",
+  "cases": [
+    {
+      "map": "floor5",
+      "input": "keyboard and mouse",
+      "renderer": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "moved": 9,
+      "frames": 358,
+      "activeSeconds": 12.066666666666086,
+      "first": {
+        "wallMs": 54669,
+        "simSeconds": 15,
+        "map": "lvl-floor5-preppad-20261105",
+        "calls": 803,
+        "player": {
+          "x": -20.541,
+          "y": 0,
+          "z": -30.03999,
+          "yaw": 3.141592653589793,
+          "pitch": 0
+        },
+        "actors": [
+          {
+            "id": "analysts-1",
+            "x": -21.02,
+            "y": 0,
+            "z": -28.88,
+            "alive": true,
+            "mode": "objective",
+            "role": "guard",
+            "travel": 0,
+            "lastShot": null
+          },
+          {
+            "id": "analysts-2",
+            "x": -20.06,
+            "y": 0,
+            "z": -28.88,
+            "alive": true,
+            "mode": "objective",
+            "role": "watch",
+            "travel": 0,
+            "lastShot": null
+          },
+          {
+            "id": "analysts-3",
+            "x": -21.09,
+            "y": 0,
+            "z": -29.53,
+            "alive": true,
+            "mode": "objective",
+            "role": "flank",
+            "travel": 0,
+            "lastShot": null
+          },
+          {
+            "id": "analysts-4",
+            "x": -19.99,
+            "y": 0,
+            "z": -29.53,
+            "alive": true,
+            "mode": "objective",
+            "role": "defend",
+            "travel": 0,
+            "lastShot": null
+          },
+          {
+            "id": "counterAnalysts-0",
+            "x": 28,
+            "y": 0,
+            "z": 30.43,
+            "alive": true,
+            "mode": "objective",
+            "role": "objective",
+            "travel": 0,
+            "lastShot": null
+          },
+          {
+            "id": "counterAnalysts-1",
+            "x": 27.46,
+            "y": 0,
+            "z": 30.17,
+            "alive": true,
+            "mode": "objective",
+            "role": "support",
+            "travel": 0,
+            "lastShot": null
+          },
+          {
+            "id": "counterAnalysts-2",
+            "x": 28.54,
+            "y": 0,
+            "z": 30.17,
+            "alive": true,
+            "mode": "objective",
+            "role": "rescue",
+            "travel": 0,
+            "lastShot": null
+          },
+          {
+            "id": "counterAnalysts-3",
+            "x": 27.64,
+            "y": 0,
+            "z": 29.59,
+            "alive": true,
+            "mode": "objective",
+            "role": "flank",
+            "travel": 0,
+            "lastShot": null
+          },
+          {
+            "id": "counterAnalysts-4",
+            "x": 28.36,
+            "y": 0,
+            "z": 29.59,
+            "alive": true,
+            "mode": "objective",
+            "role": "rescue",
+            "travel": 0,
+            "lastShot": null
+          }
+        ]
+      },
+      "last": {
+        "wallMs": 67720,
+        "simSeconds": 26.8,
+        "map": "lvl-floor5-preppad-20261105",
+        "calls": 597,
+        "player": {
+          "x": -20.60259681984652,
+          "y": 0,
+          "z": -26.400532066007177,
+          "yaw": 3.1239926535897933,
+          "pitch": 0
+        },
+        "actors": [
+          {
+            "id": "analysts-1",
+            "x": -20.63,
+            "y": 0,
+            "z": -23.55,
+            "alive": true,
+            "mode": "objective",
+            "role": "guard",
+            "travel": 14.100288716565887,
+            "lastShot": null
+          },
+          {
+            "id": "analysts-2",
+            "x": -24.29,
+            "y": 0,
+            "z": -4.31,
+            "alive": true,
+            "mode": "objective",
+            "role": "watch",
+            "travel": 32.40649760484905,
+            "lastShot": null
+          },
+          {
+            "id": "analysts-3",
+            "x": -16.46,
+            "y": 0,
+            "z": -6.63,
+            "alive": true,
+            "mode": "combat",
+            "role": "flank",
+            "travel": 26.260775310748116,
+            "lastShot": 26.79999999999976
+          },
+          {
+            "id": "analysts-4",
+            "x": -15.47,
+            "y": 0,
+            "z": -13.38,
+            "alive": true,
+            "mode": "objective",
+            "role": "defend",
+            "travel": 25.69141785042125,
+            "lastShot": null
+          },
+          {
+            "id": "counterAnalysts-0",
+            "x": 36.92,
+            "y": 0,
+            "z": 13.15,
+            "alive": true,
+            "mode": "objective",
+            "role": "objective",
+            "travel": 36.80250000000038,
+            "lastShot": null
+          },
+          {
+            "id": "counterAnalysts-1",
+            "x": 36.9,
+            "y": 0,
+            "z": 17.27,
+            "alive": true,
+            "mode": "objective",
+            "role": "support",
+            "travel": 33.00516819671518,
+            "lastShot": null
+          },
+          {
+            "id": "counterAnalysts-2",
+            "x": 36.92,
+            "y": 0,
+            "z": 15.4,
+            "alive": true,
+            "mode": "objective",
+            "role": "rescue",
+            "travel": 34.991497820587284,
+            "lastShot": null
+          },
+          {
+            "id": "counterAnalysts-3",
+            "x": 36.01,
+            "y": 0,
+            "z": 19.59,
+            "alive": true,
+            "mode": "objective",
+            "role": "flank",
+            "travel": 31.656505359145555,
+            "lastShot": null
+          },
+          {
+            "id": "counterAnalysts-4",
+            "x": 17.95,
+            "y": 0,
+            "z": 18.24,
+            "alive": true,
+            "mode": "objective",
+            "role": "rescue",
+            "travel": 30.30984709984797,
+            "lastShot": null
+          }
+        ]
+      },
+      "observedRoles": [
+        "defend",
+        "flank",
+        "guard",
+        "objective",
+        "rescue",
+        "support",
+        "watch"
+      ],
+      "observedModes": [
+        "combat",
+        "objective"
+      ],
+      "samples": 31
+    },
+    {
+      "map": "meltem",
+      "input": "emulated touch",
+      "renderer": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "moved": 9,
+      "frames": 812,
+      "activeSeconds": 12.03333333333351,
+      "first": {
+        "wallMs": 11920,
+        "simSeconds": 0,
+        "map": "meltem",
+        "calls": 578,
+        "player": {
+          "x": -23.5,
+          "y": 0,
+          "z": 42.5,
+          "yaw": 0,
+          "pitch": 0
+        },
+        "actors": [
+          {
+            "id": "analysts-1",
+            "x": -16.5,
+            "y": 0,
+            "z": 45.5,
+            "alive": true,
+            "mode": "objective",
+            "role": "guard",
+            "travel": 0,
+            "lastShot": null
+          },
+          {
+            "id": "analysts-2",
+            "x": -1.5,
+            "y": 0,
+            "z": 45.5,
+            "alive": true,
+            "mode": "objective",
+            "role": "watch",
+            "travel": 0,
+            "lastShot": null
+          },
+          {
+            "id": "analysts-3",
+            "x": 17.6,
+            "y": 0,
+            "z": 46.2,
+            "alive": true,
+            "mode": "objective",
+            "role": "flank",
+            "travel": 0,
+            "lastShot": null
+          },
+          {
+            "id": "analysts-4",
+            "x": 26.5,
+            "y": 0,
+            "z": 41.5,
+            "alive": true,
+            "mode": "objective",
+            "role": "defend",
+            "travel": 0,
+            "lastShot": null
+          },
+          {
+            "id": "counterAnalysts-0",
+            "x": -23.5,
+            "y": 0,
+            "z": -42.5,
+            "alive": true,
+            "mode": "objective",
+            "role": "support",
+            "travel": 0,
+            "lastShot": null
+          },
+          {
+            "id": "counterAnalysts-1",
+            "x": -16.5,
+            "y": 0,
+            "z": -45.5,
+            "alive": true,
+            "mode": "objective",
+            "role": "support",
+            "travel": 0,
+            "lastShot": null
+          },
+          {
+            "id": "counterAnalysts-2",
+            "x": -1.5,
+            "y": 0,
+            "z": -45.5,
+            "alive": true,
+            "mode": "objective",
+            "role": "support",
+            "travel": 0,
+            "lastShot": null
+          },
+          {
+            "id": "counterAnalysts-3",
+            "x": 17.6,
+            "y": 0,
+            "z": -46.2,
+            "alive": true,
+            "mode": "objective",
+            "role": "support",
+            "travel": 0,
+            "lastShot": null
+          },
+          {
+            "id": "counterAnalysts-4",
+            "x": 26.5,
+            "y": 0,
+            "z": -41.5,
+            "alive": true,
+            "mode": "objective",
+            "role": "flank",
+            "travel": 0,
+            "lastShot": null
+          }
+        ]
+      },
+      "last": {
+        "wallMs": 28776,
+        "simSeconds": 11.783,
+        "map": "meltem",
+        "calls": 572,
+        "player": {
+          "x": -23.508144798325425,
+          "y": 0,
+          "z": 36.75040184381374,
+          "yaw": 0,
+          "pitch": 0
+        },
+        "actors": [
+          {
+            "id": "analysts-1",
+            "x": -26.88,
+            "y": 0,
+            "z": 14.07,
+            "alive": true,
+            "mode": "objective",
+            "role": "guard",
+            "travel": 34.08346333568198,
+            "lastShot": null
+          },
+          {
+            "id": "analysts-2",
+            "x": -15.5,
+            "y": 0,
+            "z": 19.95,
+            "alive": true,
+            "mode": "objective",
+            "role": "watch",
+            "travel": 31.770055484544166,
+            "lastShot": null
+          },
+          {
+            "id": "analysts-3",
+            "x": -8.22,
+            "y": 0,
+            "z": 30.87,
+            "alive": true,
+            "mode": "objective",
+            "role": "flank",
+            "travel": 31.629648169178555,
+            "lastShot": null
+          },
+          {
+            "id": "analysts-4",
+            "x": -4.99,
+            "y": 0,
+            "z": 35.14,
+            "alive": true,
+            "mode": "objective",
+            "role": "defend",
+            "travel": 33.4215122565821,
+            "lastShot": null
+          },
+          {
+            "id": "counterAnalysts-0",
+            "x": -26.6,
+            "y": 0,
+            "z": -13.8,
+            "alive": true,
+            "mode": "investigate",
+            "role": "support",
+            "travel": 30.69932537297159,
+            "lastShot": null
+          },
+          {
+            "id": "counterAnalysts-1",
+            "x": -26.49,
+            "y": 0,
+            "z": -17.1,
+            "alive": true,
+            "mode": "objective",
+            "role": "support",
+            "travel": 31.016905052333783,
+            "lastShot": null
+          },
+          {
+            "id": "counterAnalysts-2",
+            "x": -15.5,
+            "y": 0,
+            "z": -16.99,
+            "alive": true,
+            "mode": "objective",
+            "role": "support",
+            "travel": 34.73344842662995,
+            "lastShot": null
+          },
+          {
+            "id": "counterAnalysts-3",
+            "x": -9.67,
+            "y": 0,
+            "z": -30.28,
+            "alive": true,
+            "mode": "objective",
+            "role": "support",
+            "travel": 33.27214837588058,
+            "lastShot": null
+          },
+          {
+            "id": "counterAnalysts-4",
+            "x": -4.48,
+            "y": 0,
+            "z": -35.83,
+            "alive": true,
+            "mode": "objective",
+            "role": "flank",
+            "travel": 32.568966138346866,
+            "lastShot": null
+          }
+        ]
+      },
+      "observedRoles": [
+        "defend",
+        "flank",
+        "guard",
+        "support",
+        "watch"
+      ],
+      "observedModes": [
+        "combat",
+        "investigate",
+        "objective"
+      ],
+      "samples": 42
+    }
+  ]
+}

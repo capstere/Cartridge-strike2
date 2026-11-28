@@ -117,17 +117,24 @@
       "scope": "Canonical rig adapter, existing GLB, directional blending, IK, death/ragdoll visual and LOD; outfit previews, original skins; separately assess joint hitboxes.",
       "tests": "saved-character-browser, view-grips, view-character-appearance, headshot-landing; rig fixtures/video",
       "exit": "Existing imports and arms matching; visual/authority separation.",
-      "status": "IN_PROGRESS",
+      "status": "VERIFIED",
       "baseline": "f789655c55cb431b2916a8052200383b0d22d228",
       "branch": "cs3/03-character-wardrobe",
       "pullRequests": [
-        59
+        59,
+        61
       ],
       "mergedSlices": [
-        "9e9da21a32cef3643c29eac091ec1bc9a9c06ecf"
+        "9e9da21a32cef3643c29eac091ec1bc9a9c06ecf",
+        "055b887567a054c441ecb3b09c5597002dcb4a7a"
       ],
-      "evidence": "evidence/wardrobe/README.md",
-      "remaining": "Native and independent acceptance of first-sightline performance, comparable loading, rotation, roster and resource cleanup."
+      "evidence": [
+        "evidence/wardrobe/README.md",
+        "evidence/streaks/cold-sightline/README.md"
+      ],
+      "verifiedHead": "a1f3cb607c1a5dde27c168c422241bff77727483",
+      "verifiedRun": 46138855938,
+      "independentReview": "Wardrobe, four-way motion, private GLB, two-renderer disposal, canceled/rotated loads, first-sightline and replicated death/respawn checks accepted. Join overhead and the separate first-HUD stall remain open release measurements."
     },
     {
       "id": "CS3-04",
@@ -263,7 +270,8 @@
       "scope": "Presets/custom slots, primary/secondary/equipment/attachments/optics/camos, derived stats, real preview, server validation and Classic purchases; persistence.",
       "tests": "online-classic/equipment, illegal loadout tests, preview lifecycle, profile restart",
       "exit": "No purchase bypass, correct stats and saved real loadouts. Use an explicitly seeded entitlement fixture for locked/unlocked states until CS3-10 supplies earned progression.",
-      "status": "NOT_STARTED"
+      "status": "IN_PROGRESS",
+      "branch": "cs3/09-arsenal"
     },
     {
       "id": "CS3-10",

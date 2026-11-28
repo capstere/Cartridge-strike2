@@ -21,7 +21,14 @@ try{
     try{
       await ctx.addInitScript(()=>{if(!localStorage.getItem('cartridge-settings'))localStorage.setItem('cartridge-settings',JSON.stringify({graphics:'low',volume:0}));});
       page.setDefaultTimeout(90000);page.on('pageerror',err=>errors.push(err.message));
-      const press=selector=>{const element=page.locator(selector+':visible').first();return touch?element.tap():element.click();};
+      let pointer;
+      const press=async selector=>{
+        const element=page.locator(selector+':visible').first();
+        if(touch)return element.tap();
+        const box=await element.boundingBox();
+        pointer={x:box.x+box.width/2,y:box.y+box.height/2};
+        return element.click();
+      };
       await page.goto(origin);await page.locator('#home-title').waitFor();
       await press('[data-go="play"]');await press('[data-go="solo"]');await press('.map-tile');
       await press('#choose-'+map);await page.locator('#setup-title').waitFor();
@@ -45,7 +52,7 @@ try{
           if(wall-trace.lastSample>=400){
             trace.lastSample=wall;
             trace.samples.push({wallMs:Math.round(wall),simSeconds:Number(t.toFixed(3)),map:game.world.referenceId||game.world.project.projectId,
-              calls:this.renderer.info.render.calls,player:{x:game.player.x,y:game.player.y,z:game.player.z,yaw:game.player.yaw},
+              calls:this.renderer.info.render.calls,player:{x:game.player.x,y:game.player.y,z:game.player.z,yaw:game.player.yaw,pitch:game.player.pitch},
               actors:bots.map(a=>({id:a.id,x:Number(a.x.toFixed(2)),y:Number(a.y.toFixed(2)),z:Number(a.z.toFixed(2)),
                 alive:a.alive,mode:a.bot.mode,role:a.aiRole,travel:a.bot.distanceTravelled,lastShot:a.bot.lastShotAt}))});
           }
@@ -55,12 +62,12 @@ try{
       console.log(map,'observer attached');
       await press('#start');await page.locator('#hud').waitFor();await page.locator('#cs-loading').waitFor({state:'hidden'});
       console.log(map,'HUD loaded');
-      if(!touch&&!await page.evaluate(()=>document.pointerLockElement?.id==='game'))await resumeDesktop(page);
+      if(!touch&&!await page.evaluate(()=>document.pointerLockElement?.id==='game'))pointer=(await resumeDesktop(page)).point;
       if(touch&&await page.locator('#resume').isVisible())await press('#resume');
       if(await page.locator('#return-buy').isVisible())await press('#return-buy');
       await page.waitForFunction(()=>window.botObservation.activeSeconds>=6,null,{timeout:120000});
       if(!touch){
-        await page.keyboard.down('KeyW');await page.mouse.move(558,279);await page.waitForTimeout(800);await page.keyboard.up('KeyW');
+        await page.keyboard.down('KeyW');await page.mouse.move(pointer.x+8,pointer.y);await page.waitForTimeout(800);await page.keyboard.up('KeyW');
       }else{
         const stick=await page.locator('[data-mobile-stick-zone]').boundingBox();
         assert(stick);const x=stick.x+stick.width/2,y=stick.y+stick.height/2;

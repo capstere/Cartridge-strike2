@@ -1,0 +1,525 @@
+{
+  "rawSha256": "e9d0429fc26c271df9b74eb3cce9612208099183a36b8b48bd22ece4dffbac48",
+  "rounds": [
+    {
+      "seed": 17,
+      "results": [
+        {
+          "round": 1,
+          "reason": "elimination",
+          "winner": "analysts"
+        },
+        {
+          "round": 2,
+          "reason": "elimination",
+          "winner": "analysts"
+        }
+      ],
+      "earlyShots": 0,
+      "yields": 6,
+      "maxMovingStall": 1.4333333333333331,
+      "roundsCheckedAtLift": 2,
+      "routes": 34
+    },
+    {
+      "seed": 42,
+      "results": [
+        {
+          "round": 1,
+          "reason": "elimination",
+          "winner": "counterAnalysts"
+        },
+        {
+          "round": 2,
+          "reason": "elimination",
+          "winner": "counterAnalysts"
+        }
+      ],
+      "earlyShots": 0,
+      "yields": 7,
+      "maxMovingStall": 1.8333333333333317,
+      "roundsCheckedAtLift": 2,
+      "routes": 37
+    },
+    {
+      "seed": 93,
+      "results": [
+        {
+          "round": 1,
+          "reason": "elimination",
+          "winner": "analysts"
+        },
+        {
+          "round": 2,
+          "reason": "elimination",
+          "winner": "analysts"
+        }
+      ],
+      "earlyShots": 0,
+      "yields": 6,
+      "maxMovingStall": 1.4333333333333331,
+      "roundsCheckedAtLift": 2,
+      "routes": 25
+    },
+    {
+      "seed": 9,
+      "results": [
+        {
+          "round": 1,
+          "reason": "elimination",
+          "winner": "analysts"
+        },
+        {
+          "round": 2,
+          "reason": "elimination",
+          "winner": "analysts"
+        }
+      ],
+      "earlyShots": 0,
+      "yields": 9,
+      "maxMovingStall": 1.4,
+      "roundsCheckedAtLift": 2,
+      "routes": 28
+    }
+  ],
+  "objectives": [
+    {
+      "seed": 17,
+      "scenario": "plant",
+      "time": 43.59999999999881,
+      "bomb": "planted",
+      "rescued": 0,
+      "events": [
+        {
+          "type": "hostage",
+          "time": 41.51666666666559,
+          "serial": 773,
+          "x": -22.4,
+          "y": 0,
+          "z": -21.7,
+          "actorId": "hostage-1",
+          "escortId": "counterAnalysts-4"
+        },
+        {
+          "type": "hostage",
+          "time": 43.39999999999882,
+          "serial": 799,
+          "x": -21.042,
+          "y": 0,
+          "z": -22.13526,
+          "actorId": "hostage-0",
+          "escortId": "counterAnalysts-2"
+        },
+        {
+          "type": "planted",
+          "time": 43.59999999999881,
+          "serial": 800,
+          "x": -30.86864805917264,
+          "y": 0,
+          "z": -8.765636546366734,
+          "actorId": "counterAnalysts-0",
+          "team": "counterAnalysts",
+          "deadline": 83.59999999999897
+        }
+      ]
+    },
+    {
+      "seed": 17,
+      "scenario": "defuse",
+      "time": 20.116666666666806,
+      "result": "defuse",
+      "bomb": "defused",
+      "rescued": 0,
+      "events": [
+        {
+          "type": "defuse",
+          "time": 12.400000000000196,
+          "serial": 198,
+          "x": -30.051940213655215,
+          "y": 0,
+          "z": -9.160453042378364,
+          "actorId": "analysts-1",
+          "team": "analysts",
+          "duration": 5
+        },
+        {
+          "type": "defuse",
+          "time": 13.8333333333336,
+          "serial": 221,
+          "x": -30.47481245287889,
+          "y": 0,
+          "z": -9.514887043502078,
+          "actorId": "analysts-3",
+          "team": "analysts",
+          "duration": 5
+        },
+        {
+          "type": "defuse",
+          "time": 14.000000000000275,
+          "serial": 222,
+          "x": -30.393361625121855,
+          "y": 0,
+          "z": -8.630989710510974,
+          "actorId": "analysts-1",
+          "team": "analysts",
+          "duration": 5
+        },
+        {
+          "type": "defuse",
+          "time": 14.200000000000285,
+          "serial": 229,
+          "x": -31.048171257115648,
+          "y": 0,
+          "z": -9.445851316489296,
+          "actorId": "analysts-3",
+          "team": "analysts",
+          "duration": 5
+        },
+        {
+          "type": "defuse",
+          "time": 14.400000000000295,
+          "serial": 231,
+          "x": -30.734783036588507,
+          "y": 0,
+          "z": -8.101526378643598,
+          "actorId": "analysts-1",
+          "team": "analysts",
+          "duration": 5
+        },
+        {
+          "type": "defuse",
+          "time": 15.116666666666998,
+          "serial": 243,
+          "x": -31.12942317347819,
+          "y": 0,
+          "z": -8.881178798546959,
+          "actorId": "analysts-2",
+          "team": "analysts",
+          "duration": 5
+        }
+      ]
+    },
+    {
+      "seed": 17,
+      "scenario": "rescue",
+      "time": 100.33333333332892,
+      "result": "rescue",
+      "bomb": "inactive",
+      "rescued": 2,
+      "events": [
+        {
+          "type": "hostage",
+          "time": 41.51666666666559,
+          "serial": 774,
+          "x": -22.4,
+          "y": 0,
+          "z": -21.7,
+          "actorId": "hostage-1",
+          "escortId": "counterAnalysts-4"
+        },
+        {
+          "type": "hostage",
+          "time": 43.39999999999882,
+          "serial": 800,
+          "x": -21.042,
+          "y": 0,
+          "z": -22.13526,
+          "actorId": "hostage-0",
+          "escortId": "counterAnalysts-2"
+        },
+        {
+          "type": "rescued",
+          "time": 95.5833333333292,
+          "serial": 1651,
+          "x": 26.27214468131595,
+          "y": 0,
+          "z": 32.71679744579174,
+          "actorId": "hostage-0"
+        },
+        {
+          "type": "rescued",
+          "time": 100.33333333332892,
+          "serial": 1734,
+          "x": 26.256155794319127,
+          "y": 0,
+          "z": 32.62323602484441,
+          "actorId": "hostage-1"
+        }
+      ]
+    },
+    {
+      "seed": 42,
+      "scenario": "plant",
+      "time": 43.1666666666655,
+      "bomb": "planted",
+      "rescued": 0,
+      "events": [
+        {
+          "type": "hostage",
+          "time": 41.59999999999892,
+          "serial": 764,
+          "x": -22.4,
+          "y": 0,
+          "z": -21.7,
+          "actorId": "hostage-1",
+          "escortId": "counterAnalysts-1"
+        },
+        {
+          "type": "planted",
+          "time": 43.1666666666655,
+          "serial": 785,
+          "x": -30.668972537171783,
+          "y": 0,
+          "z": -8.857825923808795,
+          "actorId": "counterAnalysts-0",
+          "team": "counterAnalysts",
+          "deadline": 83.16666666666566
+        }
+      ]
+    },
+    {
+      "seed": 42,
+      "scenario": "defuse",
+      "time": 18.400000000000237,
+      "result": "defuse",
+      "bomb": "defused",
+      "rescued": 0,
+      "events": [
+        {
+          "type": "defuse",
+          "time": 12.36666666666686,
+          "serial": 193,
+          "x": -30.147426405947225,
+          "y": 0,
+          "z": -9.116887122630493,
+          "actorId": "analysts-1",
+          "team": "analysts",
+          "duration": 5
+        },
+        {
+          "type": "defuse",
+          "time": 13.000000000000226,
+          "serial": 202,
+          "x": -30.161237177493447,
+          "y": 0,
+          "z": -8.686736033646262,
+          "actorId": "analysts-2",
+          "team": "analysts",
+          "duration": 5
+        },
+        {
+          "type": "defuse",
+          "time": 13.283333333333573,
+          "serial": 208,
+          "x": -30.515796328181302,
+          "y": 0,
+          "z": -8.960910523425015,
+          "actorId": "analysts-1",
+          "team": "analysts",
+          "duration": 5
+        },
+        {
+          "type": "defuse",
+          "time": 13.400000000000245,
+          "serial": 210,
+          "x": -30.745041221383712,
+          "y": 0,
+          "z": -8.463659835917543,
+          "actorId": "analysts-2",
+          "team": "analysts",
+          "duration": 5
+        }
+      ]
+    },
+    {
+      "seed": 42,
+      "scenario": "rescue",
+      "time": 104.766666666662,
+      "result": "rescue",
+      "bomb": "inactive",
+      "rescued": 2,
+      "events": [
+        {
+          "type": "hostage",
+          "time": 41.39999999999893,
+          "serial": 753,
+          "x": -22.4,
+          "y": 0,
+          "z": -21.7,
+          "actorId": "hostage-1",
+          "escortId": "counterAnalysts-1"
+        },
+        {
+          "type": "hostage",
+          "time": 59.71666666666456,
+          "serial": 1034,
+          "x": -21.042,
+          "y": 0,
+          "z": -22.13526,
+          "actorId": "hostage-0",
+          "escortId": "counterAnalysts-3"
+        },
+        {
+          "type": "rescued",
+          "time": 101.24999999999554,
+          "serial": 1768,
+          "x": 26.244013624768478,
+          "y": 0,
+          "z": 32.71967973104106,
+          "actorId": "hostage-1"
+        },
+        {
+          "type": "rescued",
+          "time": 104.766666666662,
+          "serial": 1832,
+          "x": 26.300996455782553,
+          "y": 0,
+          "z": 32.551817104934784,
+          "actorId": "hostage-0"
+        }
+      ]
+    },
+    {
+      "seed": 93,
+      "scenario": "plant",
+      "time": 49.83333333333179,
+      "bomb": "planted",
+      "rescued": 0,
+      "events": [
+        {
+          "type": "hostage",
+          "time": 45.399999999998705,
+          "serial": 852,
+          "x": -21.042,
+          "y": 0,
+          "z": -22.13526,
+          "actorId": "hostage-0",
+          "escortId": "counterAnalysts-1"
+        },
+        {
+          "type": "hostage",
+          "time": 46.28333333333199,
+          "serial": 866,
+          "x": -22.4,
+          "y": 0,
+          "z": -21.7,
+          "actorId": "hostage-1",
+          "escortId": "counterAnalysts-3"
+        },
+        {
+          "type": "planted",
+          "time": 49.83333333333179,
+          "serial": 911,
+          "x": -30.804089375821665,
+          "y": 0,
+          "z": -8.959174301136985,
+          "actorId": "counterAnalysts-0",
+          "team": "counterAnalysts",
+          "deadline": 89.83333333333195
+        }
+      ]
+    },
+    {
+      "seed": 93,
+      "scenario": "defuse",
+      "time": 19.01666666666687,
+      "result": "defuse",
+      "bomb": "defused",
+      "rescued": 0,
+      "events": [
+        {
+          "type": "defuse",
+          "time": 12.333333333333526,
+          "serial": 188,
+          "x": -30.147426405947225,
+          "y": 0,
+          "z": -9.116887122630493,
+          "actorId": "analysts-1",
+          "team": "analysts",
+          "duration": 5
+        },
+        {
+          "type": "defuse",
+          "time": 13.10000000000023,
+          "serial": 204,
+          "x": -30.50966026292944,
+          "y": 0,
+          "z": -8.56987028359404,
+          "actorId": "analysts-2",
+          "team": "analysts",
+          "duration": 5
+        },
+        {
+          "type": "defuse",
+          "time": 13.8333333333336,
+          "serial": 218,
+          "x": -31.00395725149189,
+          "y": 0,
+          "z": -9.26723751918573,
+          "actorId": "analysts-3",
+          "team": "analysts",
+          "duration": 5
+        },
+        {
+          "type": "defuse",
+          "time": 14.016666666666943,
+          "serial": 222,
+          "x": -31.057182254328858,
+          "y": 0,
+          "z": -8.386224104940549,
+          "actorId": "analysts-2",
+          "team": "analysts",
+          "duration": 5
+        }
+      ]
+    },
+    {
+      "seed": 93,
+      "scenario": "rescue",
+      "time": 102.78333333332878,
+      "result": "rescue",
+      "bomb": "inactive",
+      "rescued": 2,
+      "events": [
+        {
+          "type": "hostage",
+          "time": 45.399999999998705,
+          "serial": 854,
+          "x": -21.042,
+          "y": 0,
+          "z": -22.13526,
+          "actorId": "hostage-0",
+          "escortId": "counterAnalysts-1"
+        },
+        {
+          "type": "hostage",
+          "time": 46.28333333333199,
+          "serial": 868,
+          "x": -22.4,
+          "y": 0,
+          "z": -21.7,
+          "actorId": "hostage-1",
+          "escortId": "counterAnalysts-3"
+        },
+        {
+          "type": "rescued",
+          "time": 96.7499999999958,
+          "serial": 1736,
+          "x": 26.253375418323134,
+          "y": 0,
+          "z": 32.73618347874354,
+          "actorId": "hostage-0"
+        },
+        {
+          "type": "rescued",
+          "time": 102.78333333332878,
+          "serial": 1835,
+          "x": 26.266866130431875,
+          "y": 0,
+          "z": 32.69631049465736,
+          "actorId": "hostage-1"
+        }
+      ]
+    }
+  ]
+}
