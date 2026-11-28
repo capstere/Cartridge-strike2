@@ -117,7 +117,7 @@ export const accessText = Object.freeze({
   winner: team => `${team} win`,
   preview: name => `Gameplay view of ${name}`,
   roundsWon: rounds => `${rounds} round wins`,
-  secondary: name => ` + ${name} · Knife · 1 HE`,
+  deploymentKit: (className,sidearm,cartridge) => [className,sidearm,"Knife","1 "+cartridge].filter(Boolean).join(" · "),
   mapLoadFailed: name => `Could not load ${name}. Rejoin the room to try again.`,
   reconnected: "Reconnected. Select Resume to enable controls and sound.",
   loadingMap: name => `Loading ${name}…`,

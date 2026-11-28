@@ -577,7 +577,7 @@ export class Game {
     if (!actor?.alive || this.phase !== 'active') return null;
     const b = this.bomb, range = this.config.interactDistance;
     const reaches = target => distance(actor, target) < range && this.world.segmentClear(eye(actor), { ...point(target), y: (target.y ?? 0) + .4 }, { vision: false });
-    if(isEndless(this))return this.pickupNear(reaches);
+    if(isEndless(this))return this.pickupNear(actor);
     if (actor.team === 'analysts' && b.status === 'planted' && reaches(b)) return { type: 'defuse', target: b, duration: this.config.defuseTime };
     if (actor.team === 'counterAnalysts') {
       if (b.carrierId === actor.id && distance(actor, this.world.anchors.bomb) <= this.world.anchors.bomb.radius && actor.onGround && (!this.config.networkSlice || this.world.segmentClear(eye(actor),{...point(this.world.anchors.bomb),y:.4},{vision:false}))) return { type: 'plant', target: b, duration: this.config.plantTime };
@@ -586,10 +586,12 @@ export class Game {
         .sort((a, c) => distance(actor, a) - distance(actor, c)).find(reaches);
       if (hostage) return { type: 'escort', target: hostage };
     }
-    return this.pickupNear(reaches);
+    return this.pickupNear(actor);
   }
-  pickupNear(reaches){
-    const drop = this.state.drops.find(reaches);
+  pickupNear(actor){
+    const drop=this.state.drops.find(item=>
+      Math.hypot(item.x-actor.x,(item.y??0)-actor.y,item.z-actor.z)<this.config.interactDistance &&
+      this.world.segmentClear(eye(actor),{x:item.x,y:(item.y??0)+.4,z:item.z},{vision:false}));
     return drop ? { type: 'pickupWeapon', target: drop } : null;
   }
   prompt(actor = this.player) {

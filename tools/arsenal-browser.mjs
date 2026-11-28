@@ -63,6 +63,7 @@ try{
     assert(await page.locator('[data-class-equip]').isHidden());
   }
   await slot('scout').click();
+  assert.match(await page.locator('[data-class-stats]').innerText(),/24°/);
   const primary=await waitImage('primary'),sidearm=await waitImage('secondary');
   assert.notEqual(primary.hash,sidearm.hash);
   await page.locator('[data-class-turn="1"]').click();
@@ -70,6 +71,7 @@ try{
   observations.guest={primary,sidearm,rotated};
   await equip();await page.locator('[data-class-status]').filter({hasText:'Class equipped'}).waitFor();
   await openClasses();await slot('scout').filter({hasText:'Equipped preset'}).waitFor();
+  await waitImage('primary');await waitImage('secondary');
   await page.screenshot({path:join(dir,'guest-workshop.png')});
   await page.locator('[data-panel=classes] [data-go=solo]').click();
   await page.locator('#lb-mode-seg [data-value=endless]').click();
@@ -86,12 +88,15 @@ try{
     const {id}=db.prepare('SELECT id FROM users WHERE username=?').get(user);
     db.prepare('INSERT INTO rewards VALUES(?,?,?,?,?)').run('workshop-fixture','completed-match',id,'match',100000);
     const advance=db.prepare('INSERT INTO weapon_progress VALUES(?,?,?)');
-    for(const weapon of ['ar47','cr4','p9','p12'])advance.run(id,weapon,100000);
+    for(const weapon of ['ar47','p9','p12'])advance.run(id,weapon,100000);
   }finally{db.close();}
   await openClasses();await page.locator('[data-class-progress]').filter({hasText:'5/5 custom slots'}).waitFor();
   assert.doesNotMatch(await slot('scout').innerText(),/Equipped/);
   await slot('custom-1').click();await control('name').fill('Coast Patrol');
   await control('equipment').selectOption('smoke');
+  assert(await control('optic').locator('option[value=red]').isDisabled(),'shared rifle respects lower team entitlement');
+  await control('weapon').selectOption('ar47');
+  assert(await control('optic').locator('option[value=red]').isEnabled(),'specific Arc Rifle uses its earned progression');
   const bare=await waitImage('primary');
   await control('optic').selectOption('red');await control('barrel').selectOption('sil');
   await control('camo').selectOption('desert');
@@ -100,6 +105,7 @@ try{
   await openClasses();await slot('custom-1').filter({hasText:'Coast Patrol'}).waitFor();
   assert.equal(await control('optic').inputValue(),'red');assert.equal(await control('barrel').inputValue(),'sil');
   assert.equal(await control('camo').inputValue(),'desert');
+  await waitImage('primary');await waitImage('secondary');
   await page.setViewportSize({width:390,height:844});
   assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
   await page.screenshot({path:join(dir,'custom-portrait.png')});

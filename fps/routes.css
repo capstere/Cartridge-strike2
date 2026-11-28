@@ -89,7 +89,9 @@ html.touch-fps #menu .lb-foot { display: flex }
   #menu .route-card { min-height: 104px }
   #menu .lb-tools { gap: 2px }
   #menu .lb-icon, #menu .cs-quick, #menu #menu-fullscreen { padding-inline: 7px; font-size: 13px }
-  #menu[data-screen=solo], #menu[data-screen=network] { grid-template-rows: auto auto auto auto }
+  #menu.lobby:not([hidden]):is([data-screen=solo],[data-screen=network]) {
+    grid-template-rows: repeat(4,max-content); align-content:start
+  }
   #menu[data-screen=solo] .lb-left, #menu[data-screen=network] .lb-left { grid-row: 2; grid-column: 1; overflow: visible }
   #menu[data-screen=solo] .lb-right, #menu[data-screen=network] .lb-right { grid-row: 3; grid-column: 1; overflow: visible }
   #menu[data-screen=solo] .lb-foot, #menu[data-screen=network] .lb-foot { grid-row: 4 }

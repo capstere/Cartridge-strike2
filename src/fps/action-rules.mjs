@@ -35,6 +35,7 @@ export function prepareActionRound(g){
  for(const a of g.actors){equipEndless(g,a);a.spawnProtectedUntil=s.time+g.config.spawnProtection;}
  g.emit('start',null,{mode:'endless'});
 }
+export const defaultOnlineCartridge='he';
 export const onlinePrimaries=team=>['smg',team==='analysts'?'ar47':'cr4','shotgun','sniper','bazooka'];
 function equipEndless(g,a){
  if(a.arsenalClass){
@@ -48,7 +49,7 @@ function equipEndless(g,a){
  }
  if(g.config.networkSlice){
   const primary=onlinePrimaries(a.team).includes(a.loadout)?a.loadout:'smg';
-  a.inventory=g.startInventory(a.team);a.inventory.primary=g.weaponItem(primary);a.inventory.he=WEAPONS.he.limit;
+  a.inventory=g.startInventory(a.team);a.inventory.primary=g.weaponItem(primary);a.inventory[defaultOnlineCartridge]=WEAPONS[defaultOnlineCartridge].limit;
   a.weapon=primary;a.lastWeapon=a.inventory.pistol.id;a.aimAmount=0;a.aiming=false;a.armor=0;a.money=0;return;
  }
  const defaultWeapon=a.team==='analysts'?'ar47':'cr4';

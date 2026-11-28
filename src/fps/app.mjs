@@ -363,12 +363,17 @@ function showClassOffer(){
  button.textContent=player.arsenalClass.name+' class · '+(quote.items.length?quote.cost+' ¤':'Equipped');
  button.disabled=!quote.items.length||quote.cost>player.money||game.phase!=='buy';
 }
+function carriedGrenades(inventory){
+ const result=[];
+ for(const id of ['he','smoke','flash'])if(inventory[id]>0)result.push(inventory[id]+' '+WEAPONS[id].name);
+ return result.join(' · ')||'No grenades';
+}
 function refreshShop(){
  shopBalance(game.player,isEndless(game));
  if(networkSession&&game.state.mode==='classic'){
    const p=game.player;
    $('buy').dataset.team=p.team;
-   setText('buy-note','Buy time · '+Math.max(0,Math.ceil(game.state.buyDeadline-game.state.time))+' s · '+[p.inventory.primary?.id,p.inventory.pistol.id,'knife'].filter(Boolean).map(id=>WEAPONS[id].name).join(' · ')+' · '+p.armor+' armor · '+p.inventory.he+' HE');
+   setText('buy-note','Buy time · '+Math.max(0,Math.ceil(game.state.buyDeadline-game.state.time))+' s · '+[p.inventory.primary?.id,p.inventory.pistol.id,'knife'].filter(Boolean).map(id=>WEAPONS[id].name).join(' · ')+' · '+p.armor+' armor · '+carriedGrenades(p.inventory));
    const receipt=networkSession.currentPurchase();
    if(receipt)shopMessage(receipt.outcome,purchaseLabel(receipt.outcome,receipt.item==='class'?'Equipped class':WEAPONS[receipt.item]?.name,receipt.reasonId));
    else shopMessage(null,game.phase!=='buy'?'The buy phase is over.':networkSession.notice||'');
@@ -386,7 +391,7 @@ function refreshShop(){
  if(networkSession){
    const p=game.player;
    $('buy').dataset.team=p.team;
-   setText('buy-note','Changes apply at your next respawn. Equipped · '+WEAPONS[p.inventory.primary.id].name+' and '+WEAPONS[p.inventory.pistol.id].name+' · knife · '+p.inventory.he+' HE.');
+   setText('buy-note','Changes apply at your next respawn. Equipped · '+[p.inventory.primary?.id,p.inventory.pistol?.id,'knife'].filter(Boolean).map(id=>WEAPONS[id].name).join(' · ')+' · '+carriedGrenades(p.inventory)+'.');
    $('shop').replaceChildren(...onlinePrimaries(game.team).map(id=>{
      const button=document.createElement('button');button.dataset.item=id;
      button.textContent=WEAPONS[id].name+(p.loadout===id?' · SELECTED':'');
@@ -554,7 +559,7 @@ function updateHud(){bonusHud.update(game, !!modal || radioOpen || teamRadioOpen
    if(p.pending)setText('respawn-status','Connected · you will play next round');
    if(modal==='buy')refreshShop();
  }
- if(notificationUntil<s.time)setText('notification','');feed=feed.filter(f=>f.until>s.time);updateKillfeed(); if(networkSession&&game.state.mode!=='classic'){if(modal==='buy'&&$('shop').dataset.selected!==p.loadout){$('shop').dataset.selected=p.loadout;refreshShop();}onlineRoomUi?.update(networkSession);setText('timer',timer(holdingDeployment()?networkSession.room.state.durationSeconds:networkSession.room.state.remainingSeconds));setText('round-label','TEAM DEATHMATCH · '+networkSession.room.state.scoreTarget+' KILLS');setText('phase',networkSession.status||'CONNECTING');setText('money','B · EQUIPMENT');setText('bomb-status','4 · HE · FIRE TO THROW');setText('hostage-status','The match continues in menus · Esc or Pause to leave');setText('respawn-status',`RESPAWN ${Math.max(0,(p.respawnAt||s.time)-s.time).toFixed(1)} s`);}
+ if(notificationUntil<s.time)setText('notification','');feed=feed.filter(f=>f.until>s.time);updateKillfeed(); if(networkSession&&game.state.mode!=='classic'){if(modal==='buy'&&$('shop').dataset.selected!==p.loadout){$('shop').dataset.selected=p.loadout;refreshShop();}onlineRoomUi?.update(networkSession);setText('timer',timer(holdingDeployment()?networkSession.room.state.durationSeconds:networkSession.room.state.remainingSeconds));setText('round-label','TEAM DEATHMATCH · '+networkSession.room.state.scoreTarget+' KILLS');setText('phase',networkSession.status||'CONNECTING');setText('money','B · EQUIPMENT');setText('bomb-status',p.inventory.he||p.inventory.smoke||p.inventory.flash?'4 · '+carriedGrenades(p.inventory)+' · Fire to throw':'No grenades');setText('hostage-status','The match continues in menus · Esc or Pause to leave');setText('respawn-status',`RESPAWN ${Math.max(0,(p.respawnAt||s.time)-s.time).toFixed(1)} s`);}
  if(holdingDeployment()){setText('phase','DEPLOYING');setText('reload-text','');$('prompt').hidden=true;$('spawn-protection').hidden=true;}
  if(board)scoreboard();minimap();setText('perf',`${renderer.stats.fps} FPS`);focusHud.update();
 }

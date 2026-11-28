@@ -16,10 +16,10 @@ function profile(index=0){
   const p=defaultArsenal();p.selected='custom-'+(index+1);p.slots[index]=slot();return p;
 }
 const demo=JSON.parse(readFileSync(new URL('../../levels/synthetic-demo.json',import.meta.url)));
-function start(mode,kit){
+function start(mode,kit,networkSlice=false){
   const world=createWorld({fresh:true,levelProject:structuredClone(demo)});
   return new Game(world,{controllers:{'analysts-0':'human','counterAnalysts-0':'human'},localPlayerId:'analysts-0',
-    config:{mode,arsenalClass:kit,zombies:false,wanderers:false,firefight:false}}).start();
+    config:{mode,networkSlice,arsenalClass:kit,zombies:false,wanderers:false,firefight:false}}).start();
 }
 
 test('all four issued classes resolve for both teams and the five custom slots enforce separate unlocks',()=>{
@@ -88,4 +88,23 @@ test('Classic charges the complete issued kit atomically, preserves spent ammo a
   assert.equal(a.money,27);
   g.beginRound();assert.equal(a.inventory.primary.ammo,5);assert.equal(a.inventory.primary.camo,'foret');
   a.alive=false;g.beginRound();assert.equal(a.inventory.primary,null);assert.equal(a.money,27);
+});
+
+for(const online of [false,true])test((online?'server':'Solo')+' ground weapons require a reachable three-dimensional position and a clear pickup ray',()=>{
+  const game=start('endless',null,online),a=game.player;
+  Object.assign(a,{x:3,y:0,z:.4});
+  const issued=a.inventory.primary;
+  const dropped=game.weaponItem('shotgun');
+  const place=(x,y,z)=>{game.state.drops=[];game.dropItem({x,y,z},dropped);};
+  for(const y of [3,-3]){
+    place(a.x,y,a.z);game.interact(a,{interact:true});
+    assert.equal(game.interaction(a),null);assert.equal(a.inventory.primary,issued);
+    assert.equal(game.state.drops.length,1);
+  }
+  // The synthetic room's south wall runs along z = 0; the far-side item is within range.
+  place(a.x,0,-.4);game.interact(a,{interact:true});
+  assert.equal(game.interaction(a),null);assert.equal(a.inventory.primary,issued);
+  place(a.x+.35,.15,a.z);assert.equal(game.interaction(a).type,'pickupWeapon');
+  game.interact(a,{interact:true});assert.equal(a.inventory.primary.id,dropped.id);
+  assert.equal(a.inventory.primary.ammo,dropped.ammo);
 });

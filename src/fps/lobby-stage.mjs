@@ -62,9 +62,18 @@ window.addEventListener('keydown', event => {
 });
 
 /* ---------- 3D operator stage ---------- */
+let lobbyRenderer=null,weaponRack=null;
+function getLobbyRenderer(){
+  if(!lobbyRenderer){
+    lobbyRenderer=new T.WebGLRenderer({canvas,antialias:true,alpha:true,powerPreference:'low-power'});
+    lobbyRenderer.setPixelRatio(Math.min(devicePixelRatio||1,1.5));
+    lobbyRenderer.outputColorSpace=T.SRGBColorSpace;
+    lobbyRenderer.toneMapping=T.ACESFilmicToneMapping;lobbyRenderer.toneMappingExposure=1.05;
+  }
+  return lobbyRenderer;
+}
 function makeStage(){
-  const renderer=new T.WebGLRenderer({canvas,antialias:true,alpha:true,powerPreference:'low-power'});
-  renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.5));renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;
+  const renderer=getLobbyRenderer();
   const scene=new T.Scene(),camera=new T.PerspectiveCamera(24,1,.1,50);camera.position.set(0,1.18,6.1);camera.lookAt(0,.92,0);
   scene.add(new T.HemisphereLight(0xbfd2ff,0x0a0d14,.9));
   const key=new T.DirectionalLight(0xffffff,2.3);key.position.set(-2.4,3.2,3.4);scene.add(key);
@@ -205,7 +214,7 @@ function makeStage(){
     renderer.render(scene,camera);
   }
   wake();
-  return {setTeam,arsenal:arsenalPreview(renderer),rotate:direction=>{dragYaw+=direction*Math.PI/6;}};
+  return {setTeam,rotate:direction=>{dragYaw+=direction*Math.PI/6;}};
 }
 
 let stage=null;
@@ -221,7 +230,10 @@ const wardrobe = mountWardrobe({selected:currentOutfit,savedDesign:()=>Boolean(c
 });
 const arsenal=mountArsenal({
   team:()=>menu.dataset.side||'analysts',
-  draw:(canvas,spec,yaw)=>stage?.arsenal.draw(canvas,spec,yaw),
-  clear:()=>stage?.arsenal.clear()
+  draw:(tile,spec,yaw)=>{
+    weaponRack??=arsenalPreview(getLobbyRenderer());
+    weaponRack.draw(tile,spec,yaw);
+  },
+  clear:()=>weaponRack?.clear()
 });
 syncTeam();boot();
