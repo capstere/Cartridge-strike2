@@ -1,0 +1,17 @@
+{
+  "started": "2026-11-28T17:11:23.324Z",
+  "platform": "Raspberry Pi native Chromium, emulated touch",
+  "browser": "156.0.8078.79",
+  "errors": [],
+  "publicURL": "https://capstere.github.io/Cartridge-strike2/fps/",
+  "build": "aec199fd40e814a4df3b4ff04a49b25277aca6fd2788375a32d801bb11d1420b",
+  "deployed": "SCOUT RIFLE",
+  "renderer": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+  "privateEntryPath": "/room/JESPERS-ROOM",
+  "privateOrigin": "https://cs2.capstere.com",
+  "privateGateTitle": "Cartridge-Strike 3 · Private multiplayer",
+  "privateInviteLabel": "Server invite code",
+  "privateSubmit": "Open lobby",
+  "status": "PASS",
+  "finished": "2026-11-28T17:11:56.404Z"
+}

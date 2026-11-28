@@ -1,0 +1,15 @@
+{
+  "revision": "ea4467672af055c013380e7542be32cc1a32a27f",
+  "status": "PASS",
+  "utc": "2026-11-28T16:39:51.116499+00:00",
+  "rootOwned": true,
+  "operatorTrusted": true,
+  "earlierQualifiedStage": "d43379995cbed5f6858cc403fa0e86f5094856f9",
+  "publicFilesVerified": 727,
+  "manifestSHA256": "87d2f3177e22bac3b00143dc92947e972b7d08fcb80611c83742ed5a59ea239b",
+  "operatorSHA256": "0fd442f77e839d43b3c2ff55cab9f0ff12318f4da62bafe5d4d50a9f4ed7b0b5",
+  "productionAtStage": "8307e91118dba4fdca964012d2b0c247a40221fd",
+  "regularFiles": 2600,
+  "symlinksToFiles": 7,
+  "allFileContentsEqualEarlierStage": true
+}

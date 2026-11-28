@@ -399,9 +399,13 @@
       "scope": "Full acceptance, hardware/physical status, security, before-after, backup restore rehearsal, stage exact SHA; release on idle Pi via existing process only after authorized gates.",
       "tests": "all CI, server tests, rendered two-client HTTPS/WSS, long soak, migration rollback rehearsal. All 16 screenshot states and all five recording scenarios, English journey sweep, reference-free distribution inventory, authenticated/unauthenticated HTTP and mixed-version reconnect, clean cached and cold clients on both surfaces.",
       "exit": "Independent reviewer evidence, no silent scope gaps, production verified or CS2 remains active.",
-      "status": "REVIEW",
+      "status": "VERIFIED",
       "branch": "cs3/12-release",
-      "baseline": "25decefc5eee3f5f66daa17ee51629df6d7d4825"
+      "baseline": "25decefc5eee3f5f66daa17ee51629df6d7d4825",
+      "releasePR": 72,
+      "reviewedRevision": "ea4467672af055c013380e7542be32cc1a32a27f",
+      "releaseMerge": "ae30c3a0bffaa0457982befb2bf77b151ea9c54a",
+      "evidence": "evidence/release/production/README.md"
     }
   ],
   "reviewedMain": "1a9dc3f10605a7ccd2c28fef354b25bcd4418c1b",

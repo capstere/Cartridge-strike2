@@ -1,0 +1,102 @@
+{
+  "utc": "2026-11-28T17:10:44.298863+00:00",
+  "current": "ea4467672af055c013380e7542be32cc1a32a27f",
+  "previous": "8307e91118dba4fdca964012d2b0c247a40221fd",
+  "units": {
+    "cartridge-strike2-pilot": "active",
+    "cartridge-strike2-tunnel": "active"
+  },
+  "census": {
+    "status": "ok",
+    "rooms": 0,
+    "players": 0
+  },
+  "contract": {
+    "protocolVersion": 22,
+    "protocolHash": "5eeffd9db724492b606bbb7607d3ab933d430fa428db326ecf82861ccd64c469",
+    "configHash": "c0d2d00526fd8f58106a6232eec122f5c8f699b5ec91ebc0643a8ac420ff21c5",
+    "buildHash": "aec199fd40e814a4df3b4ff04a49b25277aca6fd2788375a32d801bb11d1420b",
+    "tickRate": 60,
+    "patchMs": 50,
+    "mapId": "floor5-prepared",
+    "mapHash": "1dd0ec97a14f5a4cab6448e9a8f4b5da091b71a3caa63b575ef58ef1426b9ef0",
+    "collisionHash": "a5351e073a01ac95466acf4346acf9812f4265224e56712ce3e889085a42b6d9"
+  },
+  "mainMerge": "ae30c3a0bffaa0457982befb2bf77b151ea9c54a",
+  "reviewedTree": "40301e3eb9b38fbd43832c708a346ace766cebdb",
+  "manifestSHA256": "87d2f3177e22bac3b00143dc92947e972b7d08fcb80611c83742ed5a59ea239b",
+  "publicGameplay": [
+    {
+      "status": "PASS",
+      "path": "HTTPS/WSS via public origin",
+      "clients": 2,
+      "map": "floor5-prepared",
+      "build": "aec199fd40e814a4df3b4ff04a49b25277aca6fd2788375a32d801bb11d1420b",
+      "unauthenticatedStatus": 401,
+      "wrongRoomCodeRejected": true,
+      "checkpoints": [
+        {
+          "clients": 2,
+          "readyOnEachSocket": 2,
+          "analysts": 1,
+          "counterAnalysts": 1
+        }
+      ],
+      "gameplayPeers": 2,
+      "tickAdvance": 124,
+      "movementMetres": [
+        0.35,
+        0.35
+      ],
+      "ammoAfterFire": [
+        29,
+        28
+      ],
+      "reloadAmmo": [
+        30,
+        30
+      ],
+      "sharedShots": [
+        2,
+        2
+      ],
+      "consentedLeaves": 2
+    },
+    {
+      "status": "PASS",
+      "path": "HTTPS/WSS via public origin",
+      "clients": 2,
+      "map": "floor5-prepared",
+      "build": "aec199fd40e814a4df3b4ff04a49b25277aca6fd2788375a32d801bb11d1420b",
+      "unauthenticatedStatus": 401,
+      "wrongRoomCodeRejected": true,
+      "checkpoints": [
+        {
+          "clients": 2,
+          "readyOnEachSocket": 2,
+          "analysts": 1,
+          "counterAnalysts": 1
+        }
+      ],
+      "gameplayPeers": 2,
+      "tickAdvance": 118,
+      "movementMetres": [
+        0.21,
+        0.21
+      ],
+      "ammoAfterFire": [
+        28,
+        28
+      ],
+      "reloadAmmo": [
+        30,
+        30
+      ],
+      "sharedShots": [
+        2,
+        2
+      ],
+      "consentedLeaves": 2
+    }
+  ]
+}
