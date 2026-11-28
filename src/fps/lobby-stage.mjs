@@ -135,11 +135,11 @@ function makeStage(){
       thumbnailIndex = 0;
     }
     const catalog=[...OUTFITS,...EARNED_OUTFITS];
-    while(thumbnailIndex<catalog.length && !wardrobe.has(catalog[thumbnailIndex].id))thumbnailIndex++;
+    while(thumbnailIndex<catalog.length && !wardrobe.buttons.has(catalog[thumbnailIndex].id))thumbnailIndex++;
     const outfit=catalog[thumbnailIndex];
     if (!outfit) return;
     thumbnailIndex++;
-    const tile = wardrobe.get(outfit.id).querySelector('canvas');
+    const tile = wardrobe.buttons.get(outfit.id).querySelector('canvas');
     const preview = createAuthoredAvatar(team,team+'-0',false,{ignoreOverrides:true,previewOutfit:outfit});
     const oldYaw = turntable.rotation.y;
     avatar.holder.visible = false;
@@ -225,7 +225,12 @@ async function boot(){
   // Wait until app.mjs finished loading the level and any private character design.
   await new Promise(r=>{const ok=()=>$('loading').hidden||$('loading').style.display==='none';if(ok())return r();const mo=new MutationObserver(()=>{if(ok()){mo.disconnect();r();}});mo.observe($('loading'),{attributes:true});});
   if (!$('fatal').hidden) return;
-  try{await loadCharacterLibrary();stage=makeStage();syncTeam();arsenal.draw();}catch(e){console.warn('Lobby preview unavailable:',e.message);}
+  try{
+    await loadCharacterLibrary();
+    // The local selection and authored character overrides now have identities.
+    wardrobe.update();
+    stage=makeStage();syncTeam();arsenal.draw();
+  }catch(e){console.warn('Lobby preview unavailable:',e.message);}
 }
 const wardrobe = mountWardrobe({selected:currentOutfit,savedDesign:()=>Boolean(charSelect.value || getCharacterOverride('player',menu.dataset.side+'-0')),
   equip(id){const saved=equipOutfit(id);stage?.setTeam(menu.dataset.side,true);return saved;},

@@ -1,0 +1,13 @@
+{
+  "format": "cartridge-strike-content",
+  "version": 1,
+  "id": "mode-example",
+  "entries": [
+    {
+      "kind": "mode",
+      "id": "ffa",
+      "surface": "solo",
+      "map": "floor5-prepared"
+    }
+  ]
+}

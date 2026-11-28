@@ -1,5 +1,7 @@
 // Riposte 06ga-tenues and 06gc-tenues-defi. Keys are independent of weapons.
-export const OUTFITS = Object.freeze([
+import installed from '../../assets/fps/outfit-packs.json' with {type:'json'};
+import {installedPalettes} from './appearance-package.mjs';
+const originalOutfits = Object.freeze([
   {id:'issued',name:'Issued uniform',role:'Team colors'},
   {id:'assault',name:'Assault',role:'Frontline, flexible',shirt:0x8a8462,vest:0x9a8865,glove:0x4f4f46},
   {id:'smg',name:'Commando',role:'Close range, aggressive',shirt:0x4a4f58,vest:0x33363c,glove:0x2c2e33},
@@ -28,12 +30,15 @@ export const EARNED_OUTFITS = Object.freeze(CHALLENGE_OUTFITS.map(([id,name],i)=
   const [kit,shirt,vest,glove,accent]=styles[i];
   return Object.freeze({id,name,role:'Challenge outfit',kit,shirt,vest,glove,accent});
 }));
+export const reservedOutfitIds=Object.freeze([...originalOutfits,...EARNED_OUTFITS].map(o=>o.id));
+export const OUTFITS=Object.freeze([...originalOutfits,...installedPalettes(installed,reservedOutfitIds)]);
+const earnedIds=new Set(EARNED_OUTFITS.map(o=>o.id));
 const catalog=new Map([...OUTFITS,...EARNED_OUTFITS].map(item=>[item.id,item]));
 const key='cartridge-operator-outfit';
 export const outfitDefinition=id=>catalog.get(id);
 export function publicOutfitId(id,unlocked=[]) {
   const outfit=catalog.get(id);
-  return outfit && (!outfit.kit || Array.from(unlocked).includes(id)) ? id : 'issued';
+  return outfit && (!earnedIds.has(id) || Array.from(unlocked).includes(id)) ? id : 'issued';
 }
 export function readOutfit(storage,unlocked=[]) {
   try { return catalog.get(publicOutfitId(storage.getItem(key),unlocked)); } catch { return OUTFITS[0]; }

@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "build": "6466989613a1ca4995983db3a1b708f6fff4fe17b85e1dfd14d273c24550632a",
+  "content": {
+    "version": 1,
+    "digest": "45238a8c25630788a6a354af3dae607234cca7c03f40f0cca4316bd798fe2ce9",
+    "entries": 160,
+    "managedFiles": []
+  },
+  "publicFiles": 728,
+  "privateFiles": 27,
+  "clients": 2,
+  "replicatedOutfit": "issued",
+  "rendered": false,
+  "platform": "Raspberry Pi 5, native Node 26",
+  "transport": "isolated loopback HTTP/WS",
+  "publicFilesFromParent": 726,
+  "parentFilesMissing": 0
+}

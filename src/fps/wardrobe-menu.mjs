@@ -85,5 +85,5 @@ export function mountWardrobe({selected, equip, rotate, savedDesign}) {
     update();
   });
   update();
-  return buttons;
+  return {buttons,update};
 }

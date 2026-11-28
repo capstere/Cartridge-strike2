@@ -1,0 +1,46 @@
+{
+  "browser": "156.0.8078.79",
+  "input": "Chromium emulated touch",
+  "physicalPhone": false,
+  "errors": [],
+  "portraits": 6,
+  "deployment": {
+    "gpu": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+    "outfit": "harbor-crew",
+    "kit": true,
+    "rendered": 509,
+    "first": "60f4af01",
+    "third": "60f4af01",
+    "expected": "60f4af01",
+    "original": "97cdf472",
+    "independent": true,
+    "preview": {
+      "female": "harbor-crew",
+      "owners": 36,
+      "disposed": 36,
+      "exactlyOnce": true
+    }
+  },
+  "unsupported": {
+    "startDisabled": true,
+    "reason": "The selected character could not be loaded. Choose the default operator or another compatible saved character."
+  },
+  "legacyMenu": {
+    "screen": "outfits",
+    "selection": "Legacy crew member",
+    "status": "Legacy crew member · Saved locally. Your first-person hands match this operator.",
+    "wardrobe": "Your saved character supplies its own outfit and sleeves."
+  },
+  "saved": {
+    "name": "Legacy crew member",
+    "unchanged": true,
+    "bytes": 2374724,
+    "selected": "harbor-crew",
+    "schema": 1,
+    "deployed": {
+      "private": true,
+      "signature": "private"
+    }
+  },
+  "status": "PASS"
+}

@@ -1,0 +1,14 @@
+{
+  "sourceRevision": "91724e7f19b9b04fd65a6455550d3eaad37f1245",
+  "stagedSource": "24b854eb13bfe55a6a51532c615aaf8fceed92a7",
+  "installedRegistrySha256": "a42974e4ff08e51da3a8538c1d4bb7d14ba3cb9d7e10d3fd7f4ca603cf8c5a35",
+  "browserDriverSha256": "464da2300b19fa53376f3d74762a95a1a3cfdf0010f4e2ebf7403beeaebc674c",
+  "exampleSha256": "8d8e428d78695333b0a3b0288262e541c3e9d85e61289386289284fe4027aa75",
+  "artifacts": {
+    "desktop-wardrobe.jpg": "71178c31315cc601d6427df2916e8ab2494166fcc2a8606429df1d2b77340605",
+    "harbor-crew.png": "416ff9c5fa3e69ced46bd67bee517b77a13acc53e2379f47520b03df57b9fc5e",
+    "import.json": "61e8fa78239da13571a4f430ea422e182931d44b0edbce680c4f0666d99c7865",
+    "report.json": "7a9758b32dae545f73b19b76eea38b4bb9d93d14968ea8cfbd41c7ec2312c541",
+    "touch-wardrobe.jpg": "c68d4e116919e9dd30c7d7166460ffe91a7f84113a72709881655f8bdb065e93"
+  }
+}

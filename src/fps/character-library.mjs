@@ -133,7 +133,7 @@ export function createAuthoredAvatar(team,id,isHostage=false,options={}){
     m.map=camo;m.color.setHex(0xffffff);
    }
    if(m.name==='vest-shell')m.color.setHex(outfit?.vest ?? palette.shirt);
-   if(m.name==='gloves-leather' && outfit?.glove)m.color.setHex(outfit.glove);
+   if(m.name==='gloves-leather' && outfit?.glove!=null)m.color.setHex(outfit.glove);
    if(m.name==='hair')m.color.setHex([0x261e19,0x49372a,0x796249,0x151b1c][seed%4]);
    if(m.name==='face-skin')m.color.setHex([0xffffff,0xe8d1b9,0xb18b71,0xc6a486][(seed>>>3)%4]);
    if(/fabric|vest/.test(m.name)&&fabric){m.bumpMap=fabric;m.bumpScale=.0008;}
@@ -245,7 +245,7 @@ export function privateCharacterAppearance(id,team,profiles=originalViewProfiles
  if (!profiles.has(key)) {
   const profile = createRuntimeViewAppearance(templates[gender]);
   profile.sleeve.color.setHex(outfit.shirt ?? (team === 'analysts' ? operatorPalette.analysts : operatorPalette.counters).shirt);
-  if(outfit.glove)profile.glove.color.setHex(outfit.glove);
+  if(outfit.glove!=null)profile.glove.color.setHex(outfit.glove);
   profile.cloth = profile.sleeve.color.toArray();
   const camo=uniformSwatch(outfit)?.clone();
   if (camo) {

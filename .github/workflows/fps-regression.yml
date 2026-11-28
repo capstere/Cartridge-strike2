@@ -16,6 +16,40 @@ permissions:
   contents: read
 
 jobs:
+  content-pipeline:
+    if: github.event_name != 'push'
+    runs-on: macos-15
+    timeout-minutes: 10
+    env:
+      FPS_NETWORK_ANGLE: metal
+      FPS_APPEARANCE_EVIDENCE: test-results/content-example
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: server/.node-version
+          cache: npm
+          cache-dependency-path: |
+            server/package-lock.json
+            frontline/source/tools/dev/package-lock.json
+      - run: npm ci --prefix server --ignore-scripts
+      - name: Verify the shipped content and exported two-client pilot
+        run: |
+          npm run build --prefix server -- --check
+          node tools/content-distribution-smoke.mjs
+      - name: Install and qualify an optional appearance in this disposable checkout
+        run: |
+          npm ci --prefix frontline/source/tools/dev
+          node frontline/source/tools/dev/node_modules/playwright-core/cli.js install chromium
+          node tools/appearance-import.mjs --install content/examples/appearance/harbor-crew.json
+          npm run build --prefix server
+          npm run build --prefix server -- --check
+          node tools/content-distribution-smoke.mjs --example --render
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: installed-content-evidence
+          path: test-results/content-example/
   competitive-matches:
     if: github.event_name != 'push'
     runs-on: macos-15
