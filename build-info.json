@@ -2741,8 +2741,8 @@
     },
     {
       "path": "src/fps/combat-hud.mjs",
-      "bytes": 5389,
-      "sha256": "77adf3f653d48c888845ea65c3672f553996cdedd94242c63fb0b6a54a51efe9"
+      "bytes": 5654,
+      "sha256": "203e69daad903bf738f431bf71499f311d7f91888923cc942b7cb5437ae8ae8b"
     },
     {
       "path": "src/fps/combat-visuals.mjs",
@@ -3640,7 +3640,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 82004594,
+  "bytes": 82004859,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

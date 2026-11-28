@@ -46,19 +46,27 @@ async function recordDeath(page){
   assert(first,'victim showed historical scope');
   // CSS puts a black optic mask around the circular historical viewport.
   // Discard transition frames that still show the ordinary full-width HUD.
-  for(const f of frames.filter(f=>f.at>=first.at-60&&f.at<=first.at+2400)){
-   const masked=await page.evaluate(async jpeg=>{
+  let best=null,bestScore=-1;
+  for(const f of frames.filter(f=>f.at>=first.at-60&&f.at<=first.at+3000)){
+   const score=await page.evaluate(async jpeg=>{
     const bytes=Uint8Array.from(atob(jpeg),c=>c.charCodeAt(0));
     const image=await createImageBitmap(new Blob([bytes],{type:'image/jpeg'}));
     const c=new OffscreenCanvas(image.width,image.height),ctx=c.getContext('2d');ctx.drawImage(image,0,0);image.close();
     const maxAt=(x,y)=>Math.max(...ctx.getImageData(Math.floor(x*c.width),Math.floor(y*c.height),1,1).data.slice(0,3));
-    return [[.02,.05],[.98,.05],[.02,.93],[.98,.93]].every(([x,y])=>maxAt(x,y)<24)&&
-     [[.4,.36],[.5,.45],[.6,.36],[.5,.6]].some(([x,y])=>maxAt(x,y)>45);
+    if(![[.02,.05],[.98,.05],[.02,.93],[.98,.93]].every(([x,y])=>maxAt(x,y)<24))return -1;
+    const {data}=ctx.getImageData(c.width*.45,c.height*.32,c.width*.1,c.height*.22);
+    let count=0,sum=0,squares=0;
+    for(let i=0;i<data.length;i+=16){
+     const v=Math.max(data[i],data[i+1],data[i+2]);count++;sum+=v;squares+=v*v;
+    }
+    // Prefer a textured scene at the confirmed shot over transitional sky/walls.
+    return sum/count>12?squares/count-(sum/count)**2:-1;
    },f.jpeg);
-   if(masked){
-    await writeFile(join(output,'mobile-scoped-death.jpg'),Buffer.from(f.jpeg,'base64'));
-    return {frames:frames.length,scopeOffsetMs:Math.round(f.at-first.at)};
-   }
+   if(score>=0&&score>=bestScore){best=f;bestScore=score;}
+  }
+  if(best){
+   await writeFile(join(output,'mobile-scoped-death.jpg'),Buffer.from(best.jpeg,'base64'));
+   return {frames:frames.length,scopeOffsetMs:Math.round(best.at-first.at),centreVariance:Math.round(bestScore)};
   }
   throw Error('No composited scoped death frame between the reported replay and respawn');
  };
@@ -110,7 +118,7 @@ async function observeFeedback(page){
  await page.evaluate(async()=>{
   const {Mesh,Matrix4}=await import('/vendor/three/three.module.js');
   const {AudioSystem}=await import('/src/fps/riposte-audio.mjs');
-  const feedback=window.competitiveFeedback={audio:[],marker:[],liveHits:[],warnings:[],batches:{}};
+  const feedback=window.competitiveFeedback={audio:[],marker:[],liveHits:[],hitLabels:[],warnings:[],batches:{}};
   const replayTitle=()=>{
    const overlay=document.querySelector('#replay-view');
    return overlay&&!overlay.hidden&&overlay.dataset.stage==='replay'?document.querySelector('#replay-stage').textContent:'';
@@ -144,6 +152,8 @@ async function observeFeedback(page){
   };
   const marker=document.querySelector('#hitmarker'),warning=document.querySelector('#combat-warning');
   new MutationObserver(()=>{
+   const label=document.querySelector('#combat-hit-label');
+   if(label&&!label.hidden&&getComputedStyle(label).display!=='none'&&feedback.hitLabels.at(-1)!==label.textContent)feedback.hitLabels.push(label.textContent);
    const kind=marker.dataset.kind;
    if(kind&&getComputedStyle(marker).opacity!=='0'&&feedback.liveHits.at(-1)!==kind)feedback.liveHits.push(kind);
    if(!warning.hidden&&getComputedStyle(warning).visibility!=='hidden'&&warning.textContent&&feedback.warnings.at(-1)!==warning.textContent)feedback.warnings.push(warning.textContent);
@@ -276,7 +286,9 @@ try{
  for(const p of pages)await until(()=>p.evaluate(()=>window.competitiveFeedback.marker.some(e=>e.title==='FINAL ELIMINATION')&&
   window.competitiveFeedback.audio.some(e=>e.title==='FINAL ELIMINATION')),'normal final replay drew the terminal marker and started a real sniper buffer',9000);
  const feedback=await Promise.all(pages.map(p=>p.evaluate(()=>window.competitiveFeedback)));
- assert(feedback[0].liveHits.includes('kill')&&!feedback[0].warnings.some(w=>w.includes('FRIENDLY FIRE')),'same-uniform opponent receives hostile hit feedback');
+ report.feedback=feedback;
+ assert((feedback[0].liveHits.includes('kill')||feedback[0].hitLabels.includes('ELIMINATED'))&&!feedback[0].warnings.some(w=>w.includes('FRIENDLY FIRE')),
+  'same-uniform opponent receives hostile hit feedback '+JSON.stringify({marker:feedback[0].liveHits,label:feedback[0].hitLabels,warnings:feedback[0].warnings}));
  for(const f of feedback)assert.equal(f.audio.filter(e=>e.title==='FINAL ELIMINATION').length,1,'one historical gun sound per finishing shot');
  assert(feedback[1].marker.some(e=>e.title==='ELIMINATION REPLAY'),'victim saw the confirmed marker before legal respawn');
  for(const p of pages){

@@ -61,12 +61,23 @@ try{
   await open();await page.locator('[data-outfit=gilet][aria-pressed=true]').waitFor();
   await page.locator('#route-back').click();await page.locator('[data-go=play]:visible').first().click();await page.locator('[data-go=solo]:visible').first().click();await page.locator('#start').click();
   await page.waitForFunction(()=>window.__fps?.game?.player&&!document.getElementById('hud').hidden&&__fps.renderer?.weaponModel?.userData.characterAppearance);
-  const worn=await page.evaluate(()=>{
+  const worn=await page.evaluate(async()=>{
     const {renderer,game}=__fps,avatar=renderer.actorModel(game.player).userData.avatar;
-    const first=renderer.weaponModel.userData.characterAppearance.profile.sleeve.color.getHex();
-    return {outfit:avatar.outfitId,kit:!!avatar.root.getObjectByName('operator-kit-gilet-near'),first,third:avatar.meshes.find(m=>m.material?.name==='jacket-fabric').material.color.getHex()};
+    const sleeve=renderer.weaponModel.userData.characterAppearance.profile.sleeve;
+    const jacket=avatar.meshes.find(m=>m.material?.name==='jacket-fabric').material;
+    const {uniformSwatch}=await import('/src/fps/operator-equipment.mjs');
+    const {outfitDefinition}=await import('/src/fps/operator-outfits.mjs');
+    const swatch=id=>uniformSwatch(outfitDefinition(id))?.image;
+    function digest(canvas){
+      const bytes=canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height).data;
+      let hash=2166136261;for(const byte of bytes)hash=Math.imul(hash^byte,16777619);
+      return (hash>>>0).toString(16).padStart(8,'0');
+    }
+    return {outfit:avatar.outfitId,kit:!!avatar.root.getObjectByName('operator-kit-gilet-near'),
+      first:digest(sleeve.map.image),third:digest(jacket.map.image),expected:digest(swatch('gilet')),
+      baseKit:digest(swatch('assault')),issuedSwatch:!!swatch('issued'),separateTextureHandles:sleeve.map!==jacket.map};
   });
-  assert.equal(worn.outfit,'gilet');assert.equal(worn.kit,true);assert.equal(worn.first,worn.third);
+  assert.equal(worn.outfit,'gilet');assert.equal(worn.kit,true);assert.equal(worn.first,worn.third);assert.equal(worn.first,worn.expected);assert.notEqual(worn.first,worn.baseKit);assert.equal(worn.issuedSwatch,false);assert.equal(worn.separateTextureHandles,true);
   await page.goto(fixture.origin+'/profile');await page.getByRole('button',{name:'Sign out'}).click();
   await page.getByRole('heading',{name:'Local guest'}).waitFor();
   await open();await page.locator('[data-outfit=issued][aria-pressed=true]').waitFor();
