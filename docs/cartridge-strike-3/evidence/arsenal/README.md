@@ -8,7 +8,9 @@ On the Raspberry Pi, 12 account, two-client class, Classic and equipment tests p
 
 ## Workshop and presentation
 
-The normal HTTPS guest flow reached Solo with the selected Scout Rifle. A different signed-in account saved and reloaded a custom rifle with gear and smoke in its own slot. At 390 by 844 the Solo character panel intercepted the mode button. Source revision 56eee39 corrected the portrait grid, displayed actual aiming FOV, exposed individual team-weapon unlocks and allowed the shared lobby renderer to prepare the weapon thumbnails during admission. A complete native deployment and two-pass GPU release check on the corrected build remain open.
+The normal HTTPS guest flow reached Solo with the selected Scout Rifle. A different signed-in account saved and reloaded a custom rifle with gear and smoke in its own slot. At 390 by 844 the Solo character panel intercepted the mode button. Source revision 56eee39 corrected the portrait grid, displayed actual aiming FOV, exposed individual team-weapon unlocks and allowed the shared lobby renderer to prepare the weapon thumbnails during admission. On the corrected protocol-21 build at local revision 84289a4, the normal keyboard and pointer journey completed in headed Pi Chromium using V3D. The shared rifle kept its level-two optic locked when only one team weapon had earned it. Selecting that team's variant made the optic available. The signed-in slot survived reload and deployed in Endless with the selected optic, suppressor, Desert finish and one smoke cartridge. The portrait Solo mode and Start controls accepted ordinary clicks. These were resized desktop Chromium trials. Physical-phone experience remains unmeasured.
+
+The [guest workshop](guest-workshop.jpg) shows a Scout Rifle and sidearm from the real model pipeline. The [signed portrait workshop](custom-portrait.jpg) shows the fitted rifle. In [two catalog sweeps](arsenal-fittings.json), all 17 [rendered configurations](arsenal-fittings.jpg) were distinguishable. After each sweep the renderer reported 415 geometries and 127 textures. [Deployment and thumbnail measurements](workshop.json) include rotation and independent primary/sidearm pixels.
 
 Reproduce the complete workshop on the isolated checkout with installed development dependencies. For native Raspberry Pi Chromium use the same headed Wayland and V3D configuration as the previous wardrobe and navigation trials.
 
@@ -20,3 +22,5 @@ node tools/arsenal-browser.mjs
 ```
 
 The last command creates its own TLS room service and disposable account database. FPS_ARSENAL_EVIDENCE selects the destination for normal menu captures, class deployment and fitted-model GPU receipts. The fixture serves its own checkout.
+
+The [joined mobile, navigation and arsenal trial](integrated-workshop.json) repeated both normal journeys with 720 manifest entries. The same five thumbnail comparisons and final equipment matched. The two completed GPU catalog sweeps each ended at 404 geometries and 126 textures on the joined client.

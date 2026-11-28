@@ -13,7 +13,7 @@ export const canAim = weapon => {
   return !!w && !w.projectile && ['primary', 'pistol'].includes(w.slot);
 };
 export const advanceAim=(amount,wanted,dt)=>amount+((wanted?1:0)-amount)*(1-Math.exp(-14*Math.max(0,Math.min(.1,dt))));
-export const aimFov = weapon => weapon === 'sniper' ? 24 : weapon === 'shotgun' ? 60 : 52;
+export const aimFov = (weapon,zoom=1) => (weapon === 'sniper' ? 24 : weapon === 'shotgun' ? 60 : 52) / zoom;
 export const isManualOnly = weapon => {
   const w = WEAPONS[weapon];
   return !w || !!w.projectile || ['grenade', 'bomb', 'armor'].includes(w.slot);

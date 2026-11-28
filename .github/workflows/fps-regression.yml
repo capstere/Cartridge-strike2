@@ -101,6 +101,36 @@ jobs:
           server=$!
           trap 'kill "$server" || true' EXIT
           node tools/wardrobe-browser.mjs
+  mobile-controls:
+    if: github.event_name != 'push'
+    runs-on: macos-15
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: server/.node-version
+          cache: npm
+          cache-dependency-path: frontline/source/tools/dev/package-lock.json
+      - run: npm ci --prefix frontline/source/tools/dev
+      - run: node frontline/source/tools/dev/node_modules/playwright-core/cli.js install chromium
+      - name: Play Meltem with touch and a standard controller, then recover the installed entry offline
+        env:
+          CS3_MOBILE_EVIDENCE: test-results/mobile-controls
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/cs3-mobile-server.log 2>&1 &
+          server=$!
+          trap 'kill "$server" 2>/dev/null || true; wait "$server" 2>/dev/null || true' EXIT
+          node tools/mobile-profile-browser.mjs
+          node tools/gamepad-menu-browser.mjs
+          node tools/mobile-pwa-browser.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mobile-controls
+          path: test-results/mobile-controls
+          retention-days: 3
+
   node-tests:
     runs-on: ubuntu-latest
     # Preserve the existing offline/visual/mobile gates. Full two-scene gameplay

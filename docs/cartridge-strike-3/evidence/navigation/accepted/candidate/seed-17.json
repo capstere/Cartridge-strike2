@@ -1,0 +1,1146 @@
+{
+  "cpu": "Cortex-A76",
+  "temperatureAtStartC": 50.15,
+  "loadAtStart": [
+    1.66,
+    1.94,
+    2.16
+  ],
+  "source": "4c3b35de67787492d33ac36e49fb11b381c0546a",
+  "changes": "",
+  "node": "v26.13.0",
+  "arch": "arm64",
+  "ticksPerRun": 1800,
+  "runs": [
+    {
+      "mapId": "floor5-prepared",
+      "sourceHash": "1dd0ec97a14f5a4cab6448e9a8f4b5da091b71a3caa63b575ef58ef1426b9ef0",
+      "profile": "authority",
+      "mode": "classic",
+      "seed": 17,
+      "readyMs": 3529.8,
+      "tickMs": {
+        "count": 1800,
+        "p50": 0.528,
+        "p95": 1.487,
+        "p99": 2.479,
+        "max": 28.286
+      },
+      "routeWorkPerTickMs": {
+        "count": 1800,
+        "p50": 0,
+        "p95": 0.402,
+        "p99": 0.841,
+        "max": 2.76
+      },
+      "startsPerTick": {
+        "count": 1800,
+        "p50": 0,
+        "p95": 1,
+        "p99": 1,
+        "max": 1
+      },
+      "botStartsPerTick": {
+        "count": 1800,
+        "p50": 0,
+        "p95": 1,
+        "p99": 1,
+        "max": 1
+      },
+      "routeSliceMs": {
+        "count": 457,
+        "p50": 0.159,
+        "p95": 0.472,
+        "p99": 0.817,
+        "max": 2.282
+      },
+      "completedRequestCpuMs": {
+        "count": 134,
+        "p50": 0.33,
+        "p95": 1.579,
+        "p99": 4.28,
+        "max": 20.575
+      },
+      "responseTicks": {
+        "count": 134,
+        "p50": 0,
+        "p95": 3,
+        "p99": 5,
+        "max": 34
+      },
+      "firstMovementFromActiveTicks": {
+        "analysts-1": 5,
+        "counterAnalysts-0": 7,
+        "analysts-2": 20,
+        "counterAnalysts-2": 21,
+        "analysts-3": 46,
+        "counterAnalysts-1": 49,
+        "counterAnalysts-4": 59,
+        "analysts-4": 64,
+        "counterAnalysts-3": 83
+      },
+      "requestToUsefulPathTicks": {
+        "count": 134,
+        "p50": 0,
+        "p95": 3,
+        "p99": 5,
+        "max": 34
+      },
+      "started": 134,
+      "finished": 134,
+      "empty": 0,
+      "shots": 32,
+      "kills": 0,
+      "earlyShots": 0,
+      "objectives": {
+        "plantStarts": 0,
+        "defuseStarts": 0,
+        "plants": 0,
+        "defuses": 0,
+        "rescues": 0,
+        "results": []
+      },
+      "behavior": {
+        "observations": 1350,
+        "moving": 929,
+        "investigating": 0,
+        "coverReserved": 0,
+        "stuckOverHalfSecond": 0
+      },
+      "score": {
+        "analysts": 0,
+        "counterAnalysts": 0
+      },
+      "temperatureC": 52.9,
+      "overBudgetTicks": 1,
+      "finalBotTravel": [
+        34.35,
+        37.47,
+        7.34,
+        49.92,
+        90.88,
+        85.77,
+        88.21,
+        83.88,
+        83.37
+      ]
+    },
+    {
+      "mapId": "compact-arena",
+      "sourceHash": "a4def125e3bde49f7b5632e93ec3743dd6ed3830fd631f484e4fa59d3ade357c",
+      "profile": "authority",
+      "mode": "tdm",
+      "seed": 17,
+      "readyMs": 347.3,
+      "tickMs": {
+        "count": 1800,
+        "p50": 0.363,
+        "p95": 2.194,
+        "p99": 4.035,
+        "max": 12.861
+      },
+      "routeWorkPerTickMs": {
+        "count": 1800,
+        "p50": 0,
+        "p95": 1.177,
+        "p99": 1.826,
+        "max": 5.155
+      },
+      "startsPerTick": {
+        "count": 1800,
+        "p50": 0,
+        "p95": 1,
+        "p99": 1,
+        "max": 1
+      },
+      "botStartsPerTick": {
+        "count": 1800,
+        "p50": 0,
+        "p95": 1,
+        "p99": 1,
+        "max": 1
+      },
+      "routeSliceMs": {
+        "count": 2607,
+        "p50": 0.091,
+        "p95": 0.367,
+        "p99": 0.538,
+        "max": 1.424
+      },
+      "completedRequestCpuMs": {
+        "count": 388,
+        "p50": 0.529,
+        "p95": 2.865,
+        "p99": 6.071,
+        "max": 7.367
+      },
+      "responseTicks": {
+        "count": 388,
+        "p50": 0,
+        "p95": 2,
+        "p99": 5,
+        "max": 6
+      },
+      "firstMovementFromActiveTicks": {
+        "counterAnalysts-1": 7,
+        "analysts-2": 10,
+        "counterAnalysts-0": 20,
+        "analysts-3": 24,
+        "analysts-1": 45,
+        "counterAnalysts-2": 49,
+        "counterAnalysts-4": 59,
+        "analysts-4": 66,
+        "counterAnalysts-3": 84
+      },
+      "requestToUsefulPathTicks": {
+        "count": 388,
+        "p50": 0,
+        "p95": 3,
+        "p99": 5,
+        "max": 6
+      },
+      "started": 388,
+      "finished": 388,
+      "empty": 0,
+      "shots": 191,
+      "kills": 19,
+      "earlyShots": 0,
+      "objectives": {
+        "plantStarts": 0,
+        "defuseStarts": 0,
+        "plants": 0,
+        "defuses": 0,
+        "rescues": 0,
+        "results": []
+      },
+      "behavior": {
+        "observations": 1084,
+        "moving": 799,
+        "investigating": 95,
+        "coverReserved": 123,
+        "stuckOverHalfSecond": 0
+      },
+      "score": {
+        "analysts": 8,
+        "counterAnalysts": 11
+      },
+      "temperatureC": 51.8,
+      "overBudgetTicks": 0,
+      "finalBotTravel": [
+        9.18,
+        4.13,
+        5.37,
+        19.51,
+        33.02,
+        44.14,
+        44.86,
+        1.52,
+        27.44
+      ]
+    },
+    {
+      "mapId": "meltem",
+      "sourceHash": "c25fcc797cc6f96e79e144c14a00332e65745ea7b8c835d21df6a5e2617b818f",
+      "profile": "authority",
+      "mode": "tdm",
+      "seed": 17,
+      "readyMs": 42.9,
+      "tickMs": {
+        "count": 1800,
+        "p50": 0.296,
+        "p95": 1.649,
+        "p99": 3.321,
+        "max": 18.658
+      },
+      "routeWorkPerTickMs": {
+        "count": 1800,
+        "p50": 0,
+        "p95": 0.809,
+        "p99": 1.964,
+        "max": 17.278
+      },
+      "startsPerTick": {
+        "count": 1800,
+        "p50": 0,
+        "p95": 1,
+        "p99": 1,
+        "max": 1
+      },
+      "botStartsPerTick": {
+        "count": 1800,
+        "p50": 0,
+        "p95": 1,
+        "p99": 1,
+        "max": 1
+      },
+      "routeSliceMs": {
+        "count": 2968,
+        "p50": 0.042,
+        "p95": 0.221,
+        "p99": 0.407,
+        "max": 16.156
+      },
+      "completedRequestCpuMs": {
+        "count": 223,
+        "p50": 0.591,
+        "p95": 4.249,
+        "p99": 10.918,
+        "max": 20.788
+      },
+      "responseTicks": {
+        "count": 223,
+        "p50": 1,
+        "p95": 3,
+        "p99": 7,
+        "max": 8
+      },
+      "firstMovementFromActiveTicks": {
+        "analysts-2": 5,
+        "counterAnalysts-1": 7,
+        "counterAnalysts-0": 25,
+        "analysts-3": 27,
+        "analysts-1": 51,
+        "counterAnalysts-2": 54,
+        "counterAnalysts-4": 65,
+        "analysts-4": 66,
+        "counterAnalysts-3": 84
+      },
+      "requestToUsefulPathTicks": {
+        "count": 219,
+        "p50": 1,
+        "p95": 4,
+        "p99": 7,
+        "max": 8
+      },
+      "started": 225,
+      "finished": 223,
+      "empty": 0,
+      "shots": 131,
+      "kills": 3,
+      "earlyShots": 0,
+      "objectives": {
+        "plantStarts": 0,
+        "defuseStarts": 0,
+        "plants": 0,
+        "defuses": 0,
+        "rescues": 0,
+        "results": []
+      },
+      "behavior": {
+        "observations": 1304,
+        "moving": 1115,
+        "investigating": 73,
+        "coverReserved": 46,
+        "stuckOverHalfSecond": 1
+      },
+      "score": {
+        "analysts": 2,
+        "counterAnalysts": 1
+      },
+      "temperatureC": 51.8,
+      "overBudgetTicks": 1,
+      "finalBotTravel": [
+        81.1,
+        9.92,
+        78.3,
+        75.59,
+        12.91,
+        67.07,
+        81.84,
+        4.05,
+        76.15
+      ]
+    },
+    {
+      "mapId": "embruns",
+      "sourceHash": "b38f94b347eba2ef922380982024e49efb399268eabb7add9cbcc8c6977964d3",
+      "profile": "authority",
+      "mode": "tdm",
+      "seed": 17,
+      "readyMs": 56.6,
+      "tickMs": {
+        "count": 1800,
+        "p50": 0.222,
+        "p95": 1.553,
+        "p99": 2.627,
+        "max": 26.277
+      },
+      "routeWorkPerTickMs": {
+        "count": 1800,
+        "p50": 0,
+        "p95": 0.807,
+        "p99": 1.368,
+        "max": 25.536
+      },
+      "startsPerTick": {
+        "count": 1800,
+        "p50": 0,
+        "p95": 1,
+        "p99": 1,
+        "max": 1
+      },
+      "botStartsPerTick": {
+        "count": 1800,
+        "p50": 0,
+        "p95": 1,
+        "p99": 1,
+        "max": 1
+      },
+      "routeSliceMs": {
+        "count": 3327,
+        "p50": 0.048,
+        "p95": 0.182,
+        "p99": 0.307,
+        "max": 25.044
+      },
+      "completedRequestCpuMs": {
+        "count": 269,
+        "p50": 0.706,
+        "p95": 2.374,
+        "p99": 9.189,
+        "max": 33.713
+      },
+      "responseTicks": {
+        "count": 269,
+        "p50": 0,
+        "p95": 3,
+        "p99": 8,
+        "max": 9
+      },
+      "firstMovementFromActiveTicks": {
+        "analysts-2": 6,
+        "counterAnalysts-1": 7,
+        "counterAnalysts-0": 23,
+        "analysts-3": 27,
+        "analysts-1": 49,
+        "counterAnalysts-2": 53,
+        "analysts-4": 67,
+        "counterAnalysts-4": 67,
+        "counterAnalysts-3": 85
+      },
+      "requestToUsefulPathTicks": {
+        "count": 269,
+        "p50": 1,
+        "p95": 4,
+        "p99": 8,
+        "max": 9
+      },
+      "started": 269,
+      "finished": 269,
+      "empty": 0,
+      "shots": 195,
+      "kills": 3,
+      "earlyShots": 0,
+      "objectives": {
+        "plantStarts": 0,
+        "defuseStarts": 0,
+        "plants": 0,
+        "defuses": 0,
+        "rescues": 0,
+        "results": []
+      },
+      "behavior": {
+        "observations": 1309,
+        "moving": 1125,
+        "investigating": 113,
+        "coverReserved": 95,
+        "stuckOverHalfSecond": 0
+      },
+      "score": {
+        "analysts": 2,
+        "counterAnalysts": 1
+      },
+      "temperatureC": 50.15,
+      "overBudgetTicks": 1,
+      "finalBotTravel": [
+        69.57,
+        21.56,
+        77.42,
+        71.16,
+        17.67,
+        78.17,
+        82.46,
+        66.06,
+        82.68
+      ]
+    },
+    {
+      "mapId": "tephra",
+      "sourceHash": "d393ca328b0907db8687557fb4b00d35dbfc7af2adc18e0741e2ee5ec7c90f1b",
+      "profile": "authority",
+      "mode": "tdm",
+      "seed": 17,
+      "readyMs": 37.1,
+      "tickMs": {
+        "count": 1800,
+        "p50": 0.156,
+        "p95": 0.98,
+        "p99": 1.822,
+        "max": 11.437
+      },
+      "routeWorkPerTickMs": {
+        "count": 1800,
+        "p50": 0,
+        "p95": 0.653,
+        "p99": 1.057,
+        "max": 10.953
+      },
+      "startsPerTick": {
+        "count": 1800,
+        "p50": 0,
+        "p95": 1,
+        "p99": 1,
+        "max": 1
+      },
+      "botStartsPerTick": {
+        "count": 1800,
+        "p50": 0,
+        "p95": 1,
+        "p99": 1,
+        "max": 1
+      },
+      "routeSliceMs": {
+        "count": 2941,
+        "p50": 0.029,
+        "p95": 0.131,
+        "p99": 0.246,
+        "max": 10.636
+      },
+      "completedRequestCpuMs": {
+        "count": 235,
+        "p50": 0.49,
+        "p95": 3.384,
+        "p99": 5.774,
+        "max": 14.276
+      },
+      "responseTicks": {
+        "count": 235,
+        "p50": 0,
+        "p95": 4,
+        "p99": 6,
+        "max": 6
+      },
+      "firstMovementFromActiveTicks": {
+        "analysts-2": 6,
+        "counterAnalysts-1": 7,
+        "counterAnalysts-0": 23,
+        "analysts-3": 25,
+        "analysts-1": 49,
+        "counterAnalysts-2": 54,
+        "counterAnalysts-4": 63,
+        "analysts-4": 69,
+        "counterAnalysts-3": 84
+      },
+      "requestToUsefulPathTicks": {
+        "count": 235,
+        "p50": 1,
+        "p95": 4,
+        "p99": 6,
+        "max": 7
+      },
+      "started": 235,
+      "finished": 235,
+      "empty": 0,
+      "shots": 200,
+      "kills": 4,
+      "earlyShots": 0,
+      "objectives": {
+        "plantStarts": 0,
+        "defuseStarts": 0,
+        "plants": 0,
+        "defuses": 0,
+        "rescues": 0,
+        "results": []
+      },
+      "behavior": {
+        "observations": 1289,
+        "moving": 1108,
+        "investigating": 81,
+        "coverReserved": 97,
+        "stuckOverHalfSecond": 0
+      },
+      "score": {
+        "analysts": 3,
+        "counterAnalysts": 1
+      },
+      "temperatureC": 50.7,
+      "overBudgetTicks": 0,
+      "finalBotTravel": [
+        67.98,
+        65.87,
+        13.56,
+        79.32,
+        27.64,
+        13.65,
+        76.15,
+        0.05,
+        82.15
+      ]
+    },
+    {
+      "mapId": "floor5-prepared",
+      "sourceHash": "1dd0ec97a14f5a4cab6448e9a8f4b5da091b71a3caa63b575ef58ef1426b9ef0",
+      "profile": "solo",
+      "mode": "classic",
+      "seed": 17,
+      "readyMs": 822,
+      "tickMs": {
+        "count": 1800,
+        "p50": 0.614,
+        "p95": 1.339,
+        "p99": 2.461,
+        "max": 28.276
+      },
+      "routeWorkPerTickMs": {
+        "count": 1800,
+        "p50": 0,
+        "p95": 0.444,
+        "p99": 0.934,
+        "max": 26.067
+      },
+      "startsPerTick": {
+        "count": 1800,
+        "p50": 0,
+        "p95": 1,
+        "p99": 1,
+        "max": 1
+      },
+      "botStartsPerTick": {
+        "count": 1800,
+        "p50": 0,
+        "p95": 1,
+        "p99": 1,
+        "max": 1
+      },
+      "routeSliceMs": {
+        "count": 461,
+        "p50": 0.156,
+        "p95": 0.486,
+        "p99": 3.321,
+        "max": 26.067
+      },
+      "completedRequestCpuMs": {
+        "count": 142,
+        "p50": 0.414,
+        "p95": 2.515,
+        "p99": 19.776,
+        "max": 26.067
+      },
+      "responseTicks": {
+        "count": 142,
+        "p50": 0,
+        "p95": 2,
+        "p99": 5,
+        "max": 34
+      },
+      "firstMovementFromActiveTicks": {
+        "analysts-1": 5,
+        "counterAnalysts-0": 7,
+        "analysts-2": 20,
+        "counterAnalysts-2": 21,
+        "analysts-3": 46,
+        "counterAnalysts-1": 49,
+        "counterAnalysts-4": 59,
+        "analysts-4": 64,
+        "counterAnalysts-3": 83
+      },
+      "requestToUsefulPathTicks": {
+        "count": 129,
+        "p50": 0,
+        "p95": 3,
+        "p99": 5,
+        "max": 34
+      },
+      "started": 142,
+      "finished": 142,
+      "empty": 2,
+      "shots": 19,
+      "kills": 0,
+      "earlyShots": 0,
+      "objectives": {
+        "plantStarts": 0,
+        "defuseStarts": 0,
+        "plants": 0,
+        "defuses": 0,
+        "rescues": 0,
+        "results": []
+      },
+      "behavior": {
+        "observations": 1350,
+        "moving": 928,
+        "investigating": 0,
+        "coverReserved": 0,
+        "stuckOverHalfSecond": 0
+      },
+      "score": {
+        "analysts": 0,
+        "counterAnalysts": 0
+      },
+      "temperatureC": 48.5,
+      "overBudgetTicks": 3,
+      "finalBotTravel": [
+        34.35,
+        39.53,
+        7.29,
+        47.84,
+        90.88,
+        85.77,
+        88.21,
+        83.88,
+        83.37
+      ]
+    },
+    {
+      "mapId": "compact-arena",
+      "sourceHash": "a4def125e3bde49f7b5632e93ec3743dd6ed3830fd631f484e4fa59d3ade357c",
+      "profile": "solo",
+      "mode": "endless",
+      "seed": 17,
+      "readyMs": 77,
+      "tickMs": {
+        "count": 1800,
+        "p50": 0.271,
+        "p95": 1.678,
+        "p99": 3.192,
+        "max": 7.321
+      },
+      "routeWorkPerTickMs": {
+        "count": 1800,
+        "p50": 0,
+        "p95": 1.029,
+        "p99": 1.917,
+        "max": 4.146
+      },
+      "startsPerTick": {
+        "count": 1800,
+        "p50": 0,
+        "p95": 1,
+        "p99": 1,
+        "max": 1
+      },
+      "botStartsPerTick": {
+        "count": 1800,
+        "p50": 0,
+        "p95": 1,
+        "p99": 1,
+        "max": 1
+      },
+      "routeSliceMs": {
+        "count": 2281,
+        "p50": 0.081,
+        "p95": 0.331,
+        "p99": 0.507,
+        "max": 2.171
+      },
+      "completedRequestCpuMs": {
+        "count": 352,
+        "p50": 0.327,
+        "p95": 2.591,
+        "p99": 4.655,
+        "max": 10.53
+      },
+      "responseTicks": {
+        "count": 352,
+        "p50": 0,
+        "p95": 2,
+        "p99": 4,
+        "max": 6
+      },
+      "firstMovementFromActiveTicks": {
+        "analysts-2": 4,
+        "counterAnalysts-1": 7,
+        "counterAnalysts-0": 20,
+        "analysts-3": 23,
+        "analysts-1": 47,
+        "counterAnalysts-2": 48,
+        "counterAnalysts-4": 58,
+        "analysts-4": 63,
+        "counterAnalysts-3": 84
+      },
+      "requestToUsefulPathTicks": {
+        "count": 352,
+        "p50": 0,
+        "p95": 3,
+        "p99": 4,
+        "max": 6
+      },
+      "started": 352,
+      "finished": 352,
+      "empty": 0,
+      "shots": 165,
+      "kills": 16,
+      "earlyShots": 0,
+      "objectives": {
+        "plantStarts": 0,
+        "defuseStarts": 0,
+        "plants": 0,
+        "defuses": 0,
+        "rescues": 0,
+        "results": []
+      },
+      "behavior": {
+        "observations": 1119,
+        "moving": 682,
+        "investigating": 164,
+        "coverReserved": 86,
+        "stuckOverHalfSecond": 0
+      },
+      "score": {
+        "analysts": 16,
+        "counterAnalysts": 0
+      },
+      "temperatureC": 52.35,
+      "overBudgetTicks": 0,
+      "finalBotTravel": [
+        53.09,
+        76.6,
+        60.63,
+        48.91,
+        7.75,
+        3.39,
+        9.61,
+        4.85,
+        5.57
+      ]
+    },
+    {
+      "mapId": "meltem",
+      "sourceHash": "c25fcc797cc6f96e79e144c14a00332e65745ea7b8c835d21df6a5e2617b818f",
+      "profile": "solo",
+      "mode": "endless",
+      "seed": 17,
+      "readyMs": 30.8,
+      "tickMs": {
+        "count": 1800,
+        "p50": 0.174,
+        "p95": 1.104,
+        "p99": 2.138,
+        "max": 15.002
+      },
+      "routeWorkPerTickMs": {
+        "count": 1800,
+        "p50": 0,
+        "p95": 0.646,
+        "p99": 1.313,
+        "max": 14.304
+      },
+      "startsPerTick": {
+        "count": 1800,
+        "p50": 0,
+        "p95": 1,
+        "p99": 1,
+        "max": 1
+      },
+      "botStartsPerTick": {
+        "count": 1800,
+        "p50": 0,
+        "p95": 1,
+        "p99": 1,
+        "max": 1
+      },
+      "routeSliceMs": {
+        "count": 2850,
+        "p50": 0.038,
+        "p95": 0.189,
+        "p99": 0.284,
+        "max": 11.892
+      },
+      "completedRequestCpuMs": {
+        "count": 204,
+        "p50": 0.576,
+        "p95": 3.183,
+        "p99": 9.365,
+        "max": 18.761
+      },
+      "responseTicks": {
+        "count": 204,
+        "p50": 1,
+        "p95": 3,
+        "p99": 7,
+        "max": 8
+      },
+      "firstMovementFromActiveTicks": {
+        "analysts-2": 5,
+        "counterAnalysts-1": 7,
+        "counterAnalysts-0": 25,
+        "analysts-3": 27,
+        "analysts-1": 51,
+        "counterAnalysts-2": 54,
+        "counterAnalysts-4": 65,
+        "analysts-4": 66,
+        "counterAnalysts-3": 84
+      },
+      "requestToUsefulPathTicks": {
+        "count": 200,
+        "p50": 1,
+        "p95": 4,
+        "p99": 7,
+        "max": 8
+      },
+      "started": 204,
+      "finished": 204,
+      "empty": 0,
+      "shots": 74,
+      "kills": 3,
+      "earlyShots": 0,
+      "objectives": {
+        "plantStarts": 0,
+        "defuseStarts": 0,
+        "plants": 0,
+        "defuses": 0,
+        "rescues": 0,
+        "results": []
+      },
+      "behavior": {
+        "observations": 1311,
+        "moving": 1112,
+        "investigating": 69,
+        "coverReserved": 35,
+        "stuckOverHalfSecond": 0
+      },
+      "score": {
+        "analysts": 3,
+        "counterAnalysts": 0
+      },
+      "temperatureC": 50.7,
+      "overBudgetTicks": 0,
+      "finalBotTravel": [
+        82.28,
+        68.32,
+        79.78,
+        80.76,
+        20.16,
+        59.14,
+        80.27,
+        12.63,
+        73.77
+      ]
+    },
+    {
+      "mapId": "embruns",
+      "sourceHash": "b38f94b347eba2ef922380982024e49efb399268eabb7add9cbcc8c6977964d3",
+      "profile": "solo",
+      "mode": "endless",
+      "seed": 17,
+      "readyMs": 79,
+      "tickMs": {
+        "count": 1800,
+        "p50": 0.197,
+        "p95": 1.265,
+        "p99": 1.993,
+        "max": 7.079
+      },
+      "routeWorkPerTickMs": {
+        "count": 1800,
+        "p50": 0,
+        "p95": 0.757,
+        "p99": 1.115,
+        "max": 6.459
+      },
+      "startsPerTick": {
+        "count": 1800,
+        "p50": 0,
+        "p95": 1,
+        "p99": 1,
+        "max": 1
+      },
+      "botStartsPerTick": {
+        "count": 1800,
+        "p50": 0,
+        "p95": 1,
+        "p99": 1,
+        "max": 1
+      },
+      "routeSliceMs": {
+        "count": 3956,
+        "p50": 0.041,
+        "p95": 0.136,
+        "p99": 0.247,
+        "max": 5.737
+      },
+      "completedRequestCpuMs": {
+        "count": 313,
+        "p50": 0.614,
+        "p95": 1.909,
+        "p99": 5.145,
+        "max": 7.604
+      },
+      "responseTicks": {
+        "count": 313,
+        "p50": 0,
+        "p95": 3,
+        "p99": 8,
+        "max": 9
+      },
+      "firstMovementFromActiveTicks": {
+        "analysts-2": 6,
+        "counterAnalysts-1": 7,
+        "counterAnalysts-0": 23,
+        "analysts-3": 27,
+        "analysts-1": 49,
+        "counterAnalysts-2": 53,
+        "analysts-4": 67,
+        "counterAnalysts-4": 67,
+        "counterAnalysts-3": 85
+      },
+      "requestToUsefulPathTicks": {
+        "count": 313,
+        "p50": 1,
+        "p95": 4,
+        "p99": 8,
+        "max": 9
+      },
+      "started": 313,
+      "finished": 313,
+      "empty": 0,
+      "shots": 119,
+      "kills": 4,
+      "earlyShots": 0,
+      "objectives": {
+        "plantStarts": 0,
+        "defuseStarts": 0,
+        "plants": 0,
+        "defuses": 0,
+        "rescues": 0,
+        "results": []
+      },
+      "behavior": {
+        "observations": 1292,
+        "moving": 1116,
+        "investigating": 85,
+        "coverReserved": 64,
+        "stuckOverHalfSecond": 0
+      },
+      "score": {
+        "analysts": 3,
+        "counterAnalysts": 1
+      },
+      "temperatureC": 49.05,
+      "overBudgetTicks": 0,
+      "finalBotTravel": [
+        79.31,
+        10.04,
+        86.97,
+        66.97,
+        10.96,
+        76.49,
+        89.44,
+        1.95,
+        77.91
+      ]
+    },
+    {
+      "mapId": "tephra",
+      "sourceHash": "d393ca328b0907db8687557fb4b00d35dbfc7af2adc18e0741e2ee5ec7c90f1b",
+      "profile": "solo",
+      "mode": "endless",
+      "seed": 17,
+      "readyMs": 56.6,
+      "tickMs": {
+        "count": 1800,
+        "p50": 0.137,
+        "p95": 0.846,
+        "p99": 1.34,
+        "max": 10.203
+      },
+      "routeWorkPerTickMs": {
+        "count": 1800,
+        "p50": 0,
+        "p95": 0.539,
+        "p99": 0.988,
+        "max": 1.732
+      },
+      "startsPerTick": {
+        "count": 1800,
+        "p50": 0,
+        "p95": 1,
+        "p99": 1,
+        "max": 1
+      },
+      "botStartsPerTick": {
+        "count": 1800,
+        "p50": 0,
+        "p95": 1,
+        "p99": 1,
+        "max": 1
+      },
+      "routeSliceMs": {
+        "count": 2819,
+        "p50": 0.028,
+        "p95": 0.119,
+        "p99": 0.221,
+        "max": 0.356
+      },
+      "completedRequestCpuMs": {
+        "count": 224,
+        "p50": 0.451,
+        "p95": 1.9,
+        "p99": 3.942,
+        "max": 13.287
+      },
+      "responseTicks": {
+        "count": 224,
+        "p50": 0,
+        "p95": 3,
+        "p99": 6,
+        "max": 16
+      },
+      "firstMovementFromActiveTicks": {
+        "analysts-2": 6,
+        "counterAnalysts-1": 7,
+        "counterAnalysts-0": 23,
+        "analysts-3": 25,
+        "analysts-1": 49,
+        "counterAnalysts-2": 54,
+        "counterAnalysts-4": 63,
+        "analysts-4": 69,
+        "counterAnalysts-3": 84
+      },
+      "requestToUsefulPathTicks": {
+        "count": 224,
+        "p50": 1,
+        "p95": 3,
+        "p99": 6,
+        "max": 16
+      },
+      "started": 225,
+      "finished": 224,
+      "empty": 0,
+      "shots": 152,
+      "kills": 5,
+      "earlyShots": 0,
+      "objectives": {
+        "plantStarts": 0,
+        "defuseStarts": 0,
+        "plants": 0,
+        "defuses": 0,
+        "rescues": 0,
+        "results": []
+      },
+      "behavior": {
+        "observations": 1285,
+        "moving": 1090,
+        "investigating": 80,
+        "coverReserved": 44,
+        "stuckOverHalfSecond": 0
+      },
+      "score": {
+        "analysts": 5,
+        "counterAnalysts": 0
+      },
+      "temperatureC": 50.15,
+      "overBudgetTicks": 0,
+      "finalBotTravel": [
+        68.93,
+        67.05,
+        79.64,
+        80.62,
+        27.17,
+        5.17,
+        82,
+        6.97,
+        4.61
+      ]
+    }
+  ]
+}

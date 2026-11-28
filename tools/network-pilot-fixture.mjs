@@ -15,6 +15,7 @@ export async function startPilotFixture({testMatch, familyRoom=false, publicList
   const dir=await mkdtemp(join(tmpdir(),'cs2-pilot-tls-'));
   const certPath=join(dir,'cert.pem'),keyPath=join(dir,'key.pem');
   let edge,authority;
+  let reachable=true;
   const sockets=new Set(),tunnels=new Set();
   // Own the keep-alive pool. An accepted upgrade leaves the HTTP agent and
   // remains a fixture-owned tunnel until both peers close.
@@ -43,6 +44,7 @@ export async function startPilotFixture({testMatch, familyRoom=false, publicList
         headers:{...req.headers,'x-forwarded-proto':'https','cf-connecting-ip':'127.0.0.1'}});
     }
     edge.on('request',(req,res)=>{
+      if(!reachable){req.socket.destroy();return;}
       if(!authority){res.writeHead(503);res.end();return;}
       const up=forward(req);
       res.once('close',()=>{if(!res.writableFinished)up.destroy();});
@@ -54,6 +56,7 @@ export async function startPilotFixture({testMatch, familyRoom=false, publicList
     });
     edge.on('connection',socket=>{sockets.add(socket);socket.once('close',()=>sockets.delete(socket));});
     edge.on('upgrade',(req,client,head)=>{
+      if(!reachable){client.destroy();return;}
       if(!authority){client.destroy();return;}
       const up=forward(req);
       // A reconnect can abandon the downstream socket before the authority
@@ -87,6 +90,10 @@ export async function startPilotFixture({testMatch, familyRoom=false, publicList
     const start=()=>startAuthority({...config,port:0,testMatch});
     authority=await start();
     return {origin,invite,familyPassword,close,get authority(){return authority;},
+      setReachable(value){
+        reachable=value;
+        if(!reachable)for(const socket of sockets)socket.destroy();
+      },
       async restart(){await stopAuthority();authority=await start();},
       args:['--host-resolver-rules=MAP '+host+' 127.0.0.1','--no-proxy-server','--ignore-certificate-errors-spki-list='+pin]};
   }catch(error){await close();throw error;}

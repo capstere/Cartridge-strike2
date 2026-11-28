@@ -83,15 +83,29 @@ test('a 250 ms round trip with ordered jitter preserves the original manual Rush
    send(shooterRoom,sprint);await delay(14);
  }
  const ammo=actor.inventory.pistol.ammo;
+ const clock=shooterRoom.clock,sendAt=performance.now();
+ const sendClock={sampleTick:shooterRoom.state.tick,serverNow:clock.serverNow(),patch:clock.lastServerTime(),rtt:clock.smoothedRtt()};
+ const deliveredBefore=proxy.metrics.deliveredDelays.length;
+ // Observe the real SDK stamp at authority admission, before weapon recovery.
+ const admit=authority.lag.admit,admissions=[];
+ authority.lag.admit=function(client,frame,stamp){
+   const now=this.room.clock.elapsedTime,anchor=this.tickTimes.get(frame.sampleTick);
+   const outcome=admit.call(this,client,frame,stamp);
+   admissions.push({sampleTick:frame.sampleTick,stamp,now,anchor,rtt:client.rtt,
+     age:stamp ? now-stamp : null,elapsedSinceSend:performance.now()-sendAt,outcome});
+   return outcome;
+ };
  send(shooterRoom,{...sprint,fire:true,fireId:1,fireEdge:true,shotYaw:.7,shotPitch:.06});
  shooterRoom.send('controls',{enabled:true,lifeId:actor.lifeId,controlEpoch:seat.epoch});
  send(shooterRoom,{fireId:1,fireEdge:false,fire:false,yaw:-.2});
  try{await until(()=>events.every(list=>list.length===1),'both delayed clients received the same accepted edge');}
  catch(error){
-   t.diagnostic(JSON.stringify({invalid:authority.metrics.invalid,lag:authority.lag.metrics,events:events.map(list=>list.length),
+   const relays=proxy.metrics.deliveredDelays.slice(deliveredBefore);
+   t.diagnostic(JSON.stringify({sendClock,admissions,relayCount:relays.length,peakRelayMs:Math.max(0,...relays),
+     invalid:authority.metrics.invalid,lag:authority.lag.metrics,events:events.map(list=>list.length),
      sampleTick:seat.lastSampleTick,fireId:seat.lastFire,rtt:seat.rtt,ammo:actor.inventory.pistol.ammo,actorTime:actor.nextShot,weight:actor.rushWeight}));
    throw error;
- }
+ }finally{authority.lag.admit=admit;}
  await delay(150);
  assert.equal(actor.inventory.pistol.ammo,ammo-1);
  assert.equal(events[0].length,1);assert.equal(events[1].length,1);
@@ -99,7 +113,7 @@ test('a 250 ms round trip with ordered jitter preserves the original manual Rush
  assert.equal(events[0][0].yaw,.7);assert.equal(events[0][0].pitch,.06);assert.equal(actor.yaw,-.2);
  assert.equal(authority.metrics.invalid,0);assert.equal(authority.lag.metrics.rejected,0);
  assert(proxy.metrics.deliveredDelays.some(delay=>delay>=130));
- t.diagnostic(JSON.stringify({configuredRttMs:250,jitterMs:20,authorityRttMs:seat.rtt,
+ t.diagnostic(JSON.stringify({configuredRttMs:250,jitterMs:20,authorityRttMs:seat.rtt,sendClock,admissions,
    admittedShotAgeMs:authority.lag.metrics.ages.at(-1),liveShots:authority.lag.metrics.live,
    recoveryFallbacks:authority.lag.metrics.reasons['aged during recovery']||0,acceptedShots:events[1].length}));
 });

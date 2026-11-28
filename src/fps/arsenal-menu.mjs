@@ -153,7 +153,7 @@ export function mountArsenal({team,draw,clear}){
     const kit=resolved(),item=kit[weaponSlot],w=weaponDefinition(item.id,item.attachments);
     for(const [part,tile] of tiles){tile.button.setAttribute('aria-pressed',String(part===weaponSlot));tile.name.textContent=WEAPONS[kit[part].id].name;}
     const heading=el('h3',w.name+' · Weapon level '+weaponLevel(rights,item.id)),list=el('dl');
-    for(const [name,value] of [['Damage',Number(w.damage.toFixed(1))],['Range',Math.round(w.range)+' m'],['Magazine',w.magazine],['Rate',Math.round(60/w.interval)+' rpm'],['Reload',Number(w.reload.toFixed(2))+' s'],['Aim field of view',canAim(item.id)?Number((aimFov(item.id)/(w.zoom||1)).toFixed(1))+'°':'Unavailable']]){
+    for(const [name,value] of [['Damage',Number(w.damage.toFixed(1))],['Range',Math.round(w.range)+' m'],['Magazine',w.magazine],['Rate',Math.round(60/w.interval)+' rpm'],['Reload',Number(w.reload.toFixed(2))+' s'],['Aim field of view',canAim(item.id)?Number(aimFov(item.id,w.zoom).toFixed(1))+'°':'Unavailable']]){
       const row=el('div');row.append(el('dt',name),el('dd',String(value)));list.append(row);
     }
     stats.append(heading,list,el('p','Attachments · '+(item.attachments.map(a=>ATTACHMENTS[a].name).join(', ')||'None')),el('p','Equipment · '+WEAPONS[kit.equipment].name));

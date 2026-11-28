@@ -1,0 +1,48 @@
+{
+  "map": "floor5-prepared",
+  "mode": "Classic",
+  "humans": 1,
+  "bots": 9,
+  "runtime": "4c3b35de67787492d33ac36e49fb11b381c0546a",
+  "fixtureCorrection": "1d3fe3c521c3c3c5c419e642f7a8b484e5e29ecd",
+  "oldFixture": {
+    "seconds": 25.048139239000005,
+    "invalidInputs": 0,
+    "backpressure": 0,
+    "human": {
+      "id": "analysts-0",
+      "enemy": "counterAnalysts-0",
+      "weapon": "he",
+      "pistol": "p9",
+      "primary": "",
+      "ammo": 0,
+      "reserve": 0,
+      "grenades": 1,
+      "alive": true,
+      "epoch": 1,
+      "fireId": 576,
+      "reloadId": 573,
+      "shots": 0
+    }
+  },
+  "correctedFixture": {
+    "seconds": 25.047414253999996,
+    "invalidInputs": 0,
+    "backpressure": 0,
+    "human": {
+      "id": "analysts-0",
+      "enemy": "counterAnalysts-0",
+      "weapon": "p9",
+      "pistol": "p9",
+      "primary": "",
+      "ammo": 15,
+      "reserve": 60,
+      "grenades": 0,
+      "alive": true,
+      "epoch": 1,
+      "fireId": 569,
+      "reloadId": 96,
+      "shots": 25
+    }
+  }
+}

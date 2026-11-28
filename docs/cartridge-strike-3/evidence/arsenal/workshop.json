@@ -1,0 +1,36 @@
+{
+  "guest": {
+    "primary": {
+      "pixels": 5975,
+      "hash": 915046480
+    },
+    "sidearm": {
+      "pixels": 6034,
+      "hash": 1521321342
+    },
+    "rotated": {
+      "pixels": 6432,
+      "hash": 23399560
+    }
+  },
+  "account": {
+    "bare": {
+      "pixels": 7440,
+      "hash": 2844112286
+    },
+    "fitted": {
+      "pixels": 6010,
+      "hash": 1987924293
+    }
+  },
+  "deployed": {
+    "id": "ar47",
+    "camo": "desert",
+    "attachments": [
+      "red",
+      "sil"
+    ],
+    "smoke": 1,
+    "renderer": "WebKit WebGL"
+  }
+}

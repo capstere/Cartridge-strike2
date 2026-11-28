@@ -1,0 +1,382 @@
+[
+  {
+    "map": "compact-arena",
+    "profile": "authority",
+    "original": {
+      "seeds": [
+        17
+      ],
+      "medianTickP95Ms": 2.327,
+      "medianTickP99Ms": 4.65,
+      "medianRouteWorkP99Ms": 3.355,
+      "worstRouteTickMs": 13.848,
+      "maxStartsPerTick": 2,
+      "medianOverBudgetTicks": 0,
+      "medianReadyMs": 315.5,
+      "medianCompletedRouteResponseP95Ticks": 0,
+      "completedRoutes": 354,
+      "emptyRoutes": 0,
+      "shots": 205,
+      "kills": 18
+    },
+    "candidate": {
+      "seeds": [
+        17
+      ],
+      "medianTickP95Ms": 1.048,
+      "medianTickP99Ms": 1.984,
+      "medianRouteWorkP99Ms": 0.624,
+      "worstRouteTickMs": 2.707,
+      "maxStartsPerTick": 1,
+      "medianOverBudgetTicks": 0,
+      "medianReadyMs": 310.1,
+      "medianCompletedRouteResponseP95Ticks": 103,
+      "completedRoutes": 205,
+      "emptyRoutes": 2,
+      "shots": 114,
+      "kills": 9
+    }
+  },
+  {
+    "map": "compact-arena",
+    "profile": "solo",
+    "original": {
+      "seeds": [
+        17
+      ],
+      "medianTickP95Ms": 1.881,
+      "medianTickP99Ms": 4.584,
+      "medianRouteWorkP99Ms": 2.744,
+      "worstRouteTickMs": 10.743,
+      "maxStartsPerTick": 6,
+      "medianOverBudgetTicks": 0,
+      "medianReadyMs": 48.8,
+      "medianCompletedRouteResponseP95Ticks": 0,
+      "completedRoutes": 385,
+      "emptyRoutes": 4,
+      "shots": 180,
+      "kills": 17
+    },
+    "candidate": {
+      "seeds": [
+        17
+      ],
+      "medianTickP95Ms": 0.997,
+      "medianTickP99Ms": 2.016,
+      "medianRouteWorkP99Ms": 0.673,
+      "worstRouteTickMs": 2.246,
+      "maxStartsPerTick": 1,
+      "medianOverBudgetTicks": 0,
+      "medianReadyMs": 73.2,
+      "medianCompletedRouteResponseP95Ticks": 82,
+      "completedRoutes": 191,
+      "emptyRoutes": 0,
+      "shots": 96,
+      "kills": 11
+    }
+  },
+  {
+    "map": "embruns",
+    "profile": "authority",
+    "original": {
+      "seeds": [
+        17
+      ],
+      "medianTickP95Ms": 2.622,
+      "medianTickP99Ms": 5.648,
+      "medianRouteWorkP99Ms": 4.593,
+      "worstRouteTickMs": 25.424,
+      "maxStartsPerTick": 1,
+      "medianOverBudgetTicks": 1,
+      "medianReadyMs": 61.3,
+      "medianCompletedRouteResponseP95Ticks": 0,
+      "completedRoutes": 309,
+      "emptyRoutes": 56,
+      "shots": 135,
+      "kills": 3
+    },
+    "candidate": {
+      "seeds": [
+        17
+      ],
+      "medianTickP95Ms": 0.682,
+      "medianTickP99Ms": 1.343,
+      "medianRouteWorkP99Ms": 0.469,
+      "worstRouteTickMs": 2.792,
+      "maxStartsPerTick": 1,
+      "medianOverBudgetTicks": 0,
+      "medianReadyMs": 52.7,
+      "medianCompletedRouteResponseP95Ticks": 112,
+      "completedRoutes": 180,
+      "emptyRoutes": 10,
+      "shots": 115,
+      "kills": 2
+    }
+  },
+  {
+    "map": "embruns",
+    "profile": "solo",
+    "original": {
+      "seeds": [
+        17
+      ],
+      "medianTickP95Ms": 2.384,
+      "medianTickP99Ms": 4.85,
+      "medianRouteWorkP99Ms": 3.856,
+      "worstRouteTickMs": 7.77,
+      "maxStartsPerTick": 4,
+      "medianOverBudgetTicks": 0,
+      "medianReadyMs": 44.2,
+      "medianCompletedRouteResponseP95Ticks": 0,
+      "completedRoutes": 464,
+      "emptyRoutes": 52,
+      "shots": 84,
+      "kills": 2
+    },
+    "candidate": {
+      "seeds": [
+        17
+      ],
+      "medianTickP95Ms": 0.617,
+      "medianTickP99Ms": 1.076,
+      "medianRouteWorkP99Ms": 0.383,
+      "worstRouteTickMs": 9.52,
+      "maxStartsPerTick": 1,
+      "medianOverBudgetTicks": 0,
+      "medianReadyMs": 62.6,
+      "medianCompletedRouteResponseP95Ticks": 112,
+      "completedRoutes": 171,
+      "emptyRoutes": 10,
+      "shots": 81,
+      "kills": 2
+    }
+  },
+  {
+    "map": "floor5-prepared",
+    "profile": "authority",
+    "original": {
+      "seeds": [
+        17
+      ],
+      "medianTickP95Ms": 1.599,
+      "medianTickP99Ms": 2.751,
+      "medianRouteWorkP99Ms": 0.921,
+      "worstRouteTickMs": 22.484,
+      "maxStartsPerTick": 1,
+      "medianOverBudgetTicks": 2,
+      "medianReadyMs": 3051,
+      "medianCompletedRouteResponseP95Ticks": 0,
+      "completedRoutes": 213,
+      "emptyRoutes": 0,
+      "shots": 32,
+      "kills": 0
+    },
+    "candidate": {
+      "seeds": [
+        17
+      ],
+      "medianTickP95Ms": 0.987,
+      "medianTickP99Ms": 1.775,
+      "medianRouteWorkP99Ms": 0.351,
+      "worstRouteTickMs": 2.933,
+      "maxStartsPerTick": 1,
+      "medianOverBudgetTicks": 1,
+      "medianReadyMs": 2997.3,
+      "medianCompletedRouteResponseP95Ticks": 11,
+      "completedRoutes": 141,
+      "emptyRoutes": 0,
+      "shots": 32,
+      "kills": 0
+    }
+  },
+  {
+    "map": "floor5-prepared",
+    "profile": "solo",
+    "original": {
+      "seeds": [
+        17
+      ],
+      "medianTickP95Ms": 1.694,
+      "medianTickP99Ms": 3.015,
+      "medianRouteWorkP99Ms": 1.341,
+      "worstRouteTickMs": 22.011,
+      "maxStartsPerTick": 2,
+      "medianOverBudgetTicks": 2,
+      "medianReadyMs": 887,
+      "medianCompletedRouteResponseP95Ticks": 0,
+      "completedRoutes": 224,
+      "emptyRoutes": 3,
+      "shots": 19,
+      "kills": 0
+    },
+    "candidate": {
+      "seeds": [
+        17
+      ],
+      "medianTickP95Ms": 1.083,
+      "medianTickP99Ms": 1.776,
+      "medianRouteWorkP99Ms": 0.471,
+      "worstRouteTickMs": 27.496,
+      "maxStartsPerTick": 1,
+      "medianOverBudgetTicks": 1,
+      "medianReadyMs": 823.1,
+      "medianCompletedRouteResponseP95Ticks": 11,
+      "completedRoutes": 157,
+      "emptyRoutes": 3,
+      "shots": 19,
+      "kills": 0
+    }
+  },
+  {
+    "map": "meltem",
+    "profile": "authority",
+    "original": {
+      "seeds": [
+        17
+      ],
+      "medianTickP95Ms": 2.061,
+      "medianTickP99Ms": 5.416,
+      "medianRouteWorkP99Ms": 4.627,
+      "worstRouteTickMs": 13.604,
+      "maxStartsPerTick": 1,
+      "medianOverBudgetTicks": 0,
+      "medianReadyMs": 44.1,
+      "medianCompletedRouteResponseP95Ticks": 0,
+      "completedRoutes": 315,
+      "emptyRoutes": 35,
+      "shots": 131,
+      "kills": 1
+    },
+    "candidate": {
+      "seeds": [
+        17
+      ],
+      "medianTickP95Ms": 0.727,
+      "medianTickP99Ms": 1.352,
+      "medianRouteWorkP99Ms": 0.52,
+      "worstRouteTickMs": 6.519,
+      "maxStartsPerTick": 1,
+      "medianOverBudgetTicks": 0,
+      "medianReadyMs": 32.5,
+      "medianCompletedRouteResponseP95Ticks": 151,
+      "completedRoutes": 167,
+      "emptyRoutes": 0,
+      "shots": 106,
+      "kills": 0
+    }
+  },
+  {
+    "map": "meltem",
+    "profile": "solo",
+    "original": {
+      "seeds": [
+        17
+      ],
+      "medianTickP95Ms": 2.273,
+      "medianTickP99Ms": 5.016,
+      "medianRouteWorkP99Ms": 4.102,
+      "worstRouteTickMs": 21.094,
+      "maxStartsPerTick": 4,
+      "medianOverBudgetTicks": 1,
+      "medianReadyMs": 31.6,
+      "medianCompletedRouteResponseP95Ticks": 0,
+      "completedRoutes": 424,
+      "emptyRoutes": 36,
+      "shots": 92,
+      "kills": 2
+    },
+    "candidate": {
+      "seeds": [
+        17
+      ],
+      "medianTickP95Ms": 0.599,
+      "medianTickP99Ms": 0.904,
+      "medianRouteWorkP99Ms": 0.437,
+      "worstRouteTickMs": 9.123,
+      "maxStartsPerTick": 1,
+      "medianOverBudgetTicks": 0,
+      "medianReadyMs": 40,
+      "medianCompletedRouteResponseP95Ticks": 153,
+      "completedRoutes": 158,
+      "emptyRoutes": 0,
+      "shots": 47,
+      "kills": 1
+    }
+  },
+  {
+    "map": "tephra",
+    "profile": "authority",
+    "original": {
+      "seeds": [
+        17
+      ],
+      "medianTickP95Ms": 1.594,
+      "medianTickP99Ms": 3.667,
+      "medianRouteWorkP99Ms": 3.092,
+      "worstRouteTickMs": 10.417,
+      "maxStartsPerTick": 1,
+      "medianOverBudgetTicks": 1,
+      "medianReadyMs": 84.8,
+      "medianCompletedRouteResponseP95Ticks": 0,
+      "completedRoutes": 360,
+      "emptyRoutes": 75,
+      "shots": 160,
+      "kills": 0
+    },
+    "candidate": {
+      "seeds": [
+        17
+      ],
+      "medianTickP95Ms": 0.57,
+      "medianTickP99Ms": 0.969,
+      "medianRouteWorkP99Ms": 0.425,
+      "worstRouteTickMs": 1.27,
+      "maxStartsPerTick": 1,
+      "medianOverBudgetTicks": 0,
+      "medianReadyMs": 73.5,
+      "medianCompletedRouteResponseP95Ticks": 150,
+      "completedRoutes": 166,
+      "emptyRoutes": 0,
+      "shots": 89,
+      "kills": 1
+    }
+  },
+  {
+    "map": "tephra",
+    "profile": "solo",
+    "original": {
+      "seeds": [
+        17
+      ],
+      "medianTickP95Ms": 1.631,
+      "medianTickP99Ms": 3.611,
+      "medianRouteWorkP99Ms": 3.206,
+      "worstRouteTickMs": 11.855,
+      "maxStartsPerTick": 5,
+      "medianOverBudgetTicks": 0,
+      "medianReadyMs": 53.2,
+      "medianCompletedRouteResponseP95Ticks": 0,
+      "completedRoutes": 429,
+      "emptyRoutes": 85,
+      "shots": 121,
+      "kills": 2
+    },
+    "candidate": {
+      "seeds": [
+        17
+      ],
+      "medianTickP95Ms": 0.523,
+      "medianTickP99Ms": 0.788,
+      "medianRouteWorkP99Ms": 0.426,
+      "worstRouteTickMs": 1.115,
+      "maxStartsPerTick": 1,
+      "medianOverBudgetTicks": 0,
+      "medianReadyMs": 68.7,
+      "medianCompletedRouteResponseP95Ticks": 150,
+      "completedRoutes": 166,
+      "emptyRoutes": 0,
+      "shots": 53,
+      "kills": 1
+    }
+  }
+]

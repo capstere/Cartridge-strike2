@@ -8,7 +8,7 @@ import {Game,WEAPONS} from '../game.mjs';
 import {seededRandom} from '../config.mjs';
 import {moveActor} from '../movement.mjs';
 import {multiplayerMapAnchors} from '../minimap-cache.mjs';
-import {TEAM_COMMS_TYPE,TEAM_COMMS_COMMANDS,TEAM_COMMS_RATE_MS} from '../../../shared/multiplayer/protocol.mjs';
+import {TEAM_COMMS_TYPE,TEAM_COMMS_COMMANDS,TEAM_COMMS_RATE_MS,TEAM_COMMS_LIFETIME} from '../../../shared/multiplayer/protocol.mjs';
 import {CLASSIC_NETWORK_CONFIG,NETWORK_CONFIG,ROOM_TYPE,ROOM_CAPACITY,RECONNECT_SECONDS,reliableRoomInput,INTERPOLATION_MS,copyPose,wrapYaw} from '../../../shared/multiplayer/rules.mjs';
 import {CONTRACT,MAP_CONTRACTS} from '../../../shared/multiplayer/build.mjs';
 import {FAMILY_ROOM_ALIAS} from '../../../shared/multiplayer/family-room.mjs';
@@ -186,9 +186,16 @@ export class NetworkSession {
     if(anchor)this.view.teamPing=this.teamSignal;
     else if(this.enabled){
       const sender=this.room.state.actors.get(message.senderId);
-      this.teamAudioQueued=true;
-      this.events.push({type:'radio',teamPrivate:true,teamPacket:message,command:message.kind,
-        actorId:sender.id,team:sender.team,x:sender.x,y:sender.y,z:sender.z,time:this.view.state.time,global:true});
+      // The caption lasts longer than fresh audio. Use the authoritative send time
+      // and the same immediate audio path as shots, before the next render can stall.
+      const event={type:'radio',teamPrivate:true,teamPacket:message,command:message.kind,
+        actorId:sender.id,team:sender.team,x:sender.x,y:sender.y,z:sender.z,
+        time:message.expiresAt-TEAM_COMMS_LIFETIME,global:true};
+      const now=Math.max(this.room.state.time,this.view.state.time,event.time);
+      if(!this.onCombatAudio?.(event,now)){
+        this.teamAudioQueued=true;
+        this.events.push(event);
+      }
     }
   }
   drainEvents(){
