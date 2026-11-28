@@ -2522,7 +2522,7 @@
     {
       "path": "shared/multiplayer/build.mjs",
       "bytes": 660,
-      "sha256": "9395d0994216410caa0cdc40641fb1daf294d2e6403471a32b32f903371613a7"
+      "sha256": "5d2badcf88ac1e0f1fff638fae1bf238e428c7a33bc7d6381c4b0f7225890a0d"
     },
     {
       "path": "shared/multiplayer/collision-contract.mjs",
@@ -2542,7 +2542,7 @@
     {
       "path": "shared/multiplayer/map-build.mjs",
       "bytes": 2831,
-      "sha256": "ed51240cbbe0855ccf552f0993309eb6587680504d36cbff9fb50b0fb9ebd9ab"
+      "sha256": "7972850a1a422ad4bd7dc472d45e1f6fb10045ed4de62cf07f803131b3425061"
     },
     {
       "path": "shared/multiplayer/maps.mjs",
@@ -2641,13 +2641,13 @@
     },
     {
       "path": "src/fps/bot-tactics.mjs",
-      "bytes": 6216,
-      "sha256": "4952e04bf458e9881b7bbb817a9fff5e22ea69e7c4ed1a8b020c5b9aeaff2f22"
+      "bytes": 6635,
+      "sha256": "a4f4124230c126ffaf318ccf81c2a51d0efe2c1a56a643d86bb2d9a4aaea3018"
     },
     {
       "path": "src/fps/bots.mjs",
-      "bytes": 33750,
-      "sha256": "9fd493aac87e720ced4407271cb3e2069ab33764ecb33b3401a71fe03af9f319"
+      "bytes": 39682,
+      "sha256": "a700bba7183e3aca7dc424c9eab9e344d609c8790997b556d02d09b6e1eebe20"
     },
     {
       "path": "src/fps/business-hostage.mjs",
@@ -2956,8 +2956,8 @@
     },
     {
       "path": "src/fps/navigation.mjs",
-      "bytes": 11364,
-      "sha256": "b762adcba9f6af0678430fae7d19e2024b3a46f6550548309177e7c0327e1a63"
+      "bytes": 13531,
+      "sha256": "7597f6c7ee9cf8920932f12ec7bed5ce3e52c6502c43d4044045f2923d7d112c"
     },
     {
       "path": "src/fps/network/connection.mjs",
@@ -2986,8 +2986,8 @@
     },
     {
       "path": "src/fps/network/session.mjs",
-      "bytes": 42768,
-      "sha256": "53a5307964f96431b067a0ade50480356767b44614c660f884eb145f83d893a2"
+      "bytes": 43146,
+      "sha256": "e209627f4af76d950a17e667cf6180fdddf9f06a91fda3d3ec52e49ada65bdbc"
     },
     {
       "path": "src/fps/operator-equipment.mjs",
@@ -3066,8 +3066,8 @@
     },
     {
       "path": "src/fps/reference-navigation.mjs",
-      "bytes": 3721,
-      "sha256": "358d6a57c31f99c821b25c2b67215e146eebfc9e3ef90223f6bf1f47c22e7160"
+      "bytes": 5362,
+      "sha256": "ae2746181c619ea3eb5a11587f8acc6e8a127d4800675785d402f71b853aebbe"
     },
     {
       "path": "src/fps/reference-prop-ray.mjs",
@@ -3585,7 +3585,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 81878324,
+  "bytes": 81888861,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

@@ -1,0 +1,67 @@
+{
+  "rawSha256": "da16df999026c27c45e325b2cf44f8591474a5a0d78d85de4276926ab791c65d",
+  "status": "PASS",
+  "errors": [],
+  "rounds": [
+    {
+      "seed": 17,
+      "results": [
+        {
+          "round": 1,
+          "reason": "elimination",
+          "winner": "analysts"
+        },
+        {
+          "round": 2,
+          "reason": "elimination",
+          "winner": "analysts"
+        }
+      ],
+      "earlyShots": 0,
+      "yields": 6,
+      "maxMovingStall": 1.4333333333333331,
+      "roundsCheckedAtLift": 2,
+      "routes": 34
+    },
+    {
+      "seed": 42,
+      "results": [
+        {
+          "round": 1,
+          "reason": "elimination",
+          "winner": "counterAnalysts"
+        },
+        {
+          "round": 2,
+          "reason": "elimination",
+          "winner": "counterAnalysts"
+        }
+      ],
+      "earlyShots": 0,
+      "yields": 4,
+      "maxMovingStall": 1.4666666666666663,
+      "roundsCheckedAtLift": 2,
+      "routes": 39
+    },
+    {
+      "seed": 93,
+      "results": [
+        {
+          "round": 1,
+          "reason": "elimination",
+          "winner": "analysts"
+        },
+        {
+          "round": 2,
+          "reason": "elimination",
+          "winner": "analysts"
+        }
+      ],
+      "earlyShots": 0,
+      "yields": 6,
+      "maxMovingStall": 1.4333333333333331,
+      "roundsCheckedAtLift": 2,
+      "routes": 25
+    }
+  ]
+}

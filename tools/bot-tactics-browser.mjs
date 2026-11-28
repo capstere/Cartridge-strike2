@@ -1,7 +1,12 @@
 import assert from 'node:assert/strict';import fs from 'node:fs';
 import {chromium} from '../frontline/source/tools/dev/node_modules/playwright-core/index.mjs';
 const origin=process.env.FPS_TEST_ORIGIN||'http://127.0.0.1:8765',out='test-results/bot-tactics';fs.mkdirSync(out,{recursive:true});
-const browser=await chromium.launch({headless:true,args:['--no-sandbox','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']}),page=await browser.newPage({viewport:{width:1000,height:650}}),errors=[],reports=[];
+const native=process.env.CHROMIUM_PATH;
+const browser=await chromium.launch({
+ headless:process.env.FPS_NETWORK_HEADED!=='1',executablePath:native,
+ args:['--no-sandbox','--use-gl=angle','--use-angle='+(process.env.FPS_NETWORK_ANGLE||'swiftshader'),
+   ...(native?['--ozone-platform=wayland']:['--enable-unsafe-swiftshader'])],
+}),page=await browser.newPage({viewport:{width:1000,height:650}}),errors=[],reports=[];
 page.setDefaultTimeout(180000);page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
 await page.addInitScript(()=>{requestAnimationFrame=()=>0;localStorage.setItem('cartridge-settings',JSON.stringify({mode:'classic',graphics:'standard',wanderers:false}));});
 try{
