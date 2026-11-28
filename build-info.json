@@ -1186,8 +1186,8 @@
     },
     {
       "path": "fps/index.html",
-      "bytes": 22115,
-      "sha256": "7fb20e742ed26d3bf9d20c1462256aad5c890a9616f11c04016f03d413f88769"
+      "bytes": 22676,
+      "sha256": "3ebc6f777ab27f2e587293978626214c831562922bb5c39ce4fe757bfb44895d"
     },
     {
       "path": "fps/lobby.css",
@@ -1196,8 +1196,8 @@
     },
     {
       "path": "fps/match-loading.css",
-      "bytes": 7569,
-      "sha256": "70e7868ad4ce6e541a95ab3650feddeb5a10b458d253b3150b978552204565fc"
+      "bytes": 8695,
+      "sha256": "ec4a8c6741004c589fe159dcc89d605ac0a7e2fec4ce2b4faa92bfdb02206093"
     },
     {
       "path": "fps/menu-modern.css",
@@ -2522,7 +2522,7 @@
     {
       "path": "shared/multiplayer/build.mjs",
       "bytes": 660,
-      "sha256": "8525d0dedc531d0de17751384bd8b345911990b8b953724589d4ee272457e192"
+      "sha256": "ab9422fe1cb36a9b9aebec5085a89c451bb90c77a3b519b05ec0609ce800004d"
     },
     {
       "path": "shared/multiplayer/collision-contract.mjs",
@@ -2542,7 +2542,7 @@
     {
       "path": "shared/multiplayer/map-build.mjs",
       "bytes": 2831,
-      "sha256": "9f371631db2a698633a2ba76084136d112484804514c60b87cd6a8ee70217151"
+      "sha256": "68ce293755b0cfa4bf1fb1e30abb05c960e954e5422a4039a24b8a7f8de89fa9"
     },
     {
       "path": "shared/multiplayer/maps.mjs",
@@ -2616,8 +2616,8 @@
     },
     {
       "path": "src/fps/app.mjs",
-      "bytes": 75805,
-      "sha256": "eef34efbf81c5c95f29bc58434e2d62083a6b9d1bd79c0264abafc09c21d3e4a"
+      "bytes": 77410,
+      "sha256": "8faae2411c37c1c07451b0d6fe3aacc84c6a05ee1273930d5ad49a67de214c03"
     },
     {
       "path": "src/fps/appearance-package.mjs",
@@ -2936,8 +2936,8 @@
     },
     {
       "path": "src/fps/match-flow.mjs",
-      "bytes": 12885,
-      "sha256": "d56699ed3c92b4fe6a0cdf871a3023ec2d33ada6e21602469076c51d99e1d193"
+      "bytes": 15357,
+      "sha256": "17ae72aa50a3cd584c0a4334af2cb4ba9c45592a2601e7f06e60f90eda9cb977"
     },
     {
       "path": "src/fps/match-modes.mjs",
@@ -2956,8 +2956,8 @@
     },
     {
       "path": "src/fps/menu-navigation.mjs",
-      "bytes": 12117,
-      "sha256": "684288814eb186a95993e96863abd87ae7d6cab5a228288b408eaf8bae149f82"
+      "bytes": 12297,
+      "sha256": "f0f172b14adef8baa145880b2d6d3169efc4299e8fc286784d69bff223a2ba5d"
     },
     {
       "path": "src/fps/minimap-cache.mjs",
@@ -3645,7 +3645,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 82014337,
+  "bytes": 82020281,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

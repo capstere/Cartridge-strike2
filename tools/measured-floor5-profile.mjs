@@ -16,6 +16,7 @@ try{
   await page.addInitScript(m=>localStorage.setItem('cartridge-settings',JSON.stringify({mode:'endless',graphics:m?'low':'standard'})),mobile);
   await page.goto(origin+'/fps/?test&seed=42');
   await page.locator('#start').click();
+  await page.locator('#csl-deploy').click();
   await page.waitForFunction(()=>window.__fps?.game.player&&document.querySelector('#cs-loading').hidden,null,{timeout:180000});
   if(await page.locator('#resume').isVisible())await page.locator('#resume').click();
   await page.evaluate(()=>{__fps.stopFrameLoop();__fps.pause(false);});

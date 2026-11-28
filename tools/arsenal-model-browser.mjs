@@ -82,6 +82,7 @@ if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
     await page.locator('[data-go=play]:visible').first().click();
     await page.locator('[data-go=solo]:visible').first().click();
     await page.locator('#start').click();
+    await page.locator('#csl-deploy').click();
     await page.waitForFunction(()=>!!window.__fps?.renderer?.renderer && document.querySelector('#cs-loading').hidden);
     console.log(JSON.stringify(await verifyArsenalModels(page,process.env.CS3_ARSENAL_EVIDENCE),null,2));
   }finally{await browser.close();}

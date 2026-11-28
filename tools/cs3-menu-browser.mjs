@@ -69,7 +69,9 @@ async function run(input) {
     assert.equal(await page.locator('#mm-settings').evaluate(el => el.open),true);
     await page.locator('#seed').waitFor();
     await back(); await page.locator('#home-title').waitFor();
-    await go('news'); await page.getByRole('heading',{name:'New match menus'}).waitFor(); await snap('news');
+    await go('news'); await page.getByRole('heading',{name:'Classes, Rush and new match modes'}).waitFor();
+    assert.match(await page.locator('[data-news-build]').innerText(),/Build [a-f0-9]{12}$/);
+    await page.getByRole('heading',{name:'New match menus'}).waitFor(); await snap('news');
     await back(); await page.locator('#home-title').waitFor();
     await page.locator('#lobby-stage.is-ready').waitFor({state:'attached',timeout:120000});
     progress('menu, settings and keyboard focus checked');
@@ -97,6 +99,7 @@ async function run(input) {
     async function playMatch(label, picture) {
       progress('entering '+picture);
       await press(page.locator('#start'));
+      await press(page.locator('#csl-deploy'));
       await page.locator('#hud').waitFor({timeout:120000});
       await page.locator('#cs-loading').waitFor({state:'hidden',timeout:120000});
       progress(picture+' playable');

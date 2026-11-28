@@ -1,5 +1,6 @@
 // Screen history and keyboard focus adapted from Riposte 09e-menus uiGo/uiBack
 // and 09ea-liste lmStep. Copyright (c) 2026 BenDBSS. See licenses/riposte-MIT.txt.
+import {CONTRACT} from '../../shared/multiplayer/build.mjs';
 import {accountRequest, mountAccountProfile} from './account-profile.mjs';
 import {UI_EN, selectedMapName} from './english-ui.mjs';
 import {loadSoloManifest, resolveSoloSelection, soloCatalog, soloMapURL} from './solo-maps.mjs';
@@ -48,6 +49,7 @@ function mountMenu() {
       publicEntry.onclick = () => location.assign('/profile#public-matches');
     }).catch(() => { checkedPublic=false; });
   }
+  menu.querySelector('[data-news-build]').textContent = 'Cartridge-Strike 3 · Build '+CONTRACT.buildHash.slice(0,12);
   let screen;
   settings.dataset.go = 'options';
 

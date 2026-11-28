@@ -51,6 +51,7 @@ try{
   for(let i=-3;i<=20;i++){
     const mode=i%2===0?'endless':'classic';
     await page.locator('#lb-mode-seg [data-value='+mode+']').click();await page.locator('#start').click();
+    await page.locator('#csl-deploy').click();
     await page.waitForFunction(()=>window.__fps?.game.player&&!document.querySelector('#hud').hidden&&document.querySelector('#cs-loading').hidden,null,{timeout:120000});
     const start=await page.evaluate(()=>{const g=__fps.game;lifecycleProbe.games.push(new WeakRef(g));return [g.state.mode,g.actors.length,g.state.zombies.length];});
     assert.deepEqual(start,[mode,10,4]);

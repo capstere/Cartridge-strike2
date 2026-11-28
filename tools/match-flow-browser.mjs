@@ -83,12 +83,24 @@ try {
     history.replaceState(null, '', url);
   });
   await retry.click();
+  await page.locator('#csl-deploy').waitFor({timeout:240000});
+  assert.ok(await page.locator('#hud').isHidden());
+  assert.equal(await page.evaluate(()=>__fps.game.player==null),true);
+  assert.equal(await page.locator('#csl-choice').inputValue(),'standard');
+  await page.locator('#csl-choice').selectOption('assault');
+  await page.locator('#csl-cancel').tap();
+  assert.equal(await page.evaluate(()=>document.activeElement.id),'start');
+  await start.tap();
+  assert.equal(await page.locator('#csl-choice').inputValue(),'standard');
+  await page.locator('#csl-choice').selectOption('scout');
+  await page.locator('#csl-deploy').tap();
   await page.waitForFunction(() => window.__csFlow?.flow.failed ||
     (window.__fps?.game.player && !document.getElementById('hud').hidden),
     null, { polling: 200, timeout: 240000 });
   assert.ok(await page.evaluate(() => !__csFlow.flow.failed), await page.locator('#csl-err-text').textContent());
   await page.evaluate(() => __fps.stopFrameLoop());
   assert.equal(await page.evaluate(() => __fps.game.team), 'counterAnalysts');
+  assert.equal(await page.evaluate(() => __fps.game.player.arsenalClass.id),'scout');
   assert.equal(await page.evaluate(() => __fps.game.actors.length), 10);
   assert.ok(await page.evaluate(() => __csFlow.music.track.paused));
   await page.evaluate(() => __fps.showBuy());
@@ -137,6 +149,7 @@ try {
   await page.locator('[data-go=solo]:visible').tap();
   await page.locator('#setup-title').waitFor();
   await start.tap();
+  await page.locator('#csl-deploy').tap();
   await page.locator('#hud').waitFor({timeout:120000});
   await page.locator('#cs-loading').waitFor({state:'hidden',timeout:120000});
   assert.match(await page.locator('#round-label').textContent(), /round 1/i);

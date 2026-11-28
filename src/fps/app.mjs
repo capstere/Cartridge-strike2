@@ -11,7 +11,7 @@ import {UI_EN} from './english-ui.mjs';
 import {roundReasons, purchaseLabel} from './game-english.mjs';
 import {GAME_NAME,COMPLEX_NAME,roomDisplayName,missionRoomName} from './player-names.mjs';
 import {selectedArsenal,localArsenalProfile,refreshArsenalAccount} from './arsenal-menu.mjs';
-import {quoteClass} from './arsenal.mjs';
+import {quoteClass, PRESETS, resolveClass, defaultArsenal} from './arsenal.mjs';
 import {setupCharacterMenu} from './character-selection.mjs';
 import {loadPrivateCharacter,characterHash,SavedCharacterError} from './private-character-store.mjs';
 import {currentOutfit,clearNetworkOutfits,loadCharacterLibrary,installPrivateCharacter,setPrivateCharacterActors} from './character-library.mjs?v=6.1.2';
@@ -817,10 +817,34 @@ function frame(now){try{
 function fatal(error){claimControllerForGame();cancelAnimationFrame(raf);raf=requestAnimationFrame(loadingControllerFrame);grenadeAssist?.reset();$('fatal').hidden=false;$('fatal').querySelector('pre').textContent=error.stack||String(error);$('loading').hidden=true;console.error(error);}
 team = document.querySelector('.team-option.selected').dataset.team;
 for (const option of document.querySelectorAll('[data-team]')) option.addEventListener('click', () => { team = option.dataset.team; });
+// Build the same team-specific kit that the local game and Classic shop consume.
+function deploymentOptions() {
+ const side=document.querySelector('.team-option.selected').dataset.team;
+ const current=selectedArsenal(side);
+ const classic=settings.mode==='classic';
+ const items=[];
+ if(classic)items.push({value:'standard',label:'Standard issue',brief:'Start with your team sidearm. Buy equipment during the buy phase.',config:{arsenalClass:null}});
+ else for(const option of $('loadout').options){
+   if(option.value!=='class')items.push({value:option.value,label:option.textContent,brief:'Start with '+option.textContent+'.',config:{loadout:option.value,arsenalClass:null}});
+ }
+ function addKit(value,kit) {
+   const equipment=WEAPONS[kit.primary.id].name+' · '+WEAPONS[kit.secondary.id].name;
+   items.push({value,label:kit.name,brief:classic?equipment+' · Purchase this class during the buy phase.':equipment,config:{arsenalClass:kit}});
+ }
+ if(current)addKit('equipped',current);
+ for(const preset of PRESETS){
+   if(preset.id!==current?.id)addKit(preset.id,resolveClass({...defaultArsenal(),selected:preset.id},side));
+ }
+ const selected=current&&settings.useArsenal!==false?'equipped':classic?'standard':settings.loadout;
+ return {items,selected:items.some(item=>item.value===selected)?selected:items[0].value};
+}
+$('start').addEventListener('cs-deployment-choices',event=>Object.assign(event.detail,deploymentOptions()));
 function launchMatch(event){
  if(networkMode || modal!=='menu' || !audio || !$('loading').hidden || characterSelectionFailed || !$('fatal').hidden)return;
  mobile.attemptLandscape();
- start(document.querySelector('.team-option.selected').dataset.team,{deploymentSeconds:testMode?0:MATCH_DEFAULTS.countdownSeconds});
+ const choice=deploymentOptions().items.find(item=>item.value===event.detail?.loadoutChoice);
+ if(!choice)return;
+ start(document.querySelector('.team-option.selected').dataset.team,{...choice.config,deploymentSeconds:testMode?0:MATCH_DEFAULTS.countdownSeconds});
  if(!mobile.enabled && !gamepad.active && navigator.userActivation && !navigator.userActivation.isActive && !event?.detail?.fullscreenRequested){
    showPause();$('pause').querySelector('p:not(.eyebrow)').textContent='Match ready. Select Resume to begin.';
    $('resume').focus();return;

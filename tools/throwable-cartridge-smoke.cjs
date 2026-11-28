@@ -43,6 +43,7 @@ async function boot(browser,mobile){
   assert.equal(await page.locator('#fatal').isVisible(),false);
   await page.evaluate(()=>{window.requestAnimationFrame=()=>0;});
   await page.locator('#start').click();
+  await page.locator('#csl-deploy').click();
   await page.evaluate(()=>{
     __fps.start('analysts',{mode:'endless',firefight:false,wanderers:false,botFire:false,friendlyFire:false,loadout:'smg'});
     for(const a of __fps.game.actors)if(!a.isPlayer){a.alive=false;a.bot=null;}

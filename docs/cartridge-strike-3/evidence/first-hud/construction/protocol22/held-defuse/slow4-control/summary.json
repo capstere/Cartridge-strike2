@@ -1,0 +1,140 @@
+{
+  "run": "slow4-control",
+  "gesture": [
+    {
+      "type": "pointerdown",
+      "ms": 0.0,
+      "trusted": true,
+      "target": "interact"
+    },
+    {
+      "type": "pointerup",
+      "ms": 5278.8,
+      "trusted": true,
+      "target": "interact"
+    }
+  ],
+  "clears": [],
+  "action": [
+    {
+      "time": 24.15,
+      "before": "",
+      "after": "defuse",
+      "input": true,
+      "heldLeaseMs": 180,
+      "inputAgeMs": 0.3,
+      "hp": 100,
+      "ground": true,
+      "moving": 0,
+      "range": 0
+    },
+    {
+      "time": 29.15,
+      "before": "defuse",
+      "after": "",
+      "input": true,
+      "heldLeaseMs": 113,
+      "inputAgeMs": 66.8,
+      "hp": 100,
+      "ground": true,
+      "moving": 0,
+      "range": 0
+    }
+  ],
+  "frames": 62,
+  "framesIntervalMs": {
+    "p50": 73.2,
+    "p95": 135.4,
+    "p99": 148.7,
+    "max": 148.7
+  },
+  "renderCallMs": {
+    "p50": 40.2,
+    "p95": 49.6,
+    "p99": 60.9,
+    "max": 60.9
+  },
+  "heldReceiveIntervalMs": {
+    "p50": 0.07,
+    "p95": 114.54,
+    "p99": 144.14,
+    "max": 145.12
+  },
+  "serverTickIntervalMs": {
+    "p50": 16.24,
+    "p95": 18.1,
+    "p99": 32.35,
+    "max": 33.05
+  },
+  "serverTickCostMs": {
+    "p50": 0.68,
+    "p95": 1.92,
+    "p99": 3.76,
+    "max": 5.13
+  },
+  "serverSlowTicksOver16ms": 0,
+  "invalidInputs": 0,
+  "longTasksMs": [
+    75,
+    65,
+    135,
+    72,
+    79,
+    62,
+    129,
+    63,
+    79,
+    53,
+    136,
+    62,
+    59,
+    59,
+    138,
+    74,
+    56,
+    58,
+    117,
+    52,
+    75,
+    62,
+    129,
+    62,
+    69,
+    141,
+    67,
+    63,
+    56,
+    115,
+    59,
+    73,
+    63,
+    125,
+    59,
+    66,
+    51,
+    118,
+    64,
+    69,
+    54,
+    117,
+    66,
+    60,
+    50,
+    118,
+    60,
+    73,
+    55,
+    116,
+    55,
+    66,
+    50,
+    127,
+    58,
+    60,
+    51,
+    125,
+    65,
+    79,
+    54
+  ]
+}

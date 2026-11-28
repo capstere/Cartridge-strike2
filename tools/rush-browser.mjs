@@ -31,6 +31,7 @@ async function play(touch) {
    if(process.env.FAMILY_SEQUENCE)await page.locator('[data-team=counterAnalysts]').click();
    await page.waitForFunction(()=>window.__fps && !document.querySelector('#start').disabled);
    await page.locator('#start').click();
+   await page.locator('#csl-deploy').click();
    await page.waitForFunction(()=>window.__fps?.game?.player && document.getElementById('cs-loading')?.hidden);
    if(await page.locator('#resume').isVisible())await page.locator('#resume').click();
    assert.equal(await page.evaluate(()=>__fps.game.state.mode),selectedMode);

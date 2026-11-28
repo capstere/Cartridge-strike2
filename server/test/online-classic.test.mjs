@@ -61,8 +61,51 @@ test('Classic economy, timed objectives, new lives, reserved seats and rematch',
  await until(()=>own(host).controlEpoch>deadEpoch,'dead player reconnects');
  assert.equal(own(host).alive,false);assert.equal(a.lifeId,deadLife);assert.equal(a.money,500);
  assert.equal(g.phase,'active');assert.equal(g.bomb.status,'planted');
- at(b,g.bomb);send(defender,{interact:true});await until(()=>b.action?.type==='defuse','defuse begins');send(defender,{interact:false});await until(()=>!b.action,'defuse interrupted');
- await hold(defender,()=>host.state.roundReason==='defuse','defuse completed');
+ const starts=[[],[]];
+ for(const [index,peer] of [host,defender].entries()){
+   peer.onMessage('events',batch=>{
+     for(const event of batch){
+       if(event.type==='defuse' && event.round===1 && event.actorId===b.id)starts[index].push(event.eventId);
+     }
+   });
+ }
+ // Observe each real SDK frame on its authority tick. Polling the action alone
+ // cannot distinguish an immediate release from a lease that expired later.
+ const seat=r.seats.get(defender.sessionId),buffer=r.inputs.get(defender.sessionId);
+ const admissions=[],fixedTick=r.fixedTick;
+ const observer=t.mock.method(r,'fixedTick',function(){
+   const frame=buffer.size ? buffer.peek().at(-1) : null;
+   const now=this.clock.elapsedTime,previousDeadline=seat.interactUntil,invalid=this.metrics.invalid;
+   const result=fixedTick.call(this);
+   if(frame && buffer.size===0 && this.metrics.invalid===invalid && seat.lastSampleTick===frame.sampleTick){
+     admissions.push({held:frame.interact,now,previousDeadline,deadline:seat.interactUntil,action:b.action?.type});
+   }
+   return result;
+ });
+ at(b,g.bomb);send(defender,{interact:true});
+ await until(()=>admissions.length===1,'first held input accepted');
+ const first=admissions[0];
+ assert.equal(first.held,true);assert.equal(first.action,'defuse');
+ assert.equal(first.deadline,first.now+180);
+ await until(()=>!b.action,'silent defender loses defuse authority');
+ assert(r.clock.elapsedTime>=first.deadline);
+ assert.equal(g.bomb.status,'planted');assert.equal(g.phase,'active');
+ send(defender,{interact:true});await until(()=>admissions.length===2,'fresh held input accepted');
+ const renewed=admissions[1];
+ assert.equal(renewed.held,true);assert.equal(renewed.action,'defuse');
+ assert.equal(renewed.deadline,renewed.now+180);
+ send(defender,{interact:false});await until(()=>admissions.length===3,'release input accepted');
+ observer.mock.restore();
+ const release=admissions[2];
+ assert.equal(release.held,false);assert.equal(release.previousDeadline,renewed.deadline);
+ assert(release.now<release.previousDeadline,'release arrives before passive expiry');
+ assert.equal(release.deadline,0);assert.equal(release.action,undefined);
+ assert.equal(g.bomb.status,'planted');assert.equal(g.phase,'active');
+ await hold(defender,()=>host.state.roundReason==='defuse','uninterrupted defuse completes');
+ await until(()=>starts.every(received=>received.length>=3),'both peers observe all three starts');
+ assert.deepEqual(starts[0],starts[1]);
+ assert.equal(starts[0].length,3,'each distinct gesture or renewed authorization starts only once');
+ assert.equal(new Set(starts[0]).size,3);
  const prior=a.lifeId;await until(()=>host.state.round===2&&host.state.roundPhase==='buy','next round');
  assert(a.alive&&a.lifeId>prior);assert.equal(own(late).alive,true);assert.equal(g.actors.length,3);
  assert.equal(a.money,1900);assert.equal(a.inventory.he,0);host.send('classic',old);await delay(70);assert.equal(a.money,1900);

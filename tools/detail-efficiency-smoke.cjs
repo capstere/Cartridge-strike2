@@ -24,6 +24,7 @@ const args=['--no-sandbox','--use-gl=angle','--use-angle=swiftshader','--enable-
    // RAF and game time step remain untouched.
    await page.evaluate(()=>{window.requestAnimationFrame=()=>0;});
    await page.locator('#start').click();
+   await page.locator('#csl-deploy').click();
    const checks=await page.evaluate(async()=>{
     const f=__fps;f.start('analysts',{mode:'endless',firefight:false,wanderers:false,botFire:false});
     const g=f.game,p=g.player,a=f.grenadeAssist;

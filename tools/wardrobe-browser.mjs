@@ -83,6 +83,7 @@ try {
       await route('solo');
       await page.bringToFront();
       await press(page.locator('#start'));
+      await press(page.locator('#csl-deploy'));
       await page.locator('#hud').waitFor();
       await page.locator('#cs-loading').waitFor({state:'hidden'});
       if (!touch) {

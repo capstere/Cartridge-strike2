@@ -9,6 +9,7 @@ import re
 import secrets
 import shutil
 import subprocess
+import tempfile
 import time
 import urllib.request
 from urllib.parse import urlsplit
@@ -117,12 +118,67 @@ def wait_ready():
     raise RuntimeError('Online service did not become ready.')
 
 
+def account_capable(release):
+    return (release / 'server/account-backup.mjs').is_file()
+
+
+def private_state_paths():
+    # The running unit is authoritative, including EnvironmentFile overrides.
+    # Only these two non-secret file paths leave the process environment.
+    pid = int(run('systemctl', 'show', SERVICE, '--property=MainPID', '--value').stdout)
+    if pid <= 0:
+        raise RuntimeError('Read the private state paths while the existing service is running.')
+    fields = dict(item.split(b'=', 1) for item in Path(f'/proc/{pid}/environ').read_bytes().split(b'\0') if b'=' in item)
+    family = Path(os.fsdecode(fields[b'CS2_FAMILY_ROOM_STATE']))
+    account = Path(os.fsdecode(fields.get(b'CS3_ACCOUNT_DB', os.fsencode(family.with_name('cs3-accounts.sqlite')))))
+    if not family.is_absolute() or not account.is_absolute():
+        raise RuntimeError('Expected absolute private state paths.')
+    return family, account
+
+
+def replace_family(source, destination):
+    if source.read_bytes() == destination.read_bytes():
+        return
+    owner = destination.stat()
+    fd, name = tempfile.mkstemp(dir=destination.parent, prefix='.family-recovery-')
+    staged = Path(name)
+    try:
+        with os.fdopen(fd, 'wb') as writer:
+            writer.write(source.read_bytes())
+            writer.flush()
+            os.fchown(writer.fileno(), owner.st_uid, owner.st_gid)
+            os.fsync(writer.fileno())
+        staged.replace(destination)
+        directory = os.open(destination.parent, os.O_RDONLY)
+        try:
+            os.fsync(directory)
+        finally:
+            os.close(directory)
+    finally:
+        staged.unlink(missing_ok=True)
+
+
+def prepare_older_family(source, target, paths, snapshot):
+    run('/usr/bin/node', str(MANAGER_ROOT / 'deploy/online/prepare-rollback.mjs'),
+        str(source), str(target), str(paths[0]), str(paths[1]), str(snapshot))
+    replace_family(snapshot / 'family.for-target.json', paths[0])
+
+
 def activate(value):
     release = revision(value)
     idle()
     previous = (PREFIX / 'current').resolve()
-    save()
+    saved = save()
+    uses_accounts = account_capable(previous) or account_capable(release)
+    paths = private_state_paths() if uses_accounts else None
+    downgrade = account_capable(previous) and not account_capable(release)
+    upgrade = account_capable(release) and not account_capable(previous)
+    if paths:
+        shutil.copyfile(paths[0], saved / 'family.before.json')
     try:
+        if downgrade:
+            run('systemctl', 'stop', SERVICE)
+            prepare_older_family(previous, release, paths, saved / 'downgrade')
         point(release)
         run('systemctl', 'restart', SERVICE)
         wait_ready()
@@ -131,6 +187,18 @@ def activate(value):
             raise RuntimeError('Client/server contract mismatch after activation.')
         verify()
     except Exception:
+        if paths:
+            run('systemctl', 'stop', SERVICE)
+            if upgrade and (PREFIX / 'current').resolve() == release:
+                try:
+                    prepare_older_family(release, previous, paths, saved / 'failed-upgrade')
+                except Exception:
+                    # Even a broken candidate must leave CS2 recoverable. Keep
+                    # the last candidate settings and the original DB/journal.
+                    shutil.copyfile(paths[0], saved / 'family.failed-upgrade.json')
+                    replace_family(saved / 'family.before.json', paths[0])
+            else:
+                replace_family(saved / 'family.before.json', paths[0])
         point(previous)
         run('systemctl', 'restart', SERVICE)
         wait_ready()

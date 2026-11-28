@@ -76,6 +76,7 @@ try{
   await page.locator('[data-panel=classes] [data-go=solo]').click();
   await page.locator('#lb-mode-seg [data-value=endless]').click();
   await page.locator('#start').click();
+  await page.locator('#csl-deploy').click();
   await page.waitForFunction(()=>window.__fps?.game.player?.inventory.primary?.id==='sniper'&&!document.getElementById('hud').hidden);
   const user='workshop_'+randomBytes(4).toString('hex');
   await page.goto(fixture.origin+'/profile');await page.locator('[data-action=register]').click();
@@ -116,6 +117,7 @@ try{
   observations.account={bare,fitted};
   await page.locator('[data-panel=classes] [data-go=solo]').click();await page.locator('#lb-mode-seg [data-value=endless]').click();
   await page.locator('#start').click();
+  await page.locator('#csl-deploy').click();
   await page.waitForFunction(()=>window.__fps?.game.player?.inventory.primary?.camo==='desert'&&!document.getElementById('hud').hidden);
   const actual=await page.evaluate(()=>{const p=__fps.game.player;return {id:p.inventory.primary.id,camo:p.inventory.primary.camo,
     attachments:p.inventory.primary.attachments,smoke:p.inventory.smoke,renderer:__fps.renderer.renderer?.getContext()?.getParameter(7937)};});

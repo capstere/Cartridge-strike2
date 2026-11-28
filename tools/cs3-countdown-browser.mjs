@@ -186,6 +186,7 @@ async function solo(){
  try{
   await page.locator('[data-go=solo]:visible').tap();
   await page.locator('#start').tap();
+  await page.locator('#csl-deploy').tap();
   await page.locator('#hud').waitFor({timeout:120000});
   page.setDefaultTimeout(12000);
   await stage(page,'5');await shot(page,'solo-five');
