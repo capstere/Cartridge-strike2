@@ -62,7 +62,7 @@ export function syncWeaponAppearance(model,profile){
    if (profile?.useRigFinish && !mesh.material.normalMap) {
      // The issued jacket and gloves use the actor's dye with the view rig's
      // close-up stitching and weave. All weapons share this profile.
-     for (const name of ['map','normalMap','roughnessMap']) mesh.material[name] = item.material[name];
+     for (const name of ['map','normalMap','roughnessMap']) mesh.material[name] ??= item.material[name];
      mesh.material.normalScale.copy(item.material.normalScale);
      mesh.material.needsUpdate = true;
    }

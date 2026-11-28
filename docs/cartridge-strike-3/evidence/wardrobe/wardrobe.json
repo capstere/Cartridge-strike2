@@ -1,0 +1,44 @@
+[
+  {
+    "input": "desktop",
+    "viewport": {
+      "width": 1280,
+      "height": 720
+    },
+    "fabricMatches": true,
+    "swatch": [
+      64,
+      64
+    ],
+    "glove": 4867646,
+    "hasKit": true,
+    "outfit": "shotgun",
+    "ally": "issued",
+    "shirt": 16777215,
+    "sleeve": 16777215,
+    "handTargets": 2,
+    "locale": "en",
+    "distinctPortraits": 5
+  },
+  {
+    "input": "touch",
+    "viewport": {
+      "width": 844,
+      "height": 390
+    },
+    "fabricMatches": true,
+    "swatch": [
+      64,
+      64
+    ],
+    "glove": 4867646,
+    "hasKit": true,
+    "outfit": "shotgun",
+    "ally": "issued",
+    "shirt": 16777215,
+    "sleeve": 16777215,
+    "handTargets": 2,
+    "locale": "en",
+    "distinctPortraits": 5
+  }
+]

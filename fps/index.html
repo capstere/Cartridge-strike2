@@ -67,8 +67,13 @@
       <button type="button" data-go="solo" class="route-action">Open Solo setup →</button><p>Custom class slots are unavailable in this build.</p></div>
     </section>
     <section class="route-panel sub-panel" data-panel="outfits" aria-labelledby="outfits-title" hidden>
-      <h1 id="outfits-title" tabindex="-1">Outfits</h1><div class="route-details"><p>The operator preview uses your team and selected local character. Choose a saved character in Solo setup.</p>
-      <button type="button" class="route-action" data-go="solo" data-focus="player-character">Choose operator →</button><p>Wardrobe challenges are unavailable in this build.</p></div>
+      <h1 id="outfits-title" tabindex="-1">Outfits</h1>
+      <div class="wardrobe-grid"><div class="wardrobe-stage"><div class="wardrobe-turn">
+        <button type="button" data-rotate="-1" aria-label="Rotate operator left">↶</button><span>Drag to rotate</span><button type="button" data-rotate="1" aria-label="Rotate operator right">↷</button>
+      </div></div><div class="wardrobe-list"><div data-outfit-choices aria-label="Available outfits"></div>
+        <h2>Challenge outfits</h2><p>Challenge tracking is coming with player progression.</p><ul data-outfit-challenges></ul>
+        <button type="button" class="route-action" data-go="solo" data-focus="player-character">Saved characters →</button>
+        <p role="status"></p></div></div>
     </section>
     <section class="route-panel sub-panel" data-panel="profile" aria-labelledby="profile-title" hidden>
       <h1 id="profile-title" tabindex="-1">Player profile</h1>

@@ -74,6 +74,25 @@ jobs:
             test-results/accounts/
             test-results/network-family/result.json
           retention-days: 3
+  operator-wardrobe:
+    if: github.event_name != 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: frontline/source/tools/dev/package-lock.json
+      - name: Verify wardrobe selection, persistence and deployed sleeves
+        run: |
+          npm ci --prefix frontline/source/tools/dev
+          node frontline/source/tools/dev/node_modules/playwright-core/cli.js install --with-deps chromium
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/wardrobe-server.log 2>&1 &
+          server=$!
+          trap 'kill "$server" || true' EXIT
+          node tools/wardrobe-browser.mjs
   node-tests:
     runs-on: ubuntu-latest
     # Preserve the existing offline/visual/mobile gates. Full two-scene gameplay
