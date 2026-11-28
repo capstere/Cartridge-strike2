@@ -4,6 +4,7 @@ const http = require('node:http');
 const {execFileSync} = require('node:child_process');
 const {setTimeout:sleep}=require('node:timers/promises');
 const observe=require('./observe.cjs');
+const traceRush=process.env.CS3_TRACE_RUSH==='1', listenRaw=process.env.CS3_TRACE_RAW==='1';
 const {tmpdir}=require('node:os');
 const root=process.cwd(), output=process.env.CS3_BENCH_OUT||fs.mkdtempSync(path.join(tmpdir(),'cs3-comparison-'));
 console.log('Private raw result directory',output);
@@ -14,8 +15,20 @@ const touch=profile==='touch', candidate=kind==='candidate', cs2=kind==='fps'||c
 const level=process.env.CS3_BENCH_LEVEL;
 if(level && (!cs2 || !/^[a-z0-9-]{1,48}$/.test(level)))throw Error('Invalid published CS2 benchmark level.');
 const mime={'.html':'text/html','.mjs':'text/javascript','.js':'text/javascript','.json':'application/json','.css':'text/css','.ogg':'audio/ogg','.mp3':'audio/mpeg','.png':'image/png','.jpg':'image/jpeg','.webp':'image/webp','.wasm':'application/wasm','.svg':'image/svg+xml','.woff2':'font/woff2'};
+const palette=process.env.CS3_PALETTE_COMPARE==='1';
+const originalDoors=process.env.CS3_ORIGINAL_DOORS==='1';
+const baselineSha='33a6ee0b2a8dd7bd962c66b3cd73aed6da94192a';
+const priorDoors=originalDoors?execFileSync('git',['show',baselineSha+':src/fps/door-visuals.mjs']):null;
+const originalFurniture=process.env.CS3_ORIGINAL_FURNITURE==='1';
+const priorFurniture=palette||originalFurniture?execFileSync('git',['show','33a6ee0b2a8dd7bd962c66b3cd73aed6da94192a:src/fps/project-batches.mjs']):null;
 const server=http.createServer((req,res)=>{
   const url=new URL(req.url,'http://127.0.0.1');
+  if(priorDoors && url.pathname==='/src/fps/door-visuals.mjs'){
+    res.writeHead(200,{'content-type':'text/javascript','cache-control':'public,max-age=3600'});return res.end(priorDoors);
+  }
+  if(priorFurniture && (url.pathname==='/src/fps/project-batches-before.mjs' || originalFurniture && url.pathname==='/src/fps/project-batches.mjs')){
+    res.writeHead(200,{'content-type':'text/javascript'});return res.end(priorFurniture);
+  }
   const name=path.resolve(root,'.'+decodeURIComponent(url.pathname)+(url.pathname.endsWith('/')?'index.html':''));
   if(!name.startsWith(root+'/')||!fs.statSync(name,{throwIfNoEntry:false})?.isFile()){res.writeHead(404);return res.end();}
   res.writeHead(200,{'content-type':mime[path.extname(name)]||'application/octet-stream','cache-control':'public,max-age=3600'});
@@ -60,7 +73,7 @@ async function controls(page){
 }
 async function run(ctx,base,i,version,cacheWarm){
   const page=await ctx.newPage();
-  const row={kind,profile,repeat:i,cache:cacheWarm?'warm browser HTTP cache':'new browser context',version,stamp:new Date().toISOString(),before:environment(),errors:[],startup:{}};
+  const row={kind,profile,repeat:i,doorSource:originalDoors?baselineSha:'checkout',furnitureSource:originalFurniture?'33a6ee0b2a8dd7bd962c66b3cd73aed6da94192a':'checkout',cache:cacheWarm?'warm browser HTTP cache':'new browser context',version,stamp:new Date().toISOString(),before:environment(),errors:[],startup:{}};
   const capture=()=>page.evaluate(()=>performance.now());
   const mark=async(s)=>{row.startup[s]=await capture();console.log(kind,profile,i,s,Math.round(row.startup[s]));};
   page.setDefaultTimeout(140000);
@@ -103,6 +116,13 @@ async function run(ctx,base,i,version,cacheWarm){
       if(touch && await page.locator('#tcHelp').isVisible())await page.locator('#tcHelp').tap();
       await page.waitForFunction(()=>MATCH.state==='playing'&&!cdOn());
     }
+    // The full first-person CS3 countdown deliberately freezes buy and equipment input.
+    if(candidate){
+      await page.locator('#deployment-countdown[data-stage=go]').waitFor({timeout:25000});
+      if(await page.locator('#resume, #countdown-look').filter({visible:true}).count()){
+        await page.locator('#resume:visible, #countdown-look:visible').first().click();
+      }
+    }
     await mark('playable');
     if(cs2){
       await page.keyboard.press('b');
@@ -110,7 +130,9 @@ async function run(ctx,base,i,version,cacheWarm){
       await page.locator('#return-buy').click();
       if(await page.locator('#resume').isVisible())await page.locator('#resume').click();
     }
-    await page.evaluate(observe,kind);await sleep(3000);
+    await page.evaluate(observe,kind);
+    if(traceRush) await page.evaluate(require('../../evidence/rush/latency/probe.cjs'),{kind,listenRaw,gpuQueue:process.env.CS3_GPU_QUEUE==='1'});
+    await sleep(3000);
     await page.evaluate(()=>{cs3Baseline.mode='pace';});
     await sleep(10000);
     const raw=await page.evaluate(()=>{cs3Baseline.mode='off';return {identity:cs3Baseline.identity,frames:cs3Baseline.frames};});
@@ -119,11 +141,45 @@ async function run(ctx,base,i,version,cacheWarm){
     row.frameIntervalMs=distro(raw.frames.slice(1).map((x,k)=>x[0]-raw.frames[k][0]));
     row.renderSubmissionMs=distro(raw.frames.map(x=>x[1]));row.drawCalls=distro(raw.frames.map(x=>x[2]));
     row.triangles=distro(raw.frames.map(x=>x[3]));row.ratio=distro(raw.frames.map(x=>x[4]));
+    if(traceRush){
+      const atRatio=new Map();
+      for(let index=1;index<raw.frames.length;index++){
+        const prior=raw.frames[index-1],current=raw.frames[index];
+        if(prior[4]!==current[4])continue;
+        const ratioKey=current[4].toFixed(4);
+        if(!atRatio.has(ratioKey))atRatio.set(ratioKey,{interval:[],submit:[],draws:[]});
+        const group=atRatio.get(ratioKey);
+        group.interval.push(current[0]-prior[0]);group.submit.push(current[1]);group.draws.push(current[2]);
+      }
+      row.pacingAtSamePixelRatio=Object.fromEntries([...atRatio].map(([key,group])=>[key,{
+        frameIntervalMs:distro(group.interval),renderSubmissionMs:distro(group.submit),drawCalls:distro(group.draws)
+      }]));
+    }
     row.navigationHtmlTransferBytes=await page.evaluate(()=>performance.getEntriesByType("navigation")[0]?.transferSize??null);
     row.transferredBytesAtEndOfPacing=await page.evaluate(()=>performance.getEntriesByType('resource').reduce((sum,e)=>sum+e.transferSize,0));
     await page.evaluate(()=>{cs3Baseline.mode='action';});await sleep(200);
-    await controls(page);
+    const traceFirstAction=traceRush && candidate && process.env.CS3_TRACE_FIRST_PRESENT==='1';
+    if(traceFirstAction){
+      row.presentationScenario='fresh spawn, primary action with Chromium tracing';
+      row.presentationTrial=await require('../../evidence/rush/latency/compositor.cjs')(page,controls);
+    }else{
+      await controls(page);
+    }
     row.action=await page.evaluate(()=>{cs3Baseline.mode='off';return {frames:cs3Baseline.actions,audio:cs3Baseline.audio,inputs:cs3Baseline.inputs};});
+    if(traceRush) row.rushTrace=await page.evaluate(()=>rushTrace);
+    if(traceRush && candidate && touch && process.env.CS3_STICK_TRIALS==='1'){
+      row.stickTrials=await require('../../evidence/rush/latency/stick-trials.cjs')(page);
+    }
+    if(traceRush && candidate && palette)row.palette=await page.evaluate(require('../../evidence/rush/latency/palette-pixels.cjs'));
+    if(traceRush && candidate && process.env.CS3_DOOR_PIXELS==='1'){
+      const doorPixels=require('../../evidence/rush/latency/door-pixels.cjs');
+      row.doorPixels=await page.evaluate(doorPixels);
+      if(process.env.CS3_REQUIRE_DOOR_PARITY==='1')doorPixels.checkParity(row.doorPixels);
+    }
+    if(!traceFirstAction&&traceRush&&candidate&&process.env.CS3_TRACE_PRESENT==='1'&&i===Number(offset)+Number(repeats)-1){
+      row.presentationScenario='additional action after the completed route';
+      row.presentationTrial=await require('../../evidence/rush/latency/compositor.cjs')(page,controls);
+    }
     row.memory=await page.evaluate(()=>performance.memory&&({usedHeap:performance.memory.usedJSHeapSize,totalHeap:performance.memory.totalJSHeapSize}));
     if(level){
       row.selectedLevel=level;

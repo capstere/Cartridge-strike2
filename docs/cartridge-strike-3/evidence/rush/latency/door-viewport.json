@@ -1,0 +1,1189 @@
+{
+  "revision": "bc3f5ce4adb241aacdacf26482f8311b88be39de",
+  "rawFileSha256": "e8c4bd1b4add09ebaa212568382420026c61f07c3bf9a742fe62f07cc9b82a7a",
+  "browser": "156.0.8078.79",
+  "model": "Raspberry Pi 5 Model B Rev 1.1",
+  "renderer": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+  "profile": "touch",
+  "status": "measured",
+  "error": null,
+  "stamp": "2026-11-28T09:21:57.964Z",
+  "views": [
+    {
+      "pose": "actual player camera",
+      "buffer": [
+        301,
+        139
+      ],
+      "pixelRatio": 0.3574999868869782,
+      "visibleSheets": [
+        false,
+        false
+      ],
+      "worldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "resizedWorldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "repeatChanges": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      },
+      "positiveRemovedPixels": null,
+      "drawsOriginalCandidate": [
+        374,
+        222
+      ],
+      "trianglesOriginalCandidate": [
+        399132,
+        202131
+      ],
+      "freshViewport": [
+        0,
+        0,
+        302,
+        139
+      ],
+      "afterOriginalTransmissionViewport": [
+        0,
+        0,
+        301,
+        139
+      ],
+      "removedUnsafeOptimizationChangedWorldPixels": 11174
+    },
+    {
+      "pose": "closed lift",
+      "buffer": [
+        301,
+        139
+      ],
+      "pixelRatio": 0.3574999868869782,
+      "visibleSheets": [
+        false,
+        false
+      ],
+      "worldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "resizedWorldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "repeatChanges": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      },
+      "positiveRemovedPixels": null,
+      "drawsOriginalCandidate": [
+        662,
+        376
+      ],
+      "trianglesOriginalCandidate": [
+        473952,
+        240377
+      ],
+      "freshViewport": [
+        0,
+        0,
+        302,
+        139
+      ],
+      "afterOriginalTransmissionViewport": [
+        0,
+        0,
+        301,
+        139
+      ],
+      "removedUnsafeOptimizationChangedWorldPixels": 2349
+    },
+    {
+      "pose": "half-open lift",
+      "buffer": [
+        301,
+        139
+      ],
+      "pixelRatio": 0.3574999868869782,
+      "visibleSheets": [
+        false,
+        false
+      ],
+      "worldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "resizedWorldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "repeatChanges": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      },
+      "positiveRemovedPixels": null,
+      "drawsOriginalCandidate": [
+        1061,
+        576
+      ],
+      "trianglesOriginalCandidate": [
+        582264,
+        294553
+      ],
+      "freshViewport": [
+        0,
+        0,
+        302,
+        139
+      ],
+      "afterOriginalTransmissionViewport": [
+        0,
+        0,
+        301,
+        139
+      ],
+      "removedUnsafeOptimizationChangedWorldPixels": null
+    },
+    {
+      "pose": "open lift",
+      "buffer": [
+        301,
+        139
+      ],
+      "pixelRatio": 0.3574999868869782,
+      "visibleSheets": [
+        false,
+        false
+      ],
+      "worldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "resizedWorldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "repeatChanges": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      },
+      "positiveRemovedPixels": null,
+      "drawsOriginalCandidate": [
+        1235,
+        663
+      ],
+      "trianglesOriginalCandidate": [
+        641476,
+        324159
+      ],
+      "freshViewport": [
+        0,
+        0,
+        302,
+        139
+      ],
+      "afterOriginalTransmissionViewport": [
+        0,
+        0,
+        301,
+        139
+      ],
+      "removedUnsafeOptimizationChangedWorldPixels": null
+    },
+    {
+      "pose": "lift side",
+      "buffer": [
+        301,
+        139
+      ],
+      "pixelRatio": 0.3574999868869782,
+      "visibleSheets": [
+        true,
+        true
+      ],
+      "worldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "resizedWorldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "repeatChanges": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      },
+      "positiveRemovedPixels": null,
+      "drawsOriginalCandidate": [
+        137,
+        137
+      ],
+      "trianglesOriginalCandidate": [
+        83895,
+        83895
+      ],
+      "freshViewport": [
+        0,
+        0,
+        302,
+        139
+      ],
+      "afterOriginalTransmissionViewport": [
+        0,
+        0,
+        302,
+        139
+      ],
+      "removedUnsafeOptimizationChangedWorldPixels": null
+    },
+    {
+      "pose": "lift threshold",
+      "buffer": [
+        301,
+        139
+      ],
+      "pixelRatio": 0.3574999868869782,
+      "visibleSheets": [
+        false,
+        false
+      ],
+      "worldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "resizedWorldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "repeatChanges": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      },
+      "positiveRemovedPixels": null,
+      "drawsOriginalCandidate": [
+        1125,
+        589
+      ],
+      "trianglesOriginalCandidate": [
+        506568,
+        255097
+      ],
+      "freshViewport": [
+        0,
+        0,
+        302,
+        139
+      ],
+      "afterOriginalTransmissionViewport": [
+        0,
+        0,
+        301,
+        139
+      ],
+      "removedUnsafeOptimizationChangedWorldPixels": null
+    },
+    {
+      "pose": "C08",
+      "buffer": [
+        301,
+        139
+      ],
+      "pixelRatio": 0.3574999868869782,
+      "visibleSheets": [
+        false,
+        false
+      ],
+      "worldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "resizedWorldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "repeatChanges": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      },
+      "positiveRemovedPixels": null,
+      "drawsOriginalCandidate": [
+        1265,
+        659
+      ],
+      "trianglesOriginalCandidate": [
+        469094,
+        238543
+      ],
+      "freshViewport": [
+        0,
+        0,
+        302,
+        139
+      ],
+      "afterOriginalTransmissionViewport": [
+        0,
+        0,
+        301,
+        139
+      ],
+      "removedUnsafeOptimizationChangedWorldPixels": null
+    },
+    {
+      "pose": "C08 reverse",
+      "buffer": [
+        301,
+        139
+      ],
+      "pixelRatio": 0.3574999868869782,
+      "visibleSheets": [
+        true,
+        true
+      ],
+      "worldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "resizedWorldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "repeatChanges": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      },
+      "positiveRemovedPixels": null,
+      "drawsOriginalCandidate": [
+        277,
+        277
+      ],
+      "trianglesOriginalCandidate": [
+        151739,
+        151739
+      ],
+      "freshViewport": [
+        0,
+        0,
+        302,
+        139
+      ],
+      "afterOriginalTransmissionViewport": [
+        0,
+        0,
+        302,
+        139
+      ],
+      "removedUnsafeOptimizationChangedWorldPixels": null
+    },
+    {
+      "pose": "I04 desk",
+      "buffer": [
+        301,
+        139
+      ],
+      "pixelRatio": 0.3574999868869782,
+      "visibleSheets": [
+        true,
+        true
+      ],
+      "worldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "resizedWorldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "repeatChanges": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      },
+      "positiveRemovedPixels": null,
+      "drawsOriginalCandidate": [
+        741,
+        741
+      ],
+      "trianglesOriginalCandidate": [
+        265228,
+        265228
+      ],
+      "freshViewport": [
+        0,
+        0,
+        302,
+        139
+      ],
+      "afterOriginalTransmissionViewport": [
+        0,
+        0,
+        302,
+        139
+      ],
+      "removedUnsafeOptimizationChangedWorldPixels": null
+    },
+    {
+      "pose": "I04 reverse",
+      "buffer": [
+        301,
+        139
+      ],
+      "pixelRatio": 0.3574999868869782,
+      "visibleSheets": [
+        false,
+        false
+      ],
+      "worldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "resizedWorldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "repeatChanges": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      },
+      "positiveRemovedPixels": null,
+      "drawsOriginalCandidate": [
+        394,
+        225
+      ],
+      "trianglesOriginalCandidate": [
+        337616,
+        170823
+      ],
+      "freshViewport": [
+        0,
+        0,
+        302,
+        139
+      ],
+      "afterOriginalTransmissionViewport": [
+        0,
+        0,
+        301,
+        139
+      ],
+      "removedUnsafeOptimizationChangedWorldPixels": null
+    },
+    {
+      "pose": "BYGG-D-0001 angle 0 side -1",
+      "buffer": [
+        301,
+        139
+      ],
+      "pixelRatio": 0.3574999868869782,
+      "visibleSheets": [
+        true,
+        false
+      ],
+      "worldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "resizedWorldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "repeatChanges": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      },
+      "positiveRemovedPixels": 12598,
+      "drawsOriginalCandidate": [
+        473,
+        471
+      ],
+      "trianglesOriginalCandidate": [
+        346376,
+        346352
+      ],
+      "freshViewport": [
+        0,
+        0,
+        302,
+        139
+      ],
+      "afterOriginalTransmissionViewport": [
+        0,
+        0,
+        301,
+        139
+      ],
+      "removedUnsafeOptimizationChangedWorldPixels": null
+    },
+    {
+      "pose": "BYGG-D-0001 angle 0 side 1",
+      "buffer": [
+        301,
+        139
+      ],
+      "pixelRatio": 0.3574999868869782,
+      "visibleSheets": [
+        true,
+        false
+      ],
+      "worldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "resizedWorldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "repeatChanges": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      },
+      "positiveRemovedPixels": 12598,
+      "drawsOriginalCandidate": [
+        271,
+        271
+      ],
+      "trianglesOriginalCandidate": [
+        92252,
+        92252
+      ],
+      "freshViewport": [
+        0,
+        0,
+        302,
+        139
+      ],
+      "afterOriginalTransmissionViewport": [
+        0,
+        0,
+        301,
+        139
+      ],
+      "removedUnsafeOptimizationChangedWorldPixels": null
+    },
+    {
+      "pose": "BYGG-D-0001 angle 0.8 side -1",
+      "buffer": [
+        301,
+        139
+      ],
+      "pixelRatio": 0.3574999868869782,
+      "visibleSheets": [
+        true,
+        false
+      ],
+      "worldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "resizedWorldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "repeatChanges": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      },
+      "positiveRemovedPixels": 12598,
+      "drawsOriginalCandidate": [
+        131,
+        129
+      ],
+      "trianglesOriginalCandidate": [
+        65876,
+        65852
+      ],
+      "freshViewport": [
+        0,
+        0,
+        302,
+        139
+      ],
+      "afterOriginalTransmissionViewport": [
+        0,
+        0,
+        301,
+        139
+      ],
+      "removedUnsafeOptimizationChangedWorldPixels": null
+    },
+    {
+      "pose": "BYGG-D-0001 angle 0.8 side 1",
+      "buffer": [
+        301,
+        139
+      ],
+      "pixelRatio": 0.3574999868869782,
+      "visibleSheets": [
+        true,
+        false
+      ],
+      "worldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "resizedWorldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "repeatChanges": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      },
+      "positiveRemovedPixels": 12598,
+      "drawsOriginalCandidate": [
+        439,
+        439
+      ],
+      "trianglesOriginalCandidate": [
+        225708,
+        225708
+      ],
+      "freshViewport": [
+        0,
+        0,
+        302,
+        139
+      ],
+      "afterOriginalTransmissionViewport": [
+        0,
+        0,
+        301,
+        139
+      ],
+      "removedUnsafeOptimizationChangedWorldPixels": null
+    },
+    {
+      "pose": "BYGG-D-0028 angle 0 side -1",
+      "buffer": [
+        301,
+        139
+      ],
+      "pixelRatio": 0.3574999868869782,
+      "visibleSheets": [
+        false,
+        true
+      ],
+      "worldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "resizedWorldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "repeatChanges": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      },
+      "positiveRemovedPixels": 12598,
+      "drawsOriginalCandidate": [
+        111,
+        111
+      ],
+      "trianglesOriginalCandidate": [
+        59924,
+        59924
+      ],
+      "freshViewport": [
+        0,
+        0,
+        302,
+        139
+      ],
+      "afterOriginalTransmissionViewport": [
+        0,
+        0,
+        301,
+        139
+      ],
+      "removedUnsafeOptimizationChangedWorldPixels": null
+    },
+    {
+      "pose": "BYGG-D-0028 angle 0 side 1",
+      "buffer": [
+        301,
+        139
+      ],
+      "pixelRatio": 0.3574999868869782,
+      "visibleSheets": [
+        false,
+        true
+      ],
+      "worldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "resizedWorldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "repeatChanges": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      },
+      "positiveRemovedPixels": 12598,
+      "drawsOriginalCandidate": [
+        489,
+        489
+      ],
+      "trianglesOriginalCandidate": [
+        324768,
+        324768
+      ],
+      "freshViewport": [
+        0,
+        0,
+        302,
+        139
+      ],
+      "afterOriginalTransmissionViewport": [
+        0,
+        0,
+        301,
+        139
+      ],
+      "removedUnsafeOptimizationChangedWorldPixels": null
+    },
+    {
+      "pose": "BYGG-D-0028 angle 0.8 side -1",
+      "buffer": [
+        301,
+        139
+      ],
+      "pixelRatio": 0.3574999868869782,
+      "visibleSheets": [
+        false,
+        true
+      ],
+      "worldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "resizedWorldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "repeatChanges": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      },
+      "positiveRemovedPixels": 12598,
+      "drawsOriginalCandidate": [
+        192,
+        190
+      ],
+      "trianglesOriginalCandidate": [
+        167116,
+        167092
+      ],
+      "freshViewport": [
+        0,
+        0,
+        302,
+        139
+      ],
+      "afterOriginalTransmissionViewport": [
+        0,
+        0,
+        301,
+        139
+      ],
+      "removedUnsafeOptimizationChangedWorldPixels": null
+    },
+    {
+      "pose": "BYGG-D-0028 angle 0.8 side 1",
+      "buffer": [
+        301,
+        139
+      ],
+      "pixelRatio": 0.3574999868869782,
+      "visibleSheets": [
+        false,
+        true
+      ],
+      "worldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "resizedWorldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "repeatChanges": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      },
+      "positiveRemovedPixels": 12598,
+      "drawsOriginalCandidate": [
+        322,
+        322
+      ],
+      "trianglesOriginalCandidate": [
+        175920,
+        175920
+      ],
+      "freshViewport": [
+        0,
+        0,
+        302,
+        139
+      ],
+      "afterOriginalTransmissionViewport": [
+        0,
+        0,
+        301,
+        139
+      ],
+      "removedUnsafeOptimizationChangedWorldPixels": null
+    },
+    {
+      "pose": "open lift ratio 0.4550",
+      "buffer": [
+        384,
+        177
+      ],
+      "pixelRatio": 0.4549999833106994,
+      "visibleSheets": [
+        false,
+        false
+      ],
+      "worldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "resizedWorldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "repeatChanges": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      },
+      "positiveRemovedPixels": null,
+      "drawsOriginalCandidate": [
+        1235,
+        663
+      ],
+      "trianglesOriginalCandidate": [
+        641476,
+        324159
+      ],
+      "freshViewport": [
+        0,
+        0,
+        384,
+        177
+      ],
+      "afterOriginalTransmissionViewport": [
+        0,
+        0,
+        384,
+        177
+      ],
+      "removedUnsafeOptimizationChangedWorldPixels": null
+    },
+    {
+      "pose": "visible open sheet ratio 0.4550",
+      "buffer": [
+        384,
+        177
+      ],
+      "pixelRatio": 0.4549999833106994,
+      "visibleSheets": [
+        true,
+        false
+      ],
+      "worldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "resizedWorldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "repeatChanges": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      },
+      "positiveRemovedPixels": 20448,
+      "drawsOriginalCandidate": [
+        439,
+        439
+      ],
+      "trianglesOriginalCandidate": [
+        225708,
+        225708
+      ],
+      "freshViewport": [
+        0,
+        0,
+        384,
+        177
+      ],
+      "afterOriginalTransmissionViewport": [
+        0,
+        0,
+        384,
+        177
+      ],
+      "removedUnsafeOptimizationChangedWorldPixels": null
+    },
+    {
+      "pose": "open lift ratio 0.5200",
+      "buffer": [
+        438,
+        202
+      ],
+      "pixelRatio": 0.5199999809265137,
+      "visibleSheets": [
+        false,
+        false
+      ],
+      "worldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "resizedWorldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "repeatChanges": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      },
+      "positiveRemovedPixels": null,
+      "drawsOriginalCandidate": [
+        1235,
+        663
+      ],
+      "trianglesOriginalCandidate": [
+        641476,
+        324159
+      ],
+      "freshViewport": [
+        0,
+        0,
+        439,
+        203
+      ],
+      "afterOriginalTransmissionViewport": [
+        0,
+        0,
+        438,
+        202
+      ],
+      "removedUnsafeOptimizationChangedWorldPixels": null
+    },
+    {
+      "pose": "visible open sheet ratio 0.5200",
+      "buffer": [
+        438,
+        202
+      ],
+      "pixelRatio": 0.5199999809265137,
+      "visibleSheets": [
+        true,
+        false
+      ],
+      "worldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "resizedWorldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "repeatChanges": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      },
+      "positiveRemovedPixels": 26568,
+      "drawsOriginalCandidate": [
+        439,
+        439
+      ],
+      "trianglesOriginalCandidate": [
+        225708,
+        225708
+      ],
+      "freshViewport": [
+        0,
+        0,
+        439,
+        203
+      ],
+      "afterOriginalTransmissionViewport": [
+        0,
+        0,
+        438,
+        202
+      ],
+      "removedUnsafeOptimizationChangedWorldPixels": null
+    },
+    {
+      "pose": "open lift ratio 0.5850",
+      "buffer": [
+        493,
+        228
+      ],
+      "pixelRatio": 0.5849999785423279,
+      "visibleSheets": [
+        false,
+        false
+      ],
+      "worldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "resizedWorldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "repeatChanges": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      },
+      "positiveRemovedPixels": null,
+      "drawsOriginalCandidate": [
+        1235,
+        663
+      ],
+      "trianglesOriginalCandidate": [
+        641476,
+        324159
+      ],
+      "freshViewport": [
+        0,
+        0,
+        494,
+        228
+      ],
+      "afterOriginalTransmissionViewport": [
+        0,
+        0,
+        493,
+        228
+      ],
+      "removedUnsafeOptimizationChangedWorldPixels": null
+    },
+    {
+      "pose": "visible open sheet ratio 0.5850",
+      "buffer": [
+        493,
+        228
+      ],
+      "pixelRatio": 0.5849999785423279,
+      "visibleSheets": [
+        true,
+        false
+      ],
+      "worldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "resizedWorldAndCombinedChangedPixels": [
+        0,
+        0
+      ],
+      "repeatChanges": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      },
+      "positiveRemovedPixels": 33839,
+      "drawsOriginalCandidate": [
+        439,
+        439
+      ],
+      "trianglesOriginalCandidate": [
+        225708,
+        225708
+      ],
+      "freshViewport": [
+        0,
+        0,
+        494,
+        228
+      ],
+      "afterOriginalTransmissionViewport": [
+        0,
+        0,
+        493,
+        228
+      ],
+      "removedUnsafeOptimizationChangedWorldPixels": null
+    }
+  ]
+}

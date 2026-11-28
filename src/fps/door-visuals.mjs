@@ -5,8 +5,9 @@ import {frostedDoorParts,frostedGlassMaterial,createWcDoorBadge} from './frosted
 import * as T from '../../vendor/three/three.module.js';
 import {RoundedBoxGeometry} from '../../vendor/three/addons/geometries/RoundedBoxGeometry.js';
 import {mergeGeometries,mergeVertices} from '../../vendor/three/addons/utils/BufferGeometryUtils.js';
+import {furnitureVisibility} from './project-visibility.mjs';
 import {createPBRLibrary} from './riposte-pbr-materials.mjs';
-export async function buildDoorVisuals(system){
+export async function buildDoorVisuals(system,occlusionWorld=null,renderer=null){
  if(!system)return null;
  const pbr=createPBRLibrary({THREE:T}),handles=[];
  try{handles.push(...await Promise.all([pbr.load('paintwood'),pbr.load('steel')]));}catch(e){pbr.dispose();throw e;}
@@ -43,8 +44,10 @@ export async function buildDoorVisuals(system){
   root.add(group);return {leaf,group,panelMaterial,hardware};
  }));
  const wcBadges=system.doors.filter(d=>d.doorStyle==='wc').flatMap(d=>d.leaves.map(leaf=>{const badge=createWcDoorBadge(leaf.w);badge.group.name=leaf.door.id+'-wc-badge';root.add(badge.group);return {leaf,...badge};}));
+ const glassVisibility=occlusionWorld && frosted.length?furnitureVisibility(occlusionWorld,Infinity):null;
+ const paneBox=new T.Box3(),currentViewport=new T.Vector4(),restoredViewport=new T.Vector4();
  const glassGroups=frosted.map(leaf=>{const group=new T.Group();group.name=leaf.door.id+'-frosted';const frame=new T.MeshStandardMaterial({color:leaf.door.studioColor||0x6d777a,roughness:.60,metalness:0});
-  for(const p of frostedDoorParts(leaf.w)){const mesh=new T.Mesh(new T.BoxGeometry(p.w,p.h,p.d),p.part==='glass'?glass:frame);mesh.name=p.part;mesh.position.set(p.x,p.y,p.z);mesh.castShadow=p.part!=='glass';mesh.receiveShadow=true;group.add(mesh);}root.add(group);return {leaf,group,frame};});
+  for(const p of frostedDoorParts(leaf.w)){const mesh=new T.Mesh(new T.BoxGeometry(p.w,p.h,p.d),p.part==='glass'?glass:frame);mesh.name=p.part;mesh.position.set(p.x,p.y,p.z);mesh.castShadow=p.part!=='glass';mesh.receiveShadow=true;group.add(mesh);}root.add(group);return {leaf,group,frame,pane:group.getObjectByName('glass')};});
  for(const [name,parts,material] of [['panel',body,paint],['hardware',metal,steel],['seal',seals,rubber]]){
   const non=parts.map(g=>g.index?g.toNonIndexed():g),merged=mergeGeometries(non),geometry=mergeVertices(merged,1e-8);merged.dispose();parts.forEach(g=>g.dispose());non.forEach(g=>g.dispose());
   const mesh=new T.InstancedMesh(geometry,material,leaves.length);mesh.name='doors-'+name;mesh.frustumCulled=false;mesh.receiveShadow=true;mesh.castShadow=true;
@@ -62,7 +65,23 @@ export async function buildDoorVisuals(system){
  const colors=leaves.map(l=>new T.Color(l.door.studioColor||(l.door.doorStyle==='wc'?0xf3f3ef:l.door.accessCard?0x527b80:0xc4c3af)));let lastSignature='',visibleCount=leaves.length;
  function update(camera=null,lights=[]){
   for(const {mesh,box} of sliders){mesh.position.set(box.x,box.y,box.z);mesh.rotation.y=box.angle;}
-  for(const {leaf,group} of glassGroups){group.position.set(leaf.x,0,leaf.z);group.rotation.y=leaf.box.angle;}
+  // Three rounds the viewport on resize and floors it when a transmission
+  // pass restores the main framebuffer. Preserve that first native pass until
+  // both rectangles agree, including at a fractional adaptive pixel ratio.
+  const cullGlass=glassVisibility&&camera&&renderer&&renderer.getRenderTarget()===null&&!renderer.getScissorTest()&&
+   renderer.getCurrentViewport(currentViewport).equals(renderer.getViewport(restoredViewport).multiplyScalar(renderer.getPixelRatio()).floor());
+  if(cullGlass)glassVisibility.update(camera.position);
+  for(const {leaf,group,pane} of glassGroups){
+   group.position.set(leaf.x,0,leaf.z);group.rotation.y=leaf.box.angle;
+   // A single occluded transmission sheet would request a second draw of every
+   // opaque object in the map. Test the full moving sheet against one opaque span.
+   if(cullGlass){
+    pane.updateWorldMatrix(true,false);
+    if(!pane.geometry.boundingBox)pane.geometry.computeBoundingBox();
+    paneBox.copy(pane.geometry.boundingBox).applyMatrix4(pane.matrixWorld);
+    pane.visible=!glassVisibility.hidden(paneBox);
+   }else pane.visible=true;
+  }
   for(const {leaf,group} of officeGroups){group.position.set(leaf.x,0,leaf.z);group.rotation.y=leaf.box.angle;}
    for(const {leaf,group} of wcBadges){group.position.set(leaf.x,0,leaf.z);group.rotation.y=leaf.box.angle;}
   if(camera){camera.updateMatrixWorld();frustum.setFromProjectionMatrix(projection.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse));}

@@ -2497,7 +2497,7 @@
     {
       "path": "shared/multiplayer/build.mjs",
       "bytes": 660,
-      "sha256": "76eb19d4baee970a98fc7ef534031442e0b46c9da6fd4b9da1595897cc99927f"
+      "sha256": "72e53000d5278705d66e5cc806e5ba2ea7e24ec8a6a4e15db931ebf346967d0f"
     },
     {
       "path": "shared/multiplayer/collision-contract.mjs",
@@ -2517,7 +2517,7 @@
     {
       "path": "shared/multiplayer/map-build.mjs",
       "bytes": 2831,
-      "sha256": "93f0702758d412063cb41eadd6fd6b2ef48118066b45ed555db6017d8c3bddca"
+      "sha256": "de3c152a5042d4015dfec264ff01d4a886ad91d05a7cb1218bb7e3f8e2e9bdcf"
     },
     {
       "path": "shared/multiplayer/maps.mjs",
@@ -2721,8 +2721,8 @@
     },
     {
       "path": "src/fps/door-visuals.mjs",
-      "bytes": 8247,
-      "sha256": "2d0e15e6fb7e29ee8fa0aac788384e4c1ffe7ed10980b1441f1bb433d82a1542"
+      "bytes": 9587,
+      "sha256": "1c4c99baf6596f57a146d9f2d1dfd6db6172e0b385484e5e82511b2645a39d03"
     },
     {
       "path": "src/fps/doors.mjs",
@@ -2981,8 +2981,8 @@
     },
     {
       "path": "src/fps/project-visibility.mjs",
-      "bytes": 1970,
-      "sha256": "017d0a78a0674a213ddecebe2e56c292d3700252368d7800013162053a64f422"
+      "bytes": 2051,
+      "sha256": "09d88a90a172ac02a028bae2a2ec16a0f50a1e16fc5832a73ff691c637e9257e"
     },
     {
       "path": "src/fps/reference-environment.mjs",
@@ -3056,8 +3056,8 @@
     },
     {
       "path": "src/fps/render.mjs",
-      "bytes": 22506,
-      "sha256": "78149c6c6803aacff97883af04b4497cea6092889f1cf0616f641889d70e1fb3"
+      "bytes": 22572,
+      "sha256": "5b5f9e8ecb4b2beaa19a28a9048dc306ecafd225b625a53f29ff4b7aac79a8e7"
     },
     {
       "path": "src/fps/riposte-audio.mjs",
@@ -3510,7 +3510,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 81772944,
+  "bytes": 81774431,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",
