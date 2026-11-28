@@ -1,3 +1,8 @@
+import {createReplayHitMarker,disposeReplayRender} from './replay-render.mjs';
+import {DominationFlags} from './domination-flags.mjs';
+import {combatOpponents} from './bonuses.mjs';
+import {OUTFITS} from './operator-outfits.mjs';
+import {referenceScene} from './reference-scene.mjs';
 import {ActorOcclusion} from './actor-occlusion.mjs';
 import {preparedFloorFinish} from '../../furniture-editor/build/floor5-appearance.mjs';
 import {microFinishMaterial} from '../../furniture-editor/build/pattern-materials.mjs?v=5.6.1';
@@ -15,7 +20,7 @@ import {patternMaterial} from '../../furniture-editor/build/pattern-materials.mj
 import {buildFacilityScene} from './facility-scene.mjs';
 import {installFocusLighting} from './strike-kit-environment.mjs';
 import {VisualDepth} from './visual-depth.mjs';
-import {inspectPose} from './view-surface.mjs';
+import {inspectPose,inspectDuration} from './view-surface.mjs';
 import {refitViewArms} from './presentation-hands.mjs';
 import {ZombieVisuals} from './zombie-visuals.mjs';
 import {isZombieFloor} from './zombie-sites.mjs';
@@ -26,7 +31,7 @@ import {CombatVisuals} from './combat-visuals.mjs';
  */
 import * as THREE from '../../vendor/three/three.module.js';
 import { Renderer as EngineRenderer } from './render-engine.mjs?v=6.1.2';
-import {loadCharacterLibrary,loadDefaultHostages,disposeAvatar,disposeCharacterLibrary} from './character-library.mjs?v=6.1.2';
+import {createAuthoredAvatar,loadCharacterLibrary,loadDefaultHostages,disposeAvatar,disposeCharacterLibrary} from './character-library.mjs?v=6.1.2';
 import { bakeLightfield } from './presentation-lightfield.mjs';
 import {ActionVisuals} from './action-visuals.mjs?v=6.1.2';
 import { buildLivingScene } from './living-floor-scene.mjs';
@@ -62,10 +67,30 @@ function installField(material, texture, bounds) {
   return ()=>{material.onBeforeCompile=previous;material.customProgramCacheKey=previousKey;material.needsUpdate=true;};
 }
 
+// Shared meshes and character templates keep their CPU data between maps.
+// Three attaches per-renderer disposal callbacks to each uploaded resource.
+// Dispatch disposal while the old renderer still owns those callbacks, including
+// weapons that shader warmup has removed from the first-person scene.
+function releaseMapGpuResources(roots) {
+  const geometries=new Set(),materials=new Set(),textures=new Set();
+  for(const root of roots)root?.traverse(node=>{
+    if(node.geometry)geometries.add(node.geometry);
+    for(const material of [].concat(node.material||[]))if(material)materials.add(material);
+  });
+  for(const material of materials){
+    for(const value of Object.values(material))if(value?.isTexture)textures.add(value);
+    for(const uniform of Object.values(material.uniforms||{}))if(uniform?.value?.isTexture)textures.add(uniform.value);
+  }
+  for(const geometry of geometries)geometry.dispose();
+  for(const material of materials)material.dispose();
+  for(const texture of textures)texture.dispose();
+}
+
 export class Renderer extends EngineRenderer {
-  constructor(canvas,world,settings){
+  constructor(canvas,world,settings,{roomActors,signal}={}){
     const visualWorld={...world,description:{...world.description,boxes:world.description.boxes.filter(b=>!b.livingVisual)}};
     super(canvas,visualWorld,settings);
+    if(world.referenceId)this.referenceScene=referenceScene(this.scene,world,settings);
     if(!world.newLevel){this.detailScene=buildFacilityDetails(world.details,this.registry);this.scene.add(this.detailScene.root);freezeStaticTransforms(this.detailScene.root);}
     this.glassVisuals=new GlassVisuals(this.scene,world.glass,this.registry);
     this.visualDepth=this.neutralLighting?null:new VisualDepth(this.renderer);this.inspectAt=-Infinity;this.inspectActor=null;
@@ -76,6 +101,7 @@ export class Renderer extends EngineRenderer {
     this.actorOcclusion=this.neutralLighting?new ActorOcclusion(world):null;
     this.nativeRender=this.renderer.render.bind(this.renderer);this.inDepthPass=false;
     this.renderer.render=(scene,camera)=>{
+      if(scene===this.scene&&!this.inDepthPass)this.referenceScene?.update(camera);
       if(scene===this.scene&&!this.inDepthPass)this.doorVisuals?.update(camera,this.renderer.shadowMap.enabled?this.lights:[]);
       if(scene===this.scene&&!this.inDepthPass){
         const residents=this.presentationGame?.state.zombies;
@@ -99,13 +125,14 @@ export class Renderer extends EngineRenderer {
       if(scene===this.viewScene)this.applyInspection();
       return this.nativeRender(scene,camera);
     };
+    this.replayHitMarker=createReplayHitMarker();
     this.viewFill=new THREE.DirectionalLight(0xb5d8ee,.75);this.viewFill.position.set(2,.5,-1);this.viewScene.add(this.viewFill);
     this.scene.environmentIntensity=.72;
     this.combatVisuals=new CombatVisuals(this.scene,world,settings);
     this.presentationDisposed=false;this.presentationRestores=[];this.presentationField=null;
     // Stage the field before the existing app declares its assets ready. Never bake in render().
     if(!world.networkSlice&&isZombieFloor(world))this.zombieVisuals=new ZombieVisuals(this.scene,settings.mobile);
-    this.assetsReady=Promise.all([this.assetsReady,this.zombieVisuals?.ready]).then(async()=>{
+    this.assetsReady=Promise.all([this.assetsReady,this.zombieVisuals?.ready,this.referenceScene?.ready]).then(async()=>{
       if(this.presentationDisposed)return;
       if(world.projectScene){
        this.projectFurniture=new THREE.Group();this.scene.add(this.projectFurniture);
@@ -135,7 +162,7 @@ export class Renderer extends EngineRenderer {
       this.livingScene=world.newLevel?null:buildLivingScene(world,this.registry,{replacedProps:this.facilityScene?.plan.replacedProps,refinedFreight:!!this.facilityScene});
       if(this.facilityScene)this.scene.add(this.facilityScene.root);
       if(this.livingScene){this.scene.add(this.livingScene.root);this.livingScene.decorateCeilings(this.scene);}
-      [this.doorVisuals,this.riposteProps]=await Promise.all([buildDoorVisuals(world.doors),world.newLevel?Promise.resolve(null):buildRiposteProps(world)]);
+      [this.doorVisuals,this.riposteProps]=await Promise.all([buildDoorVisuals(world.doors,this.neutralLighting&&!world.referenceId?world:null,this.renderer),world.newLevel?Promise.resolve(null):buildRiposteProps(world)]);
       if(this.presentationDisposed){this.doorVisuals?.dispose();this.riposteProps?.dispose();return;}
       if(this.doorVisuals)this.scene.add(this.doorVisuals.root);if(this.riposteProps)this.scene.add(this.riposteProps.root);
       if(this.riposteProps)freezeStaticTransforms(this.riposteProps.root);
@@ -163,16 +190,22 @@ export class Renderer extends EngineRenderer {
       // Prepare the actual rigged models and all first-use world weapon materials.
       // Previously these only existed after Start and compiled during combat.
       const startupActors=[];
-      for(const side of ['analysts','counterAnalysts'])for(let i=0;i<(world.networkSlice?1:5);i++)startupActors.push(this.actorModel({id:`${side}-${i}`,team:side}));
+      for(const side of ['analysts','counterAnalysts'])for(let i=0;i<(world.networkSlice?1:5);i++){
+       const id=`${side}-${i}`;
+       const seat=roomActors?.get(id);
+       startupActors.push(this.actorModel({id,team:side,outfitId:world.networkSlice?(seat?.handling?.outfitId||'issued'):undefined}));
+      }
       if(!world.networkSlice)for(let i=0;i<2;i++)startupActors.push(this.actorModel({id:`hostage-${i}`}));
       this.worldWeaponWarmup=new THREE.Group();this.worldWeaponWarmup.name='world-weapon-preload';
-      if(!this.settings.mobile)for(const w of Object.values(WEAPONS))if(!['armor'].includes(w.slot)&&(!world.networkSlice||w.id==='smg'))this.worldWeaponWarmup.add(makeWeapon(w.id,{viewmodel:false}));
+      if(world.networkSlice||!this.settings.mobile)for(const w of Object.values(WEAPONS))if(!['armor'].includes(w.slot)&&(!world.networkSlice||w.id==='smg'))this.worldWeaponWarmup.add(makeWeapon(w.id,{viewmodel:false}));
       this.scene.add(this.worldWeaponWarmup);
       if(this.neutralLighting){
        const maps=new Set();
-       this.projectFurniture.traverse(node=>{for(const material of [].concat(node.material||[]))for(const value of Object.values(material))if(value?.isTexture)maps.add(value);});
+       const mapGeometry=this.referenceScene?.root??this.projectFurniture;
+       mapGeometry.traverse(node=>{for(const material of [].concat(node.material||[]))for(const value of Object.values(material))if(value?.isTexture)maps.add(value);});
        for(const map of maps)this.renderer.initTexture(map);
        await this.renderer.compileAsync(this.scene,this.camera);
+       if(world.networkSlice)await this.prepareOperatorPrograms(startupActors,signal);
       }else if(!this.settings.mobile){
       const visibility=this.lights.map(light=>light.visible),shadows=this.renderer.shadowMap.enabled,previousTarget=this.renderer.getRenderTarget();
       try {
@@ -199,12 +232,234 @@ export class Renderer extends EngineRenderer {
       }
     });
   }
+  async prepareSpawnFrame(game,signal){
+    // Optional work must never hold a valid seat open on a hidden or stuck GPU.
+    const deadline=performance.now()+5000;
+    const gpu=this.renderer,gl=gpu.getContext();
+    const available=()=>performance.now()<deadline&&!globalThis.document?.hidden&&
+      !signal?.aborted&&!this.presentationDisposed&&!gl.isContextLost();
+    if(this.spawnFramePrepared||!game.player||this.settings.graphics!=='low'||!available()||
+       !gl.getExtension('KHR_parallel_shader_compile'))return;
+    // First-person lighting, camera culling, team sleeves and equipped fittings are
+    // only known once the local seat has arrived. Derive both actual display passes
+    // without presenting an unprepared image or advancing the game simulation.
+    const passes=[],draw=this.nativeRender;
+    const scissored=action=>{
+      const scissor=gpu.getScissor(new THREE.Vector4()),enabled=gpu.getScissorTest();
+      try{gpu.setScissor(0,0,1,1);gpu.setScissorTest(true);return action();}
+      finally{gpu.setScissor(scissor);gpu.setScissorTest(enabled);}
+    };
+    this.nativeRender=(scene,camera)=>{passes.push([scene,camera]);};
+    try{scissored(()=>this.render(game,game.player,0));}
+    finally{this.nativeRender=draw;}
+    if(this.replayHitMarker)passes.push([this.replayHitMarker.scene,this.replayHitMarker.camera]);
+    // Three.compile traverses invisible objects too. Link only the drawables
+    // visible to the spawn cameras; use their actual scene as the lighting target.
+    // The borrowed objects retain their parents, skeletons and instance attributes.
+    const programs=new Set(),visiblePasses=[];
+    for(const [scene,camera] of passes){
+      if(!available())return;
+      scene.updateMatrixWorld();
+      const frustum=new THREE.Frustum().setFromProjectionMatrix(new THREE.Matrix4().multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse));
+      const drawables=[];
+      scene.traverseVisible(node=>{
+        if(!node.isMesh&&!node.isLine&&!node.isPoints&&!node.isSprite)return;
+        if(!node.layers.test(camera.layers))return;
+        if(node.frustumCulled&&!(node.isSprite?frustum.intersectsSprite(node):frustum.intersectsObject(node)))return;
+        drawables.push(node);
+      });
+      visiblePasses.push({scene,camera,drawables});
+      const batch=new THREE.Group();
+      batch.traverse=visit=>{for(const node of drawables)visit(node);};
+      // Capture the handles while their material variant is current. Both cameras
+      // can share materials, and the stage may be cancelled between poll turns.
+      for(const material of gpu.compile(batch,camera,scene)){
+        const program=gpu.properties.get(material).currentProgram;
+        if(program)programs.add(program);
+      }
+    }
+    const yieldInput=()=>new Promise(resolve=>setTimeout(resolve,12));
+    for(const program of programs){
+      while(available()&&!program.isReady())await yieldInput();
+      if(!available())return;
+      // Three checks the link log on first uniform access. Do that before the
+      // new textures and buffers from both passes occupy the GPU command queue.
+      program.getUniforms();
+    }
+    // Keep first-use buffer and texture submissions bounded. Layer masks suppress
+    // individual draws without hiding nested lights. Their original values are
+    // restored synchronously, before resize, cancellation or a subsequent batch.
+    for(const {scene,camera,drawables} of visiblePasses){
+      for(let first=0;first<drawables.length;first+=16){
+        if(!available())return;
+        const masks=drawables.map(node=>node.layers.mask);
+        try{
+          for(let i=0;i<drawables.length;i++)if(i<first||i>=first+16)drawables[i].layers.mask=0;
+          scissored(()=>draw(scene,camera));
+        }finally{drawables.forEach((node,i)=>{node.layers.mask=masks[i];});}
+        const fence=gl.fenceSync(gl.SYNC_GPU_COMMANDS_COMPLETE,0);
+        if(!fence)return;
+        try{
+          gl.flush();
+          await yieldInput();
+          while(available()){
+            const state=gl.clientWaitSync(fence,0,0);
+            if(state===gl.WAIT_FAILED)return;
+            if(state!==gl.TIMEOUT_EXPIRED)break;
+            await yieldInput();
+          }
+        }finally{gl.deleteSync(fence);}
+      }
+    }
+    if(available())this.spawnFramePrepared=true;
+  }
+  async prepareOperatorPrograms(actors,signal){
+    const gpu=this.renderer,gl=gpu.getContext();
+    if(!gl.getExtension('KHR_parallel_shader_compile'))return;
+    const check=()=>{signal?.throwIfAborted();return !this.presentationDisposed&&!gl.isContextLost();};
+    if(!check())return;
+    const waitForGpu=async()=>{
+      const sync=gl.fenceSync(gl.SYNC_GPU_COMMANDS_COMPLETE,0);
+      if(!sync)return false;
+      try{
+        gl.flush();
+        while(check()){
+          const state=gl.clientWaitSync(sync,0,0);
+          if(state!==gl.TIMEOUT_EXPIRED)return state!==gl.WAIT_FAILED;
+          await new Promise(resolve=>setTimeout(resolve,12));
+        }
+        return false;
+      }finally{gl.deleteSync(sync);}
+    };
+    const started=performance.now();
+    const stage=new THREE.Scene(),camera=this.camera.clone();
+    stage.environment=this.scene.environment;stage.environmentIntensity=this.scene.environmentIntensity;
+    stage.environmentRotation.copy(this.scene.environmentRotation);stage.fog=this.scene.fog;
+    // Gameplay lights include a nested effect light even while its intensity is zero.
+    this.scene.traverseVisible(node=>{if(node.isLight&&node.layers.test(this.camera.layers))stage.add(node.clone());});
+    camera.position.set(0,1.2,2.8);camera.lookAt(0,1,0);camera.updateMatrixWorld();
+
+    // A later reservation may select camo and vertex-coloured skinned equipment.
+    // One shipped class exercises both variants. Private imports stay on demand.
+    const needsSample=actors.every(a=>!a.userData.avatar?.outfitId||a.userData.avatar.outfitId==='issued');
+    const sample=needsSample?createAuthoredAvatar('analysts','operator-display-sample',false,
+      {ignoreOverrides:true,previewOutfit:OUTFITS.find(o=>o.id==='shotgun')}):null;
+    const roots=[...actors,this.worldWeaponWarmup],proxies=[],sampleTextures=new Map(),warmMaterials=new Map();
+    if(sample){
+      // A template may stay in the character library across map changes. Keep
+      // sample-only uploads and their WebGL disposal listeners local to this pass.
+      const rosterTextures=new Set(),rosterGeometry=new Set();
+      for(const root of roots)root.traverse(mesh=>{
+        if(mesh.geometry)rosterGeometry.add(mesh.geometry);
+        for(const material of [].concat(mesh.material||[]))
+          for(const value of Object.values(material))if(value?.isTexture)rosterTextures.add(value);
+      });
+      for(const material of sample.materials.values())for(const [slot,value] of Object.entries(material)){
+        if(!value?.isTexture||rosterTextures.has(value)||sample.uniformTexture===value||material.userData.ownedTexture===value)continue;
+        if(!sampleTextures.has(value))sampleTextures.set(value,value.clone());
+        material[slot]=sampleTextures.get(value);
+      }
+      const owned=new Set(sample.ownedGeometry),copies=new Map();
+      sample.holder.traverse(mesh=>{
+        const geometry=mesh.geometry;
+        if(!geometry||rosterGeometry.has(geometry)||owned.has(geometry))return;
+        if(!copies.has(geometry)){const copy=geometry.clone();copies.set(geometry,copy);sample.ownedGeometry.push(copy);}
+        mesh.geometry=copies.get(geometry);
+      });
+    }
+    const warmMaterial=source=>{
+      if(!warmMaterials.has(source)){
+        const clone=source.clone();delete clone.userData.ownedTexture;warmMaterials.set(source,clone);
+      }
+      return warmMaterials.get(source);
+    };
+    for(const root of sample?[...roots,sample.holder]:roots){
+      root.updateWorldMatrix(true,true);
+      root.traverseVisible(mesh=>{
+        if(!mesh.isMesh)return;
+        const material=Array.isArray(mesh.material)?mesh.material.map(warmMaterial):warmMaterial(mesh.material);
+        const proxy=mesh.isSkinnedMesh?new THREE.SkinnedMesh(mesh.geometry,material):new THREE.Mesh(mesh.geometry,material);
+        if(mesh.isSkinnedMesh){proxy.bindMode=mesh.bindMode;proxy.bind(mesh.skeleton,mesh.bindMatrix);}
+        proxy.receiveShadow=mesh.receiveShadow;proxy.frustumCulled=false;
+        proxy.matrixAutoUpdate=false;proxy.matrix.copy(mesh.matrixWorld);
+        stage.add(proxy);proxies.push(proxy);
+      });
+    }
+    // compileAsync starts compilation synchronously. Restore state before any
+    // yield so a rotation, canvas resize or context teardown always takes effect.
+    const smallDraw=action=>{
+      const target=gpu.getRenderTarget(),face=gpu.getActiveCubeFace(),level=gpu.getActiveMipmapLevel();
+      const viewport=gpu.getViewport(new THREE.Vector4()),scissor=gpu.getScissor(new THREE.Vector4());
+      const scissorTest=gpu.getScissorTest();
+      try{
+        if(this.settings.graphics!=='low'&&this.visualDepth)gpu.setRenderTarget(this.visualDepth.target);
+        gpu.setViewport(0,0,16,16);gpu.setScissor(0,0,16,16);gpu.setScissorTest(true);
+        return action();
+      }finally{
+        gpu.setRenderTarget(target,face,level);
+        gpu.setViewport(viewport);gpu.setScissor(scissor);gpu.setScissorTest(scissorTest);
+      }
+    };
+    let peakSubmit=0,submit=0;
+    try{
+      await smallDraw(()=>gpu.compileAsync(stage,camera));
+      if(!check())return;
+      const batches=new Map(),textures=new Set();
+      for(const proxy of proxies){
+        // Three r180 exposes the compiled program on the material properties.
+        const material=Array.isArray(proxy.material)?proxy.material[0]:proxy.material;
+        for(const m of [].concat(proxy.material||[])){
+          for(const value of Object.values(m))if(value?.isTexture&&!value.isRenderTargetTexture)textures.add(value);
+        }
+        const program=gpu.properties.get(material).currentProgram;
+        const key=program??material;
+        if(!batches.has(key))batches.set(key,[]);
+        batches.get(key).push(proxy);proxy.visible=false;
+      }
+      for(const texture of textures)gpu.initTexture(texture);
+      if(!await waitForGpu())return;
+      // Resolve the already-linked programs before an actual draw queues GPU work.
+      // A synchronous first-use query in the following batch otherwise drains it.
+      for(const program of batches.keys()){
+        if(!check())return;
+        program.getUniforms?.();
+      }
+      for(const batch of batches.values()){
+        if(!check())return;
+        for(const proxy of batch)proxy.visible=true;
+        const begin=performance.now();smallDraw(()=>this.nativeRender(stage,camera));
+        const duration=performance.now()-begin;peakSubmit=Math.max(peakSubmit,duration);submit+=duration;
+        for(const proxy of batch)proxy.visible=false;
+        if(!await waitForGpu())return;
+      }
+      if(!check())return;
+      // Wardrobe and seat changes dispose the old live actor materials. Hold
+      // one independent program reference per variant until this renderer exits.
+      const programs=new Set();
+      this.operatorProgramMaterials=[];
+      for(const [original,material] of warmMaterials){
+        const program=gpu.properties.get(material).currentProgram;
+        if(!program||programs.has(program))continue;
+        programs.add(program);warmMaterials.delete(original);this.operatorProgramMaterials.push(material);
+        // These materials own only the cached program. No texture remains in
+        // their uniform slots and they never participate in gameplay draws.
+        for(const [slot,value] of Object.entries(material))if(value?.isTexture)material[slot]=null;
+      }
+      this.operatorReady={milliseconds:performance.now()-started,batches:batches.size,submitMs:submit,
+        maxSubmitMs:peakSubmit,retainedMaterials:this.operatorProgramMaterials?.length??0};
+    }finally{
+      for(const material of warmMaterials.values())material.dispose();
+      disposeAvatar(sample);
+      for(const texture of sampleTextures.values())texture.dispose();
+    }
+  }
   async prepareClassic(){
     await loadDefaultHostages();
   }
   requestInspect(game){
-    const p=game.player;if(!p?.alive||game.state.paused||game.phase!=='active'||p.reloadUntil>game.state.time)return false;
-    this.inspectAt=game.state.time;this.inspectActor=p.id;this.inspectWeapon=p.weapon;return true;
+    const p=game.player;if(!p?.alive||game.state.paused||game.phase!=='active'||p.aiming||p.cartridge||p.action||p.reloadUntil>game.state.time)return false;
+    if(Number.isFinite(this.inspectAt) && game.state.time<this.inspectUntil && p.id===this.inspectActor && p.weapon===this.inspectWeapon)return false;
+    this.inspectAt=game.state.time;this.inspectUntil=this.inspectAt+inspectDuration(p.weapon);this.inspectActor=p.id;this.inspectLife=p.lifeId;this.inspectEpoch=p.controlEpoch;this.inspectRound=game.state.round;this.inspectWeapon=p.weapon;return true;
   }
   updateLights(p,t,active){
     super.updateLights(p,t,active);
@@ -213,8 +468,8 @@ export class Renderer extends EngineRenderer {
   applyInspection(){
     const game=this.presentationGame,p=game?.player,t=game?.state.time??0;
     if(this.weaponModel&&p){
-      if(p.id!==this.inspectActor||p.weapon!==this.inspectWeapon||!p.alive||p.reloadUntil>t||(this.shotAt??-Infinity)>=this.inspectAt)this.inspectAt=-Infinity;
-      const pose=inspectPose(t-this.inspectAt,{reducedMotion:this.settings.reducedMotion});
+      if(p.id!==this.inspectActor||p.lifeId!==this.inspectLife||p.controlEpoch!==this.inspectEpoch||game.state.round!==this.inspectRound||game.phase!=='active'||p.aiming||p.onGround===false||p.cartridge||p.action||p.weapon!==this.inspectWeapon||!p.alive||p.reloadUntil>t||(this.shotAt??-Infinity)>=this.inspectAt)this.inspectAt=-Infinity;
+      const pose=inspectPose(t-this.inspectAt,{weapon:p.weapon,reducedMotion:this.settings.reducedMotion});
       if (!pose.rotation.some(Boolean) && !pose.position.some(Boolean)) return;
       // Show the authored side profile and gripping hands instead of the stock end.
       if(this.weaponModel.userData.heroKit){pose.rotation[1]*=-1.3;pose.rotation[2]*=-.67;}
@@ -247,12 +502,16 @@ export class Renderer extends EngineRenderer {
   }
   render(game,viewActor,dt){
     // Door instance culling runs at the world-draw hook, after camera/lights update.
+    if(game.state.mode==='dom'&&game.state.zones?.length){
+      this.dominationFlags??=new DominationFlags(this.scene);
+      this.dominationFlags.update(game.state.zones,game.team,game.state.time);
+    }else if(this.dominationFlags)this.dominationFlags.root.visible=false;
     this.presentationGame=game;this.glassVisuals?.update(game.state.time);this.combatVisuals?.update(game);this.livingScene?.update(game.state.time);this.actionVisuals?.update(game,this.camera);super.render(game,viewActor,dt);
   }
   events(events,game){
     this.glassVisuals?.events(events,game);this.combatVisuals?.events(events,game);
     const playerHit=e=>e.sourceId===game.player?.id && (
-      game.actors.some(a=>a.id===e.actorId && a.team!==game.player.team) ||
+      game.actors.some(a=>a.id===e.actorId && combatOpponents(game.player,a,game.state.mode)) ||
       game.state.zombies?.some(z=>z.id===e.actorId));
     super.events(events.filter(e=>e.type!=='hit'||playerHit(e)),game);
     this.actionVisuals?.events(events,game);
@@ -265,7 +524,10 @@ export class Renderer extends EngineRenderer {
   }
   dispose({keepCharacterLibrary=false}={}){
     if(this.presentationDisposed)return;this.presentationDisposed=true;
-    this.zombieVisuals?.dispose();this.floorEnvironment?.dispose();this.glassVisuals?.dispose();this.detailScene?.dispose();this.doorVisuals?.dispose();this.riposteProps?.dispose();
+    disposeReplayRender(this);this.replayHitMarker.geometry.dispose();this.replayHitMarker.material.dispose();
+    if(keepCharacterLibrary)releaseMapGpuResources([this.scene,this.viewScene,...this.weaponCache.values()]);
+    this.dominationFlags?.dispose();
+    this.referenceScene?.dispose();this.zombieVisuals?.dispose();this.floorEnvironment?.dispose();this.glassVisuals?.dispose();this.detailScene?.dispose();this.doorVisuals?.dispose();this.riposteProps?.dispose();
     this.focusLighting?.dispose();this.facilityScene?.dispose();
     for(const restore of this.presentationRestores||[])restore();
      for(const m of this.floor5PatternMaterials?.values()||[])m.dispose();this.floor5PatternMaterials?.clear();
@@ -273,6 +535,7 @@ export class Renderer extends EngineRenderer {
     if(keepCharacterLibrary){
       for(const actor of this.actors.values())disposeAvatar(actor.userData.avatar);
     }else disposeCharacterLibrary();
-    this.presentationRestores=[];this.presentationField?.dispose();this.livingScene?.dispose();super.dispose();
+    for(const material of this.operatorProgramMaterials??[])material.dispose();
+    this.operatorProgramMaterials=null;this.presentationRestores=[];this.presentationField?.dispose();this.livingScene?.dispose();super.dispose();
   }
 }

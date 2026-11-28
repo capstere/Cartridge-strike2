@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import {randomBytes} from 'node:crypto';
 import {mkdir,readFile,writeFile} from 'node:fs/promises';
 import {setTimeout as delay} from 'node:timers/promises';
-import {resumeDesktop} from './network-browser-resume.mjs';
+import {enterTouchMatch, resumeDesktop, waitForActiveHud} from './network-browser-resume.mjs';
 import {chromium} from '../frontline/source/tools/dev/node_modules/playwright-core/index.mjs';
 
 const external=process.env.CS2_PILOT_URL;
@@ -14,7 +14,7 @@ const origin=fixture?.origin||new URL(external).origin;
 assert.equal(new URL(origin).protocol,'https:');
 const invite=fixture?.invite||(await readFile(process.env.CS2_PILOT_INVITE_FILE,'utf8')).trim();
 const roomCode=randomBytes(12).toString('hex'),browsers=[],pages=[],errors=[],wsCounts=[],renderers=[];
-let roomId;
+let roomId,privateOffline;
 const angle=process.env.FPS_NETWORK_ANGLE||(process.platform==='darwin'?'metal':'swiftshader');
 const dpr=Number(process.env.FPS_NETWORK_DPR||1);
 
@@ -64,6 +64,38 @@ async function open(mobile){
   assert.equal(await page.locator('#network-endpoint').inputValue(),origin);
   const cookies=await context.cookies();
   assert(cookies.some(c=>c.name==='__Host-cs2_pilot'&&c.secure&&c.httpOnly));
+  if (mobile && fixture) {
+    await page.waitForFunction(async () => {
+      const registration=await navigator.serviceWorker.getRegistration();
+      return registration?.active?.state==='activated' && !!navigator.serviceWorker.controller;
+    },undefined,{timeout:30000});
+    const stored=await page.evaluate(async()=>{
+      const paths=[];
+      for(const cacheName of await caches.keys()){
+        const cache=await caches.open(cacheName);
+        for(const entry of await cache.keys())paths.push(new URL(entry.url).pathname);
+      }
+      return paths;
+    });
+    assert.deepEqual(stored,[],'Private pilot responses stay out of the install cache');
+    const offlinePage=await context.newPage();
+    try {
+      // A service worker owns its own network context. Disconnect the test TLS
+      // endpoint as well, so the worker cannot fetch through a live connection.
+      fixture.setReachable(false);
+      await context.setOffline(true);
+      const response=await offlinePage.goto(origin+'/fps/',{waitUntil:'domcontentloaded'});
+      assert.equal(response.status(),503);
+      assert.equal(response.fromServiceWorker(),true);
+      const heading=offlinePage.getByRole('heading',{name:/offline/i});
+      await heading.waitFor();
+      privateOffline={status:response.status(),fromWorker:true,heading:await heading.textContent(),cachedResponses:stored.length};
+    } finally {
+      fixture.setReachable(true);
+      await context.setOffline(false);
+      await offlinePage.close();
+    }
+  }
   const renderer=await page.evaluate(()=>{
     if(!isSecureContext||typeof window.__fps!=='undefined')throw Error('Expected normal secure multiplayer launch');
     const gl=document.getElementById('game').getContext('webgl2');
@@ -116,10 +148,10 @@ try{
   console.log('Host created a private room');
   roomId=await host.locator('#network-room').inputValue();assert(roomId);
   await submit(friend,'Pilot friend',roomId,'incorrect-'+roomCode);
-  await friend.locator('#network-status').filter({hasText:'Fel privat'}).waitFor();
+  await friend.locator('#network-status').filter({hasText:'Incorrect private room code'}).waitFor();
   await submit(friend,'Pilot friend',roomId);await friend.locator('#room-ready').waitFor({state:'visible'});
   await host.locator('#room-ready').click();await friend.locator('#room-ready').tap();await host.locator('#room-start').click();
-  await host.locator('#resume').waitFor({state:'visible'});await friend.locator('#resume').tap();
+  await waitForActiveHud(host);await enterTouchMatch(friend);
   await friend.waitForFunction(()=>document.querySelector('#pause').hidden);
   const read=await inspectFriend(friend,roomId),before=await until(read,s=>s.readyCount===2,'Both ready');
   assert.equal(before.doors,51,'Replicated Floor 5 doors');
@@ -149,18 +181,18 @@ try{
     assert.equal(result.reason,'time');assert.equal(result.winner,'draw');assert.deepEqual(result.score,{analysts:0,counterAnalysts:0});
     await host.locator('#room-rematch').click();await friend.locator('#room-ready').waitFor({state:'visible'});
     await host.locator('#room-ready').click();await friend.locator('#room-ready').tap();await host.locator('#room-start').click();
-    await host.locator('#resume').waitFor({state:'visible'});await friend.locator('#resume').tap();const secondResume=await resumeDesktop(host);
+    await waitForActiveHud(host);await enterTouchMatch(friend);const secondResume=await resumeDesktop(host);
     const next=await until(read,s=>s.phase==='active'&&s.matchId===before.matchId+1,'same public room rematch');
     assert.equal(next.ammo,30);await host.mouse.move(secondResume.point.x,secondResume.point.y+1000);
     await host.mouse.down();try{await until(read,s=>s.ammo<30,'public rematch fire');}finally{await host.mouse.up();}
     matchCycle={sameRoom:true,shippingDefaults:!!external,durationSeconds:before.duration,scoreTarget:before.scoreTarget,firstMatch:before.matchId,result,secondMatch:next.matchId,rematchFire:true};
   }
   await host.keyboard.press('Escape');await host.locator('#restart').click();
-  await friend.waitForFunction(()=>document.querySelector('#alive-a')?.textContent==='0 kvar');
+  await friend.waitForFunction(()=>document.querySelector('#alive-a')?.textContent==='0 alive');
   await friend.locator('[data-mobile-action=pause]').tap();await friend.locator('#restart').tap();
   assert.deepEqual(errors,[]);
   const report={status:'PASS',path:external?'public HTTPS':'loopback TLS',date:new Date().toISOString(),
-    physicalDevices:false,chromium:browsers[0].version(),renderers,angle,dpr,renderedClients:2,resumeAttempts,fixtureCertificatePinned:!!fixture,
+    ...(privateOffline?{privateOffline}:{}),physicalDevices:false,chromium:browsers[0].version(),renderers,angle,dpr,renderedClients:2,resumeAttempts,fixtureCertificatePinned:!!fixture,
     inviteLogins:2,rejectedWrongRoomCode:true,readyActors:before.readyCount,floor5Doors:before.doors,webSockets:wsCounts,
     matchCycle,remoteGameplay:{tickBefore:before.tick,tickAfter:reloaded.tick,distance:Math.hypot(moved.x-before.x,moved.z-before.z),
       ammoBefore:before.ammo,ammoFired:fired.ammo,ammoReloaded:reloaded.ammo},departedHostRemoved:true};
@@ -172,7 +204,7 @@ try{
     const state=await page.evaluate(()=>({
       path:location.pathname,roomAssigned:!!document.querySelector('#network-room')?.value,
       fatal:document.querySelector('#fatal')?.hidden===false,loading:document.querySelector('#loading')?.hidden===false,
-      paused:document.querySelector('#pause')?.hidden===false,pointerLockDenied:document.querySelector('#pause')?.textContent.includes('Muslås'),
+      paused:document.querySelector('#pause')?.hidden===false,pointerLockDenied:document.querySelector('#pause')?.textContent.includes('Mouse capture failed'),
       focused:document.hasFocus(),locked:!!document.pointerLockElement,focusEvents:window.__pilotFocus
     })).catch(()=>({closed:true}));
     console.error('Browser state',JSON.stringify(state));

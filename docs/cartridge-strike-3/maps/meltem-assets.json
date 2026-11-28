@@ -1,0 +1,124 @@
+{
+  "factory": {
+    "source": "frontline/source/src/02yf-meltem.js and 02yb through 02ye Cyclades kits",
+    "license": "MIT",
+    "notice": "licenses/riposte-MIT.txt"
+  },
+  "materials": [
+    {
+      "key": "plaster",
+      "asset": "white_plaster_rough_01",
+      "source": "Poly Haven",
+      "licence": "CC0 1.0"
+    },
+    {
+      "key": "pavers",
+      "asset": "Concrete012",
+      "source": "ambientCG",
+      "licence": "CC0 1.0"
+    },
+    {
+      "key": "stone",
+      "asset": "rustic_stone_wall_02",
+      "source": "Poly Haven",
+      "licence": "CC0 1.0"
+    },
+    {
+      "key": "timber",
+      "asset": "rough_wood",
+      "source": "Poly Haven",
+      "licence": "CC0 1.0"
+    }
+  ],
+  "shorelineRecording": [
+    {
+      "name": "« Gentle sea wash » (freesound 185225)",
+      "author": "deleted_user_3277771",
+      "license": "CC0 1.0",
+      "url": "https://freesound.org/people/deleted_user_3277771/sounds/185225/"
+    },
+    {
+      "name": "« Cicada chorus in Paros » (freesound 690510)",
+      "author": "CalebLopez",
+      "license": "CC0 1.0",
+      "url": "https://freesound.org/people/CalebLopez/sounds/690510/"
+    },
+    {
+      "name": "« Winds howl across a sun shade » (freesound 690512)",
+      "author": "CalebLopez",
+      "license": "CC0 1.0",
+      "url": "https://freesound.org/people/CalebLopez/sounds/690512/"
+    }
+  ],
+  "assets": [
+    {
+      "file": "levels/meltem.json",
+      "bytes": 774660,
+      "sha256": "c25fcc797cc6f96e79e144c14a00332e65745ea7b8c835d21df6a5e2617b818f"
+    },
+    {
+      "file": "assets/fps/maps/meltem.webp",
+      "bytes": 243352,
+      "sha256": "b8615c919c93e004394f67afc84cfa8c48473c90348b5aebbc37ab4144daa3db"
+    },
+    {
+      "file": "assets/fps/maps/meltem/base.bin.gz",
+      "bytes": 2824199,
+      "sha256": "e78cf0ab3c54cf96d26dde134983ae2be4c37cd12041db301332e3bf7f270290"
+    },
+    {
+      "file": "assets/fps/maps/meltem/cyflag.webp",
+      "bytes": 2030,
+      "sha256": "488ff5055047a1833a34229b2a41ddee2d3e27675f748873bff27122a49549b1"
+    },
+    {
+      "file": "assets/fps/maps/meltem/cyfol.webp",
+      "bytes": 177824,
+      "sha256": "0d5516df30dff189bf4f53e06cb3cc430a397123907a475d6db851a14665f0da"
+    },
+    {
+      "file": "assets/fps/maps/meltem/detail.bin.gz",
+      "bytes": 246408,
+      "sha256": "9794c7aee0856763000321a09964826d3708adc65ba941c3421607a9006cb051"
+    },
+    {
+      "file": "assets/fps/maps/meltem/environment.json.gz",
+      "bytes": 768833,
+      "sha256": "61725a58597853df21c3a8d92d0b1ac10ab2ac61d31c3f4915292aa993fcd6e4"
+    },
+    {
+      "file": "assets/fps/maps/meltem/pavers.webp",
+      "bytes": 47794,
+      "sha256": "3bc8b1579f917d3b469ac4e850ab005e45552b8fdc205799532078741003406a"
+    },
+    {
+      "file": "assets/fps/maps/meltem/plaster.webp",
+      "bytes": 77812,
+      "sha256": "e9b6465c3b897e949f80cc65256539d31acfb52550a6845a06b8695e38faa28b"
+    },
+    {
+      "file": "assets/fps/maps/meltem/sea.mp3",
+      "bytes": 273285,
+      "sha256": "fc419be87608483c6e4ded692697b37d8bf1e0c9e66b7fc47cba841f22fbfc43"
+    },
+    {
+      "file": "assets/fps/maps/meltem/signs.webp",
+      "bytes": 80880,
+      "sha256": "79ee402e3c9735f698db635da120089cad53b55f45fbde4094842bb6f81470dd"
+    },
+    {
+      "file": "assets/fps/maps/meltem/sky.webp",
+      "bytes": 45252,
+      "sha256": "6d09f73ad40ecb0cf19f628ee2bb69b2acf6b0311b0f7ee5280936bf548c98e7"
+    },
+    {
+      "file": "assets/fps/maps/meltem/stone.webp",
+      "bytes": 54260,
+      "sha256": "5260b748c03bd10ee2f9817f24fe258318d2f27844c97f5449cbc303adb9907a"
+    }
+  ],
+  "generatedSigns": {
+    "source": "Riposte 02yb-cyclades.js, cySignAtlas and cyDecalAtlas, with English lettering from tools/reference-map/signs.mjs",
+    "license": "MIT"
+  }
+}

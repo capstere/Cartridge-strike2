@@ -1,0 +1,395 @@
+{
+  "revision": "23df514fabd35ad3b2ec4857887d3de03a53c31c",
+  "buildHash": "1bf4ae79d6ebeaeaf5e3d22fab38316d05c8e44af30958b7e257d1bd85eee735",
+  "status": "FAIL",
+  "blockedAssertion": "Stable waiting-room geometry count for meltem: 448 != 447",
+  "stages": [
+    {
+      "name": "soak",
+      "started": "2026-11-27T16:14:51.840365+00:00",
+      "finished": "2026-11-27T16:21:43.180081+00:00",
+      "exit": 1
+    },
+    {
+      "name": "quality",
+      "started": "2026-11-27T16:21:43.183078+00:00",
+      "finished": "2026-11-27T16:22:03.346721+00:00",
+      "exit": 0
+    },
+    {
+      "name": "tavern",
+      "started": "2026-11-27T16:22:03.347230+00:00",
+      "finished": "2026-11-27T16:22:24.448152+00:00",
+      "exit": 1
+    },
+    {
+      "name": "kiosk",
+      "started": "2026-11-27T16:22:24.448629+00:00",
+      "finished": "2026-11-27T16:22:46.056265+00:00",
+      "exit": 1
+    }
+  ],
+  "score": {
+    "analysts": 4,
+    "counterAnalysts": 0
+  },
+  "frames": {
+    "n": 386,
+    "min": 17.7,
+    "p50": 23.8,
+    "p95": 34.3,
+    "p99": 44.1,
+    "max": 245.1
+  },
+  "authorityStep": {
+    "n": 606,
+    "min": 0.42,
+    "p50": 1.29,
+    "p95": 6.28,
+    "p99": 9.56,
+    "max": 23.58
+  },
+  "field": {
+    "size": [
+      550,
+      550
+    ],
+    "tiles": [
+      256,
+      256,
+      4
+    ],
+    "mips": true,
+    "samples": [
+      [
+        255,
+        0,
+        0,
+        40
+      ],
+      [
+        0,
+        255,
+        0,
+        92
+      ]
+    ]
+  },
+  "sourceShadowLift": 0.06,
+  "date": "2026-11-27T16:14:53.448Z",
+  "switches": [
+    {
+      "id": "floor5-prepared",
+      "ms": 10237,
+      "heapUsedBytes": 74752992,
+      "backingStorageBytes": 94953704,
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "liveOwners": 1,
+      "reachableOwners": 1
+    },
+    {
+      "id": "meltem",
+      "ms": 4447,
+      "heapUsedBytes": 40184944,
+      "backingStorageBytes": 95120339,
+      "geometries": 447,
+      "textures": 64,
+      "programs": 60,
+      "liveOwners": 1,
+      "reachableOwners": 1
+    },
+    {
+      "id": "embruns",
+      "ms": 3901,
+      "heapUsedBytes": 41904708,
+      "backingStorageBytes": 87599357,
+      "geometries": 308,
+      "textures": 64,
+      "programs": 60,
+      "liveOwners": 1,
+      "reachableOwners": 1
+    },
+    {
+      "id": "tephra",
+      "ms": 3743,
+      "heapUsedBytes": 42977436,
+      "backingStorageBytes": 80776074,
+      "geometries": 375,
+      "textures": 65,
+      "programs": 59,
+      "liveOwners": 1,
+      "reachableOwners": 1,
+      "livePrototypes": {
+        "Game": 1,
+        "NetworkSession": 1,
+        "AudioSystem": 1,
+        "threeRenderers": 2,
+        "glContexts": 2,
+        "glPrograms": 63,
+        "glShaders": 118,
+        "canvases": 78,
+        "detachedGameCanvases": 0,
+        "audioContexts": 1
+      }
+    },
+    {
+      "id": "floor5-prepared",
+      "ms": 10527,
+      "heapUsedBytes": 76955696,
+      "backingStorageBytes": 94957536,
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "liveOwners": 1,
+      "reachableOwners": 1
+    },
+    {
+      "id": "meltem",
+      "ms": 4195,
+      "heapUsedBytes": 41017556,
+      "backingStorageBytes": 94983386,
+      "geometries": 447,
+      "textures": 64,
+      "programs": 60,
+      "liveOwners": 1,
+      "reachableOwners": 1
+    },
+    {
+      "id": "embruns",
+      "ms": 3832,
+      "heapUsedBytes": 41901280,
+      "backingStorageBytes": 87981093,
+      "geometries": 308,
+      "textures": 64,
+      "programs": 60,
+      "liveOwners": 1,
+      "reachableOwners": 1
+    },
+    {
+      "id": "tephra",
+      "ms": 3685,
+      "heapUsedBytes": 44085904,
+      "backingStorageBytes": 80779362,
+      "geometries": 375,
+      "textures": 65,
+      "programs": 59,
+      "liveOwners": 1,
+      "reachableOwners": 1
+    },
+    {
+      "id": "floor5-prepared",
+      "ms": 9987,
+      "heapUsedBytes": 76369460,
+      "backingStorageBytes": 94957620,
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "liveOwners": 1,
+      "reachableOwners": 1
+    },
+    {
+      "id": "meltem",
+      "ms": 4203,
+      "heapUsedBytes": 42078636,
+      "backingStorageBytes": 95123450,
+      "geometries": 447,
+      "textures": 64,
+      "programs": 60,
+      "liveOwners": 1,
+      "reachableOwners": 1
+    },
+    {
+      "id": "embruns",
+      "ms": 3781,
+      "heapUsedBytes": 42183368,
+      "backingStorageBytes": 88079349,
+      "geometries": 308,
+      "textures": 64,
+      "programs": 60,
+      "liveOwners": 1,
+      "reachableOwners": 1
+    },
+    {
+      "id": "tephra",
+      "ms": 3506,
+      "heapUsedBytes": 41965972,
+      "backingStorageBytes": 80778935,
+      "geometries": 375,
+      "textures": 65,
+      "programs": 59,
+      "liveOwners": 1,
+      "reachableOwners": 1,
+      "livePrototypes": {
+        "Game": 1,
+        "NetworkSession": 1,
+        "AudioSystem": 1,
+        "threeRenderers": 2,
+        "glContexts": 2,
+        "glPrograms": 63,
+        "glShaders": 118,
+        "canvases": 78,
+        "detachedGameCanvases": 0,
+        "audioContexts": 1
+      }
+    },
+    {
+      "id": "floor5-prepared",
+      "ms": 10645,
+      "heapUsedBytes": 73916204,
+      "backingStorageBytes": 94957161,
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "liveOwners": 1,
+      "reachableOwners": 1
+    },
+    {
+      "id": "meltem",
+      "ms": 4178,
+      "heapUsedBytes": 40229384,
+      "backingStorageBytes": 95123887,
+      "geometries": 447,
+      "textures": 64,
+      "programs": 60,
+      "liveOwners": 1,
+      "reachableOwners": 1
+    },
+    {
+      "id": "embruns",
+      "ms": 3938,
+      "heapUsedBytes": 41387404,
+      "backingStorageBytes": 87981490,
+      "geometries": 308,
+      "textures": 64,
+      "programs": 60,
+      "liveOwners": 1,
+      "reachableOwners": 1
+    },
+    {
+      "id": "tephra",
+      "ms": 4576,
+      "heapUsedBytes": 42016576,
+      "backingStorageBytes": 80778935,
+      "geometries": 375,
+      "textures": 65,
+      "programs": 59,
+      "liveOwners": 1,
+      "reachableOwners": 1
+    },
+    {
+      "id": "floor5-prepared",
+      "ms": 10037,
+      "heapUsedBytes": 74435572,
+      "backingStorageBytes": 94957606,
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "liveOwners": 1,
+      "reachableOwners": 1
+    },
+    {
+      "id": "meltem",
+      "ms": 4104,
+      "heapUsedBytes": 39627712,
+      "backingStorageBytes": 95123450,
+      "geometries": 448,
+      "textures": 64,
+      "programs": 60,
+      "liveOwners": 1,
+      "reachableOwners": 1
+    },
+    {
+      "id": "embruns",
+      "ms": 3821,
+      "heapUsedBytes": 40941576,
+      "backingStorageBytes": 87981093,
+      "geometries": 308,
+      "textures": 64,
+      "programs": 60,
+      "liveOwners": 1,
+      "reachableOwners": 1
+    },
+    {
+      "id": "tephra",
+      "ms": 3606,
+      "heapUsedBytes": 42109388,
+      "backingStorageBytes": 80778935,
+      "geometries": 375,
+      "textures": 65,
+      "programs": 59,
+      "liveOwners": 1,
+      "reachableOwners": 1,
+      "livePrototypes": {
+        "Game": 1,
+        "NetworkSession": 1,
+        "AudioSystem": 1,
+        "threeRenderers": 2,
+        "glContexts": 2,
+        "glPrograms": 63,
+        "glShaders": 118,
+        "canvases": 78,
+        "detachedGameCanvases": 0,
+        "audioContexts": 1
+      }
+    }
+  ],
+  "parked": [
+    {
+      "atMs": 1,
+      "heapUsedBytes": 41296456,
+      "backingStorageBytes": 80783515
+    },
+    {
+      "atMs": 77792,
+      "heapUsedBytes": 41783952,
+      "backingStorageBytes": 80784159
+    },
+    {
+      "atMs": 155583,
+      "heapUsedBytes": 41305820,
+      "backingStorageBytes": 80780304,
+      "livePrototypes": {
+        "Game": 1,
+        "NetworkSession": 1,
+        "AudioSystem": 1,
+        "threeRenderers": 2,
+        "glContexts": 2,
+        "glPrograms": 63,
+        "glShaders": 118,
+        "canvases": 78,
+        "detachedGameCanvases": 0,
+        "audioContexts": 1
+      }
+    }
+  ],
+  "retiredGameCanvases": 0,
+  "requestedParkMs": 155584,
+  "ashLane": {
+    "regionPx": [
+      324,
+      435,
+      427,
+      495
+    ],
+    "lamps": {
+      "sha256": "8089edb7e065e7af5a0bc23eabf48deb08331ab003351df74f40217892195efd",
+      "mean": 0.01,
+      "median": 0,
+      "below12": 1.0
+    },
+    "surface": {
+      "sha256": "08d45309ea25d089cc995f59b01c827374d7f6cfc53da82e671df89ddd2453d5",
+      "mean": 2.79,
+      "median": 3,
+      "below12": 1.0
+    },
+    "sourceGrade": {
+      "sha256": "8b7598838f8e513315c97c147d30f24f87c26e78e4db188598a1913e55e80f7d",
+      "mean": 17.46,
+      "median": 18,
+      "below12": 0.0
+    }
+  }
+}

@@ -40,12 +40,34 @@ test('bounded Colyseus hitbox rewind hits moving targets without changing live p
  r.state.actors.get(target.id).lifeStartedAt=at+1;
  assert.equal(r.lag.query(shooter,from,dir,20).victim,null);
  const seat=r.seats.get(a.sessionId),frame={sampleTick:r.sim.tickNumber};
- for(const [stamp,reason] of [[NaN,'invalid'],[r.clock.elapsedTime+100,'future'],[r.clock.elapsedTime-REWIND_MS-1,'old']])assert.equal(r.lag.accept(seat,frame,stamp),false,reason);
- assert.equal(r.lag.accept(seat,{sampleTick:0},r.clock.elapsedTime-100),false,'chosen unrelated historic input tick is rejected');
+ for(const [stamp,reason] of [[NaN,'invalid'],[r.clock.elapsedTime+100,'future'],[r.clock.elapsedTime-REWIND_MS-1,'old']])assert.equal(r.lag.admit(seat,frame,stamp),null,reason);
+ assert.equal(r.lag.admit(seat,{sampleTick:0},r.clock.elapsedTime-100),null,'chosen unrelated historic input tick is rejected');
  const started=seat.lifeStartedAt;seat.lifeStartedAt=r.clock.elapsedTime;
- assert.equal(r.lag.accept(seat,frame,r.clock.elapsedTime-50),false,'a current-life counter cannot select a previous-life timestamp');seat.lifeStartedAt=started;
- seat.lastShotStamp=r.clock.elapsedTime;assert.equal(r.lag.accept(seat,frame,r.clock.elapsedTime-50),false,'regressing stamped shot is rejected');
+ assert.equal(r.lag.admit(seat,frame,r.clock.elapsedTime-50),null,'a current-life counter cannot select a previous-life timestamp');seat.lifeStartedAt=started;
+ seat.lastShotStamp=r.clock.elapsedTime;assert.equal(r.lag.admit(seat,frame,r.clock.elapsedTime-50),null,'regressing stamped shot is rejected');
  assert(r.lag.tickTimes.size<=64);
+});
+
+
+test('manual shots use the live world when SDK render time disagrees with the acknowledged patch', {timeout:10000}, async t => {
+ const {r,g,a,shooter} = await setup(t);
+ const clock = a.clock, smoothedRtt = clock.smoothedRtt.bind(clock);
+ // A slow acknowledgement makes this genuine SDK's interpolated view older
+ // than its newest tick. A later render stall advances past that tick.
+ const serverNow = clock.serverNow.bind(clock);
+ t.after(() => { clock.smoothedRtt = smoothedRtt; clock.serverNow = serverNow; });
+ const ammo = g.item(shooter).ammo;
+ for (const id of [1,2]) {
+   clock.smoothedRtt = () => id === 1 ? 450 : 0;
+   clock.serverNow = () => clock.lastServerTime() + (id === 1 ? 0 : 230);
+   send(a, {fire:true, fireEdge:true, fireId:id});
+   await until(() => g.item(shooter).ammo === ammo-id, 'authority fired once against the live world');
+   send(a, {fire:false, fireEdge:false, fireId:id});
+   await delay(180);
+ }
+ assert.equal(r.lag.metrics.rejected,0);
+ assert.equal(r.lag.metrics.live,2);
+ assert.equal(g.item(shooter).ammo,ammo-2);
 });
 
 test('historical wall, door transitions and elevator shutters use the same collision instant',{timeout:10000},async t=>{
@@ -110,6 +132,6 @@ test('coalesced reliable burst retains a short fire press and its aim without ex
   await until(()=>target.hp<hp,'the short press uses its own orientation');
   assert.equal(shooter.inventory.primary.ammo,29,'the batch fires once');
   assert(r.metrics.coalesced>=7);assert.equal(buffer.size,0);
-  assert.equal(shooter.yaw,Math.PI,'release cannot substitute an arbitrary shot orientation');
+  assert.equal(shooter.yaw,0,'the latest look survives while the shot uses its separately retained aim');
  }finally{r.fixedTick=original;}
 });

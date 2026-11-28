@@ -4,7 +4,13 @@ import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {relative,sep} from 'node:path';
 import '../server/register-shared.mjs';
+import {publicGameHTML} from './release-public-assets.mjs';
+import {buildContentCatalog} from './content/catalog.mjs';
+import {verifyAppearanceRigs} from './appearance-import.mjs';
 import {collisionContract} from '../shared/multiplayer/collision-contract.mjs';
+import {coastalRecordings,coastalClipPath} from '../src/fps/coastal-recordings.mjs';
+import {tephraRecordings} from '../src/fps/tephra-ambience.mjs';
+import {shotTakes} from '../src/fps/shot-audio.mjs';
 import {CONFIG} from '../src/fps/config.mjs';
 import {DEFAULT_MAP_ID,NETWORK_MAPS} from '../shared/multiplayer/maps.mjs';
 import {configContract,PROTOCOL_VERSION} from '../shared/multiplayer/rules.mjs';
@@ -15,8 +21,47 @@ const graph=JSON.parse(await read('docs/multiplayer/imports.json'));
 const knockdownFiles=['src/fps/character-actors.mjs','src/fps/character-library.mjs','src/fps/models.mjs',
   'src/fps/actor-occlusion.mjs','src/fps/headshot-pose.mjs',
   'assets/animations/headshot-male.animation.glb','assets/animations/headshot-female.animation.glb'];
-const paths=[...Object.keys(graph),'shared/multiplayer/rules.mjs','shared/multiplayer/protocol.mjs','server/network-schema.mjs','server/network-room.mjs','server/team-comms.mjs','server/lag-compensation.mjs','server/match-lifecycle.mjs','server/classic-round.mjs','server/headless.mjs','shared/multiplayer/input.mjs','src/fps/app.mjs','src/fps/tactical-controls.mjs','src/fps/render-engine.mjs','src/fps/render.mjs','src/fps/minimap-cache.mjs','src/fps/hud-shell.mjs','src/fps/zombie-visuals.mjs','src/fps/floor-audio.mjs','fps/network.css','src/fps/lobby-stage.mjs','src/fps/network/menu.mjs','src/fps/network/session.mjs','src/fps/network/room-ui.mjs','shared/multiplayer/world.mjs','shared/multiplayer/collision-contract.mjs','shared/sha256.mjs','src/fps/network/connection.mjs','server/access.mjs','server/pilot-access.mjs','server/local-server.mjs',
-  'server/room-world.mjs','server/family-room.mjs','server/match-preferences.mjs','shared/multiplayer/maps.mjs','shared/multiplayer/family-room.mjs','ui/cs-mobile.mjs','ui/cs-mobile.css',...knockdownFiles].sort();
+// Map geometry, prediction and source render assets share one compatibility boundary.
+const coastalAudio=Object.entries(coastalRecordings).flatMap(([id,takes])=>Object.keys(takes).map(take=>coastalClipPath(id,take)));
+const mapAssets={
+  meltem:['plaster.webp','stone.webp','pavers.webp','cyfol.webp','cyflag.webp'],
+  embruns:['coarse.bin.gz','lighting.json.gz','ground.bin.gz'],
+  tephra:['ground.bin.gz','lighting.json.gz','ash.webp','basalt.webp','lava.webp','moss.webp','panel.webp']
+};
+const mappedFiles=Object.entries(mapAssets).flatMap(([id,surfaces])=>[
+  'assets/fps/maps/'+id+'.webp',
+  ...['base.bin.gz','detail.bin.gz','environment.json.gz','sky.webp','signs.webp',...surfaces].map(name=>'assets/fps/maps/'+id+'/'+name)
+]);
+const referenceRuntime=['src/fps/reference-world.mjs','src/fps/reference-terrain.mjs','src/fps/reference-rays.mjs',
+  'src/fps/reference-prop-ray.mjs','src/fps/reference-navigation.mjs','src/fps/reference-scene.mjs',
+  'src/fps/coastal-ambience.mjs','src/fps/coastal-recordings.mjs','src/fps/tephra-ambience.mjs',...coastalAudio,
+  ...Object.keys(tephraRecordings).map(take=>coastalClipPath('tephra',take)),
+  'credits.html','licenses/riposte-MIT.txt',
+  'src/fps/reference-environment.mjs','src/fps/reference-volcano.mjs','src/fps/reference-eruption.mjs','src/fps/reference-lighting.mjs','src/fps/reference-ground.mjs',...mappedFiles];
+const appearanceSources=['src/fps/appearance-package.mjs','assets/fps/outfit-packs.json'];
+const accessCatalog='shared/multiplayer/access-english.mjs';
+const deploymentFiles=['src/fps/deployment-countdown.mjs',
+  ...['ui_tick','r_beep-1','st_start'].map(name=>'assets/fps/audio/riposte-'+name+'.mp3')];
+const fontCss=await read('fps/type.css');
+const fontFiles=['fps/type.css',...Array.from(fontCss.toString().matchAll(/url\('\.\.\/(vendor\/fonts\/[^']+)'\)/g),match=>match[1]),
+  ...['barlow','barlow-condensed','jetbrains-mono'].map(family=>'vendor/fonts/'+family+'/LICENSE.txt')];
+const accountFiles=[...fontFiles,'fps/account.html','fps/account.css','src/fps/account-profile.mjs','src/fps/network/room-invitation.mjs','src/fps/network/room-moderation.mjs',
+  'vendor/qrcode-generator/qrcode.mjs','licenses/qrcode-generator-MIT.txt'];
+const mobileInterfaceFiles=[
+  'src/fps/mobile-profile.mjs','src/fps/mobile-layout.mjs','src/fps/sound-levels.mjs','ui/cs-install.mjs',
+  'fps/app.webmanifest','fps/sw.js','fps/offline.html','fps/icon-192.png','fps/icon-512.png',
+];
+const frontendFiles=['src/fps/domination-flags.mjs','src/fps/match-modes.mjs','src/fps/replay-playback.mjs','src/fps/replay-render.mjs','shared/multiplayer/replay.mjs','src/fps/match-presentation.mjs',...mobileInterfaceFiles,'src/fps/weapon-fittings.mjs','src/fps/weapon-camo.mjs','src/fps/arsenal.mjs','src/fps/arsenal-menu.mjs','src/fps/arsenal-preview.mjs','src/fps/wardrobe-menu.mjs','src/fps/operator-outfits.mjs','src/fps/operator-equipment.mjs','src/fps/operator-locomotion.mjs',...deploymentFiles,...accountFiles,'src/fps/game-english.mjs','src/fps/english-ui.mjs','src/fps/solo-maps.mjs','src/fps/menu-navigation.mjs','fps/routes.css','furniture-editor/build/environment-art.mjs'];
+const rushPresentation=['src/fps/bonus-hud.mjs','src/fps/door-visuals.mjs','src/fps/frosted-door.mjs','src/fps/project-visibility.mjs',
+  'src/fps/mobile-controls.mjs','src/fps/gamepad-controls.mjs','src/fps/presentation-hands.mjs',
+  'src/fps/strike-kit-models.mjs','src/fps/strike-kit-timing.mjs','src/fps/strike-kit-audio.mjs','src/fps/model-primitives.mjs','src/fps/view-surface.mjs',
+  'src/fps/grenade-assist.mjs','src/fps/action-audio.mjs','src/fps/reload-foley.mjs','src/fps/effects.mjs','src/fps/focus-hud.mjs','fps/focus-hud.css'];
+const rocketPresentation=['src/fps/action-visuals.mjs','src/fps/audio.mjs'];
+const shotAudioFiles=['assets/fps/audio/ffsl-f_bolt-1.mp3','assets/fps/audio/ffsl-f_pump-1.mp3',
+  'assets/fps/audio/riposte-f_pin.mp3','assets/fps/audio/riposte-s_slide_soft.mp3','src/fps/audio.mjs','src/fps/riposte-audio.mjs','src/fps/shot-audio.mjs','src/fps/shot-timing.mjs',
+  ...shotTakes.map(take=>'assets/fps/audio/riposte-'+take+'.mp3')];
+const paths=[...new Set([...appearanceSources,...shotAudioFiles,...Object.keys(graph),...frontendFiles,...rushPresentation,...rocketPresentation,accessCatalog,'shared/multiplayer/rules.mjs','shared/multiplayer/protocol.mjs','server/network-schema.mjs','server/network-room.mjs','server/team-comms.mjs','server/bonus-channel.mjs','server/lag-compensation.mjs','server/match-lifecycle.mjs','server/classic-round.mjs','server/headless.mjs','shared/multiplayer/input.mjs','src/fps/app.mjs','src/fps/tactical-controls.mjs','src/fps/render-engine.mjs','src/fps/render.mjs','src/fps/minimap-cache.mjs','src/fps/hud-shell.mjs','src/fps/zombie-visuals.mjs','src/fps/floor-audio.mjs','fps/network.css','src/fps/lobby-stage.mjs','src/fps/network/menu.mjs','src/fps/network/session.mjs','src/fps/network/room-ui.mjs','shared/multiplayer/world.mjs','shared/multiplayer/collision-contract.mjs','shared/sha256.mjs','src/fps/network/connection.mjs','server/account-store.mjs','server/account-access.mjs','server/public-rooms.mjs','server/match-credits.mjs','server/progression.mjs','server/room-replays.mjs','server/result-journal.mjs','server/access.mjs','server/pilot-access.mjs','server/local-server.mjs',
+  'server/room-world.mjs','server/family-room.mjs','server/match-preferences.mjs','shared/multiplayer/maps.mjs','shared/multiplayer/family-room.mjs','ui/cs-mobile.mjs','ui/cs-mobile.css',...knockdownFiles,...referenceRuntime])].sort();
 const sources=await Promise.all(paths.map(async path=>[path,hash(await read(path))]));
 const {loadHeadlessWorld}=await import('../server/headless.mjs');
 const worlds=[];
@@ -26,9 +71,12 @@ for(const map of NETWORK_MAPS){
   worlds.push(world);
   fingerprints.push({mapId:map.id,mapHash:sourceHash,collisionHash:hash(collisionContract(world))});
 }
+const catalog=await buildContentCatalog({mapContracts:Object.fromEntries(fingerprints.map(map=>[map.mapId,map]))});
+const {packages}=JSON.parse(await read('assets/fps/outfit-packs.json'));
+if(packages.length)await verifyAppearanceRigs(fileURLToPath(root),packages);
 const common={protocolVersion:PROTOCOL_VERSION,
   protocolHash:hash(JSON.stringify(sources.filter(([path])=>['shared/multiplayer/protocol.mjs','server/network-schema.mjs'].includes(path)))),
-  configHash:hash(JSON.stringify(configContract())),buildHash:hash(JSON.stringify({sources,fingerprints})),tickRate:1/CONFIG.fixedStep,patchMs:50};
+  configHash:hash(JSON.stringify(configContract())),buildHash:hash(JSON.stringify({sources,fingerprints,contentDigest:catalog.digest})),tickRate:1/CONFIG.fixedStep,patchMs:50};
 const contracts=Object.fromEntries(fingerprints.map(map=>[map.mapId,{...common,...map}]));
 const contract=contracts[DEFAULT_MAP_ID];
 const header='// Generated by tools/build-network.mjs; do not hand edit.\n';
@@ -42,11 +90,13 @@ const files={
 // Only resolved, shipped map dependencies are added to the runtime allowlist.
 const {LIBRARY_MAP}=await import('../furniture-editor/library/catalog.mjs');
 const info=JSON.parse(await read('build-info.json'));
-const runtime=new Set([...info.files.map(f=>f.path),...Object.keys(files),...knockdownFiles,'shared/multiplayer/maps.mjs',
+const previousCatalogFiles=new Set(info.contentCatalog?.managedFiles??[]);
+const retainedFiles=info.files.map(f=>f.path).filter(path=>!previousCatalogFiles.has(path));
+const runtime=new Set([...appearanceSources,...shotAudioFiles,...retainedFiles,...frontendFiles,accessCatalog,...Object.keys(files),...knockdownFiles,...referenceRuntime,...rushPresentation,'src/fps/bonuses.mjs','src/fps/rush.mjs','shared/multiplayer/maps.mjs',
   ...NETWORK_MAPS.flatMap(map=>[map.file,map.preview]),
   'shared/multiplayer/world.mjs','shared/multiplayer/collision-contract.mjs','shared/sha256.mjs','src/fps/network/connection.mjs','src/fps/network/room-ui.mjs','shared/multiplayer/family-room.mjs']);
 for(const world of worlds){
-  for(const item of world.projectScene.items){
+  for(const item of (world.projectScene?.items||[])){
     const url=LIBRARY_MAP.get(item.assetId)?.url;
     if(url){const path=relative(fileURLToPath(root),fileURLToPath(new URL(url,new URL('furniture-editor/',root)))).split(sep).join('/');
       if(path.startsWith('../'))throw Error('Asset outside runtime');runtime.add(path);
@@ -54,7 +104,14 @@ for(const world of worlds){
   }
   for(const asset of [...world.project.assets.local,...world.project.assets.posters])if(asset.file)runtime.add(asset.file);
 }
+const managedFiles=catalog.assets.map(asset=>asset.path).filter(path=>!runtime.has(path)).sort();
+for(const path of managedFiles)runtime.add(path);
+info.contentCatalog={version:catalog.version,digest:catalog.digest,entries:catalog.entries.length,managedFiles};
 info.files=await Promise.all([...runtime].sort().map(async path=>{const bytes=files[path]||await read(path);return {path,bytes:bytes.length,sha256:hash(bytes)};}));
+const gamePage='fps/index.html';
+const published=await publicGameHTML((await read(gamePage)).toString(),info.files,async path=>files[path]||await read(path));
+files[gamePage]=Buffer.from(published);
+Object.assign(info.files.find(entry=>entry.path===gamePage),{bytes:files[gamePage].length,sha256:hash(files[gamePage])});
 info.bytes=info.files.reduce((n,f)=>n+f.bytes,0);
 files['build-info.json']=Buffer.from(JSON.stringify(info,null,2)+'\n');
 for(const [path,bytes] of Object.entries(files)){

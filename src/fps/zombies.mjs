@@ -81,7 +81,7 @@ function perceive(g,z){
   let noise=null,best=0;
   for(const e of g.soundEvents){
     if(e.serial<=z.heard)continue;
-    const loud=e.type==='shot'&&e.weapon!=='knife'?20:e.type==='he'?24:e.type==='step'?(e.mode==='run'?5.2:1.35):0;
+    const loud=e.type==='shot'&&e.weapon!=='knife'?(e.suppressed?4:20):e.type==='he'?24:e.type==='step'?(e.mode==='run'?5.2:1.35):0;
     if(!loud || (e.type!=='he'&&!e.team))continue;
     const d=distance(p,e);if(d>=loud)continue;
     const clear=g.world.segmentClear(from,at(e,.85),{vision:false}), strength=loud*(clear?1:.27)-d;
@@ -174,7 +174,7 @@ function move(g,z,dt){
   if(walked>.0005){
     z.yaw=Math.atan2(x-z.x,zz-z.z);z.wait=0;z.stalledAt=null;z.stepDistance+=walked;
     if(z.stepDistance>.8){
-      z.stepDistance=0;g.emit('step',z,{mode:speed>1?'run':'sneak',surface:g.world.materialAt(z.x,z.z)});
+      z.stepDistance=0;g.emit('step',z,{mode:speed>1?'run':'sneak',surface:g.world.materialAt(z.x,z.z,z.y)});
     }
   }
   else {
@@ -188,7 +188,7 @@ function tickOne(g,z,dt){
   const t=g.state.time; z.bodyTime=t;z.height=bodyHeight(z,t);
   if(z.behavior==='attack' && t>=z.impactAt){
     z.impactAt=Infinity;const a=g.actors.find(o=>o.id===z.attackId);
-    g.emit('zombie-stomp',z,{surface:g.world.materialAt(z.x,z.z)});
+    g.emit('zombie-stomp',z,{surface:g.world.materialAt(z.x,z.z,z.y)});
     if(inReach(g,z,a))g.pendingDamage.push({source:z,target:a,amount:12,kind:'stomp'});
     z.nextAttack=t+3;
   }

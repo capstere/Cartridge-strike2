@@ -5,6 +5,19 @@
 export const GRENADE_TYPES = Object.freeze(['he', 'flash', 'smoke']);
 const point = g => ({x:g.x, y:g.y, z:g.z});
 const EPS = 1e-8;
+// Riposte: Frontline 08-player, NADE_ANIM (MIT, BenDBSS 2026).
+export const CARTRIDGE=Object.freeze({pin:.24,pull:.42,release:.12,return:.38});
+
+
+// When the held fuse wins the next fixed launch tick, no outward flight exists.
+export function cartridgeFlightFuse(actor,time,config){
+  const c=actor.cartridge;
+  if(!c?.deadline)return config.grenadeFuse;
+  const release=c.releaseAt || time+CARTRIDGE.release;
+  const steps=Math.max(0,Math.ceil((release-time-EPS)/config.fixedStep));
+  const remaining=c.deadline-(time+steps*config.fixedStep);
+  return remaining>EPS ? remaining : null;
+}
 
 export function grenadeLaunch(actor, config, time = 0, type = actor.weapon) {
   const pitch = actor.pitch + .15, cp = Math.cos(pitch);
@@ -35,7 +48,8 @@ export function advanceGrenade(g, world, gravity, dt) {
     g.vy = (g.vy - 1.6 * dot * n.y) * .72;
     g.vz = (g.vz - 1.6 * dot * n.z) * .72;
   } else {g.x += displacement.x; g.y += displacement.y; g.z += displacement.z;}
-  if (g.y < g.radius) {g.y = g.radius; g.vy = Math.abs(g.vy) * .35; g.vx *= .82; g.vz *= .82;}
+  const floor = (world.lowerSurface?.(g.x,g.z) ?? 0) + g.radius;
+  if (g.y < floor) {g.y = floor; g.vy = Math.abs(g.vy) * .35; g.vx *= .82; g.vz *= .82;}
   return !!hit;
 }
 

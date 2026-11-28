@@ -1,9 +1,13 @@
+import {MODE_NAMES,MODE_GUIDES,rankPlayers,matchWinnerName} from '../match-presentation.mjs';
+import {roomModeration} from './room-moderation.mjs';
+import {roomInvitation} from './room-invitation.mjs';
+import {accessText as en} from '../../../shared/multiplayer/access-english.mjs';
 import {NETWORK_MAPS,networkMap} from '../../../shared/multiplayer/maps.mjs';
-import {onlinePrimaries} from '../action-rules.mjs';
+import {defaultOnlineCartridge,onlinePrimaries} from '../action-rules.mjs';
 import {DIFFICULTIES,WEAPONS} from '../config.mjs';
 import {FAMILY_ROOM_PATH} from '../../../shared/multiplayer/family-room.mjs';
 import {BOT_COUNTS,CLASSIC_WINS,TDM_KILLS,TDM_MINUTES} from '../../../shared/multiplayer/rules.mjs';
-const labels={analysts:'Analysts',counterAnalysts:'Counter Analysts',draw:'Oavgjort'};
+const labels={analysts:'Analysts',counterAnalysts:'Counter Analysts',draw:en.draw};
 const matchFields=[
   ['room-tdm-minutes','tdmMinutes',TDM_MINUTES],
   ['room-tdm-kills','tdmKills',TDM_KILLS],
@@ -37,6 +41,17 @@ export function roomUi({leave,resume,activate}){
   #online-room .room-controls select:disabled{opacity:1;color:#edf2e8;background:#182625;border-color:#52716d}
   #online-room .room-controls .room-wide{grid-column:1/-1}
   #online-room .room-settings p{margin:8px 0 0;font-size:13px;line-height:1.35}
+  #online-room[data-phase=results] :is(#room-rules,.room-map-card,#room-identity,#room-help){display:none}
+  #online-room[data-phase=results] .room-card{display:flex;flex-direction:column}
+  #online-room[data-phase=results] .room-header{display:contents}
+  #online-room[data-phase=results] .room-header .room-actions{order:3}
+  #online-room[data-phase=results] .room-settings{order:4}
+  #online-room[data-phase=results] .room-options{order:5}
+  #online-room[data-phase=results] #room-title{margin:0 0 6px}
+  #online-room[data-phase=results] :is(#room-earned,#room-result-summary){margin:4px 0 8px}
+  #online-room[data-phase=results] #room-notice:empty{display:none}
+  #online-room[data-phase=results] .room-roster{order:1}
+  #online-room[data-phase=results] .room-card>.room-actions{order:2}
   #online-room .room-options{display:flex;align-items:center;flex-wrap:wrap;gap:8px 16px;margin:12px 0;font-size:14px}
   #online-room .room-options p{margin:0;color:#b2c4bc}
   #online-room .room-residents{display:flex;flex-wrap:wrap;gap:8px 16px}
@@ -48,66 +63,79 @@ export function roomUi({leave,resume,activate}){
   `;document.head.append(style);
   const root=document.createElement('section');root.id='online-room';root.hidden=true;
   root.innerHTML=`<div class="room-card">
-    <div class="room-eyebrow">PRIVAT RUM</div>
+    <div class="room-eyebrow">${en.privateRoom}</div>
     <header class="room-header">
-      <h2 id="room-title">Väntrum</h2>
-      <div class="room-actions"><button id="room-share">Dela rumslänk</button><button id="room-leave">Lämna rummet</button></div>
+      <h2 id="room-title">${en.lobby}</h2>
+      <div class="room-actions"><button type="button" id="room-public-tools" hidden>Public match controls</button><button type="button" id="room-invite" hidden aria-expanded="false" aria-controls="room-invitation">Invite a friend</button><button id="room-share">${en.shareLink}</button><button id="room-leave">${en.leave}</button></div>
     </header>
-    <input id="room-link" readonly aria-label="Rumslänk" hidden>
-    <p id="room-share-help" class="muted" hidden>Vännen behöver serverns inbjudningskod och din separata privata rumskod. Koder ingår aldrig i länken.</p>
+    <section class="room-invitation" id="room-invitation" hidden aria-label="Private invitation">
+      <h3>Invite a friend</h3><p>Create one invitation for each player. A new invitation replaces the previous unused one.</p>
+      <button type="button" data-invite-create>Create invitation</button>
+      <div data-invite-output hidden><p>Invitation code <strong></strong> · Expires at <time></time></p>
+        <label>Invitation link <input type="text" readonly autocomplete="off"></label>
+        <button type="button" data-invite-share>Share or copy link</button></div>
+      <p role="status"></p><button type="button" data-invite-revoke>Revoke shared access</button>
+      <div data-invite-confirm hidden><p>Disconnect invited players and remove remembered invitation access for this room?</p>
+        <button type="button" data-cancel>Keep access</button><button type="button" data-confirm>Revoke access</button></div>
+    </section>
+    <input id="room-link" readonly aria-label="${en.roomLink}" hidden>
+    <p id="room-share-help" class="muted" hidden>${en.shareHelp}</p>
     <p id="room-identity" class="muted"></p>
-    <p id="room-result-summary" hidden></p>
+    <p id="room-result-summary" hidden></p><p id="room-earned" hidden></p>
     <p id="room-rules"></p>
     <div class="room-options">
-      <label id="room-friendly-fire-label" hidden>Friendly fire <select id="room-friendly-fire"><option value="off">Av</option><option value="on">På</option></select></label>
+      <label id="room-friendly-fire-label" hidden>Friendly fire <select id="room-friendly-fire"><option value="off">${en.off}</option><option value="on">${en.on}</option></select></label>
       <p id="room-friendly-fire-status"></p>
-      <label id="room-bot-difficulty-label" hidden>Botsvårighet <select id="room-bot-difficulty"></select></label>
+      <label id="room-bot-difficulty-label" hidden>${en.botDifficulty} <select id="room-bot-difficulty"></select></label>
       <p id="room-bot-difficulty-status"></p>
       <div class="room-residents" id="room-residents" hidden>
-        <label>Zombies <select id="room-zombies"><option value="off">Av</option><option value="on">På</option></select></label>
-        <label>Dansmannen <select id="room-danceman"><option value="off">Av</option><option value="on">På</option></select></label>
+        <label>Zombies <select id="room-zombies"><option value="off">${en.off}</option><option value="on">${en.on}</option></select></label>
+        <label>${en.danceman} <select id="room-danceman"><option value="off">${en.off}</option><option value="on">${en.on}</option></select></label>
       </div>
       <p id="room-residents-status"></p>
     </div>
     <div class="room-actions">
-      <label id="room-equipment-label">Utrustning <select id="room-primary"></select><small id="room-kit"></small></label>
-      <label id="room-team-label">Ditt lag <select id="room-team"><option value="analysts">Analysts</option><option value="counterAnalysts">Counter Analysts</option></select></label>
-      <button id="room-ready" class="primary">Redo</button><button id="room-start" class="primary">Starta match</button>
-      <button id="room-rematch" class="primary">Spela igen</button><button id="room-resume" class="primary">Fortsätt</button>
+      <label id="room-equipment-label">${en.equipment} <select id="room-primary"></select><small id="room-kit"></small></label>
+      <label id="room-team-label">${en.yourTeam} <select id="room-team"><option value="analysts">Analysts</option><option value="counterAnalysts">Counter Analysts</option></select></label>
+      <button id="room-ready" class="primary">${en.ready}</button><button id="room-start" class="primary">${en.startMatch}</button>
+      <button id="room-rematch" class="primary">${en.rematch}</button><button id="room-resume" class="primary">${en.resume}</button>
     </div>
     <p id="room-help"></p><p id="room-notice" class="notice" role="status"></p>
     <div class="room-roster">
-      <table><thead><tr><th>Spelare</th><th>Lag</th><th>Status</th><th>K</th><th>D</th></tr></thead><tbody id="room-roster"></tbody></table>
+      <table><thead><tr><th>${en.player}</th><th>${en.team}</th><th>Status</th><th>K</th><th>D</th><th id="room-captures-head" hidden>Captures</th><th id="room-points-head" hidden>Points</th></tr></thead><tbody id="room-roster"></tbody></table>
     </div>
   </div>`;
   document.body.append(root);const $=id=>root.querySelector('#'+id);let session,key='';
   $('room-rules').insertAdjacentHTML('afterend',`<div class="room-settings">
-    <fieldset><legend>Matchregler</legend>
+    <fieldset><legend>${en.matchRules}</legend>
       <div class="room-controls">
-        <label class="room-wide" hidden>Spelläge<select id="room-mode"></select></label>
-        <label>Matchlängd (min)<select id="room-tdm-minutes"></select></label>
-        <label>Kills för vinst<select id="room-tdm-kills"></select></label>
-        <label>Rundvinster för vinst<select id="room-classic-wins"></select></label>
+        <label class="room-wide" hidden>${en.mode}<select id="room-mode"></select></label>
+        <label>${en.matchLength}<select id="room-tdm-minutes"></select></label>
+        <label>${en.targetKills}<select id="room-tdm-kills"></select></label>
+        <label>${en.targetRounds}<select id="room-classic-wins"></select></label>
       </div>
     </fieldset>
-    <fieldset><legend>Botar per lag</legend>
+    <fieldset><legend>${en.teamBots}</legend>
       <div class="room-controls">
         <label>Analysts<select id="room-analysts-bots"></select></label>
         <label>Counter Analysts<select id="room-counter-analysts-bots"></select></label>
       </div>
-      <p class="muted">Spelare har företräde. Botar fyller lediga platser upp till valt antal.</p>
+      <p class="muted">${en.botHelp}</p>
     </fieldset>
   </div>`);
-  $('room-rules').insertAdjacentHTML('beforebegin',`<section class="room-map-card" aria-label="Matchkarta">
+  $('room-rules').insertAdjacentHTML('beforebegin',`<section class="room-map-card" aria-label="${en.matchMap}">
     <img id="room-map-preview" alt="" width="256" height="128">
     <div><h3 id="room-map-name"></h3><p id="room-map-modes"></p>
-    <label id="room-map-label" hidden>Karta <select id="room-map"></select></label></div>
+    <label id="room-map-label" hidden>${en.map} <select id="room-map"></select></label></div>
   </section>`);
   $('room-map').replaceChildren(...NETWORK_MAPS.map(map=>new Option(map.name,map.id)));
   $('room-map').onchange=()=>session.matchCommand('settings',{mapId:$('room-map').value});
-  const modeLabels={tdm:'Team Deathmatch',classic:'Classic'};
+  const modeLabels=MODE_NAMES;
   const shareHelp=$('room-share-help'),normalShareHelp=shareHelp.textContent;
-  $('room-leave').onclick=()=>{root.hidden=true;session=null;leave();};
+  let shareContext='';
+  const invitation=roomInvitation(root),moderation=roomModeration(root);
+  const privateAccess=new URLSearchParams(location.search).get('network')==='internet';
+  $('room-leave').onclick=()=>{moderation.update(null);invitation.update('');root.hidden=true;session=null;leave();};
   $('room-ready').onclick=()=>{activate();const a=session.room.state.actors.get(session.localPlayerId);session.matchCommand('ready',{ready:!a.playerReady});};
   $('room-start').onclick=()=>{activate();session.matchCommand('start');};
   const rematch=$('room-rematch');
@@ -153,30 +181,37 @@ export function roomUi({leave,resume,activate}){
   $('room-share').onclick=async()=>{
     const current=session;if(!current?.room)return;
     shareHelp.hidden=false;
-    const link=current.familyAlias?new URL(FAMILY_ROOM_PATH,location.origin):new URL(location.pathname,location.origin);
-    if(!current.familyAlias){
+    const publicRoom=moderation.isPublished();
+    const link=new URL(publicRoom?'/profile':current.familyAlias?FAMILY_ROOM_PATH:location.pathname,location.origin);
+    if(publicRoom) link.hash='public-matches/'+encodeURIComponent(current.room.roomId);
+    else if(!current.familyAlias){
       link.searchParams.set('network',new URLSearchParams(location.search).get('network')||'internet');
       link.searchParams.set('room',current.room.roomId);
     }
-    try{if(navigator.share){await navigator.share({title:'Cartridge-Strike 2',url:link.href});return;}
-      await navigator.clipboard.writeText(link.href);if(session===current&&!current.closed)current.notice='Rumslänken är kopierad. Dela koderna separat.';
-    }catch{if(session!==current||current.closed)return;$('room-link').hidden=false;$('room-link').value=link.href;$('room-link').focus();$('room-link').select();current.notice='Kopiera den markerade rumslänken.';}
+    try{if(navigator.share){await navigator.share({title:en.gameTitle,url:link.href});return;}
+      await navigator.clipboard.writeText(link.href);if(session===current&&!current.closed)current.notice=en.linkCopied;
+    }catch{if(session!==current||current.closed)return;$('room-link').hidden=false;$('room-link').value=link.href;$('room-link').focus();$('room-link').select();current.notice=en.copySelection;}
   };
-  return {hide(){root.hidden=true;session=null;rematchPointer=null;key='';$('room-link').hidden=true;shareHelp.hidden=true;},update(s){
-    if(!s?.room)return;session=s;const state=s.room.state,self=state.actors.get(s.localPlayerId),waiting=state.phase==='waiting',result=state.phase==='results';
+  return {hide(){moderation.update(null);invitation.update('');root.hidden=true;session=null;rematchPointer=null;key='';$('room-link').hidden=true;shareHelp.hidden=true;},update(s){
+    if(!s?.room)return;moderation.update(s);session=s;const state=s.room.state,self=state.actors.get(s.localPlayerId),waiting=state.phase==='waiting',result=state.phase==='results';
+    const enteringResult=result&&root.dataset.phase!==state.phase;
+    root.dataset.phase=state.phase;
     if(!result)rematchPointer=null;
-    root.hidden=state.phase==='active';if(root.hidden)return;
-    $('room-title').textContent=result?(state.winner==='draw'?'Oavgjort':labels[state.winner]+' vinner'):state.phase==='countdown'?'Start om '+Math.ceil(state.remainingSeconds)+'…':'Väntrum';
+    root.hidden=state.phase==='active'||state.phase==='countdown';if(root.hidden){invitation.update('');return;}
+    if(enteringResult){root.scrollTop=0;root.querySelector('.room-card').scrollTop=0;}
+    root.querySelector('.room-eyebrow').textContent=result?'Match complete':en.privateRoom;
+    $('room-title').textContent=result?(state.winner==='draw'?en.draw:en.winner(matchWinnerName(state.winner,state.actors.values(),labels),state.mode==='ffa')):en.lobby;
     const classic=state.mode==='classic';
-    $('room-rules').textContent=classic?'Classic · Counter Analysts planterar eller räddar gisslan. Analysts försvarar och desarmerar. Båda lagen kan vinna en runda på eliminering.':'Team Deathmatch · högst 5 aktörer per lag';
+    $('room-rules').textContent=classic?en.classicRules:MODE_GUIDES[state.mode]||en.tdmRules;
     const map=networkMap(state.mapId);
     if(!map)return;
     const loading=s.worldRevision!==state.worldRevision||!self?.ready;
     const host=state.ownerId===s.room.sessionId,canEdit=waiting&&host&&!loading&&s.connectionState==='connected';
+    invitation.update(privateAccess&&canEdit&&moderation.allowsPrivateInvites()?s.room.roomId:'');
     if($('room-map-preview').dataset.map!==map.id){
       $('room-map-preview').dataset.map=map.id;
       $('room-map-preview').src='../'+map.preview;
-      $('room-map-preview').alt='Spelvy från '+map.name;
+      $('room-map-preview').alt=en.preview(map.name);
       $('room-map-name').textContent=map.name;
       $('room-map-modes').textContent=map.modes.map(id=>modeLabels[id]).join(' · ');
       $('room-mode').replaceChildren(...map.modes.map(id=>new Option(modeLabels[id],id)));
@@ -184,28 +219,34 @@ export function roomUi({leave,resume,activate}){
     $('room-map').value=map.id;$('room-map-label').hidden=!canEdit;
     $('room-mode').parentElement.hidden=!canEdit||map.modes.length<2;
     $('room-map').disabled=$('room-mode').disabled=!canEdit;
-    root.querySelector('.room-eyebrow').textContent=s.familyAlias?'FAMILJERUM':'PRIVAT RUM';
-    $('room-identity').textContent=s.familyAlias||'Rum '+s.room.roomId+' · Match '+state.matchId;
-    shareHelp.textContent=s.familyAlias?'Dela den fasta länken. Skicka serverns inbjudningskod och familjerummets lösenord separat.':normalShareHelp;
+    const published=moderation.isPublished();
+    const nextShareContext=s.room.roomId+(published?'/public':'/private');
+    if(shareContext!==nextShareContext){
+      shareContext=nextShareContext;shareHelp.hidden=true;$('room-link').hidden=true;$('room-link').value='';
+    }
+    root.querySelector('.room-eyebrow').textContent=published?'Public match':s.familyAlias?en.familyRoom:en.privateRoom;
+    $('room-share').textContent=published?'Share public match':en.shareLink;
+    $('room-identity').textContent=s.familyAlias||en.roomIdentity(s.room.roomId,state.matchId);
+    shareHelp.textContent=published?'Share this link with a friend. Sign in to join while a seat is available.':s.familyAlias?en.familyShareHelp:normalShareHelp;
     if($('room-mode').value!==state.mode)$('room-mode').value=state.mode;
     $('room-tdm-minutes').parentElement.hidden=classic;
-    $('room-tdm-kills').parentElement.hidden=classic;
+    $('room-tdm-kills').parentElement.hidden=classic||state.mode==='dom';
     $('room-classic-wins').parentElement.hidden=!classic;
     for(const [id,field] of matchFields){
       const select=$(id),confirmed=String(state[field]);
       if(select.value!==confirmed)select.value=confirmed;
       select.disabled=!canEdit;
     }
-    $('room-friendly-fire-label').hidden=!canEdit;
+    $('room-friendly-fire-label').hidden=!canEdit||state.mode==='ffa';
     $('room-friendly-fire').disabled=!canEdit;
     $('room-friendly-fire').value=state.friendlyFire?'on':'off';
-    $('room-friendly-fire-status').hidden=canEdit;
-    $('room-friendly-fire-status').textContent='Friendly fire: '+(state.friendlyFire?'På':'Av');
+    $('room-friendly-fire-status').hidden=canEdit||state.mode==='ffa';
+    $('room-friendly-fire-status').textContent=en.friendlyFire+' · '+(state.friendlyFire?en.on:en.off);
     const canSetDifficulty=canEdit;
     $('room-bot-difficulty-label').hidden=!canSetDifficulty;
     $('room-bot-difficulty').value=state.botDifficulty;
     $('room-bot-difficulty-status').hidden=canSetDifficulty;
-    $('room-bot-difficulty-status').textContent='Botsvårighet · '+DIFFICULTIES[state.botDifficulty].name;
+    $('room-bot-difficulty-status').textContent=en.botDifficulty+' · '+DIFFICULTIES[state.botDifficulty].name;
     $('room-residents').hidden=!map.residents||!canEdit;
     $('room-residents-status').hidden=!map.residents||canEdit;
     for(const [name,field] of residentFields){
@@ -214,32 +255,42 @@ export function roomUi({leave,resume,activate}){
       if(select.value!==confirmed)select.value=confirmed;
       select.disabled=!canEdit||!map.residents;
     }
-    $('room-residents-status').textContent='Zombies '+(state.zombiesEnabled?'på':'av')+' · Dansmannen '+(state.dancemanEnabled?'på':'av');
+    $('room-residents-status').textContent=`Zombies ${state.zombiesEnabled?en.on:en.off} · ${en.danceman} ${state.dancemanEnabled?en.on:en.off}`;
     $('room-equipment-label').hidden=!waiting||state.mode==='classic';
     if(self?.ready&&waiting){
       if($('room-primary').dataset.team!==self.team){
         $('room-primary').dataset.team=self.team;
         $('room-primary').replaceChildren(...onlinePrimaries(self.team).map(id=>new Option(WEAPONS[id].name,id)));
       }
-      $('room-primary').value=self.loadout;
-      $('room-kit').textContent=' + '+WEAPONS[self.pistol].name+' · kniv · 1 HE';
+      const kit=s.classChoice?.team===self.team?s.classChoice.kit:null;
+      $('room-primary').value=kit?.primary.id??self.loadout;
+      $('room-kit').textContent=en.deploymentKit(kit?.name,WEAPONS[kit?.secondary.id??self.pistol].name,
+        WEAPONS[kit?.equipment??defaultOnlineCartridge].name);
     }
-    $('room-team-label').hidden=!waiting;$('room-team').value=self?.team||'analysts';
-    $('room-ready').hidden=!waiting;$('room-ready').textContent=self?.playerReady?'Inte redo':'Redo';
+    $('room-team-label').hidden=!waiting||state.mode==='ffa';$('room-team').value=self?.team||'analysts';
+    $('room-ready').hidden=!waiting;$('room-ready').textContent=self?.playerReady?en.notReady:en.ready;
     const connected=[...state.actors.values()].filter(a=>a.connected);
-    const canStart=connected.every(a=>a.ready&&a.playerReady)&&['analysts','counterAnalysts'].every(t=>connected.some(a=>a.team===t));
+    const canStart=connected.every(a=>a.ready&&a.playerReady)&&(state.mode==='ffa'?connected.length>=2:['analysts','counterAnalysts'].every(t=>connected.some(a=>a.team===t)));
     $('room-start').hidden=!waiting||!host;$('room-start').disabled=!canEdit||!canStart;
     $('room-ready').disabled=loading||s.connectionState!=='connected';$('room-rematch').hidden=!result;$('room-resume').hidden=true;
     $('room-result-summary').hidden=!result;
     if(result){
-      const reasons={rounds:`${state.scoreTarget} vunna rundor`,score:'Poänggränsen nådd',forfeit:'Ett lag lämnade matchen',time:'Tiden är slut'};
-      $('room-result-summary').textContent=`${state.analysts} – ${state.counterAnalysts} · ${reasons[state.reason]||''}`;
+      const reasons={rounds:en.roundsWon(state.scoreTarget),score:en.scoreLimit,forfeit:en.forfeit,time:en.timeLimit};
+      $('room-result-summary').textContent=`${state.mode==='ffa'?MODE_NAMES.ffa:state.analysts+' – '+state.counterAnalysts} · ${reasons[state.reason]||''}`;
     }
-    $('room-help').textContent=result?'Spela igen återgår till samma väntrum.':waiting?'Välj lag och tryck Redo. Rumsägaren startar när båda lagen är redo.':'Matchen börjar snart. Därefter: Fortsätt för kontroller och ljud.';
-    $('room-notice').textContent=loading?'Laddar '+map.name+'…':s.notice|| (s.connectionState==='reconnecting'?'Återansluter… din plats reserveras i 15 sekunder.':'');
+    const credit=result?s.progression:null;
+    $('room-earned').hidden=!credit;
+    if(credit){
+      const weapons=(credit.weapons||[]).map(w=>(WEAPONS[w.id]?.name||'Weapon')+' +'+w.xp+' XP');
+      $('room-earned').textContent=[credit.ranked?'Account rewards':'Unranked match',credit.xp+' XP',credit.assists+' assists',credit.headshots+' headshots',...weapons].join(' · ');
+    }
+    $('room-help').textContent=result?en.rematchHelp:waiting?en.readyHelp:en.startHelp;
+    $('room-notice').textContent=loading?en.loadingMap(map.name):s.notice|| (s.connectionState==='reconnecting'?en.reconnectingHelp:'');
     let rows=[...state.actors.values()];if(result)try{rows=JSON.parse(state.results).players;}catch{}
-    const next=JSON.stringify([state.ownerId,rows.map(a=>[a.id,a.name,a.team,a.ready,a.playerReady,a.connected,a.kills,a.deaths])]);
+    const showCaptures=result&&state.mode==='dom',showPoints=result&&['dom','ffa'].includes(state.mode);
+    $('room-captures-head').hidden=!showCaptures;$('room-points-head').hidden=!showPoints;
+    const next=JSON.stringify([state.mode,state.phase,state.ownerId,rows.map(a=>[a.id,a.name,a.team,a.ready,a.playerReady,a.connected,a.kills,a.deaths,a.handling?.points??a.points,a.captures])]);
     if(next===key)return;key=next;$('room-roster').replaceChildren();
-    for(const a of rows){const tr=document.createElement('tr');for(const value of [a.name+(a.id===s.localPlayerId?' · du':'')+(a.sessionId===state.ownerId?' · värd':''),labels[a.team],result?'Slutresultat':!a.connected?'Återansluter':!a.ready?'Laddar':a.playerReady?'Redo':'Väntar',a.kills||0,a.deaths||0]){const td=document.createElement('td');td.textContent=String(value);tr.append(td);}$('room-roster').append(tr);}
+    for(const a of (!result&&state.mode==='ffa'?rankPlayers(rows):rows)){const tr=document.createElement('tr');for(const value of [a.name+(a.id===s.localPlayerId?en.you:'')+(a.sessionId===state.ownerId?en.host:''),state.mode==='ffa'?'Individual':labels[a.team],result?en.result:!a.connected?en.reconnecting:!a.ready?en.loading:a.playerReady?en.ready:en.waiting,a.kills||0,a.deaths||0,...(showCaptures?[a.captures||0]:[]),...(showPoints?[a.points||0]:[])]){const td=document.createElement('td');td.textContent=String(value);tr.append(td);}$('room-roster').append(tr);}
   }};
 }

@@ -1,0 +1,1036 @@
+{
+  "build": "1ac88e31ba8f2aa7460034ae3c16f741e2527fb3fbcae199ffcd58681df393c9",
+  "protocol": 21,
+  "map": "compact-arena",
+  "players": 2,
+  "bots": 0,
+  "movement": 0.2099999999999994,
+  "ticks": 11,
+  "desktop": {
+    "firstHud": 23200,
+    "nextRaf": 25216.6,
+    "gap": 2016.5999999999985,
+    "firstVisibleCallback": 23286.299999952316,
+    "markers": [
+      [
+        "join requested",
+        12140.299999952316
+      ],
+      [
+        "loadWorld",
+        13148,
+        "compact-arena",
+        1
+      ],
+      [
+        "waiting ready",
+        25484.5
+      ]
+    ],
+    "warmWindows": [
+      [
+        16798.600000023842,
+        21663.5
+      ]
+    ],
+    "detailed": true,
+    "documentVisible": true,
+    "viewport": [
+      896,
+      504,
+      0.75
+    ],
+    "inputs": [
+      {
+        "handler": 23175.100000023842,
+        "stamp": 23150.799999952316,
+        "delay": 24.300000071525574
+      },
+      {
+        "handler": 23285.200000047684,
+        "stamp": 23250.200000047684,
+        "delay": 35
+      },
+      {
+        "handler": 25292.700000047684,
+        "stamp": 23350.799999952316,
+        "delay": 1941.9000000953674
+      }
+    ],
+    "frames": [
+      [
+        23066.6,
+        16.69999999999709
+      ],
+      [
+        23083.3,
+        16.700000000000728
+      ],
+      [
+        23100,
+        16.700000000000728
+      ],
+      [
+        23116.6,
+        16.599999999998545
+      ],
+      [
+        23133.3,
+        16.700000000000728
+      ],
+      [
+        23166.6,
+        33.29999999999927
+      ],
+      [
+        23183.3,
+        16.700000000000728
+      ],
+      [
+        23200,
+        16.700000000000728
+      ],
+      [
+        25216.6,
+        2016.5999999999985
+      ],
+      [
+        25299.9,
+        83.30000000000291
+      ],
+      [
+        25333.3,
+        33.39999999999782
+      ],
+      [
+        25349.9,
+        16.600000000002183
+      ],
+      [
+        25366.5,
+        16.599999999998545
+      ],
+      [
+        25388.9,
+        22.400000000001455
+      ],
+      [
+        25403.8,
+        14.899999999997817
+      ],
+      [
+        25420.4,
+        16.600000000002183
+      ],
+      [
+        25437.1,
+        16.69999999999709
+      ],
+      [
+        25462,
+        24.900000000001455
+      ],
+      [
+        25478.8,
+        16.799999999999272
+      ],
+      [
+        25495.4,
+        16.600000000002183
+      ],
+      [
+        25517.7,
+        22.299999999999272
+      ],
+      [
+        25534.5,
+        16.799999999999272
+      ],
+      [
+        25553.1,
+        18.599999999998545
+      ],
+      [
+        25578.4,
+        25.30000000000291
+      ],
+      [
+        25630.6,
+        52.19999999999709
+      ],
+      [
+        25647.3,
+        16.700000000000728
+      ],
+      [
+        25665.8,
+        18.5
+      ]
+    ],
+    "spans": [
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 23333.899999976158,
+        "end": 23554.100000023842
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 23557.399999976158,
+        "end": 23642.799999952316
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 23644,
+        "end": 23797.200000047684
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 23798.899999976158,
+        "end": 23889
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 23890.5,
+        "end": 23978.100000023842
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 24008,
+        "end": 24013.600000023842
+      },
+      {
+        "layer": "gl",
+        "name": "texSubImage2D",
+        "start": 24015.600000023842,
+        "end": 24022.899999976158
+      },
+      {
+        "layer": "gl",
+        "name": "texSubImage2D",
+        "start": 24023.200000047684,
+        "end": 24029.399999976158
+      },
+      {
+        "layer": "gl",
+        "name": "texSubImage2D",
+        "start": 24029.799999952316,
+        "end": 24036.700000047684
+      },
+      {
+        "layer": "gl",
+        "name": "texSubImage2D",
+        "start": 24042.600000023842,
+        "end": 24055.100000023842
+      },
+      {
+        "layer": "gl",
+        "name": "texSubImage2D",
+        "start": 24055.299999952316,
+        "end": 24060.600000023842
+      },
+      {
+        "layer": "gl",
+        "name": "texSubImage2D",
+        "start": 24060.899999976158,
+        "end": 24076.5
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 24082.5,
+        "end": 24086.799999952316
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 24088.399999976158,
+        "end": 24164.899999976158
+      },
+      {
+        "layer": "three",
+        "name": "world",
+        "start": 23325.700000047684,
+        "end": 24173.899999976158
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 24179.399999976158,
+        "end": 24185.200000047684
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 24187.5,
+        "end": 24282.5
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 24284.600000023842,
+        "end": 24394.399999976158
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 24396.5,
+        "end": 24478.700000047684
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 24481.299999952316,
+        "end": 24570.899999976158
+      },
+      {
+        "layer": "gl",
+        "name": "getShaderInfoLog",
+        "start": 24570.899999976158,
+        "end": 24575
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 24580.5,
+        "end": 25176.200000047684
+      },
+      {
+        "layer": "gl",
+        "name": "getShaderInfoLog",
+        "start": 25176.200000047684,
+        "end": 25181.700000047684
+      },
+      {
+        "layer": "three",
+        "name": "weapon",
+        "start": 24174,
+        "end": 25185.600000023842
+      },
+      {
+        "layer": "game",
+        "name": "renderer",
+        "start": 23292.600000023842,
+        "end": 25189.200000047684
+      },
+      {
+        "layer": "raf",
+        "name": "frame",
+        "stamp": 23200,
+        "start": 23286.399999976158,
+        "end": 25197.700000047684
+      },
+      {
+        "layer": "three",
+        "name": "world",
+        "start": 25295.899999976158,
+        "end": 25303.299999952316
+      },
+      {
+        "layer": "game",
+        "name": "renderer",
+        "start": 25294,
+        "end": 25304.799999952316
+      },
+      {
+        "layer": "raf",
+        "name": "frame",
+        "stamp": 25216.6,
+        "start": 25292.899999976158,
+        "end": 25306.700000047684
+      },
+      {
+        "layer": "three",
+        "name": "world",
+        "start": 25343.700000047684,
+        "end": 25350.299999952316
+      },
+      {
+        "layer": "game",
+        "name": "renderer",
+        "start": 25343,
+        "end": 25352.299999952316
+      },
+      {
+        "layer": "raf",
+        "name": "frame",
+        "stamp": 25333.3,
+        "start": 25341.899999976158,
+        "end": 25356.200000047684
+      },
+      {
+        "layer": "three",
+        "name": "world",
+        "start": 25442.5,
+        "end": 25452
+      },
+      {
+        "layer": "game",
+        "name": "renderer",
+        "start": 25440.399999976158,
+        "end": 25454.100000023842
+      },
+      {
+        "layer": "raf",
+        "name": "frame",
+        "stamp": 25437.1,
+        "start": 25437.799999952316,
+        "end": 25458.799999952316
+      },
+      {
+        "layer": "three",
+        "name": "world",
+        "start": 25557.399999976158,
+        "end": 25572.5
+      },
+      {
+        "layer": "three",
+        "name": "weapon",
+        "start": 25572.899999976158,
+        "end": 25578.899999976158
+      },
+      {
+        "layer": "game",
+        "name": "renderer",
+        "start": 25555.799999952316,
+        "end": 25579
+      },
+      {
+        "layer": "raf",
+        "name": "frame",
+        "stamp": 25553.1,
+        "start": 25554.200000047684,
+        "end": 25585.399999976158
+      },
+      {
+        "layer": "three",
+        "name": "world",
+        "start": 25681.899999976158,
+        "end": 25713.799999952316
+      },
+      {
+        "layer": "game",
+        "name": "renderer",
+        "start": 25678,
+        "end": 25716.100000023842
+      },
+      {
+        "layer": "raf",
+        "name": "frame",
+        "stamp": 25665.8,
+        "start": 25677.100000023842,
+        "end": 25720.899999976158
+      }
+    ],
+    "tasks": [
+      {
+        "kind": "longtask",
+        "start": 23199.200000047684,
+        "duration": 60
+      },
+      {
+        "kind": "longtask",
+        "start": 23280.299999952316,
+        "duration": 2002
+      },
+      {
+        "kind": "long-animation-frame",
+        "start": 23184.899999976158,
+        "duration": 2036.3000000715256,
+        "renderStart": 23285.399999976158,
+        "layoutStart": 25213,
+        "scripts": [
+          [
+            "DOMWebSocket.onmessage",
+            "colyseus.js",
+            "",
+            23185,
+            7.799999952316284
+          ],
+          [
+            "TimerHandler:setTimeout",
+            "",
+            "",
+            23199.200000047684,
+            60.5
+          ],
+          [
+            "FrameRequestCallback",
+            "",
+            "",
+            23286.399999976158,
+            1926.6000000238419
+          ]
+        ]
+      },
+      {
+        "kind": "longtask",
+        "start": 25553.799999952316,
+        "duration": 79
+      },
+      {
+        "kind": "longtask",
+        "start": 25676.799999952316,
+        "duration": 61
+      },
+      {
+        "kind": "long-animation-frame",
+        "start": 25537.200000047684,
+        "duration": 53.199999928474426,
+        "renderStart": 25553.899999976158,
+        "layoutStart": 25585.5,
+        "scripts": [
+          [
+            "FrameRequestCallback",
+            "",
+            "",
+            25554.100000023842,
+            31.399999976158142
+          ]
+        ]
+      },
+      {
+        "kind": "long-animation-frame",
+        "start": 25676.200000047684,
+        "duration": 58.699999928474426,
+        "renderStart": 25677,
+        "layoutStart": 25721.100000023842,
+        "scripts": [
+          [
+            "FrameRequestCallback",
+            "",
+            "",
+            25677.100000023842,
+            43.89999997615814
+          ]
+        ]
+      }
+    ]
+  },
+  "emulated": {
+    "firstHud": 25341.2,
+    "nextRaf": 27943.1,
+    "gap": 2601.899999999998,
+    "firstVisibleCallback": 25419.5,
+    "markers": [
+      [
+        "join requested",
+        15499.5
+      ],
+      [
+        "loadWorld",
+        16417.399999976158,
+        "compact-arena",
+        1
+      ],
+      [
+        "waiting ready",
+        28247.200000047684
+      ]
+    ],
+    "warmWindows": [
+      [
+        20259.5,
+        25280
+      ]
+    ],
+    "detailed": true,
+    "documentVisible": true,
+    "viewport": [
+      640,
+      360,
+      0.75
+    ],
+    "inputs": [
+      {
+        "handler": 25418.700000047684,
+        "stamp": 25364.600000023842,
+        "delay": 54.10000002384186
+      },
+      {
+        "handler": 28004.399999976158,
+        "stamp": 25467,
+        "delay": 2537.399999976158
+      }
+    ],
+    "frames": [
+      [
+        25196.8,
+        16.599999999998545
+      ],
+      [
+        25220.1,
+        23.299999999999272
+      ],
+      [
+        25236.7,
+        16.600000000002183
+      ],
+      [
+        25253.3,
+        16.599999999998545
+      ],
+      [
+        25270,
+        16.700000000000728
+      ],
+      [
+        25286.7,
+        16.700000000000728
+      ],
+      [
+        25307.8,
+        21.099999999998545
+      ],
+      [
+        25324.6,
+        16.799999999999272
+      ],
+      [
+        25341.2,
+        16.600000000002183
+      ],
+      [
+        27943.1,
+        2601.899999999998
+      ],
+      [
+        28045.2,
+        102.10000000000218
+      ],
+      [
+        28109.2,
+        64
+      ],
+      [
+        28132.5,
+        23.299999999999272
+      ],
+      [
+        28149.2,
+        16.700000000000728
+      ],
+      [
+        28165.6,
+        16.399999999997817
+      ],
+      [
+        28198.6,
+        33
+      ],
+      [
+        28215.4,
+        16.80000000000291
+      ],
+      [
+        28232.3,
+        16.899999999997817
+      ],
+      [
+        28248.9,
+        16.600000000002183
+      ],
+      [
+        28265.6,
+        16.69999999999709
+      ],
+      [
+        28298.9,
+        33.30000000000291
+      ],
+      [
+        28315.6,
+        16.69999999999709
+      ],
+      [
+        28332.2,
+        16.600000000002183
+      ],
+      [
+        28348.9,
+        16.700000000000728
+      ],
+      [
+        28365.6,
+        16.69999999999709
+      ],
+      [
+        28382.3,
+        16.700000000000728
+      ],
+      [
+        28416.9,
+        34.60000000000218
+      ],
+      [
+        28433.6,
+        16.69999999999709
+      ]
+    ],
+    "spans": [
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 25830.200000047684,
+        "end": 25834.700000047684
+      },
+      {
+        "layer": "gl",
+        "name": "texSubImage2D",
+        "start": 25836.5,
+        "end": 25856.799999952316
+      },
+      {
+        "layer": "gl",
+        "name": "texSubImage2D",
+        "start": 25857.100000023842,
+        "end": 25879.399999976158
+      },
+      {
+        "layer": "gl",
+        "name": "texSubImage2D",
+        "start": 25879.5,
+        "end": 25892
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 25896.799999952316,
+        "end": 25989.399999976158
+      },
+      {
+        "layer": "gl",
+        "name": "texSubImage2D",
+        "start": 25990.5,
+        "end": 26017.299999952316
+      },
+      {
+        "layer": "gl",
+        "name": "texSubImage2D",
+        "start": 26017.600000023842,
+        "end": 26072.899999976158
+      },
+      {
+        "layer": "gl",
+        "name": "texSubImage2D",
+        "start": 26073,
+        "end": 26106.200000047684
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 26107,
+        "end": 26228
+      },
+      {
+        "layer": "gl",
+        "name": "texSubImage2D",
+        "start": 26229.100000023842,
+        "end": 26250.700000047684
+      },
+      {
+        "layer": "gl",
+        "name": "texSubImage2D",
+        "start": 26250.799999952316,
+        "end": 26273.399999976158
+      },
+      {
+        "layer": "gl",
+        "name": "texSubImage2D",
+        "start": 26273.600000023842,
+        "end": 26286.700000047684
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 26288.299999952316,
+        "end": 26395.899999976158
+      },
+      {
+        "layer": "gl",
+        "name": "texSubImage2D",
+        "start": 26397.600000023842,
+        "end": 26407.299999952316
+      },
+      {
+        "layer": "gl",
+        "name": "texSubImage2D",
+        "start": 26407.5,
+        "end": 26425.100000023842
+      },
+      {
+        "layer": "gl",
+        "name": "texSubImage2D",
+        "start": 26425.200000047684,
+        "end": 26433.299999952316
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 26434.5,
+        "end": 26520.299999952316
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 26531.799999952316,
+        "end": 26536.299999952316
+      },
+      {
+        "layer": "gl",
+        "name": "texSubImage2D",
+        "start": 26551.100000023842,
+        "end": 26559.200000047684
+      },
+      {
+        "layer": "gl",
+        "name": "texSubImage2D",
+        "start": 26562.5,
+        "end": 26572.5
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 26583.299999952316,
+        "end": 26590.5
+      },
+      {
+        "layer": "three",
+        "name": "world",
+        "start": 25807.799999952316,
+        "end": 26593.799999952316
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 26602.899999976158,
+        "end": 26732.899999976158
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 26737.5,
+        "end": 26873.799999952316
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 26878.100000023842,
+        "end": 27038.100000023842
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 27042.100000023842,
+        "end": 27180.200000047684
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 27183.399999976158,
+        "end": 27342.899999976158
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramInfoLog",
+        "start": 27349,
+        "end": 27817.399999976158
+      },
+      {
+        "layer": "gl",
+        "name": "getShaderInfoLog",
+        "start": 27817.399999976158,
+        "end": 27891.200000047684
+      },
+      {
+        "layer": "gl",
+        "name": "getShaderInfoLog",
+        "start": 27891.200000047684,
+        "end": 27906.100000023842
+      },
+      {
+        "layer": "gl",
+        "name": "getProgramParameter",
+        "start": 27906.100000023842,
+        "end": 27918.600000023842
+      },
+      {
+        "layer": "three",
+        "name": "weapon",
+        "start": 26594.100000023842,
+        "end": 27921.200000047684
+      },
+      {
+        "layer": "game",
+        "name": "renderer",
+        "start": 25426.700000047684,
+        "end": 27921.600000023842
+      },
+      {
+        "layer": "raf",
+        "name": "frame",
+        "stamp": 25341.2,
+        "start": 25419.600000023842,
+        "end": 27928.299999952316
+      },
+      {
+        "layer": "three",
+        "name": "world",
+        "start": 28010.399999976158,
+        "end": 28024
+      },
+      {
+        "layer": "game",
+        "name": "renderer",
+        "start": 28006.100000023842,
+        "end": 28026
+      },
+      {
+        "layer": "raf",
+        "name": "frame",
+        "stamp": 27943.1,
+        "start": 28004.799999952316,
+        "end": 28029.700000047684
+      },
+      {
+        "layer": "three",
+        "name": "world",
+        "start": 28096,
+        "end": 28110.5
+      },
+      {
+        "layer": "game",
+        "name": "renderer",
+        "start": 28093.200000047684,
+        "end": 28111.899999976158
+      },
+      {
+        "layer": "raf",
+        "name": "frame",
+        "stamp": 28045.2,
+        "start": 28091.600000023842,
+        "end": 28115.399999976158
+      },
+      {
+        "layer": "three",
+        "name": "world",
+        "start": 28157.799999952316,
+        "end": 28167.399999976158
+      },
+      {
+        "layer": "game",
+        "name": "renderer",
+        "start": 28152.100000023842,
+        "end": 28169.899999976158
+      },
+      {
+        "layer": "raf",
+        "name": "frame",
+        "stamp": 28149.2,
+        "start": 28150.399999976158,
+        "end": 28173.399999976158
+      },
+      {
+        "layer": "three",
+        "name": "world",
+        "start": 28270,
+        "end": 28278.899999976158
+      },
+      {
+        "layer": "game",
+        "name": "renderer",
+        "start": 28268.100000023842,
+        "end": 28281.100000023842
+      },
+      {
+        "layer": "raf",
+        "name": "frame",
+        "stamp": 28265.6,
+        "start": 28266.600000023842,
+        "end": 28286.600000023842
+      },
+      {
+        "layer": "three",
+        "name": "world",
+        "start": 28372.899999976158,
+        "end": 28379.799999952316
+      },
+      {
+        "layer": "game",
+        "name": "renderer",
+        "start": 28371.299999952316,
+        "end": 28380.700000047684
+      },
+      {
+        "layer": "raf",
+        "name": "frame",
+        "stamp": 28365.6,
+        "start": 28368.799999952316,
+        "end": 28380.899999976158
+      }
+    ],
+    "tasks": [
+      {
+        "kind": "longtask",
+        "start": 25339.700000047684,
+        "duration": 59
+      },
+      {
+        "kind": "longtask",
+        "start": 25415.100000023842,
+        "duration": 2577
+      },
+      {
+        "kind": "long-animation-frame",
+        "start": 25337,
+        "duration": 2616.5,
+        "renderStart": 25418.700000047684,
+        "layoutStart": 27950.299999952316,
+        "scripts": [
+          [
+            "TimerHandler:setTimeout",
+            "",
+            "",
+            25339.700000047684,
+            59.299999952316284
+          ],
+          [
+            "FrameRequestCallback",
+            "",
+            "",
+            25419.600000023842,
+            2530.600000023842
+          ]
+        ]
+      },
+      {
+        "kind": "long-animation-frame",
+        "start": 28035.399999976158,
+        "duration": 85.20000004768372,
+        "renderStart": 28090.700000047684,
+        "layoutStart": 28115.399999976158,
+        "scripts": [
+          [
+            "DOMWebSocket.onmessage",
+            "colyseus.js",
+            "",
+            28067.299999952316,
+            10.400000095367432
+          ],
+          [
+            "FrameRequestCallback",
+            "",
+            "",
+            28091.600000023842,
+            23.799999952316284
+          ]
+        ]
+      }
+    ]
+  }
+}

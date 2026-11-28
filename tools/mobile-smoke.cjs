@@ -29,7 +29,7 @@ async function openOriginal(browser, mobile, mode = 'classic') {
       return Promise.resolve();
     };
   });
-  await page.goto(ORIGIN + '/fps/?test&realtime', { waitUntil: 'domcontentloaded', timeout: 60000 });
+  await page.goto(ORIGIN + '/fps/?screen=solo&test&realtime', { waitUntil: 'domcontentloaded', timeout: 60000 });
   await page.waitForFunction(() => {
     const fatal = document.getElementById('fatal');
     return !!globalThis.__fps || !!fatal && !fatal.hidden;
@@ -42,6 +42,7 @@ async function openOriginal(browser, mobile, mode = 'classic') {
   if (!mobile) await page.evaluate(() => __fps.stopFrameLoop());
   await page.locator('#lb-mode-seg [data-value=' + mode + ']').click();
   await page.locator('#start').click({ timeout: 30000 });
+  await page.locator('#csl-deploy').click();
   await page.waitForFunction(() => !!globalThis.__fps && globalThis.__fps.modal === null, null,
     { timeout: 20000, polling: 100 });
   if (mobile) await page.waitForTimeout(900);
@@ -189,6 +190,14 @@ async function openOriginal(browser, mobile, mode = 'classic') {
 
     const { context: desktopCtx, page: desktop, state: desktopState } = await openOriginal(browser, false, 'endless');
     assert.ok(await desktop.locator('#control-card').isVisible(), 'Endless shows its active control area');
+    const fitsCard=await desktop.locator('#control-card').evaluate(card=>{
+      const bounds=card.getBoundingClientRect();
+      return [...card.querySelectorAll('footer span')].every(label=>{
+        const rect=label.getBoundingClientRect();
+        return rect.width>0 && rect.right<=bounds.right && rect.left>=bounds.left;
+      });
+    });
+    assert.ok(fitsCard,'The full English control timer and scores fit on the objective card');
     assert.ok(await desktop.locator('#objectives').isHidden(), 'The general objective strip leaves the control area unobstructed');
     assert.equal(desktopState.mobile, false, 'Desktop must preserve mouse input');
     assert.equal(desktopState.controlsVisible, false, 'Touch UI must be absent on desktop');

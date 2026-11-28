@@ -1,0 +1,22 @@
+{
+  "format": "cartridge-strike-operator-palette",
+  "version": 1,
+  "id": "harbor-crew",
+  "name": "Harbor Crew",
+  "role": "Coastal work uniform",
+  "kit": "smg",
+  "palette": {
+    "shirt": "#1b8387",
+    "vest": "#e0883b",
+    "glove": "#34545a",
+    "accent": "#f4c777"
+  },
+  "rigs": {
+    "male": "780a0473bc7202fae47647986918dede4598286c3e2ec95ac03710aa8d00405c",
+    "female": "bc13c22dc859304f4fc4b74f7b1a4b02b3e8624494314bf866d5951db15940e1"
+  },
+  "rights": {
+    "creator": "Cartridge-Strike project",
+    "license": "project-original"
+  }
+}

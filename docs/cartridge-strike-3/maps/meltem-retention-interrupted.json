@@ -1,0 +1,173 @@
+{
+  "revision": "dd4f7fc",
+  "status": "INTERRUPTED",
+  "exitCode": 143,
+  "observed": "Twenty switches completed. Process received SIGTERM during the equal-length parked control.",
+  "observations": [
+    {
+      "id": "meltem",
+      "projectId": "lvl-meltem",
+      "heapUsedBytes": 39188760,
+      "embedderHeapUsedBytes": 7494912,
+      "backingStorageBytes": 82410018,
+      "livePrototypes": {
+        "Game": 1,
+        "NetworkSession": 1,
+        "AudioSystem": 1,
+        "threeRenderers": 2,
+        "glContexts": 2,
+        "glPrograms": 69,
+        "glShaders": 130,
+        "canvases": 78,
+        "detachedGameCanvases": 0,
+        "audioContexts": 1
+      },
+      "instances": {
+        "AudioSystem": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "AudioContext": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "NetworkSession": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "Game": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "world": {
+          "observed": 4,
+          "reachable": 1
+        },
+        "navigation": {
+          "observed": 4,
+          "reachable": 1
+        },
+        "prediction": {
+          "observed": 4,
+          "reachable": 1
+        }
+      },
+      "liveOwners": 1,
+      "reachableOwners": 1,
+      "geometries": 368,
+      "textures": 59,
+      "programs": 55,
+      "switch": 2
+    },
+    {
+      "id": "meltem",
+      "projectId": "lvl-meltem",
+      "heapUsedBytes": 38742476,
+      "embedderHeapUsedBytes": 7610184,
+      "backingStorageBytes": 82412267,
+      "livePrototypes": {
+        "Game": 1,
+        "NetworkSession": 1,
+        "AudioSystem": 1,
+        "threeRenderers": 2,
+        "glContexts": 2,
+        "glPrograms": 69,
+        "glShaders": 130,
+        "canvases": 78,
+        "detachedGameCanvases": 0,
+        "audioContexts": 1
+      },
+      "instances": {
+        "AudioSystem": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "AudioContext": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "NetworkSession": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "Game": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "world": {
+          "observed": 12,
+          "reachable": 1
+        },
+        "navigation": {
+          "observed": 12,
+          "reachable": 1
+        },
+        "prediction": {
+          "observed": 12,
+          "reachable": 1
+        }
+      },
+      "liveOwners": 1,
+      "reachableOwners": 1,
+      "geometries": 368,
+      "textures": 59,
+      "programs": 55,
+      "switch": 10
+    },
+    {
+      "id": "meltem",
+      "projectId": "lvl-meltem",
+      "heapUsedBytes": 38888228,
+      "embedderHeapUsedBytes": 7739792,
+      "backingStorageBytes": 82412267,
+      "livePrototypes": {
+        "Game": 1,
+        "NetworkSession": 1,
+        "AudioSystem": 1,
+        "threeRenderers": 2,
+        "glContexts": 2,
+        "glPrograms": 69,
+        "glShaders": 130,
+        "canvases": 78,
+        "detachedGameCanvases": 0,
+        "audioContexts": 1
+      },
+      "instances": {
+        "AudioSystem": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "AudioContext": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "NetworkSession": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "Game": {
+          "observed": 1,
+          "reachable": 1
+        },
+        "world": {
+          "observed": 22,
+          "reachable": 1
+        },
+        "navigation": {
+          "observed": 22,
+          "reachable": 1
+        },
+        "prediction": {
+          "observed": 22,
+          "reachable": 1
+        }
+      },
+      "liveOwners": 1,
+      "reachableOwners": 1,
+      "geometries": 368,
+      "textures": 59,
+      "programs": 55,
+      "switch": 20
+    }
+  ]
+}

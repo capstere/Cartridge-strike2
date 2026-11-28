@@ -17,17 +17,17 @@ export function installCharacterOverride(asset,contract,source){const report=val
 export async function loadCharacterOverrides(sources){
  if(pending)return pending;
  pending=(async()=>{
-  const response=await fetch(new URL('../../assets/fps/character-overrides.json',import.meta.url),{cache:'no-store'});if(!response.ok)throw Error('Karaktärsregistret kunde inte läsas.');
-  const manifest=await response.json();if(manifest.schema!==1||!Array.isArray(manifest.characters)||manifest.characters.length>48)throw Error('Ogiltigt karaktärsregister.');
+  const response=await fetch(new URL('../../assets/fps/character-overrides.json',import.meta.url),{cache:'no-store'});if(!response.ok)throw Error('The character catalog could not be read.');
+  const manifest=await response.json();if(manifest.schema!==1||!Array.isArray(manifest.characters)||manifest.characters.length>48)throw Error('The character catalog is invalid.');
   const staged=new Map(),loader=new GLTFLoader(),sourceHashes=new Map();
   try{for(const row of manifest.characters){
-   const c=validateActorContract(row.contract);if(staged.has(c.target)||row.file!==`assets/fps/custom-characters/${c.sha256}.glb`)throw Error('Ogiltig eller duplicerad karaktärssökväg.');
+   const c=validateActorContract(row.contract);if(staged.has(c.target)||row.file!==`assets/fps/custom-characters/${c.sha256}.glb`)throw Error('The catalog contains an invalid character file or duplicate roster slot.');
    if(c.role!=='dwarf'){
-    if(!sourceHashes.has(c.gender)){const original=await fetch(new URL('../../assets/fps/models/'+c.source.file,import.meta.url));if(!original.ok)throw Error('Originalriggen saknas.');sourceHashes.set(c.gender,await actorHash(await original.arrayBuffer()));}
-    if(sourceHashes.get(c.gender)!==c.source.sha256)throw Error('Exporten bygger på en annan originalrigg. Exportera på nytt från studion.');
+    if(!sourceHashes.has(c.gender)){const original=await fetch(new URL('../../assets/fps/models/'+c.source.file,import.meta.url));if(!original.ok)throw Error('The original rig file is missing.');sourceHashes.set(c.gender,await actorHash(await original.arrayBuffer()));}
+    if(sourceHashes.get(c.gender)!==c.source.sha256)throw Error('This export uses a different rig version. Export a compatible copy from the original design.');
    }
-   const r=await fetch(new URL('../../'+row.file,import.meta.url));if(!r.ok)throw Error('Karaktärsfil saknas: '+c.target);const bytes=await r.arrayBuffer();
-   if(bytes.byteLength!==c.bytes||await actorHash(bytes)!==c.sha256)throw Error('Karaktärens kontrollsumma stämmer inte.');inspectActorGLB(bytes);
+   const r=await fetch(new URL('../../'+row.file,import.meta.url));if(!r.ok)throw Error('Missing character file for roster slot: '+c.target);const bytes=await r.arrayBuffer();
+   if(bytes.byteLength!==c.bytes||await actorHash(bytes)!==c.sha256)throw Error('The character file checksum does not match its catalog entry.');inspectActorGLB(bytes);
    const source=c.role==='dwarf'?createDwarfAsset():sources[c.gender];
    const asset=await loader.parseAsync(bytes,'');let report;
    try{report=validateActorAsset(asset,c,source);}catch(e){disposeEntry({asset,ownsAsset:true});throw e;}finally{if(c.role==='dwarf')disposeEntry({asset:source,ownsAsset:true});}

@@ -2,6 +2,7 @@
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {readFile} from 'node:fs/promises';
+import {resumeDesktop} from './network-browser-resume.mjs';
 import {chromium} from '../frontline/source/tools/dev/node_modules/playwright-core/index.mjs';
 
 const origin = process.env.FPS_TEST_ORIGIN || 'http://127.0.0.1:8765';
@@ -56,7 +57,13 @@ function inspectAppearance() {
   };
 }
 
-const browser = await chromium.launch({channel:'chromium'});
+const native = process.env.CHROMIUM_PATH;
+const browser = await chromium.launch({
+  channel:native ? undefined : 'chromium',
+  executablePath:native,
+  headless:process.env.FPS_NETWORK_HEADED !== '1',
+  args:native ? ['--ozone-platform=wayland','--use-angle=gl-egl','--disable-dev-shm-usage'] : []
+});
 try {
   const page = await browser.newPage({viewport:{width:1100,height:700}});
   const errors = [], writes = [];
@@ -68,19 +75,35 @@ try {
     writes.push(method);
     return route.abort();
   });
-  await page.goto(origin+'/fps/',{waitUntil:'domcontentloaded'});
+  // Use a fresh origin with no storage-opening game scripts while installing a v1 fixture.
+  await page.goto(origin+'/credits.html',{waitUntil:'domcontentloaded'});
   await page.evaluate(()=>{
     const input = document.createElement('input');
     input.type='file';input.id='local-audit-file';document.body.append(input);
   });
   await page.locator('#local-audit-file').setInputFiles(file);
-  const {good,bad} = await page.evaluate(async hash=>{
-    const {savePrivateCharacter} = await import(new URL('../src/fps/private-character-store.mjs',location.href));
+  const {good,bad,legacy} = await page.evaluate(async hash=>{
+    const {savePrivateCharacter,characterHash} = await import(new URL('./src/fps/private-character-store.mjs',location.href));
     const bytes = await document.getElementById('local-audit-file').files[0].arrayBuffer();
-    return {
-      good:await savePrivateCharacter({bytes,name:'Saved Studio operator',sourceHash:hash}),
-      bad:await savePrivateCharacter({bytes,name:'Prior rig revision',sourceHash:'0'.repeat(64)}),
-    };
+    const legacy = crypto.randomUUID();
+    const checksum = await characterHash(bytes);
+    await new Promise((resolve,reject) => {
+      const open = indexedDB.open('cartridge-private-characters',1);
+      open.onupgradeneeded = () => open.result.createObjectStore('drafts',{keyPath:'id'});
+      open.onerror = () => reject(open.error);
+      open.onsuccess = () => {
+        const db = open.result;
+        const tx = db.transaction('drafts','readwrite');
+        tx.objectStore('drafts').add({id:legacy,schema:1,name:'Åke <Lab> & Co.',sourceHash:hash,sha256:checksum,bytes,created:1668200000000});
+        tx.oncomplete = () => {db.close();resolve();};
+        tx.onabort = () => {db.close();reject(tx.error);};
+      };
+    });
+    const projectId = crypto.randomUUID();
+    const good = await savePrivateCharacter({bytes,name:'Saved Studio operator',sourceHash:hash,projectId});
+    const updated = await savePrivateCharacter({bytes,name:'Saved Studio operator',sourceHash:hash,projectId});
+    if (updated !== good) throw Error('Updating a saved project changed its identity.');
+    return {good,legacy,bad:await savePrivateCharacter({bytes,name:'Prior rig revision',sourceHash:'0'.repeat(64)})};
   }, sourceHash);
   const picker = page.locator('#player-character'), start = page.locator('#start');
   const ready = () => page.waitForFunction(()=>window.__fps && document.querySelector('#loading').hidden);
@@ -90,7 +113,8 @@ try {
   }
   async function match() {
     await page.waitForFunction(()=>window.__fps?.game.player && !document.querySelector('#hud').hidden && document.querySelector('#cs-loading').hidden);
-    if (await page.locator('#resume').isVisible()) await page.locator('#resume').click();
+    await page.bringToFront();
+    if (!await page.evaluate(()=>document.pointerLockElement?.id==='game')) await resumeDesktop(page);
     await page.waitForFunction(()=>__fps.modal===null && !__fps.game.state.paused);
   }
   async function back() {
@@ -106,6 +130,8 @@ try {
   }
   await page.goto(origin+'/fps/?test&seed=42',{waitUntil:'domcontentloaded'});
   await ready();
+  assert.equal(await picker.locator('option[value="'+legacy+'"]').textContent(),'Åke <Lab> & Co.');
+  assert.equal(await picker.locator('option[value="'+good+'"]').count(),1);
   await page.locator('.team-option[data-team=counterAnalysts]').click();
 
   // Keep rig validation in flight until the visible loading screen is cancelled.
@@ -130,30 +156,34 @@ try {
   await page.reload({waitUntil:'domcontentloaded'});
   await start.click();
   await page.locator('#csl-retry').click();
+  await page.locator('#csl-deploy').click();
   await match();
   const first = await appearance('counterAnalysts');
   await back();
   await page.locator('.team-option[data-team=analysts]').click();
   await start.click();
+  await page.locator('#csl-deploy').click();
   await match();
   const replay = await appearance('analysts');
   await back();
 
   await select(bad);
   await ready();
-  assert.match(await page.locator('#character-status').innerText(),/Originalkaraktär/);
+  assert.match(await page.locator('#character-status').innerText(),/different rig version.*default operator/i);
   assert.ok(await start.isDisabled());
   await select('');
   await ready();
   assert.ok(await start.isEnabled());
   await start.click();
+  await page.locator('#csl-deploy').click();
   await match();
   assert.equal(await page.evaluate(()=>!!__fps.renderer.actorModel(__fps.game.player).userData.avatar?.privateDesign),false);
   await back();
-  await page.goto(origin+'/fps/?test',{waitUntil:'domcontentloaded'});
+  await page.goto(origin+'/fps/?screen=solo&test',{waitUntil:'domcontentloaded'});
   await ready();
   assert.equal(await picker.inputValue(),'');
-  assert.ok(await picker.locator('option').count()>=3);
+  assert.equal(await picker.locator('option').count(),4);
+  assert.equal(await picker.locator('option[value="'+legacy+'"]').textContent(),'Åke <Lab> & Co.');
   assert.deepEqual(writes,[]);
   assert.deepEqual(errors,[]);
   console.log(JSON.stringify({status:'PASS',first,replay,cancel:true,retry:true,incompatibleRecovery:true,writeRequests:writes.length}));

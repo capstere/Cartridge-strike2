@@ -72,6 +72,8 @@ test('pilot login, protected assets, room admission and upgrades follow the acti
   const entry = await get('/fps/');
   assert.equal(entry.status,200);
   assert.match(entry.body,/name="invite"/);
+  assert.match(entry.body,/<html lang="en">/);
+  assert.match(entry.body,/>Server invite code<input/);
   const nonce = entry.body.match(/<script nonce="([A-Za-z0-9+/=]+)">/)?.[1];
   assert(nonce);
   assert(entry.headers['content-security-policy'].includes("script-src 'nonce-"+nonce+"'"));
@@ -92,6 +94,7 @@ test('pilot login, protected assets, room admission and upgrades follow the acti
     const denied = await login(invalid);
     assert.equal(denied.status,403,'Only surrounding whitespace may be ignored');
     assert.equal(denied.headers['set-cookie'],undefined);
+    assert.match(denied.body,/<p role="alert">That server invite code did not match/);
     assert(!denied.body.includes(invite),'Do not echo submitted credentials');
   }
   assert.equal(local.rooms.size,0);
@@ -105,6 +108,20 @@ test('pilot login, protected assets, room admission and upgrades follow the acti
   const script = await get(asset,authorized);
   assert.equal(script.status,200);
   assert.match(script.headers['cache-control'],/private, no-store/);
+  const installAssets = [
+    ['/fps/app.webmanifest', /^application\/manifest\+json\b/],
+    ['/fps/sw.js', /^(?:text|application)\/javascript\b/],
+    ['/fps/offline.html', /^text\/html\b/],
+    ['/fps/icon-192.png', /^image\/png\b/],
+    ['/fps/icon-512.png', /^image\/png\b/],
+  ];
+  for (const [path, type] of installAssets) {
+    assert.equal((await get(path)).status, 401, path);
+    const file = await get(path, authorized);
+    assert.equal(file.status, 200, path);
+    assert.match(file.headers['content-type'], type, path);
+    assert.match(file.headers['cache-control'], /private, no-store/, path);
+  }
   assert.equal((await get('/health',authorized)).status,404);
   assert.equal((await get('/__healthcheck',authorized)).status,404);
   assert.equal((await get('/server/package.json',authorized)).status,404);

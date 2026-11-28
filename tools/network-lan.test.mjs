@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {createHash,randomBytes} from 'node:crypto';
 import {readFile} from 'node:fs/promises';
 import {sha256,sha256Fallback} from '../shared/sha256.mjs';
-import {networkEndpoint,connectionMessage} from '../src/fps/network/connection.mjs';
+import {networkEndpoint,connectionMessage,connectionFailure} from '../src/fps/network/connection.mjs';
 import {hostingConfig,configFromEnv,admissionLimiter,accessPolicy} from '../server/access.mjs';
 import {AudioSystem} from '../src/fps/audio.mjs';
 
@@ -36,8 +36,20 @@ test('admission budgets refill and release inactive peer records',()=>{
 test('client requires the same origin on any LAN port and translates connection failures',()=>{
   const origin='http://192.168.1.2:2789';assert.equal(networkEndpoint(origin,origin),origin);
   for(const endpoint of ['http://127.0.0.1:2567',origin+'/fps/',origin+'?code=secret','https://example.com','ws://192.168.1.2:2789','http://x:y@192.168.1.2:2789'])assert.throws(()=>networkEndpoint(endpoint,origin));
-  for(const [message,text] of [['Incorrect private room code.','Fel privat'],['room is locked','fullt'],['room not found','finns inte'],['Incompatible buildHash','olika version'],['Failed to fetch','Ingen kontakt']])assert(connectionMessage({message}).includes(text));
+  for(const [message,text] of [['Incorrect private room code.','Incorrect private room code'],['room is locked','room is full'],['room not found','Room not found'],['Incompatible buildHash','versions differ'],['Failed to fetch','Cannot reach']])assert(connectionMessage({message}).includes(text));
 });
+test('pilot sign-in and room proof have distinct recoveries regardless of locale',()=>{
+  const family=connectionFailure({code:403,message:'Incorrect family room password.'});
+  assert.equal(family.id,'wrongFamilyPassword');
+  assert.equal(family.recovery,'retry');
+  const pilot=connectionFailure({code:401,message:'Unauthorized'});
+  assert.equal(pilot.recovery,'signIn');
+  assert.equal(pilot.id,'pilotExpired');
+  const unknown=connectionFailure({message:'private internal diagnostic'});
+  assert.equal(unknown.id,'failed');
+  assert(!unknown.message.includes('diagnostic'));
+});
+
 test('audio resumes from Safari interruption inside the existing gesture path',async()=>{
   for(const state of ['suspended','interrupted']){
     let calls=0;const audio={initializeContext:()=>true,context:{state,async resume(){calls++;this.state='running';}},loadPromise:Promise.resolve()};

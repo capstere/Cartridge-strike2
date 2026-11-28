@@ -14,7 +14,7 @@ async function boot(browser,mobile){
   HTMLCanvasElement.prototype.requestPointerLock=function(){Object.defineProperty(document,'pointerLockElement',{configurable:true,get:()=>this});return Promise.resolve();};
   document.exitPointerLock=()=>Object.defineProperty(document,'pointerLockElement',{configurable:true,get:()=>null});
  });
- await page.goto(origin+'/fps/?test',{waitUntil:'domcontentloaded',timeout:60000});
+ await page.goto(origin+'/fps/?screen=solo&test',{waitUntil:'domcontentloaded',timeout:60000});
  await page.waitForFunction(()=>globalThis.__fps||!document.getElementById('fatal').hidden,null,{timeout:180000});
  assert.equal(await page.locator('#fatal').isVisible(),false);
  const before=await page.evaluate(()=>({frames:__fps.renderBudget.stats.idle,time:performance.now()}));
@@ -28,6 +28,7 @@ async function boot(browser,mobile){
  assert.ok(idleFrames>0&&idleFrames<=Math.ceil(elapsed/100)+1,'Menus must retain the 10 Hz cap: '+JSON.stringify({before,after}));
  await page.evaluate(()=>__fps.stopFrameLoop());
  await page.locator('#start').click();
+ await page.locator('#csl-deploy').click();
  await page.evaluate(()=>{
   __fps.start('analysts',{mode:'endless',firefight:false,botFire:false,wanderers:false,loadout:'smg'});
   for(const a of __fps.game.actors)if(!a.isPlayer){a.alive=false;a.bot=null;}

@@ -1,0 +1,40 @@
+{
+  "platform": "Raspberry Pi 5, headless system Chromium",
+  "runtime": "English room-capacity correction before the Solo card copy edit",
+  "route": "/fps/?network=local&test&realtime",
+  "preAdmissionRenderer": false,
+  "preAdmissionLevelRequests": [],
+  "observations": [
+    {
+      "device": "desktop",
+      "maps": [
+        "floor5-prepared",
+        "meltem",
+        "embruns",
+        "tephra",
+        "compact-arena"
+      ],
+      "modeBrief": [
+        "Compact Arena",
+        "5v5 · Private room",
+        "Team Deathmatch, Free-for-All, or Domination"
+      ]
+    },
+    {
+      "device": "Chromium emulated touch",
+      "maps": [
+        "floor5-prepared",
+        "meltem",
+        "embruns",
+        "tephra",
+        "compact-arena"
+      ],
+      "modeBrief": [
+        "Compact Arena",
+        "5v5 · Private room",
+        "Team Deathmatch, Free-for-All, or Domination"
+      ]
+    }
+  ],
+  "status": "PASS"
+}

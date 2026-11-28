@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {ReplayPlayback} from '../src/fps/replay-playback.mjs';
 import {NetworkSession} from '../src/fps/network/session.mjs';
 import {WEAPONS} from '../src/fps/config.mjs';
 import {validateNetworkInput} from '../shared/multiplayer/protocol.mjs';
@@ -12,7 +13,7 @@ function triggerSession(weapon='p9'){
  const wire=[];
  let steps=1;
  const prediction={world:{game:{state:{time:0}},actor:{x:0,y:0,z:0}},reset(){}};
- const session=Object.assign(Object.create(NetworkSession.prototype),{
+ const session=Object.assign(Object.create(NetworkSession.prototype),{replay:new ReplayPlayback(),
   closed:false,enabled:true,connectionState:'connected',lastPatch:performance.now(),localPlayerId:'a',lifeId:self.lifeId,controlEpoch:self.controlEpoch,
   room:{roomId:'test',state},view:{state:{time:0},actors:[]},prediction,predict:{tick:()=>steps},
   world:{doors:{doors:[]}},residents:new Map(),projectiles:new Map(),
@@ -29,6 +30,66 @@ function triggerSession(weapon='p9'){
  return {session,self,state,wire,frame(controls,count=1){steps=count;session.advanceFrame(performance.now(),controls);}};
 }
 const shots=wire=>wire.filter((entry,index)=>entry.data.fireId>(wire[index-1]?.data.fireId||0));
+
+test('Classic purchase feedback belongs to the latest command and current server seat',()=>{
+ const {session,self,state}=triggerSession();
+ Object.assign(state,{mode:'classic',roundPhase:'buy',round:1,matchId:5});
+ self.connected=true;
+ Object.assign(session,{classicSerial:0,onConnection(){}});
+ session.view.player=self;
+ const sent=[];
+ session.room.send=(type,command)=>{assert.equal(type,'classic');sent.push(command);};
+
+ assert.ok(session.classicCommand('buy','armor'));
+ assert.ok(session.classicCommand('buy','smg'));
+ const [previous,latest]=sent;
+ const reply={...latest,outcome:'accepted'};
+ const pending={...latest,outcome:'pending'};
+ assert.equal(latest.serial,previous.serial+1);
+ for(const invalid of [
+   {...previous,outcome:'denied',reasonId:'credits'},
+   {...reply,serial:previous.serial}, {...reply,item:previous.item},
+   {...reply,matchId:4}, {...reply,round:0}, {...reply,lifeId:1}, {...reply,controlEpoch:0},
+   {...reply,outcome:'unknown'}, {...reply,outcome:'denied',reasonId:'unknown'},
+ ]){
+   session.receivePurchase(invalid);
+   assert.deepEqual(session.currentPurchase(),pending);
+ }
+ for(const [owner,field,value] of [
+   [state,'round',2],[state,'matchId',6],[self,'lifeId',3],[self,'controlEpoch',2],
+   [state,'roundPhase','active'],[self,'alive',false],[self,'connected',false],
+ ]){
+   const original=owner[field];owner[field]=value;
+   session.receivePurchase(reply);
+   assert.equal(session.currentPurchase(),null,field);
+   assert.deepEqual(session.purchase,pending);
+   owner[field]=original;
+ }
+ session.receivePurchase(reply);
+ assert.equal(session.currentPurchase().outcome,'accepted');
+ const accepted=session.currentPurchase();
+ session.receivePurchase({...reply,outcome:'denied',reasonId:'credits'});
+ assert.equal(session.currentPurchase(),accepted,'a duplicate cannot reverse a confirmed purchase');
+
+ assert.ok(session.classicCommand('buy','rifle'));
+ const late={...sent.at(-1),outcome:'denied',reasonId:'credits'};
+ session.receivePurchase(reply);
+ assert.equal(session.currentPurchase().outcome,'pending');
+ session.receivePurchase(late);
+ assert.equal(session.currentPurchase().outcome,'denied');
+ assert.equal(session.currentPurchase().reasonId,'credits');
+
+ assert.ok(session.classicCommand('buy','armor'));
+ const interrupted={...sent.at(-1),outcome:'accepted'};
+ try{
+   session.beginReconnect();
+   session.receivePurchase(interrupted);
+   assert.equal(session.purchase,null);
+   session.connectionState='connected';
+   session.receivePurchase(interrupted);
+   assert.equal(session.currentPurchase(),null,'rejoining does not resurrect an older purchase');
+ }finally{clearTimeout(session.reconnectTimer);}
+});
 
 test('mobile automatic fire repeats semiautomatic weapons with ordinary release packets',()=>{
  for(const weapon of ['p9','p12','shotgun','sniper','knife']){
@@ -112,6 +173,35 @@ test('automatic fire never launches explosives while their manual trigger remain
   const manual=triggerSession(weapon);manual.frame({fire:true});
   assert.equal(manual.session.fireId,1,weapon+' retains its explicit manual launch');
  }
+});
+
+test('class cartridges use authoritative stock even while the displayed loadout is stale',()=>{
+ for(const [weapon,field] of [['smoke','smoke'],['flash','flashCount']]){
+  const f=triggerSession(weapon);
+  f.session.view.player={weapon,inventory:{[weapon]:0}};
+  f.self.handling={[field]:1};
+  f.frame({fire:true,autoFire:true});
+  assert.equal(f.wire.at(-1).data.holdThrow,false);assert.equal(f.session.fireId,0);
+  f.frame({fire:true});
+  assert.equal(f.wire.at(-1).data.holdThrow,true);assert.equal(f.session.fireId,1);
+  f.frame({fire:false});f.self.handling[field]=0;f.session.view.player.inventory[weapon]=1;
+  f.frame({fire:true});assert.equal(f.wire.at(-1).data.holdThrow,false);assert.equal(f.session.fireId,1);
+ }
+});
+
+test('only a currently stocked HE sends a manual hold through weapon or seat changes',()=>{
+ const f=triggerSession('he');
+ f.frame({fire:true});assert.equal(f.wire.at(-1).data.holdThrow,true);
+ f.self.weapon='cr4';f.self.handling={waitTriggerRelease:true};
+ for(let i=0;i<90;i++)f.frame({fire:true});
+ assert(f.wire.slice(1).every(row=>!row.data.holdThrow && row.data.fire));assert.equal(f.session.fireId,1);
+ f.frame({fire:false});f.self.handling.waitTriggerRelease=false;
+ f.frame({fire:true,firePress:{yaw:.4,pitch:.1}});assert.equal(f.session.fireId,2);
+ f.self.weapon='he';f.self.he=0;
+ f.frame({fire:true});assert.equal(f.wire.at(-1).data.holdThrow,false);assert.equal(f.session.fireId,2);
+ f.self.weapon='unknown';f.frame({fire:true,autoFire:true});
+ assert.equal(f.wire.at(-1).data.fire,false);assert.equal(f.wire.at(-1).data.holdThrow,false);
+ const count=f.wire.length;f.state.actors.delete('a');f.frame({fire:true});assert.equal(f.wire.length,count);
 });
 
 test('render stalls do not masquerade as network loss; real silence still reconnects',()=>{
@@ -226,11 +316,19 @@ test('private team packets are scoped to current teammates, match and life',()=>
  assert.equal(session.events.length,0,'normal pings play no command voice');
  session.receiveTeamComms({...packet,kind:'backup'});
  assert.equal(session.events.length,0,'duplicate packet cannot play radio audio');
- session.receiveTeamComms({...packet,kind:'backup',serial:2,anchorId:undefined});
+ const voice=[];
+ session.onCombatAudio=(event,now)=>{voice.push({event,now});return true;};
+ session.receiveTeamComms({...packet,kind:'together',serial:2,expiresAt:49});
+ assert.equal(voice.length,1);assert.equal(voice[0].event.time,41);assert.equal(voice[0].now,41);
+ assert.equal(session.events.length,0,'radio already delivered on the socket callback is never queued again');
+ session.receiveTeamComms({...packet,kind:'together',serial:2,expiresAt:49});
+ assert.equal(voice.length,1,'a repeat packet cannot speak twice');
+ session.onCombatAudio=undefined;
+ session.receiveTeamComms({...packet,kind:'backup',serial:3,anchorId:undefined});
  assert.equal(session.events[0].teamPrivate,true);
  assert.equal(session.events[0].command,'backup');
  assert.equal(session.view.teamPing.anchor,anchor);
- session.receiveTeamComms({...packet,senderId:'d',serial:3});
+ session.receiveTeamComms({...packet,senderId:'d',serial:4});
  ally.alive=false;
  session.expireTeamComms();
  assert.equal(session.teamSignal.senderId,'d','the newer ping remains valid');
@@ -240,9 +338,38 @@ test('private team packets are scoped to current teammates, match and life',()=>
  assert.equal(session.teamSignal,null);
  assert.equal(session.view.teamPing,null);
  ally.alive=true;
- session.receiveTeamComms({...packet,serial:4});
+ session.receiveTeamComms({...packet,serial:5});
  assert(session.view.teamPing);
  state.roundPhase='result';
  session.expireTeamComms();
  assert.equal(session.view.teamPing,null);
+});
+
+test('one accepted slide sounds on room receipt and duplicate, past-life and paused events stay silent',()=>{
+ const {session,self,state}=triggerSession();
+ const heard=[];session.onCombatAudio=(event,serverTime)=>{heard.push([event.eventId,serverTime]);return true;};
+ Object.assign(state,{matchId:7,mode:'classic',round:2,residents:new Map()});
+ session.seenEvent=0;session.events=[];
+ const event={type:'slide',actorId:self.id,lifeId:self.lifeId,controlEpoch:self.controlEpoch,eventId:7,matchId:7,round:2,time:0};
+ session.receiveEvents([event,event]);
+ assert.deepEqual(heard,[[7,state.time]]);assert.equal(session.events.length,1);
+ assert(session.events[0].audioPresented,'a delayed next frame must not schedule another scrape');
+ session.receiveEvents([{...event,eventId:8,lifeId:self.lifeId+1},{...event,eventId:9,round:1},{...event,eventId:10,controlEpoch:self.controlEpoch+1}]);
+ session.enabled=false;session.receiveEvents([{...event,eventId:11}]);
+ session.connectionState='reconnecting';session.receiveEvents([{...event,eventId:12}]);
+ assert.equal(heard.length,1);
+});
+
+test('pause, immediate resume and reconnect discard queued movement in both client poses',()=>{
+ const {session,self}=triggerSession(),predicted=session.prediction.world.actor;
+ session.view.player={slideBuffer:.3};predicted.slideBuffer=.3;
+ session.room.send=()=>{};session.onConnection=()=>{};
+ session.prediction.reset=()=>{predicted.slideBuffer=.3;}; // a final pre-pause patch
+ session.setInputEnabled(false);
+ assert.equal(predicted.slideBuffer,0);assert.equal(session.view.player.slideBuffer,0);
+ session.setInputEnabled(true);assert.equal(predicted.slideBuffer,0);
+ self.handling={slideBuffer:.3};predicted.slideBuffer=.3;session.view.player.slideBuffer=.3;
+ session.clearTeamComms=()=>{};
+ try{session.beginReconnect();assert.equal(predicted.slideBuffer,0);assert.equal(session.view.player.slideBuffer,0);}
+ finally{clearTimeout(session.reconnectTimer);}
 });

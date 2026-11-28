@@ -1,0 +1,82 @@
+{
+  "tdm": {
+    "rawSha256": "274722729082a5847970300ea374b032a117c9de55eaeaa02be9b8b267b91a43",
+    "cases": [
+      {
+        "status": "PASS",
+        "kind": "protocol-only, server in separate process",
+        "count": 2,
+        "rttMs": 0,
+        "perPlayerOutboundBytesPerSecond": 19221.2809867731,
+        "maxPending": 7,
+        "shots": [
+          38,
+          38
+        ],
+        "hits": [
+          0,
+          0
+        ],
+        "source": "4c3b35de67787492d33ac36e49fb11b381c0546a",
+        "environment": {
+          "model": "Raspberry Pi 5 Model B Rev 1.1",
+          "node": "v26.13.0",
+          "platform": "linux",
+          "arch": "arm64",
+          "cpu": "Cortex-A76",
+          "cores": 4
+        },
+        "elapsedSeconds": 90.035570532,
+        "tickMs": {
+          "n": 5402,
+          "p50": 1.6412280000004102,
+          "p95": 3.3246979999967152,
+          "p99": 4.549371000000974,
+          "max": 13.637925000002724,
+          "above33": 0,
+          "above50": 0,
+          "above100": 0
+        },
+        "simulationMs": {
+          "n": 5402,
+          "p50": 1.0687629999956698,
+          "p95": 2.71836300000723,
+          "p99": 3.817661999994016,
+          "max": 12.745477999997092
+        },
+        "intervalMs": {
+          "n": 5402,
+          "p50": 16.21747299999697,
+          "p95": 16.99836399999913,
+          "p99": 32.23726400000305,
+          "max": 58.184393999999884,
+          "above33": 9,
+          "above50": 1,
+          "above100": 0
+        },
+        "thermal": {
+          "temperatureC": 45.75,
+          "throttled": "throttled=0x0"
+        },
+        "serverCpuPercent": 14.932090639911847,
+        "botShots": 74,
+        "botTravel": 1591.361775825028,
+        "throws": 1,
+        "respawns": 7,
+        "sampledActors": 10,
+        "humanSeats": 2,
+        "bots": 8,
+        "maxSampledQueue": 1,
+        "classic": {
+          "rounds": 0,
+          "plants": 0,
+          "defuses": 0,
+          "escorts": 0,
+          "rescues": 0,
+          "hostageTravel": 0
+        },
+        "remainingRooms": 0
+      }
+    ]
+  }
+}

@@ -184,7 +184,7 @@ try{
   await mobile.locator('#mobile-more').tap();
   await mobile.locator('[data-utility=karta]').tap();
   assert(await mobile.locator('#map-legend').isVisible());
-  assert.doesNotMatch(await mobile.locator('#map-legend').textContent(),/Bombplats|Gisslanstart/);
+  assert.doesNotMatch(await mobile.locator('#map-legend').textContent(),/Bomb site|Hostages/);
   await mobile.locator('#mobile-more').tap();
   await mobile.locator('[data-utility=karta]').tap();
   const walker=game.state.zombies.find(z=>z.model==='hollow'&&z.alive);
@@ -223,7 +223,7 @@ try{
   checkNewLife(round1,await checkBoth(peers));
   await desktop.keyboard.press('m');
   assert(await desktop.locator('#map-legend').isVisible());
-  assert.match(await desktop.locator('#map-legend').textContent(),/Bombplats.*Gisslanstart.*Räddningszon/);
+  assert.match(await desktop.locator('#map-legend').textContent(),/Bomb site.*Hostages.*Rescue zone/);
   assert(await desktop.locator('#bomb-status').isVisible());
   console.log('PASS Classic round change recreates six residents, restores the original dance and one loop per client');
   assert.deepEqual(bad,[]);

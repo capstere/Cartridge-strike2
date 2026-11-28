@@ -1,5 +1,33 @@
 # Content registry and map pipeline
 
+## Authoring and distribution
+
+The [default export](content/default-pilot.json) and [installed Harbor Crew export](content/installed-pilot.json) each admitted two clients. Installing the sample changed the catalog from 160 to 161 entries. It preserved the same 728 public paths and the 27 additional pilot files. The installed build also rendered its normal wardrobe, Solo and a compatible stored private appearance on Pi V3D. See the [native images and lifecycle receipt](content/appearance.md).
+
+After integrating the Floor 5 admission merge, both fresh exports passed again. Both clients observed the registered outfit, the compatible saved row retained its original bytes and deployed privately, and the unsupported stock rig displayed its recovery message. The [joined evidence](content/joined-after-floor5.json) records both build identities and the real browser observations.
+
+The build derives its catalog from the same definitions the game and room authority use. Stable IDs identify content across saves, while the catalog version and SHA-256 digest identify the reviewed set of definitions and assets. The digest participates in every multiplayer map's compatibility hash. The runtime manifest records the catalog version, digest and entry count. The [catalog guide](content/catalog.md) covers the twelve content types and five checked package examples.
+
+To exercise an addition in a disposable checkout, validate and install the [Harbor Crew appearance](content/appearance.md). Its palette uses the shipped Quaternius rigs, kit and textures. The importer verifies both rig fingerprints, the required animations and the attribution before registering it. Regenerate the multiplayer build and run the two-client smoke. Existing private character data stays in the player's browser.
+
+```sh
+npm ci --prefix server --ignore-scripts
+node tools/appearance-import.mjs --install content/examples/appearance/harbor-crew.json
+npm run build --prefix server
+npm run build --prefix server -- --check
+node tools/content-distribution-smoke.mjs --example
+```
+
+`node tools/runtime-distribution.mjs check` verifies public bytes, local module imports, literal dynamic imports, module-relative asset URLs and HTML/CSS/manifest dependencies. The build catalog also records assets selected dynamically by game IDs. The pilot export follows the Node entry points and includes the pinned dependency lock and shared-module loader. The public export contains the static game, its asset credits and its public build manifest. Both commands require a new output directory. The exporter rechecks every digest while copying.
+
+```sh
+node tools/runtime-distribution.mjs public /tmp/cartridge-public
+node tools/runtime-distribution.mjs pilot /tmp/cartridge-pilot
+```
+
+The smoke installs the locked production dependencies into a fresh pilot directory, starts an isolated loopback room and admits two SDK clients. For an installed sample, it checks the same registered outfit on both clients. `--example --render` also drives the real wardrobe and Solo from this exported build and verifies a legacy private character. Install the Playwright dependencies and Chromium used in the content-pipeline CI job before requesting rendered evidence.
+
+
 Use existing manifests and validation where feasible, not a parallel editor. Stable IDs (not translated labels) + versioned JSON schema or equivalent validation. New registries should reference original assets by digest, allowed scope and attribution; asset loading ownership/disposal declared. Registry version/build digest gates online compatibility. Private user content stays on device unless approved by server; no upload of owner-private files or copyrighted reference screenshots into public repo.
 
 | Registry | Required fields / validation |

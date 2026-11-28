@@ -1,0 +1,14 @@
+--- a/tools/network-browser-resume.mjs
++++ b/tools/network-browser-resume.mjs
+@@ -10,6 +10,11 @@
+   const resume = page.locator('#pause:visible #resume:visible');
+   // A focus or orientation change can open Pause after the active phase arrives.
+   // Wait for the actual player-facing choice before deciding whether to tap.
++  const viewport=page.viewportSize();
++  await page.setViewportSize({width:viewport.height,height:viewport.width});
++  await page.locator('#pause:not([hidden])').waitFor({state:'attached'});
++  await page.setViewportSize(viewport);
++  await page.waitForFunction(()=>matchMedia('(orientation: landscape)').matches);
+   const target = playing.or(resume);
+   try {
+     if (await target.getAttribute('id') === 'resume') {

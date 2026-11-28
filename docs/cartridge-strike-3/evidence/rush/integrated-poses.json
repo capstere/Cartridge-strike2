@@ -1,0 +1,400 @@
+{
+  "contract": {
+    "protocolVersion": 16,
+    "protocolHash": "08a7f151228c70ae4de5abbfab5da1799c2595922c4042e86d75c9680028e7a4",
+    "configHash": "fdf889c558f03dbabb3c3d1e55430799e461cbf811a26eff43bc17b517094338",
+    "buildHash": "55dbca6e1f72c611eb42fe5913f62027f71753bbeed997e5803a4659d9f8dfbe",
+    "tickRate": 60,
+    "patchMs": 50,
+    "mapId": "floor5-prepared",
+    "mapHash": "1dd0ec97a14f5a4cab6448e9a8f4b5da091b71a3caa63b575ef58ef1426b9ef0",
+    "collisionHash": "a5351e073a01ac95466acf4346acf9812f4265224e56712ce3e889085a42b6d9"
+  },
+  "browser": "156.0.8078.79",
+  "renderer": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+  "viewportCSS": [
+    844,
+    390
+  ],
+  "capturePixels": [
+    633,
+    293
+  ],
+  "sourceTraceSha256": "affafe2ab5d709630a0abfcaefdce51a30f313e81d2b202b51aaf3f4ed5616f4",
+  "source": "tools/rush-browser.mjs",
+  "profiles": [
+    {
+      "name": "desktop-cr4-60-full",
+      "rushWeight": 0.93607,
+      "topOfWeaponFraction": 0.90233,
+      "rushWristNDC": [
+        0.00442,
+        -1.15622
+      ],
+      "adsSightNDC": [
+        0.00504,
+        -0.00371
+      ],
+      "nearWallWeight": 0.80355,
+      "shotTime": [
+        0.73333
+      ],
+      "audioDispatchTime": [
+        0.73333
+      ],
+      "ammoChange": -1
+    },
+    {
+      "name": "desktop-p9-30-full",
+      "rushWeight": 0.94678,
+      "topOfWeaponFraction": null,
+      "rushWristNDC": [
+        -0.41787,
+        -0.70087
+      ],
+      "adsSightNDC": [
+        0.01006,
+        -0.00745
+      ],
+      "nearWallWeight": 0.80876,
+      "shotTime": [
+        3.0
+      ],
+      "audioDispatchTime": [
+        3.0
+      ],
+      "ammoChange": -1
+    },
+    {
+      "name": "desktop-cr4-30-reduced",
+      "rushWeight": 0.94678,
+      "topOfWeaponFraction": 0.90786,
+      "rushWristNDC": [
+        -0.00096,
+        -1.2014
+      ],
+      "adsSightNDC": [
+        0,
+        -0.0
+      ],
+      "nearWallWeight": 0.79698,
+      "shotTime": [
+        5.35
+      ],
+      "audioDispatchTime": [
+        5.35
+      ],
+      "ammoChange": -1
+    },
+    {
+      "name": "desktop-p9-60-reduced",
+      "rushWeight": 0.93607,
+      "topOfWeaponFraction": null,
+      "rushWristNDC": [
+        -0.41493,
+        -0.71438
+      ],
+      "adsSightNDC": [
+        0.0,
+        -0.0
+      ],
+      "nearWallWeight": 0.80355,
+      "shotTime": [
+        7.66667
+      ],
+      "audioDispatchTime": [
+        7.66667
+      ],
+      "ammoChange": -1
+    },
+    {
+      "name": "touch-cr4-60-full",
+      "rushWeight": 0.93607,
+      "topOfWeaponFraction": 0.90233,
+      "rushWristNDC": [
+        0.00442,
+        -1.15622
+      ],
+      "adsSightNDC": [
+        0.0051,
+        -0.00384
+      ],
+      "nearWallWeight": 0.80355,
+      "shotTime": [
+        0.73333
+      ],
+      "audioDispatchTime": [
+        0.73333
+      ],
+      "ammoChange": -1
+    },
+    {
+      "name": "touch-p9-30-full",
+      "rushWeight": 0.94678,
+      "topOfWeaponFraction": null,
+      "rushWristNDC": [
+        -0.41787,
+        -0.70087
+      ],
+      "adsSightNDC": [
+        0.01017,
+        -0.00742
+      ],
+      "nearWallWeight": 0.80876,
+      "shotTime": [
+        3.0
+      ],
+      "audioDispatchTime": [
+        3.0
+      ],
+      "ammoChange": -1
+    },
+    {
+      "name": "touch-cr4-30-reduced",
+      "rushWeight": 0.94678,
+      "topOfWeaponFraction": 0.90786,
+      "rushWristNDC": [
+        -0.00096,
+        -1.2014
+      ],
+      "adsSightNDC": [
+        0,
+        -0.0
+      ],
+      "nearWallWeight": 0.79698,
+      "shotTime": [
+        5.35
+      ],
+      "audioDispatchTime": [
+        5.35
+      ],
+      "ammoChange": -1
+    },
+    {
+      "name": "touch-p9-60-reduced",
+      "rushWeight": 0.93607,
+      "topOfWeaponFraction": null,
+      "rushWristNDC": [
+        -0.41493,
+        -0.71438
+      ],
+      "adsSightNDC": [
+        0.0,
+        -0.0
+      ],
+      "nearWallWeight": 0.80355,
+      "shotTime": [
+        7.66667
+      ],
+      "audioDispatchTime": [
+        7.66667
+      ],
+      "ammoChange": -1
+    }
+  ],
+  "handling": [
+    {
+      "profile": "desktop",
+      "slideFirstSpeed": 9.114,
+      "slideLastHeight": 1.08,
+      "heldStock": 1,
+      "heldFuse": 13.33667,
+      "releasedStock": 0,
+      "releasedProjectiles": 1,
+      "returnedWeapon": "p9"
+    },
+    {
+      "profile": "touch",
+      "slideFirstSpeed": 9.114,
+      "slideLastHeight": 1.08,
+      "heldStock": 1,
+      "heldFuse": 13.33667,
+      "releasedStock": 0,
+      "releasedProjectiles": 1,
+      "returnedWeapon": "p9"
+    }
+  ],
+  "fullSoloTouch": {
+    "inspectOpened": true,
+    "independentlyHitTested": [
+      "More",
+      "Buy",
+      "Pause"
+    ],
+    "innerStickRush": true
+  },
+  "sdk": {
+    "source": "server/test/rush.test.mjs",
+    "checks": [
+      "two connected SDK clients replicate the crouch tap, held fuse and one interrupted drop",
+      "rifle switch retains the trigger interlock throughout two early/cooked attempts and fires once after release"
+    ]
+  },
+  "familyTraceSha256": "203a211ee079f71f07913520f1dd2a7841ad27a2c74eed837c2a34427c59acef",
+  "familyCaptureBuild": "082b9a98eaa391615c3f5fd52b0382e75dd491f6535df8621f853bb38cedd0f0",
+  "families": [
+    {
+      "weapon": "p9",
+      "debits": 2,
+      "shotTimes": [
+        1.33333,
+        3.11667
+      ],
+      "audioDispatchTimes": [
+        1.33333,
+        3.11667
+      ],
+      "cancelledTactical": true,
+      "sampledEmptyMechanism": [
+        0.033,
+        0,
+        null
+      ],
+      "finalAmmo": 20,
+      "finalReserve": 60
+    },
+    {
+      "weapon": "p12",
+      "debits": 2,
+      "shotTimes": [
+        6.26667,
+        8.05
+      ],
+      "audioDispatchTimes": [
+        6.26667,
+        8.05
+      ],
+      "cancelledTactical": true,
+      "sampledEmptyMechanism": [
+        0.033,
+        0,
+        null
+      ],
+      "finalAmmo": 12,
+      "finalReserve": 60
+    },
+    {
+      "weapon": "cr4",
+      "debits": 2,
+      "shotTimes": [
+        11.2,
+        13.58333
+      ],
+      "audioDispatchTimes": [
+        11.2,
+        13.58333
+      ],
+      "cancelledTactical": true,
+      "sampledEmptyMechanism": [
+        0.033,
+        0,
+        null
+      ],
+      "finalAmmo": 30,
+      "finalReserve": 60
+    },
+    {
+      "weapon": "ar47",
+      "debits": 2,
+      "shotTimes": [
+        17.28333,
+        19.88333
+      ],
+      "audioDispatchTimes": [
+        17.28333,
+        19.88333
+      ],
+      "cancelledTactical": true,
+      "sampledEmptyMechanism": [
+        0.04,
+        0,
+        null
+      ],
+      "finalAmmo": 30,
+      "finalReserve": 60
+    },
+    {
+      "weapon": "smg",
+      "debits": 2,
+      "shotTimes": [
+        23.78333,
+        25.85
+      ],
+      "audioDispatchTimes": [
+        23.78333,
+        25.85
+      ],
+      "cancelledTactical": true,
+      "sampledEmptyMechanism": [
+        0.04,
+        0,
+        null
+      ],
+      "finalAmmo": 30,
+      "finalReserve": 90
+    },
+    {
+      "weapon": "shotgun",
+      "debits": 2,
+      "shotTimes": [
+        29.25,
+        32.46667
+      ],
+      "audioDispatchTimes": [
+        29.25,
+        32.46667
+      ],
+      "cancelledTactical": true,
+      "sampledEmptyMechanism": [
+        0,
+        0,
+        0.08
+      ],
+      "finalAmmo": 8,
+      "finalReserve": 24
+    },
+    {
+      "weapon": "sniper",
+      "debits": 2,
+      "shotTimes": [
+        36.66667,
+        40.35
+      ],
+      "audioDispatchTimes": [
+        36.66667,
+        40.35
+      ],
+      "cancelledTactical": true,
+      "sampledEmptyMechanism": [
+        0.08995188075580338,
+        1.2,
+        null
+      ],
+      "finalAmmo": 5,
+      "finalReserve": 20
+    },
+    {
+      "weapon": "bazooka",
+      "debits": 1,
+      "shotTimes": [
+        44.85
+      ],
+      "audioDispatchTimes": [
+        44.85
+      ],
+      "cancelledTactical": false,
+      "sampledEmptyMechanism": [
+        null,
+        null,
+        null
+      ],
+      "finalAmmo": 1,
+      "finalReserve": 4
+    },
+    {
+      "weapon": "knife",
+      "swingTime": 49.3,
+      "returnTime": 49.8
+    }
+  ]
+}

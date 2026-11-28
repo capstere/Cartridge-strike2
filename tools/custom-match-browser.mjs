@@ -1,6 +1,8 @@
 // Two independently authenticated Chromium contexts and an isolated Pi-shaped
 // game server. Run from the repository root: node tools/custom-match-browser.mjs
 import assert from 'node:assert/strict';
+import {rememberedFamilyForm} from './test-helpers/remembered-family.mjs';
+import {enterTouchMatch} from './network-browser-resume.mjs';
 import {mkdir, writeFile} from 'node:fs/promises';
 import {join} from 'node:path';
 import {setTimeout as delay} from 'node:timers/promises';
@@ -51,15 +53,21 @@ async function open(name, touch = false) {
   page.on('pageerror', error => browserErrors.push(error.name));
   await page.goto(landing, {waitUntil:'domcontentloaded'});
   const client = {name, touch, viewport, page, context};
-  await page.getByLabel('Inbjudningskod', {exact:true}).fill(fixture.invite);
+  await page.getByLabel('Server invite code', {exact:true}).fill(fixture.invite);
   await press(client, page.locator('button[type=submit]'));
   return client;
 }
-async function enter(client) {
+async function enter(client, {remembered = false} = {}) {
   await client.page.locator('#network-name').fill(client.name);
-  await client.page.locator('#network-code').fill(fixture.familyPassword);
+  const password = client.page.locator('#network-code');
+  if (remembered) {
+    await rememberedFamilyForm(client.page);
+  } else {
+    assert(await password.evaluate(input => input.required));
+    await password.fill(fixture.familyPassword);
+  }
   await press(client, client.page.locator('[data-create=false]'));
-  await control(client, 'title').filter({hasText:'Väntrum'}).waitFor();
+  await control(client, 'title').filter({hasText:'Lobby'}).waitFor();
   await until(() => seat(client)?.ready && seat(client)?.connected, client.name + ' loaded the server-selected map', 90000);
   assert(!new URL(client.page.url()).searchParams.has('test'), 'Use the normal rendered online entry');
   assert(await client.page.locator('#fatal').isHidden());
@@ -93,7 +101,7 @@ async function switchMap(client, id, viewers) {
 async function screenshot(client, filename, settings) {
   const {page, viewport} = client;
   assert.deepEqual(page.viewportSize(), viewport);
-  assert(await page.getByRole('dialog', {name:'Vrid skärmen'}).isHidden());
+  assert(await page.getByRole('dialog', {name:'Rotate your screen'}).isHidden());
   for (const field of settings) {
     const widget = control(client, field);
     await widget.scrollIntoViewIfNeeded();
@@ -148,7 +156,7 @@ try {
     }
   });
   await until(() => room().state.zombiesEnabled && room().state.dancemanEnabled, 'Both rapid resident changes survive');
-  await control(mobile, 'residents-status').filter({hasText:/Zombies på.*Dansmannen på/}).waitFor();
+  await control(mobile, 'residents-status').filter({hasText:/Zombies On.*Danceman On/}).waitFor();
   mark('Asymmetric bot counts, Team Deathmatch limits and rapid independent resident changes replicate');
 
   await select(desktop, 'mode', 'classic');
@@ -171,7 +179,7 @@ try {
   }
   await displayed(mobile, custom, false);
   await screenshot(mobile, 'mobile-compact-tdm.jpg', Object.keys(custom));
-  mark('Compact only shows Team Deathmatch and retains its custom limits');
+  mark('Compact shows the Team Deathmatch settings and retains its custom limits');
 
   // Let the guest take ownership in the normal lobby, then start through the
   // actual touch button. Both teams have actors after the old host leaves.
@@ -185,9 +193,13 @@ try {
   await press(mobile, control(mobile, 'ready'));
   await press(mobile, control(mobile, 'start'));
   await until(() => room().state.phase === 'countdown', 'Touch host starts countdown');
-  await displayed(mobile, {tdmMinutes:3, tdmKills:25}, false);
+  await mobile.page.locator('#deployment-countdown').waitFor();
+  assert(await control(mobile,'tdmMinutes').isHidden());
+  assert(await control(mobile,'tdmKills').isHidden());
+  assert.equal(room().state.durationSeconds,180);
+  assert.equal(room().state.scoreTarget,25);
   await until(() => room().state.phase === 'active', 'Selected Compact match starts');
-  await mobile.page.locator('#resume').tap();
+  await enterTouchMatch(mobile.page);
   await mobile.page.locator('#hud').waitFor();
   assert(room().match.deadline - room().clock.elapsedTime > 160000, 'Real match uses the configured timer');
   // Advance the match clock only after the unmodified production timer was
@@ -204,11 +216,10 @@ try {
 
   await fixture.restart();
   await mobile.page.goto(landing, {waitUntil:'domcontentloaded'});
-  // Restart creates a new pilot cookie issuer while retaining the same invite.
-  const invite = mobile.page.getByLabel('Inbjudningskod', {exact:true});
-  await invite.fill(fixture.invite);
-  await press(mobile, mobile.page.locator('button[type=submit]'));
-  await enter(mobile);
+  // The authoritative session restarts. A durable room grant on the same
+  // device admits this family member without either legacy credential.
+  await enter(mobile, {remembered:true});
+  assert.equal(await mobile.page.getByLabel('Server invite code', {exact:true}).count(), 0);
   assert.equal(room().state.mapId, compact);
   await displayed(mobile, custom, true);
   await switchMap(mobile, floor, [mobile]);

@@ -1,0 +1,68 @@
+{
+  "status": "installed",
+  "id": "harbor-crew",
+  "rigs": [
+    {
+      "gender": "male",
+      "path": "assets/fps/models/quaternius-operator-male.glb",
+      "bytes": 1979872,
+      "sha256": "780a0473bc7202fae47647986918dede4598286c3e2ec95ac03710aa8d00405c",
+      "bones": 65,
+      "clips": [
+        "Crouch_Fwd_Loop",
+        "Crouch_Idle_Loop",
+        "Death01",
+        "Hit_Chest",
+        "Idle_Loop",
+        "Jog_Fwd_Loop",
+        "Jump_Land",
+        "Jump_Loop",
+        "Pistol_Idle_Loop",
+        "Pistol_Reload",
+        "Pistol_Shoot",
+        "Sprint_Loop",
+        "Walk_Loop"
+      ],
+      "materials": [
+        "jacket-fabric",
+        "trousers-fabric",
+        "vest-shell",
+        "gloves-leather"
+      ],
+      "embeddedImages": 3
+    },
+    {
+      "gender": "female",
+      "path": "assets/fps/models/quaternius-operator-female.glb",
+      "bytes": 2128972,
+      "sha256": "bc13c22dc859304f4fc4b74f7b1a4b02b3e8624494314bf866d5951db15940e1",
+      "bones": 65,
+      "clips": [
+        "Crouch_Fwd_Loop",
+        "Crouch_Idle_Loop",
+        "Death01",
+        "Hit_Chest",
+        "Idle_Loop",
+        "Jog_Fwd_Loop",
+        "Jump_Land",
+        "Jump_Loop",
+        "Pistol_Idle_Loop",
+        "Pistol_Reload",
+        "Pistol_Shoot",
+        "Sprint_Loop",
+        "Walk_Loop"
+      ],
+      "materials": [
+        "jacket-fabric",
+        "trousers-fabric",
+        "vest-shell",
+        "gloves-leather"
+      ],
+      "embeddedImages": 3
+    }
+  ],
+  "rights": {
+    "creator": "Cartridge-Strike project",
+    "license": "project-original"
+  }
+}

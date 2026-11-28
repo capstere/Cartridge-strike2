@@ -1,3 +1,6 @@
+import {soundLevels} from './sound-levels.mjs';
+import {CoastalAmbience, coastalMaps} from './coastal-ambience.mjs';
+
 /** Local Web Audio presentation. Logical hearing belongs to Game, including at volume 0.
  * Kenney CC0 samples and modifications: docs/fps-assets.json and THIRD_PARTY_NOTICES.md.
  * All scheduled sources are owned, bounded and stopped on pause/round reset.
@@ -20,9 +23,10 @@ export class AudioSystem {
   constructor(world, settings = {}) {
     this.world = world;
     this.settings = settings;
-    this.volume = clamp(Number(settings.volume ?? .55), 0, 1);
+    this.volume = soundLevels(settings).master;
     this.context = null;
     this.master = null;
+    this.announcements = null;
     this.buffers = new Map();
     this.active = new Set();
     this.ambient = []; this.ambientRoom = null; this.ambientBuffer = null;
@@ -44,6 +48,9 @@ export class AudioSystem {
       this.context = new AudioContextClass();
       this.master = this.context.createGain();
       this.master.gain.value = this.volume;
+      this.announcements = this.context.createGain();
+      this.announcements.gain.value = soundLevels(this.settings).announcements;
+      this.announcements.connect(this.master);
       const limiter = this.context.createDynamicsCompressor();
       limiter.threshold.value = -10;
       limiter.knee.value = 12;
@@ -78,13 +85,22 @@ export class AudioSystem {
   setVolume(volume) {
     this.volume = clamp(Number(volume) || 0, 0, 1);
     if (this.master) this.master.gain.setTargetAtTime(this.volume, this.context.currentTime, .015);
+    this.announcements?.gain.setTargetAtTime(soundLevels(this.settings).announcements, this.context.currentTime, .015);
     if (this.volume === 0) this.stopAmbient();
   }
 
   updateListener(listener) {
     if (!this.context || !listener) return;
+    const id = listener.id ?? listener.actorId;
+    const life = listener.lifeId ?? listener.deaths;
+    const alive = listener.alive !== false;
+    if (this.listener && (id !== this.listenerId || life !== this.listenerLife || alive !== this.listenerAlive)) {
+      this.clearFlashHearing();
+    }
     this.listener = point(listener.position || listener);
-    this.listenerId = listener.id ?? listener.actorId;
+    this.listenerId = id;
+    this.listenerLife = life;
+    this.listenerAlive = alive;
     const yaw = Number(listener.yaw) || 0, pitch = Number(listener.pitch) || 0;
     const forward = listener.forward || { x: -Math.sin(yaw) * Math.cos(pitch), y: Math.sin(pitch), z: -Math.cos(yaw) * Math.cos(pitch) };
     const l = this.context.listener, t = this.context.currentTime;
@@ -104,30 +120,37 @@ export class AudioSystem {
     this.lastSimTime = simTime;
     this.updateListener(listener);
     this.updateAmbient(listener);
-    for (const event of events) {
-      if (!event || typeof event !== 'object') continue;
-      if (this.seen.has(event) || (event.id != null && this.ids.has(event.id))) {
-        this.stats.duplicates++; continue;
-      }
-      this.seen.add(event);
-      if (event.id != null) {
-        this.ids.add(event.id);
-        if (this.ids.size > 4096) this.ids.delete(this.ids.values().next().value);
-      }
-      // Never replay accumulated pre-unlock, focus-loss or previous-round sound.
-      if (Number.isFinite(event.time) && (event.time < simTime - .4 || event.time > simTime + .1)) {
-        this.stats.stale++; continue;
-      }
-      if (!this.context || this.context.state !== 'running' || !this.listener || this.volume === 0) continue;
-      if (this.active.size >= 96) { this.stats.dropped++; continue; }
-      this.play(event);
+    for (const event of events) this.handleEvent(event, simTime);
+  }
+
+  handleEvent(event, simTime) {
+    if (!event || typeof event !== 'object') return;
+    if (this.seen.has(event) || (event.id != null && this.ids.has(event.id))) {
+      this.stats.duplicates++; return;
     }
+    this.seen.add(event);
+    if (event.id != null) {
+      this.ids.add(event.id);
+      if (this.ids.size > 4096) this.ids.delete(this.ids.values().next().value);
+    }
+    // Never replay accumulated pre-unlock, focus-loss or previous-round sound.
+    if (Number.isFinite(event.time) && (event.time < simTime - .4 || event.time > simTime + .1)) {
+      this.stats.stale++; return;
+    }
+    if (!this.context || this.context.state !== 'running' || !this.listener || this.volume === 0) return;
+    if (this.active.size >= 96) { this.stats.dropped++; return; }
+    this.play(event);
   }
 
   /** Quiet, local room tone; never enters AI hearing or the match random sequence. */
   updateAmbient(listener) {
     if (!this.context || this.context.state !== 'running' || !this.volume || listener?.ambient === false || this.settings.ambient === false) {
       this.stopAmbient(); return;
+    }
+    const coast = this.world?.referenceId;
+    if (Object.hasOwn(coastalMaps, coast)) {
+      this.updateSeasideAmbient(coast);
+      return;
     }
     const room = this.world?.roomAt?.(this.listener?.x,this.listener?.z);
     if (!room?.polygon?.length) { this.stopAmbient(); return; }
@@ -164,13 +187,79 @@ export class AudioSystem {
     filter.type='lowpass';filter.frequency.value=cutoff;
     panner.panningModel='HRTF';panner.distanceModel='inverse';panner.refDistance=4;panner.maxDistance=30;panner.rolloffFactor=1;
     panner.positionX.value=position.x;panner.positionY.value=position.y;panner.positionZ.value=position.z;
-    source.connect(filter).connect(gain).connect(panner).connect(this.master);source.start();
+    source.connect(filter).connect(gain).connect(panner).connect(this.worldOutput());source.start();
     this.ambient.push({source,gain,filter,position,volume,cutoff,nodes:[gain,filter,panner]});
   }
 
+  updateSeasideAmbient(mapId) {
+    if (this.seaside?.mapId !== mapId) {
+      this.stopAmbient();
+      const coarse = globalThis.matchMedia?.('(any-pointer: coarse)').matches ?? false;
+      this.seaside = new CoastalAmbience(this.context, this.worldOutput?.() ?? this.master, mapId, coarse);
+      this.ambientRoom = mapId;
+    }
+    this.seaside.update(this.listener, this.world);
+  }
+
   stopAmbient(){
+    this.seaside?.dispose(); this.seaside = null;
     for(const item of this.ambient){try{item.source.stop();}catch{}item.source.disconnect();for(const node of item.nodes)node.disconnect();}
     this.ambient.length=0;this.ambientRoom=null;
+  }
+
+  worldOutput() {
+    if (!this.worldFilter) {
+      this.worldFilter = this.context.createBiquadFilter();
+      this.worldFilter.type = 'lowpass';
+      this.worldFilter.frequency.value = 20000;
+      this.worldFilter.Q.value = .707;
+      this.worldGain = this.context.createGain();
+      this.worldFilter.connect(this.worldGain).connect(this.master);
+    }
+    return this.worldFilter;
+  }
+
+  // Riposte flashBang / sfxFlashBang. The listener's hearing uses distance and
+  // cover independently of facing. The V6 capture supplies the ringing band.
+  flashHearing(event) {
+    if (!this.listener || this.listenerAlive === false) return;
+    const source = point(event.position || event), ear = this.listener;
+    const distance = Math.hypot(source.x-ear.x, source.y-ear.y, source.z-ear.z);
+    if (distance >= 13) return;
+    const step = clamp((distance-2)/11, 0, 1);
+    const clear = this.world?.segmentClear?.(ear, source, {vision:false}) !== false;
+    const exposure = (1-step*step*(3-2*step)) * (clear ? 1 : .5);
+    if (exposure <= .05) return;
+    const reduced = this.settings.reducedFlash !== false;
+    const strength = exposure * .85 * (reduced ? .2 : 1);
+    const duration = (.5 + 2.4*exposure) * (reduced ? .35 : 1);
+    const ctx = this.context, now = ctx.currentTime, start = now + .04;
+    this.worldOutput();
+    const cutoff = this.worldFilter.frequency, gain = this.worldGain.gain;
+    const exposedCutoff = 4000 + (260-4000)*exposure;
+    const low = reduced ? 20000 + (exposedCutoff-20000)*.2 : exposedCutoff;
+    for (const param of [cutoff,gain]) {
+      const current = param.value;
+      param.cancelScheduledValues(now);
+      param.setValueAtTime(current,now);
+    }
+    cutoff.linearRampToValueAtTime(low,now+.03);
+    cutoff.setValueAtTime(low,now+duration*.6);
+    cutoff.exponentialRampToValueAtTime(20000,now+duration);
+    gain.linearRampToValueAtTime(1-.6*strength,now+.03);
+    gain.linearRampToValueAtTime(1,now+duration);
+
+    if (this.flashVoice) this.flashVoice.stop(now);
+    const voice = ctx.createOscillator();
+    const envelope = ctx.createGain();
+    voice.type = 'sine';
+    voice.frequency.setValueAtTime(3109,start);
+    envelope.gain.setValueAtTime(.0001,start);
+    envelope.gain.exponentialRampToValueAtTime(.035*strength,start+.03);
+    envelope.gain.exponentialRampToValueAtTime(.0001,start+duration);
+    voice.connect(envelope).connect(this.master);
+    this.flashVoice = voice;
+    this.track(voice,{when:start,nodes:[envelope]},duration+.02);
   }
 
   channel(event, volume = 1, delay = 0) {
@@ -189,21 +278,26 @@ export class AudioSystem {
       panner.panningModel = 'HRTF'; panner.distanceModel = 'inverse';
       panner.refDistance = 2.5; panner.maxDistance = 55; panner.rolloffFactor = 1.45;
       panner.positionX.value = position.x; panner.positionY.value = position.y; panner.positionZ.value = position.z;
-      filter.connect(panner).connect(this.master); nodes.push(panner);
-    } else filter.connect(this.master);
+      filter.connect(panner).connect(this.worldOutput()); nodes.push(panner);
+    } else {
+      const announcement = global || event.type === 'radio';
+      filter.connect(announcement ? this.announcements ?? this.master : this.master);
+    }
     if (!clear) this.stats.occluded++;
     return { gain, nodes, when: ctx.currentTime + delay };
   }
 
-  track(source, channel, duration) {
+  track(source, channel, duration, offset = 0) {
     const item = { source, nodes: channel.nodes };
     this.active.add(item);
     source.onended = () => {
       this.active.delete(item);
+      if (this.flashVoice === source) this.flashVoice = null;
       source.disconnect();
       for (const node of item.nodes) node.disconnect();
     };
-    source.start(channel.when);
+    if (offset) source.start(channel.when, offset);
+    else source.start(channel.when);
     source.stop(channel.when + duration);
   }
 
@@ -257,6 +351,7 @@ export class AudioSystem {
         break;
       }
       case 'shot': {
+        if(event.suppressed){this.noise(sound,.075,.12,1150);this.tone(sound,112,.08,.10,'triangle',44);break;}
         const name = String(event.weapon || 'pistol').toLowerCase();
         if (name.includes('knife')) { this.noise(sound, .12, .2, 2800); break; }
         const sniper = /sniper|scope|long|precision/.test(name), shotgun = /shot|pump/.test(name);
@@ -276,12 +371,20 @@ export class AudioSystem {
       case 'zombie-windup':
         this.noise(sound,.34,.14,850);this.tone(sound,108,.32,.12,'triangle',65);break;
       case 'rustle': this.noise(sound, .18, event.mode === 'sneak' ? .015 : .075, 7800); break;
+      case 'slide': this.noise(sound,.65,.22,1100);break;
       case 'jump': this.sample('impactSoft_medium_000', sound, .17, 1.4); this.noise(sound, .09, .05, 1400); break;
       case 'land': this.sample('impactSoft_medium_000', sound, .45, .85); break;
+      case 'cartridge-latch': this.sample('impactMetal_light_001', sound, .14, 1.7); break;
       case 'throw': this.noise(sound, .14, .22, 5000); this.sample('impactMetal_light_001', sound, .12, 2); break;
       case 'bounce': this.sample('impactMetal_light_000', sound, .28 * clamp(event.energy ?? 1, .2, 1), varied * 1.4); break;
       case 'smoke': this.noise(sound, 1.4, .25, 3400); this.sample('impactGeneric_light_000', sound, .18, .8); break;
-      case 'flash': this.sample('laserSmall_000', sound, .22, 1.5, 0, .35); this.noise(sound, .13, .36, 5600); break;
+      case 'flash': {
+        const scale = this.settings.reducedFlash !== false ? .45 : 1;
+        this.sample('laserSmall_000',sound,.22*scale,1.5,0,.35);
+        this.noise(sound,.13,.36*scale,5600);
+        this.flashHearing(sound);
+        break;
+      }
       case 'he': this.sample('explosionCrunch_000', sound, .8, .9, 0, 1.8); this.sample('lowFrequency_explosion_000', sound, .65, 1, 0, 1.8); break;
       case 'plant': this.sample('computerNoise_000', sound, .1, 1.3, 0, .5); this.tone(sound, 520, .08, .13); break;
       case 'beep': this.tone(sound, 1250, .09, .25); break;
@@ -290,6 +393,11 @@ export class AudioSystem {
         for (let i = 0; i < 3; i++) this.tone(sound, [440, 554, 659][i], .25, .12, 'triangle', [440, 554, 659][i], i * .13); break;
       case 'round': this.tone(sound, 660, .16, .12); break;
       case 'impact': this.sample('impactMetal_light_000', sound, .14, varied); break;
+      case 'immune':
+        if (this.settings.combatSounds !== false && [event.actorId,event.sourceId].includes(this.listenerId)) {
+          this.tone({...sound,actorId:this.listenerId},760,.09,.08,'triangle',390);
+        }
+        break;
       case 'hit': if(event.sourceId === this.listenerId)this.tone({...sound,actorId:this.listenerId}, 1700, .045, .07); break;
       case 'damage':
         if(event.actorId !== this.listenerId) return;
@@ -302,9 +410,22 @@ export class AudioSystem {
     this.stats.played++;
   }
 
-  /** Stop all tails and future scheduled reload/result notes. No setTimeouts survive a reset. */
+  clearFlashHearing() {
+    if (this.flashVoice) this.flashVoice.stop(this.context.currentTime);
+    this.flashVoice = null;
+    if (this.worldFilter) {
+      const time = this.context.currentTime;
+      this.worldFilter.frequency.cancelScheduledValues(time);
+      this.worldFilter.frequency.setValueAtTime(20000,time);
+      this.worldGain.gain.cancelScheduledValues(time);
+      this.worldGain.gain.setValueAtTime(1,time);
+    }
+  }
+
+  /** Stop all tails and future scheduled notes on pause or a round reset. */
   reset() {
     this.generation++;
+    this.clearFlashHearing();
     this.stopAmbient();
     for (const item of this.active) {
       item.source.onended = null;
@@ -318,6 +439,8 @@ export class AudioSystem {
   async dispose() {
     this.reset(); this.disposed = true;
     this.buffers.clear(); this.ambientBuffer=null;
+    this.worldFilter?.disconnect(); this.worldGain?.disconnect();
+    this.announcements?.disconnect();
     if (this.context && this.context.state !== 'closed') await this.context.close();
   }
 }

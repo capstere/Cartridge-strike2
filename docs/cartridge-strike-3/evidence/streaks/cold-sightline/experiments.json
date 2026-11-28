@@ -1,0 +1,315 @@
+[
+  {
+    "experiment": "original",
+    "source": "43fefa3cdcd7d2b30833330603927e1029e8f0aa",
+    "rawSha256": "acdc2b6a883859e22e7490fd24fe04420780d6765d161425815d45dafbd0fc77",
+    "buildLabel": "inherited generated p20 manifest; measured source worktree",
+    "desktop": {
+      "maxWallRenderMs": 3613.5,
+      "cues": [],
+      "warm": {}
+    },
+    "touchEmulated": {
+      "maxWallRenderMs": 4981.4,
+      "cues": [],
+      "warm": {}
+    }
+  },
+  {
+    "experiment": "texture initialization",
+    "source": "e515065ebe54282436a7918d0950a9b6817a360e",
+    "rawSha256": "99a6fbe48d6947981dc790e3152ed76b36609b1722aac436ef98ba4bcf0eb3ee",
+    "buildLabel": "inherited generated p20 manifest; measured source worktree",
+    "desktop": {
+      "maxWallRenderMs": 3472.3,
+      "cues": [],
+      "warm": {
+        "maps": 16,
+        "ms": 2138.6
+      }
+    },
+    "touchEmulated": {
+      "maxWallRenderMs": 4708.1,
+      "cues": [],
+      "warm": {
+        "maps": 15,
+        "ms": 2301.4
+      }
+    }
+  },
+  {
+    "experiment": "uniform lookup",
+    "source": "8173c267dbc59a8104647119a139de746cffc8fd",
+    "rawSha256": "948c97d52a9daa15c5914565ecbe8bf639a32d230716cd0ee91e3258da7574e8",
+    "buildLabel": "inherited generated p20 manifest; measured source worktree",
+    "desktop": {
+      "maxWallRenderMs": 3503.5,
+      "cues": [],
+      "warm": {
+        "maps": 16,
+        "programs": 17,
+        "ms": 2069.2,
+        "total": 12.3,
+        "peak": 1
+      }
+    },
+    "touchEmulated": {
+      "maxWallRenderMs": 5172.7,
+      "cues": [],
+      "warm": {
+        "maps": 15,
+        "programs": 15,
+        "ms": 2347.9,
+        "total": 15.5,
+        "peak": 3.6
+      }
+    }
+  },
+  {
+    "experiment": "single real draw",
+    "source": "90c638cd05152636ce35bacb23dcdf0f844e14e1",
+    "rawSha256": "7d5fd9606d87efc6c44264f5d751993821dd1c64d103696121a655befa850494",
+    "buildLabel": "inherited generated p20 manifest; measured source worktree",
+    "desktop": {
+      "maxWallRenderMs": 514.0,
+      "cues": [
+        "magout_smg",
+        "magin_smg"
+      ],
+      "warm": {
+        "maps": 16,
+        "programs": 17,
+        "ms": 7022.1,
+        "total": 12.8,
+        "peak": 2,
+        "submit": 3943.5
+      }
+    },
+    "touchEmulated": {
+      "maxWallRenderMs": 1920.7,
+      "cues": [],
+      "warm": {
+        "maps": 15,
+        "programs": 15,
+        "ms": 6736.3,
+        "total": 17.4,
+        "peak": 4.2,
+        "submit": 3209.5
+      }
+    }
+  },
+  {
+    "experiment": "individual draw batches",
+    "source": "af818bad32da92070e6b4213824ccdd58a122532",
+    "rawSha256": "893b59d45029258d047172c03761801a2c807fe13aa21e993c33a9a5a908b036",
+    "buildLabel": "inherited generated p20 manifest; measured source worktree",
+    "desktop": {
+      "maxWallRenderMs": 508.0,
+      "cues": [
+        "magin_smg"
+      ],
+      "warm": {
+        "maps": 16,
+        "programs": 17,
+        "ms": 6998.8,
+        "total": 15.1,
+        "peak": 2.4,
+        "submit": 56.5,
+        "peakDraw": 10.1,
+        "batches": 17
+      }
+    },
+    "touchEmulated": {
+      "maxWallRenderMs": 1057.1,
+      "cues": [
+        "magin_smg"
+      ],
+      "warm": {
+        "maps": 15,
+        "programs": 17,
+        "ms": 7890.4,
+        "total": 18.1,
+        "peak": 3.5,
+        "submit": 93.2,
+        "peakDraw": 19.6,
+        "batches": 17
+      }
+    }
+  },
+  {
+    "experiment": "nested world lighting",
+    "source": "79045f5567b9c102c944d6627f61d322cfebdb2c",
+    "rawSha256": "25f3f94c4be61026253d51c591a7a7b7e2546fe6cade81bf992460adb03e038b",
+    "buildLabel": "inherited generated p20 manifest; measured source worktree",
+    "desktop": {
+      "maxWallRenderMs": 401.0,
+      "cues": [
+        "magout_smg",
+        "magin_smg"
+      ],
+      "warm": {
+        "maps": 16,
+        "programs": 17,
+        "ms": 6376.8,
+        "total": 12.9,
+        "peak": 1.6,
+        "submit": 60.9,
+        "peakDraw": 10.8,
+        "batches": 17
+      }
+    },
+    "touchEmulated": {
+      "maxWallRenderMs": 62.6,
+      "cues": [
+        "magout_smg",
+        "magin_smg"
+      ],
+      "warm": {
+        "maps": 15,
+        "programs": 17,
+        "ms": 7383.1,
+        "total": 19.9,
+        "peak": 3.5,
+        "submit": 96.9,
+        "peakDraw": 16.5,
+        "batches": 17
+      }
+    }
+  },
+  {
+    "experiment": "proxy geometry",
+    "source": "10c60ac1914db75e959631e92de1a3a609d5d1ab",
+    "rawSha256": "3be0275567aef54c28cc06d6e0ba1fcbb08c979dd01fac70dce6f189e8e8ed55",
+    "buildLabel": "inherited generated p20 manifest; measured source worktree",
+    "desktop": {
+      "maxWallRenderMs": 95.1,
+      "cues": [
+        "magout_smg",
+        "magin_smg"
+      ],
+      "warm": {
+        "milliseconds": 4491.3,
+        "batches": 17,
+        "submitMs": 458.3,
+        "maxSubmitMs": 402.9,
+        "retainedMaterials": 0
+      }
+    },
+    "touchEmulated": {
+      "maxWallRenderMs": 88.0,
+      "cues": [
+        "magout_smg",
+        "magin_smg"
+      ],
+      "warm": {
+        "milliseconds": 4709.2,
+        "batches": 17,
+        "submitMs": 88.1,
+        "maxSubmitMs": 29.5,
+        "retainedMaterials": 2
+      }
+    }
+  },
+  {
+    "experiment": "texture fence/fair turn",
+    "source": "5ab9a8bf238f84273ea174558eff65060f2d1fec",
+    "rawSha256": "a9a2c012955bc6bbe59e0d82168061c67aa5d6d7cb8cfab0efeb3bfe6523fb40",
+    "buildLabel": "inherited generated p20 manifest; measured source worktree",
+    "desktop": {
+      "maxWallRenderMs": 211.1,
+      "cues": [
+        "magout_smg",
+        "magin_smg"
+      ],
+      "warm": {
+        "milliseconds": 4482.7,
+        "batches": 17,
+        "submitMs": 60.6,
+        "maxSubmitMs": 9.6,
+        "retainedMaterials": 0
+      }
+    },
+    "touchEmulated": {
+      "maxWallRenderMs": 282.2,
+      "cues": [
+        "magout_smg",
+        "magin_smg"
+      ],
+      "warm": {
+        "milliseconds": 4796,
+        "batches": 17,
+        "submitMs": 110.7,
+        "maxSubmitMs": 37.5,
+        "retainedMaterials": 2
+      }
+    }
+  },
+  {
+    "experiment": "synchronous viewport scope",
+    "source": "02409e3ebf494d0433c0d09eea2b5cd1de3a1a3a",
+    "rawSha256": "20fec6a75c51644ae150f18c835e7f01227c16f3dac390cfc093218bfd2fc7bd",
+    "buildLabel": "9639047a3143691c95b810de370779a5a0ed730b5ed313e79aaa995cae0c43f1",
+    "desktop": {
+      "maxWallRenderMs": 191.1,
+      "cues": [
+        "magout_smg",
+        "magin_smg"
+      ],
+      "warm": {
+        "milliseconds": 4541.1,
+        "batches": 17,
+        "submitMs": 57.1,
+        "maxSubmitMs": 10.6,
+        "retainedMaterials": 0
+      }
+    },
+    "touchEmulated": {
+      "maxWallRenderMs": 215.3,
+      "cues": [
+        "magout_smg",
+        "magin_smg"
+      ],
+      "warm": {
+        "milliseconds": 5255.3,
+        "batches": 17,
+        "submitMs": 69.6,
+        "maxSubmitMs": 15.3,
+        "retainedMaterials": 2
+      }
+    }
+  },
+  {
+    "experiment": "normalized roster and detached program owners",
+    "source": "b4f844450b093ed82498455450c19898f2b158f4",
+    "rawSha256": "725ce452e667d8a6b1a385c92e128862b7863a2db934eb414b58ac968f44b857",
+    "buildLabel": "1fbad8df83cb67f384abb8fdc08b7cbfe0c81398de6bbcde0df91cdb5728321a",
+    "desktop": {
+      "maxWallRenderMs": 203.8,
+      "cues": [
+        "magout_smg",
+        "magin_smg"
+      ],
+      "warm": {
+        "milliseconds": 4705.7,
+        "batches": 17,
+        "submitMs": 57.4,
+        "maxSubmitMs": 10.5,
+        "retainedMaterials": 17
+      }
+    },
+    "touchEmulated": {
+      "maxWallRenderMs": 219.5,
+      "cues": [
+        "magout_smg",
+        "magin_smg"
+      ],
+      "warm": {
+        "milliseconds": 5100.3,
+        "batches": 17,
+        "submitMs": 72.9,
+        "maxSubmitMs": 14.4,
+        "retainedMaterials": 17
+      }
+    }
+  }
+]

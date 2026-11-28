@@ -14,6 +14,8 @@ import {levelProjectToWorldData} from './level-adapter.mjs?v=5.9.0';
 
 import {addCabinFittings} from './start-elevators.mjs';
 
+import {createReferenceWorld} from './reference-world.mjs';
+
 let sharedWorld;
 let levelCacheKey='',levelCache;
 const flatPoint=p=>({x:p[0],y:0,z:p[1]});
@@ -36,18 +38,20 @@ export function inheritFloor5Gameplay(project){
  return p;
 }
 
-function createLevelWorld(project,{fresh=false,template=null}={}){
+function* levelWorldSteps(project,{fresh=false,template=null}={},cooperative=false){
  project=inheritFloor5Gameplay(fresh?structuredClone(project):project);
- const key=JSON.stringify(project);
+ const key=fresh?null:JSON.stringify(project);
  if(!fresh&&levelCacheKey===key&&levelCache)return levelCache;
  // The scene resolver reads a cached Floor 5 baseline. Detach nested polygons,
  // furniture records and source entries before exposing a room-owned world.
  const resolved=levelProjectToWorldData(project);
  const {data,anchors,scene}=fresh?structuredClone(resolved):resolved;
+ if(cooperative)yield;
  const source=globalThis.SpelWorldForLevel(data);
  const description=source.build({doors:Object.fromEntries(data.doors.filter(d=>d.accessCardConfirmed).map(d=>[d.id,true]))});
  paintDescription(description,data);
  addCabinFittings(description,project.gameplay.startElevators||[],scene.floors);
+ if(cooperative)yield;
  const glassPlan=prepareGlass(description,data),physics=createPhysics(description,data),doors=createDoors(data,physics);
  const doorClearance=new SpatialIndex(),scratch=[];
  for(const door of doors.doors)for(const sign of [-1,1]){
@@ -59,19 +63,38 @@ function createLevelWorld(project,{fresh=false,template=null}={}){
  const navPhysics={...physics,dynamicPassages:()=>doors.elevators.progress<1,canOccupy:(x,z,r=ACTOR_RADIUS,h=1.7,y=0)=>physics.staticCanOccupy(x,z,r,h,y)&&
   !doorClearance.query(x,z,r,scratch).some(b=>circleHitsBox(x,z,r,b))&&
   !doors.elevators.boxes.some(b=>circleHitsBox(x,z,r,b))};
+ if(cooperative)yield;
  const navigation=createNavigation(data,navPhysics,{template}),roomAt=(x,z)=>[...data.rooms,...data.corridors].find(r=>insidePolygon(x,z,r.polygon))||null;
+ if(cooperative)yield;
  physics.setDynamicBoxes(doors.boxes);
  const glass=createGlassState(glassPlan,physics,change=>navigation.updateGlass(change));
  const setElevatorProgress=t=>{if(doors.elevators.cabins.length&&doors.elevators.setProgress(t))navigation.invalidate();};
  const world={setElevatorProgress,newLevel:true,project,projectScene:scene,description,data,anchors,doors,glass,details:null,living:null,furnishings:{instances:[],boxes:[]},tactical:createFloorTactics(navigation,anchors,template),
   roomAt,materialAt:(x,z)=>roomAt(x,z)?.surface||'carpet',...physics,findPath:navigation.findPath,navigation,
   statistics:{...physics.statistics,navigation:navigation.statistics,furnishings:0}};
+ if(cooperative)yield;
  if(!fresh){levelCacheKey=key;levelCache=world;}
  return world;
 }
 
+// The published Floor 5 graph, geometry and tactics can each occupy a separate
+// browser task. Keep the room unpublished until its full collision check passes.
+export async function createRoomLevelWorld(levelProject,signal){
+ signal.throwIfAborted();
+ if(levelProject.mode!=='edit-floor5')return createWorld({levelProject,fresh:true});
+ const steps=levelWorldSteps(levelProject,{fresh:true},true);
+ for(;;){
+  const step=steps.next();
+  if(step.done)return step.value;
+  if(globalThis.scheduler?.yield)await globalThis.scheduler.yield();
+  else await new Promise(resume=>setTimeout(resume,0));
+  signal.throwIfAborted();
+ }
+}
+
 export function createWorld({fresh=false,levelProject=null,template=null}={}){
- if(levelProject)return createLevelWorld(levelProject,{fresh,template});
+ if(levelProject?.referenceMap&&['lvl-meltem','lvl-embruns','lvl-tephra'].includes(levelProject.projectId))return createReferenceWorld(levelProject);
+ if(levelProject)return levelWorldSteps(levelProject,{fresh,template}).next().value;
   if(sharedWorld&&!fresh)return sharedWorld;
   // SpelWorld.build itself caches its description, even when sharedWorld is bypassed.
   const source=fresh?freshFloor5Source():globalThis.SpelWorld,data=source.data;

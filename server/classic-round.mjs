@@ -1,3 +1,4 @@
+import {clearActorBonus} from '../src/fps/bonuses.mjs';
 import {HostageState,ActorState} from './network-schema.mjs';
 
 // Game.beginRound owns inventory carry-over, buying, objective placement and
@@ -21,6 +22,7 @@ export function prepareClassicRound(room,advanceEpoch=true){
     seat.actor.id=seat.id;
     seat.actor.lifeId=Math.max(seat.actor.lifeId,room.lives.get(seat.id)||0);
     game.actors.push(seat.actor);
+    room.accountMatch?.admit(seat);
     if(seat.connected)room.sim.controllers.bind(sid,seat.id);
   }
   room.fillVacancies(true);
@@ -31,9 +33,9 @@ export function prepareClassicRound(room,advanceEpoch=true){
     if(!seat.ready||seat.pending)continue;
     const a=seat.actor,sid=seat.client?.sessionId;
     if(advanceEpoch)seat.epoch++;
-    a.controlEpoch=seat.epoch;a.lifeId++;
+    a.controlEpoch=seat.epoch;a.lifeId++;clearActorBonus(a,true);
     seat.lastSelect=seat.lastFire=seat.lastReload=seat.lastSampleTick=seat.lastShotStamp=0;
-    seat.trigger=seat.aim=seat.releaseInteract=false;seat.interactUntil=0;
+    seat.holdThrow=seat.trigger=seat.aim=seat.releaseInteract=false;seat.interactUntil=0;
     a.aimAmount=0;a.aiming=false;
     if(sid)room.inputs.get(sid).clear();
     seat.lifeStartedAt=room.clock.elapsedTime;seat.diedAtMs=0;

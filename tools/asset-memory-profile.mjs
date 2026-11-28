@@ -8,7 +8,8 @@ try{for(let repetition=0;repetition<3;repetition++){
  await cdp.send('Network.enable');const network=[];cdp.on('Network.responseReceived',e=>network.push({url:e.response.url,cache:e.response.fromDiskCache||false,mime:e.response.mimeType}));let transfer=0;cdp.on('Network.loadingFinished',e=>transfer+=e.encodedDataLength);
  for(const cache of ['cold','warm']){
   network.length=0;transfer=0;const start=performance.now();await page.goto('http://127.0.0.1:8765/fps/?test&seed=42');await page.waitForFunction(()=>window.__fps&&!document.querySelector('#start').disabled,null,{timeout:180000});
-  const lobbyMs=performance.now()-start;await page.locator('#start').click();await page.waitForFunction(()=>__fps.game.player&&document.querySelector('#cs-loading').hidden,null,{timeout:180000});if(await page.locator('#resume').isVisible())await page.locator('#resume').click();
+  const lobbyMs=performance.now()-start;await page.locator('#start').click();
+  await page.locator('#csl-deploy').click();await page.waitForFunction(()=>__fps.game.player&&document.querySelector('#cs-loading').hidden,null,{timeout:180000});if(await page.locator('#resume').isVisible())await page.locator('#resume').click();
   await page.evaluate(()=>__fps.stopFrameLoop());await cdp.send('HeapProfiler.collectGarbage');
   const resources=await page.evaluate(()=>{
    const f=__fps,r=f.renderer,geometries=new Set(),textures=new Set(),skeletons=new Set(),arrays=new Set(),clips=new Set();let meshes=0,skinMeshes=0;

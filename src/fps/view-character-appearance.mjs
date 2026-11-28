@@ -7,7 +7,7 @@ export const SHIRT_FRACTION=.32;
 function textureColor(material,u,v){
  const color=material.color.clone(),texture=material.map;if(!texture)return color;
  texture.updateMatrix();const uv=texture.transformUv(new T.Vector2(u,v)),im=texture.image;
- if(!im?.width||!im?.height)throw Error('Karaktärens tröjtextur kunde inte läsas. Välj en annan spelkaraktär i lobbyn.');
+ if(!im?.width||!im?.height)throw Error('The shirt texture could not be read. Choose another character in the lobby.');
  const x=Math.min(im.width-1,Math.max(0,Math.floor(uv.x*im.width))),y=Math.min(im.height-1,Math.max(0,Math.floor(uv.y*im.height)));let rgba;
  if(im.data){rgba=im.data.subarray((y*im.width+x)*4,(y*im.width+x)*4+4);}
  else{const c=document.createElement('canvas');c.width=c.height=1;const ctx=c.getContext('2d',{willReadFrequently:true});ctx.drawImage(im,x,y,1,1,0,0,1,1);rgba=ctx.getImageData(0,0,1,1).data;}
@@ -19,20 +19,20 @@ export function createPrivateViewAppearance(asset){
   if(o.material?.name==='jacket-fabric')shirts.push(o);
   if(o.material?.name==='face-skin')faces.add(o.material);
  });
- if(gloves.size!==1||!shirts.length||faces.size!==1)throw Error('Karaktärens hand- och ärmmaterial kunde inte matchas. Välj en annan spelkaraktär i lobbyn.');
+ if(gloves.size!==1||!shirts.length||faces.size!==1)throw Error('The hand and sleeve materials could not be matched. Choose another character in the lobby.');
  const hand=[...gloves][0],face=[...faces][0],shirt=shirts[0].material;
- if(hand.map||hand.vertexColors)throw Error('Texturmålade händer kräver separat förstapersonsstöd. Använd pilotens handfärg.');
+ if(hand.map||hand.vertexColors)throw Error('Textured hands are unsupported in first person. Use the pilot hand color.');
  const skin=new T.Color(0,0,0);let count=0;
  for(const mesh of shirts){const {color,skinIndex,skinWeight}=mesh.geometry.attributes;if(!color||!skinIndex||!skinWeight||!mesh.skeleton)continue;
   for(let i=0;i<color.count;i++){let influence=0;for(let j=0;j<4;j++)if(/^lowerarm_[lr]$/.test(mesh.skeleton.bones[skinIndex.array[i*4+j]]?.name))influence+=skinWeight.array[i*4+j];
    if(influence<.8)continue;skin.r+=color.getX(i);skin.g+=color.getY(i);skin.b+=color.getZ(i);count++;
   }
  }
- if(!count)throw Error('Karaktärens bara underarmar kunde inte matchas. Skapa en ny Male-pilot.');
+ if(!count)throw Error('The bare forearms could not be matched. Create a new male pilot.');
  skin.multiplyScalar(1/count);
  // Exported torso artwork is masked away from sleeves at this reserved UV.
  const cloth=textureColor(shirt,.005,.005);
- if([...skin.toArray(),...cloth.toArray()].some(v=>!Number.isFinite(v)||v<0||v>1.001))throw Error('Karaktärens färgdata är ogiltiga. Välj en annan spelkaraktär i lobbyn.');
+ if([...skin.toArray(),...cloth.toArray()].some(v=>!Number.isFinite(v)||v<0||v>1.001))throw Error('The character colors are invalid. Choose another character in the lobby.');
  const colorBytes=new Uint8Array(128*4),roughBytes=new Uint8Array(128*4);
  for(let y=0;y<128;y++){const covered=(y+.5)/128<SHIRT_FRACTION,c=(covered?cloth:skin).clone().convertLinearToSRGB(),r=covered?shirt.roughness:face.roughness;
   for(let k=0;k<3;k++){colorBytes[y*4+k]=Math.round(c.toArray()[k]*255);roughBytes[y*4+k]=Math.round(r*255);}colorBytes[y*4+3]=roughBytes[y*4+3]=255;
@@ -62,7 +62,7 @@ export function syncWeaponAppearance(model,profile){
    if (profile?.useRigFinish && !mesh.material.normalMap) {
      // The issued jacket and gloves use the actor's dye with the view rig's
      // close-up stitching and weave. All weapons share this profile.
-     for (const name of ['map','normalMap','roughnessMap']) mesh.material[name] = item.material[name];
+     for (const name of ['map','normalMap','roughnessMap']) mesh.material[name] ??= item.material[name];
      mesh.material.normalScale.copy(item.material.normalScale);
      mesh.material.needsUpdate = true;
    }
@@ -81,7 +81,7 @@ export function syncWeaponAppearance(model,profile){
 /** Long- and short-sleeved exported designs share their actual material colours. */
 export function createRuntimeViewAppearance(asset,{shortSleeves=false}={}){
  let shirt,hand,skin;asset.scene.traverse(o=>{if(!o.isMesh)return;const ms=Array.isArray(o.material)?o.material:[o.material];for(const m of ms){if(m.name==='jacket-fabric')shirt=m;if(m.name==='gloves-leather')hand=m;if(m.name==='face-skin')skin=m;}});
- if(!shirt||!hand||!skin)throw Error('Spelkaraktären saknar hand-/ärmmaterial.');
+ if(!shirt||!hand||!skin)throw Error('The character is missing hand or sleeve materials.');
  // A short-sleeved export needs vertex/atlas matching; reuse its verified reader.
  if(shortSleeves)return createPrivateViewAppearance(asset);
  const cloth=textureColor(shirt,.005,.005),glove=hand.clone(),sleeve=new T.MeshStandardMaterial({color:cloth,roughness:shirt.roughness,metalness:shirt.metalness});

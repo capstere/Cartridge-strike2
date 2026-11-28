@@ -1,0 +1,79 @@
+--- a/tools/online-bonuses-browser.mjs
++++ b/tools/online-bonuses-browser.mjs
+@@ -28,7 +28,7 @@
+   while(!await check()){assert(performance.now()<end,message);await delay(35);}
+ }
+ async function open(touch){
+-  const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',
++  const browser=await chromium.launch({env:{...process.env,XDG_RUNTIME_DIR:touch?'/tmp/cs3-floor5-load-guest':process.env.XDG_RUNTIME_DIR},executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',
+     headless:!process.env.WAYLAND_DISPLAY,args:['--use-angle='+(process.env.FPS_NETWORK_ANGLE||'gl-egl'),
+       '--disable-background-timer-throttling','--disable-renderer-backgrounding','--disable-backgrounding-occluded-windows',
+       '--disable-dev-shm-usage',...(process.env.WAYLAND_DISPLAY?['--ozone-platform=wayland']:[])]});
+@@ -183,8 +183,25 @@
+     await writeFile(join(output,'rejoined-world.png'),Buffer.from(image.image,'base64'));
+     delete image.image;
+     await guest.locator('#room-leave').tap();
++    await guest.waitForFunction(()=>streakSession.closed&&document.querySelector('#hud').hidden);
++    await enterExistingRoom();await guest.locator('#room-ready').waitFor({timeout:100000});
++    const human=name=>[...room.seats.values()].find(seat=>seat.actor.name===name).actor;
++    for(const [page,name] of [[host,'Desktop player'],[guest,'Touch player']]){
++      if(!human(name).ready)await press(page,'#room-ready');
++    }
++    await press(host,'#room-start');await waitForActiveHud(host);await enterTouchMatch(guest);
++    const actor=human('Touch player'),initial=[actor.x,actor.z],tick=room.state.tick;
++    const stick=await guest.locator('[data-mobile-stick-zone]').boundingBox();assert(stick);
++    const x=stick.x+stick.width/2,y=stick.y+stick.height/2,cdp=await guest.context().newCDPSession(guest);
++    await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y}]});
++    try{await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x,y:y-stick.height*.34}]});
++      await wait(()=>Math.hypot(actor.x-initial[0],actor.z-initial[1])>.30,'live touch displacement after rejoin');}
++    finally{await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await cdp.detach();}
++    const movement={map:room.state.mapId,ticks:room.state.tick-tick,meters:Math.hypot(actor.x-initial[0],actor.z-initial[1]),actor:actor.id,players:room.seats.size,bots:room.bots.size};
++    assert.equal(movement.map,targetMap);assert(movement.ticks>0&&movement.meters>.30);assert.equal(movement.players,2);
++    await guest.screenshot({path:join(output,'playing-after-rejoin.png')});
+     assert.deepEqual(errors,[]);
+-    await writeFile(join(output,'lifecycle.json'),JSON.stringify({...result,replacement,lifecycle,rejoined:image},null,2)+'\n');
++    await writeFile(join(output,'lifecycle.json'),JSON.stringify({...result,replacement,lifecycle,rejoined:image,movement},null,2)+'\n');
+     console.log('Native cancelled warm-up, host map replacement and optional GPU error recovered');
+     break qualification;
+   }
+@@ -201,19 +218,21 @@
+     await writeFile(join(output,(i?'emulated':'desktop')+'-waiting.png'),Buffer.from(image,'base64'));
+     waiting.push(meta);
+   }
++  if(admission)await writeFile(join(output,'waiting-observed.json'),JSON.stringify({waiting,loads:await Promise.all(pages.map(page=>page.evaluate(()=>({spans:window.cs3LoadSpans,inputs:window.coldStartup.input,hud:window.coldStartup.firstHud}))))}));
+   console.log('Both players joined and entered ready state');
+   await press(host,'#room-start');await waitForActiveHud(desktop);await enterTouchMatch(touch);
+-  if(await desktop.locator('#pause').isHidden()&&!await desktop.evaluate(()=>!!document.pointerLockElement))await desktop.keyboard.press('Escape');
+-  if(await desktop.locator('#resume').isVisible())await resumeDesktop(desktop);
++  if(!admission&&await desktop.locator('#pause').isHidden()&&!await desktop.evaluate(()=>!!document.pointerLockElement))await desktop.keyboard.press('Escape');
++  if(!admission&&await desktop.locator('#resume').isVisible())await resumeDesktop(desktop);
+   if(admission){
+     for(const timer of inputTimers)clearInterval(timer);
+-    const human=[...room.seats.values()].find(seat=>seat.actor.name==='Desktop player').actor;
++    const human=[...room.seats.values()].find(seat=>seat.actor.name==='Touch player').actor;
+     const initial=[human.x,human.z],tick=room.state.tick;
+-    await desktop.bringToFront();
+-    if(await desktop.locator('#pause').isVisible())await resumeDesktop(desktop);
+-    await desktop.keyboard.down('w');
+-    try{await wait(()=>Math.hypot(human.x-initial[0],human.z-initial[1])>.08,'ordinary live movement after ready');}
+-    finally{await desktop.keyboard.up('w');}
++    const stick=await touch.locator('[data-mobile-stick-zone]').boundingBox();assert(stick);
++    const x=stick.x+stick.width/2,y=stick.y+stick.height/2,cdp=await touch.context().newCDPSession(touch);
++    await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y}]});
++    try{await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x,y:y-stick.height*.34}]});
++      await wait(()=>Math.hypot(human.x-initial[0],human.z-initial[1])>.08,'live thumbstick travel after ready');}
++    finally{await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await cdp.detach();}
+     assert(room.state.tick>tick);
+     assert.deepEqual(errors,[]);
+     const receipts=await Promise.all(pages.map(page=>page.evaluate(admission.admissionReceipt)));
+--- a/tools/first-hud-admission.mjs
++++ b/tools/first-hud-admission.mjs
+@@ -96,7 +96,7 @@
+   const {firstVisibleCallback,detailed,spans,tasks}=window.admissionTrace;
+   // rAF timestamps, handler arrival time and the event timestamp differ. Retain all three.
+   const within=([handler,stamp])=>stamp>=firstHud-50&&stamp<=following[0]&&handler<=horizon;
+-  return {firstHud,nextRaf:following[0],gap:following[1],firstVisibleCallback,markers,warmWindows,
++  return {loadSpans:window.cs3LoadSpans,loadInputs:input.filter(([h,s])=>s>=join&&h<=firstHud),loadRaf:raf.filter(([t,g])=>t>=join&&t-g<=firstHud),firstHud,nextRaf:following[0],gap:following[1],firstVisibleCallback,markers,warmWindows,
+     joinToHud:firstHud-join,loadingWorstRaf:Math.max(0,...raf.filter(([t])=>t>=join&&t<=firstHud).map(([,gap])=>gap)),
+     loadingWorstInput:Math.max(0,...input.filter(([handler,stamp])=>stamp>=join&&handler<=firstHud).map(([handler,stamp])=>handler-stamp)),
+     preparation:interval?{...interval,raf:raf.filter(([t,gap])=>t-gap<=interval.end&&t>=interval.start),input:input.filter(([t,stamp])=>stamp>=interval.start&&stamp<=interval.end)}:undefined,

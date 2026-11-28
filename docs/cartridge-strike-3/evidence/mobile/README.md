@@ -1,0 +1,54 @@
+# CS3-06 mobile acceptance
+
+The first touch run used Chromium on the Raspberry Pi's Wayland desktop. Chromium generated the touch contacts through CDP. The game continued its ordinary frame loop throughout the match. The viewport began at 844 × 390 CSS pixels and rotated to 390 × 844. These observations describe emulated touch input on the Pi. Physical handset comfort, touch sampling and screen latency require a handset.
+
+## Normal-play observations
+
+Build `362425582c5d9142a0369d8c11feae670b899845af89c853350c88343463d1f7` at `c1a3db749e8be0050d4afc7d8bba16cae1ff1769` opened Options, restored settings after reload and deployed into Meltem Endless through the Solo menu. [Frame-by-frame state samples](p20-touch-through-rotation.json) include game times in seconds, renderer frame numbers, pointer ownership and weapon state.
+
+| Reference requirement | Observed result |
+| --- | --- |
+| IMG_8153, IMG_8154 and IMG_8157 controls and persistence | Export/import and reload preserved the fixed stick, Run button, scope release, invert Y, 82° FOV, 0.9 zoom sensitivity and repositioned Reload button. A malformed import showed an English message and the valid profile could be reimported. |
+| IMG_8155 sound controls | The live menu track read 0.2 at master 0.5 and music 0.4. Muting announcements left it at 0.2 after reload. The fixture reads the live audio element and saved settings. |
+| V4 2.417–3.250 s and V6 6.252–6.502 s Rush pose and feedback | Forward motion alone kept the fixed-stick profile walking. Pressing Run entered Rush with a gold ring, reticle opacity 0 and weapon roll 0.467 rad at game time 1.10 s. Crouch entered the slide with 0.60 s remaining at game time 1.75 s. [Rush frame](p20-rush.jpg) |
+| IMG_8157 compound gestures | With three pointers held, movement and camera yaw both changed while the scope reached full aim. The rifle held five rounds until the trigger finger lifted. Ammo then fell to four, while stick ID 6 and look ID 7 stayed active. A subsequent scoped touch cancel kept ammo at four. [Scope release frame](p20-scope-release.jpg) |
+| Rotation during movement | Turning portrait paused the game at 3.83 s. Forward, Look and Fire had no active owners. The earlier viewport and renderer buffer sizes are retained in the sample. |
+
+The 2026-11-28 source review used the actual IMG_8153–8157 settings panels and timestamped V2/V4/V6 frames. [Recording observations](../../RECORDING_REVIEW.md) and [settings panel requirements](../../UI_UX_SPECIFICATION.md) identify the original frames and their acceptance criteria. Riposte contributions include `09q-tactile.js` touch roles, `09qb-tactile-layout.js` normalized layouts, `09qc-manette.js` controller dead zones and spatial navigation, `09qd-visee.js` aim behavior, `08a-binds.js` distinct device input paths and `09r-pwa.js` install/update behavior. Local and network games use the existing CS game input and authoritative weapon rules.
+
+## Reproduction
+
+Serve the exact built checkout. Set `FPS_TEST_ORIGIN`, `CHROMIUM_PATH=/usr/bin/chromium`, `FPS_NETWORK_HEADED=1`, working Wayland environment variables and `CS3_MOBILE_EVIDENCE` to a scratch directory. Run the following fixtures serially on the Pi.
+
+- `node tools/mobile-profile-browser.mjs` exercises the normal menus, scoped three-pointer play, rotation, grenades and power-saving cadence.
+- `node tools/gamepad-menu-browser.mjs` supplies a virtual standard Gamepad API controller for menu navigation, gameplay, reconnect and stalled deployment.
+- `node tools/mobile-pwa-browser.mjs` checks an installation at the supplied origin. Repeat with a repository subpath. The fixture disconnects page and service-worker traffic from the origin before checking recovery.
+- Existing package checks include `tools/mobile-reliability-browser.mjs` and `tools/online-autofire-browser.mjs`.
+
+No physical controller or handset was connected for this run.
+
+## Installed web app
+
+The native Pi browser opened the public deployment at both the root and a repository subpath on build `227ed715ceb839fcacfc8f4d9d14ccfa2a5972ae6521094455ec1a947476a9cf`, revision `1b2515e781a750748488229ac7bd8b3a41ffbe4a`. The browser activated and updated each worker and cached only that scope's public `offline.html`. With browser and worker connections disconnected, opening the manifest start URL and the explicit index in separate fresh tabs produced the English recovery page in all four cases. The browser confirmed the service worker supplied every response. An offline invitation produced a network failure. Restoring connectivity reopened the live menu.
+
+The [root receipt](p20-pwa-root.json) and [repository subpath receipt](p20-pwa-pages.json) preserve the exact scopes, cache contents, navigation responses and recovery results. These public HTTP loopback checks ran in Chromium's secure localhost context. The authenticated pilot has a separate HTTPS fixture.
+
+## Continuous touch play on the corrected build
+
+The Pi ran the complete Meltem Endless sequence on the Broadcom V3D 7.1.10.2 through ANGLE at `9c1e4f2ad321460aa8f225ffd4991e2c406f1abe`, build `e7c935555c864eeb1f34a5938b8d4de88440e84d544d4a68e3157d3cefd0c863`. The player remained alive in both pacing windows.
+
+| Scenario | Observation |
+| --- | --- |
+| Rotate with the original movement finger down | The game paused and cleared game ownership before the original emulated contact lifted in Chromium. After Resume, a fresh manual throw reached the correct control. The receipt includes capture-phase pointer IDs, CSS coordinates, targets, viewport geometry and scale. |
+| V2 manual cartridge | Smoke, flash and HE cycled in the normal HUD. The player held HE, obtained a live fuse and released it with horizontal velocity (0.97, −8.83). The ordinary shop then supplied a second cartridge. [Held cartridge and active Throw button](grenade-held.jpg) |
+| Same-aspect orientation interruption | At 932 × 430 CSS pixels, two simulated orientation notifications paused a held HE. Exactly one projectile retained the original 18.670 s deadline and had zero velocity on all axes. The trigger, held cartridge and active owner cleared. |
+| V4/V6 stick threshold | The same floating stick contact advanced from walk to sprint. Rush weight changed from 0 to 0.723 and the reticle opacity from 1 to 0. On release, the ring disappeared and the weapon recovered, with the reticle back at 0.93 at the sampled frame. [Gold ring and lowered rifle](ring-rush.jpg) |
+| IMG_8156 power saving | For 120 display callbacks at FOV 82°, ordinary play made 120 game updates and 120 draws, with 23.2 ms median and 32.9 ms p95 between draws. With the 30 FPS option, the game still updated 120 times and drew 70 times, with 33.6 ms median and 44.0 ms p95 between draws. The measurement covers Meltem in this session. Floor 5 has a separate performance investigation. |
+
+The [full touch receipt](p20-touch-verified.json) includes both calibration windows, movement, scoped firing, neutralization, profiles and pointer activity. The [layout editor](touch-layout.jpg) shows the saved-controls UI from this run. The test recorded zero page errors. Inspect the earlier samples for the initial implementation and the complete receipt for the corrected build.
+
+## Standard controller on the corrected build
+
+A virtual standard Gamepad API controller drove the same native Pi browser and corrected build. The D-pad reached visible menu controls, skipped the backing mode select on Endless-only Meltem, and changed the actual stick selector in Options. A launched Meltem, both sticks moved and looked, and L3 brought Rush weight to 0.974. The right trigger took the SMG from 30 rounds to 29. Start paused and resumed. Reconnecting with the trigger held kept the magazine at 29 until the player released the trigger.
+
+The fixture then held the engine module request, including after Retry reloaded the page. The controller could open the loading overlay, focus and activate Cancel with A, dismiss it with B, return after an actual timeout, retry with A and dismiss the new loading overlay. The [controller receipt](p20-gamepad-verified.json) records movement, ammunition, visited Solo controls and loading actions. No physical gamepad was attached.

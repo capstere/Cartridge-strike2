@@ -81,7 +81,18 @@ html[data-hud=clean] #mobile-controls .mobile-stick{box-shadow:none;opacity:.2}
 html[data-hud=clean] #mobile-controls .mobile-stick.active{opacity:.8}
 #mobile-utilities{position:absolute;left:max(12px,env(safe-area-inset-left));top:calc(max(12px,env(safe-area-inset-top)) + 52px);padding:8px;display:grid;grid-template-columns:repeat(2,72px);gap:8px;background:#0e222af5;border:1px solid #59757c;border-radius:8px;pointer-events:auto;z-index:6;max-height:calc(100dvh - 82px);overflow-y:auto;touch-action:pan-y}
 html[data-hud=clean] #mobile-controls #mobile-utilities .mobile-button{position:static;inset:auto;width:72px;height:48px;min-height:48px;border-radius:6px;font-size:11px;transform:none}
-html[data-hud=clean] #mobile-controls.mobile-dead #mobile-more{display:none}
+html[data-hud=full] #mobile-controls{
+  --full-buy-left:max(3%,calc(env(safe-area-inset-left,0px) + 12px))
+}
+html[data-hud=full] #mobile-controls .mobile-buy{left:var(--full-buy-left)}
+html[data-hud=full] #mobile-controls .mobile-more{
+  top:max(12px,env(safe-area-inset-top));left:calc(var(--full-buy-left) + 60px);
+  bottom:auto;right:auto;width:52px;height:44px;min-height:44px;transform:none
+}
+html[data-hud=full] #mobile-controls #mobile-utilities .mobile-button{
+  position:static;inset:auto;width:72px;height:48px;transform:none
+}
+#mobile-controls.mobile-dead #mobile-more{display:none}
 @media(pointer:coarse){
  html[data-hud=clean] #hud .top-hud{top:max(12px,env(safe-area-inset-top));margin:0;transform:translateX(-50%);gap:2px;max-width:calc(100vw - 152px)}
  html[data-hud=clean] .score{min-width:64px;gap:6px;padding:4px 7px}
@@ -133,4 +144,72 @@ html[data-hud=clean] #mobile-controls.mobile-dead #mobile-more{display:none}
  html[data-hud=clean] #notification{bottom:280px;max-width:calc(100vw - 32px)}
  html[data-hud=clean] #radio-caption{bottom:322px;max-width:calc(100vw - 32px)}
  html[data-hud=clean] #grenade-preview-note{bottom:204px;max-width:240px}
+}
+
+/* World effects sit beneath the persistent tactical HUD in both layouts. */
+html #flash-overlay,html #smoke-overlay,html #damage-overlay{z-index:2}
+html.hud-low-ammo #hud #ammo{color:#ffad94}
+html.hud-low-ammo #hud #reload-text{color:#ffd9b9}
+
+/* The donor's outer-stick Rush turns the thumb and base gold. The dashed
+   outer arc stays distinguishable from the solid base on either HUD. */
+html #mobile-controls [data-mobile-stick].active.rushing{border-color:#e5b642!important}
+html #mobile-controls [data-mobile-stick].active.rushing [data-mobile-nub]{background:#edbf4d!important;border-color:#ffda7e!important}
+html #mobile-controls .mobile-stick[data-mobile-stick].active.rushing::after{border-style:dashed}
+
+/* The compact ammo plate only fits the weapon and magazine. Keep its action
+   prompt above the interaction row, visible against either world or flash. */
+@media (orientation:landscape) and (max-height:520px){
+  html.touch-fps[data-hud=clean] #hud #reload-text:not(:empty){
+    position:fixed;top:68%;left:50%;transform:translate(-50%,-50%);
+    width:max-content;max-width:38vw;padding:3px 8px;text-align:center;
+    line-height:1.2;font-size:11px!important;font-weight:700;
+    color:#ffd9b9!important;background:#080b0fe8;pointer-events:none;
+  }
+  html.touch-fps[data-hud=clean].hud-map-open:not(.network-session-ui) #hud .map-panel{
+    top:max(64px,calc(env(safe-area-inset-top) + 56px))!important;
+    left:max(12px,env(safe-area-inset-left))!important;
+    max-width:min(36vw,340px)!important;
+  }
+}
+
+#bonus-controls:not([hidden]) { position:fixed; z-index:13; display:flex; gap:3px; bottom:max(8px,env(safe-area-inset-bottom)); left:50%; transform:translateX(-50%) }
+#bonus-controls button { min-width:50px; min-height:44px; padding:3px 7px; display:grid; align-content:center; color:#d9e0e5; background:#16212aed; border:1px solid #73838e; font:12px/1.1 system-ui; touch-action:manipulation }
+#bonus-controls button:disabled { opacity:1; color:#aebbc3 }
+#bonus-controls button[data-state=ready] { border:2px solid #efba58; color:#ffe5a3 }
+#bonus-controls button[data-state=active] { color:#b5f3e5; border-color:#89d8c4 }
+#bonus-controls button:focus-visible { outline:3px solid white }
+
+#zone-control{position:absolute;top:clamp(55px,10vh,95px);left:50%;transform:translateX(-50%);display:flex;gap:4px;pointer-events:none}
+#zone-control[hidden]{display:none}
+#zone-control span{padding:3px 6px;border:1px solid #71818c;background:#131b24e8;color:#f2f4f5;font:600 11px var(--lb-display,sans-serif);white-space:nowrap}
+#zone-control b{margin-right:5px}
+#zone-control [data-status=Held]{border-color:#66c7b1}
+#zone-control [data-status=Enemy]{border-color:#de8176}
+#zone-control [data-status=Contested]{border-color:#f7be67}
+
+#replay-view{position:fixed;inset:0;z-index:1200;pointer-events:auto;color:#f6f4ed}
+#replay-view[data-stage=card]{background:radial-gradient(ellipse at center,#23191a,#0c0d10 78%)}
+.replay-strip{position:absolute;bottom:max(5vh,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:min(35rem,92vw);display:flex;align-items:center;justify-content:space-between;gap:1rem;background:#101417ed;border-left:3px solid #cb7855;padding:1rem 1.2rem;box-sizing:border-box}
+.replay-strip p{margin:.25rem 0}.replay-strip strong{font-size:clamp(1.1rem,3vw,1.75rem);overflow-wrap:anywhere}.replay-strip button{min-height:44px;flex:none}
+.replay-optic{position:absolute;left:50%;top:50%;width:72vmin;height:72vmin;transform:translate(-50%,-50%);border:2px solid #141515;border-radius:50%;box-shadow:0 0 0 150vmax #080a0a;background:linear-gradient(transparent calc(50% - 1px),#171919 50%,transparent calc(50% + 1px)),linear-gradient(90deg,transparent calc(50% - 1px),#171919 50%,transparent calc(50% + 1px))}
+.cs-replaying :is(#flash-overlay,#smoke-overlay,#damage-direction,#damage-overlay,#hud,#mobile-controls,#online-room,#scoreboard,#match-end,#countdown-look,#spectate){visibility:hidden!important;pointer-events:none!important}
+
+.cs-ffa [data-utility=radio],.cs-ffa .team-radio-hint{display:none!important}
+
+@media(pointer:coarse){
+  html.cs-ffa[data-hud=clean] .score.analysts>span::before{content:'YOU'}
+  html.cs-ffa[data-hud=clean] .score.counter>span::before{content:'LEADER'}
+}
+
+@media (orientation:landscape) and (max-height:500px){
+  .replay-strip{bottom:max(.5rem,env(safe-area-inset-bottom));width:auto;left:max(.5rem,env(safe-area-inset-left));right:max(.5rem,env(safe-area-inset-right));transform:none;background:transparent;align-items:flex-end;padding:0;border:0;pointer-events:none}
+  .replay-strip>div{background:#101417ec;padding:.35rem .65rem;border-left:3px solid #cb7855;max-width:45vw}
+  .replay-strip .eyebrow{font-size:.62rem}.replay-strip strong{font-size:1.05rem}.replay-strip p{margin:.12rem 0;font-size:.75rem}
+  .replay-strip button{background:#192225e8;pointer-events:auto}
+}
+
+@media (pointer:fine){
+  html[data-hud=clean].hud-inventory-peek:has(#bonus-controls:not([hidden])) .inventory{bottom:54px}
+  html[data-hud=full] #bonus-controls:not([hidden]){bottom:calc(62px + env(safe-area-inset-bottom))}
 }

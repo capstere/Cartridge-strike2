@@ -2,7 +2,7 @@
  * Colyseus owns sequencing/buffering; this module validates a consumed frame.
  */
 const axes = {forward: 1, strafe: 1, yaw: Math.PI, pitch: 1.49};
-const buttons = ['jump', 'crouch', 'sneak', 'aim', 'fire', 'interact', 'reload'];
+const buttons = ['jump', 'crouch','crouchEdge','holdThrow', 'sneak', 'sprint', 'aim', 'fire', 'interact', 'reload'];
 const slots = ['primary', 'pistol', 'knife'];
 const fields = new Set([...Object.keys(axes), ...buttons, 'select']);
 

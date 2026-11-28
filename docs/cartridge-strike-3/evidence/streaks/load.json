@@ -1,0 +1,80 @@
+{
+  "build": "dad083e84e1ccf1997ecfc12be871a14b75d0ab53baf4ff7e8acd9050b83c5d4",
+  "map": "compact-arena",
+  "peers": 10,
+  "actors": 10,
+  "inputs": 3820,
+  "inputHzPerPeer": 20,
+  "activeWindowSeconds": 15.163,
+  "fixedTickMilliseconds": {
+    "baseline": {
+      "count": 240,
+      "median": 0.608,
+      "p95": 1.314,
+      "p99": 2.69,
+      "max": 3.673
+    },
+    "tenUav": {
+      "count": 901,
+      "median": 0.512,
+      "p95": 1.045,
+      "p99": 2.046,
+      "max": 5.719
+    }
+  },
+  "packets": [
+    {
+      "pulses": 5,
+      "contacts": 25,
+      "maxPayloadJsonBytes": 701
+    },
+    {
+      "pulses": 5,
+      "contacts": 25,
+      "maxPayloadJsonBytes": 715
+    },
+    {
+      "pulses": 5,
+      "contacts": 25,
+      "maxPayloadJsonBytes": 701
+    },
+    {
+      "pulses": 5,
+      "contacts": 25,
+      "maxPayloadJsonBytes": 715
+    },
+    {
+      "pulses": 5,
+      "contacts": 25,
+      "maxPayloadJsonBytes": 701
+    },
+    {
+      "pulses": 5,
+      "contacts": 25,
+      "maxPayloadJsonBytes": 715
+    },
+    {
+      "pulses": 5,
+      "contacts": 25,
+      "maxPayloadJsonBytes": 701
+    },
+    {
+      "pulses": 5,
+      "contacts": 25,
+      "maxPayloadJsonBytes": 715
+    },
+    {
+      "pulses": 5,
+      "contacts": 25,
+      "maxPayloadJsonBytes": 701
+    },
+    {
+      "pulses": 5,
+      "contacts": 25,
+      "maxPayloadJsonBytes": 715
+    }
+  ],
+  "queuePeak": 1,
+  "backpressure": 0,
+  "drops": 0
+}

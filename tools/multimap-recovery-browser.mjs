@@ -51,7 +51,9 @@ try {
   const join = page.locator('[data-create="false"]');
   await page.route('**/levels/compact-arena.json', route => route.fulfill({status: 503, body: 'fixture unavailable'}), {times: 1});
   await join.click();
-  await page.locator('#network-status').filter({hasText: /Kunde inte ladda/i}).waitFor();
+  const status = page.locator('#network-status[data-error-id="mapLoadFailed"]');
+  await status.waitFor();
+  assert.equal(await status.textContent(), 'Could not load Compact Arena. Rejoin the room to try again.');
   await until(() => room.seats.size === 1 && room.clients.length === 1, 'failed load released its reserved seat');
   assert(await join.isEnabled() && await page.locator('#fatal').isHidden());
   assert(await page.evaluate(() => !__fps.network && !__fps.world && !__fps.renderer));

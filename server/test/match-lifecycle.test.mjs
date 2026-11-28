@@ -65,18 +65,72 @@ test('missing/stale RTT uses live hits; forged and delayed echoes cannot buy mor
  const {r,a}=await fixture(t);const seat=r.seats.get(a.sessionId);
  await delay(160);const frame={sampleTick:r.sim.tickNumber},stamp=r.clock.elapsedTime-100;
  seat.rtt=undefined;seat.rttAt=undefined;
- assert(r.lag.accept(seat,frame,stamp));assert.equal(r.lag.shots.get(seat.id),0);
+ assert.equal(r.lag.admit(seat,frame,stamp),0);
  recordRtt(seat,20,r.clock.elapsedTime);recordRtt(seat,450,r.clock.elapsedTime);assert.equal(seat.rtt,20);
  seat.rttAt=r.clock.elapsedTime-RTT_FRESH_MS-1;
- assert(r.lag.accept(seat,frame,stamp));assert.equal(r.lag.shots.get(seat.id),0);
+ assert.equal(r.lag.admit(seat,frame,stamp),0);
  const before=seat.rttAt;a.send('clock-echo','forged');await delay(50);assert.equal(seat.rttAt,before);
  assert.equal(recordRtt(seat,1001,r.clock.elapsedTime),false);assert.equal(recordRtt(seat,NaN,r.clock.elapsedTime),false);
  seat.rtt=310;seat.rttAt=r.clock.elapsedTime;seat.lifeStartedAt=0;seat.lastShotStamp=0;
  const tick=r.sim.tickNumber;r.lag.tickTimes.set(tick,r.clock.elapsedTime-310);
  // Synthetic monotonic room clock permits the measured 250 ms stress budget.
  const old=r.clock.elapsedTime;r.clock.elapsedTime=old+500;r.lag.tickTimes.set(tick,old+190);
- assert(r.lag.accept(seat,{sampleTick:tick},old+90));assert.equal(r.lag.shots.get(seat.id),old+90);
+ assert.equal(r.lag.admit(seat,{sampleTick:tick},old+90),old+90);
  seat.rtt=20;seat.lastShotStamp=0;recordRtt(seat,450,r.clock.elapsedTime);
- assert(r.lag.accept(seat,{sampleTick:tick},old+90));assert.equal(r.lag.shots.get(seat.id),0,'delayed echo does not enlarge historical allowance');
+ assert.equal(r.lag.admit(seat,{sampleTick:tick},old+90),0,'delayed echo does not enlarge historical allowance');
  r.clock.elapsedTime=old;
+});
+
+test('the room releases both seats at one start tick and never spends the match timer during deployment',{timeout:15000},async t=>{
+ const {a,b,r,g,client}=await fixture(t,{countdownSeconds:1.2,durationSeconds:20});
+ command(a,'ready',{ready:true});command(b,'ready',{ready:true});
+ await until(()=>[...a.state.actors.values()].every(actor=>actor.playerReady),'two ready seats');
+ command(a,'start');
+ await until(()=>a.state.phase==='countdown'&&b.state.phase==='countdown','two visible countdowns');
+ const actor=r.seats.get(a.sessionId).actor,other=r.seats.get(b.sessionId).actor;
+ const pose=p=>[p.x,p.y,p.z,p.hp,g.item(p).ammo];
+ const spawns=[pose(actor),pose(other)];
+ assert.equal(a.state.durationSeconds,20);
+ assert(a.state.remainingSeconds>0&&a.state.remainingSeconds<=1.2);
+ for(const p of [a,b]){
+  p.send('controls',{enabled:true,lifeId:own(p).lifeId,controlEpoch:own(p).controlEpoch});
+  send(p,{forward:1,fire:true,fireId:1,jump:true,yaw:1});
+ }
+ const mid=await ready(await client.joinById(a.roomId,options));
+ mid.onMessage('notice',()=>{});t.after(()=>mid.leave());
+ assert.equal(mid.state.phase,'countdown','an arriving seat receives the remaining countdown without restarting it');
+ assert.equal(mid.state.matchId,a.state.matchId);
+ await delay(100);
+ assert.equal(g.state.time,0);
+ assert.deepEqual([pose(actor),pose(other)],spawns);
+ await until(()=>a.state.phase==='active'&&b.state.phase==='active','one authoritative release');
+ assert(a.state.remainingSeconds>19);
+ assert.equal(g.item(actor).ammo,spawns[0][4],'held shot was discarded');
+ assert.equal(g.item(other).ammo,spawns[1][4]);
+ send(a,{fire:true,fireId:2,yaw:1});
+ await until(()=>g.item(actor).ammo===spawns[0][4]-1,'live input after release');
+ const late=await ready(await client.joinById(a.roomId,options));
+ late.onMessage('notice',()=>{});t.after(()=>late.leave());
+ assert.equal(late.state.phase,'active');
+ assert.equal(late.state.matchId,a.state.matchId);
+ assert(late.state.remainingSeconds>16,'late player sees the existing game clock');
+});
+
+test('Classic admits a loaded arrival during deployment and holds a still-loading seat for next round',{timeout:18000},async t=>{
+ const {a,b,r,client}=await fixture(t,{countdownSeconds:1.8});
+ command(a,'settings',{mode:'classic'});await until(()=>a.state.mode==='classic'&&b.state.mode==='classic','Classic selected');
+ for(const p of [a,b])command(p,'ready',{ready:true});
+ await until(()=>[...a.state.actors.values()].every(s=>s.playerReady),'starting seats ready');
+ command(a,'start');await until(()=>a.state.phase==='countdown','deployment begins');
+ const early=await ready(await client.joinById(a.roomId,options));
+ early.onMessage('notice',()=>{});t.after(()=>early.leave());
+ assert.equal(early.state.phase,'countdown');assert(own(early).alive);assert.equal(own(early).pending,false);
+ const loading=await client.joinById(a.roomId,options);
+ loading.onMessage('notice',()=>{});t.after(()=>loading.leave());
+ assert.equal(r.state.phase,'countdown');
+ await until(()=>a.state.phase==='active','original deployment completes');
+ await ready(loading);
+ assert.equal(loading.state.phase,'active');assert.equal(loading.state.roundPhase,'buy');
+ assert.equal(own(loading).alive,false);assert.equal(own(loading).pending,true);
+ assert.equal(own(early).alive,true);
 });

@@ -42,6 +42,7 @@ export class SquadTactics {
   this.game=game;this.signature='';this.assignments=new Map();this.claims=new Map();this.ranks=new Map();
   for(const a of game.actors)if(a.bot)this.ranks.set(a.id,game.random());
   this.refresh();
+  if(game.state.mode==='ffa')return;
   for(const team of ['analysts','counterAnalysts']){
    const door=game.world.doors?.elevators?.cabins.find(c=>c.id===game.world.project?.gameplay.startElevators?.find(e=>e.team===team)?.doorId);
    const bots=game.actors.filter(a=>a.bot&&a.team===team).sort((a,b)=>door?distance(a,door)-distance(b,door):this.rank(a)-this.rank(b));
@@ -50,6 +51,7 @@ export class SquadTactics {
  }
  rank(a){return this.ranks.get(a.id)??a.index/5;}
  refresh(){
+  if(this.game.state.mode==='ffa')return;
   const g=this.game,b=g.bomb,signature=[g.actors.filter(a=>a.alive).map(a=>a.id).join(','),b.status,b.carrierId,...g.hostages.map(h=>`${h.id}:${h.alive}:${h.rescued}:${h.escortId}`)].join('|');
   if(signature===this.signature)return;this.signature=signature;this.assignments.clear();
   for(const team of ['analysts','counterAnalysts']){
@@ -70,6 +72,7 @@ export class SquadTactics {
   for(const a of g.actors)if(a.bot){const task=this.assignments.get(a.id);if(task){a.aiRole=task.role;a.bot.task=task;}}
  }
  claim(bot,record){
+  if(this.game.state.mode==='ffa')return true;
   const g=this.game,now=g.state.time,a=bot.actor,key=`${a.team}:${record.entity.id}:${Math.round(record.lastSensedPosition.x/3)}:${Math.round(record.lastSensedPosition.z/3)}`;
   for(const [id,c]of this.claims)if(c.until<now||!g.actors.some(a=>a.id===id&&a.alive))this.claims.delete(id);
   const own=this.claims.get(a.id);if(own?.key===key)return true;
@@ -91,13 +94,22 @@ export function tacticalPosition(bot,center,{threat=null,radius=2.2,cover=false}
  const {game:g,actor:a}=bot,w=g.world,phase=bot.positionPhase??bot.style.angle,candidates=[];
  for(let i=0;i<12;i++){
   const angle=phase+i*Math.PI/6,p={x:center.x+Math.cos(angle)*radius,z:center.z+Math.sin(angle)*radius};
-  if(!w.canOccupy(p.x,p.z,a.radius+.02)||g.actors.some(o=>o!==a&&o.alive&&o.team===a.team&&(distance(o,p)<.75||o.bot?.hold&&distance(o.bot.hold.point,p)<.75)))continue;
-  if(g.hostages.some(h=>h.alive!==false&&!h.rescued&&distance(h,p)<.65))continue;
+  const floor=center.y??a.y;
+  if(w.layeredTerrain)p.y=w.groundHeight(p.x,p.z,floor,a.radius);
+  const crowded=(other,radius=.75)=>distance(other,p)<radius&&(!w.layeredTerrain||Math.abs((other.y??floor)-p.y)<a.height);
+  if(!w.canOccupy(p.x,p.z,a.radius+.02,a.height,p.y??0))continue;
+  if(g.actors.some(o=>o!==a&&o.alive&&o.team===a.team&&
+      (crowded(o)||o.bot?.hold&&crowded(o.bot.hold.point)||o.bot?.coverMove?.until>g.state.time&&crowded(o.bot.coverMove.point))))continue;
+  if(g.hostages.some(h=>h.alive!==false&&!h.rescued&&crowded(h,.65)))continue;
   if(!w.navigation.clear(cover?a:center,p))continue;
   let score=-distance(a,p)*.12;
-  if(threat){const sheltered=!g.canSee({...p,y:1.35},{...threat,y:threat.y??1.3});score+=sheltered?(cover?5:1):0;}
+  if(threat){
+    const sheltered=!g.canSee({...p,y:(p.y??0)+1.35},{...threat,y:threat.y??1.3});
+    if(cover&&!sheltered)continue;
+    if(sheltered)score+=cover?5:1;
+  }
   candidates.push({...p,score});
  }
  candidates.sort((a,b)=>b.score-a.score);
- return candidates[0]||point(center);
+ return candidates[0]||(w.layeredTerrain?{...point(center),y:center.y??a.y}:point(center));
 }

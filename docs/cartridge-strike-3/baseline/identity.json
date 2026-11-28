@@ -1,0 +1,45 @@
+{
+  "reviewedHead": "f1f363963cd082c6cc1b0f6289c3f9b616064e83",
+  "release": "8307e91118dba4fdca964012d2b0c247a40221fd",
+  "previousRelease": "75feffd9360da2380098bfea18f60df12713feff",
+  "health": "ok",
+  "roomsAtSample": 0,
+  "protocol": 14,
+  "build": "30f8f4af97b2b082f995196f06f498b132ba9bf8d303671ee8ab8d4b69590385",
+  "sourceDirectoriesIdentical": [
+    "src",
+    "shared",
+    "server",
+    "ui",
+    "fps",
+    "assets",
+    "vendor",
+    "levels",
+    "audio",
+    "furniture-editor/build",
+    "furniture-editor/library",
+    "frontline/source"
+  ],
+  "host": {
+    "model": "Raspberry Pi 5 Model B Rev 1.1",
+    "node": "v26.13.1"
+  },
+  "branchPublication": {
+    "environment": "github-pages",
+    "ref": "main",
+    "source": "5364240599164c0aee278bb0ac2a35d662c3a818",
+    "deployment": 8107023141,
+    "workflow": "dynamic/pages/pages-build-deployment",
+    "state": "success",
+    "deploymentCompletedAt": "2026-11-27T10:06:22Z"
+  },
+  "localTests": {
+    "fps": 258,
+    "server": 53,
+    "deployment": 7,
+    "failed": 0
+  },
+  "productionSample": "2026-11-27T10:06:49Z",
+  "comparedFrom": "8307e91118dba4fdca964012d2b0c247a40221fd",
+  "comparedTo": "5364240599164c0aee278bb0ac2a35d662c3a818"
+}

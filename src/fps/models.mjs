@@ -1,3 +1,11 @@
+import {WEAPONS} from './config.mjs';
+import {syncWeaponFittings,releaseWeaponFittings} from './weapon-fittings.mjs';
+export {syncWeaponFittings,releaseWeaponFittings};
+export function syncActorWeaponFittings(model,actor){
+  const item=actor?.inventory?.[WEAPONS[actor.weapon]?.slot];
+  syncWeaponFittings(model,item);
+}
+
 import {kitWeapon} from './strike-kit-timing.mjs';
 import {makeKitWeapon,animateKitWeapon,disposeKitModels} from './strike-kit-models.mjs?v=6.1.2';
 import {upgradeViewSurfaces,disposeViewSurfaces} from './view-surface.mjs';
@@ -10,13 +18,35 @@ import * as THREE from '../../vendor/three/three.module.js';
 import { makeWeapon as primitiveWeapon, makeActor as primitiveActor,
   animateWeapon as primitiveWeaponAnimation, animateActor as primitiveActorAnimation,
   disposeWeaponResources as disposePrimitiveWeapons, animateCorpse as primitiveCorpse } from './model-primitives.mjs';
-import {refitViewArms} from './presentation-hands.mjs';
+import {refitViewArms,releasePistolSupport} from './presentation-hands.mjs';
 import { createViewMotion, viewMotion, strideSample, solveLeg, clamp } from './presentation-motion.mjs';
+
+// Front/rear marker coordinates on the authored meshes, in viewmodel space.
+// Additional camera-space drop at full Rush, fitted to the different mesh spans.
+// V4 at 2.417-3.250 s shows only the upper tip moving along the lower edge.
+const rushDrop={cr4:.26,ar47:.23,smg:.25,shotgun:.20,sniper:.28,bazooka:.26};
+const sightLines = {
+  p9: [.090,-.174,.089,.037], p12: [.090,-.174,.089,.037],
+  cr4: [.119,-.475,.119,.023], ar47: [.104,-.640,.126,-.210],
+  smg: [.122,-.380,.133,.030], shotgun: [.073,-.760,.100,.070],
+  sniper: [.165,-.425,.165,-.055]
+};
+function alignSights(model,amount,pitchKick) {
+  const line=model.userData.opticSight || sightLines[model.userData.id];
+  if(!line || amount<=0)return;
+  const [frontY,frontZ,rearY,rearZ]=line;
+  const pitch=Math.atan((rearY-frontY)/(rearZ-frontZ));
+  const aimY=rearZ*Math.sin(pitch)-rearY*Math.cos(pitch);
+  model.rotation.x+=(pitch+pitchKick-model.rotation.x)*amount;
+  model.rotation.y*=1-amount;model.rotation.z*=1-amount;
+  model.position.x*=1-amount;model.position.y+=(aimY-model.position.y)*amount;
+}
 
 export function makeWeapon(id='p9',options={}) {
   const hero=options.viewmodel!==false&&kitWeapon(id);
   const model=hero?makeKitWeapon(id):primitiveWeapon(id,options);
   if(options.viewmodel!==false){if(!hero)upgradeViewSurfaces(model);model.userData.presentationMotion=createViewMotion();}
+  syncWeaponFittings(model,{...options,id});
   return model;
 }
 export function animateWeapon(model,actor,time,dt,options={}) {
@@ -27,6 +57,46 @@ export function animateWeapon(model,actor,time,dt,options={}) {
     const offset=viewMotion(state,actor,time,{weapon:model.userData.id,shotAt:options.shotAt,reducedMotion:options.reducedMotion});
     model.position.x+=offset.position[0];model.position.y+=offset.position[1];model.position.z+=offset.position[2];
     model.rotation.x+=offset.rotation[0];model.rotation.y+=offset.rotation[1];model.rotation.z+=offset.rotation[2];
+    // Riposte 5.6.1 06-weapons VM_SPRINT and 06c-models pistolRunPose.
+    // Copyright (c) 2026 BenDBSS, MIT (licenses/riposte-MIT.txt).
+    const gait=actor.rushWeight || 0,phase=(actor.distanceWalked || 0)*4.4;
+    const handling=pose.reloading || actor.action || actor.cartridge || options.inspecting ||
+      time-(options.switchAt ?? -Infinity)<.26 || time-(options.throwAt ?? -Infinity)<.48;
+    // The locomotion clock keeps advancing during an action. Ease between the
+    // two poses instead of snapping the gun aside at either end of a reload.
+    const elapsed=time-(state.handlingAt ?? -Infinity),target=handling?1:0;
+    if(elapsed<0 || elapsed>.25 || state.poseActor!==actor.id || state.poseLife!==actor.lifeId){
+      state.handlingWeight=target;
+    }else{
+      state.handlingWeight=target+(state.handlingWeight-target)*Math.exp(-25*elapsed);
+    }
+    state.handlingAt=time;state.poseActor=actor.id;state.poseLife=actor.lifeId;
+    const rush=gait*(1-.92*state.handlingWeight)*(1-(actor.aimAmount || 0));
+    if(rush>.001){
+      const stride=options.reducedMotion?0:Math.cos(phase),bounce=options.reducedMotion?0:Math.sin(2*phase);
+      const roll=options.reducedMotion?0:Math.sin(phase);
+      const pistol=['p9','p12'].includes(model.userData.id);
+      if(pistol){
+        model.position.x+=(.035+.008*stride)*rush;
+        model.position.y+=(-.115+.016*bounce)*rush;
+        model.position.z+=(.095+.030*stride)*rush;
+        model.rotation.x-=.38*rush;model.rotation.y-=.25*rush;model.rotation.z-=.24*rush;
+        releasePistolSupport(model,rush,stride,bounce);
+      }else if(WEAPONS[model.userData.id]?.slot==='primary'){
+        model.position.x+=(.01+.012*stride)*rush;model.position.y+=(-.04-rushDrop[model.userData.id]+.012*bounce)*rush;
+        model.position.z+=(-.04+.01*bounce)*rush;
+        model.rotation.x+=(-.50+.04*bounce)*rush;
+        model.rotation.y+=(.65+.05*stride)*rush;model.rotation.z+=(.70+.10*roll)*rush;
+      }else{
+        const compact=WEAPONS[model.userData.id]?.slot!=='bomb';
+        model.position.y+=(-.045+.012*bounce)*rush;
+        model.position.z+=(.055+.012*stride)*rush;
+        model.rotation.x-=(compact?.18:.10)*rush;model.rotation.z+=(compact?.14:.07)*rush;
+      }
+    }
+    const wall=(options.nearWall || 0)*(1-rush)*(1-(actor.aimAmount || 0));
+    model.rotation.x+=wall*.75;model.position.z+=wall*.12;
+    alignSights(model,(1-state.handlingWeight)*clamp(actor.aimAmount || 0),pose.pitchKick+offset.rotation[0]);
     refitViewArms(model);
     model.updateMatrixWorld(true);
     // Muzzle effect follows the final pose. Bullet/hitscan origin stays owned by Game.
@@ -53,7 +123,11 @@ export function makeActor(team,id,isHostage=false) {
   return model;
 }
 export function animateActor(model,actor,time,dt,options={}) {
+  const oldWeapon=model.userData.weaponModel;
   primitiveActorAnimation(model,actor,time,dt,options);
+  const weapon=model.userData.weaponModel;
+  if (oldWeapon && oldWeapon!==weapon) releaseWeaponFittings(oldWeapon);
+  if (weapon) syncActorWeaponFittings(weapon,actor);
   if(model.userData.avatar){
     if(model.userData.avatar.death){model.userData.avatar.death=null;model.userData.avatar.time=-1;model.userData.avatar.activeBase=null;model.userData.avatar.activeUpper=null;}
     syncAuthoredActor(model,actor,time,options);return;

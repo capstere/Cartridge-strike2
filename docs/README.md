@@ -1,6 +1,6 @@
 # Cartridge-Strike 3 program
 
-[CS3 development program and review gate](cartridge-strike-3/README.md) · [Codex handover](cartridge-strike-3/CODEX_HANDOVER.md). Preparation only; explicit owner approval required before implementation.
+[CS3 development program and review gate](cartridge-strike-3/README.md) · [Codex handover](cartridge-strike-3/CODEX_HANDOVER.md). Owner approval is recorded. See [current status](cartridge-strike-3/PROJECT_STATUS.md) for the active package and verification gates.
 
 ---
 

@@ -1,6 +1,6 @@
 # Dependency-aware implementation roadmap
 
-All packages are NOT_STARTED. Owner approval opens CS3-00. A package can start only after its listed dependencies are VERIFIED. A BLOCKED record carries evidence and a recovery action. CS3-00 specifies interfaces on paper. Their first consumer owns the minimal implementation and a working fixture. CS3-11 consolidates those proven interfaces.
+The owner approved the preparation and opened CS3-00. Live package status is in [the task manifest](tasks.json). A package can start only after its listed dependencies are VERIFIED. A BLOCKED record carries evidence and a recovery action. CS3-00 specifies interfaces on paper. Their first consumer owns the minimal implementation and a working fixture. CS3-11 consolidates those proven interfaces.
 
 Use the [media evidence](RECORDING_REVIEW.md), [screenshot and English gates](UI_UX_SPECIFICATION.md) and [source review](SOURCE_REVIEW.md) at each visual exit. Frontend delivers the solo navigation and class-picker mount in 01, gameplay the CR4/P9 Rush slice in 02, wardrobe in 03 and the complete configurable touch layout in 06. For 02 the mobile specialist supplies the first real sprint gesture on existing controls and the backend specialist owns the matching input/pose contract. Do a rendered two-client check before expanding the slice to every held object. One writer per integration path and one heavy Pi job at a time.
 

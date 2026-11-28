@@ -4,6 +4,7 @@
 // Credentials remain in their existing root-owned files. Only JESPERS-ROOM's
 // host controls are used. Restore the observed settings through the same UI.
 import assert from 'node:assert/strict';
+import {enterTouchMatch} from './network-browser-resume.mjs';
 import {execFileSync} from 'node:child_process';
 import {mkdir,realpath,writeFile} from 'node:fs/promises';
 import {basename,join} from 'node:path';
@@ -43,8 +44,10 @@ let changed=false, joined=false, original;
 const report={url:link,revision:expected,buildHash:CONTRACT.buildHash,physicalPhone:false,browser:browser.version(),initialRooms:0};
 const control=key=>page.locator('#room-'+key);
 async function connect(){
-  await page.locator('#network-name').fill('Kartkontroll');
-  await page.locator('#network-code').fill(password);
+  await page.locator('#network-name').fill('Map check');
+  const passwordField=page.locator('#network-code');
+  if (await passwordField.isVisible()) await passwordField.fill(password);
+  else assert.equal(await passwordField.evaluate(input=>input.required),false,'Returning family device can join without re-entering its password');
   await page.locator('[data-create=false]').tap(); joined=true;
   await control('start').waitFor();
   await until(async()=>{const h=await health();return h.players===1&&h.rooms===1;},'One family-room member');
@@ -79,7 +82,7 @@ async function leave() {
     if(!await page.locator('#restart').isVisible())await page.locator('[data-mobile-action=pause]').tap();
     await page.locator('#restart').tap();
   }
-  await page.locator('#network-code').waitFor();joined=false;
+  await page.locator('#network-name').waitFor();joined=false;
 }
 try {
   await page.goto(link,{waitUntil:'domcontentloaded'});await page.locator('[name=invite]').fill(invite);await page.locator('button[type=submit]').tap();
@@ -100,7 +103,7 @@ try {
   const lobby=await state();
   assert(lobby?.host&&lobby.phase==='waiting'&&lobby.settings.map===arena&&lobby.others===0,'Only the probe may start its family match');
   await control('ready').tap();await control('start').tap();
-  await page.locator('#resume').tap();await until(async()=>(await state())?.phase==='active','Live Compact match active');
+  await enterTouchMatch(page);await until(async()=>(await state())?.phase==='active','Live Compact match active');
   const before=await state();assert.equal(before.settings.map,arena);assert.equal(before.settings.mode,'tdm');assert.equal(before.actors,6);
   assert.equal(before.duration,180);assert.equal(before.target,10);
   assert.deepEqual(before.bots,{analysts:2,counterAnalysts:3});

@@ -18,13 +18,14 @@ async function boot(browser, mobile) {
     };
     document.exitPointerLock=()=>Object.defineProperty(document,'pointerLockElement',{configurable:true,get:()=>null});
   });
-  await page.goto(origin+'/fps/?test',{waitUntil:'domcontentloaded',timeout:60000});
+  await page.goto(origin+'/fps/?screen=solo&test',{waitUntil:'domcontentloaded',timeout:60000});
   await page.waitForFunction(()=>globalThis.__fps||!document.getElementById('fatal').hidden,null,{timeout:180000});
   assert.equal(await page.locator('#fatal').isVisible(),false,'Startup error');
   // This suite advances and draws explicit game frames. Avoid queuing a second
   // WebGL draw loop while SwiftShader captures the scoped viewport.
   await page.evaluate(()=>{window.requestAnimationFrame=()=>0;});
   await page.locator('#start').click();
+  await page.locator('#csl-deploy').click();
   await page.evaluate(()=>{
     __fps.start('analysts',{mode:'endless',firefight:false,wanderers:false,botFire:false});
     const g=__fps.game;
@@ -107,11 +108,13 @@ const equip = (page,id) => page.evaluate(id=>{
     await equip(page,'he');await advance(page,3);
     const trigger=page.locator('[data-mobile-action=fire]');
     assert.equal(await trigger.isVisible(),true,'Grenade has manual trigger in auto-fire mode');
-    assert.equal(await trigger.textContent(),'KASTA');
+    assert.equal(await trigger.textContent(),'THROW');
     const rect=await trigger.boundingBox();
     await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:rect.x+rect.width/2,y:rect.y+rect.height/2,id:70}]});
-    const threw=await page.evaluate(()=>{__fps.step(null,1/60);return {n:__fps.game.player.inventory.he,grenades:__fps.game.state.grenades.length};});
+    const held=await page.evaluate(()=>{__fps.step(null,1/60);return {n:__fps.game.player.inventory.he,pulling:!!__fps.game.player.cartridge};});
+    assert.deepEqual(held,{n:1,pulling:true});
     await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+    const threw=await page.evaluate(()=>{for(let i=0;i<40&&!__fps.game.state.grenades.length;i++)__fps.step(null,1/60);return {n:__fps.game.player.inventory.he,grenades:__fps.game.state.grenades.length};});
     assert.equal(threw.n,0);assert.equal(threw.grenades,1,'Manual touch produced one real grenade');
     await equip(page,'bazooka');await advance(page,2);
     assert.equal(await trigger.isVisible(),true);assert.equal(await trigger.textContent(),'AVFYRA');

@@ -47,10 +47,10 @@ test('online minimap shows only living allies and selects cached labels by mode'
  m.draw(w,{...game,actors},true);
  assert.equal(c.counts.arc,1,'one living ally, the player arrow and zero enemy dots');
  assert.equal(m.layer(w,true).xmin,-5,'online projection includes walls beyond floor polygon');
- assert(layers[0].labels.includes('B')&&layers[0].labels.includes('G')&&layers[0].labels.includes('R'));
+ assert(layers[0].labels.includes('B')&&layers[0].labels.includes('H')&&layers[0].labels.includes('R'));
  w.networkClassic=false;
  m.draw(w,{...game,actors},true);
- for(const marker of ['B','G','R'])assert(!layers[1].labels.includes(marker),'TDM has no Classic objective markers');
+ for(const marker of ['B','H','R'])assert(!layers[1].labels.includes(marker),'TDM has no Classic objective markers');
  assert.equal(m.stats.builds,2);
  assert.equal(m.layers.size,2);
  assert.equal(c.counts.arc,2);

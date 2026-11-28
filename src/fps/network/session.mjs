@@ -1,11 +1,16 @@
+import {decodeEquipment,equippedDefinition} from '../arsenal.mjs';
+import {ReplayPlayback} from '../replay-playback.mjs';
+import {bonusSlot} from '../bonuses.mjs';
+import {purchaseReasons} from '../game-english.mjs';
+import {RUSH,rushReady} from '../rush.mjs';
 import {networkEndpoint} from './connection.mjs';
 import '../../../vendor/colyseus/colyseus.js';
 import {Game,WEAPONS} from '../game.mjs';
 import {seededRandom} from '../config.mjs';
 import {moveActor} from '../movement.mjs';
 import {multiplayerMapAnchors} from '../minimap-cache.mjs';
-import {TEAM_COMMS_TYPE,TEAM_COMMS_COMMANDS,TEAM_COMMS_RATE_MS} from '../../../shared/multiplayer/protocol.mjs';
-import {CLASSIC_NETWORK_CONFIG,NETWORK_CONFIG,ROOM_TYPE,ROOM_CAPACITY,RECONNECT_SECONDS,INTERPOLATION_MS,copyPose,wrapYaw} from '../../../shared/multiplayer/rules.mjs';
+import {TEAM_COMMS_TYPE,TEAM_COMMS_COMMANDS,TEAM_COMMS_RATE_MS,TEAM_COMMS_LIFETIME} from '../../../shared/multiplayer/protocol.mjs';
+import {CLASSIC_NETWORK_CONFIG,NETWORK_CONFIG,ROOM_TYPE,ROOM_CAPACITY,RECONNECT_SECONDS,reliableRoomInput,INTERPOLATION_MS,copyPose,wrapYaw} from '../../../shared/multiplayer/rules.mjs';
 import {CONTRACT,MAP_CONTRACTS} from '../../../shared/multiplayer/build.mjs';
 import {FAMILY_ROOM_ALIAS} from '../../../shared/multiplayer/family-room.mjs';
 
@@ -25,12 +30,29 @@ const wait=async(predicate,timeout=15000)=>{
 function headshotResultTime(room){
   return room.state.time+Math.max(0,room.clock.serverNow()-room.state.resultsAtMs)/1000;
 }
+function discardSlideRequest(session){
+  const predicted=session.prediction?.world?.actor;
+  if(predicted)predicted.slideBuffer=0;
+  if(session.view?.player)session.view.player.slideBuffer=0;
+}
+function publicBonus(s){
+  const handling=s.handling;
+  return handling?.bonusId?{id:handling.bonusId,startTick:handling.bonusStart,endTick:handling.bonusEnd}:null;
+}
+function cartridgeCount(actor,id){
+  if(id==='he')return actor.he??0;
+  if(id==='smoke')return actor.handling?.smoke??0;
+  if(id==='flash')return actor.handling?.flashCount??0;
+  return 0;
+}
 function actorView(s,localId){
-  const a={id:s.id,name:s.name,team:s.team,index:Number(s.id.split('-').at(-1)),isPlayer:s.id===localId,controllerType:s.bot?'bot':'human',bot:null,
-    pending:!!s.pending,radius:NETWORK_CONFIG.radius,weapon:s.weapon,lastWeapon:s.lastWeapon,loadout:s.loadout,aimAmount:s.aimAmount,aiming:s.aiming,money:s.money,flash:0,action:s.actionType?{type:s.actionType,start:s.actionStart,duration:s.actionDuration}:null,
-    inventory:{primary:s.primary?{id:s.primary,ammo:s.primaryAmmo,reserve:s.primaryReserve}:null,pistol:{id:s.pistol,ammo:s.pistolAmmo,reserve:s.pistolReserve},knife:{id:'knife',ammo:Infinity,reserve:0},smoke:0,flash:0,he:s.he}};
+  const a={outfitId:s.handling?.outfitId || 'issued',reloadStartedAt:s.handling?.reloadStartedAt||0,reloadDuration:s.handling?.reloadDuration||0,bonusEffect:publicBonus(s),id:s.id,name:s.name,team:s.team,index:Number(s.id.split('-').at(-1)),isPlayer:s.id===localId,controllerType:s.bot?'bot':'human',bot:null,
+    cartridge:s.handling?.cartridgeStart?{type:s.weapon,started:s.handling.cartridgeStart,releaseAt:s.handling.cartridgeRelease,deadline:s.handling.cartridgeFuse}:null,
+    pending:!!s.pending,radius:NETWORK_CONFIG.radius,weapon:s.weapon,lastWeapon:s.lastWeapon,loadout:s.loadout,aimAmount:s.aimAmount,aiming:s.aiming,money:s.money,flash:s.handling?.flashAmount||0,action:s.actionType?{type:s.actionType,start:s.actionStart,duration:s.actionDuration}:null,
+    inventory:{primary:s.primary?{...decodeEquipment(s.handling?.primaryKit),id:s.primary,ammo:s.primaryAmmo,reserve:s.primaryReserve}:null,pistol:{...decodeEquipment(s.handling?.pistolKit),id:s.pistol,ammo:s.pistolAmmo,reserve:s.pistolReserve},knife:{id:'knife',ammo:Infinity,reserve:0},smoke:cartridgeCount(s,'smoke'),flash:cartridgeCount(s,'flash'),he:cartridgeCount(s,'he')}};
   copyPose(a,s);
   for(const k of ['lifeId','controlEpoch','connected','alive','hp','armor','kills','deaths','reloadUntil','nextShot','respawnAt','spawnProtectedUntil','deathVariant','hurtTime','recoil'])a[k]=s[k];
+  a.points=s.handling?.points??0;
   // An unspawned Classic reservation also has alive=false, with no death.
   a.deathAt=s.deathWeapon?s.deathAt:null;
   a.deathCause=s.deathWeapon?{sourceName:s.deathSource,weapon:s.deathWeapon}:null;
@@ -39,18 +61,28 @@ function actorView(s,localId){
 
 /** A Game-shaped presentation only. Never advances Game combat/rules locally. */
 export class NetworkSession {
-  constructor(world,{loadWorld,onLoading=()=>{},onDisconnect=()=>{},onConnection=()=>{},onMatch=()=>{}}={}){
+  constructor(world,{outfitId='issued',arsenalProfile=null,loadWorld,onLoading=()=>{},onCombatAudio,onRocketAudio,onDisconnect=()=>{},onConnection=()=>{},onMatch=()=>{}}={}){
+    this.replay=new ReplayPlayback();this.progression=null;this.rewardSerial=0;
     this.loadWorld=loadWorld;this.onLoading=onLoading;this.worldRevision=0;
-    this.onMatch=onMatch;this.matchId=0;this.matchPhase='';this.world=world;this.onDisconnect=onDisconnect;this.onConnection=onConnection;this.connectionState='connecting';this.controlEpoch=0;this.closed=false;this.enabled=true;
+    this.onCombatAudio=onCombatAudio;this.onRocketAudio=onRocketAudio;this.onMatch=onMatch;this.matchId=0;this.matchPhase='';this.world=world;this.onDisconnect=onDisconnect;this.onConnection=onConnection;this.connectionState='connecting';this.controlEpoch=0;this.closed=false;this.enabled=true;
     this.events=[];this.seenEvent=0;this.predictedShots=new Map();this.actionTimes=new Map();this.remote=new Map();this.residents=new Map();this.projectiles=new Map();this.unsub=[];
     this.fireId=0;this.reloadId=0;this.trigger=false;this.nextCosmetic=0;this.lifeId=0;this.lastPatch=0;
     this.metrics={sent:0,replays:0,adopts:0,resets:0,cosmeticShots:0,confirmedShots:0,suppressedShots:0,corrections:[],adoptionDistance:[],shotLatency:[],hitLatency:[],maxPending:0,reconnects:0};
+    this.outfitId=outfitId;this.arsenalProfile=arsenalProfile;this.classChoice=null;
     this.view=new Game(world,{config:NETWORK_CONFIG,localPlayerId:null,controllers:{}});
     Object.assign(this.view.state,{mode:'endless',phase:'menu',round:1,projectiles:[],wanderers:[],orders:{}});
     // Presentation recoil gets its own RNG, never the authority's stream.
     this.view.random=seededRandom(81);this.view.network=true;
     this.view.pause=value=>this.setInputEnabled(!value);
     this.view.reload=()=>{if(!this.closed&&this.enabled&&this.view.player?.alive){this.reloadId++;return true;}return false;};
+    this.bonusSerial=0;this.privateBonus=null;
+    this.view.requestBonus=slot=>{
+      const self=this.teamCommsActor(),item=bonusSlot(slot),state=this.room?.state;
+      if(!this.enabled || !self || !item || !this.view.player?.bonus?.charges[item.id] || this.view.player.bonus.active)return false;
+      this.room.send('bonus',{actorId:self.id,slot,serial:++this.bonusSerial,matchId:state.matchId,round:state.round,
+        worldRevision:state.worldRevision,lifeId:self.lifeId,controlEpoch:self.controlEpoch});
+      return true;
+    };
     this.selectId=0;this.botDifficultySerial=0;
     this.teamAnchors=new Map();
     this.teamCommsSerial=0;
@@ -62,24 +94,77 @@ export class NetworkSession {
     this.view.select=value=>{
       const a=this.view.player;
       if(!this.enabled||!a?.alive||this.closed)return false;
-      const slot=({'1':'primary','2':'pistol','3':'knife','4':'he','5':'bomb',[a.inventory.primary?.id]:'primary',[a.inventory.pistol.id]:'pistol'})[value]||value;
-      if(!['primary','pistol','knife','he','last','bomb'].includes(slot))return false;
+      const grenades=['smoke','flash','he'].filter(id=>a.inventory[id]>0);
+      const next=grenades[(grenades.indexOf(a.weapon)+1)%grenades.length];
+      const slot=({'grenade':next,'1':'primary','2':'pistol','3':'knife','4':next,'5':'bomb',[a.inventory.primary?.id]:'primary',[a.inventory.pistol.id]:'pistol'})[value]||value;
+      if(!['primary','pistol','knife','he','flash','smoke','last','bomb'].includes(slot))return false;
       this.room.send('select',{slot,serial:++this.selectId,lifeId:a.lifeId,controlEpoch:a.controlEpoch});
       return true;
     };
     this.view.radio=this.view.setDifficulty=()=>false;
-    this.classicSerial=0;
+    this.classicSerial=0;this.purchase=null;
     this.view.drop=()=>this.classicCommand('drop');
-    this.view.buy=id=>this.classicCommand('buy',id)?{ok:true,pending:true}:{ok:false,reason:'Välj utrustning för nästa liv.'};
+    this.view.buy=id=>this.classicCommand('buy',id)?{ok:true,pending:true}:{ok:false,reasonId:'nextRound',reason:purchaseReasons.nextRound};
     this.view.drainEvents=()=>this.drainEvents();
     this.view.update=()=>{throw Error('NetworkSession owns input; the client cannot step Game.');};
   }
+  replayScope(){
+    const room=this.room,state=room?.state,self=state?.actors?.get(this.localPlayerId);
+    if(this.closed||!self?.ready||self.pending||self.sessionId!==room.sessionId||this.worldRevision!==state.worldRevision)return null;
+    return {matchId:state.matchId,round:state.round,worldRevision:state.worldRevision,mapId:state.mapId,
+      phase:state.phase,mode:state.mode,roundPhase:state.roundPhase,actorId:self.id,lifeId:self.lifeId,controlEpoch:self.controlEpoch,
+      connected:self.connected&&this.connectionState==='connected',alive:self.alive,
+      respawnRemaining:self.respawnAt>0?self.respawnAt-state.time:undefined};
+  }
+  receiveReward(m){
+    const s=this.replayScope();
+    if(!s?.connected||!m||!['matchId','round','worldRevision','actorId','lifeId','controlEpoch'].every(k=>m[k]===s[k])||
+      !Number.isSafeInteger(m.serial)||m.serial<=this.rewardSerial||!['kill','headshot','assist'].includes(m.kind)||
+      !Number.isSafeInteger(m.xp)||m.xp<0||!Number.isSafeInteger(m.weaponXp)||m.weaponXp<0)return;
+    this.rewardSerial=m.serial;this.events.push({...m,type:'reward'});
+  }
+  receiveProgression(m){
+    const s=this.replayScope();
+    if(!s?.connected||!m||!['matchId','worldRevision','actorId'].every(k=>m[k]===s[k])||
+      ![m.xp,m.assists,m.headshots].every(n=>Number.isSafeInteger(n)&&n>=0)||!Array.isArray(m.weapons)||
+      !Array.isArray(m.challenges)||typeof m.ranked!=='boolean')return;
+    this.progression=m;
+  }
+  applyPrivateBonus(message=this.privateBonus){
+    const state=this.room?.state,self=state?.actors.get(this.localPlayerId);
+    if(!message || !self?.ready || !self.connected || self.pending || self.sessionId!==this.room.sessionId ||
+       message.actorId!==self.id || message.matchId!==state.matchId || message.round!==state.round ||
+       message.worldRevision!==state.worldRevision || message.lifeId!==self.lifeId || message.controlEpoch!==self.controlEpoch)return;
+    this.privateBonus=message;
+    this.bonusSerial=Math.max(this.bonusSerial,message.bonus.lastSerial);
+    const player=this.view.player;
+    if(player && player.id===self.id && player.lifeId===self.lifeId && player.controlEpoch===self.controlEpoch){
+      player.bonus=message.bonus;
+      player.uavSamples=message.samples;
+    }
+  }
   classicCommand(kind,item){
     const a=this.view.player,s=this.room?.state;
-    if(!a||s?.mode!=='classic'||this.connectionState!=='connected')return false;
+    if(!a||!s||(s.mode!=='classic'&&kind!=='drop')||this.connectionState!=='connected')return false;
     this.notice='';
-    this.room.send('classic',{kind,item,serial:++this.classicSerial,round:s.round,matchId:s.matchId,lifeId:a.lifeId,controlEpoch:a.controlEpoch});
+    const command={kind,item,serial:++this.classicSerial,round:s.round,matchId:s.matchId,lifeId:a.lifeId,controlEpoch:a.controlEpoch};
+    if(kind==='buy')this.purchase={...command,outcome:'pending'};
+    this.room.send('classic', command);
     return true;
+  }
+  currentPurchase(){
+    const p=this.purchase, state=this.room?.state, self=state?.actors.get(this.localPlayerId);
+    if(!p || !self || this.closed || this.connectionState!=='connected' || state.phase!=='active' ||
+       state.mode!=='classic' || state.roundPhase!=='buy' || !self.alive || !self.connected ||
+       p.round!==state.round || p.matchId!==state.matchId || p.lifeId!==self.lifeId || p.controlEpoch!==self.controlEpoch)return null;
+    return p;
+  }
+  receivePurchase(reply){
+    const pending=this.currentPurchase();
+    if(!pending || pending.outcome!=='pending' || !reply ||
+       !['matchId','round','lifeId','controlEpoch','serial','item'].every(key=>reply[key]===pending[key]))return;
+    if(reply.outcome!=='accepted' && !(reply.outcome==='denied' && Object.hasOwn(purchaseReasons,reply.reasonId)))return;
+    this.purchase={...pending,outcome:reply.outcome,reasonId:reply.reasonId};
   }
   teamCommsActor(){
     const state=this.room?.state;
@@ -89,11 +174,11 @@ export class NetworkSession {
     return self?.ready&&self.connected&&self.alive&&!self.pending?self:null;
   }
   canSendTeamComms(){
-    return this.enabled&&!!this.teamCommsActor();
+    return this.room?.state.mode!=='ffa'&&this.enabled&&!!this.teamCommsActor();
   }
   sendTeamComms(kind,anchorId){
     const self=this.teamCommsActor();
-    if(!this.enabled||!self||!TEAM_COMMS_COMMANDS.includes(kind))return false;
+    if(this.room?.state.mode==='ffa'||!this.enabled||!self||!TEAM_COMMS_COMMANDS.includes(kind))return false;
     if(kind==='ping'&&!this.teamAnchors.has(anchorId))return false;
     const now=performance.now();
     if(now<this.nextTeamCommsAt)return false;
@@ -107,7 +192,7 @@ export class NetworkSession {
   }
   validTeamComms(message){
     const self=this.teamCommsActor();
-    if(!self||!message)return false;
+    if(this.room?.state.mode==='ffa'||!self||!message)return false;
     const state=this.room.state;
     if(message.team!==self.team||message.matchId!==state.matchId||message.round!==state.round||
       message.recipientLifeId!==self.lifeId||message.recipientEpoch!==self.controlEpoch||
@@ -126,9 +211,16 @@ export class NetworkSession {
     if(anchor)this.view.teamPing=this.teamSignal;
     else if(this.enabled){
       const sender=this.room.state.actors.get(message.senderId);
-      this.teamAudioQueued=true;
-      this.events.push({type:'radio',teamPrivate:true,teamPacket:message,command:message.kind,
-        actorId:sender.id,team:sender.team,x:sender.x,y:sender.y,z:sender.z,time:this.view.state.time,global:true});
+      // The caption lasts longer than fresh audio. Use the authoritative send time
+      // and the same immediate audio path as shots, before the next render can stall.
+      const event={type:'radio',teamPrivate:true,teamPacket:message,command:message.kind,
+        actorId:sender.id,team:sender.team,x:sender.x,y:sender.y,z:sender.z,
+        time:message.expiresAt-TEAM_COMMS_LIFETIME,global:true};
+      const now=Math.max(this.room.state.time,this.view.state.time,event.time);
+      if(!this.onCombatAudio?.(event,now)){
+        this.teamAudioQueued=true;
+        this.events.push(event);
+      }
     }
   }
   drainEvents(){
@@ -148,7 +240,8 @@ export class NetworkSession {
     if(this.teamSignal&&!this.validTeamComms(this.teamSignal))this.teamSignal=null;
     if(this.view.teamPing&&!this.validTeamComms(this.view.teamPing))this.view.teamPing=null;
   }
-  async connect({endpoint,roomId,code,name,family,mapId,team='auto',mode='tdm',fillBots=true,zombies=false,danceman=false,create=false,contract=CONTRACT}){
+  async connect({endpoint,arsenalProfile=this.arsenalProfile,roomId,code,name,family,mapId,team='auto',mode='tdm',fillBots=true,zombies=false,danceman=false,create=false,contract=CONTRACT}){
+    this.arsenalProfile=arsenalProfile;
     const url=networkEndpoint(endpoint),client=new SessionClient(url),options={code,name,team,contract,fillBots,mode,zombies,danceman};
     if(create&&mapId)options.mapId=mapId;
     client.owner=this;
@@ -164,6 +257,15 @@ export class NetworkSession {
     this.joiningRoom=null;this.room=room;this.familyAlias=room.name===FAMILY_ROOM_ALIAS?FAMILY_ROOM_ALIAS:'';
     Object.assign(room.reconnection,{enabled:true,minUptime:0,minDelay:150,maxDelay:1000,maxRetries:30,maxEnqueuedMessages:0});
     this.unsub.push(room.onMessage('problem',message=>{this.problem=String(message);}));
+    this.unsub.push(room.onMessage('replay',m=>this.replay.receive(m,this.replayScope())));
+    this.unsub.push(room.onMessage('reward',m=>this.receiveReward(m)));
+    this.unsub.push(room.onMessage('match-progression',m=>this.receiveProgression(m)));
+    this.unsub.push(room.onMessage('bonusState',message=>this.applyPrivateBonus(message)));
+    this.unsub.push(room.onMessage('class-choice',message=>{
+      this.classChoice=message;this.arsenalProfile=message.profile;
+      if(this.view.player?.team===message.team)this.view.player.arsenalClass=message.kit;
+    }));
+    this.unsub.push(room.onMessage('purchase',message=>this.receivePurchase(message)));
     this.unsub.push(room.onMessage('notice',message=>{this.notice=String(message);}));
     this.unsub.push(room.onMessage('events',events=>{if(this.worldRevision===room.state.worldRevision)this.receiveEvents(events);}));
     this.unsub.push(room.onMessage(TEAM_COMMS_TYPE,message=>this.receiveTeamComms(message)));
@@ -174,8 +276,8 @@ export class NetworkSession {
     room.onReconnect(reconnected);this.unsub.push(()=>room.onReconnect.remove(reconnected));
     const left=code=>{
       if(this.closed)return;
-      const retry=this.familyAlias?'Öppna familjerummet igen via den fasta länken.':'Anslut till rummet igen, eller skapa ett nytt om servern startades om.';
-      const problem=this.problem||`Anslutningen bröts (${code}). ${retry}`;
+      const retry=this.familyAlias?'Reopen the family room using its permanent link.':'Rejoin the room, or create one if the server restarted.';
+      const problem=this.problem||`Connection lost (${code}). ${retry}`;
       this.problem=problem;this.dispose(false);this.onDisconnect(problem);
     };
     const changed=()=>this.snapshot();
@@ -186,18 +288,24 @@ export class NetworkSession {
     if(this.closed)throw Error(this.problem||'Room closed during loading.');
     this.localPlayerId=[...room.state.actors.values()].find(a=>a.sessionId===room.sessionId).id;
     this.view.localPlayerId=this.localPlayerId;this.view.team=this.localPlayerId.split('-')[0];
-    this.input=room.input({mode:'reliable'});
+    this.input=reliableRoomInput(room);
     if(this.input.stepSeconds!==NETWORK_CONFIG.fixedStep)throw Error('Incompatible simulation step.');
     this.predict=Predict.get(room,{mode:'lerp',delay:INTERPOLATION_MS});
     this.snapshot();
-    await wait(()=>this.closed||(this.worldRevision===room.state.worldRevision&&room.state.actors.get(this.localPlayerId)?.ready),125000);
-    if(this.closed)throw Error(this.problem||'Room closed before spawn.');
+    await this.waitForSpawn();
     this.connectionState='connected';this.snapshot();
     this.lastWatchdog=performance.now();this.silenceSince=0;
     this.watchdog=setInterval(()=>this.checkConnection(performance.now()),1000);
     return this;
   }
+  async waitForSpawn(){
+    const ready=()=>this.worldRevision===this.room.state.worldRevision&&
+      this.room.state.actors.get(this.localPlayerId)?.ready&&this.view.player;
+    await wait(()=>this.closed||ready(),125000);
+    if(this.closed)throw this.problem instanceof Error ? this.problem : Error(this.problem||'Room closed before spawn.');
+  }
   resetWorldBindings(){
+    this.replay.reset();this.progression=null;this.rewardSerial=0;
     this.prediction?.dispose();
     this.prediction=null;
     for(const collection of [this.remote,this.residents,this.projectiles]){
@@ -208,7 +316,7 @@ export class NetworkSession {
     for(const door of this.doorSchemas||[])this.predict.detach(door);
     this.doorSchemas=[];this.worldSchema=null;this.glassCount=undefined;
     this.matchMode=null;this.matchPhase='';this.matchId=0;
-    this.events=[];this.clearTeamComms();this.teamAnchors.clear();this.receivedTeamComms.clear();
+    this.privateBonus=null;this.events=[];this.clearTeamComms();this.teamAnchors.clear();this.receivedTeamComms.clear();
     this.predictedShots.clear();this.actionTimes.clear();
     this.view.state.actors=[];
   }
@@ -229,7 +337,7 @@ export class NetworkSession {
       this.worldRevision=worldRevision;this.loadingRevision=null;
       this.snapshot();
     }).catch(error=>{
-      if(!signal.aborted&&!this.closed)this.disconnect(error.message);
+      if(!signal.aborted&&!this.closed)this.disconnect(error);
     });
   }
   snapshot(){
@@ -249,7 +357,7 @@ export class NetworkSession {
     if(!mine?.ready){
       if(mine&&this.sentReadyRevision!==state.worldRevision&&(this.connectionState!=='reconnecting'||this.awaitingSnapshot)){
         this.sentReadyRevision=state.worldRevision;
-        this.room.send('ready',{...MAP_CONTRACTS[state.mapId],worldRevision:state.worldRevision});
+        this.room.send('ready',{...MAP_CONTRACTS[state.mapId],outfitId:this.outfitId,...(this.arsenalProfile?{arsenalProfile:this.arsenalProfile}:{}),worldRevision:state.worldRevision});
       }
       return;
     }
@@ -261,13 +369,20 @@ export class NetworkSession {
     }
     this.view.config=classic?CLASSIC_NETWORK_CONFIG:NETWORK_CONFIG;
     this.view.state.difficulty=state.botDifficulty??this.view.config.difficulty;
-    this.view.state.mode=classic?'classic':'endless';
+    this.view.state.mode=state.mode==='tdm'?'endless':state.mode;
+    Object.assign(this.view.state,{scoreTarget:state.scoreTarget,remainingSeconds:state.remainingSeconds,winner:state.winner,
+      zones:Array.from(state.zones?.values()??[],({id,x,y,z,radius,owner,progress,contested})=>({id,x,y,z,radius,owner,progress,contested}))});
     const newMatch=this.matchId!==state.matchId,newPhase=this.matchPhase!==state.phase;
+    if(newMatch){
+      this.replay.reset();this.rewardSerial=0;
+      if(this.progression?.matchId!==state.matchId)this.progression=null;
+    }
     if(newMatch||newRound||modeChanged){
       this.events=[];
       this.clearTeamComms();
     }
     if(newMatch||newPhase||modeChanged){
+      this.crouchEdge=false;this.firePress=null;this.pendingCosmetic=null;this.confirmedLocalShots?.clear();
       this.matchId=state.matchId;this.matchPhase=state.phase;
       this.resultsAt=state.phase==='results'?this.lastPatch:undefined;
       this.view.state.headshotTime=this.resultsAt!==undefined?headshotResultTime(this.room):undefined;
@@ -311,8 +426,13 @@ export class NetworkSession {
       this.glassCount=state.brokenGlass.size;
     }
     this.view.state.grenades=[...state.grenades.values()];
+    this.view.state.smokes=Array.from(state.smokes?.values()??[]);
+    this.view.state.drops=Array.from(state.drops?.values()??[],d=>({id:d.id,type:'weapon',x:d.x,y:d.y,z:d.z,createdAt:d.createdAt,
+      item:{id:d.weapon,ammo:d.ammo,reserve:d.reserve,...decodeEquipment(d.equipment)}}));
     applyNetworkWorld(this.world.doors,state);
     this.view.state.actors=ready.map(s=>actorView(s,this.localPlayerId));
+    if(this.classChoice&&this.view.player?.team===this.classChoice.team)this.view.player.arsenalClass=this.classChoice.kit;
+    this.applyPrivateBonus();
     this.view.state.score={analysts:state.analysts,counterAnalysts:state.counterAnalysts};
     this.view.state.time=newMatch?state.time:Math.max(this.view.state.time??0,state.time);
     const self=state.actors.get(this.localPlayerId);
@@ -366,7 +486,10 @@ export class NetworkSession {
           this.metrics.adopts++;const d=Math.hypot(w.actor.x-s.x,w.actor.y-s.y,w.actor.z-s.z);
           this.metrics.adoptionDistance.push(d);if(this.metrics.adoptionDistance.length>512)this.metrics.adoptionDistance.shift();
           w.dynamics.adopt(this.room.state);
-          copyPose(w.actor,s);w.actor.alive=s.alive;w.actor.lifeId=s.lifeId;w.game.state.time=this.room.state.time;
+          copyPose(w.actor,s);w.actor.weapon=s.weapon;w.actor.inventory=this.view.player?.inventory;
+          if(!this.enabled)w.actor.slideBuffer=0;
+          w.actor.reloadStartedAt=s.handling?.reloadStartedAt||0;w.actor.reloadDuration=s.handling?.reloadDuration||0;
+          w.actor.bonusEffect=publicBonus(s);w.actor.reloadUntil=s.reloadUntil;w.actor.cartridge=s.handling?.cartridgeStart || null;w.actor.action=s.actionType?{type:s.actionType}:null;w.actor.alive=s.alive;w.actor.lifeId=s.lifeId;w.game.state.time=this.room.state.time;
           w.game.hostages=this.view.hostages;
           w.game.state.zombies=[...this.residents.values()].map(({schema:s})=>({id:s.id,x:s.x,y:s.y,z:s.z,height:s.height,radius:s.radius,alive:s.alive}));
           w.game.actors=[w.actor,...[...this.room.state.actors.values()].filter(a=>a.ready&&a.id!==s.id).map(a=>actorView(a,null))];
@@ -382,17 +505,22 @@ export class NetworkSession {
           this.metrics.corrections.push(Math.hypot(c.x||0,c.y||0,c.z||0));if(this.metrics.corrections.length>512)this.metrics.corrections.shift();},
       });
     }
-    if(this.cosmeticWeapon!==self.weapon){this.nextCosmetic=0;this.cosmeticWeapon=self.weapon;}
+    if(this.cosmeticWeapon!==self.weapon){this.crouchEdge=false;this.firePress=null;this.pendingCosmetic=null;this.nextCosmetic=0;this.cosmeticWeapon=self.weapon;}
     const newLife=self.lifeId!==this.lifeId;
     if(newLife||self.alive!==this.alive||self.controlEpoch!==this.controlEpoch){
       const newConnection=self.controlEpoch!==this.controlEpoch;this.controlEpoch=self.controlEpoch;
       this.lifeId=self.lifeId;this.alive=self.alive;this.metrics.resets++;
       // Reset the replay controller, NOT InputHandle's reliable wire counters.
       this.prediction.reset();if(newLife||newConnection){this.predictedShots.clear();this.actionTimes?.clear();}this.nextCosmetic=0;
+      this.crouchEdge=false;this.firePress=null;this.pendingCosmetic=null;this.confirmedLocalShots?.clear();
       this.fireId=0;this.reloadId=0;this.trigger=false;
       this.keepRocketEffects();
     }
     if(newMatch||newPhase||modeChanged)queueMicrotask(()=>{if(!this.closed)this.onMatch(this.matchPhase);});
+  }
+  selectClass(profile){
+    if(!this.room)this.arsenalProfile=profile;
+    else this.matchCommand('class',{profile});
   }
   matchCommand(kind,extra={}){
     const self=this.room?.state.actors.get(this.localPlayerId);if(!self||this.connectionState!=='connected')return;
@@ -418,13 +546,25 @@ export class NetworkSession {
       }
       if(event.type==='shot'&&event.actorId===this.localPlayerId){
         this.metrics.confirmedShots++;
+        this.confirmedLocalShots ??= new Set();
+        this.confirmedLocalShots.add(event.actionId);
+        if(this.confirmedLocalShots.size>128)this.confirmedLocalShots.delete(this.confirmedLocalShots.values().next().value);
         const sent=this.predictedShots.get(event.actionId);
         if(sent!==undefined&&this.metrics.shotLatency){this.metrics.shotLatency.push(performance.now()-sent);if(this.metrics.shotLatency.length>512)this.metrics.shotLatency.shift();}
         if(this.predictedShots.has(event.actionId)){this.predictedShots.delete(event.actionId);this.metrics.suppressedShots++;continue;}
       }
       if(event.type==='hit'&&event.sourceId===this.localPlayerId){const sent=this.actionTimes?.get(event.actionId);
         if(sent!==undefined){this.metrics.hitLatency.push(performance.now()-sent);if(this.metrics.hitLatency.length>512)this.metrics.hitLatency.shift();}}
-      if(this.enabled||rocketEffect&&['active','results'].includes(this.room.state.phase))this.events.push(event);
+      if(this.enabled||rocketEffect&&['active','results'].includes(this.room.state.phase)){
+        // Schedule fresh confirmed gunfire and slide starts on receipt. Rendering may resume after
+        // the audio freshness window. Muzzle and rocket visuals keep their event.
+        const rocketSound=event.type==='rocket-launch'||event.type==='rocket-explosion';
+        if(event.type==='shot'||event.type==='slide'||rocketSound){
+          const present=this.onCombatAudio??(rocketSound?this.onRocketAudio:undefined);
+          if(present?.(event,this.room.state.time))event={...event,audioPresented:true};
+        }
+        this.events.push(event);
+      }
     }
     this.events=this.events.slice(-128);
   }
@@ -432,32 +572,53 @@ export class NetworkSession {
     if(this.closed||this.connectionState==='reconnecting'||!this.predict||!this.prediction)return;
     const steps=Math.min(6,this.predict.tick(now)),state=this.room.state,self=state.actors.get(this.localPlayerId);
     if(!self)return;
+    const weapon=Object.hasOwn(WEAPONS,self.weapon)?equippedDefinition(this.view.player,self.weapon):null;
+    const throwing=weapon?.slot==='grenade';
+    const stocked=throwing?cartridgeCount(self,self.weapon)>0:self.ammo>0 || self.weapon==='knife';
     const stale=performance.now()-this.lastPatch>1000;
+    if(this.enabled && !stale && self.alive && state.phase==='active' && (state.mode!=='classic'||state.roundPhase==='active')){
+      if(controls.crouchEdge)this.crouchEdge=true;
+      if(controls.firePress)this.firePress ??= controls.firePress;
+    }else{this.crouchEdge=false;this.firePress=null;this.pendingCosmetic=null;}
     for(let i=0;i<steps;i++){
       if(state.phase!=='active'||!this.enabled||!self.alive||stale)break;
       const data=this.input.data;
       Object.assign(data,{lifeId:self.lifeId,controlEpoch:self.controlEpoch,sampleTick:state.tick,fireId:this.fireId,reloadId:this.reloadId,
         forward:controls.forward||0,strafe:controls.strafe||0,yaw:wrapYaw(controls.yaw??self.yaw),pitch:controls.pitch??self.pitch,
-        jump:!!controls.jump,crouch:!!controls.crouch,sneak:!!controls.sneak,interact:!!controls.interact,aim:!!controls.aim,fire:!!controls.fire});
+        holdThrow:throwing && stocked && !!controls.fire && !controls.autoFire,jump:!!controls.jump,crouch:!!controls.crouch,crouchEdge:!!this.crouchEdge,sneak:!!controls.sneak,sprint:!!controls.sprint,
+        fireEdge:!!weapon && !!this.firePress,shotYaw:wrapYaw(this.firePress?.yaw??0),shotPitch:this.firePress?.pitch??0,interact:!!controls.interact,aim:!!controls.aim,fire:!!weapon && !!controls.fire});
       const time=this.prediction.world.game.state.time;
-      const weapon=WEAPONS[self.weapon],throwing=self.weapon==='he';
-      const shotReady=(state.mode!=='classic'||state.roundPhase==='active')&&time+1e-8>=Math.max(this.nextCosmetic,self.nextShot)&&
-        (self.ammo>0||self.weapon==='knife'||throwing&&self.he>0)&&!self.reloadUntil;
-      if(controls.autoFire){
+      const shotReady=!!weapon && (!self.handling?.waitTriggerRelease || data.fireEdge) && !self.handling?.cartridgeStart && (state.mode!=='classic'||state.roundPhase==='active')&&time+1e-8>=Math.max(this.nextCosmetic,self.nextShot)&&
+        stocked && !self.reloadUntil;
+      const actor=this.prediction.world.actor,shouldered=rushReady(actor);
+      if(data.fireEdge)data.fire=true;
+      if(controls.autoFire && !data.fireEdge){
         // Auto-trigger is local input intent, never a new server privilege.
         // Semi-auto weapons need a real release between ordinary fire frames;
         // generate it per fixed input step, including render catch-up batches.
-        const eligible=['primary','pistol','knife'].includes(weapon.slot)&&!weapon.projectile;
+        const eligible=!!weapon && ['primary','pistol','knife'].includes(weapon.slot)&&!weapon.projectile;
         data.fire=data.fire&&eligible&&(weapon.automatic||(!this.trigger&&shotReady));
       }
-      if(data.fire&&shotReady&&(weapon.automatic||!this.trigger)){
-        data.fireId=++this.fireId;this.nextCosmetic=time+weapon.interval;
+      const manualPress=data.fireEdge || (!this.trigger && data.fire && !controls.autoFire);
+      if(shotReady && !this.pendingCosmetic && data.fire && (weapon.automatic || !this.trigger || data.fireEdge) &&
+        (shouldered || manualPress)){
+        data.fireId=++this.fireId;
+        this.pendingCosmetic={weapon:self.weapon,id:data.fireId,yaw:data.fireEdge?data.shotYaw:data.yaw,
+          pitch:data.fireEdge?data.shotPitch:data.pitch,until:time+RUSH.edgeLifetime};
+      }
+      this.crouchEdge=false;this.firePress=null;
+      const pending=this.pendingCosmetic;
+      if(pending && (pending.weapon!==self.weapon || self.reloadUntil || time>pending.until))this.pendingCosmetic=null;
+      else if(pending && shouldered){
+        this.pendingCosmetic=null;this.nextCosmetic=time+weapon.interval;
         if(!throwing&&!weapon.projectile){
-          const actionId=`${self.id}:${self.lifeId}:${self.controlEpoch}:${this.fireId}`;
-          this.predictedShots.set(actionId,performance.now());this.actionTimes.set(actionId,performance.now());this.metrics.cosmeticShots++;
-          const a=this.prediction.world.actor;
-          this.events.push({type:'shot',actorId:self.id,team:self.team,weapon:self.weapon,time:this.view.state.time,
-            x:a.x,y:a.y,z:a.z,yaw:data.yaw,pitch:data.pitch,actionId,lifeId:self.lifeId,predicted:true});
+          const actionId=`${self.id}:${self.lifeId}:${self.controlEpoch}:${pending.id}`;
+          // A late prediction must not replay a shot already seen from the authority.
+          if(!this.confirmedLocalShots?.has(actionId)){
+            this.predictedShots.set(actionId,performance.now());this.actionTimes.set(actionId,performance.now());this.metrics.cosmeticShots++;
+            this.events.push({type:'shot',actorId:self.id,team:self.team,weapon:self.weapon,...(weapon.silent?{suppressed:true}:{}),time:this.view.state.time,
+              x:actor.x,y:actor.y,z:actor.z,yaw:pending.yaw,pitch:pending.pitch,actionId,lifeId:self.lifeId,predicted:true});
+          }
         }
       }
       this.trigger=data.fire;
@@ -491,7 +652,7 @@ export class NetworkSession {
       d.angle=Math.abs(angle);d.sign=Math.sign(angle)||s.sign;this.world.doors.pose(d);}
     if(this.predict.value)this.world.doors.elevators.setProgress(this.predict.value(state,'elevatorProgress'));
     const rtt=Math.round(this.room.clock?.smoothedRtt?.()||0);
-    this.status=stale?'Anslutningen väntar — kontroller stoppade':`${this.room.roomId} · ${this.view.actors.filter(a=>!a.pending).length}/${ROOM_CAPACITY} · ${rtt} ms${rtt>=200?' · Hög fördröjning':''}`;
+    this.status=stale?'Waiting for the connection · controls paused':`${this.room.roomId} · ${this.view.actors.filter(a=>!a.pending).length}/${ROOM_CAPACITY} · ${rtt} ms${rtt>=200?' · High latency':''}`;
   }
   updateDisplayTime(state,now){
     const results=this.resultsAt!==undefined,elapsed=Math.max(0,(now-(this.resultsAt??this.lastPatch))/1000);
@@ -503,11 +664,16 @@ export class NetworkSession {
   }
   setInputEnabled(enabled){
     if(this.closed)return;
-    enabled=enabled&&this.connectionState!=='reconnecting';
+    enabled=!!enabled && this.connectionState!=='reconnecting';
+    const generation=[this.localPlayerId,this.matchId,this.matchPhase,this.lifeId,this.controlEpoch].join('/');
+    if(this.enabled===enabled && this.lastControlGeneration===generation)return;
+    this.lastControlGeneration=generation;
+    this.crouchEdge=false;this.firePress=null;this.pendingCosmetic=null;
     this.trigger=false;this.enabled=enabled;this.view.state.paused=!enabled;
     this.keepRocketEffects();
     if(this.room&&this.lifeId&&this.connectionState!=='reconnecting')this.room.send('controls',{enabled,lifeId:this.lifeId,controlEpoch:this.controlEpoch});
     if(enabled&&this.prediction)this.prediction.reset();
+    discardSlideRequest(this);
   }
   checkConnection(now){
     if(this.closed||this.connectionState!=='connected')return;
@@ -521,12 +687,17 @@ export class NetworkSession {
   }
   beginReconnect(){
     if(this.closed||this.connectionState==='reconnecting')return;
-    this.connectionState='reconnecting';this.enabled=false;this.view.state.paused=true;
-    this.events=[];this.clearTeamComms();this.status='Återansluter… Din plats reserveras i 15 sekunder. Matchen fortsätter.';
+    this.crouchEdge=false;this.firePress=null;this.pendingCosmetic=null;
+    discardSlideRequest(this);
+    this.replay.reset();this.progression=null;
+    this.privateBonus=null;
+    if(this.view.player){this.view.player.bonus=null;this.view.player.uavSamples=null;}
+    this.connectionState='reconnecting';this.purchase=null;this.enabled=false;this.view.state.paused=true;
+    this.events=[];this.clearTeamComms();this.status='Reconnecting… Your seat is reserved for 15 seconds. The match continues.';
     this.onConnection('reconnecting');
     this.reconnectTimer=setTimeout(()=>{
-      const retry=this.familyAlias?'Öppna familjerummet igen via den fasta länken.':'Anslut till rummet igen.';
-      this.disconnect('Återanslutningen gick inte. Platsen har löpt ut eller servern startades om. '+retry);
+      const retry=this.familyAlias?'Reopen the family room using its permanent link.':'Rejoin the room.';
+      this.disconnect('Reconnection failed. Your seat expired or the server restarted. '+retry);
     },RECONNECT_SECONDS*1000);
   }
   interruptConnection(){
@@ -539,11 +710,12 @@ export class NetworkSession {
   }
   dispose(leave=true){
     if(this.closed)return;this.closed=true;this.connectionState='disconnected';
+    this.replay.reset();this.progression=null;
     clearTimeout(this.reconnectTimer);this.reconnectTimer=null;
     clearInterval(this.watchdog);this.watchdog=null;clearTimeout(this.joinTimer);this.joinTimer=null;this.joinAbort?.abort();this.mapAbort?.abort();
     for(const off of this.unsub)if(typeof off==='function')off();this.unsub=[];
     this.predict?.dispose();this.prediction=null;this.predict=null;this.remote.clear();
-    this.events=[];this.clearTeamComms();this.teamAnchors.clear();this.receivedTeamComms.clear();this.predictedShots.clear();this.actionTimes?.clear();this.view.state.actors=[];this.view.state.phase='menu';
+    this.privateBonus=null;this.events=[];this.clearTeamComms();this.teamAnchors.clear();this.receivedTeamComms.clear();this.predictedShots.clear();this.actionTimes?.clear();this.view.state.actors=[];this.view.state.phase='menu';
     const room=this.room||this.joiningRoom;this.room=null;this.joiningRoom=null;this.input=null;
     if(leave&&room){room.reconnection.enabled=false;return room.leave().catch(()=>{});}
   }

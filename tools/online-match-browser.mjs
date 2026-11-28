@@ -9,7 +9,7 @@ import {chromium} from '../frontline/source/tools/dev/node_modules/playwright-co
 import {CONTRACT} from '../shared/multiplayer/build.mjs';
 import {DEFAULT_MAP_ID} from '../shared/multiplayer/maps.mjs';
 import {startPilotFixture} from './network-pilot-fixture.mjs';
-import {resumeDesktop} from './network-browser-resume.mjs';
+import {enterTouchMatch, resumeDesktop, waitForActiveHud} from './network-browser-resume.mjs';
 const mapId=process.env.FPS_MATCH_MAP??DEFAULT_MAP_ID;
 const lanes={
  'floor5-prepared':{x:20,hostZ:-16,friendZ:-18},
@@ -36,14 +36,32 @@ async function roomRead(page){
  const {objects}=await cdp.send('Runtime.queryObjects',{prototypeObjectId:proto.objectId});
  const {result}=await cdp.send('Runtime.callFunctionOn',{objectId:objects.objectId,functionDeclaration:'function(){return Array.from(this).find(r=>r.connection?.isOpen&&r.state?.actors?.size)}'});
  assert(result.objectId);
+ // Record public snapshots as they are applied. A slow rendered frame can span
+ // both a death and its respawn before the Node driver next polls this tab.
+ function observeLives(){
+  const latest=new Map();
+  this.fixtureLives=[];
+  const capture=()=>{
+   for(const actor of this.state.actors.values()){
+    const entry={match:this.state.matchId,phase:this.state.phase,id:actor.id,life:actor.lifeId,alive:actor.alive,deaths:actor.deaths};
+    const previous=latest.get(actor.id);
+    if(previous && previous.match===entry.match && previous.alive===entry.alive && previous.life===entry.life && previous.deaths===entry.deaths)continue;
+    latest.set(actor.id,entry);this.fixtureLives.push(entry);
+    if(this.fixtureLives.length>64)this.fixtureLives.shift();
+   }
+  };
+  this.onStateChange(capture);capture();
+ }
+ const installed=await cdp.send('Runtime.callFunctionOn',{objectId:result.objectId,functionDeclaration:observeLives.toString()});
+ assert(!installed.exceptionDetails);
  return async()=>{
-  const {result:value,exceptionDetails}=await cdp.send('Runtime.callFunctionOn',{objectId:result.objectId,returnByValue:true,functionDeclaration:`function(){return {mapId:this.state.mapId,mode:this.state.mode,phase:this.state.phase,matchId:this.state.matchId,results:this.state.results,room:this.roomId,players:[...this.state.actors.values()].map(a=>({id:a.id,bot:a.bot,team:a.team,alive:a.alive,hp:a.hp,life:a.lifeId,kills:a.kills,deaths:a.deaths,ammo:a.ammo,x:a.x,z:a.z,yaw:a.yaw,pitch:a.pitch,protectedUntil:a.spawnProtectedUntil,time:this.state.time}))}}`});
+  const {result:value,exceptionDetails}=await cdp.send('Runtime.callFunctionOn',{objectId:result.objectId,returnByValue:true,functionDeclaration:`function(){return {mapId:this.state.mapId,mode:this.state.mode,phase:this.state.phase,matchId:this.state.matchId,results:this.state.results,room:this.roomId,lives:this.fixtureLives,players:[...this.state.actors.values()].map(a=>({id:a.id,bot:a.bot,team:a.team,alive:a.alive,hp:a.hp,life:a.lifeId,kills:a.kills,deaths:a.deaths,ammo:a.ammo,x:a.x,z:a.z,yaw:a.yaw,pitch:a.pitch,protectedUntil:a.spawnProtectedUntil,time:this.state.time}))}}`});
   assert(!exceptionDetails);return value.value;
  };
 }
 async function readyAndStart(host,friend){
  await host.locator('#room-ready').click();await friend.locator('#room-ready').tap();await host.locator('#room-start').click();
- await host.locator('#resume').waitFor({state:'visible'});await friend.locator('#resume').tap();host.aimPoint=(await resumeDesktop(host)).point;
+ await waitForActiveHud(host);await enterTouchMatch(friend);host.aimPoint=(await resumeDesktop(host)).point;
 }
 try{
  const host=await open(false);
@@ -115,10 +133,18 @@ try{
    await host.mouse.down();await delay(160);await host.mouse.up();await delay(100);
   }
  }
- const first=await readFriend();assert.equal(first.phase,'active');const victim=()=>readFriend().then(s=>s.players.find(a=>a.team==='counterAnalysts'));
- await fireUntil(async()=>!(await victim()).alive,'real death');
+ const first=await readFriend();assert.equal(first.phase,'active');
+ const victim=first.players.find(a=>a.team==='counterAnalysts');
+ const authoritativeVictim=r.sim.game.actors.find(a=>a.id===victim.id);
+ // Stop sending shots after one genuine elimination, independently of when the
+ // observer next renders. Both transitions still have to arrive on its socket.
+ await fireUntil(()=>authoritativeVictim.deaths>victim.deaths,'real death');
+ const newLife=(entry,alive)=>entry.match===first.matchId && entry.phase==='active' && entry.id===victim.id &&
+   entry.deaths===victim.deaths+1 && entry.alive===alive &&
+   (alive ? entry.life>victim.life : entry.life===victim.life);
+ await until(async()=>(await readFriend()).lives.some(entry=>newLife(entry,false)),'first death replicated');
  progress('first death');
- await until(async()=>{const a=await victim();return a.alive&&a.life>first.players.find(a=>a.team==='counterAnalysts').life;},'real automatic respawn');
+ await until(async()=>(await readFriend()).lives.some(entry=>newLife(entry,true)),'real automatic respawn');
  progress('respawn');
  await fireUntil(async()=> (await readHost()).phase==='results','score-limit result');
  await until(async()=> (await readFriend()).phase==='results','replicated results');
@@ -147,9 +173,15 @@ try{
  progress('time-limit result');
  const timed=JSON.parse((await readHost()).results);assert.equal(timed.winner,'analysts');assert.equal(timed.reason,'time');assert.equal(timed.score.analysts,1);
  progress('third match');
- r.match.settings.durationSeconds=2;r.state.durationSeconds=2;
  await friend.locator('#room-rematch').tap();await until(async()=> (await readHost()).phase==='waiting','third lobby');await readyAndStart(host,friend);
- await until(async()=> (await readHost()).phase==='results','time draw');const draw=JSON.parse((await readHost()).results);assert.equal(draw.winner,'draw');
+ // Start the measured two-second draw window after both browsers have entered.
+ // Foregrounding two real renderers can itself take longer than that window.
+ assert.equal((await readHost()).phase,'active');assert.equal((await readFriend()).phase,'active');
+ const drawDeadline=r.clock.elapsedTime+2000;
+ r.match.deadline=drawDeadline;
+ await until(async()=> (await readHost()).phase==='results','time draw');
+ assert(r.clock.elapsedTime>=drawDeadline,'the authority completed the full draw window');
+ const draw=JSON.parse((await readHost()).results);assert.equal(draw.winner,'draw');assert.equal(draw.reason,'time');
  await until(async()=> (await readFriend()).results===(await readHost()).results,'same draw on both clients');
  assert.equal(draw.matchId,score.matchId+2);assert.deepEqual(draw.score,{analysts:0,counterAnalysts:0});
  await host.locator('#room-leave').click();await until(async()=> (await readFriend()).players.length===1,'host departure');
@@ -161,8 +193,9 @@ try{
  await until(()=>fixture.authority.rooms.size===0,'room cleanup');assert.deepEqual(errors,[]);
  // A session lost on server restart must offer a working login, not trap the player.
  await friend.context().clearCookies();await friend.locator('[data-create=true]').tap();
- await friend.getByText('Logga in igen',{exact:true}).waitFor({state:'visible'});
- await friend.getByText('Logga in igen',{exact:true}).tap();await friend.locator('[name=invite]').waitFor();
+ await friend.locator('#network-status[data-error-id=pilotExpired]').waitFor();
+ await friend.getByText('Sign in again',{exact:true}).waitFor({state:'visible'});
+ await friend.getByText('Sign in again',{exact:true}).tap();await friend.locator('[name=invite]').waitFor();
  await friend.locator('[name=invite]').fill(fixture.invite);await friend.locator('button[type=submit]').tap();
  await friend.locator('#network-name').waitFor();assert.equal(await friend.locator('#network-room').inputValue(),roomId);
  const result={status:'PASS',mapId,buildHash:CONTRACT.buildHash,browser:browsers[0].version(),bots:0,date:new Date().toISOString(),renderedClients:2,protocolOnlyClients:0,physicalDevices:false,transport:'HTTPS/WSS pinned loopback fixture',scoreResult,timeResult:timed,drawResult:draw,sharedRoomLogin:true,expiredLoginRecovery:true,bothMovementControls:true,touchFire:true,deathRespawn:true,sameRoomRematch:true,teamChange:true,ownerTransfer:true,cleanup:true};
@@ -170,6 +203,6 @@ try{
 }catch(e){
  // Never expose invitations/cookies in Playwright action diagnostics.
  console.error(String(e.stack||e).replaceAll(fixture.invite,'[invite]'));process.exitCode=1;
- for(const room of fixture.authority.rooms)console.error(JSON.stringify({phase:room.state.phase,actors:room.sim.game.actors.map(a=>({id:a.id,x:a.x,z:a.z,yaw:a.yaw,blockedBy:a.blockedBy})),enabled:[...room.seats.values()].map(s=>s.enabled)}));
+ for(const room of fixture.authority.rooms)console.error(JSON.stringify({phase:room.state.phase,reason:room.state.reason,score:room.sim.game.state.score,actors:room.sim.game.actors.map(a=>({id:a.id,x:a.x,z:a.z,yaw:a.yaw,blockedBy:a.blockedBy})),enabled:[...room.seats.values()].map(s=>s.enabled)}));
  for(const [i,page] of pages.entries())await page.screenshot({path:'test-results/online-failure-'+i+'.png'}).catch(()=>{});
 }finally{clearInterval(placing);await Promise.all(browsers.map(b=>b.close()));await fixture.close();}

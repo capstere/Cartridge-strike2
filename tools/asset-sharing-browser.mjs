@@ -2,7 +2,8 @@ import assert from 'node:assert/strict';
 import {chromium} from '../frontline/source/tools/dev/node_modules/playwright-core/index.mjs';
 const b=await chromium.launch({channel:'chromium'});
 try{
- const p=await b.newPage({viewport:{width:844,height:390},isMobile:true,hasTouch:true});p.setDefaultTimeout(180000);await p.goto((process.env.FPS_TEST_ORIGIN||'http://127.0.0.1:8765')+'/fps/?test&seed=42');await p.waitForFunction(()=>window.__fps,null,{timeout:180000});await p.locator('#start').click();await p.waitForFunction(()=>__fps.game.player&&document.querySelector('#cs-loading').hidden);
+ const p=await b.newPage({viewport:{width:844,height:390},isMobile:true,hasTouch:true});p.setDefaultTimeout(180000);await p.goto((process.env.FPS_TEST_ORIGIN||'http://127.0.0.1:8765')+'/fps/?test&seed=42');await p.waitForFunction(()=>window.__fps,null,{timeout:180000});await p.locator('#start').click();
+ await p.locator('#csl-deploy').click();await p.waitForFunction(()=>__fps.game.player&&document.querySelector('#cs-loading').hidden);
  const result=await p.evaluate(async()=>{
   __fps.stopFrameLoop();const {AnimationClip,AnimationMixer}=await import('../vendor/three/three.module.js'),{cloneSkinned}=await import('../src/fps/skinned-clone.mjs');let tracks=0,poses=0;
   const states=[...__fps.renderer.actors.values()].map(m=>m.userData.avatar).filter(s=>s&&!s.isHostage);

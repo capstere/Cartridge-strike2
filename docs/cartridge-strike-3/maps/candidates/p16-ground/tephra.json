@@ -1,0 +1,504 @@
+{
+  "scenario": "tephra",
+  "map": "tephra",
+  "physicalPhone": false,
+  "transport": "TLS loopback",
+  "date": "2026-11-27T16:08:58.935Z",
+  "revision": "aafc587f32060cf738c19dfcd4de1631e1e15ec6",
+  "buildHash": "e6f610309ea6722b01e469f2ff6d343c89cca0715c8e6040aeaf5abc35466aad",
+  "manifestHash": "f4c8238312ac2ba614f30cd9239f066e60fd64fda3c6c33c11800860ab3b9fdd",
+  "cpu": "Cortex-A76",
+  "arch": "arm64",
+  "os": "linux",
+  "node": "v26.13.0",
+  "model": "Raspberry Pi 5 Model B Rev 1.1",
+  "warmupMs": 3000,
+  "windowMs": 10000,
+  "scheduledSeconds": 45,
+  "scoreTarget": 150,
+  "args": [
+    "--use-angle=gl-egl",
+    "--ignore-gpu-blocklist",
+    "--enable-unsafe-swiftshader",
+    "--disable-renderer-backgrounding",
+    "--disable-background-timer-throttling",
+    "--disable-backgrounding-occluded-windows",
+    "--host-resolver-rules=MAP 127.0.0.1 127.0.0.1",
+    "--no-proxy-server",
+    "--ozone-platform=wayland"
+  ],
+  "hardwareBefore": {
+    "thermalC": 49.6,
+    "cpuKHz": 2400000
+  },
+  "renderedClients": 1,
+  "sdkPeers": 0,
+  "phaseLog": [
+    {
+      "step": "enter waiting room",
+      "elapsedMs": 3736
+    },
+    {
+      "step": "load tephra",
+      "elapsedMs": 29533
+    },
+    {
+      "step": "start match",
+      "elapsedMs": 38535
+    },
+    {
+      "step": "measure active game",
+      "elapsedMs": 44659
+    },
+    {
+      "step": "finish match",
+      "elapsedMs": 56829
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 85486
+    },
+    {
+      "step": "switch tephra",
+      "elapsedMs": 94998
+    },
+    {
+      "step": "reject a damaged level and retry on the saved map",
+      "elapsedMs": 98958
+    },
+    {
+      "step": "complete",
+      "elapsedMs": 110651
+    }
+  ],
+  "browser": "156.0.8078.79",
+  "viewport": {
+    "width": 1024,
+    "height": 576
+  },
+  "signInToFormMs": 2706,
+  "enterToWaitingMs": 25797,
+  "selectMapMs": 8859,
+  "players": {
+    "humanSlots": 1,
+    "bots": 9
+  },
+  "startToPlayableMs": 1856,
+  "controls": {
+    "distanceM": 0.7,
+    "ammoBefore": 30,
+    "ammoAfter": 29,
+    "rightClickAim": true,
+    "team": "analysts"
+  },
+  "measurement": {
+    "client": {
+      "frameIntervalMs": {
+        "n": 387,
+        "min": 18.2,
+        "p50": 24.4,
+        "p95": 34.4,
+        "p99": 41.9,
+        "max": 166.1
+      },
+      "framesOver33": 27,
+      "framesOver50": 2,
+      "framesOver100": 1,
+      "renderCpuMs": {
+        "n": 388,
+        "min": 16.5,
+        "p50": 20.3,
+        "p95": 26.3,
+        "p99": 31.1,
+        "max": 143.7
+      },
+      "draws": {
+        "n": 388,
+        "min": 457,
+        "p50": 503,
+        "p95": 589,
+        "p99": 589,
+        "max": 589
+      },
+      "triangles": {
+        "n": 388,
+        "min": 268004,
+        "p50": 294429,
+        "p95": 343995,
+        "p99": 343995,
+        "max": 343995
+      },
+      "pixelRatio": {
+        "n": 388,
+        "min": 0.47,
+        "p50": 0.47,
+        "p95": 0.68,
+        "p99": 0.68,
+        "max": 0.68
+      }
+    },
+    "server": {
+      "executionMs": {
+        "n": 606,
+        "min": 0.4,
+        "p50": 1.28,
+        "p95": 4.66,
+        "p99": 7.92,
+        "max": 21.83
+      },
+      "intervalMs": {
+        "n": 605,
+        "min": 0.69,
+        "p50": 16.19,
+        "p95": 18.5,
+        "p99": 32.25,
+        "max": 34.34
+      },
+      "executionOverTickBudget": 1,
+      "executionOver33": 0,
+      "executionOver50": 0,
+      "intervalOver33": 1,
+      "rttMs": 0,
+      "tick": 2814
+    },
+    "resources": {
+      "projectId": "lvl-tephra",
+      "level": "Tephra",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        478,
+        269
+      ],
+      "quality": "low",
+      "geometries": 486,
+      "textures": 84,
+      "programs": 60,
+      "owners": 2,
+      "disposals": 1,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    }
+  },
+  "sourceGeometry": {
+    "inScene": true,
+    "groups": 265,
+    "triangles": 112492,
+    "projectId": "lvl-tephra"
+  },
+  "environment": {
+    "camera": {
+      "x": -14,
+      "z": 20,
+      "y": 4,
+      "pitch": 0.08,
+      "yaw": -2.4,
+      "height": 1.72,
+      "radius": 0.2
+    },
+    "first": {
+      "draws": 176,
+      "skyWidth": 2048,
+      "groundField": {
+        "size": [
+          550,
+          550
+        ],
+        "tiles": [
+          256,
+          256,
+          4
+        ],
+        "mips": true,
+        "samples": [
+          [
+            255,
+            0,
+            0,
+            40
+          ],
+          [
+            0,
+            255,
+            0,
+            92
+          ]
+        ]
+      },
+      "bakedLight": [
+        64,
+        104,
+        12
+      ],
+      "eruption": {
+        "azimuth": -3.0692553230511983,
+        "radius": 0.0833095213740033,
+        "elevation": 0.46238077449763015,
+        "plume": [
+          0.97,
+          0.15,
+          1,
+          1.7
+        ]
+      },
+      "weatherTime": 53.93529999995232,
+      "counts": {
+        "waveBands": 0,
+        "mills": 0,
+        "fabrics": 0,
+        "boats": 0,
+        "ponds": 0,
+        "ash": 700
+      },
+      "steam": 91,
+      "canopy": [
+        32,
+        62
+      ],
+      "millAngles": [],
+      "boatHeights": [],
+      "fourPoses": true,
+      "failedPrograms": 0
+    },
+    "second": {
+      "draws": 133,
+      "skyWidth": 2048,
+      "groundField": {
+        "size": [
+          550,
+          550
+        ],
+        "tiles": [
+          256,
+          256,
+          4
+        ],
+        "mips": true,
+        "samples": [
+          [
+            255,
+            0,
+            0,
+            40
+          ],
+          [
+            0,
+            255,
+            0,
+            92
+          ]
+        ]
+      },
+      "bakedLight": [
+        64,
+        104,
+        12
+      ],
+      "eruption": {
+        "azimuth": -3.0692553230511983,
+        "radius": 0.0833095213740033,
+        "elevation": 0.46238077449763015,
+        "plume": [
+          0.97,
+          0.15,
+          1,
+          1.7
+        ]
+      },
+      "weatherTime": 54.9285,
+      "counts": {
+        "waveBands": 0,
+        "mills": 0,
+        "fabrics": 0,
+        "boats": 0,
+        "ponds": 0,
+        "ash": 700
+      },
+      "steam": 91,
+      "canopy": [
+        32,
+        62
+      ],
+      "millAngles": [],
+      "boatHeights": [],
+      "fourPoses": true,
+      "failedPrograms": 0
+    }
+  },
+  "completed": {
+    "matchId": 1,
+    "winner": "counterAnalysts",
+    "reason": "time",
+    "score": {
+      "analysts": 1,
+      "counterAnalysts": 2
+    },
+    "players": [
+      {
+        "id": "analysts-1",
+        "name": "BOT A-02",
+        "team": "analysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "analysts-2",
+        "name": "BOT A-03",
+        "team": "analysts",
+        "kills": 1,
+        "deaths": 1
+      },
+      {
+        "id": "analysts-3",
+        "name": "BOT A-04",
+        "team": "analysts",
+        "kills": 0,
+        "deaths": 1
+      },
+      {
+        "id": "analysts-4",
+        "name": "BOT A-05",
+        "team": "analysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "counterAnalysts-0",
+        "name": "BOT C-01",
+        "team": "counterAnalysts",
+        "kills": 0,
+        "deaths": 1
+      },
+      {
+        "id": "counterAnalysts-1",
+        "name": "BOT C-02",
+        "team": "counterAnalysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "counterAnalysts-2",
+        "name": "BOT C-03",
+        "team": "counterAnalysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "counterAnalysts-3",
+        "name": "BOT C-04",
+        "team": "counterAnalysts",
+        "kills": 1,
+        "deaths": 0
+      },
+      {
+        "id": "counterAnalysts-4",
+        "name": "BOT C-05",
+        "team": "counterAnalysts",
+        "kills": 1,
+        "deaths": 0
+      },
+      {
+        "id": "analysts-0",
+        "name": "Map Tester",
+        "team": "analysts",
+        "kills": 0,
+        "deaths": 0
+      }
+    ]
+  },
+  "retiredGameCanvases": 0,
+  "transitions": [
+    {
+      "id": "floor5-prepared",
+      "ms": 9042,
+      "heapUsedBytes": 74837060,
+      "heapCapacityBytes": 76562432,
+      "embedderHeapUsedBytes": 10352528,
+      "backingStorageBytes": 94952340,
+      "documents": 1,
+      "nodes": 2259,
+      "eventListeners": 176,
+      "resourceTimings": 250,
+      "mountedNodes": 810,
+      "loadingPanels": 1,
+      "loadingDescendants": 31,
+      "projectId": "lvl-floor5-preppad-20261105",
+      "level": "Unit 05",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 3,
+      "disposals": 2,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "tephra",
+      "ms": 3712,
+      "heapUsedBytes": 42424156,
+      "heapCapacityBytes": 44023808,
+      "embedderHeapUsedBytes": 7739040,
+      "backingStorageBytes": 80774090,
+      "documents": 1,
+      "nodes": 2223,
+      "eventListeners": 176,
+      "resourceTimings": 250,
+      "mountedNodes": 809,
+      "loadingPanels": 1,
+      "loadingDescendants": 31,
+      "projectId": "lvl-tephra",
+      "level": "Tephra",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 375,
+      "textures": 65,
+      "programs": 59,
+      "owners": 4,
+      "disposals": 3,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    }
+  ],
+  "damagedMapRejected": true,
+  "retryMap": "floor5-prepared",
+  "audio": {
+    "peakVoices": 12,
+    "peakBytes": 16193224,
+    "closed": [
+      {
+        "id": "tephra",
+        "bytes": 0,
+        "voices": 0,
+        "banks": 0
+      },
+      {
+        "id": "tephra",
+        "bytes": 0,
+        "voices": 0,
+        "banks": 0
+      }
+    ],
+    "map": "tephra",
+    "decodeErrors": []
+  },
+  "status": "PASS",
+  "hardwareAfter": {
+    "thermalC": 50.7,
+    "cpuKHz": 2400000
+  },
+  "teardown": {
+    "naturalExit": true,
+    "elapsedMs": 567,
+    "activeResources": [],
+    "liveReferenced": []
+  }
+}

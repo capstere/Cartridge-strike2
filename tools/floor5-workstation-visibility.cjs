@@ -73,6 +73,7 @@ async function main() {
     await page.addInitScript(() => localStorage.setItem('cartridge-settings', JSON.stringify({ mode: 'endless', graphics: 'low' })));
     await page.goto((process.env.FPS_TEST_ORIGIN || 'http://127.0.0.1:8765') + '/fps/?test&realtime&seed=42', { waitUntil: 'commit' });
     await page.locator('#start').tap();
+    await page.locator('#csl-deploy').tap();
     await page.waitForFunction(() => window.__fps?.game.phase === 'active' && !__fps.modal && document.getElementById('cs-loading').hidden,
       null, { timeout: 180000 });
     const start = await page.evaluate(() => ({ x: __fps.game.player.x, z: __fps.game.player.z, yaw: __fps.game.player.yaw }));

@@ -1,0 +1,16 @@
+{
+  "utc": "2026-11-28T16:14:43.838201+00:00",
+  "status": "PASS",
+  "revision": "d43379995cbed5f6858cc403fa0e86f5094856f9",
+  "runtime": "aec199fd40e814a4df3b4ff04a49b25277aca6fd2788375a32d801bb11d1420b",
+  "protocol": 22,
+  "publicFiles": 727,
+  "publicBytes": 82049665,
+  "publicManifestSHA256": "87d2f3177e22bac3b00143dc92947e972b7d08fcb80611c83742ed5a59ea239b",
+  "verifiedPublicFileDigests": 727,
+  "privateRuntimeFiles": 27,
+  "regularFilesWithLockedProductionPackages": 2600,
+  "installedOperatorSHA256": "0fd442f77e839d43b3c2ff55cab9f0ff12318f4da62bafe5d4d50a9f4ed7b0b5",
+  "rootOwnedOperationsVerified": true,
+  "productionRevisionAtStaging": "8307e91118dba4fdca964012d2b0c247a40221fd"
+}

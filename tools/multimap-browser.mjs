@@ -1,6 +1,9 @@
+import {rememberedFamilyForm} from './test-helpers/remembered-family.mjs';
 // Rendered multiplayer play and measurements. Start in the repo root.
-// FPS_MAP_CASE=desktop|mobile|four|floor node tools/multimap-browser.mjs
+// FPS_MAP_CASE=desktop|mobile|four|floor|meltem|meltemTouch node tools/multimap-browser.mjs
+import {verifyMapProcessExit} from './multimap-teardown.mjs';
 import assert from 'node:assert/strict';
+import {writeFileSync} from 'node:fs';
 import {execFileSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {mkdir, mkdtemp, readFile, rm, writeFile} from 'node:fs/promises';
@@ -9,23 +12,37 @@ import {join} from 'node:path';
 import {setTimeout as delay} from 'node:timers/promises';
 import {chromium, devices} from '../frontline/source/tools/dev/node_modules/playwright-core/index.mjs';
 import {startPilotFixture} from './network-pilot-fixture.mjs';
-import {resumeDesktop} from './network-browser-resume.mjs';
+import {enterTouchMatch, resumeDesktop, waitForActiveHud} from './network-browser-resume.mjs';
+import {countLivePrototypes,installRetentionProbe,parkedControl,readRetained,snapshotDetachedCanvases,writeRetainedProfile} from './multimap-heap.mjs';
 import {CONTRACT} from '../shared/multiplayer/build.mjs';
+import {waitForMeltemDeck} from './reference-map/geometry-census.mjs';
 
 const cases = {
   desktop: {actors:10, bots:9, family:true, video:true},
   mobile: {actors:2, bots:0, mobile:true},
   four: {actors:4, bots:0},
+  ...Object.fromEntries(['meltem','embruns','tephra'].flatMap(id=>[
+    [id,{actors:10,bots:9,family:true,reference:id}],
+    [id+'Touch',{actors:2,bots:0,mobile:true,reference:id}]
+  ])),
   floor: {actors:10, bots:9, family:true, floor:true},
 };
 const name = process.env.FPS_MAP_CASE || 'desktop';
+const profileHeap=process.env.FPS_MAP_HEAP_PROFILE==='1';
+const audible=process.env.FPS_MAP_AUDIO==='1';
+const traceGeometry=process.env.FPS_MAP_GEOMETRY_CENSUS==='1';
 const tour = name==='four' && process.env.FPS_MAP_TOUR==='1';
 const spec = cases[name];
-// A pair switches the same family room to Floor 5 and then back to Compact.
+// A pair switches the same family room to Floor 5 and then back to the selected map.
 const switchPairs = Number(process.env.FPS_MAP_SWITCH_PAIRS ?? 2);
 assert(Number.isSafeInteger(switchPairs) && switchPairs>=1, 'Use a positive number of map switch pairs');
-assert(spec, 'Choose desktop, mobile, four or floor');
-const floor = 'floor5-prepared', arena = 'compact-arena', map = spec.floor ? floor : arena;
+assert(spec, 'Unknown map browser scenario');
+const floor = 'floor5-prepared', arena = 'compact-arena', map = spec.reference || (spec.floor ? floor : arena);
+// A qualified full-catalog run returns to the same anchor at every comparison.
+const cycle=process.env.FPS_MAP_ALL_VARIANTS==='1'?[floor,'meltem','embruns','tephra']:[floor,map];
+assert(cycle.at(-1)===map&&2*switchPairs%cycle.length===0,'Use whole catalog cycles ending on the selected map.');
+const cycleCount=2*switchPairs/cycle.length;
+const checkpoints=new Set([cycle.length,cycle.length*Math.ceil(cycleCount/2),cycle.length*cycleCount]);
 const out = process.env.FPS_MAP_OUT || 'test-results/multiplayer-maps';
 await mkdir(out, {recursive:true});
 const fixture = await startPilotFixture({familyRoom:true, host:'127.0.0.1',
@@ -36,6 +53,15 @@ const gpu = process.env.FPS_NETWORK_ANGLE || (process.platform === 'darwin' ? 'm
 const args = ['--use-angle=' + gpu, '--ignore-gpu-blocklist', '--enable-unsafe-swiftshader',
   '--disable-renderer-backgrounding', '--disable-background-timer-throttling', '--disable-backgrounding-occluded-windows', ...fixture.args];
 if (process.env.WAYLAND_DISPLAY) args.push('--ozone-platform=wayland');
+async function piState() {
+  const number=async file=>{
+    const value=await readFile(file,'utf8').catch(()=>null);
+    return value===null?null:Number(value.trim());
+  };
+  const temperature=await number('/sys/class/thermal/thermal_zone0/temp');
+  const cpuKHz=await number('/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq');
+  return {thermalC:temperature===null?null:temperature/1000,cpuKHz};
+}
 const errors = [], peers = [], phases = [];
 const code = 'compact-render-test';
 let browser, page, room, mousePoint;
@@ -45,7 +71,7 @@ const result = {scenario:name, map, physicalPhone:false, transport:'TLS loopback
   cpu:cpus()[0].model, arch:arch(), os:platform(), node:process.version,
   model:await readFile('/proc/device-tree/model','utf8').then(s=>s.replaceAll('\0','')).catch(()=>null),
   warmupMs:3000, windowMs:10000, scheduledSeconds:45, scoreTarget:150, args:args.filter(a=>!a.includes('certificate')),
-  renderedClients:1, sdkPeers:spec.actors - spec.bots - 1, phaseLog:phases};
+  hardwareBefore:await piState(),renderedClients:1, sdkPeers:spec.actors - spec.bots - 1, phaseLog:phases};
 const mark = msg => { phases.push({step:msg, elapsedMs:Math.round(performance.now()-startAt)}); console.log(name, msg); };
 async function until(check, reason, timeout=90000) {
   const end = performance.now() + timeout;
@@ -60,10 +86,35 @@ function stats(raw) {
 
 // No test query, camera replacement, simulated rendering, or edits to actor state.
 // Observe completed Three.js frames, resource ownership and world identity.
-async function observe() {
+async function observe(withAudio) {
   const path = performance.getEntriesByType('resource').find(r=>new URL(r.name).pathname.endsWith('/src/fps/render.mjs'))?.name;
   const {Renderer} = await import(path || '/src/fps/render.mjs?v=floor5-environment-1');
-  const observed = window.mapProbe = {frames:[], collecting:false, renderers:[], last:null};
+  const observed = window.mapProbe = {frames:[], collecting:false, renderers:[], gameCanvases:[], last:null};
+  if(withAudio){
+    const loaded=performance.getEntriesByType('resource').find(r=>new URL(r.name).pathname.endsWith('/src/fps/coastal-ambience.mjs'));
+    const {CoastalAmbience}=await import(loaded?.name||'/src/fps/coastal-ambience.mjs');
+    const sample=observed.audio={peakVoices:0,peakBytes:0,opened:[],closed:[],audibleMaps:[],decodeErrors:[]};
+    const owners=new WeakMap();
+    const update=CoastalAmbience.prototype.update,dispose=CoastalAmbience.prototype.dispose;
+    CoastalAmbience.prototype.update=function(...args){
+      if (!owners.has(this)) {
+        const owner={serial:sample.opened.length+1,id:args[1].referenceId};
+        owners.set(this,owner);
+        sample.opened.push(owner);
+      }
+      const value=update.apply(this,args);
+      sample.map=this.mapId;sample.peakVoices=Math.max(sample.peakVoices,this.voices.size);
+      sample.peakBytes=Math.max(sample.peakBytes,this.bytes);if (this.bytes && this.voices.size && !sample.audibleMaps.includes(this.mapId)) sample.audibleMaps.push(this.mapId);
+      return value;
+    };
+    CoastalAmbience.prototype.dispose=function(){
+      try{return dispose.call(this);}
+      finally{
+        sample.decodeErrors.push(...this.loadErrors);
+        sample.closed.push({serial:owners.get(this)?.serial,id:this.mapId,bytes:this.bytes,voices:this.voices.size,banks:this.banks.size});
+      }
+    };
+  }
   const draw = Renderer.prototype.render, dispose = Renderer.prototype.dispose;
   Renderer.prototype.render = function(...args) {
     const started = performance.now();
@@ -71,7 +122,9 @@ async function observe() {
     const result = draw.apply(this,args);
     if(observed.last?.deref() !== this) {
       observed.last = new WeakRef(this);
-      if(!observed.renderers.some(ref=>ref.deref()===this)) observed.renderers.push(observed.last);
+      if(!observed.renderers.some(ref=>ref.deref()===this)){
+        observed.renderers.push(observed.last);observed.gameCanvases.push(new WeakRef(this.renderer.domElement));
+      }
     }
     if(observed.collecting) {
       const info = this.renderer.info;
@@ -100,7 +153,7 @@ async function renderedResources() {
       liveOwners:mapProbe.renderers.filter(ref=>ref.deref() && !ref.deref().presentationDisposed).length};
   });
 }
-function localSeat() { return [...room.seats.values()].find(s=>s.actor?.name==='Mapptest'); }
+function localSeat() { return [...room.seats.values()].find(s=>s.actor?.name==='Map Tester'); }
 async function acknowledge(id) {
   await until(()=>room.state.mapId===id && localSeat()?.ready, 'Authority confirmed map and loading seat');
   await until(async()=>(await renderedResources())?.projectId===room.sim.game.world.project.projectId,
@@ -123,7 +176,7 @@ async function addPeer(index) {
     const build = await import('/shared/multiplayer/build.mjs');
     await import('/vendor/colyseus/colyseus.js');
     const room = await new Colyseus.Client(location.origin).joinById(id, {contract:build.CONTRACT,
-      name:'Spelare '+index, team:index%2 ? 'counterAnalysts' : 'analysts', code});
+      name:'Player '+index, team:index%2 ? 'counterAnalysts' : 'analysts', code});
     window.mapPeerRoom = room;
     room.onMessage('clock-probe',token=>room.send('clock-echo',token));
     room.onMessage('events',()=>{});
@@ -140,7 +193,7 @@ async function addPeer(index) {
     room.onStateChange(ready);
     ready();
   },{id:room.roomId,code,index});
-  await until(()=>[...room.seats.values()].find(s=>s.actor?.name==='Spelare '+index)?.ready,'Late joining SDK peer loaded selected map');
+  await until(()=>[...room.seats.values()].find(s=>s.actor?.name==='Player '+index)?.ready,'Late joining SDK peer loaded selected map');
   await peer.evaluate(()=>{
     const r = window.mapPeerRoom, own = [...r.state.actors.values()].find(s=>s.sessionId===r.sessionId);
     r.send('match',{kind:'ready',ready:true,matchId:r.state.matchId,controlEpoch:own.controlEpoch});
@@ -198,9 +251,10 @@ async function sample() {
   assert(frames.length>=4,'At least four rendered frames');
   assert.equal(room.state.phase,'active');
   const gaps=frames.slice(1).map(([t],i)=>t-frames[i][0]);
-  return {client:{frameIntervalMs:stats(gaps), renderCpuMs:stats(frames.map(f=>f[1])), draws:stats(frames.map(f=>f[2])),
+  return {client:{frameIntervalMs:stats(gaps),framesOver33:gaps.filter(v=>v>33).length,
+      framesOver50:gaps.filter(v=>v>50).length,framesOver100:gaps.filter(v=>v>100).length,renderCpuMs:stats(frames.map(f=>f[1])), draws:stats(frames.map(f=>f[2])),
       triangles:stats(frames.map(f=>f[3])), pixelRatio:stats(frames.map(f=>f[6]))},
-    server:{executionMs:stats(tickCosts), intervalMs:stats(tickGaps), executionOver33:tickCosts.filter(v=>v>33).length,
+    server:{executionMs:stats(tickCosts),intervalMs:stats(tickGaps),executionOverTickBudget:tickCosts.filter(v=>v>1000/CONTRACT.tickRate).length,executionOver33:tickCosts.filter(v=>v>33).length,
       executionOver50:tickCosts.filter(v=>v>50).length, intervalOver33:tickGaps.filter(v=>v>33).length,
       rttMs:localSeat().rtt, tick:room.state.tick}, resources:await renderedResources()};
 }
@@ -278,15 +332,25 @@ try {
   const viewport=spec.mobile ? {width:915,height:412} : {width:1024,height:576};
   const context=await browser.newContext({...spec.mobile&&devices['Pixel 7'],viewport,screen:viewport,deviceScaleFactor:1,ignoreHTTPSErrors:true});
   result.browser=browser.version(); result.viewport=viewport;
-  await context.addInitScript(()=>localStorage.setItem('cartridge-settings',JSON.stringify({graphics:'low',volume:0,mobileAutoFire:false})));
-  page=await context.newPage(); page.setDefaultTimeout(90000); page.on('pageerror',err=>errors.push(err.message));
+  await context.addInitScript(volume=>localStorage.setItem('cartridge-settings',JSON.stringify({graphics:'low',volume,mobileAutoFire:false})),audible ? .45 : 0);
+  page=await context.newPage();
+  page.on('console',message=>{
+    if(message.type()==='error'&&/shader error|WebGLProgram:|GL_INVALID/i.test(message.text()))errors.push(message.text());
+  });
+  page.setDefaultTimeout(90000); page.on('pageerror',err=>errors.push(err.message));
   const entry=spec.family?'/room/JESPERS-ROOM':'/';
   await page.goto(fixture.origin+entry,{waitUntil:'domcontentloaded'});
   await page.locator('[name=invite]').fill(fixture.invite);
   const login=performance.now(); await page.locator('button[type=submit]').click();
   await page.locator('#network-code').waitFor(); result.signInToFormMs=Math.round(performance.now()-login);
-  await page.evaluate(observe); assert.equal(await page.evaluate(()=>typeof window.__fps),'undefined');
-  await page.locator('#network-name').fill('Mapptest');
+  await page.evaluate(observe,audible);
+  if(profileHeap)await page.evaluate(installRetentionProbe);
+  if(traceGeometry){
+    const {installGeometryCensus}=await import('./reference-map/geometry-census.mjs');
+    await page.evaluate(installGeometryCensus);
+  }
+  assert.equal(await page.evaluate(()=>typeof window.__fps),'undefined');
+  await page.locator('#network-name').fill('Map Tester');
   await page.locator('#network-code').fill(spec.family ? fixture.familyPassword : code);
   if(!spec.family) await page.locator('#network-fill-bots').uncheck();
   if(tour) await page.locator('#network-map').selectOption(arena);
@@ -308,14 +372,30 @@ try {
   await page.locator('#room-ready').click();
   mark('start match');
   const start=performance.now(); await page.locator('#room-start').click();
-  await page.locator('#resume').waitFor(); result.startToPlayableMs=Math.round(performance.now()-start);
-  if(spec.mobile) await page.locator('#resume').tap(); else mousePoint=(await resumeDesktop(page)).point;
+  await waitForActiveHud(page); result.startToPlayableMs=Math.round(performance.now()-start);
+  if(spec.mobile) await enterTouchMatch(page); else mousePoint=(await resumeDesktop(page)).point;
   await until(()=>localSeat()?.enabled && room.state.phase==='active','Active controls on authority');
   await delay(result.warmupMs);
   result.controls=await walkAndFire(spec.mobile);
   mark('measure active game');
   result.measurement=await sample();
   assert(result.measurement.client.draws.min>0);
+  if(spec.reference) {
+    result.sourceGeometry=await page.evaluate(()=>{
+      const renderer=window.mapProbe.last.deref(), root=renderer.referenceScene?.root;
+      const architecture=root?.getObjectByName('Indexed architecture')?.children.filter(mesh=>mesh.geometry?.index && mesh.geometry.hasAttribute('color')) || [];
+      return {inScene:!!root && root.parent===renderer.scene,
+        groups:architecture.length, triangles:architecture.reduce((n,mesh)=>n+mesh.geometry.index.count/3,0),
+        projectId:renderer.world.project.projectId};
+    });
+    const expected={meltem:[302,291400],embruns:[149,238376],tephra:[265,112492]}[map];
+    assert.deepEqual(result.sourceGeometry,{inScene:true,groups:expected[0],triangles:expected[1],projectId:'lvl-'+map},
+      'The selected room must render its measured original architecture');
+    if(process.env.FPS_MAP_ENVIRONMENT==='1'){
+      const {verifyEnvironment}=await import('./reference-map/verify-environment.mjs');
+      result.environment=await verifyEnvironment(page,out,map);
+    }
+  }
   await page.screenshot({path:join(out,name+'-game.jpg'), quality:86});
   if(spec.video || tour) {
     mark('record gameplay');
@@ -354,15 +434,60 @@ try {
   await page.locator('#room-rematch').click();
   await until(()=>room.state.phase==='waiting','Rematch returns to same room');
   if(!spec.floor) await acknowledge(map);
-  if(spec.video) {
+  if(spec.reference){
+    const cdp=await context.newCDPSession(page);
+    try {await cdp.send('HeapProfiler.collectGarbage');} finally {await cdp.detach();}
+    result.retiredGameCanvases=await page.evaluate(()=>mapProbe.gameCanvases.filter(ref=>{
+      const canvas=ref.deref();return canvas&&!canvas.isConnected;
+    }).length);
+    assert.equal(result.retiredGameCanvases,0,'Previous maps must release their WebGL canvas');
+  }
+  if(spec.video || (spec.reference && spec.family)) {
     result.transitions=[];
-    for(let turn=0;turn<2*switchPairs;turn++) {
-      const id=turn%2 ? arena : floor;
-      mark('switch '+id); const ms=await selectMap(id);
-      const cdp=await context.newCDPSession(page);
-      try {await cdp.send('HeapProfiler.collectGarbage');} finally {await cdp.detach();}
-      result.transitions.push({id,ms,...await renderedResources()});
-    }
+    const cdp=await context.newCDPSession(page), switchesStarted=performance.now();
+    try {
+      if(profileHeap)await cdp.send('HeapProfiler.startSampling',{samplingInterval:32768});
+      for(let turn=0;turn<2*switchPairs;turn++) {
+        const id=cycle[turn%cycle.length];
+        mark('switch '+id); const ms=await selectMap(id);
+        if(traceGeometry&&id==='meltem'){
+          const frames=[await page.evaluate(()=>mapGeometryCensus())];
+          if(process.env.FPS_MAP_GEOMETRY_SETTLE==='1'){
+            for(const interval of [500,1500,3000]){
+              await page.waitForTimeout(interval);
+              frames.push(await page.evaluate(()=>mapGeometryCensus()));
+            }
+          }
+          await writeFile(join(out,'meltem-geometry-'+(turn+1)+'.json'),JSON.stringify(frames)+'\n');
+        }
+        const movingDeck=id==='meltem'?await waitForMeltemDeck(page):undefined;
+        result.transitions.push({id,ms,movingDeck,...await readRetained(cdp,page),...await renderedResources()});
+        if(profileHeap && id===map && checkpoints.has(turn+1)){
+          const sample=result.transitions.at(-1);
+          sample.livePrototypes=await countLivePrototypes(cdp);
+          await writeFile(join(out,'heap-'+(turn+1)+'.json'),JSON.stringify(sample,null,2)+'\n');
+          await writeRetainedProfile(cdp,out,turn+1);
+        }
+        if(profileHeap)await writeFile(join(out,'lifecycle-progress.json'),JSON.stringify({
+          revision:result.revision,buildHash:result.buildHash,measurement:result.measurement,transitions:result.transitions,
+        },null,2)+'\n');
+      }
+      if(profileHeap) {
+        mark('park on '+map+' for the same interval as all switches');
+        result.parked=await parkedControl(cdp,page,out,Math.round(performance.now()-switchesStarted));
+        await cdp.send('HeapProfiler.stopSampling');
+        const first=result.transitions.find(row=>row.livePrototypes)?.livePrototypes;
+        const last=result.parked.at(-1).livePrototypes;
+        if(process.env.FPS_MAP_HEAP_SNAPSHOT==='1' && first && last.canvases>first.canvases)
+          await snapshotDetachedCanvases(cdp,out);
+        for(const sample of [...result.transitions,...result.parked].filter(row=>row.livePrototypes)){
+          const counts=sample.livePrototypes;
+          assert.equal(counts.detachedGameCanvases,0,'A retired game canvas still owns a WebGL context');
+          for(const key of ['Game','NetworkSession','AudioSystem','threeRenderers','glContexts','canvases'])
+            assert.equal(counts[key],first[key],'Stable same-map live '+key);
+        }
+      }
+    } finally {await cdp.detach();}
     for(const row of result.transitions) {
       assert.equal(row.liveOwners,1,'Only the current renderer stays live');
       assert.equal(row.reachableOwners,1,'Previous renderers were collected');
@@ -371,25 +496,55 @@ try {
       assert.equal(row.geometries,first.geometries,'Stable waiting-room geometry count for '+row.id);
       assert.equal(row.textures,first.textures,'Stable waiting-room texture count for '+row.id);
     }
+    if (audible && process.env.FPS_MAP_ALL_VARIANTS==='1') {
+      // Waiting-room map selection can leave the audio context suspended. Enter
+      // each additional soundscape through the real controls before checking disposal.
+      for (const id of cycle.filter(id=>id!==floor && id!==map)) {
+        mark('hear '+id+' during active play');
+        await selectMap(id);
+        await page.locator('#room-ready').click();
+        await page.locator('#room-start').click();
+        await waitForActiveHud(page);
+        await resumeDesktop(page);
+        await page.waitForFunction(id=>mapProbe.audio.audibleMaps.includes(id),id);
+        await page.locator('#room-rematch').click();
+        await until(()=>room.state.phase==='waiting','Audible round returned to its lobby');
+      }
+      await selectMap(map);
+    }
     mark('reject a damaged level and retry on the saved map');
     const route='**/levels/floor5-prepared.json';
     await page.route(route,r=>r.fulfill({status:200,contentType:'application/json',body:'{}'}));
     try {
       await page.locator('#room-map').selectOption(floor);
-      await page.locator('#network-code').waitFor();
+      await rememberedFamilyForm(page);
       await page.locator('#network-status').filter({hasText:/mismatch|version/i}).waitFor();
       await until(()=>fixture.authority.rooms.size===0,'Failed map load released its seat');
       assert(await page.locator('#fatal').isHidden());
     } finally {await page.unroute(route);}
-    await page.locator('#network-code').fill(fixture.familyPassword);
+    await rememberedFamilyForm(page);
     await page.locator('[data-create=false]').click();
     await page.locator('#room-ready').waitFor(); room=[...fixture.authority.rooms][0];
     await acknowledge(floor);
     result.damagedMapRejected=true; result.retryMap=room.state.mapId;
   }
-  await page.locator('#room-leave').click(); await page.locator('#network-code').waitFor();
+  await page.locator('#room-leave').click();
+  if (spec.family) await rememberedFamilyForm(page);
+  else await page.locator('#network-code').waitFor();
   for(const p of peers) await p.pages()[0].evaluate(()=>mapPeerRoom.leave());
   await until(()=>fixture.authority.rooms.size===0,'All sockets and simulation released');
+  if(audible&&spec.reference){
+    result.audio=await page.evaluate(()=>mapProbe.audio);
+    assert.ok(result.audio.peakBytes>0&&result.audio.peakVoices>0);
+    assert.deepEqual(result.audio.decodeErrors,[]);
+    assert.ok(result.audio.closed.length>0);
+    const visitedMaps=new Set([map,...(result.transitions??[]).map(row=>row.id)]);
+    const expectedMaps=[...visitedMaps].filter(id=>id!==floor);
+    assert.deepEqual([...result.audio.audibleMaps].sort(),[...expectedMaps].sort());
+    for (const owner of result.audio.opened) assert(expectedMaps.includes(owner.id),'Audio owner belongs to a visited soundscape');
+    assert.deepEqual(result.audio.closed,result.audio.opened.map(owner=>({...owner,bytes:0,voices:0,banks:0})),
+      'Each world audio owner is disposed once in visit order with no retained samples, voices or banks');
+  }
   assert.deepEqual(errors,[]);
   await browser.close();browser=null;
   if(footage) result.video=await encode(footage);
@@ -408,5 +563,17 @@ try {
   console.error(result.failure,result.ui);process.exitCode=1;
 } finally {
   try {await browser?.close();} finally {await fixture.close();}
-  await writeFile(join(out,name+'.json'),JSON.stringify(result,null,2)+'\n');
+  result.hardwareAfter=await piState();
+  const receipt=join(out,name+'.json');
+  await writeFile(receipt,JSON.stringify(result,null,2)+'\n');
+  verifyMapProcessExit(teardown=>{
+    result.teardown=teardown;
+    if(teardown.naturalExit)console.log(name,'browser, TLS proxy and authority released; Node naturally drained',teardown.elapsedMs+'ms');
+    if(!teardown.naturalExit){
+      result.status='FAIL';
+      result.failure=[result.failure,'The browser, TLS proxy and authority closed, but the Node event loop remained referenced.'].filter(Boolean).join('\n');
+      console.error(result.failure,JSON.stringify(teardown));
+    }
+    writeFileSync(receipt,JSON.stringify(result,null,2)+'\n');
+  });
 }

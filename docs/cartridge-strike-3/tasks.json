@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "reviewGate": "REVIEW_REQUIRED",
+  "reviewGate": "APPROVED",
   "baseline": "239b15b01040c2b0a1fd394f3be158cfb006d82a",
   "reference": "31ca050d8ce59f4885c01a3237f68cdf186c9b60",
   "defaultLanguage": "en",
@@ -14,7 +14,17 @@
       "scope": "Recheck live/recovery identity and privately rehearse restore. Compare playable CS2 and vendored Frontline. Record source hashes, steady and worst-case measurements, input/action, map, inventory, access and English contracts. Inventory release files versus browser allowlist and Pages publishing root.",
       "tests": "Existing tests; reproducible scenarios; exact SHA, sanitized backup receipt and review of contract",
       "exit": "Verified backup/isolated restore, comparable baselines and signed-off interface designs. A missing prerequisite is BLOCKED and keeps dependents pending.",
-      "status": "NOT_STARTED"
+      "status": "VERIFIED",
+      "evidence": [
+        "baseline/identity.json",
+        "baseline/recovery.json",
+        "baseline/distribution.json",
+        "baseline/contracts.md",
+        "baseline/performance/README.md",
+        "baseline/performance/progress.json"
+      ],
+      "runtimeRevision": "5364240599164c0aee278bb0ac2a35d662c3a818",
+      "reviewer": "Independent project reviewer"
     },
     {
       "id": "CS3-01",
@@ -27,7 +37,30 @@
       "scope": "Design system; en catalog; main/Play/Solo/With Friends, options, map cards, roster, countdown, news; real solo and private lobby actions; placeholder routes explicitly disabled pending 03/04/09/10.",
       "tests": "IMG_8150, 8158, 8160–8162 and 8164, V1 countdown, English guest Pages and denied/authorized Pi routes. Provide class-picker navigation for later class/wardrobe owners. Exercise real loading, Classic buy success/failure and re-login after translation.",
       "exit": "Menu→match→results real flows; stable back/resize/focus.",
-      "status": "NOT_STARTED"
+      "status": "VERIFIED",
+      "branch": "cs3/01-countdown",
+      "pullRequests": [
+        48,
+        50,
+        54
+      ],
+      "mergedSlices": [
+        "65a6f06385a3fa8944ed605ebdd4680522f70588",
+        "e6a56c2159fed23fac576abe068dece4fce98207",
+        "adb3cdf6c7c0a8721cecc1db30602eea1fe200f6"
+      ],
+      "evidence": [
+        "evidence/01-private-entry.md",
+        "evidence/01-menu/README.md",
+        "evidence/01-countdown/README.md"
+      ],
+      "workBranches": [
+        "cs3/01-runtime-english",
+        "cs3/01-countdown"
+      ],
+      "verifiedHead": "2390c8248743582e3d13883a18acd46e0f7f9af1",
+      "verifiedRun": 46017902821,
+      "independentReview": "Accepted the full English guest and private flows, all six native countdown images and the corrected two-client draw timing."
     },
     {
       "id": "CS3-02",
@@ -40,7 +73,36 @@
       "scope": "First prove CR4 and P9 hip → Rush → release/ADS/short fire in both normal input paths and under reconciliation. Extend to slide, reload/inspect/switch, grenade hold/return and remaining held models. Preserve manual/auto-fire and saved bindings.",
       "tests": "RECORDING_REVIEW V2/V4/V6, input tick → legal shot → ammo/FX, near/far A/V onset, pause/cancel. Use view-arms-capture, recoil-autofire, online-equipment and the sprint-reload reticle fixture.",
       "exit": "Readable camera and grips, distinct supported poses, no lost tap or duplicate shot/foley. Fixed-step client/server/offline trace and synchronized video per weapon family.",
-      "status": "NOT_STARTED"
+      "status": "VERIFIED",
+      "branch": "cs3/02-buffered-slide",
+      "pullRequests": [
+        49,
+        51,
+        53,
+        57
+      ],
+      "mergedSlices": [
+        "1a0e1fab3ed2fe53f9764470039a89ebe5943598",
+        "6fda2c88a07cd7e27cdda616beaead230d7e76ce",
+        "cac3d3d3d148a0a2c40c9f42ea3aa6206892141f",
+        "f789655c55cb431b2916a8052200383b0d22d228"
+      ],
+      "evidence": [
+        "evidence/rush/README.md",
+        "evidence/audio/README.md",
+        "evidence/rush/integration.md",
+        "evidence/rush/buffered-slide.json",
+        "evidence/rush/all-held-families.json"
+      ],
+      "workBranches": [
+        "cs3/02-handling",
+        "cs3/02-spatial-audio",
+        "cs3/02-buffered-slide",
+        "cs3/02-rush-latency"
+      ],
+      "independentReview": "Accepted p17 buffered input and decoded local and remote audio, 13 held items, recorded near/far and V6 handling, and parity with the fixed-step simulation.",
+      "verifiedHead": "4ce7aaa56aa9201a4c4ca13e6cb8975315763af4",
+      "verifiedRun": 46031863063
     },
     {
       "id": "CS3-03",
@@ -55,7 +117,24 @@
       "scope": "Canonical rig adapter, existing GLB, directional blending, IK, death/ragdoll visual and LOD; outfit previews, original skins; separately assess joint hitboxes.",
       "tests": "saved-character-browser, view-grips, view-character-appearance, headshot-landing; rig fixtures/video",
       "exit": "Existing imports and arms matching; visual/authority separation.",
-      "status": "NOT_STARTED"
+      "status": "VERIFIED",
+      "baseline": "f789655c55cb431b2916a8052200383b0d22d228",
+      "branch": "cs3/03-character-wardrobe",
+      "pullRequests": [
+        59,
+        61
+      ],
+      "mergedSlices": [
+        "9e9da21a32cef3643c29eac091ec1bc9a9c06ecf",
+        "055b887567a054c441ecb3b09c5597002dcb4a7a"
+      ],
+      "evidence": [
+        "evidence/wardrobe/README.md",
+        "evidence/streaks/cold-sightline/README.md"
+      ],
+      "verifiedHead": "a1f3cb607c1a5dde27c168c422241bff77727483",
+      "verifiedRun": 46138855938,
+      "independentReview": "Wardrobe, four-way motion, private GLB, two-renderer disposal, canceled/rotated loads, first-sightline and replicated death/respawn checks accepted. Join overhead and the separate first-HUD stall remain open release measurements."
     },
     {
       "id": "CS3-04",
@@ -69,7 +148,19 @@
       "scope": "Scoped remembered sessions, invite link/QR/short code, migration, optional accounts/recovery/stats storage, secure public listing behind off-by-default flag.",
       "tests": "network-family-browser, network-pilot-browser, security/expiry/revoke/replay tests, migration/restore. Verify guest Pages flow separately from Pi pilot proof, room proof and account identity.",
       "exit": "Two-client old and new access, private credentials protected, real persistent accounts.",
-      "status": "NOT_STARTED"
+      "status": "VERIFIED",
+      "branch": "cs3/04-account-access",
+      "baseline": "adb3cdf6c7c0a8721cecc1db30602eea1fe200f6",
+      "pullRequests": [
+        55
+      ],
+      "reviewHead": "1dd34063a04599ada44d1017f1576d5dcdbf52bc",
+      "independentReview": "Independent reviewer accepted the account runtime and reconciled task states. All nine final hosted jobs passed.",
+      "verifiedHead": "fb34637d27d5b495dd51126e13345ed856ad9288",
+      "verifiedRun": 46129743025,
+      "mergedSlices": [
+        "e2ad344636cb53d2411e73cc38b66ac5f84204f2"
+      ]
     },
     {
       "id": "CS3-05",
@@ -83,7 +174,19 @@
       "scope": "Implement dedicated spec 3/5/8 and 15/15/8; shared pure transitions, kill attribution, authoritative command and own radar, HUD/action binding, audio.",
       "tests": "state tests, invalid input cases, two-client online, offline parity, delayed projectiles, exact durations. Split-screen observer/recipient check on a fresh join and reconnect, including mixed assist/kill/headshot signals.",
       "exit": "All bonus rules proven, no unauthorized activation/stacking; UI confirmed.",
-      "status": "NOT_STARTED"
+      "status": "VERIFIED",
+      "baseline": "f789655c55cb431b2916a8052200383b0d22d228",
+      "branch": "cs3/05-authoritative-streaks",
+      "pullRequests": [
+        58
+      ],
+      "verifiedHead": "f265f35d09118af50fa909f30f0131eb909f383e",
+      "verifiedRun": 46133071502,
+      "mergedSlices": [
+        "e67f32aff5cba0707e15c398d89b03b06d93513b"
+      ],
+      "independentReview": "Two rendered players, native touch emulation, ten-seat UAV load, immutable reload intervals, foley and reconnect passed independent review.",
+      "evidence": "evidence/streaks/protocol-20/README.md"
     },
     {
       "id": "CS3-06",
@@ -98,7 +201,21 @@
       "scope": "Finish saved fixed/floating layouts, auto/on/off touch UI, stick-threshold or Run button, look while firing, tap/hold ADS, optional double-tap and fire-on-release, sprint+crouch, manual throw, bonuses, gamepad and PWA.",
       "tests": "Replay V2/V4/V6 and IMG_8153–8157 profiles, three pointers, HUD and cancel/rotation; mobile-input-ownership, mobile-reliability-browser and online-autofire-browser. Record hardware/emulation separately.",
       "exit": "Simultaneous controls, rotation, no stuck input, no key conflicts; physical status explicit.",
-      "status": "NOT_STARTED"
+      "status": "VERIFIED",
+      "branch": "cs3/06-mobile-input",
+      "pullRequests": [
+        63
+      ],
+      "reviewHead": "e1fa727b55d38dabed73f7ff01aaab19783bbac3",
+      "verifiedHead": "e1fa727b55d38dabed73f7ff01aaab19783bbac3",
+      "verifiedRun": 46141267973,
+      "mergedSlices": [
+        "8ecd504b59e5d591804ae36fb15078ca076e61ea"
+      ],
+      "evidence": [
+        "evidence/mobile/README.md"
+      ],
+      "independentReview": "Native Pi touch emulation, virtual pad, PWA scopes, protected offline response and exact hosted controller acceptance reviewed. Real handset and controller remain explicitly unmeasured."
     },
     {
       "id": "CS3-07",
@@ -111,7 +228,25 @@
       "scope": "Baseline visual pass, reference map adapter and Meltem or lower-risk pilot; validated additional maps, all nine assessed, environment FX and ambience; LOD/disposal.",
       "tests": "build-network --check, compact-arena/owner-door-traversal tests, multimap-browser/recovery, asset-memory and complete matches",
       "exit": "Original maps preserved. All nine have a source ID, capability assessment and explicit disposition. Each offered map passes versioned collision/nav/void, mode eligibility, spawn, lifecycle and measured budget.",
-      "status": "NOT_STARTED"
+      "status": "VERIFIED",
+      "branch": "cs3/07-candidate-environments",
+      "pullRequests": [
+        52,
+        56
+      ],
+      "workBranches": [
+        "cs3/07-reference-maps",
+        "cs3/07-meltem-art",
+        "cs3/07-candidate-environments"
+      ],
+      "mergedSlices": [
+        "b7d303b44b147e671b033f6519e16abe4376ee0f",
+        "7e9803126add17ed29ac61dd4446337a399b28ef"
+      ],
+      "nativeReviewedBuild": "b575ba6a76c3d1a9253c370b2a2ef3ed2e2b44c5d51c5711615bd488621e2384",
+      "independentReview": "Native and hosted acceptance passed. Twenty map changes and matched park, six disposed soundscapes, quality, recovery and actual render inspections accepted. Corrected the private room-code fixture and retained all nine checks.",
+      "verifiedHead": "aac2e576ede3ac728d4bc92b7e985dc251eeea94",
+      "verifiedRun": 46133947108
     },
     {
       "id": "CS3-08",
@@ -126,7 +261,22 @@
       "scope": "Measure navigation tails, bounded route budgets, fair perception, cover, personalities/squad, objective preservation and multilevel routes.",
       "tests": "bot-tactics tests/scenarios/browser, network-load, Classic objectives, room startup",
       "exit": "Improved natural behavior and measured tick tails without rule degradation.",
-      "status": "NOT_STARTED"
+      "status": "VERIFIED",
+      "branch": "cs3/08-navigation",
+      "pullRequests": [
+        62
+      ],
+      "reviewHead": "55095b2c7771fee9d3d992a507890a1e3a2968c3",
+      "verifiedHead": "55095b2c7771fee9d3d992a507890a1e3a2968c3",
+      "verifiedRun": 46143568711,
+      "mergedSlices": [
+        "64cc4e8e7158e24e03858575f2f2cc84473b5393"
+      ],
+      "evidence": [
+        "evidence/navigation/README.md",
+        "evidence/integration/joined-equipment-navigation.json"
+      ],
+      "independentReview": "Three alternating A/B seeds, normal keyboard/touch input, real objectives and human/bot lifecycle gates accepted. The 90.920 ms TDM tick remains a release performance investigation."
     },
     {
       "id": "CS3-09",
@@ -141,7 +291,22 @@
       "scope": "Presets/custom slots, primary/secondary/equipment/attachments/optics/camos, derived stats, real preview, server validation and Classic purchases; persistence.",
       "tests": "online-classic/equipment, illegal loadout tests, preview lifecycle, profile restart",
       "exit": "No purchase bypass, correct stats and saved real loadouts. Use an explicitly seeded entitlement fixture for locked/unlocked states until CS3-10 supplies earned progression.",
-      "status": "NOT_STARTED"
+      "status": "VERIFIED",
+      "branch": "cs3/09-arsenal",
+      "pullRequests": [
+        64
+      ],
+      "reviewHead": "32bbbcc6392b796f92b322a4b53adc29275e5023",
+      "verifiedHead": "32bbbcc6392b796f92b322a4b53adc29275e5023",
+      "verifiedRun": 46143587002,
+      "mergedSlices": [
+        "20e8b20dfe3f07abca32b81e88442f6cbc6e5aad"
+      ],
+      "evidence": [
+        "evidence/arsenal/README.md",
+        "evidence/integration/joined-equipment-navigation.json"
+      ],
+      "independentReview": "Guest and signed class deployment, two-client equipment, 17 model comparisons, private admission and genuine current-life suppressed shot passed. Weapon XP used the approved seeded fixture until CS3-10."
     },
     {
       "id": "CS3-10",
@@ -158,7 +323,24 @@
       "scope": "Bounded filtered killcam/final replay, spectator, scoreboard/results, FFA and Domination, server XP/challenges/unlocks; preserve existing modes.",
       "tests": "match-lifecycle-browser, online-match/classic, replay, FFA/domination win rules, trusted XP idempotency. V5 killer card → scoped replay → legal respawn or Classic spectator, skip/timeout/disconnect and clean local HUD; V6 assist, kill and headshot credit exactly once.",
       "exit": "Real replays, new modes verified, no information leaks or double rewards.",
-      "status": "NOT_STARTED"
+      "status": "VERIFIED",
+      "branch": "cs3/10-match-progression",
+      "baseline": "20e8b20dfe3f07abca32b81e88442f6cbc6e5aad",
+      "pullRequests": [
+        66
+      ],
+      "reviewHead": "dc6a8d6b123c1f63a92aedc690474ffdf463ffde",
+      "verifiedHead": "dc6a8d6b123c1f63a92aedc690474ffdf463ffde",
+      "verifiedRun": 46152682878,
+      "mergedSlices": [
+        "4c83eaa7665f13fa84377670e2c93c585aca817f"
+      ],
+      "evidence": [
+        "evidence/competitive/README.md",
+        "evidence/competitive/first-replay/README.md",
+        "evidence/competitive/solo/README.md"
+      ],
+      "independentReview": "Accepted the signed and guest reward flows, two-browser FFA and Domination, ordinary Solo, eleven wardrobe models, historical render and audio, results, settings and all five private-room menus. Both clicked and naturally expired final replays reached results in the hosted macOS run."
     },
     {
       "id": "CS3-11",
@@ -177,7 +359,24 @@
       "scope": "Consolidate versioned registries, examples, migration, validated additions for character/rig/weapon/attachment/map/mode/bonus/audio/outfit/bot/theme/progression; no parallel editor.",
       "tests": "schema negative/positive tests, import sample and runtime smoke, build reproducibility",
       "exit": "Adding example content without unrelated gameplay edits. New registries reference the already exercised interfaces and include a build/allowlist closure check.",
-      "status": "NOT_STARTED"
+      "status": "VERIFIED",
+      "branch": "cs3/11-content-pipeline",
+      "baseline": "4c83eaa7665f13fa84377670e2c93c585aca817f",
+      "pullRequests": [
+        68
+      ],
+      "reviewHead": "e4c30096a420d9e4050bb4b6c1bf2e734a667eb7",
+      "evidence": [
+        "content/joined-after-floor5.json",
+        "content/appearance-evidence/report.json",
+        "content/catalog.md"
+      ],
+      "verifiedHead": "e4c30096a420d9e4050bb4b6c1bf2e734a667eb7",
+      "verifiedRun": 46157414997,
+      "mergedSlices": [
+        "25decefc5eee3f5f66daa17ee51629df6d7d4825"
+      ],
+      "independentReview": "Accepted versioned content identities, shipped public/pilot import closure, both native exports, appearance rig/rights and 36/36 disposal. Both hosted Mac and Pi confirmed the optional outfit and deployed private legacy character."
     },
     {
       "id": "CS3-12",
@@ -200,11 +399,21 @@
       "scope": "Full acceptance, hardware/physical status, security, before-after, backup restore rehearsal, stage exact SHA; release on idle Pi via existing process only after authorized gates.",
       "tests": "all CI, server tests, rendered two-client HTTPS/WSS, long soak, migration rollback rehearsal. All 16 screenshot states and all five recording scenarios, English journey sweep, reference-free distribution inventory, authenticated/unauthenticated HTTP and mixed-version reconnect, clean cached and cold clients on both surfaces.",
       "exit": "Independent reviewer evidence, no silent scope gaps, production verified or CS2 remains active.",
-      "status": "NOT_STARTED"
+      "status": "REVIEW",
+      "branch": "cs3/12-release",
+      "baseline": "25decefc5eee3f5f66daa17ee51629df6d7d4825"
     }
   ],
   "reviewedMain": "1a9dc3f10605a7ccd2c28fef354b25bcd4418c1b",
   "reviewedPreparation": "b387b4dc51872eeb333336c09f2480c1997321bf",
   "referenceSourceTree": "d7661a36d439a246464b0d1c060b5f19715ac7ea",
-  "prerequisiteState": "VERIFIED"
+  "prerequisiteState": "VERIFIED",
+  "authorization": {
+    "owner": "Jesper",
+    "scope": "Develop the dependency-ordered CS3 program and deploy after the documented release gates. Preserve live CS2 until then.",
+    "preparationPR": 47,
+    "approvedPreparationHead": "f1f363963cd082c6cc1b0f6289c3f9b616064e83",
+    "preparationMerge": "5364240599164c0aee278bb0ac2a35d662c3a818",
+    "integrationBranch": "develop/cartridge-strike-3"
+  }
 }

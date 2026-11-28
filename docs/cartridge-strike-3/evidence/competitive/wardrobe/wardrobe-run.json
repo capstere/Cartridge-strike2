@@ -1,0 +1,12 @@
+{
+  "task": "CS3-10",
+  "qualification": "PASS",
+  "sourceRevision": "83b350f1b0f9989b2bdd5e5a782c8255dacce80e",
+  "publishedEquivalent": "e420c76289ab3627fde9a4dfe5156698548de7c1",
+  "buildHash": "5ead5b3a201ffd9de8c3652eb624f207f036f4e5129a44a1c38f6932de1b0679",
+  "scriptBlob": "05ebd8f37ec3f285c71afd5a07796b025ee2e5aa",
+  "command": "CHROMIUM_PATH=/usr/bin/chromium FPS_NETWORK_HEADED=1 FPS_NETWORK_ANGLE=gl-egl node --import ./server/register-shared.mjs tools/challenge-outfits-browser.mjs",
+  "environment": "Raspberry Pi 5, native Chromium, ANGLE gl-egl",
+  "reviewer": "Independent match reviewer",
+  "output": "earned-wardrobe.json"
+}

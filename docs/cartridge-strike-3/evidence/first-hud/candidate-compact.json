@@ -1,0 +1,112 @@
+{
+  "map": "compact-arena",
+  "reference": "1ac88e31ba8f2aa7460034ae3c16f741e2527fb3fbcae199ffcd58681df393c9",
+  "candidate": "749945bacd7499229910b12a52bd6911f0a35cdb81cf290985325155e7a9e30b",
+  "protocol": 21,
+  "movementMeters": [
+    0.2099999999999996,
+    0.2099999999999996
+  ],
+  "rawSHA256": [
+    "07c3e18cd5868acf8b87572519e09696f75d27117b8d4a51069108308ce11d4a",
+    "167019ac724d30ecac27853414fe718e4ea8aac0666ab5461f845c3d7512b2d9"
+  ],
+  "desktop": {
+    "original": {
+      "joinToVisibleHudMs": 11564.9,
+      "joinToReadyClickMs": 13301.9,
+      "worstLoadingRafMs": 533.4,
+      "worstLoadingPointerMs": 467.2,
+      "firstPostHudRafMs": 1549.9,
+      "longestPostHudPointerMs": 1442.3,
+      "postHudPointerCount": 3
+    },
+    "candidate": {
+      "joinToVisibleHudMs": 13647.5,
+      "joinToReadyClickMs": 14384.7,
+      "worstLoadingRafMs": 1815,
+      "worstLoadingPointerMs": 1807.4,
+      "firstPostHudRafMs": 100,
+      "longestPostHudPointerMs": 59.9,
+      "postHudPointerCount": 1
+    },
+    "driver": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+    "pose": [
+      "analysts-0",
+      2.6,
+      0,
+      7.75,
+      -1.570796,
+      "smg"
+    ],
+    "canvas": [
+      [
+        672,
+        378
+      ],
+      [
+        672,
+        378
+      ]
+    ],
+    "draws": [
+      98,
+      98
+    ],
+    "rgbMeanAbsoluteError": [
+      0.897,
+      0.792,
+      0.597
+    ],
+    "pixelsOver15Of255": 1.436
+  },
+  "emulated": {
+    "original": {
+      "joinToVisibleHudMs": 12501.9,
+      "joinToReadyClickMs": 15827.5,
+      "worstLoadingRafMs": 1000.0,
+      "worstLoadingPointerMs": 944.4,
+      "firstPostHudRafMs": 2907.4,
+      "longestPostHudPointerMs": 2725.9,
+      "postHudPointerCount": 3
+    },
+    "candidate": {
+      "joinToVisibleHudMs": 13357.1,
+      "joinToReadyClickMs": 13961.1,
+      "worstLoadingRafMs": 2113.7,
+      "worstLoadingPointerMs": 2035,
+      "firstPostHudRafMs": 116.7,
+      "longestPostHudPointerMs": 98.8,
+      "postHudPointerCount": 1
+    },
+    "driver": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+    "pose": [
+      "counterAnalysts-0",
+      27.4,
+      0,
+      10.25,
+      1.570796,
+      "smg"
+    ],
+    "canvas": [
+      [
+        480,
+        270
+      ],
+      [
+        480,
+        270
+      ]
+    ],
+    "draws": [
+      109,
+      109
+    ],
+    "rgbMeanAbsoluteError": [
+      0.529,
+      0.413,
+      0.286
+    ],
+    "pixelsOver15Of255": 0.625
+  }
+}

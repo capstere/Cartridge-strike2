@@ -10,6 +10,7 @@ try {
   await page.goto(origin+'/fps/?test&seed=42',{waitUntil:'domcontentloaded'});
   await page.locator('#lb-mode-seg [data-value=endless]').click();
   await page.locator('#start').click();
+  await page.locator('#csl-deploy').click();
   await page.waitForFunction(()=>window.__fps?.game.player && document.querySelector('#cs-loading').hidden,null,{timeout:120000});
   if(await page.locator('#resume').isVisible())await page.locator('#resume').click();
   await page.evaluate(async()=>{

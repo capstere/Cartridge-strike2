@@ -1,0 +1,83 @@
+{
+  "runtimeParent": "c51a6ff05e17fc41fab86a16b2cae2dc53d9a07a",
+  "mergedFloor5": "3704a0f697340cb44da003db28d37b4fc381af7c",
+  "parentFilesMissing": 0,
+  "platform": "Raspberry Pi 5, native V3D, Chromium emulated touch",
+  "physicalPhone": false,
+  "default": {
+    "status": "PASS",
+    "build": "ca85c51ad40bd98ed62b7763ee0029e5c89788ce3cccc3260c2dd378d6a81dde",
+    "content": {
+      "version": 1,
+      "digest": "45238a8c25630788a6a354af3dae607234cca7c03f40f0cca4316bd798fe2ce9",
+      "entries": 160,
+      "managedFiles": []
+    },
+    "publicFiles": 728,
+    "privateFiles": 27,
+    "clients": 2,
+    "replicatedOutfit": "issued",
+    "rendered": false
+  },
+  "installed": {
+    "status": "PASS",
+    "build": "2bef0dafbb52b263271a319e296f9faa44fd08e57bd0d9b60912fdbde22a6201",
+    "content": {
+      "version": 1,
+      "digest": "6e6a76f6cece04471023d91b5e5a9280305889f7b7a6d1627953d2f473382d02",
+      "entries": 161,
+      "managedFiles": []
+    },
+    "publicFiles": 728,
+    "privateFiles": 27,
+    "clients": 2,
+    "replicatedOutfit": "harbor-crew",
+    "rendered": true
+  },
+  "browser": {
+    "browser": "156.0.8078.79",
+    "input": "Chromium emulated touch",
+    "physicalPhone": false,
+    "errors": [],
+    "portraits": 6,
+    "deployment": {
+      "gpu": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "outfit": "harbor-crew",
+      "kit": true,
+      "rendered": 509,
+      "first": "60f4af01",
+      "third": "60f4af01",
+      "expected": "60f4af01",
+      "original": "97cdf472",
+      "independent": true,
+      "preview": {
+        "female": "harbor-crew",
+        "owners": 36,
+        "disposed": 36,
+        "exactlyOnce": true
+      }
+    },
+    "unsupported": {
+      "startDisabled": true,
+      "reason": "The selected character could not be loaded. Choose the default operator or another compatible saved character."
+    },
+    "legacyMenu": {
+      "screen": "outfits",
+      "selection": "Legacy crew member",
+      "status": "Legacy crew member · Saved locally. Your first-person hands match this operator.",
+      "wardrobe": "Your saved character supplies its own outfit and sleeves."
+    },
+    "saved": {
+      "name": "Legacy crew member",
+      "unchanged": true,
+      "bytes": 2374724,
+      "selected": "harbor-crew",
+      "schema": 1,
+      "deployed": {
+        "private": true,
+        "signature": "private"
+      }
+    },
+    "status": "PASS"
+  }
+}

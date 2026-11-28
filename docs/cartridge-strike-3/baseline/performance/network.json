@@ -1,0 +1,780 @@
+[
+  {
+    "case": "server-1",
+    "git": "8ea01ffb721c2f3ec0d5685031fb93afcde5b404",
+    "completedAt": "2026-11-27T10:22:52.213Z",
+    "environment": {
+      "model": "Raspberry Pi 5 Model B Rev 1.1",
+      "node": "v26.13.1",
+      "platform": "linux",
+      "arch": "arm64",
+      "cpu": "Cortex-A76",
+      "cores": 4
+    },
+    "humanSDKSeats": 2,
+    "bots": 8,
+    "residents": 6,
+    "rttSettingMs": 0,
+    "jitterMs": 0,
+    "status": "PASS",
+    "pacer": "60 Hz",
+    "loss": "NOT RUN: ordered WebSocket delay, no packet dropping",
+    "roomTransportCountersAtEnd": {
+      "invalid": 0,
+      "maxQueue": 6,
+      "coalesced": 661,
+      "ticks": 5716,
+      "events": 6391,
+      "reconnects": 0,
+      "drops": 0,
+      "backpressure": 0
+    },
+    "elapsedSeconds": 90.04,
+    "releaseBuild": "30f8f4af97b2b082f995196f06f498b132ba9bf8d303671ee8ab8d4b69590385",
+    "protocol": 14,
+    "tickMs": {
+      "n": 5403,
+      "p50": 1.400670999995782,
+      "p95": 5.19421699999657,
+      "p99": 18.988033999994514,
+      "max": 86.03155099999276,
+      "above16_67": 63,
+      "above33": 18,
+      "above50": 9,
+      "above100": 0
+    },
+    "intervalMs": {
+      "n": 5403,
+      "p50": 16.194601000002876,
+      "p95": 22.04996800000663,
+      "p99": 32.334347999989404,
+      "max": 86.28499600000214,
+      "above16_67": 500,
+      "above33": 23,
+      "above50": 10,
+      "above100": 0
+    },
+    "simulationMs": {
+      "n": 5403,
+      "p50": 0.9229469999991124,
+      "p95": 4.693679999996675,
+      "p99": 18.477439999987837,
+      "max": 85.28251099999761
+    },
+    "findPathCallMs": {
+      "n": 321,
+      "p50": 1.8135050000018964,
+      "p95": 23.996213999998872,
+      "p99": 48.614096999997855,
+      "max": 61.12414899999567
+    },
+    "slowestTickObserved": {
+      "tick": 3886,
+      "ms": 86.03155099999276,
+      "work": {
+        "world.findPath": 84.18221199999971,
+        "moveActor": 0.44089199998416007,
+        "fire": 0.01726000000780914,
+        "updateGrenades": 0.0012030000070808455
+      },
+      "respawns": 3,
+      "breaks": 2
+    },
+    "eventLoopMs": {
+      "n": 8646,
+      "p50": 10.125311,
+      "p95": 11.468799,
+      "p99": 21.692415,
+      "max": 94.371839
+    },
+    "bytesOutPerClientS": 29237.65,
+    "bytesInPerClientS": 1518.52,
+    "nTicks": 5403,
+    "serverPercentOfOneCore": 16.79,
+    "rssMiB": 269.0,
+    "heapMiB": 120.48,
+    "inputToConfirmationMs": {
+      "n": 268,
+      "p50": 36.07,
+      "p95": 58.04,
+      "p99": 67.72,
+      "max": 89.1
+    },
+    "rttSamplesMs": [
+      0,
+      0
+    ],
+    "shotAgeMs": {
+      "n": 8192,
+      "p50": 119,
+      "p95": 125,
+      "p99": 127,
+      "max": 164
+    },
+    "botShots": 87,
+    "shotsByHuman": [
+      150,
+      150
+    ],
+    "botTravel": 1901.24,
+    "grenadesThrown": 3,
+    "combatRespawns": 8,
+    "maxPending": 8,
+    "emptyRoomsAfterLeave": 0,
+    "thermal": {
+      "temperatureC": 45.2,
+      "throttled": "throttled=0x0"
+    },
+    "worktreeRevisionAtStart": "8ea01ffb721c2f3ec0d5685031fb93afcde5b404",
+    "revisionSource": "harness invocation"
+  },
+  {
+    "case": "server-2",
+    "git": "8ea01ffb721c2f3ec0d5685031fb93afcde5b404",
+    "completedAt": "2026-11-27T10:25:01.613Z",
+    "environment": {
+      "model": "Raspberry Pi 5 Model B Rev 1.1",
+      "node": "v26.13.1",
+      "platform": "linux",
+      "arch": "arm64",
+      "cpu": "Cortex-A76",
+      "cores": 4
+    },
+    "humanSDKSeats": 2,
+    "bots": 8,
+    "residents": 6,
+    "rttSettingMs": 0,
+    "jitterMs": 0,
+    "status": "PASS",
+    "pacer": "60 Hz",
+    "loss": "NOT RUN: ordered WebSocket delay, no packet dropping",
+    "roomTransportCountersAtEnd": {
+      "invalid": 0,
+      "maxQueue": 5,
+      "coalesced": 675,
+      "ticks": 5712,
+      "events": 6487,
+      "reconnects": 0,
+      "drops": 0,
+      "backpressure": 0
+    },
+    "elapsedSeconds": 90.05,
+    "releaseBuild": "30f8f4af97b2b082f995196f06f498b132ba9bf8d303671ee8ab8d4b69590385",
+    "protocol": 14,
+    "tickMs": {
+      "n": 5401,
+      "p50": 1.4290409999994154,
+      "p95": 5.280013999999937,
+      "p99": 18.442955999998958,
+      "max": 81.35618100001011,
+      "above16_67": 69,
+      "above33": 22,
+      "above50": 11,
+      "above100": 0
+    },
+    "intervalMs": {
+      "n": 5401,
+      "p50": 16.198634999993374,
+      "p95": 21.93009600000005,
+      "p99": 32.32651199999964,
+      "max": 81.60851500001445,
+      "above16_67": 536,
+      "above33": 26,
+      "above50": 14,
+      "above100": 0
+    },
+    "simulationMs": {
+      "n": 5401,
+      "p50": 0.9438179999997374,
+      "p95": 4.72490199999811,
+      "p99": 17.81640000000334,
+      "max": 80.75866099999985
+    },
+    "findPathCallMs": {
+      "n": 281,
+      "p50": 1.8662639999984094,
+      "p95": 21.301483000002918,
+      "p99": 56.76378200000909,
+      "max": 75.81661100000201
+    },
+    "slowestTickObserved": {
+      "tick": 4130,
+      "ms": 81.35618100001011,
+      "work": {
+        "moveActor": 0.4185929999948712,
+        "fire": 0.002573999998276122,
+        "findPath": 75.81661100000201,
+        "world.findPath": 0.20981600000231992,
+        "updateGrenades": 0.0010559999936958775
+      },
+      "respawns": 6,
+      "breaks": 3
+    },
+    "eventLoopMs": {
+      "n": 8634,
+      "p50": 10.117119,
+      "p95": 11.427839,
+      "p99": 22.347775,
+      "max": 105.381887
+    },
+    "bytesOutPerClientS": 29630.95,
+    "bytesInPerClientS": 1522.67,
+    "nTicks": 5401,
+    "serverPercentOfOneCore": 17.2,
+    "rssMiB": 279.5,
+    "heapMiB": 107.0,
+    "inputToConfirmationMs": {
+      "n": 268,
+      "p50": 34.88,
+      "p95": 62.96,
+      "p99": 67.68,
+      "max": 82.11
+    },
+    "rttSamplesMs": [
+      0,
+      0
+    ],
+    "shotAgeMs": {
+      "n": 8192,
+      "p50": 118,
+      "p95": 125,
+      "p99": 127,
+      "max": 163
+    },
+    "botShots": 105,
+    "shotsByHuman": [
+      150,
+      150
+    ],
+    "botTravel": 1855.23,
+    "grenadesThrown": 5,
+    "combatRespawns": 11,
+    "maxPending": 11,
+    "emptyRoomsAfterLeave": 0,
+    "thermal": {
+      "temperatureC": 44.65,
+      "throttled": "throttled=0x0"
+    },
+    "worktreeRevisionAtStart": "8ea01ffb721c2f3ec0d5685031fb93afcde5b404",
+    "revisionSource": "harness invocation"
+  },
+  {
+    "case": "server-3",
+    "git": "8ea01ffb721c2f3ec0d5685031fb93afcde5b404",
+    "completedAt": "2026-11-27T10:26:41.734Z",
+    "environment": {
+      "model": "Raspberry Pi 5 Model B Rev 1.1",
+      "node": "v26.13.1",
+      "platform": "linux",
+      "arch": "arm64",
+      "cpu": "Cortex-A76",
+      "cores": 4
+    },
+    "humanSDKSeats": 2,
+    "bots": 8,
+    "residents": 6,
+    "rttSettingMs": 0,
+    "jitterMs": 0,
+    "status": "PASS",
+    "pacer": "60 Hz",
+    "loss": "NOT RUN: ordered WebSocket delay, no packet dropping",
+    "roomTransportCountersAtEnd": {
+      "invalid": 0,
+      "maxQueue": 5,
+      "coalesced": 623,
+      "ticks": 5715,
+      "events": 6554,
+      "reconnects": 0,
+      "drops": 0,
+      "backpressure": 0
+    },
+    "elapsedSeconds": 90.04,
+    "releaseBuild": "30f8f4af97b2b082f995196f06f498b132ba9bf8d303671ee8ab8d4b69590385",
+    "protocol": 14,
+    "tickMs": {
+      "n": 5402,
+      "p50": 1.4958000000042375,
+      "p95": 5.992478999993182,
+      "p99": 19.490255000000616,
+      "max": 83.71664799999962,
+      "above16_67": 79,
+      "above33": 15,
+      "above50": 9,
+      "above100": 0
+    },
+    "intervalMs": {
+      "n": 5402,
+      "p50": 16.194950999997673,
+      "p95": 20.952666999999565,
+      "p99": 32.301843999986886,
+      "max": 84.82481800000096,
+      "above16_67": 560,
+      "above33": 24,
+      "above50": 9,
+      "above100": 0
+    },
+    "simulationMs": {
+      "n": 5402,
+      "p50": 0.9905209999997169,
+      "p95": 5.398403999999573,
+      "p99": 18.956383000011556,
+      "max": 83.02990599999976
+    },
+    "findPathCallMs": {
+      "n": 304,
+      "p50": 1.8494129999999132,
+      "p95": 21.589798000000883,
+      "p99": 43.33405900000071,
+      "max": 68.32036500000686
+    },
+    "slowestTickObserved": {
+      "tick": 352,
+      "ms": 83.71664799999962,
+      "work": {
+        "moveActor": 0.5350040000030276,
+        "world.findPath": 81.56843900000058,
+        "breakAt": 0.008074000001215609,
+        "fire": 0.35753900000054273,
+        "updateGrenades": 0.0025930000010703225
+      },
+      "respawns": 0,
+      "breaks": 0
+    },
+    "eventLoopMs": {
+      "n": 8635,
+      "p50": 10.108927,
+      "p95": 11.591679,
+      "p99": 22.888447,
+      "max": 102.825983
+    },
+    "bytesOutPerClientS": 29893.7,
+    "bytesInPerClientS": 1517.31,
+    "nTicks": 5402,
+    "serverPercentOfOneCore": 18.0,
+    "rssMiB": 274.02,
+    "heapMiB": 119.88,
+    "inputToConfirmationMs": {
+      "n": 268,
+      "p50": 35.27,
+      "p95": 59.6,
+      "p99": 65.2,
+      "max": 100.7
+    },
+    "rttSamplesMs": [
+      0,
+      0
+    ],
+    "shotAgeMs": {
+      "n": 8192,
+      "p50": 118,
+      "p95": 125,
+      "p99": 126,
+      "max": 143
+    },
+    "botShots": 97,
+    "shotsByHuman": [
+      150,
+      150
+    ],
+    "botTravel": 1866.49,
+    "grenadesThrown": 6,
+    "combatRespawns": 8,
+    "maxPending": 9,
+    "emptyRoomsAfterLeave": 0,
+    "thermal": {
+      "temperatureC": 44.65,
+      "throttled": "throttled=0x0"
+    },
+    "worktreeRevisionAtStart": "3012a6378d75ead639d27e3ee5745b771f33f040",
+    "revisionSource": "local worktree reflog and timed run sequence"
+  },
+  {
+    "case": "server-4",
+    "git": "8ea01ffb721c2f3ec0d5685031fb93afcde5b404",
+    "completedAt": "2026-11-27T10:28:22.274Z",
+    "environment": {
+      "model": "Raspberry Pi 5 Model B Rev 1.1",
+      "node": "v26.13.1",
+      "platform": "linux",
+      "arch": "arm64",
+      "cpu": "Cortex-A76",
+      "cores": 4
+    },
+    "humanSDKSeats": 2,
+    "bots": 8,
+    "residents": 6,
+    "rttSettingMs": 100,
+    "jitterMs": 20,
+    "status": "PASS",
+    "pacer": "60 Hz",
+    "loss": "NOT RUN: ordered WebSocket delay, no packet dropping",
+    "roomTransportCountersAtEnd": {
+      "invalid": 0,
+      "maxQueue": 6,
+      "coalesced": 3853,
+      "ticks": 5732,
+      "events": 6029,
+      "reconnects": 0,
+      "drops": 0,
+      "backpressure": 0
+    },
+    "elapsedSeconds": 90.04,
+    "releaseBuild": "30f8f4af97b2b082f995196f06f498b132ba9bf8d303671ee8ab8d4b69590385",
+    "protocol": 14,
+    "tickMs": {
+      "n": 5405,
+      "p50": 1.4400410000016564,
+      "p95": 5.0761619999975665,
+      "p99": 16.303171999999904,
+      "max": 70.0262189999994,
+      "above16_67": 50,
+      "above33": 9,
+      "above50": 4,
+      "above100": 0
+    },
+    "intervalMs": {
+      "n": 5405,
+      "p50": 16.077801999999792,
+      "p95": 19.85055199999988,
+      "p99": 32.35813999999664,
+      "max": 109.07004599999891,
+      "above16_67": 755,
+      "above33": 18,
+      "above50": 5,
+      "above100": 1
+    },
+    "simulationMs": {
+      "n": 5405,
+      "p50": 0.944761999999173,
+      "p95": 4.387344999995548,
+      "p99": 15.611745000001974,
+      "max": 69.39134799999738
+    },
+    "findPathCallMs": {
+      "n": 262,
+      "p50": 1.4722259999980452,
+      "p95": 10.152471000001242,
+      "p99": 37.011170999998285,
+      "max": 46.68828799999028
+    },
+    "slowestTickObserved": {
+      "tick": 3639,
+      "ms": 70.0262189999994,
+      "work": {
+        "moveActor": 0.4899629999999888,
+        "world.findPath": 67.75980699999491,
+        "fire": 0.018260000004374888,
+        "updateGrenades": 0.0011659999945550226
+      },
+      "respawns": 4,
+      "breaks": 0
+    },
+    "eventLoopMs": {
+      "n": 8716,
+      "p50": 10.117119,
+      "p95": 11.411455,
+      "p99": 19.496959,
+      "max": 98.500607
+    },
+    "bytesOutPerClientS": 28255.52,
+    "bytesInPerClientS": 1515.44,
+    "nTicks": 5405,
+    "serverPercentOfOneCore": 16.42,
+    "rssMiB": 272.69,
+    "heapMiB": 77.73,
+    "inputToConfirmationMs": {
+      "n": 270,
+      "p50": 141.55,
+      "p95": 172.99,
+      "p99": 184.75,
+      "max": 187.9
+    },
+    "rttSamplesMs": [
+      63,
+      63
+    ],
+    "shotAgeMs": {
+      "n": 6985,
+      "p50": 214,
+      "p95": 232,
+      "p99": 238,
+      "max": 254
+    },
+    "botShots": 52,
+    "shotsByHuman": [
+      150,
+      150
+    ],
+    "botTravel": 1862.49,
+    "grenadesThrown": 4,
+    "combatRespawns": 6,
+    "maxPending": 16,
+    "emptyRoomsAfterLeave": 0,
+    "thermal": {
+      "temperatureC": 42.45,
+      "throttled": "throttled=0x0"
+    },
+    "worktreeRevisionAtStart": "3012a6378d75ead639d27e3ee5745b771f33f040",
+    "revisionSource": "local worktree reflog and timed run sequence"
+  },
+  {
+    "case": "server-5",
+    "git": "af479ebb44f87cadefb774a28e3831838479985c",
+    "completedAt": "2026-11-27T10:49:05.757Z",
+    "environment": {
+      "model": "Raspberry Pi 5 Model B Rev 1.1",
+      "node": "v26.13.1",
+      "platform": "linux",
+      "arch": "arm64",
+      "cpu": "Cortex-A76",
+      "cores": 4
+    },
+    "humanSDKSeats": 2,
+    "bots": 8,
+    "residents": 6,
+    "rttSettingMs": 100,
+    "jitterMs": 20,
+    "status": "PASS",
+    "pacer": "60 Hz",
+    "loss": "NOT RUN: ordered WebSocket delay, no packet dropping",
+    "roomTransportCountersAtEnd": {
+      "invalid": 0,
+      "maxQueue": 7,
+      "coalesced": 3852,
+      "ticks": 5734,
+      "events": 6122,
+      "reconnects": 0,
+      "drops": 0,
+      "backpressure": 0
+    },
+    "elapsedSeconds": 90.06,
+    "releaseBuild": "30f8f4af97b2b082f995196f06f498b132ba9bf8d303671ee8ab8d4b69590385",
+    "protocol": 14,
+    "tickMs": {
+      "n": 5401,
+      "p50": 1.4269129999884171,
+      "p95": 5.492056999995839,
+      "p99": 16.676414000001387,
+      "max": 105.53116900000168,
+      "above16_67": 55,
+      "above33": 15,
+      "above50": 8,
+      "above100": 1
+    },
+    "intervalMs": {
+      "n": 5401,
+      "p50": 16.07893100000365,
+      "p95": 20.733355999997002,
+      "p99": 32.37384200000088,
+      "max": 105.82170700000279,
+      "above16_67": 745,
+      "above33": 28,
+      "above50": 9,
+      "above100": 1
+    },
+    "simulationMs": {
+      "n": 5401,
+      "p50": 0.9413560000011785,
+      "p95": 4.96275799999421,
+      "p99": 16.174505000002682,
+      "max": 104.99720499999967
+    },
+    "findPathCallMs": {
+      "n": 272,
+      "p50": 1.7554139999992913,
+      "p95": 19.26209000000381,
+      "p99": 37.72621500000241,
+      "max": 102.79628900000534
+    },
+    "slowestTickObserved": {
+      "tick": 3659,
+      "ms": 105.53116900000168,
+      "work": {
+        "moveActor": 0.38031600000249455,
+        "findPath": 102.79628900000534,
+        "world.findPath": 0.4525749999957043,
+        "fire": 0.01362900000094669,
+        "updateGrenades": 0.026870000001508743
+      },
+      "respawns": 4,
+      "breaks": 1
+    },
+    "eventLoopMs": {
+      "n": 8666,
+      "p50": 10.108927,
+      "p95": 11.403263,
+      "p99": 20.234239,
+      "max": 114.229247
+    },
+    "bytesOutPerClientS": 28700.36,
+    "bytesInPerClientS": 1513.29,
+    "nTicks": 5401,
+    "serverPercentOfOneCore": 16.76,
+    "rssMiB": 268.75,
+    "heapMiB": 102.46,
+    "inputToConfirmationMs": {
+      "n": 270,
+      "p50": 141.16,
+      "p95": 173.52,
+      "p99": 186.8,
+      "max": 190.7
+    },
+    "rttSamplesMs": [
+      0,
+      63
+    ],
+    "shotAgeMs": {
+      "n": 6986,
+      "p50": 213,
+      "p95": 231,
+      "p99": 238,
+      "max": 256
+    },
+    "botShots": 40,
+    "shotsByHuman": [
+      150,
+      150
+    ],
+    "botTravel": 1898.01,
+    "grenadesThrown": 9,
+    "combatRespawns": 6,
+    "maxPending": 19,
+    "emptyRoomsAfterLeave": 0,
+    "thermal": {
+      "temperatureC": 45.75,
+      "throttled": "throttled=0x0"
+    },
+    "worktreeRevisionAtStart": "af479ebb44f87cadefb774a28e3831838479985c",
+    "revisionSource": "harness invocation"
+  },
+  {
+    "case": "server-6",
+    "git": "af479ebb44f87cadefb774a28e3831838479985c",
+    "completedAt": "2026-11-27T10:50:46.342Z",
+    "environment": {
+      "model": "Raspberry Pi 5 Model B Rev 1.1",
+      "node": "v26.13.1",
+      "platform": "linux",
+      "arch": "arm64",
+      "cpu": "Cortex-A76",
+      "cores": 4
+    },
+    "humanSDKSeats": 2,
+    "bots": 8,
+    "residents": 6,
+    "rttSettingMs": 100,
+    "jitterMs": 20,
+    "status": "PASS",
+    "pacer": "60 Hz",
+    "loss": "NOT RUN: ordered WebSocket delay, no packet dropping",
+    "roomTransportCountersAtEnd": {
+      "invalid": 0,
+      "maxQueue": 6,
+      "coalesced": 3868,
+      "ticks": 5736,
+      "events": 6101,
+      "reconnects": 0,
+      "drops": 0,
+      "backpressure": 0
+    },
+    "elapsedSeconds": 90.06,
+    "releaseBuild": "30f8f4af97b2b082f995196f06f498b132ba9bf8d303671ee8ab8d4b69590385",
+    "protocol": 14,
+    "tickMs": {
+      "n": 5404,
+      "p50": 1.5051349999994272,
+      "p95": 5.303372000002128,
+      "p99": 15.7952609999993,
+      "max": 63.54832399999941,
+      "above16_67": 47,
+      "above33": 10,
+      "above50": 3,
+      "above100": 0
+    },
+    "intervalMs": {
+      "n": 5404,
+      "p50": 16.074946000007913,
+      "p95": 20.483702000012272,
+      "p99": 32.258597000007285,
+      "max": 64.97723699999915,
+      "above16_67": 724,
+      "above33": 17,
+      "above50": 4,
+      "above100": 0
+    },
+    "simulationMs": {
+      "n": 5404,
+      "p50": 0.9761700000017299,
+      "p95": 4.7556839999997464,
+      "p99": 15.214370000001509,
+      "max": 62.8915990000005
+    },
+    "findPathCallMs": {
+      "n": 298,
+      "p50": 1.4089309999981197,
+      "p95": 12.449861000000965,
+      "p99": 44.574233999999706,
+      "max": 49.71639799998957
+    },
+    "slowestTickObserved": {
+      "tick": 374,
+      "ms": 63.54832399999941,
+      "work": {
+        "moveActor": 0.42599999999947613,
+        "world.findPath": 61.69226200000048,
+        "fire": 0.3008539999991626,
+        "breakAt": 0.007573999999294756,
+        "updateGrenades": 0.001704000000245287
+      },
+      "respawns": 0,
+      "breaks": 0
+    },
+    "eventLoopMs": {
+      "n": 8699,
+      "p50": 10.117119,
+      "p95": 11.517951,
+      "p99": 18.464767,
+      "max": 85.327871
+    },
+    "bytesOutPerClientS": 28370.13,
+    "bytesInPerClientS": 1515.32,
+    "nTicks": 5404,
+    "serverPercentOfOneCore": 16.62,
+    "rssMiB": 266.44,
+    "heapMiB": 92.09,
+    "inputToConfirmationMs": {
+      "n": 270,
+      "p50": 141.38,
+      "p95": 175.74,
+      "p99": 187.71,
+      "max": 193.43
+    },
+    "rttSamplesMs": [
+      63,
+      63
+    ],
+    "shotAgeMs": {
+      "n": 6969,
+      "p50": 213,
+      "p95": 231,
+      "p99": 237,
+      "max": 257
+    },
+    "botShots": 43,
+    "shotsByHuman": [
+      150,
+      150
+    ],
+    "botTravel": 1886.79,
+    "grenadesThrown": 5,
+    "combatRespawns": 6,
+    "maxPending": 15,
+    "emptyRoomsAfterLeave": 0,
+    "thermal": {
+      "temperatureC": 44.1,
+      "throttled": "throttled=0x0"
+    },
+    "worktreeRevisionAtStart": "af479ebb44f87cadefb774a28e3831838479985c",
+    "revisionSource": "harness invocation"
+  }
+]

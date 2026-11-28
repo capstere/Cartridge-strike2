@@ -1,0 +1,406 @@
+{
+  "oldBuild": "30f8f4af97b2b082f995196f06f498b132ba9bf8d303671ee8ab8d4b69590385",
+  "oldHTML": "4330aeae56695692dd5f84b7ef9d751f451e695c04c80668a7a7797a96e09a55",
+  "candidateBuild": "aec199fd40e814a4df3b4ff04a49b25277aca6fd2788375a32d801bb11d1420b",
+  "candidateHTML": "8ebdefe189ca502585ab5cae4fda4e2b402d8fec2721824faacb1bed121b8035",
+  "started": "2026-11-28T15:57:21.322Z",
+  "browser": "153.0.8010.12",
+  "platform": "darwin",
+  "angle": "metal",
+  "headed": false,
+  "cache": "public, max-age=600",
+  "samples": [
+    {
+      "label": "original with ordinary callbacks",
+      "trace": [
+        {
+          "path": "/fps/",
+          "type": "Document",
+          "servedBy": "CS2",
+          "fromDiskCache": false
+        },
+        {
+          "path": "/fps/match-loading.css?v=3",
+          "type": "Stylesheet",
+          "servedBy": "CS2",
+          "fromDiskCache": false
+        },
+        {
+          "path": "/src/fps/match-flow.mjs?v=7",
+          "type": "Script",
+          "servedBy": "CS2",
+          "fromDiskCache": false
+        },
+        {
+          "path": "/src/fps/app.mjs?v=floor5-environment-2",
+          "type": "Script",
+          "servedBy": "CS2",
+          "fromDiskCache": false
+        }
+      ],
+      "errors": [],
+      "language": "sv",
+      "outcome": "PASS",
+      "changedLegacyResponses": [
+        "/fps/focus-hud.css?v=2",
+        "/fps/lobby.css?v=2",
+        "/ui/cs-mobile.css?v=5",
+        "/fps/hud.css?v=5",
+        "/fps/match-loading.css?v=3",
+        "/fps/network.css",
+        "/src/fps/lobby-stage.mjs?v=3",
+        "/src/fps/match-flow.mjs?v=7",
+        "/src/fps/app.mjs?v=floor5-environment-2",
+        "/src/fps/hud-shell.mjs?v=2",
+        "/ui/cs-mobile.mjs?v=3",
+        "/src/fps/player-names.mjs",
+        "/src/fps/private-character-store.mjs",
+        "/src/fps/character-library.mjs?v=6.1.2",
+        "/src/fps/character-selection.mjs",
+        "/src/fps/action-rules.mjs",
+        "/src/fps/minimap-cache.mjs",
+        "/src/fps/focus-hud.mjs",
+        "/src/fps/world.mjs?v=5.9.0",
+        "/src/fps/grenade-assist.mjs",
+        "/src/fps/combat-hud.mjs",
+        "/src/fps/render.mjs?v=floor5-environment-1",
+        "/src/fps/game.mjs",
+        "/src/fps/riposte-audio.mjs",
+        "/src/fps/riposte-recoil.mjs",
+        "/src/fps/mobile-controls.mjs",
+        "/src/fps/tactical-controls.mjs",
+        "/shared/multiplayer/maps.mjs",
+        "/src/fps/network/room-ui.mjs",
+        "/src/fps/config.mjs",
+        "/src/fps/network/connection.mjs",
+        "/src/fps/skinned-clone.mjs",
+        "/src/fps/view-character-appearance.mjs?v=6.1.2",
+        "/src/fps/character-footwear.mjs?v=6.1.2",
+        "/src/fps/character-overrides.mjs?v=6.1.2",
+        "/src/fps/combat-flow.mjs",
+        "/src/fps/bots.mjs",
+        "/src/fps/bot-tactics.mjs",
+        "/src/fps/navigation.mjs",
+        "/src/fps/tactical-map.mjs",
+        "/src/fps/level-adapter.mjs?v=5.9.0",
+        "/src/fps/grenade-physics.mjs",
+        "/src/fps/project-batches.mjs",
+        "/src/fps/door-visuals.mjs?v=5.5.0",
+        "/src/fps/models.mjs?v=6.1.2",
+        "/src/fps/view-surface.mjs",
+        "/src/fps/visual-depth.mjs",
+        "/src/fps/presentation-hands.mjs",
+        "/src/fps/render-engine.mjs?v=6.1.2",
+        "/src/fps/action-visuals.mjs?v=6.1.2",
+        "/src/fps/movement.mjs",
+        "/src/fps/zombies.mjs",
+        "/src/fps/tactical-rules.mjs",
+        "/src/fps/strike-kit-audio.mjs",
+        "/shared/multiplayer/rules.mjs",
+        "/src/fps/character-roles.mjs?v=6.1.2",
+        "/src/fps/character-runtime-contract.mjs?v=6.1.2",
+        "/src/fps/dwarf-rig.mjs?v=6.1.2",
+        "/src/fps/control-deployment.mjs",
+        "/src/fps/project-visibility.mjs",
+        "/src/fps/frosted-door.mjs?v=5.4.0",
+        "/furniture-editor/build/environment-art.mjs",
+        "/src/fps/strike-kit-timing.mjs",
+        "/src/fps/character-actors.mjs?v=6.1.2",
+        "/src/fps/model-primitives.mjs",
+        "/src/fps/strike-kit-models.mjs?v=6.1.2",
+        "/src/fps/adaptive-resolution.mjs",
+        "/src/fps/living-floor-art.mjs",
+        "/src/fps/effects.mjs",
+        "/src/fps/skinned-clone.mjs?v=6.1.2",
+        "/src/fps/action-models.mjs",
+        "/src/fps/action-audio.mjs",
+        "/src/fps/audio.mjs",
+        "/src/fps/reload-foley.mjs"
+      ],
+      "received": {
+        "cs2": 180,
+        "cs3": 0
+      }
+    },
+    {
+      "label": "same navigation URL after cutover",
+      "trace": [
+        {
+          "path": "/fps/",
+          "type": "Document",
+          "servedBy": "CS2",
+          "fromDiskCache": true
+        },
+        {
+          "path": "/fps/match-loading.css?v=3",
+          "type": "Stylesheet",
+          "servedBy": "CS2",
+          "fromDiskCache": true
+        },
+        {
+          "path": "/src/fps/match-flow.mjs?v=7",
+          "type": "Script",
+          "servedBy": "CS2",
+          "fromDiskCache": true
+        },
+        {
+          "path": "/src/fps/app.mjs?v=floor5-environment-2",
+          "type": "Script",
+          "servedBy": "CS2",
+          "fromDiskCache": true
+        }
+      ],
+      "errors": [],
+      "language": "sv",
+      "outcome": "PASS",
+      "changedLegacyResponses": [
+        "/fps/focus-hud.css?v=2",
+        "/fps/lobby.css?v=2",
+        "/ui/cs-mobile.css?v=5",
+        "/fps/hud.css?v=5",
+        "/fps/match-loading.css?v=3",
+        "/fps/network.css",
+        "/src/fps/match-flow.mjs?v=7",
+        "/ui/cs-mobile.mjs?v=3",
+        "/src/fps/lobby-stage.mjs?v=3",
+        "/src/fps/app.mjs?v=floor5-environment-2",
+        "/src/fps/hud-shell.mjs?v=2",
+        "/src/fps/character-library.mjs?v=6.1.2",
+        "/src/fps/player-names.mjs",
+        "/src/fps/character-selection.mjs",
+        "/src/fps/private-character-store.mjs",
+        "/src/fps/minimap-cache.mjs",
+        "/src/fps/focus-hud.mjs",
+        "/src/fps/action-rules.mjs",
+        "/src/fps/grenade-assist.mjs",
+        "/src/fps/world.mjs?v=5.9.0",
+        "/src/fps/combat-hud.mjs",
+        "/src/fps/render.mjs?v=floor5-environment-1",
+        "/src/fps/riposte-audio.mjs",
+        "/src/fps/game.mjs",
+        "/src/fps/riposte-recoil.mjs",
+        "/src/fps/mobile-controls.mjs",
+        "/src/fps/tactical-controls.mjs",
+        "/shared/multiplayer/maps.mjs",
+        "/src/fps/network/connection.mjs",
+        "/src/fps/network/room-ui.mjs",
+        "/src/fps/config.mjs",
+        "/src/fps/skinned-clone.mjs",
+        "/src/fps/character-overrides.mjs?v=6.1.2",
+        "/src/fps/view-character-appearance.mjs?v=6.1.2",
+        "/src/fps/character-footwear.mjs?v=6.1.2",
+        "/src/fps/combat-flow.mjs",
+        "/src/fps/grenade-physics.mjs",
+        "/src/fps/bots.mjs",
+        "/src/fps/navigation.mjs",
+        "/src/fps/tactical-map.mjs",
+        "/src/fps/bot-tactics.mjs",
+        "/src/fps/level-adapter.mjs?v=5.9.0",
+        "/src/fps/project-batches.mjs",
+        "/src/fps/door-visuals.mjs?v=5.5.0",
+        "/src/fps/models.mjs?v=6.1.2",
+        "/src/fps/visual-depth.mjs",
+        "/src/fps/view-surface.mjs",
+        "/src/fps/presentation-hands.mjs",
+        "/src/fps/render-engine.mjs?v=6.1.2",
+        "/src/fps/action-visuals.mjs?v=6.1.2",
+        "/src/fps/strike-kit-audio.mjs",
+        "/src/fps/movement.mjs",
+        "/src/fps/zombies.mjs",
+        "/src/fps/tactical-rules.mjs",
+        "/shared/multiplayer/rules.mjs",
+        "/src/fps/character-roles.mjs?v=6.1.2",
+        "/src/fps/character-runtime-contract.mjs?v=6.1.2",
+        "/src/fps/control-deployment.mjs",
+        "/src/fps/dwarf-rig.mjs?v=6.1.2",
+        "/src/fps/project-visibility.mjs",
+        "/src/fps/frosted-door.mjs?v=5.4.0",
+        "/furniture-editor/build/environment-art.mjs",
+        "/src/fps/strike-kit-timing.mjs",
+        "/src/fps/strike-kit-models.mjs?v=6.1.2",
+        "/src/fps/character-actors.mjs?v=6.1.2",
+        "/src/fps/model-primitives.mjs",
+        "/src/fps/adaptive-resolution.mjs",
+        "/src/fps/effects.mjs",
+        "/src/fps/living-floor-art.mjs",
+        "/src/fps/skinned-clone.mjs?v=6.1.2",
+        "/src/fps/action-models.mjs",
+        "/src/fps/action-audio.mjs",
+        "/src/fps/audio.mjs",
+        "/src/fps/reload-foley.mjs"
+      ],
+      "received": {
+        "cs2": 180,
+        "cs3": 0
+      }
+    },
+    {
+      "label": "new HTML with warm CS2 subresources",
+      "trace": [
+        {
+          "path": "/fps/?migration-probe=1",
+          "type": "Document",
+          "servedBy": "CS3",
+          "fromDiskCache": false
+        },
+        {
+          "path": "/fps/match-loading.css?asset=ec4a8c6741004c58",
+          "type": "Stylesheet",
+          "servedBy": "CS3",
+          "fromDiskCache": false
+        },
+        {
+          "path": "/fps/routes.css?asset=66b098c8502f12da",
+          "type": "Stylesheet",
+          "servedBy": "CS3",
+          "fromDiskCache": false
+        },
+        {
+          "path": "/src/fps/menu-navigation.mjs?asset=f0f172b14adef8ba",
+          "type": "Script",
+          "servedBy": "CS3",
+          "fromDiskCache": false
+        },
+        {
+          "path": "/src/fps/match-flow.mjs?asset=58c61f0f958688c7",
+          "type": "Script",
+          "servedBy": "CS3",
+          "fromDiskCache": false
+        },
+        {
+          "path": "/src/fps/app.mjs?asset=ceb179752f9eb67d",
+          "type": "Script",
+          "servedBy": "CS3",
+          "fromDiskCache": false
+        }
+      ],
+      "errors": [],
+      "language": "en",
+      "readyModule": true,
+      "savedGraphics": "low",
+      "deployed": "SCOUT RIFLE",
+      "cacheStorage": [
+        "/fps/offline.html"
+      ],
+      "outcome": "PASS",
+      "changedLegacyResponses": [],
+      "received": {
+        "cs2": 0,
+        "cs3": 231
+      }
+    },
+    {
+      "label": "ordinary reload with saved CS2 settings",
+      "trace": [
+        {
+          "path": "/fps/",
+          "type": "Document",
+          "servedBy": "CS3",
+          "fromDiskCache": false
+        },
+        {
+          "path": "/fps/match-loading.css?asset=ec4a8c6741004c58",
+          "type": "Stylesheet",
+          "servedBy": "CS3",
+          "fromDiskCache": true
+        },
+        {
+          "path": "/fps/routes.css?asset=66b098c8502f12da",
+          "type": "Stylesheet",
+          "servedBy": "CS3",
+          "fromDiskCache": true
+        },
+        {
+          "path": "/src/fps/menu-navigation.mjs?asset=f0f172b14adef8ba",
+          "type": "Script",
+          "servedBy": "CS3",
+          "fromDiskCache": true
+        },
+        {
+          "path": "/src/fps/match-flow.mjs?asset=58c61f0f958688c7",
+          "type": "Script",
+          "servedBy": "CS3",
+          "fromDiskCache": true
+        },
+        {
+          "path": "/src/fps/app.mjs?asset=ceb179752f9eb67d",
+          "type": "Script",
+          "servedBy": "CS3",
+          "fromDiskCache": true
+        }
+      ],
+      "errors": [],
+      "initialLanguage": "en",
+      "language": "en",
+      "readyModule": true,
+      "savedGraphics": "low",
+      "deployed": "SCOUT RIFLE",
+      "cacheStorage": [
+        "/fps/offline.html"
+      ],
+      "outcome": "PASS",
+      "changedLegacyResponses": [],
+      "received": {
+        "cs2": 0,
+        "cs3": 231
+      }
+    },
+    {
+      "label": "new HTML in a fresh browser cache",
+      "trace": [
+        {
+          "path": "/fps/?migration-probe=1",
+          "type": "Document",
+          "servedBy": "CS3",
+          "fromDiskCache": false
+        },
+        {
+          "path": "/fps/match-loading.css?asset=ec4a8c6741004c58",
+          "type": "Stylesheet",
+          "servedBy": "CS3",
+          "fromDiskCache": false
+        },
+        {
+          "path": "/fps/routes.css?asset=66b098c8502f12da",
+          "type": "Stylesheet",
+          "servedBy": "CS3",
+          "fromDiskCache": false
+        },
+        {
+          "path": "/src/fps/menu-navigation.mjs?asset=f0f172b14adef8ba",
+          "type": "Script",
+          "servedBy": "CS3",
+          "fromDiskCache": false
+        },
+        {
+          "path": "/src/fps/match-flow.mjs?asset=58c61f0f958688c7",
+          "type": "Script",
+          "servedBy": "CS3",
+          "fromDiskCache": false
+        },
+        {
+          "path": "/src/fps/app.mjs?asset=ceb179752f9eb67d",
+          "type": "Script",
+          "servedBy": "CS3",
+          "fromDiskCache": false
+        }
+      ],
+      "errors": [],
+      "language": "en",
+      "readyModule": true,
+      "savedGraphics": "low",
+      "deployed": "SCOUT RIFLE",
+      "cacheStorage": [
+        "/fps/offline.html"
+      ],
+      "outcome": "PASS",
+      "changedLegacyResponses": [],
+      "received": {
+        "cs2": 0,
+        "cs3": 231
+      }
+    }
+  ],
+  "migrationPass": true,
+  "finished": "2026-11-28T15:58:47.104Z"
+}

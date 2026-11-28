@@ -2,7 +2,7 @@ import {missionRoomName} from './player-names.mjs';
 import {headshotSpace} from './headshot-pose.mjs';
 import {syncWeaponAppearance} from './view-character-appearance.mjs?v=6.1.2';
 import {refreshActorCharacter} from './character-actors.mjs?v=6.1.2';
-import {privateCharacterAppearance} from './character-library.mjs?v=6.1.2';
+import {privateCharacterAppearance,setNetworkOutfit} from './character-library.mjs?v=6.1.2';
 import { FrameTimeWindow } from './frame-time-window.mjs';
 import { AdaptiveResolution } from './adaptive-resolution.mjs';
 import { TracerBatch } from './tracer-batch.mjs';
@@ -10,7 +10,7 @@ import { createThrownCartridge, updateThrownCartridge } from './throwable-cartri
 import * as THREE from '../../vendor/three/three.module.js';
 import { GLTFLoader } from '../../vendor/three/addons/loaders/GLTFLoader.js';
 import { mergeGeometries } from '../../vendor/three/addons/utils/BufferGeometryUtils.js';
-import { makeActor,makeWeapon,cartridge,animateActor,animateWeapon,animateCorpse,disposeWeaponResources } from './models.mjs?v=6.1.2';
+import { makeActor,makeWeapon,cartridge,animateActor,animateWeapon,animateCorpse,disposeWeaponResources,syncActorWeaponFittings,releaseWeaponFittings } from './models.mjs?v=6.1.2';
 import { createMaterialRegistry,applyMetreUV } from './materials.mjs?v=5.5.0';
 import { buildDecor } from './decor.mjs';
 import { createRoomVisualPlan,buildRoomVisuals,roomMaterialOverride,createRoomFinishMaterial,replaceRoomSurface } from './room-visuals.mjs';
@@ -33,6 +33,7 @@ export function freezeStaticTransforms(root){root.updateWorldMatrix(true,true);r
 }
 export class Renderer{
  constructor(canvas,world,settings){
+  this.operatorViewProfiles=new Map();
   this.world=world;this.settings=settings;const intent=world.project?.intent;this.neutralLighting=(intent?.runtimeLighting??intent?.floor5Preparation?.runtimeLighting)==='neutral-daylight';this.renderer=new THREE.WebGLRenderer({canvas,antialias:!settings.mobile,powerPreference:settings.mobile?'low-power':'high-performance'});this.renderer.info.autoReset=false;this.quality=settings.graphics;this.adaptiveResolution=new AdaptiveResolution();this.resScale=1;this.adaptiveActive=false;this.renderer.setPixelRatio(Math.min(devicePixelRatio,settings.mobile?(settings.graphics==='low'?.78:1):(settings.graphics==='low'?.85:1))*this.resScale);this.renderer.outputColorSpace=THREE.SRGBColorSpace;this.renderer.toneMapping=THREE.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1.04;this.renderer.shadowMap.enabled=!this.neutralLighting&&settings.graphics!=='low';this.renderer.shadowMap.type=THREE.PCFSoftShadowMap;this.renderer.shadowMap.autoUpdate=false;this.shadowAt=-Infinity;
   this.scene=new THREE.Scene();this.scene.background=new THREE.Color(0x28353d);if(this.neutralLighting){
    this.scene.add(new THREE.HemisphereLight(0xffffff,0xe3e3df,2.1));
@@ -60,8 +61,8 @@ export class Renderer{
   for(const bucket of buckets.values()){const geometry=mergeGeometries(bucket.geometries,false);if(!geometry)throw new Error('Static material batch attributes do not match');const mesh=new THREE.Mesh(geometry,bucket.material);mesh.castShadow=false;mesh.receiveShadow=true;mesh.name='room-static-batch';this.scene.add(mesh);bucket.geometries.forEach(g=>g.dispose());}
   // Opaque static geometry shares one depth caster per area; PBR meshes keep their materials.
   for(const geometries of shadowBuckets.values()){const mesh=new THREE.Mesh(mergeGeometries(geometries),this.shadowOnlyMaterial);mesh.name='static-shadow-proxy';mesh.castShadow=true;mesh.customDepthMaterial=this.shadowDepthMaterial;this.scene.add(mesh);geometries.forEach(g=>g.dispose());}
-  for(const l of desc.labels)label(this.scene,l.text.replace(' · PASSERKORT',' · ÖPPEN'),l.x,l.y,l.z,l.width,l.height,{fg:l.color,bg:l.accent,yaw:l.yaw});
-  this.objectiveMarkers=new THREE.Group();this.scene.add(this.objectiveMarkers);this.objectiveMarkers.visible=!this.world.networkSlice;for(const[p,c,txt]of[[this.world.anchors.bomb,0xe5a04e,missionRoomName(this.world)+' · PLANTERA'],[this.world.anchors.rescue,0x76c8ae,'RÄDDNINGSZON']]){const ring=new THREE.Mesh(new THREE.RingGeometry(p.radius-.04,p.radius,64),new THREE.MeshBasicMaterial({color:c,side:THREE.DoubleSide,transparent:true,opacity:.6}));ring.rotation.x=-Math.PI/2;ring.position.set(p.x,.018,p.z);this.objectiveMarkers.add(ring);const sign=label(this.objectiveMarkers,txt,p.x,.02,p.z,p.radius*1.6,.26,{fg:'#f1e7d2',bg:'#384a4b'});sign.rotation.x=-Math.PI/2;}
+  for(const l of desc.labels)label(this.scene,l.text.replace(' · PASSERKORT',' · OPEN'),l.x,l.y,l.z,l.width,l.height,{fg:l.color,bg:l.accent,yaw:l.yaw});
+  this.objectiveMarkers=new THREE.Group();this.scene.add(this.objectiveMarkers);this.objectiveMarkers.visible=!this.world.networkSlice;for(const[p,c,txt]of[[this.world.anchors.bomb,0xe5a04e,missionRoomName(this.world)+' · PLANT'],[this.world.anchors.rescue,0x76c8ae,'RESCUE ZONE']]){if(!p)continue;const ring=new THREE.Mesh(new THREE.RingGeometry(p.radius-.04,p.radius,64),new THREE.MeshBasicMaterial({color:c,side:THREE.DoubleSide,transparent:true,opacity:.6}));ring.rotation.x=-Math.PI/2;ring.position.set(p.x,.018,p.z);this.objectiveMarkers.add(ring);const sign=label(this.objectiveMarkers,txt,p.x,.02,p.z,p.radius*1.6,.26,{fg:'#f1e7d2',bg:'#384a4b'});sign.rotation.x=-Math.PI/2;}
   const shadows=[];for(const b of desc.boxes.filter(b=>b.asset||b.furnishingId&&b.h>.5)){if(b.y-b.h/2>.15)continue;const g=new THREE.PlaneGeometry(Math.min(b.w+.24,2.8),Math.min(b.d+.24,2.8));g.rotateX(-Math.PI/2);g.translate(b.x,.012,b.z);shadows.push(g);}if(shadows.length){const mesh=new THREE.Mesh(mergeGeometries(shadows),this.contactMaterial);this.scene.add(mesh);shadows.forEach(g=>g.dispose());}
   this.fixtures=desc.boxes.filter(b=>b.material==='emissive'&&b.y>2.3).map(b=>({x:b.x,y:2.66,z:b.z}));if(!this.neutralLighting&&!this.fixtures.length)this.fixtures=this.world.navigation.nodes.filter((n,i)=>i%18===0).map(n=>({...n,y:2.66}));this.decor=buildDecor(this.world,this.registry);this.scene.add(this.decor);this.roomVisuals=buildRoomVisuals(this.world,this.registry,{plan:this.roomVisualPlan});this.scene.add(this.roomVisuals);this.cartridgeProps=this.world.newLevel?new THREE.Group():buildCartridgeProps(this.world);this.scene.add(this.cartridgeProps);
   for(const root of this.scene.children)if(!dynamicRoots.has(root))freezeStaticTransforms(root);
@@ -117,6 +118,7 @@ export class Renderer{
   if(changed&&shadows){this.renderer.shadowMap.needsUpdate=true;this.shadowAt=t;}
  }
  actorModel(a){
+  if (a.outfitId) setNetworkOutfit(a.id,a.outfitId);
   let model=this.actors.get(a.id);if(model){refreshActorCharacter(model,a.team,a.id);return model;}
   model=makeActor(a.team||'hostage',a.id,!a.team);model.traverse(o=>{if(o.isMesh)o.castShadow=false;});this.actors.set(a.id,model);this.scene.add(model);
   const shadow=new THREE.Mesh(new THREE.PlaneGeometry(.62,.62),this.contactMaterial);shadow.rotation.x=-Math.PI/2;this.scene.add(shadow);model.userData.contact=shadow;return model;
@@ -136,9 +138,9 @@ export class Renderer{
   return animateCorpse(model,a,time,d.fall);
  }
  resize(){const w=innerWidth,h=innerHeight;this.renderer.setSize(w,h,false);this.camera.userData.cartridgeViewportHeight=this.renderer.domElement.height;this.camera.aspect=this.viewCamera.aspect=w/h;this.camera.updateProjectionMatrix();this.viewCamera.updateProjectionMatrix();}
- events(events,game){this.combatEffects.handle(events,game);for(const e of events){if(e.type==='shot'||e.type==='knife'){const actor=this.actors.get(e.actorId);if(actor)actor.userData.shotAt=game.state.time;}if(e.type==='throw'&&e.actorId===game.player?.id)this.throwAt=game.state.time;if(e.type==='tracer'&&e.from&&e.to&&e.weapon!=='knife')this.tracerBatch.add(e.from,e.to,game.state.time);if(e.type==='shot'||e.type==='knife'){if(e.actorId===game.player?.id){this.recoil=.035;this.shotAt=game.state.time;if(e.weapon==='knife')this.swingAt=game.state.time;else this.muzzleUntil=game.state.time+.055;}}if(e.type==='hit'&&e.sourceId===game.player?.id)this.hitUntil=game.state.time+.15;if(e.type==='damage'&&e.actorId===game.player?.id){this.damageUntil=game.state.time+.55;this.damageDirection=e.direction;}if(['explosion','he','flash'].includes(e.type)&&Number.isFinite(e.x)){const blast=e.type!=='flash';for(let i=0;i<(blast?12:4);i++){const mesh=new THREE.Mesh(new THREE.PlaneGeometry(blast?.44:.28,blast?.44:.28),new THREE.MeshBasicMaterial({map:this.muzzle.material.map,color:blast?0xffb06a:0xfff8de,transparent:true,opacity:.9,depthWrite:false,side:THREE.DoubleSide,blending:THREE.AdditiveBlending}));const a=i*2.4,r=(i%3)*.12;mesh.position.set(e.x+Math.cos(a)*r,(e.y??1)+Math.sin(i)*r,e.z+Math.sin(a)*r);this.scene.add(mesh);this.effects.push({mesh,until:game.state.time+(blast?.28:.11),start:game.state.time,billboard:true,origin:mesh.position.clone(),velocity:new THREE.Vector3(Math.cos(a)*2.2,1+Math.sin(i)*1.5,Math.sin(a)*2.2)});}}}}
+ events(events,game){this.combatEffects.handle(events,game);for(const e of events){if(e.type==='shot'||e.type==='knife'){const actor=this.actors.get(e.actorId);if(actor)actor.userData.shotAt=game.state.time;}if(e.type==='throw'&&e.actorId===game.player?.id)this.throwAt=game.state.time;if(e.type==='tracer'&&e.from&&e.to&&e.weapon!=='knife')this.tracerBatch.add(e.from,e.to,game.state.time);if(e.type==='shot'||e.type==='knife'){if(e.actorId===game.player?.id){this.recoil=.035;this.shotAt=game.state.time;if(e.weapon==='knife')this.swingAt=game.state.time;else this.muzzleUntil=e.suppressed?0:game.state.time+.055;}}if(e.type==='hit'&&e.sourceId===game.player?.id)this.hitUntil=game.state.time+.15;if(e.type==='damage'&&e.actorId===game.player?.id){this.damageUntil=game.state.time+.55;this.damageDirection=e.direction;}if(['explosion','he','flash'].includes(e.type)&&Number.isFinite(e.x)){const blast=e.type!=='flash';for(let i=0;i<(blast?12:4);i++){const mesh=new THREE.Mesh(new THREE.PlaneGeometry(blast?.44:.28,blast?.44:.28),new THREE.MeshBasicMaterial({map:this.muzzle.material.map,color:blast?0xffb06a:0xfff8de,transparent:true,opacity:.9,depthWrite:false,side:THREE.DoubleSide,blending:THREE.AdditiveBlending}));const a=i*2.4,r=(i%3)*.12;mesh.position.set(e.x+Math.cos(a)*r,(e.y??1)+Math.sin(i)*r,e.z+Math.sin(a)*r);this.scene.add(mesh);this.effects.push({mesh,until:game.state.time+(blast?.28:.11),start:game.state.time,billboard:true,origin:mesh.position.clone(),velocity:new THREE.Vector3(Math.cos(a)*2.2,1+Math.sin(i)*1.5,Math.sin(a)*2.2)});}}}}
 
- render(game,viewActor,dt){const s=game.state,p=viewActor||game.player||this.world.anchors.analysts[0],h=p.height||1.72,t=s.time;const eye=h-.12,bob=this.settings.reducedMotion?0:Math.sin(t*11)*(p.moving?.018:0)*(1-(p.aimAmount||0)*.9);this.camera.position.set(p.x,p.y+eye+bob,p.z);this.camera.rotation.set(p.pitch||0,p.yaw||0,0);this.camera.updateMatrixWorld();
+ render(game,viewActor,dt){const s=game.state,p=viewActor||game.player||this.world.anchors.analysts[0],h=p.height||1.72,t=s.time;const eye=h-.12,bob=this.settings.reducedMotion?0:Math.sin(p.rushing?(p.distanceWalked||0)*8.8:t*11)*(p.moving?(p.rushing?.023:.018):0)*(1-(p.aimAmount||0)*.9);this.camera.position.set(p.x,p.y+eye+bob,p.z);this.camera.rotation.set(p.pitch||0,p.yaw||0,0);this.camera.updateMatrixWorld();
  this.actorFrustum.setFromProjectionMatrix(this.actorProjection.multiplyMatrices(this.camera.projectionMatrix,this.camera.matrixWorldInverse));this.stats.posedActors=0;this.stats.culledActors=0;
  this.tracerBatch.update(t);this.updateLights(p,t,s.phase==='active'&&!s.paused);this.combatEffects.update(t,this.effectTime==null?0:Math.max(0,Math.min(.1,t-this.effectTime)),this.camera);this.effectTime=t;
  this.objectiveMarkers.visible=!game.network||s.mode==='classic';
@@ -171,7 +173,7 @@ export class Renderer{
   if(dead){model.visible=this.corpsePose(model,a,corpseTime);continue;}
   model.userData.fall=null;model.position.set(a.x,a.y||0,a.z);model.rotation.set(0,a.yaw||0,0);
   const previousWeapon=model.userData.weaponModel;
-  animateActor(model,a,t,dt,{cameraYaw:this.camera.rotation.y,shotAt:model.userData.shotAt??-Infinity});
+  animateActor(model,a,t,dt,{cameraYaw:this.camera.rotation.y,distanceSquared:this.camera.position.distanceToSquared(model.position),shotAt:model.userData.shotAt??-Infinity});
   if(previousWeapon!==model.userData.weaponModel)model.userData.weaponModel?.traverse(o=>{if(o.isMesh)o.castShadow=false;});
  }
  for(const g of s.grenades){let model=this.grenades.get(g.id);if(!model){model=createThrownCartridge(g,t);this.grenades.set(g.id,model);this.scene.add(model);}updateThrownCartridge(model,g,t);}for(const [id,m]of this.grenades)if(!s.grenades.some(g=>g.id===id)){this.disposeTransient(m);this.grenades.delete(id);}
@@ -205,14 +207,49 @@ export class Renderer{
  }
  for(const [id,m]of this.smokes)if(!s.smokes.some(q=>(q.id||q.until)===id)){this.disposeTransient(m);this.smokes.delete(id);}
  const bomb=s.bomb;this.bombModel.visible=!!bomb&&['planted','dropped'].includes(bomb.status);if(this.bombModel.visible){this.bombModel.position.set(bomb.x,(bomb.y||0)+.05,bomb.z);this.bombModel.rotation.y=.3;}
- for(const d of s.drops){let m=this.drops.get(d.id);if(!m){m=makeWeapon(d.item?.id||'ar47',{viewmodel:false});m.rotation.z=Math.PI/2;m.scale.setScalar(.8);this.drops.set(d.id,m);this.scene.add(m);}m.position.set(d.x,.15,d.z);}for(const [id,m] of this.drops)if(!s.drops.some(d=>d.id===id)){this.disposeTransient(m);this.drops.delete(id);}
+ for(const d of s.drops){let m=this.drops.get(d.id);if(!m){m=makeWeapon(d.item?.id||'ar47',{...d.item,viewmodel:false});m.rotation.z=Math.PI/2;m.scale.setScalar(.8);this.drops.set(d.id,m);this.scene.add(m);}m.position.set(d.x,(d.y??0)+.15,d.z);}for(const [id,m] of this.drops)if(!s.drops.some(d=>d.id===id)){this.disposeTransient(m);this.drops.delete(id);}
  this.effects=this.effects.filter(f=>{if(t>f.until){this.disposeTransient(f.mesh);return false;}if(f.billboard){f.mesh.quaternion.copy(this.camera.quaternion);f.mesh.position.copy(f.origin).addScaledVector(f.velocity,Math.max(0,t-f.start));}f.mesh.material.opacity=(f.until-t)/Math.max(.001,f.until-f.start);return true;});
- if(p.weapon!==this.lastWeapon){if(this.weaponModel)this.viewScene.remove(this.weaponModel);this.weaponModel=this.weaponCache.get(p.weapon);if(!this.weaponModel){this.weaponModel=makeWeapon(p.weapon||'p9');this.weaponCache.set(p.weapon,this.weaponModel);}this.viewScene.add(this.weaponModel);this.lastWeapon=p.weapon;this.switchAt=t;}
- if(this.weaponModel){syncWeaponAppearance(this.weaponModel,privateCharacterAppearance(p.id,p.team));this.recoil*=Math.exp(-dt*18);const pose=animateWeapon(this.weaponModel,p,t,dt,{reducedMotion:this.settings.reducedMotion,recoil:this.recoil,shotAt:this.shotAt??-Infinity,switchAt:this.switchAt,throwAt:this.throwAt??-Infinity,swingAt:this.swingAt??-Infinity});this.weaponModel.visible=p.alive!==false&&s.phase!=='menu'&&!(p.weapon==='sniper'&&p.aimAmount>.92);this.muzzle.visible=this.weaponModel.visible&&t<(this.muzzleUntil||0);this.weaponModel.updateMatrixWorld(true);const muzzle=pose?.muzzle||this.weaponModel.userData.muzzle||new THREE.Vector3(0,.08,-.4);this.muzzle.position.copy(pose?.muzzle||this.weaponModel.localToWorld(muzzle.clone()));this.muzzle.rotation.z=t*83;}
+ if(p.weapon!==this.lastWeapon){if(this.weaponModel){releaseWeaponFittings(this.weaponModel);this.viewScene.remove(this.weaponModel);}this.weaponModel=this.weaponCache.get(p.weapon);if(!this.weaponModel){this.weaponModel=makeWeapon(p.weapon||'p9');this.weaponCache.set(p.weapon,this.weaponModel);}this.viewScene.add(this.weaponModel);this.lastWeapon=p.weapon;this.switchAt=t;}
+ if(this.wallActor!==p.id || !(t>=this.wallSampleAt && t-this.wallSampleAt<.08)){
+   this.wallActor=p.id;this.wallSampleAt=t;
+   const origin=this.camera.position,dir=this.camera.getWorldDirection(this.wallDir??=new THREE.Vector3());
+   const hit=p.alive && this.world.raycast(origin,dir,.62,{vision:false});
+   this.wallTarget=hit?Math.max(0,Math.min(1,(.62-hit.distance)/.35)):0;
+ }
+ this.wallAmount=(this.wallAmount||0)+((this.wallTarget||0)-(this.wallAmount||0))*(1-Math.exp(-14*dt));
+ if(this.weaponModel){syncActorWeaponFittings(this.weaponModel,p);if(p.outfitId)setNetworkOutfit(p.id,p.outfitId);syncWeaponAppearance(this.weaponModel,privateCharacterAppearance(p.id,p.team,this.operatorViewProfiles));this.recoil*=Math.exp(-dt*18);const pose=animateWeapon(this.weaponModel,p,t,dt,{inspecting:Number.isFinite(this.inspectAt)&&t>=this.inspectAt&&t<this.inspectUntil,nearWall:this.wallAmount,reducedMotion:this.settings.reducedMotion,recoil:this.recoil,shotAt:this.shotAt??-Infinity,switchAt:this.switchAt,throwAt:this.throwAt??-Infinity,swingAt:this.swingAt??-Infinity});this.weaponModel.visible=p.alive!==false&&s.phase!=='menu'&&!(p.weapon==='sniper'&&p.aimAmount>.92);this.muzzle.visible=this.weaponModel.visible&&t<(this.muzzleUntil||0);this.weaponModel.updateMatrixWorld(true);const muzzle=pose?.muzzle||this.weaponModel.userData.muzzle||new THREE.Vector3(0,.08,-.4);this.muzzle.position.copy(pose?.muzzle||this.weaponModel.localToWorld(muzzle.clone()));this.muzzle.rotation.z=t*83;}
+ this.updateLaser(p,s.phase);
  this.facilityScene?.update(this.camera);this.renderer.info.reset();this.renderer.autoClear=true;this.renderer.render(this.scene,this.camera);if(this.weaponModel?.visible){this.renderer.autoClear=false;this.renderer.clearDepth();this.renderer.render(this.viewScene,this.viewCamera);}this.stats.drawCalls=this.renderer.info.render.calls;this.stats.triangles=this.renderer.info.render.triangles;const now=performance.now();this.stats.fps=this.frameTimes.push(now-this.lastFrame);this.stats.resolutionScale=this.resScale;this.stats.pixelRatio=this.renderer.getPixelRatio();this.lastFrame=now;
+ }
+ // Riposte 06p laserUpdate: the sight projects one point on the actual visible
+ // world surface from hip aim. The muzzle and sight never change the game ray.
+ updateLaser(actor,phase){
+  const enabled=this.weaponModel?.userData.laserEmitter&&actor.alive&&['active','buy'].includes(phase)&&
+    !actor.rushing&&!(actor.rushWeight>.1)&&!(actor.aimAmount>.1)&&!actor.action;
+  if(!enabled){if(this.laserDot)this.laserDot.visible=false;return;}
+  const dir=this.camera.getWorldDirection(this.laserDir??=new THREE.Vector3());
+  const hit=this.world.raycast(this.camera.position,dir,90,{vision:false});
+  if(!hit){if(this.laserDot)this.laserDot.visible=false;return;}
+  if(!this.laserDot){
+    const mat=new THREE.MeshBasicMaterial({color:0xff4941,toneMapped:false,depthWrite:false});
+    this.laserDot=new THREE.Mesh(new THREE.CircleGeometry(1,12),mat);
+    this.laserDot.name='equipment-laser-point';this.scene.add(this.laserDot);
+  }
+  this.laserDot.visible=true;this.laserDot.quaternion.copy(this.camera.quaternion);
+  this.laserDot.position.copy(this.camera.position).addScaledVector(dir,Math.max(.03,hit.distance-.025));
+  this.laserDot.scale.setScalar(.006+hit.distance*.0017);
  }
  smokeOpacity(actor,smokes){let value=0;for(const sm of smokes){const d=Math.hypot(actor.x-sm.x,actor.z-sm.z);if(d<(sm.radius||3)&&this.world.segmentClear({x:actor.x,y:(actor.y||0)+1,z:actor.z},{x:sm.x,y:Math.max(.5,sm.y),z:sm.z},{vision:false}))value=Math.max(value,Math.min(.97,((sm.radius||3)-d)*.8));}return value;}
  resetTransient(){this.tracerBatch.clear();this.combatEffects.clear();this.effectTime=null;this.lightAt=-1;this.shadowAt=-Infinity;for(const model of this.actors.values()){model.userData.fall=null;model.rotation.set(0,0,0);}for(const f of this.effects)this.disposeTransient(f.mesh);this.effects=[];for(const map of [this.grenades,this.smokes,this.drops]){for(const m of map.values())this.disposeTransient(m);map.clear();}this.recoil=0;this.hitUntil=0;this.damageUntil=0;this.damageDirection=null;this.shotAt=-1;this.throwAt=-1;this.swingAt=-1;this.muzzleUntil=0;this.switchAt=-1;this.muzzle.visible=false;this.bombModel.visible=false;this.lastWeapon='';this.frameTimes.clear();this.lastFrame=performance.now();}
- disposeTransient(object){this.scene.remove(object);if(object.isInstancedMesh)object.dispose();const mats=new Set(),geos=new Set();object.traverse(o=>{if(o.material&&!o.material.userData.sharedWeapon)mats.add(o.material);if(o.geometry&&!o.geometry.userData.sharedWeapon&&o.geometry!==boxGeo&&o.geometry!==sphereGeo&&o.geometry!==smokeGeo)geos.add(o.geometry);});for(const m of mats){if(m.map!==this.smokeMap&&m.map!==this.muzzle.material.map)m.map?.dispose();m.dispose();}for(const g of geos)g.dispose();}
- dispose(){this.tracerBatch.dispose();window.removeEventListener('resize',this.onResize);this.combatEffects.dispose();this.registry.dispose();this.decor?.userData.dispose?.();this.roomVisuals?.userData.dispose?.();this.roomFinishMaterial?.dispose();this.cartridgeProps?.userData.dispose?.();disposeCartridgeResources();disposeWeaponResources();this.smokeWarmMaterial?.dispose();this.environment.dispose();this.smokeMap.dispose();this.actorShadowGeometry.dispose();this.shadowOnlyMaterial.dispose();this.shadowDepthMaterial.dispose();this.renderer.dispose();}
+ disposeTransient(object){releaseWeaponFittings(object);this.scene.remove(object);if(object.isInstancedMesh)object.dispose();const mats=new Set(),geos=new Set();object.traverse(o=>{if(o.material&&!o.material.userData.sharedWeapon)mats.add(o.material);if(o.geometry&&!o.geometry.userData.sharedWeapon&&o.geometry!==boxGeo&&o.geometry!==sphereGeo&&o.geometry!==smokeGeo)geos.add(o.geometry);});for(const m of mats){if(m.map!==this.smokeMap&&m.map!==this.muzzle.material.map)m.map?.dispose();m.dispose();}for(const g of geos)g.dispose();}
+ dispose(){
+  // Built-in view finishes belong to this renderer, including retired outfits.
+  // Imported profiles keep their existing character-library owners.
+  for(const profile of this.operatorViewProfiles.values())profile.dispose();
+  if(this.laserDot){this.laserDot.removeFromParent();this.laserDot.geometry.dispose();this.laserDot.material.dispose();}
+  this.operatorViewProfiles.clear();
+  for(const model of this.weaponCache.values())releaseWeaponFittings(model);
+  for(const actor of this.actors.values())releaseWeaponFittings(actor.userData.weaponModel);
+  for(const model of this.drops.values())releaseWeaponFittings(model);
+  this.tracerBatch.dispose();window.removeEventListener('resize',this.onResize);this.combatEffects.dispose();this.registry.dispose();this.decor?.userData.dispose?.();this.roomVisuals?.userData.dispose?.();this.roomFinishMaterial?.dispose();this.cartridgeProps?.userData.dispose?.();disposeCartridgeResources();disposeWeaponResources();this.smokeWarmMaterial?.dispose();this.environment.dispose();this.smokeMap.dispose();this.actorShadowGeometry.dispose();this.shadowOnlyMaterial.dispose();this.shadowDepthMaterial.dispose();this.renderer.dispose();}
 }

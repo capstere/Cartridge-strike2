@@ -1,0 +1,159 @@
+[
+  {
+    "runtimeHead": "2807ed95d6ab82f49d73d150e31f883717831ae0",
+    "buildHash": "5ead5b3a201ffd9de8c3652eb624f207f036f4e5129a44a1c38f6932de1b0679",
+    "driverSha256": "d591026f0f41826c0278e2139015e5cbd075f79af9814c9d025e4f47a542be0b",
+    "result": "local replay timed out between cold draws",
+    "initialReceipt": {
+      "kind": "death",
+      "elapsed": 0,
+      "step": 0,
+      "stage": "card",
+      "budget": 2.9833333333333325,
+      "life": 2,
+      "alive": false,
+      "cardMs": 800,
+      "offset": 0.8296666666666674,
+      "prior": null,
+      "current": 0.8296666666666674,
+      "hit": 2.733,
+      "strength": 0,
+      "shots": 0
+    },
+    "history": [
+      {
+        "kind": "death",
+        "elapsed": 812,
+        "step": 17,
+        "stage": "replay",
+        "budget": 2.0333333333332853,
+        "life": 2,
+        "alive": false,
+        "cardMs": 800,
+        "offset": 0.8296666666666674,
+        "prior": null,
+        "current": 0.841966666738193,
+        "hit": 2.733,
+        "strength": 0,
+        "shots": 0
+      },
+      {
+        "kind": "death",
+        "elapsed": 2067,
+        "step": 1255,
+        "stage": "replay",
+        "budget": 1.9833333333332828,
+        "life": 2,
+        "alive": false,
+        "cardMs": 800,
+        "offset": 0.8296666666666674,
+        "prior": 0.841966666738193,
+        "current": 2.096466666738193,
+        "hit": 2.733,
+        "strength": 0,
+        "shots": 0
+      },
+      {
+        "kind": "death",
+        "elapsed": 2944,
+        "step": 877,
+        "stage": "cut",
+        "budget": 0.8166666666665581,
+        "life": 2,
+        "alive": false,
+        "cardMs": 800,
+        "offset": 0.8296666666666674,
+        "prior": 2.096466666738193,
+        "hit": 2.733
+      }
+    ],
+    "marker": [],
+    "audio": []
+  },
+  {
+    "runtimeHead": "a1698a9f79b2ecb788981fced4a028d9867db5da",
+    "buildHash": "21e6a67d07dfb41f1f650ee221dd93fb674f098f042b3598cd06796b414ba66a",
+    "driverSha256": "49ca50c27e31b50264a285dde24cc013b9ae624cd1673f26e22246105fe7dbdd",
+    "result": "tail recovered before legal respawn; screenshot selector still used old layout",
+    "initialReceipt": {
+      "kind": "death",
+      "elapsed": 0,
+      "step": 0,
+      "stage": "card",
+      "budget": 2.966666666666665,
+      "life": 2,
+      "alive": false,
+      "cardMs": 800,
+      "offset": 0.8463333333333349,
+      "prior": null,
+      "current": 0.8463333333333349,
+      "hit": 2.733,
+      "strength": 0,
+      "shots": 0
+    },
+    "history": [
+      {
+        "kind": "death",
+        "elapsed": 813,
+        "step": 33,
+        "stage": "replay",
+        "budget": 1.9999999999999503,
+        "life": 2,
+        "alive": false,
+        "cardMs": 800,
+        "offset": 0.8463333333333349,
+        "prior": null,
+        "current": 0.8591333332856512,
+        "hit": 2.733,
+        "strength": 0,
+        "shots": 0
+      },
+      {
+        "kind": "death",
+        "elapsed": 2071,
+        "step": 1258,
+        "stage": "replay",
+        "budget": 1.9499999999999478,
+        "life": 2,
+        "alive": false,
+        "cardMs": 800,
+        "offset": 1.462100000023842,
+        "prior": 0.8591333332856512,
+        "current": 2.733,
+        "hit": 2.733,
+        "strength": 1,
+        "shots": 1
+      },
+      {
+        "kind": "death",
+        "elapsed": 2788,
+        "step": 717,
+        "stage": "cut",
+        "budget": 0.7333333333332206,
+        "life": 2,
+        "alive": false,
+        "cardMs": 800,
+        "offset": 1.462100000023842,
+        "prior": 2.733,
+        "hit": 2.733
+      }
+    ],
+    "marker": [
+      {
+        "title": "ELIMINATION REPLAY",
+        "opacity": 1,
+        "vertices": 24
+      }
+    ],
+    "audio": [
+      {
+        "title": "ELIMINATION REPLAY",
+        "weapon": "sniper",
+        "actor": "analysts-0",
+        "at": 2.733,
+        "volume": 0.55,
+        "duration": 1.6
+      }
+    ]
+  }
+]

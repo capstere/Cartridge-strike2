@@ -2,7 +2,7 @@ name: FPS regression
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, develop/cartridge-strike-3]
   push:
     branches: [main]
   workflow_dispatch:
@@ -16,6 +16,69 @@ permissions:
   contents: read
 
 jobs:
+  content-pipeline:
+    if: github.event_name != 'push'
+    runs-on: macos-15
+    timeout-minutes: 10
+    env:
+      FPS_NETWORK_ANGLE: metal
+      FPS_APPEARANCE_EVIDENCE: test-results/content-example
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: server/.node-version
+          cache: npm
+          cache-dependency-path: |
+            server/package-lock.json
+            frontline/source/tools/dev/package-lock.json
+      - run: npm ci --prefix server --ignore-scripts
+      - name: Verify the shipped content and exported two-client pilot
+        run: |
+          npm run build --prefix server -- --check
+          node tools/content-distribution-smoke.mjs
+      - name: Install and qualify an optional appearance in this disposable checkout
+        run: |
+          npm ci --prefix frontline/source/tools/dev
+          node frontline/source/tools/dev/node_modules/playwright-core/cli.js install chromium
+          node tools/appearance-import.mjs --install content/examples/appearance/harbor-crew.json
+          npm run build --prefix server
+          npm run build --prefix server -- --check
+          node tools/content-distribution-smoke.mjs --example --render
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: installed-content-evidence
+          path: test-results/content-example/
+  competitive-matches:
+    if: github.event_name != 'push'
+    runs-on: macos-15
+    timeout-minutes: 12
+    env:
+      FPS_NETWORK_ANGLE: metal
+      FPS_WARDROBE_EVIDENCE: test-results/earned-wardrobe
+      FPS_COMPETITIVE_EVIDENCE: test-results/competitive
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: server/.node-version
+          cache: npm
+          cache-dependency-path: |
+            server/package-lock.json
+            frontline/source/tools/dev/package-lock.json
+      - run: npm ci --prefix server --ignore-scripts
+      - run: npm ci --prefix frontline/source/tools/dev
+      - run: node frontline/source/tools/dev/node_modules/playwright-core/cli.js install chromium
+      - run: node tools/challenge-outfits-browser.mjs
+      - run: node tools/competitive-browser.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: competitive-evidence
+          path: |
+            test-results/competitive/
+            test-results/earned-wardrobe/
   multiplayer-foundation:
     # Full dependency/API verification belongs to PR/manual runs, not duplicate
     # post-merge browser/dependency jobs. The headless core tests also run below.
@@ -34,6 +97,103 @@ jobs:
         run: |
           npm run build --prefix server -- --check
           npm test --prefix server
+  multiplayer-accounts:
+    if: github.event_name != 'push'
+    runs-on: macos-15
+    timeout-minutes: 13
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: server/.node-version
+          cache: npm
+          cache-dependency-path: |
+            server/package-lock.json
+            frontline/source/tools/dev/package-lock.json
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: |
+          python -m pip install --only-binary=:all: pillow==11.3.0 zxing-cpp==3.0.0
+      - run: npm ci --prefix server --ignore-scripts
+      - run: npm ci --prefix frontline/source/tools/dev
+      - run: node frontline/source/tools/dev/node_modules/playwright-core/cli.js install chromium webkit
+      - name: Exercise actual accounts, scan the QR, join privately and moderate an opted-in room
+        env:
+          FPS_NETWORK_ANGLE: metal
+          CS3_QR_DECODER: ./tools/test-helpers/decode-room-qr.py
+          CS3_ACCOUNT_EVIDENCE: test-results/accounts
+        run: node tools/account-room-browser.mjs
+      - name: Verify first-time and remembered family entry on WebKit and Chromium
+        timeout-minutes: 6
+        env:
+          FPS_NETWORK_ANGLE: metal
+        run: node tools/network-family-browser.mjs
+      - name: Exercise signed and guest classes, equipped effects and model cleanup
+        env:
+          FPS_NETWORK_ANGLE: metal
+          FPS_ARSENAL_EVIDENCE: test-results/arsenal
+        run: |
+          node --import ./server/register-shared.mjs --test src/fps/arsenal.test.mjs src/fps/weapon-fittings.test.mjs
+          node tools/arsenal-browser.mjs
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: account-journey
+          path: |
+            test-results/accounts/
+            test-results/arsenal/
+            test-results/network-family/result.json
+          retention-days: 3
+  operator-wardrobe:
+    if: github.event_name != 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: frontline/source/tools/dev/package-lock.json
+      - name: Verify wardrobe selection, persistence and deployed sleeves
+        run: |
+          npm ci --prefix frontline/source/tools/dev
+          node frontline/source/tools/dev/node_modules/playwright-core/cli.js install --with-deps chromium
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/wardrobe-server.log 2>&1 &
+          server=$!
+          trap 'kill "$server" || true' EXIT
+          node tools/wardrobe-browser.mjs
+  mobile-controls:
+    if: github.event_name != 'push'
+    runs-on: macos-15
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: server/.node-version
+          cache: npm
+          cache-dependency-path: frontline/source/tools/dev/package-lock.json
+      - run: npm ci --prefix frontline/source/tools/dev
+      - run: node frontline/source/tools/dev/node_modules/playwright-core/cli.js install chromium
+      - name: Play Meltem with touch and a standard controller, then recover the installed entry offline
+        env:
+          CS3_MOBILE_EVIDENCE: test-results/mobile-controls
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/cs3-mobile-server.log 2>&1 &
+          server=$!
+          trap 'kill "$server" 2>/dev/null || true; wait "$server" 2>/dev/null || true' EXIT
+          node tools/mobile-profile-browser.mjs
+          node tools/gamepad-menu-browser.mjs
+          node tools/mobile-pwa-browser.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mobile-controls
+          path: test-results/mobile-controls
+          retention-days: 3
+
   node-tests:
     runs-on: ubuntu-latest
     # Preserve the existing offline/visual/mobile gates. Full two-scene gameplay
@@ -70,6 +230,28 @@ jobs:
           node tools/match-flow-browser.mjs
           node tools/floor5-workstation-visibility.cjs
           node tools/actor-occlusion-browser.mjs
+      - name: Enter all four Solo maps from the English desktop menu
+        if: github.event_name != 'push'
+        timeout-minutes: 6
+        env:
+          CS3_MENU_INPUT: desktop
+          CS3_VERIFY_VARIANTS: '1'
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/cs3-desktop-menu-server.log 2>&1 &
+          server=$!
+          trap 'kill "$server" 2>/dev/null || true; wait "$server" 2>/dev/null || true' EXIT
+          node tools/cs3-menu-browser.mjs
+      - name: Enter all four Solo maps from the English touch menu
+        if: github.event_name != 'push'
+        timeout-minutes: 6
+        env:
+          CS3_MENU_INPUT: touch
+          CS3_VERIFY_VARIANTS: '1'
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/cs3-touch-menu-server.log 2>&1 &
+          server=$!
+          trap 'kill "$server" 2>/dev/null || true; wait "$server" 2>/dev/null || true' EXIT
+          node tools/cs3-menu-browser.mjs
       - name: Verify shared character resources and exact animation poses
         if: github.event_name != 'push'
         timeout-minutes: 5
@@ -78,6 +260,7 @@ jobs:
           server=$!
           trap 'kill $server || true' EXIT
           node tools/asset-sharing-browser.mjs
+          node tools/spatial-audio-browser.mjs
       - name: Verify simultaneous touch input and orientation lifecycle
         if: github.event_name != 'push'
         timeout-minutes: 6
@@ -270,7 +453,21 @@ jobs:
       - name: Play a complete human-only match on Compact Arena with touch controls
         env:
           FPS_MAP_CASE: mobile
-        run: node --import ./server/register-shared.mjs tools/multimap-browser.mjs
+        run: node --import ./tools/multimap-teardown.mjs --import ./server/register-shared.mjs tools/multimap-browser.mjs
+      - name: Play a complete human-only match on Meltem with touch controls
+        env:
+          FPS_MAP_CASE: meltemTouch
+        run: node --import ./tools/multimap-teardown.mjs --import ./server/register-shared.mjs tools/multimap-browser.mjs
+      - name: Play and reconnect on the real harbor map with touch controls and sound
+        env:
+          FPS_MAP_CASE: embrunsTouch
+          FPS_MAP_AUDIO: "1"
+        run: node --import ./tools/multimap-teardown.mjs --import ./server/register-shared.mjs tools/multimap-browser.mjs
+      - name: Play and reconnect on the real volcanic map with touch controls and sound
+        env:
+          FPS_MAP_CASE: tephraTouch
+          FPS_MAP_AUDIO: "1"
+        run: node --import ./tools/multimap-teardown.mjs --import ./server/register-shared.mjs tools/multimap-browser.mjs
       - name: Verify custom match settings in desktop and mobile family lobbies
         run: node tools/custom-match-browser.mjs
       - uses: actions/upload-artifact@v4

@@ -1,0 +1,11 @@
+{
+  "format": "cartridge-strike-content",
+  "version": 1,
+  "id": "bonus-example",
+  "entries": [
+    {
+      "kind": "bonus",
+      "id": "uav"
+    }
+  ]
+}

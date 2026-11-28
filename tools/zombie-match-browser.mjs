@@ -14,6 +14,7 @@ try{
   await page.addInitScript(mobile=>localStorage.setItem('cartridge-settings',JSON.stringify({graphics:mobile?'low':'standard'})),mobile);
   await page.goto(origin+'/fps/?test&seed=42',{waitUntil:'domcontentloaded'});
   await page.locator('#lb-mode-seg [data-value='+mode+']').click();await page.locator('#start').click();
+  await page.locator('#csl-deploy').click();
   await page.waitForFunction(()=>window.__fps?.game.player && !document.querySelector('#hud').hidden && document.querySelector('#cs-loading').hidden,null,{timeout:120000});
   // A cold desktop Pages load can outlast the Start click's pointer-lock activation.
   // Resume through the normal Continue control before sampling the simulation.

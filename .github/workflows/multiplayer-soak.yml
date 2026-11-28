@@ -2,16 +2,29 @@ name: Multiplayer 30-minute soak
 
 on:
   workflow_dispatch:
+  pull_request:
+    branches: [develop/cartridge-strike-3, main]
+    types: [opened, reopened, synchronize]
 
 permissions:
   contents: read
 
 jobs:
   authoritative-soak:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.pull_request.head.repo.full_name == github.repository &&
+      ((github.base_ref == 'develop/cartridge-strike-3' && github.head_ref == 'cs3/12-release') ||
+      (github.base_ref == 'main' && github.head_ref == 'develop/cartridge-strike-3')))
+    concurrency:
+      group: multiplayer-soak-${{ github.event.pull_request.number || github.ref }}
+      cancel-in-progress: true
     runs-on: ubuntu-latest
     timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: actions/setup-node@v4
         with:
           node-version-file: server/.node-version
@@ -26,10 +39,15 @@ jobs:
           CS2_LOAD_SECONDS: '1800'
           CS2_LOAD_OUTPUT: test-results/pass3b/soak-30m.json
         run: node --import ./server/register-shared.mjs tools/network-load.mjs
+      - name: Identify the tested release and complete report
+        working-directory: test-results/pass3b
+        run: |
+          git rev-parse HEAD > revision.txt
+          sha256sum soak-30m.json > SHA256SUMS
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: multiplayer-soak
           path: test-results/pass3b/
-          if-no-files-found: ignore
-          retention-days: 3
+          if-no-files-found: error
+          retention-days: 30

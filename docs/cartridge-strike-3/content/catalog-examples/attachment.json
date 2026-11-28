@@ -1,0 +1,20 @@
+{
+  "format": "cartridge-strike-content",
+  "version": 1,
+  "id": "attachment-example",
+  "entries": [
+    {
+      "kind": "attachment",
+      "id": "red",
+      "weapon": "ar47"
+    },
+    {
+      "kind": "weapon",
+      "id": "ar47",
+      "attachments": [
+        "red",
+        "vgrip"
+      ]
+    }
+  ]
+}

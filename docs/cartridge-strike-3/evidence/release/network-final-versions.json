@@ -1,0 +1,22 @@
+{
+  "date": "2026-11-28T16:04:14.903Z",
+  "transport": "pinned loopback TLS/WSS",
+  "oldSeatReached": true,
+  "previous": {
+    "build": "30f8f4af97b2b082f995196f06f498b132ba9bf8d303671ee8ab8d4b69590385",
+    "protocol": 14
+  },
+  "wssAttemptsBeforeFreshLogin": 13,
+  "previousSessionStatus": 401,
+  "authenticatedPreviousBuild": {
+    "rejected": true,
+    "reason": "Incompatible protocolVersion"
+  },
+  "current": {
+    "build": "aec199fd40e814a4df3b4ff04a49b25277aca6fd2788375a32d801bb11d1420b",
+    "protocol": 22
+  },
+  "freshBuildAdmitted": true,
+  "staleSeatResumed": false,
+  "status": "PASS"
+}

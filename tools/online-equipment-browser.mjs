@@ -3,8 +3,9 @@ import {setTimeout as delay} from 'node:timers/promises';
 import {chromium} from '../frontline/source/tools/dev/node_modules/playwright-core/index.mjs';
 import '../server/register-shared.mjs';
 const {createLocalServer}=await import('../server/local-server.mjs');
+import {verifyRoomAudio} from './network-audio-observer.mjs';
 import {glassCrossing} from './network-glass-fixture.mjs';
-import {resumeDesktop} from './network-browser-resume.mjs';
+import {resumeDesktop, waitForActiveHud} from './network-browser-resume.mjs';
 
 const local=await createLocalServer({port:0,testMatch:{countdownSeconds:.15}});
 const browsers=[],pages=[],errors=[];
@@ -13,12 +14,14 @@ async function until(check,label){
   while(!await check()){assert(performance.now()-start<25000,label);await delay(50);}
 }
 async function lobby(mobile){
+  const args=['--use-angle='+(process.env.FPS_NETWORK_ANGLE||'swiftshader'),'--disable-background-timer-throttling','--disable-renderer-backgrounding','--disable-backgrounding-occluded-windows'];
+  if(process.env.WAYLAND_DISPLAY)args.push('--ozone-platform=wayland');
   const browser=await chromium.launch({channel:'chromium',executablePath:process.env.CHROMIUM_PATH||undefined,
-    args:['--use-angle='+(process.env.FPS_NETWORK_ANGLE||'swiftshader'),'--disable-background-timer-throttling','--disable-renderer-backgrounding']});
+    headless:process.env.FPS_NETWORK_HEADED!=='1',args});
   browsers.push(browser);
   const page=await browser.newPage({viewport:mobile?{width:844,height:390}:{width:820,height:480},deviceScaleFactor:.5,isMobile:mobile,hasTouch:mobile});
   pages.push(page);page.on('pageerror',e=>errors.push(e.message));
-  await page.addInitScript(()=>localStorage.setItem('cartridge-settings',JSON.stringify({graphics:'low',volume:0})));
+  await page.addInitScript(()=>localStorage.setItem('cartridge-settings',JSON.stringify({graphics:'low',volume:.08})));
   await page.goto(local.url+'/fps/?network=local');
   await page.waitForFunction(()=>document.querySelector('#network-code')||!document.querySelector('#fatal').hidden,null,{timeout:90000});
   assert(await page.locator('#fatal').isHidden(),await page.locator('#fatal').textContent());
@@ -35,9 +38,20 @@ async function observe(page){
 }
 try{
   const desktop=await lobby(false),mobile=await lobby(true);
+  await desktop.evaluate(async()=>{
+    const {defaultArsenal,saveArsenal}=await import('/src/fps/arsenal.mjs');
+    saveArsenal({...defaultArsenal(),selected:'scout'});
+  });
   await desktop.locator('[data-create=true]').click();
+  await desktop.waitForFunction(()=>document.querySelector('#room-kit')?.textContent?.includes('Scout ·'));
+  assert.match(await desktop.locator('#room-kit').innerText(),/Scout · .+ · Knife · 1 Smoke Cartridge/);
+  assert.equal(await desktop.locator('#room-primary').inputValue(),'sniper');
   await desktop.locator('#room-primary').selectOption('ar47');
+  await desktop.waitForFunction(()=>document.querySelector('#room-kit')?.textContent?.endsWith('1 HE Cartridge'));
+  assert.doesNotMatch(await desktop.locator('#room-kit').innerText(),/Scout|Smoke Cartridge/);
   await desktop.locator('#room-ready').click();await desktop.locator('#room-start').click();
+  await waitForActiveHud(desktop);
+  if(await desktop.locator('#pause').isHidden())await desktop.keyboard.press('Escape');
   await desktop.locator('#resume').waitFor();
   const room=[...local.rooms][0],game=room.sim.game,host=[...room.seats.values()][0].actor;
   assert.equal(room.bots.size,9);assert.equal(host.weapon,'ar47');
@@ -47,9 +61,31 @@ try{
   const guest=[...room.seats.values()].find(s=>s.actor!==host).actor;
   // Move the shooter's test spawn onto the normal of an existing clear pane.
   const crossing=glassCrossing(game.world);
-  Object.assign(host,crossing.pose);
-  await desktop.waitForFunction(yaw=>Math.abs(reviewSession.view.player.yaw-yaw)<.01,crossing.pose.yaw);
+  await until(()=>host.alive,'host is alive before setting the glass test spawn');
+  // Stage one reproducible spawn. The normal first shot ends protection immediately.
+  // All eight bots continue moving and firing while the two renderers acquire their inputs.
+  Object.assign(host,crossing.pose,{spawnProtectedUntil:game.state.time+30});
+  const stagedLife=host.lifeId;
+  await desktop.waitForFunction(({x,z,yaw})=>{
+    const actor=reviewSession.room.state.actors.get(reviewSession.localPlayerId);
+    const angle=Math.atan2(Math.sin(actor.yaw-yaw),Math.cos(actor.yaw-yaw));
+    return Math.hypot(actor.x-x,actor.z-z)<.12 && Math.abs(angle)<.01 && Math.abs(actor.pitch)<.01;
+  },crossing.pose);
   await resumeDesktop(desktop);
+  // A real resume gesture restores pointer lock. Align the live camera after
+  // reacquisition; its previous rendered angle can belong to another life.
+  await desktop.waitForFunction(()=>reviewSession.enabled);
+  await desktop.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+  await desktop.evaluate(({yaw,pitch})=>{
+    const actor=reviewSession.view.player,scale=.0022;
+    const heading=Math.atan2(Math.sin(actor.yaw-yaw),Math.cos(actor.yaw-yaw));
+    window.dispatchEvent(new MouseEvent('mousemove',{
+      movementX:Math.round(heading/scale),movementY:Math.round((actor.pitch-pitch)/scale)
+    }));
+  },crossing.pose);
+  await until(()=>host.alive && Math.hypot(host.x-crossing.pose.x,host.z-crossing.pose.z)<.13 &&
+    Math.abs(Math.atan2(Math.sin(host.yaw-crossing.pose.yaw),Math.cos(host.yaw-crossing.pose.yaw)))<.02 &&
+    Math.abs(host.pitch)<.02,'live authority faces the same standing-height pane as the camera');
   await desktop.mouse.down({button:'right'});
   try{
     await until(()=>host.aimAmount>.6,'right mouse reaches authority');
@@ -58,6 +94,8 @@ try{
     try{await until(()=>room.state.brokenGlass.has(crossing.pane.id),'aimed shot broke pane');}
     finally{await desktop.mouse.up();}
   }finally{await desktop.mouse.up({button:'right'});}
+  assert.equal(host.lifeId,stagedLife,'the same real host life broke the pane');
+  assert.equal(host.spawnProtectedUntil,0,'normal gunfire removed setup protection');
   for(const p of [desktop,mobile])await p.waitForFunction(id=>reviewSession.world.glass.panes.get(id).broken,crossing.pane.id);
   await desktop.keyboard.press('r');await until(()=>host.reloadUntil>0,'desktop reload');
   await desktop.keyboard.press('2');await until(()=>host.weapon==='p9'&&!host.reloadUntil,'switch cancels reload');
@@ -79,7 +117,7 @@ try{
   finally{await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});}
   await mobile.locator('#mobile-more').tap();
   await mobile.locator('[data-mobile-action=grenade]').tap();await until(()=>guest.weapon==='he','touch grenade selected');
-  await until(()=>game.state.time>guest.nextShot,'throw ready');await until(async()=>await fire.textContent()==='KASTA','throw label');
+  await until(()=>game.state.time>guest.nextShot,'throw ready');await until(async()=>await fire.textContent()==='THROW','throw label');
   // A single hold must begin after the matching client snapshot has made the
   // selected grenade usable, including its predicted switch cooldown.
   await mobile.waitForFunction(()=>{
@@ -90,21 +128,27 @@ try{
   const t=await fire.boundingBox();
   await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{id:3,x:t.x+t.width/2,y:t.y+t.height/2}]});
   try{
-    await until(()=>guest.inventory.he===0,'one touch throw');
-    await desktop.waitForFunction(id=>reviewSession.view.state.grenades.some(g=>g.ownerId===id),guest.id);
+    await until(()=>guest.cartridge?.deadline>0,'touch holds a live cartridge');
+    assert.equal(guest.inventory.he,1);assert.equal(game.state.grenades.filter(g=>g.owner===guest).length,0);
   }finally{await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await cdp.detach();}
+  await until(()=>guest.inventory.he===0,'release casts one cartridge');
+  assert.equal(game.state.grenades.filter(g=>g.owner===guest).length,1);
+  await desktop.waitForFunction(id=>reviewSession.view.state.grenades.some(g=>g.ownerId===id),guest.id);
   await until(()=>!game.state.grenades.some(g=>g.owner===guest),'authority detonated HE');
   await mobile.locator('#mobile-more').tap();await mobile.locator('[data-mobile-action=buy]').tap();
   const note=mobile.locator('#buy-note'),shop=mobile.locator('#shop');
   const heading=await note.boundingBox(),choices=await shop.boundingBox();
   assert(heading.height>0&&heading.y+heading.height<=choices.y+1);
-  assert.match(await note.textContent(),/nästa respawn/);
+  assert.match(await note.textContent(),/next respawn/);
   await mobile.locator('[data-item=cr4]').tap();await until(()=>guest.loadout==='cr4','mobile team rifle queued');
   await mobile.locator('#return-buy').tap();assert.equal(guest.weapon,'smg');assert.equal(guest.inventory.he,0);
+  await verifyRoomAudio({desktop,mobile,room,host,guest,until});
   for(const p of [desktop,mobile])assert(await p.locator('#fatal').isHidden());
   assert.deepEqual(errors,[]);
   console.log('PASS two rendered clients, eight BotControllers, desktop ADS/glass/equipment and simultaneous mobile movement/ADS/fire/HE.');
 }catch(error){
   for(const page of pages)console.error(await page.evaluate(()=>({fatal:document.querySelector('#fatal pre')?.textContent,room:document.querySelector('#room-notice')?.textContent,phase:document.querySelector('#room-title')?.textContent,status:document.querySelector('#network-status')?.textContent})).catch(()=>null));
+  for(const room of local.rooms)console.error('Authority',room.state.phase,room.metrics,[...room.seats.values()].map(({actor,enabled,lastFire,trigger})=>({
+    enabled,lastFire,trigger,life:actor.lifeId,alive:actor.alive,x:actor.x,z:actor.z,yaw:actor.yaw,pitch:actor.pitch,ammo:actor.inventory?.primary?.ammo,weapon:actor.weapon,aimAmount:actor.aimAmount})));
   console.error(errors);throw error;
 }finally{for(const b of browsers)await b.close();await local.close();}

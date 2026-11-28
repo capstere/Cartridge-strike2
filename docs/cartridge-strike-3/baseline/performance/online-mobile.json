@@ -1,0 +1,116 @@
+{
+  "scenario": "mobile",
+  "map": "compact-arena",
+  "physicalPhone": false,
+  "transport": "TLS loopback",
+  "date": "2026-11-27T10:33:44.867Z",
+  "revision": "3012a6378d75ead639d27e3ee5745b771f33f040",
+  "buildHash": "30f8f4af97b2b082f995196f06f498b132ba9bf8d303671ee8ab8d4b69590385",
+  "browser": "156.0.8078.79",
+  "viewport": {
+    "width": 915,
+    "height": 412
+  },
+  "warmupMs": 3000,
+  "windowMs": 10000,
+  "renderedClients": 1,
+  "sdkPeers": 1,
+  "signInToFormMs": 2178,
+  "enterToWaitingMs": 20382,
+  "selectMapMs": 2849,
+  "startToPlayableMs": 1486,
+  "controls": {
+    "distanceM": 0.64,
+    "ammoBefore": 30,
+    "ammoAfter": 28,
+    "team": "counterAnalysts"
+  },
+  "measurement": {
+    "client": {
+      "frameIntervalMs": {
+        "n": 486,
+        "min": 13.2,
+        "p50": 19.3,
+        "p95": 27.6,
+        "p99": 51.3,
+        "max": 89.8
+      },
+      "renderCpuMs": {
+        "n": 487,
+        "min": 9.6,
+        "p50": 12.3,
+        "p95": 17.3,
+        "p99": 34.6,
+        "max": 84.7
+      },
+      "draws": {
+        "n": 487,
+        "min": 208,
+        "p50": 208,
+        "p95": 208,
+        "p99": 210,
+        "max": 212
+      },
+      "triangles": {
+        "n": 487,
+        "min": 18624,
+        "p50": 18624,
+        "p95": 18624,
+        "p99": 18672,
+        "max": 18806
+      },
+      "pixelRatio": {
+        "n": 487,
+        "min": 0.55,
+        "p50": 0.55,
+        "p95": 0.62,
+        "p99": 0.62,
+        "max": 0.7
+      }
+    },
+    "server": {
+      "executionMs": {
+        "n": 604,
+        "min": 0.12,
+        "p50": 0.61,
+        "p95": 1.23,
+        "p99": 2.88,
+        "max": 10.49
+      },
+      "intervalMs": {
+        "n": 603,
+        "min": 0.34,
+        "p50": 16.16,
+        "p95": 22.14,
+        "p99": 32.32,
+        "max": 32.72
+      },
+      "executionOver33": 0,
+      "executionOver50": 0,
+      "intervalOver33": 0,
+      "rttMs": 0,
+      "tick": 2110
+    },
+    "resources": {
+      "projectId": "lvl-compact-arena",
+      "level": "Compact Arena",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        499,
+        224
+      ],
+      "quality": "low",
+      "geometries": 147,
+      "textures": 52,
+      "programs": 56,
+      "owners": 2,
+      "disposals": 1,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    }
+  },
+  "reconnectMap": "compact-arena",
+  "status": "PASS",
+  "resultReason": "time",
+  "finalAuthorityRooms": 0
+}

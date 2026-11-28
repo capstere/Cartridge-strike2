@@ -1,0 +1,666 @@
+{
+  "capture": {
+    "revision": "88d9893f0ce854fe5e4316a48d1209c20987d2ed",
+    "stages": [
+      {
+        "name": "source",
+        "start": "2026-11-27T15:05:37.935117+00:00",
+        "end": "2026-11-27T15:08:38.666003+00:00",
+        "exit": 0
+      },
+      {
+        "name": "package-meltem",
+        "start": "2026-11-27T15:08:38.666450+00:00",
+        "end": "2026-11-27T15:08:42.263653+00:00",
+        "exit": 0
+      },
+      {
+        "name": "package-embruns",
+        "start": "2026-11-27T15:08:42.264049+00:00",
+        "end": "2026-11-27T15:08:44.192540+00:00",
+        "exit": 0
+      },
+      {
+        "name": "package-tephra",
+        "start": "2026-11-27T15:08:44.192947+00:00",
+        "end": "2026-11-27T15:08:45.264642+00:00",
+        "exit": 0
+      }
+    ],
+    "success": true
+  },
+  "upstream": "31ca050d8ce59f4885c01a3237f68cdf186c9b60",
+  "sourceHtmlBlob": "8edb16dadf2c81c0e6009888a283734da1b72316",
+  "sourceHtmlSHA256": "db596cdfeb2a6b061343e0c5e2d8445d8e95619bf1a9b6ca10a8ff4025f55401",
+  "runtimeEngine": {
+    "donor": 147,
+    "target": 180
+  },
+  "maps": {
+    "meltem": {
+      "factories": {
+        "02yf-meltem": {
+          "file": "frontline/source/src/02yf-meltem.js",
+          "blob": "16f541c40afc96afc238d59a3985b615014ac4d4"
+        },
+        "02yb-cyclades": {
+          "file": "frontline/source/src/02yb-cyclades.js",
+          "blob": "ed36786a3e36eaf292b8d51b064fa8648b72da73"
+        },
+        "02yc-cyclades-bati": {
+          "file": "frontline/source/src/02yc-cyclades-bati.js",
+          "blob": "0103737b7b4876ca68cd803d2a11601b2522bf49"
+        },
+        "02yd-cyclades-edifices": {
+          "file": "frontline/source/src/02yd-cyclades-edifices.js",
+          "blob": "37293bbf7225c6f0efdc72685472a23ccd61aab6"
+        },
+        "02ye-cyclades-deco": {
+          "file": "frontline/source/src/02ye-cyclades-deco.js",
+          "blob": "ecb10ce67a4112ddbbd5b5b40a2119e4889b8f58"
+        }
+      },
+      "layer": {
+        "base": {
+          "groups": 302,
+          "triangles": 291400
+        },
+        "detail": {
+          "groups": 33,
+          "triangles": 29702
+        }
+      },
+      "volumes": 791,
+      "navNodes": 5376,
+      "navEdges": 31642,
+      "patrol": 76,
+      "environment": {
+        "geometryGzipSHA256": "61725a58597853df21c3a8d92d0b1ac10ab2ac61d31c3f4915292aa993fcd6e4",
+        "fabrics": 12,
+        "sails": 2,
+        "boats": 22,
+        "ponds": 8,
+        "waves": 8,
+        "vents": 0,
+        "far": 460,
+        "photograph": {
+          "source": "frontline/source/assets/sky/kloofendal_48d_lo.webp",
+          "blob": "0ba41b7efaf7a8a5823f193e1320fb1322d653e7",
+          "sha256": "6d09f73ad40ecb0cf19f628ee2bb69b2acf6b0311b0f7ee5280936bf548c98e7",
+          "license": "CC0 1.0, Poly Haven"
+        }
+      },
+      "assets": [
+        {
+          "file": "levels/meltem.json",
+          "bytes": 774660,
+          "sha256": "c25fcc797cc6f96e79e144c14a00332e65745ea7b8c835d21df6a5e2617b818f"
+        },
+        {
+          "file": "assets/fps/maps/meltem.webp",
+          "bytes": 243352,
+          "sha256": "b8615c919c93e004394f67afc84cfa8c48473c90348b5aebbc37ab4144daa3db"
+        },
+        {
+          "file": "assets/fps/maps/meltem/base.bin.gz",
+          "bytes": 2824199,
+          "sha256": "e78cf0ab3c54cf96d26dde134983ae2be4c37cd12041db301332e3bf7f270290"
+        },
+        {
+          "file": "assets/fps/maps/meltem/cyflag.webp",
+          "bytes": 2030,
+          "sha256": "488ff5055047a1833a34229b2a41ddee2d3e27675f748873bff27122a49549b1"
+        },
+        {
+          "file": "assets/fps/maps/meltem/cyfol.webp",
+          "bytes": 177824,
+          "sha256": "0d5516df30dff189bf4f53e06cb3cc430a397123907a475d6db851a14665f0da"
+        },
+        {
+          "file": "assets/fps/maps/meltem/detail.bin.gz",
+          "bytes": 246408,
+          "sha256": "9794c7aee0856763000321a09964826d3708adc65ba941c3421607a9006cb051"
+        },
+        {
+          "file": "assets/fps/maps/meltem/environment.json.gz",
+          "bytes": 768833,
+          "sha256": "61725a58597853df21c3a8d92d0b1ac10ab2ac61d31c3f4915292aa993fcd6e4"
+        },
+        {
+          "file": "assets/fps/maps/meltem/pavers.webp",
+          "bytes": 47794,
+          "sha256": "3bc8b1579f917d3b469ac4e850ab005e45552b8fdc205799532078741003406a"
+        },
+        {
+          "file": "assets/fps/maps/meltem/plaster.webp",
+          "bytes": 77812,
+          "sha256": "e9b6465c3b897e949f80cc65256539d31acfb52550a6845a06b8695e38faa28b"
+        },
+        {
+          "file": "assets/fps/maps/meltem/sea.mp3",
+          "bytes": 273285,
+          "sha256": "fc419be87608483c6e4ded692697b37d8bf1e0c9e66b7fc47cba841f22fbfc43"
+        },
+        {
+          "file": "assets/fps/maps/meltem/signs.webp",
+          "bytes": 80880,
+          "sha256": "79ee402e3c9735f698db635da120089cad53b55f45fbde4094842bb6f81470dd"
+        },
+        {
+          "file": "assets/fps/maps/meltem/sky.webp",
+          "bytes": 45252,
+          "sha256": "6d09f73ad40ecb0cf19f628ee2bb69b2acf6b0311b0f7ee5280936bf548c98e7"
+        },
+        {
+          "file": "assets/fps/maps/meltem/stone.webp",
+          "bytes": 54260,
+          "sha256": "5260b748c03bd10ee2f9817f24fe258318d2f27844c97f5449cbc303adb9907a"
+        }
+      ]
+    },
+    "embruns": {
+      "factories": {
+        "02u-embruns": {
+          "file": "frontline/source/src/02u-embruns.js",
+          "blob": "6d87b9a4ffa273045edf65dad853c4bddd03d9a8"
+        },
+        "02l-port": {
+          "file": "frontline/source/src/02l-port.js",
+          "blob": "a996fb0d9a47d3a1eb6fb485b9d92699c015357d"
+        }
+      },
+      "layer": {
+        "base": {
+          "groups": 305,
+          "triangles": 502749
+        },
+        "detail": {
+          "groups": 21,
+          "triangles": 30804
+        },
+        "coarse": {
+          "groups": 149,
+          "triangles": 238376
+        }
+      },
+      "volumes": 1656,
+      "navNodes": 6420,
+      "navEdges": 38610,
+      "patrol": 35,
+      "environment": {
+        "geometryGzipSHA256": "cc4068056f86a52f7964c128e2d52e468ec6f0c3b9eb03466e1c86d4a5fb70b0",
+        "fabrics": 6,
+        "sails": 0,
+        "boats": 14,
+        "ponds": 17,
+        "waves": 8,
+        "vents": 0,
+        "far": 460,
+        "photograph": {
+          "source": "frontline/source/assets/sky/kloofendal_misty_morning_lo.webp",
+          "blob": "77b834a53961bb96840cffdbcb1e58f4cad92c63",
+          "sha256": "0d80d18eb4c2e314c27c0ec895f7fa8c8d569bb4a0a63c1cd10671176eaf7583",
+          "license": "CC0 1.0, Poly Haven"
+        }
+      },
+      "assets": [
+        {
+          "file": "levels/embruns.json",
+          "bytes": 1458128,
+          "sha256": "b38f94b347eba2ef922380982024e49efb399268eabb7add9cbcc8c6977964d3"
+        },
+        {
+          "file": "assets/fps/maps/embruns.webp",
+          "bytes": 104908,
+          "sha256": "d178f95e2d72ff940eaf0efc29012f88fdbd3299f0c4c4c19371bd1014fd5d97"
+        },
+        {
+          "file": "assets/fps/maps/embruns/audio/a_bed.mp3",
+          "bytes": 355941,
+          "sha256": "0881d007ecbac5881325c9c01fc4c75da8fc3f1ed6f62ce5c8cebc15055aa97f"
+        },
+        {
+          "file": "assets/fps/maps/embruns/audio/a_buoybell-1.mp3",
+          "bytes": 26109,
+          "sha256": "874182102c21950008eee6d71ca290ccf71a2c8ebc7c14a3cebc9995388e94d1"
+        },
+        {
+          "file": "assets/fps/maps/embruns/audio/a_buoybell-2.mp3",
+          "bytes": 26073,
+          "sha256": "5bea8a445cd285442b80240bd2dfa80720d9065809ca7edf9980c6fe49838fa2"
+        },
+        {
+          "file": "assets/fps/maps/embruns/audio/a_creak-1.mp3",
+          "bytes": 18981,
+          "sha256": "201d0bfe105e27a744d484c13a3bfe6e4813d2eb1e649c5f05573081bf4a6b09"
+        },
+        {
+          "file": "assets/fps/maps/embruns/audio/a_creak-2.mp3",
+          "bytes": 26397,
+          "sha256": "f8b9257d68378df74978d4de24abcbc1eb2fff8f17ff960601082b51bdb3df81"
+        },
+        {
+          "file": "assets/fps/maps/embruns/audio/a_foghorn.mp3",
+          "bytes": 25209,
+          "sha256": "7e7b872b94ae3b463a28a53045806e6f946161eb183c5d6b4e3b3b02970c3341"
+        },
+        {
+          "file": "assets/fps/maps/embruns/audio/a_gull-1.mp3",
+          "bytes": 28485,
+          "sha256": "afaf9ff3fc8605278469d5cd19a29ad2ad24cef5d711d3cc2dd7c892bb1e172d"
+        },
+        {
+          "file": "assets/fps/maps/embruns/audio/a_gull-2.mp3",
+          "bytes": 29781,
+          "sha256": "9bd983072b1d4f83ceddea58c835c65fe14de13d013e3eb14324a9e48c6cdeb8"
+        },
+        {
+          "file": "assets/fps/maps/embruns/audio/a_gull-3.mp3",
+          "bytes": 34605,
+          "sha256": "303aa80eda63c485a7c1f5e72cdf47ef6da2ffaf46965353ec74337a9c2d1686"
+        },
+        {
+          "file": "assets/fps/maps/embruns/audio/a_gull-4.mp3",
+          "bytes": 34425,
+          "sha256": "f1288456ef6fbbd0053f596aac0fea4b4e700f906621dfd065379e77e1394d65"
+        },
+        {
+          "file": "assets/fps/maps/embruns/audio/a_rigging-1.mp3",
+          "bytes": 16317,
+          "sha256": "ba31d691196ac9b3cf39e587860143ec64184f6753ffb6c98c806c5b0c675a20"
+        },
+        {
+          "file": "assets/fps/maps/embruns/audio/a_rigging-2.mp3",
+          "bytes": 16785,
+          "sha256": "c9b7c6ddc1da0af26ac70ac8b6ad15c51a5d1a5b27191793130c1dd36b0c4c04"
+        },
+        {
+          "file": "assets/fps/maps/embruns/audio/a_waves.mp3",
+          "bytes": 43101,
+          "sha256": "2e52f2e91746218e91e4179498dc510676671f63d095113d6e727fa891cb7d20"
+        },
+        {
+          "file": "assets/fps/maps/embruns/base.bin.gz",
+          "bytes": 4547242,
+          "sha256": "2768ec110440e126784e20f6aad1b38f12d69272a7fa2a88a50b97be3afb5a68"
+        },
+        {
+          "file": "assets/fps/maps/embruns/coarse.bin.gz",
+          "bytes": 2507974,
+          "sha256": "8ce58435f48604002cc854de5cf93f95c6a76b7885043ec7232d7b3da7feb276"
+        },
+        {
+          "file": "assets/fps/maps/embruns/detail.bin.gz",
+          "bytes": 262738,
+          "sha256": "e9660001a7aa5c3cf06369d59971b3edff7ce8095f8be0f9b8ec6d54c69a6e34"
+        },
+        {
+          "file": "assets/fps/maps/embruns/environment.json.gz",
+          "bytes": 353724,
+          "sha256": "cc4068056f86a52f7964c128e2d52e468ec6f0c3b9eb03466e1c86d4a5fb70b0"
+        },
+        {
+          "file": "assets/fps/maps/embruns/lighting.json.gz",
+          "bytes": 85278,
+          "sha256": "d999c9d531ff8294a2be0366e8baca6028d8a27d15b6708f773bede49d112d11"
+        },
+        {
+          "file": "assets/fps/maps/embruns/signs.webp",
+          "bytes": 183712,
+          "sha256": "f993b2c989278d17d336cdec9a7e0c095b986c81c1363de4f380edae0fba95af"
+        },
+        {
+          "file": "assets/fps/maps/embruns/sky.webp",
+          "bytes": 10132,
+          "sha256": "0d80d18eb4c2e314c27c0ec895f7fa8c8d569bb4a0a63c1cd10671176eaf7583"
+        },
+        {
+          "file": "assets/fps/maps/embruns/ground.bin.gz",
+          "bytes": 959800,
+          "sha256": "1676f93ecef47bb9d0971e54c60aa87b4de81f6886ef0ec6f3512ee58958a0d9"
+        }
+      ],
+      "bakedLighting": {
+        "version": 1,
+        "id": "embruns",
+        "x": -60,
+        "z": -64,
+        "step": 1.5,
+        "nx": 70,
+        "nz": 86,
+        "ny": 12,
+        "range": 8,
+        "maximum": 5.010958316725728,
+        "lit": 5319,
+        "source": {
+          "nx": 208,
+          "nz": 256,
+          "ny": 36,
+          "nyL": 18,
+          "step": 0.5,
+          "lights": 23,
+          "lampGain": 4.8
+        }
+      },
+      "groundSurface": {
+        "version": 1,
+        "id": "embruns",
+        "width": 416,
+        "height": 560,
+        "side": 256,
+        "bounds": [
+          -52,
+          -70,
+          104,
+          140
+        ],
+        "scales": [
+          2.5,
+          2.6,
+          2.2,
+          4.5
+        ],
+        "dirt": [
+          0.62,
+          0.6,
+          0.57
+        ],
+        "layers": [
+          {
+            "layer": "concrete",
+            "sha256": "0f162e10f8c16276c130cf5136c3c1d70746eed9557cc02032ee5ed52a364046"
+          },
+          {
+            "layer": "pavers",
+            "sha256": "d87bcbc88e4ed244d2c38757dc71e9159e7ce1d3d6e5673947ff6673e1a8031d"
+          },
+          {
+            "layer": "cobble",
+            "sha256": "fc5ad6edee722642be2ebb94d123d049cb3aaedc4e6b2c1efab855f245b9a013"
+          },
+          {
+            "layer": "asphalt",
+            "sha256": "5de115441364a21677d55af284ace3598059c527cddf65ad59c04e052d96dcdf"
+          }
+        ],
+        "maskSHA256": "0262c79c61e95c59f73a449c16ba2157d2bb2aba0b9d5328fd24f4aa48897f21",
+        "bytes": 959800,
+        "sha256": "1676f93ecef47bb9d0971e54c60aa87b4de81f6886ef0ec6f3512ee58958a0d9",
+        "pinnedSourceBlobs": {
+          "02b-texlab.js": "0a7ff324c718f6a5dca5a2076a66d6703fb0ceaf",
+          "02c-materials.js": "302834b0aed24ffa9ec132f93ac45b219715d70f",
+          "01-core.js": "e054e504a82c3b24917b1b8c2c0d08a391389007",
+          "02u-embruns.js": "6d87b9a4ffa273045edf65dad853c4bddd03d9a8"
+        },
+        "runtime": "referenceScene → referenceGround → DataTexture mask and four-layer mipmapped sRGB DataArrayTexture",
+        "samplers": 2,
+        "gpuBytesIncludingTileMipmaps": 2329936
+      }
+    },
+    "tephra": {
+      "factories": {
+        "02yh-tephra": {
+          "file": "frontline/source/src/02yh-tephra.js",
+          "blob": "d4bd2b3b8f477f8244a82f909111bb19ff35e4a7"
+        },
+        "02yg-tephra-kit": {
+          "file": "frontline/source/src/02yg-tephra-kit.js",
+          "blob": "b394efcfc19d1bf4feb85153976a6c590b8a60bf"
+        }
+      },
+      "layer": {
+        "base": {
+          "groups": 265,
+          "triangles": 112492
+        },
+        "detail": {
+          "groups": 8,
+          "triangles": 8024
+        }
+      },
+      "volumes": 716,
+      "navNodes": 8855,
+      "navEdges": 57160,
+      "patrol": 23,
+      "environment": {
+        "geometryGzipSHA256": "58a9a4b9a406e463c885678de236905b9828a617fe7ecfcd900a3e8567ce8d8a",
+        "fabrics": 0,
+        "sails": 0,
+        "boats": 0,
+        "ponds": 0,
+        "waves": 0,
+        "vents": 9,
+        "far": 560,
+        "photograph": {
+          "source": "frontline/source/assets/sky/wasteland_feu_lo.webp",
+          "blob": "a12e5468f9fcaa3b9f64aa3d0ac2c52ade951a17",
+          "sha256": "c0ea9a9df7e3f3f708d04590b0f417de6d801e2cbb41194ac77813dfbafa8d7d",
+          "license": "CC0 1.0, Poly Haven"
+        }
+      },
+      "assets": [
+        {
+          "file": "levels/tephra.json",
+          "bytes": 1233818,
+          "sha256": "d393ca328b0907db8687557fb4b00d35dbfc7af2adc18e0741e2ee5ec7c90f1b"
+        },
+        {
+          "file": "assets/fps/maps/tephra.webp",
+          "bytes": 63140,
+          "sha256": "2c9b2ec4f7e62a1b267d7e7a00c0b7a59a7bafc045e9d6e172a206d3ce57f03b"
+        },
+        {
+          "file": "assets/fps/maps/tephra/ash.webp",
+          "bytes": 24692,
+          "sha256": "03945d04830fa59d3c92ecb17204f2fa53ce921e6238b0edfca0479586f70547"
+        },
+        {
+          "file": "assets/fps/maps/tephra/audio/a_bed.mp3",
+          "bytes": 276381,
+          "sha256": "7f38316e458e8ec12d1ba762704d1e96858d05a07d60681cbf6c93edd405e6c6"
+        },
+        {
+          "file": "assets/fps/maps/tephra/audio/a_boom-1.mp3",
+          "bytes": 50445,
+          "sha256": "2abc955868f68573562a10ae66f7401f9cb4afe3590ffaf9d802c98fca3c5dc7"
+        },
+        {
+          "file": "assets/fps/maps/tephra/audio/a_boom-2.mp3",
+          "bytes": 46629,
+          "sha256": "98550a8b7c9067ba570d5941bf2ca660f686ae70befbc5fe665c2f6f6def329c"
+        },
+        {
+          "file": "assets/fps/maps/tephra/audio/a_bubble.mp3",
+          "bytes": 51453,
+          "sha256": "18cfd181a8714572711cd453be54fb24107e1289b1e48fd577cb1fd1e8cfe2de"
+        },
+        {
+          "file": "assets/fps/maps/tephra/audio/a_gust-1.mp3",
+          "bytes": 17721,
+          "sha256": "c88e26e64ce4975e37d003d6ee9521a8bc58eee762931689b210f88974735bb3"
+        },
+        {
+          "file": "assets/fps/maps/tephra/audio/a_gust-2.mp3",
+          "bytes": 17289,
+          "sha256": "a800ab85a7cf32c2965d3b148ff1a90da6abeda95f941ce0202af5edde8aa1de"
+        },
+        {
+          "file": "assets/fps/maps/tephra/audio/a_hum.mp3",
+          "bytes": 52893,
+          "sha256": "c754f537d562064713f97552e860548c42bf52d3a7ffab2a1b12df409d76d24f"
+        },
+        {
+          "file": "assets/fps/maps/tephra/audio/a_steam.mp3",
+          "bytes": 72225,
+          "sha256": "c91228210320ad101dbe6eeb2c88ead3dad29b5a068ea4243945adf5ce64e6f2"
+        },
+        {
+          "file": "assets/fps/maps/tephra/audio/a_thunder-1.mp3",
+          "bytes": 24813,
+          "sha256": "2acd96a1220b80401425d66ac6c6e3e83ebfcba8854f8d58a6fa9402c260ab94"
+        },
+        {
+          "file": "assets/fps/maps/tephra/audio/a_thunder-2.mp3",
+          "bytes": 24813,
+          "sha256": "0c25d78d586521cfdb80cd58c47baad52ba691257309c495f15307900bc51ded"
+        },
+        {
+          "file": "assets/fps/maps/tephra/basalt.webp",
+          "bytes": 14560,
+          "sha256": "75d0a17ecb925a605eb3309f516281372d5ce4df734eb28fec71b5a9e3d3c07f"
+        },
+        {
+          "file": "assets/fps/maps/tephra/base.bin.gz",
+          "bytes": 1128828,
+          "sha256": "a170bdd335cc9a7b4493b4af62f6bd803713bf610c39604d85c2fbf6aad47431"
+        },
+        {
+          "file": "assets/fps/maps/tephra/detail.bin.gz",
+          "bytes": 59462,
+          "sha256": "dfcff33bf462304fb8ee230c2854f63ac458ab830311a4575926a6fd9d3fceb9"
+        },
+        {
+          "file": "assets/fps/maps/tephra/environment.json.gz",
+          "bytes": 845,
+          "sha256": "58a9a4b9a406e463c885678de236905b9828a617fe7ecfcd900a3e8567ce8d8a"
+        },
+        {
+          "file": "assets/fps/maps/tephra/lava.webp",
+          "bytes": 30542,
+          "sha256": "bbe678421fe9fb30ab7af22b358df2e65fbad790892e85d4cb31fcb317e7aa28"
+        },
+        {
+          "file": "assets/fps/maps/tephra/lighting.json.gz",
+          "bytes": 52553,
+          "sha256": "cf1010db14280f64bd3d726b62607a88402efcea1cec422a5995244399a06745"
+        },
+        {
+          "file": "assets/fps/maps/tephra/moss.webp",
+          "bytes": 39770,
+          "sha256": "9b69b937a7dfa4ad5fafea45cc8e53df8c4bdbd48d0602a4c14d79d1404b6284"
+        },
+        {
+          "file": "assets/fps/maps/tephra/panel.webp",
+          "bytes": 1566,
+          "sha256": "7ba0a12112ddaed370fd5928b5de36a395b2ac40451c4b43a1e25a9f9b9de725"
+        },
+        {
+          "file": "assets/fps/maps/tephra/signs.webp",
+          "bytes": 198486,
+          "sha256": "1cf6d830a4f72892d9132452e352d1706ce77035066c29391eaf65132f087de3"
+        },
+        {
+          "file": "assets/fps/maps/tephra/sky.webp",
+          "bytes": 15328,
+          "sha256": "c0ea9a9df7e3f3f708d04590b0f417de6d801e2cbb41194ac77813dfbafa8d7d"
+        },
+        {
+          "file": "assets/fps/maps/tephra/ground.bin.gz",
+          "bytes": 943846,
+          "sha256": "a6b4d3047690dd4ccf012a7c69192c8345ab231893b70c05335f2e5259d831b3"
+        }
+      ],
+      "bakedLighting": {
+        "version": 1,
+        "id": "tephra",
+        "x": -48,
+        "z": -78,
+        "step": 1.5,
+        "nx": 64,
+        "nz": 104,
+        "ny": 12,
+        "range": 8,
+        "maximum": 6.419036179467854,
+        "lit": 2451,
+        "source": {
+          "nx": 192,
+          "nz": 312,
+          "ny": 36,
+          "nyL": 18,
+          "step": 0.5,
+          "lights": 4,
+          "lampGain": 6.4
+        }
+      },
+      "groundSurface": {
+        "version": 1,
+        "id": "tephra",
+        "width": 550,
+        "height": 550,
+        "side": 256,
+        "bounds": [
+          -150,
+          -110,
+          220,
+          220
+        ],
+        "scales": [
+          2.6,
+          4.5,
+          2.6,
+          2.4
+        ],
+        "dirt": [
+          1.7,
+          1.62,
+          1.55
+        ],
+        "layers": [
+          {
+            "layer": "ash",
+            "sha256": "899f684d50ea456ea7dc25159b4e4f3c65efe320e882816c6d67a392eff9017a"
+          },
+          {
+            "layer": "asphalt",
+            "sha256": "5de115441364a21677d55af284ace3598059c527cddf65ad59c04e052d96dcdf"
+          },
+          {
+            "layer": "pavers",
+            "sha256": "d87bcbc88e4ed244d2c38757dc71e9159e7ce1d3d6e5673947ff6673e1a8031d"
+          },
+          {
+            "layer": "moss",
+            "sha256": "3272f02bc3376cf7e5f9a4af3866bd04ec5ca0d9c44b960f5162b2ad8b8cbf2d"
+          }
+        ],
+        "maskSHA256": "86cdf8d1ecfe7c344d827991fc97e86fb6e4600a0f31da646f1eacfd3cf7a478",
+        "bytes": 943846,
+        "sha256": "a6b4d3047690dd4ccf012a7c69192c8345ab231893b70c05335f2e5259d831b3",
+        "pinnedSourceBlobs": {
+          "02b-texlab.js": "0a7ff324c718f6a5dca5a2076a66d6703fb0ceaf",
+          "02c-materials.js": "302834b0aed24ffa9ec132f93ac45b219715d70f",
+          "01-core.js": "e054e504a82c3b24917b1b8c2c0d08a391389007",
+          "02yh-tephra.js": "d4bd2b3b8f477f8244a82f909111bb19ff35e4a7",
+          "02yg-tephra-kit.js": "b394efcfc19d1bf4feb85153976a6c590b8a60bf"
+        },
+        "runtime": "referenceScene → referenceGround → DataTexture mask and four-layer mipmapped sRGB DataArrayTexture",
+        "samplers": 2,
+        "gpuBytesIncludingTileMipmaps": 2608096
+      }
+    }
+  },
+  "originalLightCapture": {
+    "revision": "eb1f0e3f8b53a468b75b283a7ca00caa6eb8254b",
+    "stages": [
+      {
+        "stage": "lights",
+        "start": "2026-11-27T15:32:16.141831+00:00",
+        "end": "2026-11-27T15:33:55.444859+00:00",
+        "exit": 0
+      },
+      {
+        "stage": "embruns",
+        "start": "2026-11-27T15:33:55.445282+00:00",
+        "end": "2026-11-27T15:33:59.166178+00:00",
+        "exit": 0
+      },
+      {
+        "stage": "tephra",
+        "start": "2026-11-27T15:33:59.166568+00:00",
+        "end": "2026-11-27T15:33:59.795313+00:00",
+        "exit": 0
+      }
+    ],
+    "success": true
+  }
+}

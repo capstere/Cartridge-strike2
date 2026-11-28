@@ -177,7 +177,7 @@ for(const count of counts)for(const rtt of rtts){
     const enemy=[...p.room.state.actors.values()].find(b=>b.ready&&b.alive&&b.team!==a.team&&b.id.endsWith(a.id.split('-').at(-1)));
     const input=p.room.input({mode:'reliable',renderDelay:100});
     Object.assign(input.data,{lifeId:a.lifeId,controlEpoch:a.controlEpoch||0,sampleTick:p.room.state.tick,
-     fireId:++p.fire,reloadId:a.ammo===0?++p.reload:p.reload,forward:0,strafe:Math.sin(frames/120)*.15,
+     fireId:++p.fire,reloadId:a.ammo===0&&a.reserve>0?++p.reload:p.reload,forward:0,strafe:Math.sin(frames/120)*.15,
      yaw:enemy?Math.atan2(-(enemy.x-a.x),-(enemy.z-a.z)):a.yaw,pitch:0,jump:false,crouch:false,sneak:false,aim:ai&&a.weapon!=='he',fire:a.weapon==='he'?Math.floor(frames/12)%2===1:!!enemy&&(!classic||Math.floor(frames/8)%2===0)});
     input.send();maxPending=Math.max(maxPending,input.pendingCount);
    }

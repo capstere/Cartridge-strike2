@@ -1,3 +1,6 @@
+import {FFA,DOMINATION,DOMINATION_LIMIT,simulationMode,modeWinner,rankFFA,modeReachedTarget,resetModeObjectives} from '../src/fps/match-modes.mjs';
+import {createBonusState,clearActorBonus} from '../src/fps/bonuses.mjs';
+import {resetRush} from '../src/fps/rush.mjs';
 import {BOT_DIFFICULTY_IDS,CLASSIC_NETWORK_CONFIG,MATCH_DEFAULTS,NETWORK_CONFIG,RECONNECT_SECONDS} from '../shared/multiplayer/rules.mjs';
 import {prepareNetworkWorld} from '../shared/multiplayer/world.mjs';
 import {onlinePrimaries,respawnActor} from '../src/fps/action-rules.mjs';
@@ -26,7 +29,7 @@ export class MatchLifecycle {
   get state(){return this.room.state;}
   get now(){return this.room.clock.elapsedTime;}
   get tdmDuration(){return this.settings.durationSeconds??this.state.tdmMinutes*60;}
-  get tdmScoreTarget(){return this.settings.scoreTarget??this.state.tdmKills;}
+  get tdmScoreTarget(){return this.settings.scoreTarget??(this.state.mode===DOMINATION?DOMINATION_LIMIT:this.state.tdmKills);}
   get lobbySeconds(){return this.state.durationSeconds;}
   setModeLimits(){
     const r=this.room;
@@ -36,7 +39,9 @@ export class MatchLifecycle {
   }
   eligible(){
     const connected=[...this.room.seats.values()].filter(s=>s.connected);
-    return connected.length>0&&connected.every(s=>s.ready&&s.playerReady)&&teams.every(team=>connected.some(s=>s.actor?.team===team)||[...this.room.bots.values()].some(s=>s.actor.team===team));
+    if(!connected.length||!connected.every(s=>s.ready&&s.playerReady))return false;
+    if(this.state.mode===FFA)return connected.length+this.room.bots.size>=2;
+    return teams.every(team=>connected.some(s=>s.actor?.team===team)||[...this.room.bots.values()].some(s=>s.actor.team===team));
   }
   ownership(){
     const r=this.room;
@@ -65,7 +70,7 @@ export class MatchLifecycle {
 
     // The same paused game, map and sessions continue into the selected ruleset.
     r.classic=mode==='classic';state.mode=mode;
-    Object.assign(g.config,r.classic?CLASSIC_NETWORK_CONFIG:NETWORK_CONFIG,{difficulty:state.botDifficulty,
+    Object.assign(g.config,r.classic?CLASSIC_NETWORK_CONFIG:NETWORK_CONFIG,{mode:simulationMode(mode),difficulty:state.botDifficulty,
       zombies:state.zombiesEnabled,danceman:state.dancemanEnabled,friendlyFire:state.friendlyFire});
     prepareNetworkWorld(g.world);
     g.state.resultDeadline=0;
@@ -82,13 +87,18 @@ export class MatchLifecycle {
   command(client,m){
     const r=this.room,s=r.seats.get(client.sessionId),state=this.state;
     const keys=m?.kind==='botDifficulty'?['kind','matchId','controlEpoch','botDifficulty','serial']:
+      m?.kind==='class'?['kind','matchId','controlEpoch','profile']:
       m?.kind==='settings'?['kind','matchId','controlEpoch',...lobbySettingKeys]:
       m?.kind==='residents'?['kind','matchId','controlEpoch','zombies','danceman']:
       ['kind','matchId','controlEpoch','ready','team','primary','zombies','danceman','friendlyFire'];
     if(r.changingMap||!s?.ready||!s.connected||s.client!==client||(r.familyRoom&&s.revoked)||!m||m.matchId!==state.matchId||m.controlEpoch!==s.epoch||
       Object.keys(m).some(k=>!keys.includes(k)))return;
     const lobbyHost=state.phase==='waiting'&&state.ownerId===client.sessionId;
-    if(!r.classic&&m.kind==='loadout'&&['waiting','active'].includes(state.phase)&&onlinePrimaries(s.actor.team).includes(m.primary))s.actor.loadout=m.primary;
+    if(m.kind==='class'&&['waiting','active'].includes(state.phase)){
+      r.applySeatClass(s,s.actor,m.profile);r.sendClass(s);
+    }else if(!r.classic&&m.kind==='loadout'&&['waiting','active'].includes(state.phase)&&onlinePrimaries(s.actor.team).includes(m.primary)){
+      s.actor.loadout=m.primary;s.loadout=m.primary;s.arsenalProfile=null;s.actor.arsenalClass=null;r.sendClass(s);
+    }
     else if(m.kind==='ready'&&state.phase==='waiting'&&typeof m.ready==='boolean')s.playerReady=m.ready;
     else if(m.kind==='team'&&state.phase==='waiting')r.changeTeam(client,m.team);
     else if(m.kind==='settings'){
@@ -124,9 +134,12 @@ export class MatchLifecycle {
       s.lastBotDifficultySerial=m.serial;
       state.botDifficulty=m.botDifficulty;
     }else if(m.kind==='start'&&state.phase==='waiting'){
-      if(state.ownerId!==client.sessionId)throw Error('Bara rumsägaren kan starta matchen.');
-      if(!this.eligible())throw Error('Alla anslutna spelare måste vara redo, med minst en spelare i varje lag.');
-      this.resetActors();state.phase='countdown';this.deadline=this.now+this.settings.countdownSeconds*1000;
+      if(state.ownerId!==client.sessionId)throw Error('Only the room host can start the match.');
+      if(!this.eligible())throw Error(state.mode===FFA?'Free-for-All needs two combatants and all connected players ready.':
+        'Both teams need a player, and all connected players must be ready.');
+      this.resetActors();
+      this.startingSeats=[...r.seats.values()].filter(seat=>seat.connected);
+      state.phase='countdown';state.remainingSeconds=this.settings.countdownSeconds;this.deadline=this.now+this.settings.countdownSeconds*1000;
     }else if(m.kind==='rematch'&&state.phase==='results'){
       state.matchId++;state.phase='waiting';state.winner=state.reason=state.results='';state.resultsAtMs=0;
       this.resetActors();
@@ -143,14 +156,16 @@ export class MatchLifecycle {
   }
   resetActors(){
     const r=this.room,g=r.sim.game;
+    g.state.matchId=r.state.matchId;
+    for(const a of g.actors){a.bonus=createBonusState();clearActorBonus(a);}
     if(r.classic){this.resetRound();return;}
-    g.state.paused=true;g.state.score={analysts:0,counterAnalysts:0};
+    g.state.paused=true;g.state.score={analysts:0,counterAnalysts:0};resetModeObjectives(g);
     g.events=[];g.soundEvents=[];g.pendingDamage=[];g.state.projectiles=[];g.state.smokes=[];g.state.grenades=[];g.state.drops=[];
     r.state.brokenGlass.clear();prepareNetworkWorld(g.world);g.tacticalContacts=[];g.state.combatFlow.firstKill=false;this.absent.clear();
     // Remove every old body before selecting the new safe spawn positions.
     for(const a of g.actors)a.alive=false;
     for(const seat of r.participants()){
-      const sid=seat.client?.sessionId;if(sid)r.inputs.get(sid).clear();seat.aim=seat.trigger=false;seat.lastSelect=0;seat.enabled=false;
+      const sid=seat.client?.sessionId;if(sid)r.inputs.get(sid).clear();seat.holdThrow=seat.aim=seat.trigger=false;seat.lastSelect=0;seat.enabled=false;
       seat.lastFire=seat.lastReload=seat.lastSampleTick=seat.lastShotStamp=0;
       if(!seat.ready)continue;
       seat.epoch++;seat.actor.controlEpoch=seat.epoch;
@@ -167,8 +182,21 @@ export class MatchLifecycle {
     this.ownership();const s=this.state;
     if(this.continuous)return;
     if(s.phase==='countdown'){
-      if(!this.eligible()){s.phase='waiting';s.remainingSeconds=this.lobbySeconds;}
+      // New reservations may load during deployment. Only the ready cohort that
+      // launched the match participates in the cancellation decision.
+      if(this.startingSeats.some(seat=>!seat.connected||!seat.playerReady||!this.room.seats.has(seat.client.sessionId))){
+        s.phase='waiting';s.remainingSeconds=this.lobbySeconds;this.startingSeats=null;
+      }
       else if(this.now>=this.deadline){
+        // Inputs received during the hold must not become a queued first shot or step.
+        for(const client of this.room.clients)this.room.inputs.get(client.sessionId).clear();
+        this.startingSeats=null;
+        if(!this.room.classic){
+          // The deployment hold has already satisfied initial weapon readiness.
+          // Ordinary mid-match respawns retain their own short draw delay.
+          for(const actor of this.room.sim.game.actors)actor.nextShot=this.room.sim.game.state.time;
+        }
+        this.room.beginAccountMatch?.();
         s.phase='active';this.deadline=this.now+this.tdmDuration*1000;
         this.room.sim.game.state.paused=false;
         if(!this.room.classic)this.room.sim.game.world.networkDynamics.elevatorOpenAt=this.room.sim.game.state.time;
@@ -176,14 +204,22 @@ export class MatchLifecycle {
     }
     if(s.phase==='active'){
       if(!this.room.classic&&this.now>=this.deadline){this.finish('time');return;}
+      if(s.mode===FFA){
+        const present=[...this.room.participants()].filter(seat=>seat.ready&&seat.connected);
+        if(present.length>=2)this.absent.delete(FFA);
+        else if(!this.absent.has(FFA))this.absent.set(FFA,this.now);
+        else if(this.now-this.absent.get(FFA)>=RECONNECT_SECONDS*1000)this.finish('forfeit',present[0]?.id??'draw');
+      }else this.checkTeamForfeit();
+    }
+    if(['active','countdown'].includes(s.phase))s.remainingSeconds=Math.max(0,(this.deadline-this.now)/1000);
+  }
+  checkTeamForfeit(){
       for(const team of teams){
         const present=[...this.room.participants()].some(seat=>seat.ready&&seat.connected&&seat.actor.team===team);
         if(present)this.absent.delete(team);else if(!this.absent.has(team))this.absent.set(team,this.now);
       }
       const gone=teams.filter(team=>this.absent.has(team)&&this.now-this.absent.get(team)>=RECONNECT_SECONDS*1000);
       if(gone.length)this.finish('forfeit',gone.length===2?'draw':teams.find(t=>t!==gone[0]));
-    }
-    if(['active','countdown'].includes(s.phase))s.remainingSeconds=Math.max(0,(this.deadline-this.now)/1000);
   }
   afterTick(){
     if(this.room.classic){
@@ -191,16 +227,20 @@ export class MatchLifecycle {
       if(this.state.phase==='active'&&g.phase==='match')this.finish('rounds',g.state.result.winner);
       return;
     }
-    if(!this.continuous&&this.state.phase==='active'&&teams.some(t=>this.room.sim.game.state.score[t]>=this.tdmScoreTarget))this.finish('score');
+    const g=this.room.sim.game;
+    if(!this.continuous&&this.state.phase==='active'&&modeReachedTarget(this.state.mode,g.actors,g.state.score,this.state.scoreTarget))this.finish('score');
   }
   finish(reason,forced){
     if(this.state.phase!=='active')return;
     const r=this.room,g=r.sim.game,score=g.state.score;
     // Resolve after the complete damage batch: simultaneous final kills can draw.
-    const winner=forced||(score.analysts===score.counterAnalysts?'draw':score.analysts>score.counterAnalysts?'analysts':'counterAnalysts');
+    const winner=forced||modeWinner(this.state.mode,g.actors,score);
+    const players=this.state.mode===FFA?rankFFA(g.actors):g.actors;
     Object.assign(this.state,{phase:'results',winner,reason,remainingSeconds:0,resultsAtMs:this.now,
-      results:JSON.stringify({matchId:this.state.matchId,winner,reason,score:{...score},players:g.actors.map(a=>({id:a.id,name:a.name,team:a.team,kills:a.kills,deaths:a.deaths}))})});
-    g.state.paused=true;g.state.projectiles=[];
-    for(const [sid,seat] of r.seats){seat.enabled=false;r.inputs.get(sid).clear();}
+      results:JSON.stringify({matchId:this.state.matchId,winner,reason,score:{...score},players:players.map(a=>({id:a.id,name:a.name,team:a.team,kills:a.kills,deaths:a.deaths,points:a.combat?.points??0,captures:a.combat?.captures??0}))})});
+    r.finishAccountMatch?.(winner);
+    g.state.paused=true;g.state.projectiles=[];g.state.grenades=[];g.state.smokes=[];g.state.drops=[];
+    for(const actor of g.actors){clearActorBonus(actor);resetRush(actor);actor.reloadUntil=actor.reloadStartedAt=actor.reloadDuration=0;actor.cartridge=null;actor.waitTriggerRelease=false;}
+    for(const [sid,seat] of r.seats){seat.enabled=false;seat.holdThrow=false;r.inputs.get(sid).clear();}
   }
 }

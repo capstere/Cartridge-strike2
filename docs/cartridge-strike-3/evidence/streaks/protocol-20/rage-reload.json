@@ -1,0 +1,2212 @@
+{
+  "ordinary": {
+    "accepted": {
+      "start": 26.56666666666644,
+      "duration": 1.8,
+      "end": 28.36666666666644
+    },
+    "owner": {
+      "contactFrame": {
+        "outfit": "shotgun",
+        "elapsed": 0.39999999999997726,
+        "fraction": 0.22222222222220958,
+        "visible": true,
+        "magazineMeters": 0.06815165372256371,
+        "thirdPersonFraction": null,
+        "width": 470,
+        "height": 264
+      },
+      "frames": [
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.04999999999999716,
+          "fraction": 0.027777777777776198,
+          "visible": true,
+          "magazineMeters": 0,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.29999999999998295,
+          "fraction": 0.1666666666666572,
+          "visible": true,
+          "magazineMeters": 0.012783224601747302,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.3065999999761395,
+          "fraction": 0.1703333333200775,
+          "visible": true,
+          "magazineMeters": 0.015307187872367515,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.3499999999999801,
+          "fraction": 0.19444444444443337,
+          "visible": true,
+          "magazineMeters": 0.03638388139590216,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.3597999999522976,
+          "fraction": 0.19988888886238756,
+          "visible": true,
+          "magazineMeters": 0.042075566182546764,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.37319999995229836,
+          "fraction": 0.2073333333068324,
+          "visible": true,
+          "magazineMeters": 0.05031853540911755,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.39999999999997726,
+          "fraction": 0.22222222222220958,
+          "visible": true,
+          "magazineMeters": 0.06815165372256371,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.4499999999999744,
+          "fraction": 0.2499999999999858,
+          "visible": true,
+          "magazineMeters": 0.10462589940694178,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.48333333333330586,
+          "fraction": 0.2685185185185032,
+          "visible": true,
+          "magazineMeters": 0.1298478115188189,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.5053333333094621,
+          "fraction": 0.2807407407274789,
+          "visible": true,
+          "magazineMeters": 0.14629955059384317,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.5372333333809856,
+          "fraction": 0.2984629629894364,
+          "visible": true,
+          "magazineMeters": 0.16918745628787843,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.5539333333809893,
+          "fraction": 0.30774074076721625,
+          "visible": true,
+          "magazineMeters": 0.1804486195685817,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.5668333333809912,
+          "fraction": 0.31490740743388396,
+          "visible": true,
+          "magazineMeters": 0.18869984439722293,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.5833333333333002,
+          "fraction": 0.32407407407405564,
+          "visible": true,
+          "magazineMeters": 0.19858200975028303,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.5902333333571441,
+          "fraction": 0.3279074074206356,
+          "visible": true,
+          "magazineMeters": 0.2024639312800187,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.6069333333571407,
+          "fraction": 0.3371851851984115,
+          "visible": true,
+          "magazineMeters": 0.2111746245798261,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.6333333333332973,
+          "fraction": 0.3518518518518318,
+          "visible": true,
+          "magazineMeters": 0.22270560802863879,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.6430333333571383,
+          "fraction": 0.3572407407539657,
+          "visible": true,
+          "magazineMeters": 0.22616794155949538,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.6765333333571384,
+          "fraction": 0.37585185186507686,
+          "visible": true,
+          "magazineMeters": 0.2344601202586521,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.6868333332856089,
+          "fraction": 0.3815740740475605,
+          "visible": true,
+          "magazineMeters": 0.2357556725542984,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.7035333332856126,
+          "fraction": 0.3908518518253403,
+          "visible": true,
+          "magazineMeters": 0.23648129201323248,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.7499999999999574,
+          "fraction": 0.416666666666643,
+          "visible": true,
+          "magazineMeters": 0.23331896863000756,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.7623999999522724,
+          "fraction": 0.4235555555290402,
+          "visible": true,
+          "magazineMeters": 0.23153393540784947,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.7954999999522698,
+          "fraction": 0.4419444444179277,
+          "visible": true,
+          "magazineMeters": 0.22501661445946533,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.7999999999999545,
+          "fraction": 0.44444444444441916,
+          "visible": true,
+          "magazineMeters": 0.22394525961548747,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.8140999999761114,
+          "fraction": 0.4522777777645063,
+          "visible": true,
+          "magazineMeters": 0.2203196479764015,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.8308999999761113,
+          "fraction": 0.4616111110978396,
+          "visible": true,
+          "magazineMeters": 0.215493027423043,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.8575999999522708,
+          "fraction": 0.4764444444179282,
+          "visible": true,
+          "magazineMeters": 0.20677985311684755,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.8999999999999488,
+          "fraction": 0.4999999999999716,
+          "visible": true,
+          "magazineMeters": 0.19065801757502884,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.9040999999761041,
+          "fraction": 0.5022777777645023,
+          "visible": true,
+          "magazineMeters": 0.18896944504350952,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.949999999999946,
+          "fraction": 0.5277777777777478,
+          "visible": true,
+          "magazineMeters": 0.16879523546748443,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.9697000000476308,
+          "fraction": 0.5387222222486837,
+          "visible": true,
+          "magazineMeters": 0.15954435050050744,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.9999999999999432,
+          "fraction": 0.5555555555555239,
+          "visible": true,
+          "magazineMeters": 0.1448201799139929,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.0057999999761016,
+          "fraction": 0.5587777777645009,
+          "visible": true,
+          "magazineMeters": 0.14194916357392842,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.0218999999760996,
+          "fraction": 0.5677222222089442,
+          "visible": true,
+          "magazineMeters": 0.13391632508267234,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.0499999999999403,
+          "fraction": 0.5833333333333002,
+          "visible": true,
+          "magazineMeters": 0.11975822637375111,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.0537999999522576,
+          "fraction": 0.5854444444179209,
+          "visible": true,
+          "magazineMeters": 0.11783808932573346,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.0999999999999375,
+          "fraction": 0.6111111111110764,
+          "visible": true,
+          "magazineMeters": 0.09463475030595621,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.1126999999999363,
+          "fraction": 0.6181666666666312,
+          "visible": true,
+          "magazineMeters": 0.08836628159603069,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.1499999999999346,
+          "fraction": 0.6388888888888525,
+          "visible": true,
+          "magazineMeters": 0.07047512716980553,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.15249999997609,
+          "fraction": 0.6402777777644945,
+          "visible": true,
+          "magazineMeters": 0.06931083983583354,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.1689999999760907,
+          "fraction": 0.6494444444311614,
+          "visible": true,
+          "magazineMeters": 0.06176048302749593,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.185899999976094,
+          "fraction": 0.6588333333200522,
+          "visible": true,
+          "magazineMeters": 0.054295951462977374,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.1999999999999318,
+          "fraction": 0.6666666666666288,
+          "visible": true,
+          "magazineMeters": 0.048304732424495817,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.2116999999760942,
+          "fraction": 0.6731666666533856,
+          "visible": true,
+          "magazineMeters": 0.04351430256831534,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.2283999999760908,
+          "fraction": 0.6824444444311616,
+          "visible": true,
+          "magazineMeters": 0.036988635360372286,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.249999999999929,
+          "fraction": 0.694444444444405,
+          "visible": true,
+          "magazineMeters": 0.029148941529224388,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.2578000000237672,
+          "fraction": 0.6987777777909818,
+          "visible": true,
+          "magazineMeters": 0.026498904025999644,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.3077999999522412,
+          "fraction": 0.7265555555290228,
+          "visible": true,
+          "magazineMeters": 0.012105785285952032,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.3243999999522416,
+          "fraction": 0.7357777777512453,
+          "visible": true,
+          "magazineMeters": 0.008432165725114446,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.3407999999522424,
+          "fraction": 0.7448888888623569,
+          "visible": true,
+          "magazineMeters": 0.005405094138931776,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.3647000000237632,
+          "fraction": 0.7581666666798684,
+          "visible": true,
+          "magazineMeters": 0.0021405047819074187,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.3816000000237665,
+          "fraction": 0.7675555555687591,
+          "visible": true,
+          "magazineMeters": 0.0007069811419204571,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.3999999999999204,
+          "fraction": 0.7777777777777335,
+          "visible": true,
+          "magazineMeters": 0.0000229465356104805,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.4146999999522372,
+          "fraction": 0.7859444444179096,
+          "visible": true,
+          "magazineMeters": 0,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.4499999999999176,
+          "fraction": 0.8055555555555097,
+          "visible": true,
+          "magazineMeters": 0,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.4578999999522324,
+          "fraction": 0.8099444444179069,
+          "visible": true,
+          "magazineMeters": 0,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.4745999999522361,
+          "fraction": 0.8192222221956867,
+          "visible": true,
+          "magazineMeters": 0,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.4999999999999147,
+          "fraction": 0.833333333333286,
+          "visible": true,
+          "magazineMeters": 0,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.5114000000237588,
+          "fraction": 0.839666666679866,
+          "visible": true,
+          "magazineMeters": 0,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.5666666666665776,
+          "fraction": 0.8703703703703208,
+          "visible": true,
+          "magazineMeters": 0,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.599999999999909,
+          "fraction": 0.8888888888888383,
+          "visible": true,
+          "magazineMeters": 0,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.603700000047592,
+          "fraction": 0.8909444444708845,
+          "visible": true,
+          "magazineMeters": 0,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.666666666666572,
+          "fraction": 0.9259259259258733,
+          "visible": true,
+          "magazineMeters": 0,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.6831666666665726,
+          "fraction": 0.9350925925925403,
+          "visible": true,
+          "magazineMeters": 0,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.6998666666665692,
+          "fraction": 0.9443703703703161,
+          "visible": true,
+          "magazineMeters": 0,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.6999999999999034,
+          "fraction": 0.9444444444443907,
+          "visible": true,
+          "magazineMeters": 0,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.7066999999760633,
+          "fraction": 0.9481666666533685,
+          "visible": true,
+          "magazineMeters": 0,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.7237999999760625,
+          "fraction": 0.957666666653368,
+          "visible": true,
+          "magazineMeters": 0,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.7666666666665662,
+          "fraction": 0.9814814814814257,
+          "visible": true,
+          "magazineMeters": 0,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.778966666714247,
+          "fraction": 0.9883148148412483,
+          "visible": true,
+          "magazineMeters": 0,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.796366666714249,
+          "fraction": 0.9979814815079161,
+          "visible": true,
+          "magazineMeters": 0,
+          "thirdPersonFraction": null
+        }
+      ],
+      "cues": [
+        {
+          "take": "magout_smg",
+          "rate": 1,
+          "elapsed": 0.39999999999997726,
+          "seconds": 0.15110416666666668,
+          "sampleRate": 48000,
+          "listener": "analysts-0"
+        },
+        {
+          "take": "magin_smg",
+          "rate": 1,
+          "elapsed": 1.3999999999999204,
+          "seconds": 0.16610416666666666,
+          "sampleRate": 48000,
+          "listener": "analysts-0"
+        }
+      ],
+      "completion": {
+        "time": 28.388633333333004,
+        "duration": 0,
+        "until": 0
+      }
+    },
+    "observer": {
+      "contactFrame": {
+        "outfit": "shotgun",
+        "elapsed": 0.39999999999997726,
+        "fraction": 0.22222222222220958,
+        "visible": true,
+        "magazineMeters": null,
+        "thirdPersonFraction": 0.22222222222220958,
+        "width": 234,
+        "height": 132
+      },
+      "frames": [
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.19999999999998863,
+          "fraction": 0.11111111111110479,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.11111111111110479
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.2499999999999858,
+          "fraction": 0.13888888888888098,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.13888888888888098
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.29999999999998295,
+          "fraction": 0.1666666666666572,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.1666666666666572
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.3499999999999801,
+          "fraction": 0.19444444444443337,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.19444444444443337
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.39999999999997726,
+          "fraction": 0.22222222222220958,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.22222222222220958
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.4499999999999744,
+          "fraction": 0.2499999999999858,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.2499999999999858
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.48333333333330586,
+          "fraction": 0.2685185185185032,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.2685185185185032
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.533333333333303,
+          "fraction": 0.29629629629627946,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.29629629629627946
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.5411333333571413,
+          "fraction": 0.3006296296428563,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.3006296296428563
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.5590333333571422,
+          "fraction": 0.31057407408730126,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.31057407408730126
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.5833333333333002,
+          "fraction": 0.32407407407405564,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.32407407407405564
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.5965333333809824,
+          "fraction": 0.3314074074338791,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.3314074074338791
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.6333333333332973,
+          "fraction": 0.3518518518518318,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.3518518518518318
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.6333333333332973,
+          "fraction": 0.3518518518518318,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.3518518518518318
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.6493333333332956,
+          "fraction": 0.36074074074071977,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.36074074074071977
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.6833333333332945,
+          "fraction": 0.37962962962960806,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.37962962962960806
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.7499999999999574,
+          "fraction": 0.416666666666643,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.416666666666643
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.7534000000238024,
+          "fraction": 0.4185555555687791,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.4185555555687791
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.7698000000237961,
+          "fraction": 0.42766666667988673,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.4276666666798868
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.7999999999999545,
+          "fraction": 0.44444444444441916,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.44444444444441916
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.8066000000714837,
+          "fraction": 0.44811111115082425,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.44811111115082425
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.8233000000714803,
+          "fraction": 0.45738888892860013,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.4573888889286001
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.8400000000714769,
+          "fraction": 0.466666666706376,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.466666666706376
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.8499999999999517,
+          "fraction": 0.47222222222219534,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.47222222222219534
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.8601000000237953,
+          "fraction": 0.4778333333465529,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.477833333346553
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.8999999999999488,
+          "fraction": 0.4999999999999716,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.4999999999999716
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.9105000000237915,
+          "fraction": 0.5058333333465508,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.5058333333465508
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.926800000023789,
+          "fraction": 0.514888888902105,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.514888888902105
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.949999999999946,
+          "fraction": 0.5277777777777478,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.5277777777777478
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.9655999999999452,
+          "fraction": 0.536444444444414,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.536444444444414
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.9824999999999449,
+          "fraction": 0.5458333333333026,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.5458333333333026
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.9999999999999432,
+          "fraction": 0.5555555555555239,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.5555555555555239
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.0289000000953124,
+          "fraction": 0.5716111111640624,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.5716111111640624
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.0504999999999391,
+          "fraction": 0.5836111111110773,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.5836111111110773
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.0672999999999426,
+          "fraction": 0.5929444444444125,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.5929444444444125
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.0999999999999375,
+          "fraction": 0.6111111111110764,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.6111111111110763
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.1030000000237798,
+          "fraction": 0.6127777777909887,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.6127777777909887
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.153100000047619,
+          "fraction": 0.6406111111375661,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.6406111111375661
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.1698000000476156,
+          "fraction": 0.649888888915342,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.649888888915342
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.18620000004762,
+          "fraction": 0.6590000000264555,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.6590000000264555
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.1999999999999318,
+          "fraction": 0.6666666666666288,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.6666666666666288
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.211500000071453,
+          "fraction": 0.6730555555952517,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.6730555555952517
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.249999999999929,
+          "fraction": 0.694444444444405,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.694444444444405
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.299999999999926,
+          "fraction": 0.7222222222221811,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.7222222222221811
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.3154000000237716,
+          "fraction": 0.7307777777909842,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.7307777777909842
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.3317000000237655,
+          "fraction": 0.7398333333465364,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.7398333333465364
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.3499999999999233,
+          "fraction": 0.7499999999999574,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.7499999999999574
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.3596000000714525,
+          "fraction": 0.7553333333730292,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.7553333333730292
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.3762000000714494,
+          "fraction": 0.7645555555952497,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.7645555555952497
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.3999999999999204,
+          "fraction": 0.7777777777777335,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.7777777777777335
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.4049000000476006,
+          "fraction": 0.7805000000264448,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.7805000000264448
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.4499999999999176,
+          "fraction": 0.8055555555555097,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.8055555555555097
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.4682000000952868,
+          "fraction": 0.8156666667196038,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.8156666667196038
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.4999999999999147,
+          "fraction": 0.833333333333286,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.833333333333286
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.5107000000714415,
+          "fraction": 0.8392777778174675,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.8392777778174674
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.5273000000714418,
+          "fraction": 0.8485000000396898,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.84850000003969
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.5666666666665776,
+          "fraction": 0.8703703703703208,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.8703703703703208
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.584166666714264,
+          "fraction": 0.8800925926190355,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.8800925926190355
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.602100000071438,
+          "fraction": 0.8900555555952433,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.8900555555952433
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.6188000000714347,
+          "fraction": 0.8993333333730192,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.8993333333730192
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.6362000000714367,
+          "fraction": 0.9090000000396871,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.9090000000396871
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.666666666666572,
+          "fraction": 0.9259259259258733,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.9259259259258733
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.6804666666904104,
+          "fraction": 0.9335925926057835,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.9335925926057835
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.6999999999999034,
+          "fraction": 0.9444444444443907,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.9444444444443907
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.7078999999999063,
+          "fraction": 0.9488333333332812,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.9488333333332812
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.7666666666665662,
+          "fraction": 0.9814814814814257,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.9814814814814257
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.7683666667619349,
+          "fraction": 0.9824259259788527,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.9824259259788528
+        }
+      ],
+      "cues": [
+        {
+          "take": "magout_smg",
+          "rate": 1,
+          "elapsed": 0.39999999999997726,
+          "seconds": 0.15110416666666668,
+          "sampleRate": 48000,
+          "listener": "counterAnalysts-0"
+        },
+        {
+          "take": "magin_smg",
+          "rate": 1,
+          "elapsed": 1.3999999999999204,
+          "seconds": 0.16610416666666666,
+          "sampleRate": 48000,
+          "listener": "counterAnalysts-0"
+        }
+      ],
+      "completion": {
+        "time": 28.36893333342837,
+        "duration": 1.8,
+        "until": 28.36666666666644
+      }
+    }
+  },
+  "rage": {
+    "accepted": {
+      "start": 28.799999999999645,
+      "duration": 1.35,
+      "end": 30.149999999999647
+    },
+    "owner": {
+      "contactFrame": {
+        "outfit": "shotgun",
+        "elapsed": 0.29999999999998295,
+        "fraction": 0.22222222222220958,
+        "visible": true,
+        "magazineMeters": 0.06815165372256371,
+        "thirdPersonFraction": null,
+        "width": 403,
+        "height": 226
+      },
+      "frames": [
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.03333333333333144,
+          "fraction": 0.02469135802468995,
+          "visible": true,
+          "magazineMeters": 0,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.0833333333333286,
+          "fraction": 0.06172839506172488,
+          "visible": true,
+          "magazineMeters": 0,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.13333333333332575,
+          "fraction": 0.0987654320987598,
+          "visible": true,
+          "magazineMeters": 0,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.14743333335716713,
+          "fraction": 0.10920987656086453,
+          "visible": true,
+          "magazineMeters": 0,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.16773333335716956,
+          "fraction": 0.12424691359790337,
+          "visible": true,
+          "magazineMeters": 0,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.1843333333571664,
+          "fraction": 0.13654320989419733,
+          "visible": true,
+          "magazineMeters": 0.0004417851203454915,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.201033333357163,
+          "fraction": 0.14891358026456517,
+          "visible": true,
+          "magazineMeters": 0.0035721978356084666,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.23333333333332007,
+          "fraction": 0.17283950617282967,
+          "visible": true,
+          "magazineMeters": 0.01714478950469151,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.24743333333331918,
+          "fraction": 0.18328395061727346,
+          "visible": true,
+          "magazineMeters": 0.025725842099239938,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.29999999999998295,
+          "fraction": 0.22222222222220958,
+          "visible": true,
+          "magazineMeters": 0.06815165372256371,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.3435999999523034,
+          "fraction": 0.2545185184831877,
+          "visible": true,
+          "magazineMeters": 0.11076819283632985,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.3499999999999801,
+          "fraction": 0.2592592592592445,
+          "visible": true,
+          "magazineMeters": 0.11723172858558423,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.36820000002381903,
+          "fraction": 0.27274074075838445,
+          "visible": true,
+          "magazineMeters": 0.13556931584696852,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.39999999999997726,
+          "fraction": 0.29629629629627946,
+          "visible": true,
+          "magazineMeters": 0.1664758635220797,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.41120000004766055,
+          "fraction": 0.3045925926278967,
+          "visible": true,
+          "magazineMeters": 0.17669538638787724,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.4499999999999744,
+          "fraction": 0.3333333333333144,
+          "visible": true,
+          "magazineMeters": 0.20768105485847307,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.45339999997613134,
+          "fraction": 0.3358518518341713,
+          "visible": true,
+          "magazineMeters": 0.20998576775787864,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.4999999999999716,
+          "fraction": 0.3703703703703493,
+          "visible": true,
+          "magazineMeters": 0.23264429892118785,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.5018000000476555,
+          "fraction": 0.371703703739004,
+          "visible": true,
+          "magazineMeters": 0.23313628051027616,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.5365000000476599,
+          "fraction": 0.39740740744271097,
+          "visible": true,
+          "magazineMeters": 0.23623197878350982,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.5499999999999687,
+          "fraction": 0.40740740740738424,
+          "visible": true,
+          "magazineMeters": 0.2351133351749408,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.555799999999973,
+          "fraction": 0.41170370370368364,
+          "visible": true,
+          "magazineMeters": 0.23436902206054655,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.5732999999999713,
+          "fraction": 0.4246666666666454,
+          "visible": true,
+          "magazineMeters": 0.231211290703592,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.6028999999999662,
+          "fraction": 0.44659259259256756,
+          "visible": true,
+          "magazineMeters": 0.22299108994363145,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.6229999999999656,
+          "fraction": 0.46148148148145596,
+          "visible": true,
+          "magazineMeters": 0.2155636751341353,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.6393999999999664,
+          "fraction": 0.47362962962960475,
+          "visible": true,
+          "magazineMeters": 0.20852589400783067,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.649999999999963,
+          "fraction": 0.4814814814814541,
+          "visible": true,
+          "magazineMeters": 0.20355336214752126,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.6639000000476436,
+          "fraction": 0.4917777778130693,
+          "visible": true,
+          "magazineMeters": 0.19657372801025386,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.6999999999999602,
+          "fraction": 0.518518518518489,
+          "visible": true,
+          "magazineMeters": 0.17636816237802785,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.7146000000238004,
+          "fraction": 0.5293333333509632,
+          "visible": true,
+          "magazineMeters": 0.16749892379456205,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.7312000000238008,
+          "fraction": 0.5416296296472598,
+          "visible": true,
+          "magazineMeters": 0.15703967817379538,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.7499999999999574,
+          "fraction": 0.5555555555555239,
+          "visible": true,
+          "magazineMeters": 0.1448201799139929,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.7631999999761199,
+          "fraction": 0.5653333333156443,
+          "visible": true,
+          "magazineMeters": 0.1360696289548036,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.7797999999761167,
+          "fraction": 0.5776296296119383,
+          "visible": true,
+          "magazineMeters": 0.12494291135692931,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.7999999999999545,
+          "fraction": 0.5925925925925589,
+          "visible": true,
+          "magazineMeters": 0.11133993436240203,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.8107999999761155,
+          "fraction": 0.6005925925749004,
+          "visible": true,
+          "magazineMeters": 0.10409022000516917,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.8499999999999517,
+          "fraction": 0.6296296296295938,
+          "visible": true,
+          "magazineMeters": 0.07835794533024118,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.8633000000237914,
+          "fraction": 0.6394814814991047,
+          "visible": true,
+          "magazineMeters": 0.06997774883739057,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.8999999999999488,
+          "fraction": 0.6666666666666288,
+          "visible": true,
+          "magazineMeters": 0.048304732424495817,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.9072000000476308,
+          "fraction": 0.672000000035282,
+          "visible": true,
+          "magazineMeters": 0.044361381322848316,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.9237000000476314,
+          "fraction": 0.6842222222575047,
+          "visible": true,
+          "magazineMeters": 0.03578284436176108,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.949999999999946,
+          "fraction": 0.7037037037036636,
+          "visible": true,
+          "magazineMeters": 0.023610815252151866,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.9574000000476275,
+          "fraction": 0.7091851852204648,
+          "visible": true,
+          "magazineMeters": 0.020559236273875875,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.9739000000476281,
+          "fraction": 0.7214074074426874,
+          "visible": true,
+          "magazineMeters": 0.01440942305821466,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.9999999999999432,
+          "fraction": 0.7407407407406986,
+          "visible": true,
+          "magazineMeters": 0.006706713420194809,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.0093000000476238,
+          "fraction": 0.7476296296649064,
+          "visible": true,
+          "magazineMeters": 0.004617093539825251,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.0499999999999403,
+          "fraction": 0.7777777777777335,
+          "visible": true,
+          "magazineMeters": 0.0000229465356104805,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.05720000002378,
+          "fraction": 0.7831111111287259,
+          "visible": true,
+          "magazineMeters": 0,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.0750000000237847,
+          "fraction": 0.7962962963139145,
+          "visible": true,
+          "magazineMeters": 0,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.0914000000237856,
+          "fraction": 0.8084444444620633,
+          "visible": true,
+          "magazineMeters": 0,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.1009000000237812,
+          "fraction": 0.8154814814990972,
+          "visible": true,
+          "magazineMeters": 0,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.1175000000237816,
+          "fraction": 0.8277777777953937,
+          "visible": true,
+          "magazineMeters": 0,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.1341000000237784,
+          "fraction": 0.8400740740916877,
+          "visible": true,
+          "magazineMeters": 0,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.167166666642757,
+          "fraction": 0.8645679012168569,
+          "visible": true,
+          "magazineMeters": 0,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.1839666666427604,
+          "fraction": 0.8770123456613039,
+          "visible": true,
+          "magazineMeters": 0,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.20086666664276,
+          "fraction": 0.8895308641798222,
+          "visible": true,
+          "magazineMeters": 0,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.2166666666665975,
+          "fraction": 0.9012345679011833,
+          "visible": true,
+          "magazineMeters": 0,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.2666666666665947,
+          "fraction": 0.9382716049382183,
+          "visible": true,
+          "magazineMeters": 0,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.2829666666904345,
+          "fraction": 0.9503456790299514,
+          "visible": true,
+          "magazineMeters": 0,
+          "thirdPersonFraction": null
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.3329666666904352,
+          "fraction": 0.9873827160669889,
+          "visible": true,
+          "magazineMeters": 0,
+          "thirdPersonFraction": null
+        }
+      ],
+      "cues": [
+        {
+          "take": "magout_smg",
+          "rate": 1.3333333730697632,
+          "elapsed": 0.29999999999998295,
+          "seconds": 0.11332812500000002,
+          "sampleRate": 48000,
+          "listener": "analysts-0"
+        },
+        {
+          "take": "magin_smg",
+          "rate": 1.3333333730697632,
+          "elapsed": 1.0499999999999403,
+          "seconds": 0.124578125,
+          "sampleRate": 48000,
+          "listener": "analysts-0"
+        }
+      ],
+      "completion": {
+        "time": 30.1833333333329,
+        "duration": 0,
+        "until": 0
+      }
+    },
+    "observer": {
+      "contactFrame": {
+        "outfit": "shotgun",
+        "elapsed": 0.29999999999998295,
+        "fraction": 0.22222222222220958,
+        "visible": true,
+        "magazineMeters": null,
+        "thirdPersonFraction": 0.22222222222220958,
+        "width": 234,
+        "height": 132
+      },
+      "frames": [
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.03333333333333144,
+          "fraction": 0.02469135802468995,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.02469135802468995
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.03633333333333155,
+          "fraction": 0.026913580246912257,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.026913580246912257
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.0857333334286956,
+          "fraction": 0.06350617291014489,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.06350617291014489
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.10253333342869908,
+          "fraction": 0.07595061735459191,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.0759506173545919
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.13333333333332575,
+          "fraction": 0.0987654320987598,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.0987654320987598
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.14933333338101207,
+          "fraction": 0.11061728398593486,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.11061728398593486
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.16603333338100867,
+          "fraction": 0.12298765435630271,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.12298765435630271
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.1833333333333229,
+          "fraction": 0.13580246913579475,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.13580246913579475
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.1942333334048456,
+          "fraction": 0.1438765432628486,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.1438765432628486
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.21183333340484722,
+          "fraction": 0.15691358029988683,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.15691358029988683
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.23333333333332007,
+          "fraction": 0.17283950617282967,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.1728395061728297
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.29999999999998295,
+          "fraction": 0.22222222222220958,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.22222222222220958
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.3314000000715076,
+          "fraction": 0.24548148153445007,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.24548148153445007
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.3499999999999801,
+          "fraction": 0.2592592592592445,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.2592592592592445
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.3727000000715073,
+          "fraction": 0.27607407412704243,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.27607407412704243
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.39999999999997726,
+          "fraction": 0.29629629629627946,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.29629629629627946
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.41410000002381864,
+          "fraction": 0.30674074075838414,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.30674074075838414
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.4499999999999744,
+          "fraction": 0.3333333333333144,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.3333333333333144
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.4999999999999716,
+          "fraction": 0.3703703703703493,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.37037037037034937
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.5140000000953364,
+          "fraction": 0.3807407408113603,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.3807407408113602
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.5499999999999687,
+          "fraction": 0.40740740740738424,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.40740740740738424
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.5821999999999647,
+          "fraction": 0.43125925925923314,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.43125925925923314
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.5999999999999659,
+          "fraction": 0.44444444444441916,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.44444444444441916
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.6158999999999679,
+          "fraction": 0.45622222222219844,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.45622222222219844
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.6320999999999657,
+          "fraction": 0.4682222222221968,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.46822222222219684
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.649999999999963,
+          "fraction": 0.4814814814814541,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.4814814814814541
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.6999999999999602,
+          "fraction": 0.518518518518489,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.518518518518489
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.7049000000714827,
+          "fraction": 0.5221481482010982,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.5221481482010982
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.7216000000714899,
+          "fraction": 0.534518518571474,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.534518518571474
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.7499999999999574,
+          "fraction": 0.5555555555555239,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.5555555555555239
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.7598000000953249,
+          "fraction": 0.5628148148854258,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.5628148148854258
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.776500000095325,
+          "fraction": 0.5751851852557963,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.5751851852557963
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.7999999999999545,
+          "fraction": 0.5925925925925589,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.5925925925925589
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.8034000000953228,
+          "fraction": 0.5951111111817206,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.5951111111817206
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.8200000000953196,
+          "fraction": 0.6074074074780145,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.6074074074780145
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.8499999999999517,
+          "fraction": 0.6296296296295938,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.6296296296295938
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.8999999999999488,
+          "fraction": 0.6666666666666288,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.6666666666666288
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.9041000000953119,
+          "fraction": 0.6697037037743051,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.6697037037743051
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.9209000000953154,
+          "fraction": 0.682148148218752,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.682148148218752
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.949999999999946,
+          "fraction": 0.7037037037036636,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.7037037037036636
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.9552000000953171,
+          "fraction": 0.7075555556261608,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.7075555556261608
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.9713000000953151,
+          "fraction": 0.7194814815520852,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.7194814815520854
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 0.9999999999999432,
+          "fraction": 0.7407407407406986,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.7407407407406987
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.0153000000714698,
+          "fraction": 0.7520740741270147,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.7520740741270147
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.0570000000476263,
+          "fraction": 0.7829629629982416,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.7829629629982415
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.0748000000476239,
+          "fraction": 0.796148148183425,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.796148148183425
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.0999999999999375,
+          "fraction": 0.8148148148147685,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.8148148148147685
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.1121000000953032,
+          "fraction": 0.8237777778483727,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.8237777778483727
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.1666666666666003,
+          "fraction": 0.8641975308641483,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.8641975308641483
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.1702666667142871,
+          "fraction": 0.8668641975661385,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.8668641975661384
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.1869666667142837,
+          "fraction": 0.8792345679365065,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.8792345679365065
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.2038666667142834,
+          "fraction": 0.8917530864550247,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.8917530864550248
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.217566666666599,
+          "fraction": 0.901901234567851,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.901901234567851
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.2342666666665956,
+          "fraction": 0.9142716049382189,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.9142716049382189
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.2666666666665947,
+          "fraction": 0.9382716049382183,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.9382716049382183
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.2765666666665965,
+          "fraction": 0.9456049382715529,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.9456049382715529
+        },
+        {
+          "outfit": "shotgun",
+          "elapsed": 1.3333333333332575,
+          "fraction": 0.9876543209875981,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.9876543209875981
+        }
+      ],
+      "cues": [
+        {
+          "take": "magout_smg",
+          "rate": 1.3333333730697632,
+          "elapsed": 0.29999999999998295,
+          "seconds": 0.11332812500000002,
+          "sampleRate": 48000,
+          "listener": "counterAnalysts-0"
+        },
+        {
+          "take": "magin_smg",
+          "rate": 1.3333333730697632,
+          "elapsed": 1.0570000000476263,
+          "seconds": 0.124578125,
+          "sampleRate": 48000,
+          "listener": "counterAnalysts-0"
+        }
+      ],
+      "completion": {
+        "time": 30.1833333333329,
+        "duration": 0,
+        "until": 0
+      }
+    }
+  }
+}

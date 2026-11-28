@@ -1,0 +1,75 @@
+[
+  {
+    "ready": false,
+    "status": "Loading Floor 5 Laboratory…",
+    "actor": "analysts-0",
+    "revision": 2
+  },
+  {
+    "life": {
+      "entries": [
+        {
+          "owner": 1,
+          "revision": 1,
+          "map": "compact-arena",
+          "frames": 9,
+          "uncovered": 0,
+          "scissorLeaks": 0,
+          "aborted": true,
+          "closed": true,
+          "finished": true,
+          "prepared": false,
+          "remainingFences": 0
+        },
+        {
+          "owner": 1,
+          "revision": 1,
+          "map": "compact-arena",
+          "frames": 102,
+          "uncovered": 0,
+          "scissorLeaks": 0,
+          "aborted": false,
+          "closed": false,
+          "finished": true,
+          "prepared": true,
+          "remainingFences": 0
+        },
+        {
+          "owner": 2,
+          "revision": 2,
+          "map": "floor5-prepared",
+          "frames": 0,
+          "uncovered": 0,
+          "scissorLeaks": 0,
+          "aborted": false,
+          "closed": false,
+          "finished": true,
+          "prepared": false,
+          "remainingFences": 0
+        }
+      ],
+      "retired": [
+        {
+          "owner": 1,
+          "lost": true,
+          "disposed": true,
+          "memory": {
+            "geometries": 0,
+            "textures": 1
+          },
+          "fences": 0
+        }
+      ],
+      "created": 9,
+      "deleted": 9,
+      "active": 0,
+      "failNextFence": false,
+      "ownerSequence": 2,
+      "failedFence": true
+    },
+    "ready": false,
+    "status": "Room ID · gKL-o9Dzy",
+    "actor": "counterAnalysts-0",
+    "revision": 2
+  }
+]

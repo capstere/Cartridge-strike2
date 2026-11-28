@@ -1,0 +1,18 @@
+{
+  "complete": true,
+  "acceptedClientRepeats": {
+    "cs2Desktop": 3,
+    "cs2Touch": 3,
+    "frontlineDesktop": 3,
+    "frontlineTouch": 3
+  },
+  "acceptedAuthorityRepeats": {
+    "loopback": 3,
+    "injected100ms": 3
+  },
+  "pending": [],
+  "excluded": "excluded.json",
+  "physicalPhones": "UNMEASURED",
+  "onlineMobile": "PASS",
+  "lifecycle": "PASS"
+}

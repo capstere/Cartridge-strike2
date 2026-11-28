@@ -1,0 +1,32 @@
+{
+  "runtime": "ec9ce4962d2e936acd7752b7afd373939e4f1b6d",
+  "matchSource": "bfdf48f66babf95b2b97fc8bafed517f3cad0002",
+  "performanceRuntime": "835205c",
+  "build": "57abdeb88d66e26154d5c721208510dce5971edee07394ba30405daa54642d87",
+  "protocol": 22,
+  "publishedRuntimeFiles": 726,
+  "parentRuntimeFiles": [
+    726,
+    720
+  ],
+  "missingParentRuntimeFiles": [
+    0,
+    0
+  ],
+  "changedAgainstMatchRuntime": [
+    "src/fps/app.mjs",
+    "src/fps/world.mjs",
+    "shared/multiplayer/build.mjs",
+    "shared/multiplayer/map-build.mjs"
+  ],
+  "buildCheck": "PASS",
+  "floor5TestSuite": {
+    "passed": 7,
+    "failed": 0
+  },
+  "nativeDriverSHA256": "1e677ae244a6823f4321cedcc5e5982fafc229cbf9f665008155c5c1de287a27",
+  "nativeCollectorSHA256": "1b908bff6073672f4d54ef89d540fde321a57c5c98432f95d9955b01308b3294",
+  "nativeExit": 0,
+  "pageErrors": [],
+  "physicalHandset": "NOT_RUN"
+}

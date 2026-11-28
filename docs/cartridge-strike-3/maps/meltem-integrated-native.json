@@ -1,0 +1,821 @@
+{
+  "revision": "7ead5ac03893c6d04f71abf8329c0be42046eb58",
+  "buildHash": "c426a708be413827fe8a1b13f1c4e5e76df12e9fcfb447d8b4e59840990bf6ff",
+  "manifestHash": "0b40c6c3ca84ba434d897ad19c9e3be7213f6e4a767be50f4a163abdc2f66885",
+  "scenario": "meltem",
+  "map": "meltem",
+  "date": "2026-11-27T14:23:26.951Z",
+  "cpu": "Cortex-A76",
+  "arch": "arm64",
+  "os": "linux",
+  "node": "v26.13.0",
+  "model": "Raspberry Pi 5 Model B Rev 1.1",
+  "physicalPhone": false,
+  "transport": "TLS loopback",
+  "warmupMs": 3000,
+  "windowMs": 10000,
+  "scheduledSeconds": 45,
+  "scoreTarget": 150,
+  "sourceGeometry": {
+    "inScene": true,
+    "groups": 293,
+    "triangles": 291400,
+    "projectId": "lvl-meltem"
+  },
+  "measurement": {
+    "client": {
+      "frameIntervalMs": {
+        "n": 395,
+        "min": 19.1,
+        "p50": 23.7,
+        "p95": 33.1,
+        "p99": 53.3,
+        "max": 152.7
+      },
+      "framesOver33": 20,
+      "framesOver50": 4,
+      "framesOver100": 1,
+      "renderCpuMs": {
+        "n": 396,
+        "min": 16.7,
+        "p50": 20.2,
+        "p95": 26.8,
+        "p99": 34.5,
+        "max": 135.9
+      },
+      "draws": {
+        "n": 396,
+        "min": 451,
+        "p50": 495,
+        "p95": 583,
+        "p99": 587,
+        "max": 587
+      },
+      "triangles": {
+        "n": 396,
+        "min": 437242,
+        "p50": 463667,
+        "p95": 512899,
+        "p99": 513247,
+        "max": 513563
+      },
+      "pixelRatio": {
+        "n": 396,
+        "min": 0.47,
+        "p50": 0.51,
+        "p95": 0.68,
+        "p99": 0.77,
+        "max": 0.77
+      }
+    },
+    "server": {
+      "executionMs": {
+        "n": 606,
+        "min": 0.31,
+        "p50": 1.1,
+        "p95": 5.23,
+        "p99": 10.19,
+        "max": 20.98
+      },
+      "intervalMs": {
+        "n": 605,
+        "min": 0.61,
+        "p50": 16.18,
+        "p95": 17.39,
+        "p99": 32.29,
+        "max": 46.1
+      },
+      "executionOverTickBudget": 1,
+      "executionOver33": 0,
+      "executionOver50": 0,
+      "intervalOver33": 3,
+      "rttMs": 0,
+      "tick": 2742
+    },
+    "resources": {
+      "projectId": "lvl-meltem",
+      "level": "Meltem",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        478,
+        269
+      ],
+      "quality": "low",
+      "geometries": 479,
+      "textures": 77,
+      "programs": 56,
+      "owners": 2,
+      "disposals": 1,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    }
+  },
+  "controls": {
+    "distanceM": 0.7,
+    "ammoBefore": 30,
+    "ammoAfter": 29,
+    "rightClickAim": true,
+    "team": "analysts"
+  },
+  "damagedMapRejected": true,
+  "retryMap": "floor5-prepared",
+  "status": "PASS",
+  "stages": [
+    {
+      "stage": "menu",
+      "startedAt": "2026-11-27T14:21:44.225870+00:00",
+      "finishedAt": "2026-11-27T14:23:25.320865+00:00",
+      "exitCode": 0
+    },
+    {
+      "stage": "room",
+      "startedAt": "2026-11-27T14:23:25.454475+00:00",
+      "finishedAt": "2026-11-27T14:31:29.784662+00:00",
+      "exitCode": 0
+    }
+  ],
+  "transitions": [
+    {
+      "switch": 1,
+      "id": "floor5-prepared",
+      "heapUsedBytes": 74299120,
+      "backingStorageBytes": 92015888,
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 3,
+      "disposals": 2,
+      "reachableOwners": 1,
+      "liveOwners": 1,
+      "documents": 1,
+      "mountedNodes": 804,
+      "eventListeners": 173,
+      "loadingDescendants": 31
+    },
+    {
+      "switch": 2,
+      "id": "meltem",
+      "heapUsedBytes": 38932160,
+      "backingStorageBytes": 88056676,
+      "geometries": 368,
+      "textures": 59,
+      "programs": 55,
+      "owners": 4,
+      "disposals": 3,
+      "reachableOwners": 1,
+      "liveOwners": 1,
+      "livePrototypes": {
+        "Game": 1,
+        "NetworkSession": 1,
+        "AudioSystem": 1,
+        "threeRenderers": 2,
+        "glContexts": 2,
+        "glPrograms": 59,
+        "glShaders": 110,
+        "canvases": 78,
+        "detachedGameCanvases": 0,
+        "audioContexts": 1
+      },
+      "documents": 1,
+      "mountedNodes": 803,
+      "eventListeners": 173,
+      "loadingDescendants": 31
+    },
+    {
+      "switch": 3,
+      "id": "floor5-prepared",
+      "heapUsedBytes": 75708964,
+      "backingStorageBytes": 92018558,
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 5,
+      "disposals": 4,
+      "reachableOwners": 1,
+      "liveOwners": 1,
+      "documents": 1,
+      "mountedNodes": 804,
+      "eventListeners": 173,
+      "loadingDescendants": 31
+    },
+    {
+      "switch": 4,
+      "id": "meltem",
+      "heapUsedBytes": 39487128,
+      "backingStorageBytes": 88059753,
+      "geometries": 368,
+      "textures": 59,
+      "programs": 55,
+      "owners": 6,
+      "disposals": 5,
+      "reachableOwners": 1,
+      "liveOwners": 1,
+      "documents": 1,
+      "mountedNodes": 803,
+      "eventListeners": 173,
+      "loadingDescendants": 31
+    },
+    {
+      "switch": 5,
+      "id": "floor5-prepared",
+      "heapUsedBytes": 74352540,
+      "backingStorageBytes": 92018595,
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 7,
+      "disposals": 6,
+      "reachableOwners": 1,
+      "liveOwners": 1,
+      "documents": 1,
+      "mountedNodes": 804,
+      "eventListeners": 173,
+      "loadingDescendants": 31
+    },
+    {
+      "switch": 6,
+      "id": "meltem",
+      "heapUsedBytes": 39519376,
+      "backingStorageBytes": 88059345,
+      "geometries": 368,
+      "textures": 59,
+      "programs": 55,
+      "owners": 8,
+      "disposals": 7,
+      "reachableOwners": 1,
+      "liveOwners": 1,
+      "documents": 1,
+      "mountedNodes": 803,
+      "eventListeners": 173,
+      "loadingDescendants": 31
+    },
+    {
+      "switch": 7,
+      "id": "floor5-prepared",
+      "heapUsedBytes": 75261884,
+      "backingStorageBytes": 92018571,
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 9,
+      "disposals": 8,
+      "reachableOwners": 1,
+      "liveOwners": 1,
+      "documents": 1,
+      "mountedNodes": 804,
+      "eventListeners": 173,
+      "loadingDescendants": 31
+    },
+    {
+      "switch": 8,
+      "id": "meltem",
+      "heapUsedBytes": 40245532,
+      "backingStorageBytes": 88059345,
+      "geometries": 368,
+      "textures": 59,
+      "programs": 55,
+      "owners": 10,
+      "disposals": 9,
+      "reachableOwners": 1,
+      "liveOwners": 1,
+      "documents": 1,
+      "mountedNodes": 803,
+      "eventListeners": 173,
+      "loadingDescendants": 31
+    },
+    {
+      "switch": 9,
+      "id": "floor5-prepared",
+      "heapUsedBytes": 75948444,
+      "backingStorageBytes": 92019002,
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 11,
+      "disposals": 10,
+      "reachableOwners": 1,
+      "liveOwners": 1,
+      "documents": 1,
+      "mountedNodes": 804,
+      "eventListeners": 173,
+      "loadingDescendants": 31
+    },
+    {
+      "switch": 10,
+      "id": "meltem",
+      "heapUsedBytes": 38504232,
+      "backingStorageBytes": 88059345,
+      "geometries": 368,
+      "textures": 59,
+      "programs": 55,
+      "owners": 12,
+      "disposals": 11,
+      "reachableOwners": 1,
+      "liveOwners": 1,
+      "livePrototypes": {
+        "Game": 1,
+        "NetworkSession": 1,
+        "AudioSystem": 1,
+        "threeRenderers": 2,
+        "glContexts": 2,
+        "glPrograms": 59,
+        "glShaders": 110,
+        "canvases": 78,
+        "detachedGameCanvases": 0,
+        "audioContexts": 1
+      },
+      "documents": 1,
+      "mountedNodes": 803,
+      "eventListeners": 173,
+      "loadingDescendants": 31
+    },
+    {
+      "switch": 11,
+      "id": "floor5-prepared",
+      "heapUsedBytes": 75314140,
+      "backingStorageBytes": 92018932,
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 13,
+      "disposals": 12,
+      "reachableOwners": 1,
+      "liveOwners": 1,
+      "documents": 1,
+      "mountedNodes": 804,
+      "eventListeners": 173,
+      "loadingDescendants": 31
+    },
+    {
+      "switch": 12,
+      "id": "meltem",
+      "heapUsedBytes": 38295580,
+      "backingStorageBytes": 88059345,
+      "geometries": 368,
+      "textures": 59,
+      "programs": 55,
+      "owners": 14,
+      "disposals": 13,
+      "reachableOwners": 1,
+      "liveOwners": 1,
+      "documents": 1,
+      "mountedNodes": 803,
+      "eventListeners": 173,
+      "loadingDescendants": 31
+    },
+    {
+      "switch": 13,
+      "id": "floor5-prepared",
+      "heapUsedBytes": 73588280,
+      "backingStorageBytes": 92018571,
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 15,
+      "disposals": 14,
+      "reachableOwners": 1,
+      "liveOwners": 1,
+      "documents": 1,
+      "mountedNodes": 804,
+      "eventListeners": 173,
+      "loadingDescendants": 31
+    },
+    {
+      "switch": 14,
+      "id": "meltem",
+      "heapUsedBytes": 38418704,
+      "backingStorageBytes": 88059345,
+      "geometries": 368,
+      "textures": 59,
+      "programs": 55,
+      "owners": 16,
+      "disposals": 15,
+      "reachableOwners": 1,
+      "liveOwners": 1,
+      "documents": 1,
+      "mountedNodes": 803,
+      "eventListeners": 173,
+      "loadingDescendants": 31
+    },
+    {
+      "switch": 15,
+      "id": "floor5-prepared",
+      "heapUsedBytes": 73615484,
+      "backingStorageBytes": 92018571,
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 17,
+      "disposals": 16,
+      "reachableOwners": 1,
+      "liveOwners": 1,
+      "documents": 1,
+      "mountedNodes": 804,
+      "eventListeners": 173,
+      "loadingDescendants": 31
+    },
+    {
+      "switch": 16,
+      "id": "meltem",
+      "heapUsedBytes": 38483912,
+      "backingStorageBytes": 88059345,
+      "geometries": 368,
+      "textures": 59,
+      "programs": 55,
+      "owners": 18,
+      "disposals": 17,
+      "reachableOwners": 1,
+      "liveOwners": 1,
+      "documents": 1,
+      "mountedNodes": 803,
+      "eventListeners": 173,
+      "loadingDescendants": 31
+    },
+    {
+      "switch": 17,
+      "id": "floor5-prepared",
+      "heapUsedBytes": 75571672,
+      "backingStorageBytes": 92018572,
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 19,
+      "disposals": 18,
+      "reachableOwners": 1,
+      "liveOwners": 1,
+      "documents": 1,
+      "mountedNodes": 804,
+      "eventListeners": 173,
+      "loadingDescendants": 31
+    },
+    {
+      "switch": 18,
+      "id": "meltem",
+      "heapUsedBytes": 38530564,
+      "backingStorageBytes": 88059345,
+      "geometries": 368,
+      "textures": 59,
+      "programs": 55,
+      "owners": 20,
+      "disposals": 19,
+      "reachableOwners": 1,
+      "liveOwners": 1,
+      "documents": 1,
+      "mountedNodes": 803,
+      "eventListeners": 173,
+      "loadingDescendants": 31
+    },
+    {
+      "switch": 19,
+      "id": "floor5-prepared",
+      "heapUsedBytes": 75678548,
+      "backingStorageBytes": 92018932,
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 21,
+      "disposals": 20,
+      "reachableOwners": 1,
+      "liveOwners": 1,
+      "documents": 1,
+      "mountedNodes": 804,
+      "eventListeners": 173,
+      "loadingDescendants": 31
+    },
+    {
+      "switch": 20,
+      "id": "meltem",
+      "heapUsedBytes": 38672148,
+      "backingStorageBytes": 88059345,
+      "geometries": 368,
+      "textures": 59,
+      "programs": 55,
+      "owners": 22,
+      "disposals": 21,
+      "reachableOwners": 1,
+      "liveOwners": 1,
+      "livePrototypes": {
+        "Game": 1,
+        "NetworkSession": 1,
+        "AudioSystem": 1,
+        "threeRenderers": 2,
+        "glContexts": 2,
+        "glPrograms": 59,
+        "glShaders": 110,
+        "canvases": 78,
+        "detachedGameCanvases": 0,
+        "audioContexts": 1
+      },
+      "documents": 1,
+      "mountedNodes": 803,
+      "eventListeners": 173,
+      "loadingDescendants": 31
+    }
+  ],
+  "parkedControl": {
+    "durationMs": 186470,
+    "samples": [
+      {
+        "atMs": 1,
+        "heapUsedBytes": 38396212,
+        "backingStorageBytes": 88066251,
+        "documents": 1,
+        "mountedNodes": 803,
+        "eventListeners": 173,
+        "loadingDescendants": 31
+      },
+      {
+        "atMs": 93234,
+        "heapUsedBytes": 37822536,
+        "backingStorageBytes": 88062730,
+        "documents": 1,
+        "mountedNodes": 803,
+        "eventListeners": 173,
+        "loadingDescendants": 31
+      },
+      {
+        "atMs": 186470,
+        "heapUsedBytes": 37871540,
+        "backingStorageBytes": 88059567,
+        "livePrototypes": {
+          "Game": 1,
+          "NetworkSession": 1,
+          "AudioSystem": 1,
+          "threeRenderers": 2,
+          "glContexts": 2,
+          "glPrograms": 59,
+          "glShaders": 110,
+          "canvases": 78,
+          "detachedGameCanvases": 0,
+          "audioContexts": 1
+        },
+        "documents": 1,
+        "mountedNodes": 803,
+        "eventListeners": 173,
+        "loadingDescendants": 31
+      }
+    ]
+  },
+  "normalMenu": {
+    "commit": "7ead5ac03893c6d04f71abf8329c0be42046eb58",
+    "workingTreeClean": true,
+    "browser": "156.0.8078.79",
+    "scenarios": [
+      {
+        "input": "desktop",
+        "locale": "sv-SE",
+        "menuViewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "matchViewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "maps": [
+          "floor5-prepared",
+          "meltem"
+        ],
+        "startedAt": "2026-11-27T14:21:45.488Z",
+        "completedAt": "2026-11-27T14:22:48.011Z"
+      },
+      {
+        "input": "touch",
+        "locale": "fr-FR",
+        "menuViewport": {
+          "width": 390,
+          "height": 844
+        },
+        "matchViewport": {
+          "width": 844,
+          "height": 390
+        },
+        "maps": [
+          "floor5-prepared",
+          "meltem"
+        ],
+        "startedAt": "2026-11-27T14:22:48.464Z",
+        "completedAt": "2026-11-27T14:23:24.973Z"
+      }
+    ]
+  },
+  "hardwareBefore": {
+    "thermalC": 49.05,
+    "cpuKHz": 2400000
+  },
+  "hardwareAfter": {
+    "thermalC": 47.95,
+    "cpuKHz": 2400000
+  },
+  "browser": "156.0.8078.79",
+  "viewport": {
+    "width": 1024,
+    "height": 576
+  },
+  "renderedClients": 1,
+  "sdkPeers": 0,
+  "players": {
+    "humanSlots": 1,
+    "bots": 9
+  },
+  "startToPlayableMs": 1466,
+  "signInToFormMs": 2181,
+  "enterToWaitingMs": 24923,
+  "selectMapMs": 9063,
+  "completed": {
+    "matchId": 1,
+    "winner": "draw",
+    "reason": "time",
+    "score": {
+      "analysts": 1,
+      "counterAnalysts": 1
+    },
+    "players": [
+      {
+        "id": "analysts-1",
+        "name": "BOT A-02",
+        "team": "analysts",
+        "kills": 1,
+        "deaths": 0
+      },
+      {
+        "id": "analysts-2",
+        "name": "BOT A-03",
+        "team": "analysts",
+        "kills": 0,
+        "deaths": 1
+      },
+      {
+        "id": "analysts-3",
+        "name": "BOT A-04",
+        "team": "analysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "analysts-4",
+        "name": "BOT A-05",
+        "team": "analysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "counterAnalysts-0",
+        "name": "BOT C-01",
+        "team": "counterAnalysts",
+        "kills": 0,
+        "deaths": 1
+      },
+      {
+        "id": "counterAnalysts-1",
+        "name": "BOT C-02",
+        "team": "counterAnalysts",
+        "kills": 1,
+        "deaths": 0
+      },
+      {
+        "id": "counterAnalysts-2",
+        "name": "BOT C-03",
+        "team": "counterAnalysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "counterAnalysts-3",
+        "name": "BOT C-04",
+        "team": "counterAnalysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "counterAnalysts-4",
+        "name": "BOT C-05",
+        "team": "counterAnalysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "analysts-0",
+        "name": "Mapptest",
+        "team": "analysts",
+        "kills": 0,
+        "deaths": 0
+      }
+    ]
+  },
+  "phaseLog": [
+    {
+      "step": "enter waiting room",
+      "elapsedMs": 3540
+    },
+    {
+      "step": "load meltem",
+      "elapsedMs": 28464
+    },
+    {
+      "step": "start match",
+      "elapsedMs": 37662
+    },
+    {
+      "step": "measure active game",
+      "elapsedMs": 42855
+    },
+    {
+      "step": "finish match",
+      "elapsedMs": 53223
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 84617
+    },
+    {
+      "step": "switch meltem",
+      "elapsedMs": 94885
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 109869
+    },
+    {
+      "step": "switch meltem",
+      "elapsedMs": 121422
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 125819
+    },
+    {
+      "step": "switch meltem",
+      "elapsedMs": 136499
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 140704
+    },
+    {
+      "step": "switch meltem",
+      "elapsedMs": 151113
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 155612
+    },
+    {
+      "step": "switch meltem",
+      "elapsedMs": 166100
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 182236
+    },
+    {
+      "step": "switch meltem",
+      "elapsedMs": 193844
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 198327
+    },
+    {
+      "step": "switch meltem",
+      "elapsedMs": 209235
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 213830
+    },
+    {
+      "step": "switch meltem",
+      "elapsedMs": 224916
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 229346
+    },
+    {
+      "step": "switch meltem",
+      "elapsedMs": 240033
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 244416
+    },
+    {
+      "step": "switch meltem",
+      "elapsedMs": 255249
+    },
+    {
+      "step": "park on meltem for the same interval as all switches",
+      "elapsedMs": 271085
+    },
+    {
+      "step": "reject a damaged level and retry on the saved map",
+      "elapsedMs": 469406
+    },
+    {
+      "step": "complete",
+      "elapsedMs": 482114
+    }
+  ],
+  "retiredGameCanvases": 0
+}

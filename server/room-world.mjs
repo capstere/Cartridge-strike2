@@ -1,5 +1,6 @@
 // A room owns one live simulation. Prepare and validate a replacement off to the
 // side so a failed level load or failed family save leaves its lobby playable.
+import {simulationMode} from '../src/fps/match-modes.mjs';
 import {createHash} from 'node:crypto';
 import {createHeadlessSimulation} from './headless.mjs';
 import {CLASSIC_NETWORK_CONFIG, NETWORK_CONFIG, TEAM_CAPACITY} from '../shared/multiplayer/rules.mjs';
@@ -18,7 +19,7 @@ export async function prepareRoomSimulation(settings) {
   const base = settings.mode === 'classic' ? CLASSIC_NETWORK_CONFIG : NETWORK_CONFIG;
   const sim = await createHeadlessSimulation({mapId: settings.mapId,
     controllers: Object.fromEntries(ROOM_SEATS.map(id => [id, 'human'])),
-    config: {...base, difficulty: settings.botDifficulty}});
+    config: {...base, mode:simulationMode(settings.mode), difficulty: settings.botDifficulty}});
   if (sim.sourceHash !== contract.mapHash) throw Error('Server map differs from built contract.');
   const collisionHash = createHash('sha256').update(collisionContract(sim.game.world)).digest('hex');
   if (collisionHash !== contract.collisionHash) throw Error('Server collision differs from built contract.');
@@ -64,7 +65,7 @@ export async function changeRoomMap(room, client, settings) {
     room.teamComms.dispose();
     room.lag.dispose();
     room.bots.clear();
-    for (const field of ['doors', 'actors', 'brokenGlass', 'residents', 'hostages', 'grenades', 'projectiles']) room.state[field].clear();
+    for (const field of ['zones', 'doors', 'actors', 'brokenGlass', 'residents', 'hostages', 'drops', 'smokes', 'grenades', 'projectiles']) room.state[field].clear();
     Object.assign(room.state, settings, {worldRevision: room.state.worldRevision + 1, round: 0, roundPhase: '',
       deadline: 0, buyDeadline: 0, resultDeadline: 0, roundReason: '', roundWinner: '', bombStatus: '',
       carrierId: '', bombX: 0, bombY: 0, bombZ: 0, bombDeadline: 0});

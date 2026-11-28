@@ -1,0 +1,25 @@
+{
+  "publicRegistration": true,
+  "distinctPortraits": 11,
+  "earned": [
+    "nomad",
+    "tempest",
+    "verdant",
+    "raptor",
+    "void",
+    "gilet"
+  ],
+  "worn": {
+    "outfit": "gilet",
+    "kit": true,
+    "first": "68f76085",
+    "third": "68f76085",
+    "expected": "68f76085",
+    "baseKit": "3f907d78",
+    "issuedSwatch": false,
+    "separateTextureHandles": true
+  },
+  "logoutFallback": "issued",
+  "physicalDevice": false,
+  "browser": "156.0.8078.79"
+}

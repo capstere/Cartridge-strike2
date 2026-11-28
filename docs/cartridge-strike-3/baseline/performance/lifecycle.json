@@ -1,0 +1,79 @@
+{
+  "revision": "af479ebb44f87cadefb774a28e3831838479985c",
+  "browser": "Chromium 156.0.8078.79 built on Debian GNU/Linux 12 (bookworm)",
+  "startedAt": "2026-11-27T10:44:11.713759+00:00",
+  "viewport": [
+    844,
+    390
+  ],
+  "physicalPhone": false,
+  "backendRequest": "native Wayland EGL",
+  "completedAt": "2026-11-27T10:47:24.086083+00:00",
+  "warmupCycles": 4,
+  "measuredCycles": 20,
+  "status": "PASS",
+  "retainedGames": [
+    1,
+    1
+  ],
+  "audioContexts": [
+    1,
+    1
+  ],
+  "webAudioNodes": [
+    3,
+    3
+  ],
+  "domListeners": [
+    270,
+    270
+  ],
+  "domDocuments": [
+    1,
+    1
+  ],
+  "domNodes": [
+    1507,
+    1510
+  ],
+  "residentInstances": [
+    4,
+    4
+  ],
+  "liveOrAmbientVoices": [
+    0,
+    0
+  ],
+  "rafOwners": [
+    [
+      "game",
+      "lobby"
+    ]
+  ],
+  "endpointGpuByMode": {
+    "classic": {
+      "game": [
+        1332,
+        165,
+        106
+      ],
+      "lobby-stage": [
+        29,
+        7,
+        10
+      ]
+    },
+    "endless": {
+      "game": [
+        1332,
+        165,
+        106
+      ],
+      "lobby-stage": [
+        29,
+        7,
+        10
+      ]
+    }
+  }
+}

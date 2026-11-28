@@ -1,0 +1,2094 @@
+{
+  "profile": "Chromium touch emulation",
+  "viewport": [
+    844,
+    390
+  ],
+  "deviceScaleFactor": 1,
+  "persisted": {
+    "version": 1,
+    "settings": {
+      "touchMode": "on",
+      "touchStick": "fixed",
+      "touchRun": "button",
+      "touchDoubleAim": true,
+      "touchQuickShot": true,
+      "touchLookSensitivity": 1,
+      "zoomSensitivity": 0.9,
+      "invertLookY": true,
+      "fieldOfView": 82,
+      "mobileAutoFire": false,
+      "mobileAimAssist": true
+    },
+    "layout": {
+      "reload": {
+        "x": 0.79,
+        "y": 0.9,
+        "size": 54,
+        "opacity": 1
+      }
+    }
+  },
+  "audio": {
+    "master": 0.5,
+    "music": 0.4,
+    "announcements": 0,
+    "track": 0.2
+  },
+  "rush": {
+    "time": 1.2833333333333337,
+    "alive": true,
+    "x": -23.5,
+    "z": 39.9449714673913,
+    "yaw": 0,
+    "pitch": 0,
+    "rush": 0.840120253920301,
+    "slide": -1.2833333333333337,
+    "aim": 0,
+    "ammo": 5,
+    "weapon": "sniper",
+    "cartridge": false,
+    "grenades": 0,
+    "manualFire": false,
+    "stick": 3,
+    "look": null,
+    "buttons": 0,
+    "scopeHeld": false,
+    "paused": false,
+    "frame": 112,
+    "goldRing": true,
+    "reticleOpacity": 0,
+    "weaponY": -0.4188384812530035,
+    "weaponRoll": 0.5880841777409451,
+    "buffer": [
+      658,
+      304
+    ]
+  },
+  "slide": {
+    "time": 1.8999999999999981,
+    "alive": true,
+    "x": -23.508144798325425,
+    "z": 35.666700441889354,
+    "yaw": 0,
+    "pitch": 0,
+    "rush": 0.15969868328713785,
+    "slide": 0.6000000000000005,
+    "aim": 0,
+    "ammo": 5,
+    "weapon": "sniper",
+    "cartridge": false,
+    "grenades": 0,
+    "manualFire": false,
+    "stick": 3,
+    "look": null,
+    "buttons": 1,
+    "scopeHeld": false,
+    "paused": false,
+    "frame": 158,
+    "goldRing": true,
+    "reticleOpacity": 0.68,
+    "weaponY": -0.2011035786518841,
+    "weaponRoll": 0.11178907830099649,
+    "buffer": [
+      658,
+      304
+    ]
+  },
+  "threePointers": {
+    "before": {
+      "time": 2.416666666666663,
+      "alive": true,
+      "x": -23.508144798325425,
+      "z": 33.56107160092533,
+      "yaw": 0,
+      "pitch": 0,
+      "rush": 0,
+      "slide": 0.0833333333333357,
+      "aim": 0,
+      "ammo": 5,
+      "weapon": "sniper",
+      "cartridge": false,
+      "grenades": 0,
+      "manualFire": false,
+      "stick": null,
+      "look": null,
+      "buttons": 0,
+      "scopeHeld": false,
+      "paused": false,
+      "frame": 196,
+      "goldRing": false,
+      "reticleOpacity": 1,
+      "weaponY": -0.15,
+      "weaponRoll": 0,
+      "buffer": [
+        592,
+        273
+      ]
+    },
+    "held": {
+      "time": 2.833333333333328,
+      "alive": true,
+      "x": -23.91194520291913,
+      "z": 33.01434194054869,
+      "yaw": -0.10349182317073172,
+      "pitch": 0.009199273170731706,
+      "rush": 0,
+      "slide": -2.833333333333328,
+      "aim": 1,
+      "ammo": 5,
+      "weapon": "sniper",
+      "cartridge": false,
+      "grenades": 0,
+      "manualFire": false,
+      "stick": 6,
+      "look": 7,
+      "buttons": 1,
+      "scopeHeld": true,
+      "paused": false,
+      "frame": 225,
+      "goldRing": false,
+      "reticleOpacity": 1,
+      "weaponY": -0.165,
+      "weaponRoll": 0,
+      "buffer": [
+        592,
+        273
+      ]
+    },
+    "released": {
+      "time": 3.016666666666661,
+      "alive": true,
+      "x": -24.017500000000002,
+      "z": 32.71948130716463,
+      "yaw": -0.1091699355463399,
+      "pitch": 0.0454025342555863,
+      "rush": 0,
+      "slide": -3.016666666666661,
+      "aim": 0,
+      "ammo": 4,
+      "weapon": "sniper",
+      "cartridge": false,
+      "grenades": 0,
+      "manualFire": false,
+      "stick": 6,
+      "look": 7,
+      "buttons": 0,
+      "scopeHeld": false,
+      "paused": false,
+      "frame": 234,
+      "goldRing": false,
+      "reticleOpacity": 1,
+      "weaponY": -0.15,
+      "weaponRoll": 0.0007684551961540895,
+      "buffer": [
+        592,
+        273
+      ]
+    }
+  },
+  "cancel": {
+    "time": 3.566666666666659,
+    "alive": true,
+    "x": -24.017500000000002,
+    "z": 32.50459069104765,
+    "yaw": -0.1091699355463399,
+    "pitch": 0.013589717443603239,
+    "rush": 0,
+    "slide": -3.566666666666659,
+    "aim": 1,
+    "ammo": 4,
+    "weapon": "sniper",
+    "cartridge": false,
+    "grenades": 0,
+    "manualFire": false,
+    "stick": null,
+    "look": null,
+    "buttons": 0,
+    "scopeHeld": false,
+    "paused": false,
+    "frame": 269,
+    "goldRing": false,
+    "reticleOpacity": 1,
+    "weaponY": -0.165,
+    "weaponRoll": 0,
+    "buffer": [
+      592,
+      273
+    ]
+  },
+  "rotation": {
+    "time": 3.766666666666658,
+    "alive": true,
+    "x": -24.009537325965834,
+    "z": 32.4319423416302,
+    "yaw": -0.1091699355463399,
+    "pitch": 0.01301710034156746,
+    "rush": 0,
+    "slide": -3.766666666666658,
+    "aim": 0,
+    "ammo": 4,
+    "weapon": "sniper",
+    "cartridge": false,
+    "grenades": 0,
+    "manualFire": false,
+    "stick": null,
+    "look": null,
+    "buttons": 0,
+    "scopeHeld": false,
+    "paused": true,
+    "frame": 287,
+    "goldRing": false,
+    "reticleOpacity": 1,
+    "weaponY": -0.15,
+    "weaponRoll": 8.758031012335744e-9,
+    "buffer": [
+      273,
+      592
+    ]
+  },
+  "grenadeSelection": [
+    "smoke",
+    "flash",
+    "he",
+    "smoke",
+    "flash",
+    "he"
+  ],
+  "throwTarget": {
+    "throwAt": {
+      "x": 888,
+      "y": 260
+    },
+    "hit": {
+      "action": "fire",
+      "tag": "BUTTON",
+      "id": ""
+    }
+  },
+  "grenadePress": {
+    "time": 6.666666666666648,
+    "alive": true,
+    "x": -24.009537325965834,
+    "z": 32.4319423416302,
+    "yaw": -0.1091699355463399,
+    "pitch": 0.012917675404263512,
+    "rush": 0,
+    "slide": -6.666666666666648,
+    "aim": 0,
+    "weapon": "he",
+    "cartridge": true,
+    "grenades": 0,
+    "manualFire": true,
+    "stick": null,
+    "look": null,
+    "buttons": 1,
+    "scopeHeld": false,
+    "paused": false,
+    "frame": 491,
+    "goldRing": false,
+    "reticleOpacity": 1,
+    "weaponY": -0.10859086491739554,
+    "weaponRoll": -0.007437101824856877,
+    "buffer": [
+      581,
+      268
+    ]
+  },
+  "grenadeHeld": {
+    "time": 7.0833333333333135,
+    "alive": true,
+    "x": -24.009537325965834,
+    "z": 32.4319423416302,
+    "yaw": -0.1091699355463399,
+    "pitch": 0.012917675404263512,
+    "rush": 0,
+    "slide": -7.0833333333333135,
+    "aim": 0,
+    "weapon": "he",
+    "cartridge": true,
+    "grenades": 0,
+    "manualFire": true,
+    "stick": null,
+    "look": null,
+    "buttons": 1,
+    "scopeHeld": false,
+    "paused": false,
+    "frame": 527,
+    "goldRing": false,
+    "reticleOpacity": 1,
+    "weaponY": -0.07400000000000001,
+    "weaponRoll": -0.19,
+    "buffer": [
+      581,
+      268
+    ]
+  },
+  "thrown": {
+    "vx": 0.9675943515257176,
+    "vz": -8.827955563973308,
+    "deadline": 8.836666666666648
+  },
+  "grenadeReleased": {
+    "time": 7.4666666666666455,
+    "alive": true,
+    "x": -24.009537325965834,
+    "z": 32.4319423416302,
+    "yaw": -0.1091699355463399,
+    "pitch": 0.012917675404263512,
+    "rush": 0,
+    "slide": -7.4666666666666455,
+    "aim": 0,
+    "ammo": 4,
+    "weapon": "sniper",
+    "cartridge": false,
+    "grenades": 1,
+    "manualFire": false,
+    "stick": null,
+    "look": null,
+    "buttons": 0,
+    "scopeHeld": false,
+    "paused": false,
+    "frame": 559,
+    "goldRing": false,
+    "reticleOpacity": 1,
+    "weaponY": -0.40559124865269736,
+    "weaponRoll": 0,
+    "buffer": [
+      581,
+      268
+    ]
+  },
+  "ordinary": {
+    "draws": 120,
+    "updates": 120,
+    "p50Ms": 23.2,
+    "p95Ms": 32.9,
+    "alive": true,
+    "fov": 82,
+    "powerSaving": false,
+    "gpu": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)"
+  },
+  "powerSaving": {
+    "draws": 70,
+    "updates": 120,
+    "p50Ms": 33.6,
+    "p95Ms": 44,
+    "alive": true,
+    "fov": 82,
+    "powerSaving": true,
+    "gpu": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)"
+  },
+  "stickThreshold": {
+    "walking": {
+      "time": 13.483333333333583,
+      "alive": true,
+      "x": -23.994283875797585,
+      "z": 32.29277577862756,
+      "yaw": -0.1091699355463399,
+      "pitch": 0.012917675404263512,
+      "rush": 0,
+      "slide": -13.483333333333583,
+      "aim": 0,
+      "ammo": 4,
+      "weapon": "sniper",
+      "cartridge": false,
+      "grenades": 0,
+      "manualFire": false,
+      "stick": 21,
+      "look": null,
+      "buttons": 0,
+      "scopeHeld": false,
+      "paused": false,
+      "frame": 997,
+      "goldRing": false,
+      "reticleOpacity": 1,
+      "weaponY": -0.15,
+      "weaponRoll": 0,
+      "buffer": [
+        472,
+        218
+      ]
+    },
+    "sprinting": {
+      "time": 13.666666666666925,
+      "alive": true,
+      "x": -23.89933114850022,
+      "z": 31.426463923936183,
+      "yaw": -0.1091699355463399,
+      "pitch": 0.012917675404263512,
+      "rush": 0.7228879476114975,
+      "slide": -13.666666666666925,
+      "aim": 0,
+      "ammo": 4,
+      "weapon": "sniper",
+      "cartridge": false,
+      "grenades": 0,
+      "manualFire": false,
+      "stick": 21,
+      "look": null,
+      "buttons": 0,
+      "scopeHeld": false,
+      "paused": false,
+      "frame": 1007,
+      "goldRing": true,
+      "reticleOpacity": 0,
+      "weaponY": -0.3634812532166145,
+      "weaponRoll": 0.46699024141134415,
+      "buffer": [
+        472,
+        218
+      ]
+    },
+    "recovered": {
+      "time": 14.16666666666695,
+      "alive": true,
+      "x": -23.769295485815874,
+      "z": 30.24006897433877,
+      "yaw": -0.1091699355463399,
+      "pitch": 0.012917675404263512,
+      "rush": 0.029572397003959132,
+      "slide": -14.16666666666695,
+      "aim": 0,
+      "ammo": 4,
+      "weapon": "sniper",
+      "cartridge": false,
+      "grenades": 0,
+      "manualFire": false,
+      "stick": null,
+      "look": null,
+      "buttons": 0,
+      "scopeHeld": false,
+      "paused": false,
+      "frame": 1037,
+      "goldRing": false,
+      "reticleOpacity": 0.93,
+      "weaponY": -0.16136729579638148,
+      "weaponRoll": 0.024865959554584507,
+      "buffer": [
+        472,
+        218
+      ]
+    }
+  },
+  "sameAspect": {
+    "source": "simulated OS orientation notification",
+    "viewport": [
+      932,
+      430
+    ],
+    "modal": "pause",
+    "paused": true,
+    "held": false,
+    "manualFire": false,
+    "deadline": 18.67000000000035,
+    "matchingDrops": 1,
+    "drop": {
+      "vx": 0,
+      "vy": 0,
+      "vz": 0,
+      "deadline": 18.67000000000035
+    }
+  },
+  "deviceEvents": [
+    {
+      "type": "pointerdown",
+      "id": 3,
+      "at": 13094,
+      "x": 177.234375,
+      "y": 278.65625,
+      "target": "DIV",
+      "viewport": [
+        844,
+        390,
+        844,
+        390,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerdown",
+      "id": 4,
+      "at": 13514.5,
+      "x": 239,
+      "y": 221.609375,
+      "target": "run",
+      "viewport": [
+        844,
+        390,
+        844,
+        390,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerup",
+      "id": 4,
+      "at": 13614.399999976158,
+      "x": 239,
+      "y": 221.609375,
+      "target": "run",
+      "viewport": [
+        844,
+        390,
+        844,
+        390,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "lostpointercapture",
+      "id": 4,
+      "at": 13614.399999976158,
+      "x": 239,
+      "y": 221.609375,
+      "target": "run",
+      "viewport": [
+        844,
+        390,
+        844,
+        390,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerdown",
+      "id": 5,
+      "at": 14146.899999976158,
+      "x": 804,
+      "y": 288,
+      "target": "crouch",
+      "viewport": [
+        844,
+        390,
+        844,
+        390,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerup",
+      "id": 5,
+      "at": 14384.399999976158,
+      "x": 804,
+      "y": 288,
+      "target": "crouch",
+      "viewport": [
+        844,
+        390,
+        844,
+        390,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "lostpointercapture",
+      "id": 5,
+      "at": 14384.399999976158,
+      "x": 804,
+      "y": 288,
+      "target": "crouch",
+      "viewport": [
+        844,
+        390,
+        844,
+        390,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerup",
+      "id": 3,
+      "at": 14429.600000023842,
+      "x": 177.234375,
+      "y": 213.65625,
+      "target": "DIV",
+      "viewport": [
+        844,
+        390,
+        844,
+        390,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "lostpointercapture",
+      "id": 3,
+      "at": 14429.600000023842,
+      "x": 177.234375,
+      "y": 213.65625,
+      "target": "DIV",
+      "viewport": [
+        844,
+        390,
+        844,
+        390,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerdown",
+      "id": 6,
+      "at": 14892.300000071526,
+      "x": 177.234375,
+      "y": 278.65625,
+      "target": "DIV",
+      "viewport": [
+        844,
+        390,
+        844,
+        390,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerdown",
+      "id": 7,
+      "at": 15029.300000071526,
+      "x": 464.20001220703125,
+      "y": 136.5,
+      "target": "DIV",
+      "viewport": [
+        844,
+        390,
+        844,
+        390,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerdown",
+      "id": 8,
+      "at": 15095.100000023842,
+      "x": 800,
+      "y": 220,
+      "target": "fire",
+      "viewport": [
+        844,
+        390,
+        844,
+        390,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerup",
+      "id": 8,
+      "at": 15322.800000071526,
+      "x": 826,
+      "y": 227,
+      "target": "fire",
+      "viewport": [
+        844,
+        390,
+        844,
+        390,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "lostpointercapture",
+      "id": 8,
+      "at": 15322.800000071526,
+      "x": 826,
+      "y": 227,
+      "target": "fire",
+      "viewport": [
+        844,
+        390,
+        844,
+        390,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerup",
+      "id": 7,
+      "at": 15638.800000071526,
+      "x": 483.20001220703125,
+      "y": 133.5,
+      "target": "DIV",
+      "viewport": [
+        844,
+        390,
+        844,
+        390,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "lostpointercapture",
+      "id": 7,
+      "at": 15638.800000071526,
+      "x": 483.20001220703125,
+      "y": 133.5,
+      "target": "DIV",
+      "viewport": [
+        844,
+        390,
+        844,
+        390,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerup",
+      "id": 6,
+      "at": 15687.399999976158,
+      "x": 157.234375,
+      "y": 258.65625,
+      "target": "DIV",
+      "viewport": [
+        844,
+        390,
+        844,
+        390,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "lostpointercapture",
+      "id": 6,
+      "at": 15687.399999976158,
+      "x": 157.234375,
+      "y": 258.65625,
+      "target": "DIV",
+      "viewport": [
+        844,
+        390,
+        844,
+        390,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerdown",
+      "id": 9,
+      "at": 15903.300000071526,
+      "x": 800,
+      "y": 220,
+      "target": "fire",
+      "viewport": [
+        844,
+        390,
+        844,
+        390,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointercancel",
+      "id": 9,
+      "at": 16142.300000071526,
+      "x": 800,
+      "y": 220,
+      "target": "fire",
+      "viewport": [
+        844,
+        390,
+        844,
+        390,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "lostpointercapture",
+      "id": 9,
+      "at": 16142.300000071526,
+      "x": 800,
+      "y": 220,
+      "target": "fire",
+      "viewport": [
+        844,
+        390,
+        844,
+        390,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerdown",
+      "id": 10,
+      "at": 16194.600000023842,
+      "x": 177.234375,
+      "y": 278.65625,
+      "target": "DIV",
+      "viewport": [
+        844,
+        390,
+        844,
+        390,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerup",
+      "id": 10,
+      "at": 16533.200000047684,
+      "x": 177.234375,
+      "y": 248.65625,
+      "target": "DIV",
+      "viewport": [
+        390,
+        844,
+        390,
+        844,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "lostpointercapture",
+      "id": 10,
+      "at": 16533.200000047684,
+      "x": 177.234375,
+      "y": 248.65625,
+      "target": "DIV",
+      "viewport": [
+        390,
+        844,
+        390,
+        844,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerdown",
+      "id": 11,
+      "at": 16676.600000023842,
+      "x": 154,
+      "y": 140.3800048828125,
+      "target": "resume",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerup",
+      "id": 11,
+      "at": 16676.700000047684,
+      "x": 154,
+      "y": 140.3800048828125,
+      "target": "resume",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "lostpointercapture",
+      "id": 11,
+      "at": 16676.700000047684,
+      "x": 154,
+      "y": 140.3800048828125,
+      "target": "resume",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerdown",
+      "id": 12,
+      "at": 17168.300000071526,
+      "x": 38,
+      "y": 34,
+      "target": "mobile-more",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerup",
+      "id": 12,
+      "at": 17168.300000071526,
+      "x": 38,
+      "y": 34,
+      "target": "mobile-more",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "lostpointercapture",
+      "id": 12,
+      "at": 17168.300000071526,
+      "x": 38,
+      "y": 34,
+      "target": "mobile-more",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerdown",
+      "id": 13,
+      "at": 17531.100000023842,
+      "x": 137,
+      "y": 97,
+      "target": "grenade",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerup",
+      "id": 13,
+      "at": 17531.100000023842,
+      "x": 137,
+      "y": 97,
+      "target": "grenade",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "lostpointercapture",
+      "id": 13,
+      "at": 17531.100000023842,
+      "x": 137,
+      "y": 97,
+      "target": "grenade",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerdown",
+      "id": 14,
+      "at": 18217.200000047684,
+      "x": 38,
+      "y": 34,
+      "target": "mobile-more",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerup",
+      "id": 14,
+      "at": 18217.399999976158,
+      "x": 38,
+      "y": 34,
+      "target": "mobile-more",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "lostpointercapture",
+      "id": 14,
+      "at": 18217.399999976158,
+      "x": 38,
+      "y": 34,
+      "target": "mobile-more",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerdown",
+      "id": 15,
+      "at": 18555.700000047684,
+      "x": 137,
+      "y": 97,
+      "target": "grenade",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerup",
+      "id": 15,
+      "at": 18555.899999976158,
+      "x": 137,
+      "y": 97,
+      "target": "grenade",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "lostpointercapture",
+      "id": 15,
+      "at": 18555.899999976158,
+      "x": 137,
+      "y": 97,
+      "target": "grenade",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerdown",
+      "id": 16,
+      "at": 18948.300000071526,
+      "x": 38,
+      "y": 34,
+      "target": "mobile-more",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerup",
+      "id": 16,
+      "at": 18948.300000071526,
+      "x": 38,
+      "y": 34,
+      "target": "mobile-more",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "lostpointercapture",
+      "id": 16,
+      "at": 18948.300000071526,
+      "x": 38,
+      "y": 34,
+      "target": "mobile-more",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerdown",
+      "id": 17,
+      "at": 19300,
+      "x": 137,
+      "y": 97,
+      "target": "grenade",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerup",
+      "id": 17,
+      "at": 19300.100000023842,
+      "x": 137,
+      "y": 97,
+      "target": "grenade",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "lostpointercapture",
+      "id": 17,
+      "at": 19300.100000023842,
+      "x": 137,
+      "y": 97,
+      "target": "grenade",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerdown",
+      "id": 18,
+      "at": 19749.899999976158,
+      "x": 888,
+      "y": 260,
+      "target": "fire",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerup",
+      "id": 18,
+      "at": 20516,
+      "x": 888,
+      "y": 260,
+      "target": "fire",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "lostpointercapture",
+      "id": 18,
+      "at": 20516,
+      "x": 888,
+      "y": 260,
+      "target": "fire",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerdown",
+      "id": 19,
+      "at": 23953.200000047684,
+      "x": 894,
+      "y": 34,
+      "target": "pause",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerup",
+      "id": 19,
+      "at": 23954.200000047684,
+      "x": 894,
+      "y": 34,
+      "target": "pause",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "lostpointercapture",
+      "id": 19,
+      "at": 23954.200000047684,
+      "x": 894,
+      "y": 34,
+      "target": "pause",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerdown",
+      "id": 1,
+      "at": 24185.200000047684,
+      "x": 887.5,
+      "y": 210.3699951171875,
+      "target": "INPUT",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerup",
+      "id": 1,
+      "at": 24185.800000071526,
+      "x": 887.5,
+      "y": 210.3699951171875,
+      "target": "INPUT",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerdown",
+      "id": 1,
+      "at": 24316.5,
+      "x": 887.5,
+      "y": 209.9600067138672,
+      "target": "INPUT",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerup",
+      "id": 1,
+      "at": 24316.600000023842,
+      "x": 887.5,
+      "y": 209.9600067138672,
+      "target": "INPUT",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerdown",
+      "id": 20,
+      "at": 24427.600000023842,
+      "x": 154,
+      "y": 140.3800048828125,
+      "target": "resume",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerup",
+      "id": 20,
+      "at": 24427.600000023842,
+      "x": 154,
+      "y": 140.3800048828125,
+      "target": "resume",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "lostpointercapture",
+      "id": 20,
+      "at": 24427.600000023842,
+      "x": 154,
+      "y": 140.3800048828125,
+      "target": "resume",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerdown",
+      "id": 21,
+      "at": 27026.300000071526,
+      "x": 144.83187866210938,
+      "y": 319.9312438964844,
+      "target": "DIV",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerup",
+      "id": 21,
+      "at": 27527.100000023842,
+      "x": 144.83187866210938,
+      "y": 245.93124389648438,
+      "target": "DIV",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "lostpointercapture",
+      "id": 21,
+      "at": 27527.100000023842,
+      "x": 144.83187866210938,
+      "y": 245.93124389648438,
+      "target": "DIV",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerdown",
+      "id": 22,
+      "at": 28076.5,
+      "x": 38,
+      "y": 34,
+      "target": "mobile-more",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerup",
+      "id": 22,
+      "at": 28076.600000023842,
+      "x": 38,
+      "y": 34,
+      "target": "mobile-more",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "lostpointercapture",
+      "id": 22,
+      "at": 28076.600000023842,
+      "x": 38,
+      "y": 34,
+      "target": "mobile-more",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerdown",
+      "id": 23,
+      "at": 28289.600000023842,
+      "x": 57,
+      "y": 97,
+      "target": "buy",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerup",
+      "id": 23,
+      "at": 28289.700000047684,
+      "x": 57,
+      "y": 97,
+      "target": "buy",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "lostpointercapture",
+      "id": 23,
+      "at": 28289.700000047684,
+      "x": 57,
+      "y": 97,
+      "target": "buy",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerdown",
+      "id": 24,
+      "at": 28479.700000047684,
+      "x": 370.989990234375,
+      "y": 236.1199951171875,
+      "target": "BUTTON",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerup",
+      "id": 24,
+      "at": 28479.800000071526,
+      "x": 370.989990234375,
+      "y": 236.1199951171875,
+      "target": "BUTTON",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "lostpointercapture",
+      "id": 24,
+      "at": 28479.800000071526,
+      "x": 370.989990234375,
+      "y": 236.1199951171875,
+      "target": "BUTTON",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerdown",
+      "id": 25,
+      "at": 28590.300000071526,
+      "x": 826,
+      "y": 391,
+      "target": "return-buy",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerup",
+      "id": 25,
+      "at": 28590.399999976158,
+      "x": 826,
+      "y": 391,
+      "target": "return-buy",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "lostpointercapture",
+      "id": 25,
+      "at": 28590.399999976158,
+      "x": 826,
+      "y": 391,
+      "target": "return-buy",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerdown",
+      "id": 26,
+      "at": 28762.399999976158,
+      "x": 38,
+      "y": 34,
+      "target": "mobile-more",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerup",
+      "id": 26,
+      "at": 28762.5,
+      "x": 38,
+      "y": 34,
+      "target": "mobile-more",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "lostpointercapture",
+      "id": 26,
+      "at": 28762.5,
+      "x": 38,
+      "y": 34,
+      "target": "mobile-more",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerdown",
+      "id": 27,
+      "at": 29064.800000071526,
+      "x": 137,
+      "y": 97,
+      "target": "grenade",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerup",
+      "id": 27,
+      "at": 29064.899999976158,
+      "x": 137,
+      "y": 97,
+      "target": "grenade",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "lostpointercapture",
+      "id": 27,
+      "at": 29064.899999976158,
+      "x": 137,
+      "y": 97,
+      "target": "grenade",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerdown",
+      "id": 28,
+      "at": 29380,
+      "x": 38,
+      "y": 34,
+      "target": "mobile-more",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerup",
+      "id": 28,
+      "at": 29380.399999976158,
+      "x": 38,
+      "y": 34,
+      "target": "mobile-more",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "lostpointercapture",
+      "id": 28,
+      "at": 29380.399999976158,
+      "x": 38,
+      "y": 34,
+      "target": "mobile-more",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerdown",
+      "id": 29,
+      "at": 29659,
+      "x": 137,
+      "y": 97,
+      "target": "grenade",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerup",
+      "id": 29,
+      "at": 29659.100000023842,
+      "x": 137,
+      "y": 97,
+      "target": "grenade",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "lostpointercapture",
+      "id": 29,
+      "at": 29659.100000023842,
+      "x": 137,
+      "y": 97,
+      "target": "grenade",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerdown",
+      "id": 30,
+      "at": 29909,
+      "x": 38,
+      "y": 34,
+      "target": "mobile-more",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerup",
+      "id": 30,
+      "at": 29909.200000047684,
+      "x": 38,
+      "y": 34,
+      "target": "mobile-more",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "lostpointercapture",
+      "id": 30,
+      "at": 29909.200000047684,
+      "x": 38,
+      "y": 34,
+      "target": "mobile-more",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerdown",
+      "id": 31,
+      "at": 30117.899999976158,
+      "x": 137,
+      "y": 97,
+      "target": "grenade",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerup",
+      "id": 31,
+      "at": 30118.100000023842,
+      "x": 137,
+      "y": 97,
+      "target": "grenade",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "lostpointercapture",
+      "id": 31,
+      "at": 30118.100000023842,
+      "x": 137,
+      "y": 97,
+      "target": "grenade",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointerdown",
+      "id": 32,
+      "at": 30425,
+      "x": 888,
+      "y": 260,
+      "target": "fire",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "pointercancel",
+      "id": 32,
+      "at": 30893.399999976158,
+      "x": 888,
+      "y": 260,
+      "target": "fire",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "type": "lostpointercapture",
+      "id": 32,
+      "at": 30893.399999976158,
+      "x": 888,
+      "y": 260,
+      "target": "fire",
+      "viewport": [
+        932,
+        430,
+        932,
+        430,
+        0,
+        0,
+        1
+      ]
+    }
+  ],
+  "errors": []
+}
