@@ -16,7 +16,10 @@ assert(stagePath&&outputPath&&['loopback','internet'].includes(surface),'Usage: 
 const stage=resolve(stagePath),output=resolve(outputPath),pilotRoot=join(stage,'pilot'),siteRoot=join(stage,'site');
 const {CONTRACT}=await import(pathToFileURL(join(pilotRoot,'shared/multiplayer/build.mjs')));
 const tmp=await mkdtemp(join(tmpdir(),'cs3-candidate-edge-'));
-const closed=[], errors=[], browsers=[], evidence={path:surface,build:CONTRACT.buildHash,protocol:CONTRACT.protocolVersion,
+const closed=[], errors=[], browsers=[], evidence={path:surface,
+  publicEntry:'loopback HTTPS at the Pages project subpath',
+  pilotEntry:surface==='internet'?'external HTTPS/WSS tunnel':'pinned loopback TLS/WSS',
+  build:CONTRACT.buildHash,protocol:CONTRACT.protocolVersion,
   date:new Date().toISOString(),physicalPhone:false,viewports:[],navigation:[],players:[]};
 let step='start',edge,site;
 async function cleanup(){
@@ -44,6 +47,7 @@ async function surfaceLoad(page,surface,visit,fn) {
     const resources=performance.getEntriesByType('resource').filter(r=>r.name.startsWith(location.origin+'/'));
     return {lang:document.documentElement.lang,resources:resources.length,cacheHits:resources.filter(r=>r.transferSize===0&&r.decodedBodySize>0).length};
   })});
+  assert.equal(evidence.navigation.at(-1).lang,'en','Each normal launch presents English');
 }
 async function snap(page,name){
   await page.screenshot({path:join(output,name+'.jpg'),type:'jpeg',quality:76,timeout:30000});
@@ -143,6 +147,11 @@ try{
   await surfaceLoad(host.page,'public','cold',()=>loadSite(host.page));
   await surfaceLoad(host.page,'public','cached',()=>loadSite(host.page));
   assert(evidence.navigation.at(-1).cacheHits>0,'warm public entry must use its ordinary browser cache');
+  evidence.publicBuild=await host.page.evaluate(async()=>{
+    const module=new URL('../shared/multiplayer/build.mjs',location.href);
+    return (await import(module.href)).CONTRACT.buildHash;
+  });
+  assert.equal(evidence.publicBuild,CONTRACT.buildHash);
   step='profile and private gate';
   await host.page.goto(edge.origin+'/profile');
   await host.page.getByRole('heading',{name:'Local guest'}).waitFor();
@@ -175,14 +184,17 @@ try{
   await snap(guest.page,'active-match');
   await guest.page.locator('[data-mobile-action=fire]').tap();
   const fired=await until(read,s=>s?.ammo<initial.ammo,'Guest touch fire visible on host');
-  step='reconnect';await edge.authority.dropGuest('Release guest');
+  step='reconnect';
+  const interrupted=performance.now();
+  await edge.authority.dropGuest('Release guest');
   const resumed=await until(read,s=>s?.connected&&s.epoch>fired.epoch,'Reserved guest resumed',14500);
+  const observedReconnectMs=Math.round(performance.now()-interrupted);
   assert.equal(resumed.life,fired.life);assert.equal(resumed.actor,fired.actor);assert(resumed.actor);assert.equal(resumed.match,fired.match);
   await enterTouchMatch(guest.page);
   await guest.page.locator('[data-mobile-action=fire]').tap();
   const refired=await until(read,s=>s.ammo<resumed.ammo,'Host observed guest input after reconnect');
   assert(host.ws.connections>=1 && guest.ws.connections>=2 && [host,guest].every(p=>p.ws.sent>0&&p.ws.received>0));
-  evidence.room={initial,fired,resumed,refired,ws:[host.ws,guest.ws]};
+  evidence.room={initial,fired,resumed,refired,observedReconnectMs,ws:[host.ws,guest.ws]};
   step='return from match';
   await guest.page.locator('[data-mobile-action=pause]').tap();
   await guest.page.locator('#restart').tap();await guest.page.locator('#network-name').waitFor();

@@ -1,5 +1,15 @@
 # CS3-12 multiplayer staging
 
+## Final release repeat
+
+The complete external two-renderer and mixed-release journeys passed on 2026-11-28 for published commit `fc61be4382b4ea97024d3eeb762f655b96612503`. The public and private exports shared manifest SHA-256 `87d2f3177e22bac3b00143dc92947e972b7d08fcb80611c83742ed5a59ea239b`, checked against the published Git object. Both public project-path entry and authenticated private entry loaded build `aec199fd40e814a4df3b4ff04a49b25277aca6fd2788375a32d801bb11d1420b`. The public return visit reused 247 of 250 resources. The private return visit recorded zero cache hits. All four navigations presented English.
+
+On the Pi’s native V3D, two independent touch-emulated clients played Compact Arena through an external HTTPS/WSS staging connector. The host observed the guest’s reserved seat again 433 ms after the deliberate transport interruption. The guest kept life 3 and match 1, advanced from epoch 1 to 2, and fired again. Both players left, the host returned to the family room, and the candidate ended with zero rooms and players. The temporary external connector and both renderers exited. [Final browser receipt](network-final-browser.json)
+
+At a separate pinned TLS origin, the actual CS2 browser SDK remained open during the authority version change and made 12 unsuccessful attempts to recover its old seat over WSS. Its old cookie received 401. Fresh sign-in with the old protocol produced a version mismatch. Reloading the current contract admitted a fresh player on build `aec199fd`. [Final mixed-version receipt](network-final-versions.json)
+
+## Earlier native and transport qualification
+
 The public and pilot exporters ran against the published release tree at `0e0346c0833b05d308d630beaa24447af1abf90e`. Both yielded manifest SHA-256 `065b531e6b97545315ef5497ebaaa0880f9656d7e6e687b7d3d5a750fb23084f`, containing 727 public files. The pilot added 27 private files. The isolated pilot installed its 90 locked production packages from the offline npm cache. The candidate ran build `8dc2a53ff714cb321129cf8f5e4c0b41bef0c4239baf18a2608731512b8cc1fc`, protocol 22.
 
 | Player journey | Observed result |
