@@ -36,8 +36,8 @@ function link(label, href) {
   el.href = href;
   return el;
 }
-export async function accountRequest(path, body) {
-  const options = {credentials:'same-origin', cache:'no-store', headers:{Accept:'application/json'}};
+export async function accountRequest(path, body, signal) {
+  const options = {credentials:'same-origin', cache:'no-store', headers:{Accept:'application/json'},signal};
   if (body !== undefined) {
     Object.assign(options, {method:'POST', body:JSON.stringify(body)});
     options.headers['Content-Type'] = 'application/json';
@@ -85,6 +85,7 @@ export function mountAccountProfile(root) {
         const result = await accountRequest(path,payload);
         if (!valid()) return;
         data = result;
+        window.dispatchEvent(new CustomEvent('cs-account-changed',{detail:{user:result.user,arsenal:result.arsenal,entitlements:result.entitlements}}));
         render();
         if (result.recoveryCode) {
           const code = result.recoveryCode;

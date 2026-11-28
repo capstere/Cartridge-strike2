@@ -1,3 +1,4 @@
+import {equippedDefinition} from './arsenal.mjs';
 import {rushReady} from './rush.mjs';
 import { WEAPONS } from './config.mjs';
 import { advanceAim, canAim, aimFov, aimFriction, EmptyMagazineReload, nextWeapon, clamp01 } from './tactical-rules.mjs';
@@ -104,7 +105,7 @@ export class TacticalControls {
     if (!canAim(p.weapon) || p.reloadUntil || p.action) this.wanted = false;
     this.reload.tick(g, this.settings.autoReload, this.isInteracting());
     const target = (this.wanted || (this.padAim && canAim(p.weapon) && !p.action)) && !p.reloadUntil && rushReady(p) ? 1 : 0;
-    this.amount = this.settings.reducedMotion ? target : advanceAim(this.amount,target,dt);
+    this.amount = this.settings.reducedMotion ? target : advanceAim(this.amount,target,dt/(equippedDefinition(p)?.adsTime||1));
     p.aimAmount = clamp01(this.amount); p.aiming = target === 1;
     this.updateButton();
     this.syncTrigger();
@@ -122,7 +123,7 @@ export class TacticalControls {
 
   syncTrigger() {
     if (!this.mobile.enabled) return;
-    const p = this.getGame()?.player, w = WEAPONS[p?.weapon];
+    const p = this.getGame()?.player, w = equippedDefinition(p);
     const trigger = this.mobile.root?.querySelector('[data-mobile-action="fire"]');
     if (!trigger) return;
     const manual = w?.slot === 'grenade' || !!w?.projectile;
@@ -135,7 +136,7 @@ export class TacticalControls {
 
   lookScale(touch, yaw, pitch) {
     const p = this.getGame()?.player;
-    const fov = 76 + (aimFov(p?.weapon) - 76) * this.amount;
+    const fov = 76 + ((aimFov(p?.weapon)/(equippedDefinition(p)?.zoom||1)) - 76) * this.amount;
     const zoomScale = .35 + .65 * fov / 76;
     return zoomScale * (touch && this.settings.mobileAimAssist && this.playing() ? aimFriction(this.getGame(), yaw, pitch) : 1);
   }
@@ -152,7 +153,7 @@ export class TacticalControls {
   render(renderer) {
     const p = this.getGame()?.player;
     const amount = this.playing() && canAim(p?.weapon) ? this.amount : 0;
-    const fov = 76 + (aimFov(p?.weapon) - 76) * amount;
+    const fov = 76 + ((aimFov(p?.weapon)/(equippedDefinition(p)?.zoom||1)) - 76) * amount;
     if (Math.abs(renderer.camera.fov - fov) > .005) {
       renderer.camera.fov = fov; renderer.camera.updateProjectionMatrix();
     }

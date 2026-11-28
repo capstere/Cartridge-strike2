@@ -81,7 +81,7 @@ function perceive(g,z){
   let noise=null,best=0;
   for(const e of g.soundEvents){
     if(e.serial<=z.heard)continue;
-    const loud=e.type==='shot'&&e.weapon!=='knife'?20:e.type==='he'?24:e.type==='step'?(e.mode==='run'?5.2:1.35):0;
+    const loud=e.type==='shot'&&e.weapon!=='knife'?(e.suppressed?4:20):e.type==='he'?24:e.type==='step'?(e.mode==='run'?5.2:1.35):0;
     if(!loud || (e.type!=='he'&&!e.team))continue;
     const d=distance(p,e);if(d>=loud)continue;
     const clear=g.world.segmentClear(from,at(e,.85),{vision:false}), strength=loud*(clear?1:.27)-d;

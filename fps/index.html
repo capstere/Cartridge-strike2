@@ -63,8 +63,24 @@
     </section>
 
     <section class="route-panel sub-panel" data-panel="classes" aria-labelledby="classes-title" hidden>
-      <h1 id="classes-title" tabindex="-1">Classes</h1><div class="route-details"><p>Classic players buy equipment at spawn. In Endless Action, choose a starting weapon in Solo setup.</p>
-      <button type="button" data-go="solo" class="route-action">Open Solo setup →</button><p>Custom class slots are unavailable in this build.</p></div>
+      <h1 id="classes-title" tabindex="-1">Classes</h1>
+      <p class="arsenal-progress" data-class-progress></p>
+      <div class="arsenal-workshop">
+        <nav class="arsenal-slots" aria-label="Class selection">
+          <h2>Presets</h2><div data-class-presets></div>
+          <h2>Custom classes</h2><div data-class-custom></div>
+        </nav>
+        <div class="arsenal-detail">
+          <h2 data-class-title></h2><p data-class-note></p>
+          <div class="arsenal-rack" aria-label="Inspect equipped weapons"></div>
+          <div class="arsenal-rotate"><button type="button" data-class-turn="-1" aria-label="Rotate weapon left">↶</button>
+            <button type="button" data-class-turn="1" aria-label="Rotate weapon right">↷</button></div>
+          <div data-class-stats></div><div data-class-editor></div>
+          <p data-class-status role="status" aria-live="polite"></p>
+          <div class="arsenal-actions"><button type="button" data-class-equip>Equip class</button>
+            <button type="button" data-go="solo" class="route-action">Open Solo setup →</button></div>
+        </div>
+      </div>
     </section>
     <section class="route-panel sub-panel" data-panel="outfits" aria-labelledby="outfits-title" hidden>
       <h1 id="outfits-title" tabindex="-1">Outfits</h1>

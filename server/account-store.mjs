@@ -4,6 +4,7 @@ import {closeSync,openSync,fchmodSync,realpathSync,fstatSync,constants} from 'no
 import {basename,dirname,join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {DatabaseSync} from 'node:sqlite';
+import {BASE_ENTITLEMENTS,weaponLevelFromXP,playerLevelFromXP,validateArsenal} from '../src/fps/arsenal.mjs';
 import {applyMatchCredit} from './result-journal.mjs';
 
 const derive=promisify(scrypt);
@@ -45,7 +46,7 @@ export class AccountStore {
       this.db.exec('PRAGMA trusted_schema=OFF; PRAGMA foreign_keys=ON; PRAGMA busy_timeout=250; PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL');
       this.transaction(()=>{
         const version=this.db.prepare('PRAGMA user_version').get().user_version;
-        if(version>3)throw Error('Unsupported account database version.');
+        if(version>4)throw Error('Unsupported account database version.');
         if(!version)this.db.exec(schema);
         if(version<2)this.db.exec(`CREATE TABLE credential_attempts(name_hash TEXT PRIMARY KEY, failures INTEGER NOT NULL, until_ms INTEGER NOT NULL);
           CREATE INDEX attempts_expiry ON credential_attempts(until_ms);
@@ -58,6 +59,9 @@ export class AccountStore {
             reason TEXT NOT NULL,created INTEGER NOT NULL,PRIMARY KEY(epoch,reporter,target,reason));
           CREATE INDEX reports_expiry ON public_reports(created);
           PRAGMA user_version=3;`);
+        if(version<4)this.db.exec(`CREATE TABLE arsenals(user_id TEXT PRIMARY KEY REFERENCES users ON DELETE CASCADE, profile TEXT NOT NULL);
+          CREATE TABLE weapon_progress(user_id TEXT NOT NULL REFERENCES users ON DELETE CASCADE,weapon TEXT NOT NULL,xp INTEGER NOT NULL DEFAULT 0 CHECK(xp>=0),PRIMARY KEY(user_id,weapon));
+          PRAGMA user_version=4;`);
       });
       this.findUser=this.db.prepare('SELECT u.*,s.token AS session FROM users u JOIN sessions s ON s.user_id=u.id WHERE s.token=? AND s.origin=? AND s.expires>?');
       this.findDevice=this.db.prepare('SELECT token FROM devices WHERE token=? AND origin=? AND expires>?');
@@ -165,12 +169,32 @@ export class AccountStore {
   }
   rename(user,name){if(!validateName(name))throw denied(400,'Use a display name of 1–24 characters.');this.db.prepare('UPDATE users SET display_name=? WHERE id=?').run(name.trim(),user.id);}
   logout(token,origin){if(token)this.db.prepare('DELETE FROM sessions WHERE token=? AND origin=?').run(digest(token),origin);}
+  arsenalEntitlements(userId){
+    if(!userId)return BASE_ENTITLEMENTS;
+    const {xp}=this.db.prepare('SELECT coalesce(sum(xp),0) AS xp FROM rewards WHERE user_id=?').get(userId);
+    const weaponLevels={};
+    for(const row of this.db.prepare('SELECT weapon,xp FROM weapon_progress WHERE user_id=?').all(userId))
+      weaponLevels[row.weapon]=weaponLevelFromXP(row.weapon,row.xp);
+    return {playerLevel:playerLevelFromXP(xp),weaponLevels};
+  }
+  arsenalFor(userId,entitlements=this.arsenalEntitlements(userId)){
+    const row=this.db.prepare('SELECT profile FROM arsenals WHERE user_id=?').get(userId);
+    return row?validateArsenal(JSON.parse(row.profile),entitlements):null;
+  }
+  saveArsenal(userId,profile){
+    return this.transaction(()=>{
+      try{validateArsenal(profile,this.arsenalEntitlements(userId));}
+      catch(error){throw denied(400,error.message);}
+      this.db.prepare('INSERT INTO arsenals(user_id,profile) VALUES(?,?) ON CONFLICT(user_id) DO UPDATE SET profile=excluded.profile').run(userId,JSON.stringify(profile));
+    });
+  }
   profile(user,rooms=[],all=false){
-    if(!user)return {user:null,stats:emptyStats(),recent:[],rooms};
+    if(!user)return {user:null,stats:emptyStats(),recent:[],rooms,arsenal:null,entitlements:BASE_ENTITLEMENTS};
     const stats=this.db.prepare(`SELECT count(*) AS matches,coalesce(sum(kills),0) AS kills,coalesce(sum(deaths),0) AS deaths,coalesce(sum(win),0) AS wins,
        (SELECT coalesce(sum(xp),0) FROM rewards WHERE user_id=?) AS xp FROM summaries WHERE user_id=?`).get(user.id,user.id);
     const recent=this.db.prepare('SELECT mode,map,played,kills,deaths,win FROM summaries WHERE user_id=? ORDER BY played DESC'+(all?'':' LIMIT 12')).all(user.id);
-    return {user:{username:user.username,displayName:user.display_name,createdAt:user.created},stats,recent,rooms};
+    const entitlements=this.arsenalEntitlements(user.id);
+    return {arsenal:this.arsenalFor(user.id,entitlements),entitlements,user:{username:user.username,displayName:user.display_name,createdAt:user.created},stats,recent,rooms};
   }
   deviceFor(token,origin){
     if(!token)return;

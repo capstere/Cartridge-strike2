@@ -27,7 +27,8 @@ export function shotSpread(actor, weapon) {
   if ((!actor.isPlayer && actor.controllerType !== 'human') || actor.bot || !canAim(w.id)) return old;
   const aim = clamp01(actor.aimAmount);
   // Same direction as Riposte: precision reduces movement/bloom, not damage.
-  return old * (1 - .65 * aim * aim);
+  const stable=w.bipod&&actor.crouching&&actor.moving<.1 ? .35 : 1;
+  return old * (1 - .65 * aim * aim)*(1+((w.adsAccuracy||1)-1)*aim)*stable;
 }
 
 /** Friction slows a finger near a VISIBLE enemy. It never changes the aim itself. */

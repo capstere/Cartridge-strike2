@@ -4,6 +4,8 @@
 import {UI_EN} from './english-ui.mjs';
 import * as T from '../../vendor/three/three.module.js';
 import {getCharacterOverride} from './character-overrides.mjs?v=6.1.2';
+import {mountArsenal} from './arsenal-menu.mjs';
+import {arsenalPreview} from './arsenal-preview.mjs';
 import {mountWardrobe} from './wardrobe-menu.mjs';
 import {syncAuthoredActor} from './character-actors.mjs?v=6.1.2';
 import {makeWeapon} from './models.mjs?v=6.1.2';
@@ -85,7 +87,7 @@ function makeStage(){
   turntable.userData.marker = new T.Object3D();
   // Use the same world model, grip and support-hand solver as a live actor.
   function poseArmed(operator,time) {
-    const id = $('loadout').value || 'smg';
+    const id = $('loadout').selectedOptions[0]?.dataset.primary || $('loadout').value || 'smg';
     if (turntable.userData.weaponModel?.userData.id !== id) {
       weaponSocket.clear();
       const weapon = makeWeapon(id,{viewmodel:false});
@@ -116,7 +118,7 @@ function makeStage(){
   tileCamera.lookAt(0,.88,0);
   function drawNextPortrait() {
     if (menu.dataset.screen !== 'outfits' || !avatar) return;
-    const weapon = $('loadout').value || 'smg';
+    const weapon = $('loadout').selectedOptions[0]?.dataset.primary || $('loadout').value || 'smg';
     if (thumbnailTeam !== team || thumbnailWeapon !== weapon) {
       thumbnailTeam = team;
       thumbnailWeapon = weapon;
@@ -203,7 +205,7 @@ function makeStage(){
     renderer.render(scene,camera);
   }
   wake();
-  return {setTeam,rotate:direction=>{dragYaw+=direction*Math.PI/6;}};
+  return {setTeam,arsenal:arsenalPreview(renderer),rotate:direction=>{dragYaw+=direction*Math.PI/6;}};
 }
 
 let stage=null;
@@ -211,10 +213,15 @@ async function boot(){
   // Wait until app.mjs finished loading the level and any private character design.
   await new Promise(r=>{const ok=()=>$('loading').hidden||$('loading').style.display==='none';if(ok())return r();const mo=new MutationObserver(()=>{if(ok()){mo.disconnect();r();}});mo.observe($('loading'),{attributes:true});});
   if (!$('fatal').hidden) return;
-  try{await loadCharacterLibrary();stage=makeStage();syncTeam();}catch(e){console.warn('Lobby preview unavailable:',e.message);}
+  try{await loadCharacterLibrary();stage=makeStage();syncTeam();arsenal.draw();}catch(e){console.warn('Lobby preview unavailable:',e.message);}
 }
 const wardrobe = mountWardrobe({selected:currentOutfit,savedDesign:()=>Boolean(charSelect.value || getCharacterOverride('player',menu.dataset.side+'-0')),
   equip(id){const saved=equipOutfit(id);stage?.setTeam(menu.dataset.side,true);return saved;},
   rotate(direction){stage?.rotate(direction);}
+});
+const arsenal=mountArsenal({
+  team:()=>menu.dataset.side||'analysts',
+  draw:(canvas,spec,yaw)=>stage?.arsenal.draw(canvas,spec,yaw),
+  clear:()=>stage?.arsenal.clear()
 });
 syncTeam();boot();

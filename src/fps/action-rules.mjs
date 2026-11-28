@@ -1,3 +1,4 @@
+import {classWeaponItem} from './arsenal.mjs';
 import {bonusOrigin} from './bonuses.mjs';
 import {resetRush} from './rush.mjs';
 import {controlObjective,combatSpawnCandidates,activeControl} from './combat-flow.mjs';
@@ -36,6 +37,15 @@ export function prepareActionRound(g){
 }
 export const onlinePrimaries=team=>['smg',team==='analysts'?'ar47':'cr4','shotgun','sniper','bazooka'];
 function equipEndless(g,a){
+ if(a.arsenalClass){
+  const kit=a.arsenalClass;
+  a.inventory=g.startInventory(a.team);
+  a.inventory.primary=classWeaponItem(kit.primary.id,kit.primary);
+  a.inventory.pistol=classWeaponItem(kit.secondary.id,kit.secondary);
+  a.inventory[kit.equipment]=1;a.weapon=a.loadout=kit.primary.id;a.lastWeapon=kit.secondary.id;
+  a.aimAmount=0;a.aiming=false;a.armor=g.config.networkSlice?0:60;a.money=g.config.networkSlice?0:g.config.maxMoney;
+  return;
+ }
  if(g.config.networkSlice){
   const primary=onlinePrimaries(a.team).includes(a.loadout)?a.loadout:'smg';
   a.inventory=g.startInventory(a.team);a.inventory.primary=g.weaponItem(primary);a.inventory.he=WEAPONS.he.limit;

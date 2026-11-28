@@ -1,3 +1,4 @@
+import {decodeEquipment,equippedDefinition} from '../arsenal.mjs';
 import {bonusSlot} from '../bonuses.mjs';
 import {purchaseReasons} from '../game-english.mjs';
 import {RUSH,rushReady} from '../rush.mjs';
@@ -40,8 +41,8 @@ function publicBonus(s){
 function actorView(s,localId){
   const a={outfitId:s.handling?.outfitId || 'issued',reloadStartedAt:s.handling?.reloadStartedAt||0,reloadDuration:s.handling?.reloadDuration||0,bonusEffect:publicBonus(s),id:s.id,name:s.name,team:s.team,index:Number(s.id.split('-').at(-1)),isPlayer:s.id===localId,controllerType:s.bot?'bot':'human',bot:null,
     cartridge:s.handling?.cartridgeStart?{type:s.weapon,started:s.handling.cartridgeStart,releaseAt:s.handling.cartridgeRelease,deadline:s.handling.cartridgeFuse}:null,
-    pending:!!s.pending,radius:NETWORK_CONFIG.radius,weapon:s.weapon,lastWeapon:s.lastWeapon,loadout:s.loadout,aimAmount:s.aimAmount,aiming:s.aiming,money:s.money,flash:0,action:s.actionType?{type:s.actionType,start:s.actionStart,duration:s.actionDuration}:null,
-    inventory:{primary:s.primary?{id:s.primary,ammo:s.primaryAmmo,reserve:s.primaryReserve}:null,pistol:{id:s.pistol,ammo:s.pistolAmmo,reserve:s.pistolReserve},knife:{id:'knife',ammo:Infinity,reserve:0},smoke:0,flash:0,he:s.he}};
+    pending:!!s.pending,radius:NETWORK_CONFIG.radius,weapon:s.weapon,lastWeapon:s.lastWeapon,loadout:s.loadout,aimAmount:s.aimAmount,aiming:s.aiming,money:s.money,flash:s.handling?.flashAmount||0,action:s.actionType?{type:s.actionType,start:s.actionStart,duration:s.actionDuration}:null,
+    inventory:{primary:s.primary?{...decodeEquipment(s.handling?.primaryKit),id:s.primary,ammo:s.primaryAmmo,reserve:s.primaryReserve}:null,pistol:{...decodeEquipment(s.handling?.pistolKit),id:s.pistol,ammo:s.pistolAmmo,reserve:s.pistolReserve},knife:{id:'knife',ammo:Infinity,reserve:0},smoke:s.handling?.smoke||0,flash:s.handling?.flashCount||0,he:s.he}};
   copyPose(a,s);
   for(const k of ['lifeId','controlEpoch','connected','alive','hp','armor','kills','deaths','reloadUntil','nextShot','respawnAt','spawnProtectedUntil','deathVariant','hurtTime','recoil'])a[k]=s[k];
   // An unspawned Classic reservation also has alive=false, with no death.
@@ -52,13 +53,13 @@ function actorView(s,localId){
 
 /** A Game-shaped presentation only. Never advances Game combat/rules locally. */
 export class NetworkSession {
-  constructor(world,{outfitId='issued',loadWorld,onLoading=()=>{},onCombatAudio,onRocketAudio,onDisconnect=()=>{},onConnection=()=>{},onMatch=()=>{}}={}){
+  constructor(world,{outfitId='issued',arsenalProfile=null,loadWorld,onLoading=()=>{},onCombatAudio,onRocketAudio,onDisconnect=()=>{},onConnection=()=>{},onMatch=()=>{}}={}){
     this.loadWorld=loadWorld;this.onLoading=onLoading;this.worldRevision=0;
     this.onCombatAudio=onCombatAudio;this.onRocketAudio=onRocketAudio;this.onMatch=onMatch;this.matchId=0;this.matchPhase='';this.world=world;this.onDisconnect=onDisconnect;this.onConnection=onConnection;this.connectionState='connecting';this.controlEpoch=0;this.closed=false;this.enabled=true;
     this.events=[];this.seenEvent=0;this.predictedShots=new Map();this.actionTimes=new Map();this.remote=new Map();this.residents=new Map();this.projectiles=new Map();this.unsub=[];
     this.fireId=0;this.reloadId=0;this.trigger=false;this.nextCosmetic=0;this.lifeId=0;this.lastPatch=0;
     this.metrics={sent:0,replays:0,adopts:0,resets:0,cosmeticShots:0,confirmedShots:0,suppressedShots:0,corrections:[],adoptionDistance:[],shotLatency:[],hitLatency:[],maxPending:0,reconnects:0};
-    this.outfitId=outfitId;
+    this.outfitId=outfitId;this.arsenalProfile=arsenalProfile;this.classChoice=null;
     this.view=new Game(world,{config:NETWORK_CONFIG,localPlayerId:null,controllers:{}});
     Object.assign(this.view.state,{mode:'endless',phase:'menu',round:1,projectiles:[],wanderers:[],orders:{}});
     // Presentation recoil gets its own RNG, never the authority's stream.
@@ -84,8 +85,10 @@ export class NetworkSession {
     this.view.select=value=>{
       const a=this.view.player;
       if(!this.enabled||!a?.alive||this.closed)return false;
-      const slot=({'1':'primary','2':'pistol','3':'knife','4':'he','5':'bomb',[a.inventory.primary?.id]:'primary',[a.inventory.pistol.id]:'pistol'})[value]||value;
-      if(!['primary','pistol','knife','he','last','bomb'].includes(slot))return false;
+      const grenades=['smoke','flash','he'].filter(id=>a.inventory[id]>0);
+      const next=grenades[(grenades.indexOf(a.weapon)+1)%grenades.length];
+      const slot=({'grenade':next,'1':'primary','2':'pistol','3':'knife','4':next,'5':'bomb',[a.inventory.primary?.id]:'primary',[a.inventory.pistol.id]:'pistol'})[value]||value;
+      if(!['primary','pistol','knife','he','flash','smoke','last','bomb'].includes(slot))return false;
       this.room.send('select',{slot,serial:++this.selectId,lifeId:a.lifeId,controlEpoch:a.controlEpoch});
       return true;
     };
@@ -199,7 +202,8 @@ export class NetworkSession {
     if(this.teamSignal&&!this.validTeamComms(this.teamSignal))this.teamSignal=null;
     if(this.view.teamPing&&!this.validTeamComms(this.view.teamPing))this.view.teamPing=null;
   }
-  async connect({endpoint,roomId,code,name,family,mapId,team='auto',mode='tdm',fillBots=true,zombies=false,danceman=false,create=false,contract=CONTRACT}){
+  async connect({endpoint,arsenalProfile=this.arsenalProfile,roomId,code,name,family,mapId,team='auto',mode='tdm',fillBots=true,zombies=false,danceman=false,create=false,contract=CONTRACT}){
+    this.arsenalProfile=arsenalProfile;
     const url=networkEndpoint(endpoint),client=new SessionClient(url),options={code,name,team,contract,fillBots,mode,zombies,danceman};
     if(create&&mapId)options.mapId=mapId;
     client.owner=this;
@@ -216,6 +220,10 @@ export class NetworkSession {
     Object.assign(room.reconnection,{enabled:true,minUptime:0,minDelay:150,maxDelay:1000,maxRetries:30,maxEnqueuedMessages:0});
     this.unsub.push(room.onMessage('problem',message=>{this.problem=String(message);}));
     this.unsub.push(room.onMessage('bonusState',message=>this.applyPrivateBonus(message)));
+    this.unsub.push(room.onMessage('class-choice',message=>{
+      this.classChoice=message;
+      if(this.view.player?.team===message.team)this.view.player.arsenalClass=message.kit;
+    }));
     this.unsub.push(room.onMessage('purchase',message=>this.receivePurchase(message)));
     this.unsub.push(room.onMessage('notice',message=>{this.notice=String(message);}));
     this.unsub.push(room.onMessage('events',events=>{if(this.worldRevision===room.state.worldRevision)this.receiveEvents(events);}));
@@ -302,7 +310,7 @@ export class NetworkSession {
     if(!mine?.ready){
       if(mine&&this.sentReadyRevision!==state.worldRevision&&(this.connectionState!=='reconnecting'||this.awaitingSnapshot)){
         this.sentReadyRevision=state.worldRevision;
-        this.room.send('ready',{...MAP_CONTRACTS[state.mapId],outfitId:this.outfitId,worldRevision:state.worldRevision});
+        this.room.send('ready',{...MAP_CONTRACTS[state.mapId],outfitId:this.outfitId,...(this.arsenalProfile?{arsenalProfile:this.arsenalProfile}:{}),worldRevision:state.worldRevision});
       }
       return;
     }
@@ -365,8 +373,10 @@ export class NetworkSession {
       this.glassCount=state.brokenGlass.size;
     }
     this.view.state.grenades=[...state.grenades.values()];
+    this.view.state.smokes=[...state.smokes.values()];
     applyNetworkWorld(this.world.doors,state);
     this.view.state.actors=ready.map(s=>actorView(s,this.localPlayerId));
+    if(this.view.player&&this.view.player.team===this.classChoice?.team)this.view.player.arsenalClass=this.classChoice.kit;
     this.applyPrivateBonus();
     this.view.state.score={analysts:state.analysts,counterAnalysts:state.counterAnalysts};
     this.view.state.time=newMatch?state.time:Math.max(this.view.state.time??0,state.time);
@@ -421,7 +431,7 @@ export class NetworkSession {
           this.metrics.adopts++;const d=Math.hypot(w.actor.x-s.x,w.actor.y-s.y,w.actor.z-s.z);
           this.metrics.adoptionDistance.push(d);if(this.metrics.adoptionDistance.length>512)this.metrics.adoptionDistance.shift();
           w.dynamics.adopt(this.room.state);
-          copyPose(w.actor,s);
+          copyPose(w.actor,s);w.actor.weapon=s.weapon;w.actor.inventory=this.view.player?.inventory;
           if(!this.enabled)w.actor.slideBuffer=0;
           w.actor.reloadStartedAt=s.handling?.reloadStartedAt||0;w.actor.reloadDuration=s.handling?.reloadDuration||0;
           w.actor.bonusEffect=publicBonus(s);w.actor.reloadUntil=s.reloadUntil;w.actor.cartridge=s.handling?.cartridgeStart || null;w.actor.action=s.actionType?{type:s.actionType}:null;w.actor.alive=s.alive;w.actor.lifeId=s.lifeId;w.game.state.time=this.room.state.time;
@@ -453,8 +463,13 @@ export class NetworkSession {
     }
     if(newMatch||newPhase||modeChanged)queueMicrotask(()=>{if(!this.closed)this.onMatch(this.matchPhase);});
   }
+  selectClass(profile){
+    this.arsenalProfile=profile;
+    this.matchCommand('class',{profile});
+  }
   matchCommand(kind,extra={}){
     const self=this.room?.state.actors.get(this.localPlayerId);if(!self||this.connectionState!=='connected')return;
+    if(kind==='loadout')this.arsenalProfile=null;
     this.notice='';this.room.send('match',{kind,matchId:this.room.state.matchId,controlEpoch:self.controlEpoch,...extra});
   }
   setBotDifficulty(botDifficulty){
@@ -503,9 +518,9 @@ export class NetworkSession {
     if(this.closed||this.connectionState==='reconnecting'||!this.predict||!this.prediction)return;
     const steps=Math.min(6,this.predict.tick(now)),state=this.room.state,self=state.actors.get(this.localPlayerId);
     if(!self)return;
-    const weapon=Object.hasOwn(WEAPONS,self.weapon)?WEAPONS[self.weapon]:null;
-    const throwing=self.weapon==='he';
-    const stocked=throwing?self.he>0:self.ammo>0 || self.weapon==='knife';
+    const weapon=equippedDefinition(this.view.player,self.weapon);
+    const throwing=weapon?.slot==='grenade';
+    const stocked=throwing?this.view.player?.inventory?.[self.weapon]>0:self.ammo>0 || self.weapon==='knife';
     const stale=performance.now()-this.lastPatch>1000;
     if(this.enabled && !stale && self.alive && state.phase==='active' && (state.mode!=='classic'||state.roundPhase==='active')){
       if(controls.crouchEdge)this.crouchEdge=true;
@@ -547,7 +562,7 @@ export class NetworkSession {
           // A late prediction must not replay a shot already seen from the authority.
           if(!this.confirmedLocalShots?.has(actionId)){
             this.predictedShots.set(actionId,performance.now());this.actionTimes.set(actionId,performance.now());this.metrics.cosmeticShots++;
-            this.events.push({type:'shot',actorId:self.id,team:self.team,weapon:self.weapon,time:this.view.state.time,
+            this.events.push({type:'shot',actorId:self.id,team:self.team,weapon:self.weapon,...(weapon.silent?{suppressed:true}:{}),time:this.view.state.time,
               x:actor.x,y:actor.y,z:actor.z,yaw:pending.yaw,pitch:pending.pitch,actionId,lifeId:self.lifeId,predicted:true});
           }
         }

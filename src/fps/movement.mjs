@@ -1,3 +1,4 @@
+import {equippedDefinition} from './arsenal.mjs';
 import {BONUSES,activeBonus,bonusTick} from './bonuses.mjs';
 import {RUSH,SLIDE,endSlide,beginBufferedSlide,wantsRush,advanceRush} from './rush.mjs';
 import {zombiePosition} from './zombie-poses.mjs';
@@ -14,7 +15,7 @@ export function moveActor(game, actor, input, dt, effects = true) {
   if (Number.isFinite(input.yaw)) actor.yaw = input.yaw;
   if (Number.isFinite(input.pitch)) actor.pitch = clamp(input.pitch, -1.49, 1.49);
   const time=game.state.time;
-  const speedScale=activeBonus(actor,bonusTick(time))==='rage'?BONUSES[1].moveScale:1;
+  const speedScale=(equippedDefinition(actor)?.mobility||1)*(activeBonus(actor,bonusTick(time))==='rage'?BONUSES[1].moveScale:1);
   const runSpeed=game.config.runSpeed*speedScale;
   const started=beginBufferedSlide(actor,input,time,dt,runSpeed);
   // Store the base slide speed. Activation or expiry mid-slide must take
