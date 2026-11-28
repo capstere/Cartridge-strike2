@@ -1,3 +1,4 @@
+import {OUTFITS} from './operator-outfits.mjs';
 import {referenceScene} from './reference-scene.mjs';
 import {ActorOcclusion} from './actor-occlusion.mjs';
 import {preparedFloorFinish} from '../../furniture-editor/build/floor5-appearance.mjs';
@@ -27,7 +28,7 @@ import {CombatVisuals} from './combat-visuals.mjs';
  */
 import * as THREE from '../../vendor/three/three.module.js';
 import { Renderer as EngineRenderer } from './render-engine.mjs?v=6.1.2';
-import {loadCharacterLibrary,loadDefaultHostages,disposeAvatar,disposeCharacterLibrary} from './character-library.mjs?v=6.1.2';
+import {createAuthoredAvatar,loadCharacterLibrary,loadDefaultHostages,disposeAvatar,disposeCharacterLibrary} from './character-library.mjs?v=6.1.2';
 import { bakeLightfield } from './presentation-lightfield.mjs';
 import {ActionVisuals} from './action-visuals.mjs?v=6.1.2';
 import { buildLivingScene } from './living-floor-scene.mjs';
@@ -83,7 +84,7 @@ function releaseMapGpuResources(roots) {
 }
 
 export class Renderer extends EngineRenderer {
-  constructor(canvas,world,settings){
+  constructor(canvas,world,settings,{roomActors,signal}={}){
     const visualWorld={...world,description:{...world.description,boxes:world.description.boxes.filter(b=>!b.livingVisual)}};
     super(canvas,visualWorld,settings);
     if(world.referenceId)this.referenceScene=referenceScene(this.scene,world,settings);
@@ -185,10 +186,13 @@ export class Renderer extends EngineRenderer {
       // Prepare the actual rigged models and all first-use world weapon materials.
       // Previously these only existed after Start and compiled during combat.
       const startupActors=[];
-      for(const side of ['analysts','counterAnalysts'])for(let i=0;i<(world.networkSlice?1:5);i++)startupActors.push(this.actorModel({id:`${side}-${i}`,team:side}));
+      for(const side of ['analysts','counterAnalysts'])for(let i=0;i<(world.networkSlice?1:5);i++){
+       const id=`${side}-${i}`;
+       startupActors.push(this.actorModel(roomActors?.get(id)||{id,team:side}));
+      }
       if(!world.networkSlice)for(let i=0;i<2;i++)startupActors.push(this.actorModel({id:`hostage-${i}`}));
       this.worldWeaponWarmup=new THREE.Group();this.worldWeaponWarmup.name='world-weapon-preload';
-      if(!this.settings.mobile)for(const w of Object.values(WEAPONS))if(!['armor'].includes(w.slot)&&(!world.networkSlice||w.id==='smg'))this.worldWeaponWarmup.add(makeWeapon(w.id,{viewmodel:false}));
+      if(world.networkSlice||!this.settings.mobile)for(const w of Object.values(WEAPONS))if(!['armor'].includes(w.slot)&&(!world.networkSlice||w.id==='smg'))this.worldWeaponWarmup.add(makeWeapon(w.id,{viewmodel:false}));
       this.scene.add(this.worldWeaponWarmup);
       if(this.neutralLighting){
        const maps=new Set();
@@ -196,6 +200,7 @@ export class Renderer extends EngineRenderer {
        mapGeometry.traverse(node=>{for(const material of [].concat(node.material||[]))for(const value of Object.values(material))if(value?.isTexture)maps.add(value);});
        for(const map of maps)this.renderer.initTexture(map);
        await this.renderer.compileAsync(this.scene,this.camera);
+       if(world.networkSlice)await this.prepareOperatorPrograms(startupActors,signal);
       }else if(!this.settings.mobile){
       const visibility=this.lights.map(light=>light.visible),shadows=this.renderer.shadowMap.enabled,previousTarget=this.renderer.getRenderTarget();
       try {
@@ -221,6 +226,141 @@ export class Renderer extends EngineRenderer {
         finally{this.viewScene.remove(model);}
       }
     });
+  }
+  async prepareOperatorPrograms(actors,signal){
+    const gpu=this.renderer,gl=gpu.getContext();
+    if(!gl.getExtension('KHR_parallel_shader_compile'))return;
+    const check=()=>{signal?.throwIfAborted();return !this.presentationDisposed&&!gl.isContextLost();};
+    if(!check())return;
+    const waitForGpu=async()=>{
+      const sync=gl.fenceSync(gl.SYNC_GPU_COMMANDS_COMPLETE,0);
+      if(!sync)return false;
+      try{
+        gl.flush();
+        while(check()){
+          const state=gl.clientWaitSync(sync,0,0);
+          if(state!==gl.TIMEOUT_EXPIRED)return state!==gl.WAIT_FAILED;
+          await new Promise(resolve=>setTimeout(resolve,12));
+        }
+        return false;
+      }finally{gl.deleteSync(sync);}
+    };
+    const started=performance.now();
+    const stage=new THREE.Scene(),camera=this.camera.clone();
+    stage.environment=this.scene.environment;stage.environmentIntensity=this.scene.environmentIntensity;
+    stage.environmentRotation.copy(this.scene.environmentRotation);stage.fog=this.scene.fog;
+    // Gameplay lights include a nested effect light even while its intensity is zero.
+    this.scene.traverseVisible(node=>{if(node.isLight&&node.layers.test(this.camera.layers))stage.add(node.clone());});
+    camera.position.set(0,1.2,2.8);camera.lookAt(0,1,0);camera.updateMatrixWorld();
+
+    // A later reservation may select camo and vertex-coloured skinned equipment.
+    // One shipped class exercises both variants. Private imports stay on demand.
+    const needsSample=actors.every(a=>!a.userData.avatar?.outfitId||a.userData.avatar.outfitId==='issued');
+    const sample=needsSample?createAuthoredAvatar('analysts','operator-display-sample',false,
+      {ignoreOverrides:true,previewOutfit:OUTFITS.find(o=>o.id==='shotgun')}):null;
+    const roots=[...actors,this.worldWeaponWarmup],proxies=[],sampleTextures=new Map();
+    if(sample){
+      // A template may stay in the character library across map changes. Keep
+      // sample-only uploads and their WebGL disposal listeners local to this pass.
+      const rosterTextures=new Set(),rosterGeometry=new Set();
+      for(const root of roots)root.traverse(mesh=>{
+        if(mesh.geometry)rosterGeometry.add(mesh.geometry);
+        for(const material of [].concat(mesh.material||[]))
+          for(const value of Object.values(material))if(value?.isTexture)rosterTextures.add(value);
+      });
+      for(const material of sample.materials.values())for(const [slot,value] of Object.entries(material)){
+        if(!value?.isTexture||rosterTextures.has(value)||material.userData.ownedTexture===value)continue;
+        if(!sampleTextures.has(value))sampleTextures.set(value,value.clone());
+        material[slot]=sampleTextures.get(value);
+      }
+      const owned=new Set(sample.ownedGeometry),copies=new Map();
+      sample.holder.traverse(mesh=>{
+        const geometry=mesh.geometry;
+        if(!geometry||rosterGeometry.has(geometry)||owned.has(geometry))return;
+        if(!copies.has(geometry)){const copy=geometry.clone();copies.set(geometry,copy);sample.ownedGeometry.push(copy);}
+        mesh.geometry=copies.get(geometry);
+      });
+    }
+    for(const root of sample?[...roots,sample.holder]:roots){
+      root.updateWorldMatrix(true,true);
+      root.traverseVisible(mesh=>{
+        if(!mesh.isMesh)return;
+        const proxy=mesh.isSkinnedMesh?new THREE.SkinnedMesh(mesh.geometry,mesh.material):new THREE.Mesh(mesh.geometry,mesh.material);
+        if(mesh.isSkinnedMesh){proxy.bindMode=mesh.bindMode;proxy.bind(mesh.skeleton,mesh.bindMatrix);}
+        proxy.receiveShadow=mesh.receiveShadow;proxy.frustumCulled=false;
+        proxy.matrixAutoUpdate=false;proxy.matrix.copy(mesh.matrixWorld);
+        stage.add(proxy);proxies.push(proxy);
+      });
+    }
+    // compileAsync starts compilation synchronously. Restore state before any
+    // yield so a rotation, canvas resize or context teardown always takes effect.
+    const smallDraw=action=>{
+      const target=gpu.getRenderTarget(),face=gpu.getActiveCubeFace(),level=gpu.getActiveMipmapLevel();
+      const viewport=gpu.getViewport(new THREE.Vector4()),scissor=gpu.getScissor(new THREE.Vector4());
+      const scissorTest=gpu.getScissorTest();
+      try{
+        if(this.settings.graphics!=='low'&&this.visualDepth)gpu.setRenderTarget(this.visualDepth.target);
+        gpu.setViewport(0,0,16,16);gpu.setScissor(0,0,16,16);gpu.setScissorTest(true);
+        return action();
+      }finally{
+        gpu.setRenderTarget(target,face,level);
+        gpu.setViewport(viewport);gpu.setScissor(scissor);gpu.setScissorTest(scissorTest);
+      }
+    };
+    let peakSubmit=0,submit=0;
+    try{
+      await smallDraw(()=>gpu.compileAsync(stage,camera));
+      if(!check())return;
+      const batches=new Map(),textures=new Set();
+      for(const proxy of proxies){
+        // Three r180 exposes the compiled program on the material properties.
+        const material=Array.isArray(proxy.material)?proxy.material[0]:proxy.material;
+        for(const m of [].concat(proxy.material||[])){
+          for(const value of Object.values(m))if(value?.isTexture&&!value.isRenderTargetTexture)textures.add(value);
+        }
+        const program=gpu.properties.get(material).currentProgram;
+        const key=program??material;
+        if(!batches.has(key))batches.set(key,[]);
+        batches.get(key).push(proxy);proxy.visible=false;
+      }
+      for(const texture of textures)gpu.initTexture(texture);
+      if(!await waitForGpu())return;
+      // Resolve the already-linked programs before an actual draw queues GPU work.
+      // A synchronous first-use query in the following batch otherwise drains it.
+      for(const program of batches.keys()){
+        if(!check())return;
+        program.getUniforms?.();
+      }
+      for(const batch of batches.values()){
+        if(!check())return;
+        for(const proxy of batch)proxy.visible=true;
+        const begin=performance.now();smallDraw(()=>this.nativeRender(stage,camera));
+        const duration=performance.now()-begin;peakSubmit=Math.max(peakSubmit,duration);submit+=duration;
+        for(const proxy of batch)proxy.visible=false;
+        if(!await waitForGpu())return;
+      }
+      if(!check())return;
+      if(sample){
+        // Keep only a representative material for variants absent from the
+        // received roster. Release the extra skeleton, clips and geometry now.
+        const livePrograms=new Set();
+        for(const root of roots)root.traverse(node=>{
+          for(const material of [].concat(node.material||[]))livePrograms.add(gpu.properties.get(material).currentProgram);
+        });
+        this.operatorProgramMaterials=[];
+        for(const [key,material] of sample.materials){
+          const program=gpu.properties.get(material).currentProgram;
+          if(program&&!livePrograms.has(program)){
+            livePrograms.add(program);sample.materials.delete(key);this.operatorProgramMaterials.push(material);
+          }
+        }
+      }
+      this.operatorReady={milliseconds:performance.now()-started,batches:batches.size,submitMs:submit,
+        maxSubmitMs:peakSubmit,retainedMaterials:this.operatorProgramMaterials?.length??0};
+    }finally{
+      disposeAvatar(sample);
+      for(const texture of sampleTextures.values())texture.dispose();
+    }
   }
   async prepareClassic(){
     await loadDefaultHostages();
@@ -298,6 +438,7 @@ export class Renderer extends EngineRenderer {
     if(keepCharacterLibrary){
       for(const actor of this.actors.values())disposeAvatar(actor.userData.avatar);
     }else disposeCharacterLibrary();
-    this.presentationRestores=[];this.presentationField?.dispose();this.livingScene?.dispose();super.dispose();
+    for(const material of this.operatorProgramMaterials??[]){material.userData.ownedTexture?.dispose();material.dispose();}
+    this.operatorProgramMaterials=null;this.presentationRestores=[];this.presentationField?.dispose();this.livingScene?.dispose();super.dispose();
   }
 }

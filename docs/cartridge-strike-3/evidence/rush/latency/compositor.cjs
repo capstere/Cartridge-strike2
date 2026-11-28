@@ -1,4 +1,4 @@
-// An extra real action after the normal timing window. Chromium's compositor
+// An explicitly traced native action. Chromium's compositor
 // trace carries presentation feedback even for frames under the LoAF threshold.
 module.exports=async function collectCompositor(page,controls){
   const session=await page.context().newCDPSession(page),events=[];
@@ -17,6 +17,6 @@ module.exports=async function collectCompositor(page,controls){
     const action=await page.evaluate(()=>{cs3Baseline.mode='off';return {events:rushTrace.events,renders:rushTrace.renders};});
     const finished=new Promise(resolve=>session.once('Tracing.tracingComplete',resolve));
     await session.send('Tracing.end');await finished;
-    return {timingAffectsThisAdditionalAction:true,events,action};
+    return {timingAffectsThisAction:true,events,action};
   }finally{await session.detach();}
 };

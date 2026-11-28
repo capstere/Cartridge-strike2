@@ -114,7 +114,7 @@ function loadRoomWorld(contract,mode,signal){
    prepareNetworkWorld(candidate);
    releaseWorldPresentation();
    try{
-    renderer=new Renderer($('game'),candidate,settings);
+    renderer=new Renderer($('game'),candidate,settings,{roomActors:networkSession?.room?.state.actors,signal});
     await renderer.assetsReady;
     signal.throwIfAborted();
     grenadeAssist=new GrenadeAssist(renderer,settings);

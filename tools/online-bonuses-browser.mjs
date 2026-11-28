@@ -33,14 +33,15 @@ async function open(touch){
   page.on('pageerror',e=>errors.push(e.message));
   await page.addInitScript(()=>localStorage.setItem('cartridge-settings',JSON.stringify({graphics:'low',ambient:false,volume:.35,mobileAutoFire:false})));
   if(process.env.CS3_BONUS_COLD_FOCUS)await page.addInitScript(()=>{
-    const result=window.coldStartup={first:performance.now(),last:null,maxGap:0,above100:0,above250:0,intervals:0,markers:[]};
+    const result=window.coldStartup={first:performance.now(),last:null,maxGap:0,above100:0,above250:0,intervals:0,markers:[],raf:[],input:[]};
     function frame(now){
-      if(result.last!==null){const gap=now-result.last;result.intervals++;result.maxGap=Math.max(result.maxGap,gap);
+      if(result.last!==null){const gap=now-result.last;result.raf.push([now,gap]);result.intervals++;result.maxGap=Math.max(result.maxGap,gap);
         if(gap>100)result.above100++;if(gap>250)result.above250++;}
       result.last=now;
       if(!document.getElementById('hud')?.hidden && document.getElementById('hud'))result.firstHud??=now;
       requestAnimationFrame(frame);
     }
+    addEventListener('pointermove',e=>{if(e.isTrusted)result.input.push([performance.now(),e.timeStamp]);},{passive:true});
     requestAnimationFrame(frame);
   });
   await page.goto(server.url+'/',{waitUntil:'domcontentloaded'});
@@ -57,6 +58,13 @@ async function open(touch){
   await page.evaluate(async()=>{
     const {NetworkSession}=await import('/src/fps/network/session.mjs');
     const snapshot=NetworkSession.prototype.snapshot;
+    if(window.coldStartup){
+      const prepare=NetworkSession.prototype.prepareRoomWorld;
+      NetworkSession.prototype.prepareRoomWorld=function(state){
+        if(this.loadingRevision!==state.worldRevision)window.coldStartup.markers.push(['loadWorld',performance.now(),state.mapId,state.worldRevision]);
+        return prepare.call(this,state);
+      };
+    }
     NetworkSession.prototype.snapshot=function(...args){
       window.streakSession=this;
       return snapshot.apply(this,args);
@@ -106,15 +114,32 @@ try{
   const desktop=await open(false),touch=await open(true);
   await desktop.locator('#network-map').selectOption('compact-arena');
   await desktop.locator('#network-fill-bots').uncheck();
+  const mark=async(page,label)=>{
+    if(process.env.CS3_BONUS_COLD_FOCUS)await page.evaluate(s=>window.coldStartup.markers.push([s,performance.now()]),label);
+  };
+  const inputTimers=[];
+  const monitorInput=async page=>{
+    if(!process.env.CS3_BONUS_COLD_FOCUS)return;
+    const cdp=await page.context().newCDPSession(page);let n=0,inFlight=false;
+    inputTimers.push(setInterval(async()=>{
+      if(inFlight)return;inFlight=true;
+      try{await cdp.send('Input.dispatchMouseEvent',{type:'mouseMoved',x:3+(n++%3),y:3});}catch{}finally{inFlight=false;}
+    },100).unref());
+  };
+  await monitorInput(desktop);await monitorInput(touch);
+  await mark(desktop,'join requested');
   await desktop.locator('[data-create=true]').click();await desktop.locator('#room-ready').click();
   const room=[...server.rooms][0];
   await touch.locator('#network-room').fill(room.roomId);
+  await mark(desktop,'waiting ready');await mark(touch,'join requested');
   await touch.locator('[data-create=false]').tap();await touch.locator('#room-ready').tap();
+  await mark(touch,'waiting ready');
   console.log('Both players joined and entered ready state');
   await desktop.locator('#room-start').click();await waitForActiveHud(desktop);await enterTouchMatch(touch);
   if(await desktop.locator('#pause').isHidden()&&!await desktop.evaluate(()=>!!document.pointerLockElement))await desktop.keyboard.press('Escape');
   if(await desktop.locator('#resume').isVisible())await resumeDesktop(desktop);
   await Promise.all([observe(desktop),observe(touch)]);
+  await mark(desktop,'active input');await mark(touch,'active input');for(const timer of inputTimers)clearInterval(timer);
   console.log('Both game HUDs active');
   const game=room.sim.game;
   const [a,b]=[...room.seats.values()].map(s=>s.actor);

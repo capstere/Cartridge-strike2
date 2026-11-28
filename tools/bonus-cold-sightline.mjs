@@ -7,7 +7,7 @@ import {setTimeout as delay} from 'node:timers/promises';
 async function install(actorId) {
   const {Renderer} = await import('/src/fps/render.mjs?v=floor5-environment-1');
   const clock = () => performance.now();
-  const result = {origin:performance.timeOrigin,events:[],raf:[],frames:[],patches:[],longTasks:[],resources:[],gpu:[],stages:[],glSlow:[]};
+  const result = {origin:performance.timeOrigin,events:[],raf:[],frames:[],patches:[],longTasks:[],resources:[],gpu:[],stages:[],glSlow:[],slowDraws:[]};
   result.startup={...window.coldStartup,armed:clock()};
   const state = () => ({focus:document.hasFocus(),visibility:document.visibilityState,
     pausePanel:!document.getElementById('pause').hidden,paused:streakSession.view.state.paused});
@@ -75,6 +75,17 @@ async function install(actorId) {
         parallelCompile:!!gl.getExtension('KHR_parallel_shader_compile'),mobile:this.settings.mobile,quality:this.quality,
         neutralLighting:this.neutralLighting,warmup:this.warmup,lights:this.lights.map(l=>l.visible),
         actorReady:this.operatorReady??null};
+      const bufferDraw=gpu.renderBufferDirect;
+      gpu.renderBufferDirect=function(camera,scene,geometry,material,mesh,...rest){
+        const clockStart=clock(),value=bufferDraw.call(this,camera,scene,geometry,material,mesh,...rest),finish=clock();
+        if(finish-clockStart>12){
+          const names=[];for(let n=mesh;n && names.length<8;n=n.parent)if(n.name)names.push(n.name);
+          const program=this.properties.get(material)?.currentProgram;
+          result.slowDraws.push({t:clockStart,end:finish,material:material.name||material.type,path:names,
+            program:program?.id,shader:program?.name,cacheKey:program?.cacheKey});
+        }
+        return value;
+      };
       const native=gpu.render;
       gpu.render=function(scene,...other){
         const start=clock(),value=native.call(this,scene,...other),end=clock();
@@ -101,7 +112,31 @@ async function install(actorId) {
   event('armed');
 }
 
-export async function startColdSightline(pages,owner,game,position,focus,output){
+async function turnWithTouch(page,actor,target){
+  const cdp=await page.context().newCDPSession(page);
+  const point=await page.evaluate(()=>{
+    const look=document.querySelector('[data-mobile-look]');
+    for(let y=.18;y<.8;y+=.05)for(let x=.52;x<.88;x+=.04){
+      const px=innerWidth*x,py=innerHeight*y;
+      if(document.elementFromPoint(px,py)===look)return {x:px,y:py,w:innerWidth};
+    }
+    throw Error('No unobstructed native touch look surface');
+  });
+  try{
+    for(let i=0;i<10;i++){
+      const angle=Math.atan2(Math.sin(target-actor.yaw),Math.cos(target-actor.yaw));
+      if(Math.abs(angle)<.075)return;
+      const dx=Math.max(-point.x+6,Math.min(point.w-point.x-6,-angle/(.0022*2.15)));
+      const send=(type,x)=>cdp.send('Input.dispatchTouchEvent',{type,touchPoints:x===null?[]:[{x,y:point.y,id:1}]});
+      await send('touchStart',point.x);
+      for(let n=1;n<=4;n++){await send('touchMove',point.x+dx*n/4);await delay(22);}
+      await send('touchEnd',null);await delay(110);
+    }
+    throw Error('Normal touch look did not reach the requested sightline');
+  }finally{await cdp.detach();}
+}
+
+export async function startColdSightline(pages,owner,observer,game,position,focus,output){
   assert(output && ['owner','observer'].includes(focus));
   await Promise.all(pages.map(p=>p.evaluate(install,owner.id)));
   await delay(1700);
@@ -111,15 +146,28 @@ export async function startColdSightline(pages,owner,game,position,focus,output)
     await mark('focus-request');
     await pages[focus==='owner'?0:1].bringToFront();
     await delay(500);
+    const turn=process.env.CS3_BONUS_COLD_TURN==='1',yaw=Math.atan2(observer.x-position.x,observer.z-position.z);
+    if(turn){
+      await turnWithTouch(pages[1],observer,yaw+1.9);
+      Object.assign(owner,{x:position.x,y:position.y??0,z:position.z,vy:0});
+      await pages[1].waitForFunction(pos=>reloadCapture.warm.slice(-7).length===7 &&
+        reloadCapture.warm.slice(-7).every(r=>!r.visible&&Math.hypot(r.x-pos.x,r.z-pos.z)<.2),
+        position,{timeout:12000});
+      await delay(500);
+    }
     await mark('before-sightline');
     await Promise.all(pages.map(p=>p.evaluate(()=>{
       reloadCapture.trial='cold';reloadCapture.trials.cold={frames:[],cues:[],audioFrames:[]};
     })));
     const beforePlacement=performance.timeOrigin+performance.now();
-    Object.assign(owner,{x:position.x,y:position.y??0,z:position.z,vy:0});
+    if(!turn)Object.assign(owner,{x:position.x,y:position.y??0,z:position.z,vy:0});
     // Both focus conditions use the same authoritative reload. Keyboard and mouse
     // input into the observer's own window would change the controlled focus.
-    game.item(owner).ammo--;assert(game.reload(owner));
+    if(turn){
+      await turnWithTouch(pages[1],observer,yaw);
+      await pages[0].mouse.down();await delay(220);await pages[0].mouse.up();
+      await pages[0].keyboard.press('r');
+    }else{game.item(owner).ammo--;assert(game.reload(owner));}
     await delay(3400);
     // Read the first processed post-transition frame, too. An evaluate call can
     // otherwise retrieve the trace immediately after a long draw, before RAF/LoAF delivery.
@@ -131,6 +179,6 @@ export async function startColdSightline(pages,owner,game,position,focus,output)
       reloadCapture.trial=null;
       return {...bonusColdAudit.result,reload};
     })));
-    await writeFile(join(output,'cold-sightline.json'),JSON.stringify({focus,beforePlacement,server,views}));
+    await writeFile(join(output,'cold-sightline.json'),JSON.stringify({focus,turn,beforePlacement,server,views}));
   }finally{clearInterval(interval);}
 }

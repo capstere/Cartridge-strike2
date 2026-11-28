@@ -129,13 +129,27 @@ jobs:
           node tools/match-flow-browser.mjs
           node tools/floor5-workstation-visibility.cjs
           node tools/actor-occlusion-browser.mjs
-      - name: Enter Solo from the English main menu with desktop and touch inputs
+      - name: Enter all four Solo maps from the English desktop menu
         if: github.event_name != 'push'
         timeout-minutes: 6
+        env:
+          CS3_MENU_INPUT: desktop
+          CS3_VERIFY_VARIANTS: '1'
         run: |
-          python3 -m http.server 8765 >/tmp/cs3-menu-server.log 2>&1 &
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/cs3-desktop-menu-server.log 2>&1 &
           server=$!
-          trap 'kill $server || true' EXIT
+          trap 'kill "$server" 2>/dev/null || true; wait "$server" 2>/dev/null || true' EXIT
+          node tools/cs3-menu-browser.mjs
+      - name: Enter all four Solo maps from the English touch menu
+        if: github.event_name != 'push'
+        timeout-minutes: 6
+        env:
+          CS3_MENU_INPUT: touch
+          CS3_VERIFY_VARIANTS: '1'
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/cs3-touch-menu-server.log 2>&1 &
+          server=$!
+          trap 'kill "$server" 2>/dev/null || true; wait "$server" 2>/dev/null || true' EXIT
           node tools/cs3-menu-browser.mjs
       - name: Verify shared character resources and exact animation poses
         if: github.event_name != 'push'

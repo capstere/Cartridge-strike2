@@ -1,0 +1,390 @@
+[
+  {
+    "freshCompositorTrace": true,
+    "doorGeometry": "original",
+    "profile": "touch",
+    "repeat": 0,
+    "sourceToCallbackMs": 153.1,
+    "touchMinusPointerMs": 0.3,
+    "unshiftedRenderIntervalsMs": [
+      [
+        0.0,
+        10.7
+      ],
+      [
+        24.5,
+        88.9
+      ],
+      [
+        96.6,
+        149.9
+      ]
+    ],
+    "renderMs": 128.4,
+    "worldWithinRenderMs": 114.1,
+    "gameUpdateMs": 7.7,
+    "outsideBothMs": 17.0,
+    "isInputPendingAtUpdateBegins": [
+      false,
+      false
+    ]
+  },
+  {
+    "freshCompositorTrace": true,
+    "doorGeometry": "original",
+    "profile": "desktop",
+    "repeat": 0,
+    "sourceToCallbackMs": 56.0,
+    "touchMinusPointerMs": null,
+    "unshiftedRenderIntervalsMs": [
+      [
+        7.7,
+        54.0
+      ]
+    ],
+    "renderMs": 46.3,
+    "worldWithinRenderMs": 39.9,
+    "gameUpdateMs": 6.4,
+    "outsideBothMs": 3.3,
+    "isInputPendingAtUpdateBegins": []
+  },
+  {
+    "freshCompositorTrace": true,
+    "doorGeometry": "candidate",
+    "profile": "touch",
+    "repeat": 0,
+    "sourceToCallbackMs": 87.4,
+    "touchMinusPointerMs": 0.4,
+    "unshiftedRenderIntervalsMs": [
+      [
+        0.0,
+        6.8
+      ],
+      [
+        14.8,
+        43.7
+      ],
+      [
+        58.7,
+        83.3
+      ]
+    ],
+    "renderMs": 60.3,
+    "worldWithinRenderMs": 47.2,
+    "gameUpdateMs": 14.2,
+    "outsideBothMs": 12.9,
+    "isInputPendingAtUpdateBegins": [
+      false,
+      false
+    ]
+  },
+  {
+    "freshCompositorTrace": true,
+    "doorGeometry": "candidate",
+    "profile": "desktop",
+    "repeat": 0,
+    "sourceToCallbackMs": 26.1,
+    "touchMinusPointerMs": null,
+    "unshiftedRenderIntervalsMs": [
+      [
+        0.2,
+        25.0
+      ]
+    ],
+    "renderMs": 24.8,
+    "worldWithinRenderMs": 20.1,
+    "gameUpdateMs": 0,
+    "outsideBothMs": 1.3,
+    "isInputPendingAtUpdateBegins": []
+  },
+  {
+    "freshCompositorTrace": false,
+    "doorGeometry": "original",
+    "profile": "touch",
+    "repeat": 0,
+    "sourceToCallbackMs": 201.0,
+    "touchMinusPointerMs": 0.3,
+    "unshiftedRenderIntervalsMs": [
+      [
+        1.8,
+        59.4
+      ],
+      [
+        69.6,
+        135.3
+      ],
+      [
+        145.1,
+        198.2
+      ]
+    ],
+    "renderMs": 176.4,
+    "worldWithinRenderMs": 151.0,
+    "gameUpdateMs": 10.0,
+    "outsideBothMs": 14.6,
+    "isInputPendingAtUpdateBegins": [
+      false,
+      false
+    ]
+  },
+  {
+    "freshCompositorTrace": false,
+    "doorGeometry": "original",
+    "profile": "touch",
+    "repeat": 1,
+    "sourceToCallbackMs": 113.6,
+    "touchMinusPointerMs": 0.2,
+    "unshiftedRenderIntervalsMs": [
+      [
+        7.3,
+        54.9
+      ],
+      [
+        62.8,
+        110.8
+      ]
+    ],
+    "renderMs": 95.6,
+    "worldWithinRenderMs": 82.2,
+    "gameUpdateMs": 6.7,
+    "outsideBothMs": 11.3,
+    "isInputPendingAtUpdateBegins": [
+      false,
+      false
+    ]
+  },
+  {
+    "freshCompositorTrace": false,
+    "doorGeometry": "original",
+    "profile": "touch",
+    "repeat": 2,
+    "sourceToCallbackMs": 143.8,
+    "touchMinusPointerMs": 0.2,
+    "unshiftedRenderIntervalsMs": [
+      [
+        0.0,
+        27.2
+      ],
+      [
+        35.6,
+        83.7
+      ],
+      [
+        89.9,
+        141.3
+      ]
+    ],
+    "renderMs": 126.7,
+    "worldWithinRenderMs": 113.1,
+    "gameUpdateMs": 7.4,
+    "outsideBothMs": 9.7,
+    "isInputPendingAtUpdateBegins": [
+      false,
+      false
+    ]
+  },
+  {
+    "freshCompositorTrace": false,
+    "doorGeometry": "original",
+    "profile": "desktop",
+    "repeat": 0,
+    "sourceToCallbackMs": 71.6,
+    "touchMinusPointerMs": null,
+    "unshiftedRenderIntervalsMs": [
+      [
+        11.0,
+        67.8
+      ]
+    ],
+    "renderMs": 56.8,
+    "worldWithinRenderMs": 47.8,
+    "gameUpdateMs": 9.6,
+    "outsideBothMs": 5.2,
+    "isInputPendingAtUpdateBegins": []
+  },
+  {
+    "freshCompositorTrace": false,
+    "doorGeometry": "original",
+    "profile": "desktop",
+    "repeat": 1,
+    "sourceToCallbackMs": 51.5,
+    "touchMinusPointerMs": null,
+    "unshiftedRenderIntervalsMs": [
+      [
+        0.7,
+        48.8
+      ]
+    ],
+    "renderMs": 48.1,
+    "worldWithinRenderMs": 42.7,
+    "gameUpdateMs": 0,
+    "outsideBothMs": 3.4,
+    "isInputPendingAtUpdateBegins": []
+  },
+  {
+    "freshCompositorTrace": false,
+    "doorGeometry": "original",
+    "profile": "desktop",
+    "repeat": 2,
+    "sourceToCallbackMs": 69.4,
+    "touchMinusPointerMs": null,
+    "unshiftedRenderIntervalsMs": [
+      [
+        2.3,
+        67.3
+      ]
+    ],
+    "renderMs": 65.0,
+    "worldWithinRenderMs": 56.8,
+    "gameUpdateMs": 0,
+    "outsideBothMs": 4.4,
+    "isInputPendingAtUpdateBegins": []
+  },
+  {
+    "freshCompositorTrace": false,
+    "doorGeometry": "candidate",
+    "profile": "touch",
+    "repeat": 0,
+    "sourceToCallbackMs": 114.6,
+    "touchMinusPointerMs": 0.3,
+    "unshiftedRenderIntervalsMs": [
+      [
+        0.0,
+        35.5
+      ],
+      [
+        45.9,
+        74.4
+      ],
+      [
+        85.2,
+        112.8
+      ]
+    ],
+    "renderMs": 91.6,
+    "worldWithinRenderMs": 74.1,
+    "gameUpdateMs": 11.2,
+    "outsideBothMs": 11.8,
+    "isInputPendingAtUpdateBegins": [
+      false,
+      false
+    ]
+  },
+  {
+    "freshCompositorTrace": false,
+    "doorGeometry": "candidate",
+    "profile": "touch",
+    "repeat": 1,
+    "sourceToCallbackMs": 87.0,
+    "touchMinusPointerMs": 0.2,
+    "unshiftedRenderIntervalsMs": [
+      [
+        0.0,
+        13.8
+      ],
+      [
+        21.2,
+        49.6
+      ],
+      [
+        59.2,
+        85.4
+      ]
+    ],
+    "renderMs": 68.4,
+    "worldWithinRenderMs": 54.4,
+    "gameUpdateMs": 7.5,
+    "outsideBothMs": 11.1,
+    "isInputPendingAtUpdateBegins": [
+      false,
+      false
+    ]
+  },
+  {
+    "freshCompositorTrace": false,
+    "doorGeometry": "candidate",
+    "profile": "touch",
+    "repeat": 2,
+    "sourceToCallbackMs": 93.8,
+    "touchMinusPointerMs": 0.2,
+    "unshiftedRenderIntervalsMs": [
+      [
+        0.0,
+        28.0
+      ],
+      [
+        34.2,
+        59.2
+      ],
+      [
+        67.5,
+        92.3
+      ]
+    ],
+    "renderMs": 77.8,
+    "worldWithinRenderMs": 61.5,
+    "gameUpdateMs": 6.9,
+    "outsideBothMs": 9.1,
+    "isInputPendingAtUpdateBegins": [
+      false,
+      false
+    ]
+  },
+  {
+    "freshCompositorTrace": false,
+    "doorGeometry": "candidate",
+    "profile": "desktop",
+    "repeat": 0,
+    "sourceToCallbackMs": 28.7,
+    "touchMinusPointerMs": null,
+    "unshiftedRenderIntervalsMs": [
+      [
+        0.8,
+        27.6
+      ]
+    ],
+    "renderMs": 26.8,
+    "worldWithinRenderMs": 20.7,
+    "gameUpdateMs": 0,
+    "outsideBothMs": 1.9,
+    "isInputPendingAtUpdateBegins": []
+  },
+  {
+    "freshCompositorTrace": false,
+    "doorGeometry": "candidate",
+    "profile": "desktop",
+    "repeat": 1,
+    "sourceToCallbackMs": 28.7,
+    "touchMinusPointerMs": null,
+    "unshiftedRenderIntervalsMs": [
+      [
+        4.1,
+        26.7
+      ]
+    ],
+    "renderMs": 22.6,
+    "worldWithinRenderMs": 18.3,
+    "gameUpdateMs": 1.4,
+    "outsideBothMs": 4.7,
+    "isInputPendingAtUpdateBegins": []
+  },
+  {
+    "freshCompositorTrace": false,
+    "doorGeometry": "candidate",
+    "profile": "desktop",
+    "repeat": 2,
+    "sourceToCallbackMs": 31.2,
+    "touchMinusPointerMs": null,
+    "unshiftedRenderIntervalsMs": [
+      [
+        8.6,
+        29.8
+      ]
+    ],
+    "renderMs": 21.2,
+    "worldWithinRenderMs": 15.4,
+    "gameUpdateMs": 7.3,
+    "outsideBothMs": 2.7,
+    "isInputPendingAtUpdateBegins": []
+  }
+]

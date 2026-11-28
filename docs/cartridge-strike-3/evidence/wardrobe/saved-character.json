@@ -1,0 +1,27 @@
+{
+  "status": "PASS",
+  "first": {
+    "team": "counterAnalysts",
+    "drawn": 10,
+    "hands": 2,
+    "sleeves": 2,
+    "matches": true,
+    "gloveColorMatches": true,
+    "thirdPerson": true,
+    "otherOriginal": true
+  },
+  "replay": {
+    "team": "analysts",
+    "drawn": 10,
+    "hands": 2,
+    "sleeves": 2,
+    "matches": true,
+    "gloveColorMatches": true,
+    "thirdPerson": true,
+    "otherOriginal": true
+  },
+  "cancel": true,
+  "retry": true,
+  "incompatibleRecovery": true,
+  "writeRequests": 0
+}

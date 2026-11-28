@@ -73,7 +73,7 @@ export async function captureReloads({desktop,touch,game,owner,observer,output,w
   assert(nodes.length,'a clear placement in the normal observer camera');
   if(process.env.CS3_BONUS_COLD_FOCUS){
     const {startColdSightline}=await import('./bonus-cold-sightline.mjs');
-    await startColdSightline(pages,owner,game,nodes[0].p,process.env.CS3_BONUS_COLD_FOCUS,output);
+    await startColdSightline(pages,owner,observer,game,nodes[0].p,process.env.CS3_BONUS_COLD_FOCUS,output);
     return;
   }
   Object.assign(owner,{x:nodes[0].p.x,y:nodes[0].p.y??0,z:nodes[0].p.z,vy:0});
