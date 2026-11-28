@@ -3,6 +3,7 @@ import test from 'node:test';
 import {Client} from '@colyseus/sdk';
 import {createLocalServer} from '../local-server.mjs';
 import {defaultArsenal,quoteClass,weaponDefinition} from '../../src/fps/arsenal.mjs';
+import {INTERPOLATION_MS} from '../../shared/multiplayer/rules.mjs';
 import {MAP_CONTRACTS} from '../../shared/multiplayer/build.mjs';
 import {own,options,until,send,delay} from './helpers.mjs';
 
@@ -39,9 +40,32 @@ test('two clients see equipped kits and smoke, pending class stays private throu
   await until(()=>b.state.actors.get(actor.id).handling.primaryKit==='sil,xmag:desert','equipped fittings replicated');
   assert.equal(own(a).primaryAmmo,weaponDefinition('smg',['xmag']).magazine);assert.equal(own(b).handling.flashCount,1);
   assert(!JSON.stringify(b.state.toJSON()).includes('Harbor'));assert(!JSON.stringify(peer.receipts).includes('Harbor'));
-  send(a,{fire:true,fireId:1,yaw:actor.yaw});
-  await until(()=>peer.events.some(e=>e.type==='shot'&&e.actorId===actor.id&&e.suppressed),'peer observed suppressed shot');
-  assert(!peer.events.some(e=>e.type==='tracer'&&e.actorId===actor.id));
+  // A compressed countdown can finish while the SDK still displays the former
+  // life. Wait for a current-life render sample before sending the single shot.
+  const renderStamp=()=>Math.round(a.clock.serverNow())-Math.round(INTERPOLATION_MS+a.clock.smoothedRtt()/2);
+  const stock=actor.inventory.primary.ammo;
+  const actionId=[actor.id,actor.lifeId,seat.epoch,1].join(':');
+  const observed=()=>peer.events.filter(e=>e.type==='shot'&&e.actorId===actor.id);
+  let sampled;
+  try{
+    await until(()=>seat.enabled&&own(a).controlEpoch===seat.epoch&&own(a).lifeId===actor.lifeId&&
+      a.clock.lastServerTime()>0&&renderStamp()>=seat.lifeStartedAt&&r.lag.tickTimes.has(a.state.tick),
+    'SDK displayed this life with controls enabled');
+    sampled={tick:a.state.tick,render:renderStamp(),lifeStartedAt:seat.lifeStartedAt};
+    send(a,{fire:true,fireEdge:true,fireId:1,yaw:actor.yaw,shotYaw:actor.yaw});
+    await until(()=>observed().length>0&&own(a).primaryAmmo===stock-1,'peer observed suppressed shot and shooter adopted its spent round');
+    assert.equal(observed().length,1);
+    assert.equal(observed()[0].actionId,actionId);
+    assert.equal(observed()[0].suppressed,true);
+    assert.equal(actor.inventory.primary.ammo,stock-1);
+    assert.equal(actor.spawnProtectedUntil,0);
+    assert(!peer.events.some(e=>e.type==='tracer'&&e.actorId===actor.id));
+  }catch(error){
+    t.diagnostic(JSON.stringify({sampled,actionId,latestTick:r.sim.tickNumber,enabled:seat.enabled,phase:r.state.phase,
+      lastFire:seat.lastFire,invalid:r.metrics.invalid,rejected:r.lag.metrics.reasons,authorityAmmo:actor.inventory.primary.ammo,
+      clientAmmo:own(a)?.primaryAmmo,peerShots:observed().map(e=>[e.actionId,e.weapon,e.suppressed])}));
+    throw error;
+  }
   const other=r.seats.get(b.sessionId).actor;
   const drop=(room,serial)=>room.send('classic',{kind:'drop',matchId:room.state.matchId,round:room.state.round,
     lifeId:own(room).lifeId,controlEpoch:own(room).controlEpoch,serial});
