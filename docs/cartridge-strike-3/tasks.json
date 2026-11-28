@@ -325,7 +325,12 @@
       "exit": "Real replays, new modes verified, no information leaks or double rewards.",
       "status": "IN_PROGRESS",
       "branch": "cs3/10-match-progression",
-      "baseline": "20e8b20dfe3f07abca32b81e88442f6cbc6e5aad"
+      "baseline": "20e8b20dfe3f07abca32b81e88442f6cbc6e5aad",
+      "pullRequests": [
+        66
+      ],
+      "reviewHead": "bfdf48f66babf95b2b97fc8bafed517f3cad0002",
+      "pendingRun": 46151183749
     },
     {
       "id": "CS3-11",
