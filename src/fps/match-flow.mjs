@@ -1,3 +1,4 @@
+import {soundLevels} from './sound-levels.mjs';
 import {UI_EN, selectedMapName} from './english-ui.mjs';
 import {createFullscreenController} from './fullscreen.mjs';
 // CARTRIDGE-STRIKE // lobby theme + lobby → loading → match flow (presentation layer).
@@ -22,7 +23,13 @@ const TIPS = [
 const track = new Audio();
 track.preload = 'none';
 track.loop = true;
-track.volume = .55;
+function setMusicLevel(settings) {
+  track.volume = soundLevels(settings).menuMusic;
+}
+let savedSound;
+try { savedSound = JSON.parse(localStorage.getItem('cartridge-settings') || '{}'); } catch {}
+setMusicLevel(savedSound);
+window.addEventListener('cs-sound-settings', event => setMusicLevel(event.detail));
 track.src = '../audio/Preparation.mp3';
 const music = {
   track,

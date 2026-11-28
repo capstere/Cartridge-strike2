@@ -1,3 +1,4 @@
+import {normalizeTouchProfile} from './mobile-profile.mjs';
 import {rushReady} from './rush.mjs';
 import { WEAPONS } from './config.mjs';
 import { advanceAim, canAim, aimFov, aimFriction, EmptyMagazineReload, nextWeapon, clamp01 } from './tactical-rules.mjs';
@@ -6,6 +7,7 @@ import { advanceAim, canAim, aimFov, aimFriction, EmptyMagazineReload, nextWeapo
 export class TacticalControls {
   constructor({ settings, mobile, getGame, getModal, isInteracting, onAimChange }) {
     Object.assign(this, { settings, mobile, getGame, getModal, isInteracting, onAimChange });
+    normalizeTouchProfile(settings);
     settings.autoReload = settings.autoReload !== false;
     settings.mobileAimAssist = settings.mobileAimAssist !== false;
     this.reload = new EmptyMagazineReload();
@@ -16,16 +18,36 @@ export class TacticalControls {
     this.scope.setAttribute('aria-hidden', 'true');
     this.scope.innerHTML = '<div class="precision-lens"><i></i><b></b><span>PRECISION</span></div>';
     document.body.append(this.scope);
-    if ((mobile.touchCapable ?? mobile.enabled) && mobile.root) {
+    if (mobile.root) {
       this.button = document.createElement('button');
       this.button.type = 'button'; this.button.className = 'mobile-button mobile-aim';
       this.button.dataset.tacticalAim = ''; this.button.textContent = 'AIM';
-      this.button.setAttribute('aria-label', 'Toggle aim');
+      this.button.setAttribute('aria-label', 'Toggle aim or hold to aim');
       this.button.setAttribute('aria-pressed', 'false');
       mobile.root.append(this.button);
       this.button.addEventListener('pointerdown', e => {
         e.preventDefault(); e.stopPropagation();
-        if (e.pointerType !== 'mouse' || e.button === 0) this.toggle();
+        if ((e.pointerType==='mouse' && e.button!==0) || this.aimFinger || !this.playing()) return;
+        this.aimFinger={id:e.pointerId,at:e.timeStamp,previous:this.wanted,x:e.clientX,y:e.clientY};
+        this.setAim(true);
+        try {this.button.setPointerCapture(e.pointerId);} catch {}
+      });
+      this.button.addEventListener('pointermove',e=>{
+        const finger=this.aimFinger;
+        if (finger?.id!==e.pointerId) return;
+        e.preventDefault();
+        mobile.onLook(e.clientX-finger.x,e.clientY-finger.y);
+        finger.x=e.clientX;finger.y=e.clientY;
+      });
+      const endAim=e=>{
+        const finger=this.aimFinger;
+        if (finger?.id!==e.pointerId) return;
+        this.aimFinger=null;
+        this.setAim(e.type==='pointerup' && e.timeStamp-finger.at<=350 && !finger.previous);
+      };
+      for (const type of ['pointerup','pointercancel','lostpointercapture']) this.button.addEventListener(type,endAim);
+      this.button.addEventListener('click',e=>{
+        if (e.detail===0) this.toggle();
       });
       this.installDoubleTap(mobile.root.querySelector('[data-mobile-look]'));
     }
@@ -63,7 +85,7 @@ export class TacticalControls {
   installDoubleTap(zone) {
     if (!zone) return;
     zone.addEventListener('pointerdown', e => {
-      if (this.tap || !this.playing()) return;
+      if (!this.settings.touchDoubleAim || this.tap || !this.playing()) return;
       this.tap = { id: e.pointerId, x: e.clientX, y: e.clientY, at: e.timeStamp, moved: false };
     });
     zone.addEventListener('pointermove', e => {
@@ -83,7 +105,22 @@ export class TacticalControls {
     for (const name of ['pointerup', 'pointercancel', 'lostpointercapture']) zone.addEventListener(name, end);
   }
 
+  scopedTrigger(phase) {
+    if (phase==='press') {
+      if (!this.settings.touchQuickShot || !this.playing() || this.getGame().player.weapon!=='sniper') return false;
+      this.scopeHold={previous:this.wanted};
+      this.setAim(true);
+      return true;
+    }
+    const held=this.scopeHold;
+    this.scopeHold=null;
+    if (!held) return false;
+    this.setAim(held.previous);
+    return phase==='release' && this.playing() && this.getGame().player.weapon==='sniper';
+  }
+
   reset() {
+    this.aimFinger=null;this.scopeHold=null;
     this.wanted = false; this.padAim=false; this.amount = 0; this.tap = this.previousTap = null;
     this.reload.reset();
     const p = this.getGame()?.player;
@@ -125,9 +162,10 @@ export class TacticalControls {
     const p = this.getGame()?.player, w = WEAPONS[p?.weapon];
     const trigger = this.mobile.root?.querySelector('[data-mobile-action="fire"]');
     if (!trigger) return;
-    const manual = w?.slot === 'grenade' || !!w?.projectile;
+    const manual = w?.slot === 'grenade' || !!w?.projectile || (p?.weapon==='sniper' && this.settings.touchQuickShot);
     // Auto-fire must not make grenades/rocket launchers impossible to use.
     trigger.hidden = !!this.settings.mobileAutoFire && !manual;
+    this.mobile.root.classList.toggle('manual-trigger-visible',!trigger.hidden);
     const label = w?.slot === 'grenade' ? 'THROW' : w?.projectile ? 'LAUNCH' : 'FIRE';
     if (trigger.textContent !== label) trigger.textContent = label;
     trigger.setAttribute('aria-label', label === 'THROW' ? 'Throw selected grenade' : 'Fire');
@@ -135,8 +173,9 @@ export class TacticalControls {
 
   lookScale(touch, yaw, pitch) {
     const p = this.getGame()?.player;
-    const fov = 76 + (aimFov(p?.weapon) - 76) * this.amount;
-    const zoomScale = .35 + .65 * fov / 76;
+    const base=this.settings.fieldOfView;
+    const fov=base+(aimFov(p?.weapon)-base)*this.amount;
+    const zoomScale=(.35+.65*fov/base)*(1+(this.settings.zoomSensitivity-1)*this.amount);
     return zoomScale * (touch && this.settings.mobileAimAssist && this.playing() ? aimFriction(this.getGame(), yaw, pitch) : 1);
   }
 
@@ -152,7 +191,8 @@ export class TacticalControls {
   render(renderer) {
     const p = this.getGame()?.player;
     const amount = this.playing() && canAim(p?.weapon) ? this.amount : 0;
-    const fov = 76 + (aimFov(p?.weapon) - 76) * amount;
+    const base=this.settings.fieldOfView;
+    const fov=base+(aimFov(p?.weapon)-base)*amount;
     if (Math.abs(renderer.camera.fov - fov) > .005) {
       renderer.camera.fov = fov; renderer.camera.updateProjectionMatrix();
     }
@@ -168,7 +208,6 @@ export class TacticalControls {
 
   settingsMarkup() {
     return `<label class="setting">Auto-reload <input type="checkbox" data-setting="autoReload" aria-label="Auto-reload" ${this.settings.autoReload ? 'checked' : ''}></label>` +
-      (this.mobile.enabled ? `<label class="setting">Light aim assist <input type="checkbox" data-setting="mobileAimAssist" aria-label="Light aim assist" ${this.settings.mobileAimAssist ? 'checked' : ''}></label><p class="setting-note">Touch aim slows near visible enemies. Double-tap on the right or tap Aim to zoom.</p>` :
-        '<p class="setting-note">Hold the right mouse button to aim, or press F to toggle. The scout rifle has a scope.</p>');
+      `<label class="setting">Light aim assist <input type="checkbox" data-setting="mobileAimAssist" aria-label="Light aim assist" ${this.settings.mobileAimAssist ? 'checked' : ''}></label><p class="setting-note">Touch aim slows near visible opponents. Right mouse aims on desktop. F toggles aim.</p>`;
   }
 }

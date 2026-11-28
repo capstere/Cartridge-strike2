@@ -1160,6 +1160,11 @@
       "sha256": "064cece18abd29d27501f17adafd84498cfce055e41489c8f036ad70392d8d6c"
     },
     {
+      "path": "fps/app.webmanifest",
+      "bytes": 448,
+      "sha256": "3286a19319b4467e21ece94c3044e6fe3b1ff5dbc1cd32be9ab97cf9967f4230"
+    },
+    {
       "path": "fps/focus-hud.css",
       "bytes": 15353,
       "sha256": "24e47d029fd9c6c37d8c918238274368833c567f8bf10537ae3d8d2fcf62872e"
@@ -1170,9 +1175,19 @@
       "sha256": "39eb7d2c30d230c9ed7bc64c67c38a48e0a975f6f9b0c3fd8ca3c1d99885ca67"
     },
     {
+      "path": "fps/icon-192.png",
+      "bytes": 2300,
+      "sha256": "00e8f8e8c6d02ce381bb5abef89de3fb42fd01ac09ff80308f99b98f957b7296"
+    },
+    {
+      "path": "fps/icon-512.png",
+      "bytes": 4672,
+      "sha256": "126fb9ad15bbb0f9b82dd0542b4ebf5025b212e811b05333ac115af532851083"
+    },
+    {
       "path": "fps/index.html",
-      "bytes": 20471,
-      "sha256": "664ba466e09a7667fc4339ce9a407588c15b7f1e571a22bc830786dce6b085bc"
+      "bytes": 20643,
+      "sha256": "b8be54aaeb589f7825f65a53a16b463f18532d84ed44ad9acc8cdc80afb80b8a"
     },
     {
       "path": "fps/lobby.css",
@@ -1195,6 +1210,11 @@
       "sha256": "6cc21ddee0ae89be20b6e5aead891abcd426683a2abf699bda4b5a7beb5a4a08"
     },
     {
+      "path": "fps/offline.html",
+      "bytes": 694,
+      "sha256": "592a090a467172f5d1a9496a5b0512875a361762c7b930dd3205627cb18f6488"
+    },
+    {
       "path": "fps/routes.css",
       "bytes": 12039,
       "sha256": "89922794720b78603b9a5cf8201196f101c22bc863121bffc46c028fa684b5da"
@@ -1203,6 +1223,11 @@
       "path": "fps/style.css",
       "bytes": 29996,
       "sha256": "deb5f649b51b6571d3f71f14ef3ab6c9e627ad05dc2da7f7eaa2d86e26637cd8"
+    },
+    {
+      "path": "fps/sw.js",
+      "bytes": 2202,
+      "sha256": "ecf3158449ad5402dc03a7919ed158cdfba5ba4c4a840163f9e67ace6d5a705f"
     },
     {
       "path": "fps/type.css",
@@ -2497,7 +2522,7 @@
     {
       "path": "shared/multiplayer/build.mjs",
       "bytes": 660,
-      "sha256": "c826c6585a97f051011124a6da1750cd60de5510f5540fcd32f93f98620fbb44"
+      "sha256": "ac865207781d3183420f48d7a959c2eda9d2d2284abb0351e6239b27b3daed1a"
     },
     {
       "path": "shared/multiplayer/collision-contract.mjs",
@@ -2517,7 +2542,7 @@
     {
       "path": "shared/multiplayer/map-build.mjs",
       "bytes": 2831,
-      "sha256": "7b228e9126ef64b53d62f9aeb8bc5d2b428540aed9ea58ef8daf7a7075b6bef2"
+      "sha256": "953c6b588fc28adcb0dbe0e9bc99340fd77f8ec27df37c1f689156a4512576f4"
     },
     {
       "path": "shared/multiplayer/maps.mjs",
@@ -2581,18 +2606,18 @@
     },
     {
       "path": "src/fps/adaptive-resolution.mjs",
-      "bytes": 816,
-      "sha256": "2b4b2f1b07c16eb7baf18f26d2b58797da42d2e1a46933016ae76e37be3fdbfa"
+      "bytes": 1002,
+      "sha256": "15742f0305f6a9a7e19cf4ea4fb8b6876a26aaa0fd61cfad9a45afbb42cfabe3"
     },
     {
       "path": "src/fps/app.mjs",
-      "bytes": 62595,
-      "sha256": "db0fb879be389adeec7a2d8a9bc68ff0dfd274a8f9388c21c58a7b805df3c6b3"
+      "bytes": 66749,
+      "sha256": "2006e6cc3b9d6251b45a959c12beed4c8ff0a4b2005b6e94db8820ed41a74e1b"
     },
     {
       "path": "src/fps/audio.mjs",
-      "bytes": 22320,
-      "sha256": "6c822a870aceee68417cdaf0dbae7d2e2121a7b6f07b4e93fac8eb2165af0377"
+      "bytes": 22849,
+      "sha256": "836f81ed46deee184284eaa57d546e20f32038a21cf9f9b0954f510f8e35833e"
     },
     {
       "path": "src/fps/authored-hand-data.mjs",
@@ -2651,8 +2676,8 @@
     },
     {
       "path": "src/fps/character-library.mjs",
-      "bytes": 27728,
-      "sha256": "31f0fd97236f34f3031b93aaeb40b66c8503947e2edd285f982ab3942125f24c"
+      "bytes": 28005,
+      "sha256": "e1fcba96c2ba6965364ad210a99cc5d611babdc977dccd8805b99baa577732c7"
     },
     {
       "path": "src/fps/character-overrides.mjs",
@@ -2786,8 +2811,8 @@
     },
     {
       "path": "src/fps/focus-hud.mjs",
-      "bytes": 8506,
-      "sha256": "5d708e8f8831a8c79f60b5cc1495246b3abe08b1f0fad108757435d267dce367"
+      "bytes": 8480,
+      "sha256": "3e5a7f588ebc82a96ad03d8406aefceb74de05c6259735e24fa830666b025420"
     },
     {
       "path": "src/fps/frame-time-window.mjs",
@@ -2821,8 +2846,8 @@
     },
     {
       "path": "src/fps/gamepad-controls.mjs",
-      "bytes": 1823,
-      "sha256": "a02d71748b4b760a174fe2ca8d3f17bba07f176072b9ae168d78c71766f64d83"
+      "bytes": 4152,
+      "sha256": "c7ec52c28bc604c9ebe0b074e9f4fc8c0ce6de99f63b4b6fe6100dfc83f0dc12"
     },
     {
       "path": "src/fps/glass-visuals.mjs",
@@ -2881,8 +2906,8 @@
     },
     {
       "path": "src/fps/match-flow.mjs",
-      "bytes": 12460,
-      "sha256": "7ffa5fdf7e52412d97b7ae1042c8b0d05f4c8045c3d245a063fb82aa1553fe87"
+      "bytes": 12796,
+      "sha256": "894a2abeb91eeb06da0387bab779202081c1ad31fbe0f238377ae2b89260634a"
     },
     {
       "path": "src/fps/materials.mjs",
@@ -2901,8 +2926,18 @@
     },
     {
       "path": "src/fps/mobile-controls.mjs",
-      "bytes": 8959,
-      "sha256": "107735a0fb86b331916b8bdefc48840b7b7749b49403ffeb96c4bf5631cddf64"
+      "bytes": 13433,
+      "sha256": "5e152197de014d312fe795794dc53edb910834c8d931c57601b72b3c199873fe"
+    },
+    {
+      "path": "src/fps/mobile-layout.mjs",
+      "bytes": 7744,
+      "sha256": "bc567c02a0cb56976c0b6beb496a1ddc7695350b11b392a69dff3479cd77005a"
+    },
+    {
+      "path": "src/fps/mobile-profile.mjs",
+      "bytes": 6783,
+      "sha256": "c3f37e3f22f23d13785aa4bfe4c98967ee396d52024a0e588457cc8cd856b422"
     },
     {
       "path": "src/fps/model-primitives.mjs",
@@ -3076,13 +3111,13 @@
     },
     {
       "path": "src/fps/render-engine.mjs",
-      "bytes": 34101,
-      "sha256": "1f5f944320186b3663ee177281e57c7f93e554004d1a8a0af519fae25be369be"
+      "bytes": 34432,
+      "sha256": "5917634be91cd7ad30143b033911b910236015f9cb1895399e824079e3391b17"
     },
     {
       "path": "src/fps/render.mjs",
-      "bytes": 22572,
-      "sha256": "5b5f9e8ecb4b2beaa19a28a9048dc306ecafd225b625a53f29ff4b7aac79a8e7"
+      "bytes": 30783,
+      "sha256": "00df482b654b88250e692880f364f802a28e9c97c18a1cebe525ff97b917b265"
     },
     {
       "path": "src/fps/riposte-audio.mjs",
@@ -3160,6 +3195,11 @@
       "sha256": "87647801cc4e9602e6ef4e9d1f1a75f7db59ff211a192a353231486e8759b694"
     },
     {
+      "path": "src/fps/sound-levels.mjs",
+      "bytes": 568,
+      "sha256": "2aa93c04023541d73324f1a31c5020b2e23673ee6d0d56e2b59408d668dc4eb4"
+    },
+    {
       "path": "src/fps/start-elevators.mjs",
       "bytes": 2526,
       "sha256": "b23e866b245439e2553a07ea66ebc38d1f16012287697c86c292bac53b220d12"
@@ -3196,8 +3236,8 @@
     },
     {
       "path": "src/fps/tactical-controls.mjs",
-      "bytes": 8628,
-      "sha256": "ad22c76b7f5e05c65e17220026740d6d4a6490711c035dba243f5214b92356b2"
+      "bytes": 10328,
+      "sha256": "40b14d407bcc1597080cd5b06f62a593dd109362256e32d40940b8f72547fb2b"
     },
     {
       "path": "src/fps/tactical-map.mjs",
@@ -3241,8 +3281,8 @@
     },
     {
       "path": "src/fps/visual-depth.mjs",
-      "bytes": 7163,
-      "sha256": "fffc09302fa4eab9772610f4e9095f122206685b71a067076f53cd3944947bfa"
+      "bytes": 7187,
+      "sha256": "bb53a8e1aaac2a61861cc3ae6ed792f5a746fb4d4092576f2c45946a9869b8bc"
     },
     {
       "path": "src/fps/walk-start.mjs",
@@ -3285,14 +3325,19 @@
       "sha256": "1ebcd89ac4e7f803e6a11633877cdb57fc1bdb635a72716d222b465677e39a77"
     },
     {
+      "path": "ui/cs-install.mjs",
+      "bytes": 1744,
+      "sha256": "f764fb3ce10303c52362cadcf7a21ec687b9aba108bb545a8a3cd1130b1f4b9a"
+    },
+    {
       "path": "ui/cs-mobile.css",
-      "bytes": 4941,
-      "sha256": "6848839111ef0fbf134196d0579f6bd6c4a979f76aba5c0dfcd0fed070cdc24c"
+      "bytes": 8327,
+      "sha256": "2fde9864f48abea1daf92bbc02cfbb70e58021c7caec8ea6d6d3c5ab5939ec21"
     },
     {
       "path": "ui/cs-mobile.mjs",
-      "bytes": 1458,
-      "sha256": "37170d81aba6a6b8db7d3249f02db58f10e281b07ccf4bb69c033de13474d747"
+      "bytes": 1535,
+      "sha256": "ca3297bd161a81dd64af71c94a2733c0bcb06d84e902bbb324f7017bc3322f98"
     },
     {
       "path": "ui/cs-theme.css",
@@ -3540,7 +3585,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 81821181,
+  "bytes": 81874496,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

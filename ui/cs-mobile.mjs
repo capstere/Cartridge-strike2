@@ -1,3 +1,4 @@
+import {installAppControls} from './cs-install.mjs';
 // Cartridge-Strike game-only mobile orientation support.
 import {isFamilyRoomLink} from '../shared/multiplayer/family-room.mjs';
 
@@ -22,6 +23,7 @@ function rotatePrompt() {
 
 function init() {
   rotatePrompt();
+  installAppControls();
   const menu = document.getElementById('menu');
   const sync = () => html.classList.toggle('cs-in-match', menu.hidden);
   new MutationObserver(sync).observe(menu, {attributes:true, attributeFilter:['hidden']});

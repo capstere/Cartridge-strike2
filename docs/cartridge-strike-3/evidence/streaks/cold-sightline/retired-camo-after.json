@@ -1,0 +1,69 @@
+{
+  "outfit": "sniper",
+  "before": {
+    "sourceShared": true,
+    "sameHandle": false,
+    "patternListeners": 1,
+    "apparelListeners": 1,
+    "separateAlive": true,
+    "activeOutfit": "sniper",
+    "disposed": false,
+    "knownPrograms": [
+      10,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      9,
+      23,
+      34,
+      36,
+      19,
+      37,
+      38,
+      39,
+      41,
+      12
+    ]
+  },
+  "afterReplacement": {
+    "sourceShared": true,
+    "sameHandle": false,
+    "patternListeners": 1,
+    "apparelListeners": 0,
+    "separateAlive": true,
+    "activeOutfit": "issued",
+    "disposed": false,
+    "knownPrograms": [
+      10,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      9,
+      23,
+      34,
+      36,
+      19,
+      37,
+      38,
+      39,
+      41,
+      12
+    ]
+  },
+  "afterMapExit": {
+    "sourceShared": true,
+    "sameHandle": false,
+    "patternListeners": 1,
+    "apparelListeners": 0,
+    "separateAlive": true,
+    "activeOutfit": "issued",
+    "disposed": true,
+    "knownPrograms": []
+  }
+}

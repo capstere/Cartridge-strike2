@@ -78,7 +78,7 @@ export class VisualDepth{
  }
  render(scene,camera){
   if(this.disposed)throw Error('VisualDepth is disposed');const r=this.renderer;
-  if(!this.supported){r.render(scene,camera);return;}
+  if(!this.supported || this.enabled===false){r.render(scene,camera);return;}
   this.renderCount++;const previous=r.getRenderTarget();r.getDrawingBufferSize(this.size);
   const w=Math.max(1,this.size.x|0),h=Math.max(1,this.size.y|0),aw=Math.ceil(w/2),ah=Math.ceil(h/2);
   if(w!==this.width||h!==this.height){this.target.setSize(w,h);this.aoTarget.setSize(aw,ah);this.width=w;this.height=h;this.aoMaterial.uniforms.resolution.value.set(w,h);this.material.uniforms.aoResolution.value.set(aw,ah);this.material.uniforms.depthResolution.value.set(w,h);}

@@ -1,3 +1,4 @@
+import {soundLevels} from './sound-levels.mjs';
 import {CoastalAmbience, coastalMaps} from './coastal-ambience.mjs';
 
 /** Local Web Audio presentation. Logical hearing belongs to Game, including at volume 0.
@@ -22,9 +23,10 @@ export class AudioSystem {
   constructor(world, settings = {}) {
     this.world = world;
     this.settings = settings;
-    this.volume = clamp(Number(settings.volume ?? .55), 0, 1);
+    this.volume = soundLevels(settings).master;
     this.context = null;
     this.master = null;
+    this.announcements = null;
     this.buffers = new Map();
     this.active = new Set();
     this.ambient = []; this.ambientRoom = null; this.ambientBuffer = null;
@@ -46,6 +48,9 @@ export class AudioSystem {
       this.context = new AudioContextClass();
       this.master = this.context.createGain();
       this.master.gain.value = this.volume;
+      this.announcements = this.context.createGain();
+      this.announcements.gain.value = soundLevels(this.settings).announcements;
+      this.announcements.connect(this.master);
       const limiter = this.context.createDynamicsCompressor();
       limiter.threshold.value = -10;
       limiter.knee.value = 12;
@@ -80,6 +85,7 @@ export class AudioSystem {
   setVolume(volume) {
     this.volume = clamp(Number(volume) || 0, 0, 1);
     if (this.master) this.master.gain.setTargetAtTime(this.volume, this.context.currentTime, .015);
+    this.announcements?.gain.setTargetAtTime(soundLevels(this.settings).announcements, this.context.currentTime, .015);
     if (this.volume === 0) this.stopAmbient();
   }
 
@@ -273,7 +279,10 @@ export class AudioSystem {
       panner.refDistance = 2.5; panner.maxDistance = 55; panner.rolloffFactor = 1.45;
       panner.positionX.value = position.x; panner.positionY.value = position.y; panner.positionZ.value = position.z;
       filter.connect(panner).connect(this.worldOutput()); nodes.push(panner);
-    } else filter.connect(this.master);
+    } else {
+      const announcement = global || event.type === 'radio';
+      filter.connect(announcement ? this.announcements ?? this.master : this.master);
+    }
     if (!clear) this.stats.occluded++;
     return { gain, nodes, when: ctx.currentTime + delay };
   }
@@ -430,6 +439,7 @@ export class AudioSystem {
     this.reset(); this.disposed = true;
     this.buffers.clear(); this.ambientBuffer=null;
     this.worldFilter?.disconnect(); this.worldGain?.disconnect();
+    this.announcements?.disconnect();
     if (this.context && this.context.state !== 'closed') await this.context.close();
   }
 }

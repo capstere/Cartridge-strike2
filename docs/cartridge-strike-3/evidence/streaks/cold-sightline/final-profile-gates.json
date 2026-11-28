@@ -1,0 +1,1385 @@
+{
+  "runtimeRevision": "527a03b7f2d4940622eeed4932b0151f557f712b",
+  "networkBuild": "5958767871dd610dbbc6fae8d29504cd7b25357dc2cad800d0a8dce9c7b02029",
+  "protocol": 20,
+  "sourceSha256": {
+    "src/fps/app.mjs": "28646e0337415b7b4ace39c933aee2da076866ebe5be6d68780d9040fcb8d16b",
+    "src/fps/render.mjs": "00df482b654b88250e692880f364f802a28e9c97c18a1cebe525ff97b917b265",
+    "src/fps/render-engine.mjs": "5917634be91cd7ad30143b033911b910236015f9cb1895399e824079e3391b17",
+    "src/fps/character-library.mjs": "e1fcba96c2ba6965364ad210a99cc5d611babdc977dccd8805b99baa577732c7",
+    "shared/multiplayer/build.mjs": "3343f1471bd191da39733c6b6d06b6059f66c25f12fd0887b2291e5cef71a401"
+  },
+  "wardrobe": {
+    "desktop-wardrobe": {
+      "dimensions": [
+        1280,
+        720
+      ],
+      "sameRgb": true,
+      "changedPixels": 0,
+      "fractionChanged": 0.0,
+      "meanAbsChannel": 0.0,
+      "originalSha256": "4d2102ff7498a458a9dc6531f1f30f1df35df9272748a38cb1ddaaba3610963a",
+      "currentSha256": "4d2102ff7498a458a9dc6531f1f30f1df35df9272748a38cb1ddaaba3610963a"
+    },
+    "desktop-deployed": {
+      "dimensions": [
+        1280,
+        720
+      ],
+      "sameRgb": false,
+      "changedPixels": 12096,
+      "fractionChanged": 0.013125,
+      "meanAbsChannel": 0.3149,
+      "originalSha256": "2f638dd0dd8ecea7f39892848b0ed623e08b363681710062b3529da4b0d342b4",
+      "currentSha256": "43e008cefb8ed6e330ab2942095e04897d6cac9ce44bab110af12a24abdfe250",
+      "differenceBoxExclusive": [
+        543,
+        655,
+        737,
+        720
+      ]
+    },
+    "touch-wardrobe": {
+      "dimensions": [
+        844,
+        390
+      ],
+      "sameRgb": true,
+      "changedPixels": 0,
+      "fractionChanged": 0.0,
+      "meanAbsChannel": 0.0,
+      "originalSha256": "5f8fa2cfd8a244120b2589800558b18ffd5c55be4b67201c7bd13553f09b2875",
+      "currentSha256": "5f8fa2cfd8a244120b2589800558b18ffd5c55be4b67201c7bd13553f09b2875"
+    },
+    "touch-deployed": {
+      "dimensions": [
+        844,
+        390
+      ],
+      "sameRgb": false,
+      "changedPixels": 8808,
+      "fractionChanged": 0.026759,
+      "meanAbsChannel": 1.31,
+      "originalSha256": "7400e0f26c0271e30faedff0b4d6af9360c3640664d2f838f6cc0e39f80a5cd2",
+      "currentSha256": "c0f83b90debe2ccadabbbbbc517f811d156836e04ed61b19645e44a452367e4c",
+      "differenceBoxExclusive": [
+        335,
+        335,
+        513,
+        385
+      ]
+    },
+    "journey": [
+      {
+        "input": "desktop",
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "fabricMatches": true,
+        "actorOwnsFabric": true,
+        "swatch": [
+          64,
+          64
+        ],
+        "glove": 4867646,
+        "hasKit": true,
+        "outfit": "shotgun",
+        "ally": "issued",
+        "shirt": 16777215,
+        "sleeve": 16777215,
+        "handTargets": 2,
+        "locale": "en",
+        "distinctPortraits": 5
+      },
+      {
+        "input": "touch",
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "fabricMatches": true,
+        "actorOwnsFabric": true,
+        "swatch": [
+          64,
+          64
+        ],
+        "glove": 4867646,
+        "hasKit": true,
+        "outfit": "shotgun",
+        "ally": "issued",
+        "shirt": 16777215,
+        "sleeve": 16777215,
+        "handTargets": 2,
+        "locale": "en",
+        "distinctPortraits": 5
+      }
+    ]
+  },
+  "reloadCaptureComparison": {
+    "ordinary-owner": {
+      "priorDimensions": [
+        470,
+        264
+      ],
+      "currentDimensions": [
+        537,
+        302
+      ],
+      "originalSha256": "a45123fb989d9bef1ddc86836d9fde0ab8bd1b152c79a41f9b6ac27e42ab8533",
+      "currentSha256": "8d167b1ff54eef82ec165438aaae7f49abca9bbb267c40ce995c7a95b97e485c"
+    },
+    "ordinary-observer": {
+      "dimensions": [
+        234,
+        132
+      ],
+      "sameRgb": false,
+      "changedPixels": 10801,
+      "fractionChanged": 0.349683,
+      "meanAbsChannel": 0.9687,
+      "originalSha256": "dd218eb1bb006a7de4cb032e3307640e751751bc495f0314c8c10465d04277e5",
+      "currentSha256": "ee4198fe549a04bd3c6b12e911d4eddc5d2b651d525066c82c2ebdb1b91b0edc"
+    },
+    "rage-owner": {
+      "priorDimensions": [
+        403,
+        226
+      ],
+      "currentDimensions": [
+        470,
+        264
+      ],
+      "originalSha256": "69e3adbc016ce2110b593f8d73f1c1ce86944ff8249aa22b5410ca19f85c6319",
+      "currentSha256": "e312d73d14dadce06b38fddc87cf57ade19fcbbe305775d2a888cc59913d0a01"
+    },
+    "rage-observer": {
+      "dimensions": [
+        234,
+        132
+      ],
+      "sameRgb": false,
+      "changedPixels": 14192,
+      "fractionChanged": 0.459466,
+      "meanAbsChannel": 1.146,
+      "originalSha256": "5d9e59795a537f3106815c581928caa5d3eade44814d7bc19d90eb1069326284",
+      "currentSha256": "10eb98c7369b1f2b14f5ac80a0c88d4ca97f3e62369e77cd5ca99affbe2dccd7"
+    }
+  },
+  "appearanceLifecycle": [
+    {
+      "firstPerson": true,
+      "outfit": "sniper",
+      "before": {
+        "sourceShared": true,
+        "sameHandle": false,
+        "patternListeners": 1,
+        "apparelListeners": 1,
+        "separateAlive": true,
+        "activeOutfit": "sniper",
+        "profileReplaced": false,
+        "profileOwners": 1,
+        "disposed": false,
+        "knownPrograms": [
+          30,
+          48,
+          49,
+          50,
+          51,
+          52,
+          29,
+          43,
+          54,
+          39,
+          55,
+          56,
+          57,
+          59,
+          32,
+          60,
+          61
+        ]
+      },
+      "afterReplacement": {
+        "sourceShared": true,
+        "sameHandle": false,
+        "patternListeners": 1,
+        "apparelListeners": 1,
+        "separateAlive": true,
+        "activeOutfit": "issued",
+        "profileReplaced": true,
+        "profileOwners": 2,
+        "disposed": false,
+        "knownPrograms": [
+          30,
+          48,
+          49,
+          50,
+          51,
+          52,
+          29,
+          43,
+          54,
+          39,
+          55,
+          56,
+          57,
+          59,
+          32,
+          60,
+          61
+        ]
+      },
+      "afterMapExit": {
+        "sourceShared": true,
+        "sameHandle": false,
+        "patternListeners": 1,
+        "apparelListeners": 0,
+        "separateAlive": true,
+        "activeOutfit": null,
+        "profileReplaced": true,
+        "profileOwners": 0,
+        "disposed": true,
+        "knownPrograms": []
+      }
+    },
+    {
+      "firstPerson": false,
+      "outfit": "sniper",
+      "before": {
+        "sourceShared": true,
+        "sameHandle": false,
+        "patternListeners": 1,
+        "apparelListeners": 1,
+        "separateAlive": true,
+        "activeOutfit": "sniper",
+        "profileReplaced": null,
+        "profileOwners": 1,
+        "disposed": false,
+        "knownPrograms": [
+          10,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          9,
+          23,
+          34,
+          36,
+          19,
+          37,
+          38,
+          39,
+          41,
+          12
+        ]
+      },
+      "afterReplacement": {
+        "sourceShared": true,
+        "sameHandle": false,
+        "patternListeners": 1,
+        "apparelListeners": 0,
+        "separateAlive": true,
+        "activeOutfit": "issued",
+        "profileReplaced": null,
+        "profileOwners": 1,
+        "disposed": false,
+        "knownPrograms": [
+          10,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          9,
+          23,
+          34,
+          36,
+          19,
+          37,
+          38,
+          39,
+          41,
+          12
+        ]
+      },
+      "afterMapExit": {
+        "sourceShared": true,
+        "sameHandle": false,
+        "patternListeners": 1,
+        "apparelListeners": 0,
+        "separateAlive": true,
+        "activeOutfit": "issued",
+        "profileReplaced": null,
+        "profileOwners": 0,
+        "disposed": true,
+        "knownPrograms": []
+      }
+    }
+  ],
+  "normalGhillie": {
+    "sha256": "1b227f3d000bc754e05d8242cc8098f1c292b1f81ed3f0adee91b4b30a020db3",
+    "bytes": 1154856,
+    "build": "5958767871dd610dbbc6fae8d29504cd7b25357dc2cad800d0a8dce9c7b02029",
+    "focus": "observer",
+    "touchTurn": true,
+    "nodeObserverInterval": {
+      "count": 252,
+      "p50": 25.41,
+      "p95": 28.98,
+      "p99": 32.82,
+      "max": 35.26,
+      "over100": 0,
+      "over250": 0,
+      "over1000": 0
+    },
+    "seats": {
+      "desktop": {
+        "renderer": {
+          "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+          "quality": "low",
+          "mobile": false,
+          "parallelCompile": true
+        },
+        "normal": true,
+        "render": {
+          "count": 302,
+          "p50": 10.9,
+          "p95": 22.0,
+          "p99": 32.2,
+          "max": 209.8,
+          "over100": 1,
+          "over250": 0,
+          "over1000": 0
+        },
+        "renderStartInterval": {
+          "count": 302,
+          "p50": 17.2,
+          "p95": 40.0,
+          "p99": 64.4,
+          "max": 241.3,
+          "over100": 2,
+          "over250": 0,
+          "over1000": 0
+        },
+        "rafInterval": {
+          "count": 301,
+          "p50": 16.7,
+          "p95": 34.4,
+          "p99": 70,
+          "max": 246.1,
+          "over100": 1,
+          "over250": 0,
+          "over1000": 0
+        },
+        "javascriptPatchCallbackInterval": {
+          "count": 129,
+          "p50": 48.4,
+          "p95": 87.6,
+          "p99": 150.3,
+          "max": 386.2,
+          "over100": 3,
+          "over250": 1,
+          "over1000": 0
+        },
+        "firstVisibleStartAfterRequest": null,
+        "firstVisibleCompletionAfterRequest": null,
+        "stationaryTargetXZ": false,
+        "visibleModel": null,
+        "slowFrame": {
+          "gpuCountsBefore": [
+            197,
+            69,
+            85
+          ],
+          "gpuCountsAfter": [
+            199,
+            69,
+            86
+          ],
+          "calls": 86
+        },
+        "cues": [
+          {
+            "sample": "magout_smg",
+            "elapsed": 402.23
+          },
+          {
+            "sample": "magin_smg",
+            "elapsed": 1390.63
+          }
+        ],
+        "operatorPrepare": {
+          "milliseconds": 4753.1,
+          "batches": 17,
+          "submitMs": 76.5,
+          "maxSubmitMs": 14.8,
+          "retainedMaterials": 17
+        },
+        "admission": {
+          "joinToFirstHud": 10889.1,
+          "worldLoadToFirstHud": 9953.9,
+          "firstHudToReadyClick": 1735.6,
+          "joinToReadyClick": 12624.7,
+          "joinToBothActiveInputs": 26748,
+          "joinToReady": {
+            "duration": 12624.7,
+            "raf": {
+              "count": 524,
+              "p50": 16.7,
+              "p95": 18.9,
+              "p99": 133.4,
+              "max": 1516.6,
+              "over100": 8,
+              "over250": 5,
+              "over1000": 1
+            },
+            "trustedPointerDelay": {
+              "count": 90,
+              "p50": 12.8,
+              "p95": 391.5,
+              "p99": 1425.5,
+              "max": 1425.5,
+              "over100": 7,
+              "over250": 5,
+              "over1000": 1
+            },
+            "trustedPointerCallbackGap": {
+              "count": 89,
+              "p50": 100.0,
+              "p95": 512.0,
+              "p99": 1510.0,
+              "max": 1510.0,
+              "over100": 40,
+              "over250": 6,
+              "over1000": 1
+            }
+          },
+          "beforeOperatorPrepare": {
+            "duration": 3627.3,
+            "raf": {
+              "count": 128,
+              "p50": 16.7,
+              "p95": 16.8,
+              "p99": 466.7,
+              "max": 499.9,
+              "over100": 4,
+              "over250": 3,
+              "over1000": 0
+            },
+            "trustedPointerDelay": {
+              "count": 24,
+              "p50": 15.1,
+              "p95": 439.4,
+              "p99": 489.9,
+              "max": 489.9,
+              "over100": 4,
+              "over250": 3,
+              "over1000": 0
+            },
+            "trustedPointerCallbackGap": {
+              "count": 23,
+              "p50": 100.1,
+              "p95": 453.4,
+              "p99": 535.7,
+              "max": 535.7,
+              "over100": 13,
+              "over250": 2,
+              "over1000": 0
+            }
+          },
+          "operatorPrepare": {
+            "duration": 4756.8,
+            "raf": {
+              "count": 280,
+              "p50": 16.7,
+              "p95": 16.8,
+              "p99": 23.8,
+              "max": 66.7,
+              "over100": 0,
+              "over250": 0,
+              "over1000": 0
+            },
+            "trustedPointerDelay": {
+              "count": 47,
+              "p50": 8.0,
+              "p95": 15.7,
+              "p99": 18.2,
+              "max": 18.2,
+              "over100": 0,
+              "over250": 0,
+              "over1000": 0
+            },
+            "trustedPointerCallbackGap": {
+              "count": 46,
+              "p50": 100.0,
+              "p95": 112.8,
+              "p99": 117.7,
+              "max": 117.7,
+              "over100": 18,
+              "over250": 0,
+              "over1000": 0
+            }
+          },
+          "afterOperatorPrepareToFirstHud": {
+            "duration": 1569.8,
+            "raf": {
+              "count": 56,
+              "p50": 16.7,
+              "p95": 116.6,
+              "p99": 436.5,
+              "max": 436.5,
+              "over100": 3,
+              "over250": 1,
+              "over1000": 0
+            },
+            "trustedPointerDelay": {
+              "count": 11,
+              "p50": 16.0,
+              "p95": 425.3,
+              "p99": 425.3,
+              "max": 425.3,
+              "over100": 2,
+              "over250": 1,
+              "over1000": 0
+            },
+            "trustedPointerCallbackGap": {
+              "count": 10,
+              "p50": 100.0,
+              "p95": 199.0,
+              "p99": 199.0,
+              "max": 199.0,
+              "over100": 4,
+              "over250": 0,
+              "over1000": 0
+            }
+          },
+          "rosterOutfits": [
+            "issued",
+            "issued"
+          ]
+        }
+      },
+      "touchEmulated": {
+        "renderer": {
+          "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+          "quality": "low",
+          "mobile": true,
+          "parallelCompile": true
+        },
+        "normal": true,
+        "render": {
+          "count": 226,
+          "p50": 14.7,
+          "p95": 27.1,
+          "p99": 36.9,
+          "max": 180.8,
+          "over100": 1,
+          "over250": 0,
+          "over1000": 0
+        },
+        "renderStartInterval": {
+          "count": 226,
+          "p50": 23.9,
+          "p95": 50.7,
+          "p99": 88.2,
+          "max": 208.4,
+          "over100": 1,
+          "over250": 0,
+          "over1000": 0
+        },
+        "rafInterval": {
+          "count": 226,
+          "p50": 25.7,
+          "p95": 50.6,
+          "p99": 83.2,
+          "max": 200.4,
+          "over100": 1,
+          "over250": 0,
+          "over1000": 0
+        },
+        "javascriptPatchCallbackInterval": {
+          "count": 128,
+          "p50": 48.9,
+          "p95": 85.5,
+          "p99": 175.5,
+          "max": 235,
+          "over100": 5,
+          "over250": 0,
+          "over1000": 0
+        },
+        "firstVisibleStartAfterRequest": 113.38,
+        "firstVisibleCompletionAfterRequest": 130.88,
+        "stationaryTargetXZ": true,
+        "visibleModel": {
+          "meshes": 51,
+          "skinned": 13,
+          "geometries": 51,
+          "materials": 32
+        },
+        "slowFrame": {
+          "gpuCountsBefore": [
+            199,
+            65,
+            56
+          ],
+          "gpuCountsAfter": [
+            202,
+            66,
+            57
+          ],
+          "calls": 158
+        },
+        "cues": [
+          {
+            "sample": "magout_smg",
+            "elapsed": 409.33
+          },
+          {
+            "sample": "magin_smg",
+            "elapsed": 1433.33
+          }
+        ],
+        "operatorPrepare": {
+          "milliseconds": 4958.4,
+          "batches": 17,
+          "submitMs": 88.9,
+          "maxSubmitMs": 13.7,
+          "retainedMaterials": 17
+        },
+        "admission": {
+          "joinToFirstHud": 10006.9,
+          "worldLoadToFirstHud": 9587.2,
+          "firstHudToReadyClick": 2812.5,
+          "joinToReadyClick": 12819.4,
+          "joinToBothActiveInputs": 14138.1,
+          "joinToReady": {
+            "duration": 12819.4,
+            "raf": {
+              "count": 477,
+              "p50": 16.7,
+              "p95": 16.8,
+              "p99": 235,
+              "max": 2571.5,
+              "over100": 6,
+              "over250": 4,
+              "over1000": 1
+            },
+            "trustedPointerDelay": {
+              "count": 84,
+              "p50": 10.0,
+              "p95": 132.8,
+              "p99": 2512.8,
+              "max": 2512.8,
+              "over100": 6,
+              "over250": 4,
+              "over1000": 1
+            },
+            "trustedPointerCallbackGap": {
+              "count": 83,
+              "p50": 100.1,
+              "p95": 232.2,
+              "p99": 2552,
+              "max": 2552,
+              "over100": 42,
+              "over250": 4,
+              "over1000": 1
+            }
+          },
+          "beforeOperatorPrepare": {
+            "duration": 4563.4,
+            "raf": {
+              "count": 164,
+              "p50": 16.7,
+              "p95": 16.8,
+              "p99": 733.3,
+              "max": 765.4,
+              "over100": 4,
+              "over250": 2,
+              "over1000": 0
+            },
+            "trustedPointerDelay": {
+              "count": 30,
+              "p50": 10.0,
+              "p95": 664.3,
+              "p99": 744.9,
+              "max": 744.9,
+              "over100": 4,
+              "over250": 2,
+              "over1000": 0
+            },
+            "trustedPointerCallbackGap": {
+              "count": 29,
+              "p50": 100.1,
+              "p95": 759.1,
+              "p99": 822.3,
+              "max": 822.3,
+              "over100": 15,
+              "over250": 2,
+              "over1000": 0
+            }
+          },
+          "operatorPrepare": {
+            "duration": 4959.8,
+            "raf": {
+              "count": 277,
+              "p50": 16.7,
+              "p95": 16.8,
+              "p99": 23.7,
+              "max": 316.6,
+              "over100": 1,
+              "over250": 1,
+              "over1000": 0
+            },
+            "trustedPointerDelay": {
+              "count": 47,
+              "p50": 9.2,
+              "p95": 25.1,
+              "p99": 313.1,
+              "max": 313.1,
+              "over100": 1,
+              "over250": 1,
+              "over1000": 0
+            },
+            "trustedPointerCallbackGap": {
+              "count": 46,
+              "p50": 100.0,
+              "p95": 112.6,
+              "p99": 386.9,
+              "max": 386.9,
+              "over100": 20,
+              "over250": 1,
+              "over1000": 0
+            }
+          },
+          "afterOperatorPrepareToFirstHud": {
+            "duration": 64.0,
+            "raf": {
+              "count": 5,
+              "p50": 16.6,
+              "p95": 16.7,
+              "p99": 16.7,
+              "max": 16.7,
+              "over100": 0,
+              "over250": 0,
+              "over1000": 0
+            },
+            "trustedPointerDelay": {
+              "count": 0
+            },
+            "trustedPointerCallbackGap": {
+              "count": 0
+            }
+          },
+          "rosterOutfits": [
+            "sniper",
+            "issued"
+          ]
+        }
+      }
+    }
+  },
+  "repeatedNormalGhillie": {
+    "sha256": "308cd91f2642888d3637a8b85aa6c03588c484e0a5d8e2d01de5da2e439412f2",
+    "bytes": 1169601,
+    "build": "5958767871dd610dbbc6fae8d29504cd7b25357dc2cad800d0a8dce9c7b02029",
+    "focus": "observer",
+    "touchTurn": true,
+    "nodeObserverInterval": {
+      "count": 255,
+      "p50": 25.41,
+      "p95": 27.78,
+      "p99": 29.62,
+      "max": 31.54,
+      "over100": 0,
+      "over250": 0,
+      "over1000": 0
+    },
+    "seats": {
+      "desktop": {
+        "renderer": {
+          "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+          "quality": "low",
+          "mobile": false,
+          "parallelCompile": true
+        },
+        "normal": true,
+        "render": {
+          "count": 286,
+          "p50": 11.2,
+          "p95": 25.6,
+          "p99": 37.8,
+          "max": 256.8,
+          "over100": 1,
+          "over250": 1,
+          "over1000": 0
+        },
+        "renderStartInterval": {
+          "count": 286,
+          "p50": 17.6,
+          "p95": 43.6,
+          "p99": 81.2,
+          "max": 308.0,
+          "over100": 1,
+          "over250": 1,
+          "over1000": 0
+        },
+        "rafInterval": {
+          "count": 286,
+          "p50": 16.7,
+          "p95": 50.2,
+          "p99": 68.4,
+          "max": 279.2,
+          "over100": 1,
+          "over250": 1,
+          "over1000": 0
+        },
+        "javascriptPatchCallbackInterval": {
+          "count": 130,
+          "p50": 48.3,
+          "p95": 87.7,
+          "p99": 107.2,
+          "max": 412.6,
+          "over100": 2,
+          "over250": 1,
+          "over1000": 0
+        },
+        "firstVisibleStartAfterRequest": null,
+        "firstVisibleCompletionAfterRequest": null,
+        "stationaryTargetXZ": false,
+        "visibleModel": null,
+        "slowFrame": {
+          "gpuCountsBefore": [
+            216,
+            69,
+            85
+          ],
+          "gpuCountsAfter": [
+            218,
+            69,
+            86
+          ],
+          "calls": 86
+        },
+        "cues": [
+          {
+            "sample": "magout_smg",
+            "elapsed": 400.0
+          },
+          {
+            "sample": "magin_smg",
+            "elapsed": 1404.47
+          }
+        ],
+        "operatorPrepare": {
+          "milliseconds": 4793.9,
+          "batches": 17,
+          "submitMs": 74.4,
+          "maxSubmitMs": 11.7,
+          "retainedMaterials": 17
+        },
+        "admission": {
+          "joinToFirstHud": 11026.5,
+          "worldLoadToFirstHud": 9990.0,
+          "firstHudToReadyClick": 1746.4,
+          "joinToReadyClick": 12772.9,
+          "joinToBothActiveInputs": 26504.4,
+          "joinToReady": {
+            "duration": 12772.9,
+            "raf": {
+              "count": 530,
+              "p50": 16.7,
+              "p95": 21.7,
+              "p99": 149.9,
+              "max": 1516.5,
+              "over100": 8,
+              "over250": 5,
+              "over1000": 1
+            },
+            "trustedPointerDelay": {
+              "count": 94,
+              "p50": 7.0,
+              "p95": 291.8,
+              "p99": 1464.6,
+              "max": 1464.6,
+              "over100": 7,
+              "over250": 5,
+              "over1000": 1
+            },
+            "trustedPointerCallbackGap": {
+              "count": 93,
+              "p50": 100.0,
+              "p95": 484.7,
+              "p99": 1484.3,
+              "max": 1484.3,
+              "over100": 45,
+              "over250": 6,
+              "over1000": 1
+            }
+          },
+          "beforeOperatorPrepare": {
+            "duration": 3647.0,
+            "raf": {
+              "count": 127,
+              "p50": 16.7,
+              "p95": 16.8,
+              "p99": 466.6,
+              "max": 550,
+              "over100": 4,
+              "over250": 3,
+              "over1000": 0
+            },
+            "trustedPointerDelay": {
+              "count": 25,
+              "p50": 3.9,
+              "p95": 455.5,
+              "p99": 478.8,
+              "max": 478.8,
+              "over100": 4,
+              "over250": 3,
+              "over1000": 0
+            },
+            "trustedPointerCallbackGap": {
+              "count": 24,
+              "p50": 100.0,
+              "p95": 333.9,
+              "p99": 583.5,
+              "max": 583.5,
+              "over100": 12,
+              "over250": 2,
+              "over1000": 0
+            }
+          },
+          "operatorPrepare": {
+            "duration": 4797.4,
+            "raf": {
+              "count": 281,
+              "p50": 16.7,
+              "p95": 16.8,
+              "p99": 24.4,
+              "max": 66.6,
+              "over100": 0,
+              "over250": 0,
+              "over1000": 0
+            },
+            "trustedPointerDelay": {
+              "count": 48,
+              "p50": 10.8,
+              "p95": 16.4,
+              "p99": 48.4,
+              "max": 48.4,
+              "over100": 0,
+              "over250": 0,
+              "over1000": 0
+            },
+            "trustedPointerCallbackGap": {
+              "count": 47,
+              "p50": 100.0,
+              "p95": 109.0,
+              "p99": 116.1,
+              "max": 116.1,
+              "over100": 23,
+              "over250": 0,
+              "over1000": 0
+            }
+          },
+          "afterOperatorPrepareToFirstHud": {
+            "duration": 1545.6,
+            "raf": {
+              "count": 55,
+              "p50": 16.7,
+              "p95": 116.7,
+              "p99": 422,
+              "max": 422,
+              "over100": 3,
+              "over250": 1,
+              "over1000": 0
+            },
+            "trustedPointerDelay": {
+              "count": 11,
+              "p50": 4.4,
+              "p95": 391.0,
+              "p99": 391.0,
+              "max": 391.0,
+              "over100": 2,
+              "over250": 1,
+              "over1000": 0
+            },
+            "trustedPointerCallbackGap": {
+              "count": 10,
+              "p50": 99.8,
+              "p95": 222.0,
+              "p99": 222.0,
+              "max": 222.0,
+              "over100": 4,
+              "over250": 0,
+              "over1000": 0
+            }
+          },
+          "rosterOutfits": [
+            "issued",
+            "issued"
+          ]
+        }
+      },
+      "touchEmulated": {
+        "renderer": {
+          "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+          "quality": "low",
+          "mobile": true,
+          "parallelCompile": true
+        },
+        "normal": true,
+        "render": {
+          "count": 227,
+          "p50": 15.0,
+          "p95": 27.2,
+          "p99": 39.4,
+          "max": 195.3,
+          "over100": 1,
+          "over250": 0,
+          "over1000": 0
+        },
+        "renderStartInterval": {
+          "count": 227,
+          "p50": 25.1,
+          "p95": 49.8,
+          "p99": 78.9,
+          "max": 234.8,
+          "over100": 1,
+          "over250": 0,
+          "over1000": 0
+        },
+        "rafInterval": {
+          "count": 226,
+          "p50": 32.6,
+          "p95": 52.6,
+          "p99": 79.4,
+          "max": 215.1,
+          "over100": 1,
+          "over250": 0,
+          "over1000": 0
+        },
+        "javascriptPatchCallbackInterval": {
+          "count": 130,
+          "p50": 48.3,
+          "p95": 87.3,
+          "p99": 149.7,
+          "max": 280.1,
+          "over100": 4,
+          "over250": 1,
+          "over1000": 0
+        },
+        "firstVisibleStartAfterRequest": 126.38,
+        "firstVisibleCompletionAfterRequest": 153.58,
+        "stationaryTargetXZ": true,
+        "visibleModel": {
+          "meshes": 51,
+          "skinned": 13,
+          "geometries": 51,
+          "materials": 32
+        },
+        "slowFrame": {
+          "gpuCountsBefore": [
+            199,
+            65,
+            56
+          ],
+          "gpuCountsAfter": [
+            202,
+            66,
+            57
+          ],
+          "calls": 158
+        },
+        "cues": [
+          {
+            "sample": "magout_smg",
+            "elapsed": 400.0
+          },
+          {
+            "sample": "magin_smg",
+            "elapsed": 1416.67
+          }
+        ],
+        "operatorPrepare": {
+          "milliseconds": 4935.4,
+          "batches": 17,
+          "submitMs": 68.9,
+          "maxSubmitMs": 13,
+          "retainedMaterials": 17
+        },
+        "admission": {
+          "joinToFirstHud": 9560.9,
+          "worldLoadToFirstHud": 9159.9,
+          "firstHudToReadyClick": 2996.5,
+          "joinToReadyClick": 12557.4,
+          "joinToBothActiveInputs": 13730.1,
+          "joinToReady": {
+            "duration": 12557.4,
+            "raf": {
+              "count": 448,
+              "p50": 16.7,
+              "p95": 24.1,
+              "p99": 197.5,
+              "max": 2466.2,
+              "over100": 8,
+              "over250": 4,
+              "over1000": 1
+            },
+            "trustedPointerDelay": {
+              "count": 84,
+              "p50": 8.5,
+              "p95": 116.1,
+              "p99": 2420.9,
+              "max": 2420.9,
+              "over100": 5,
+              "over250": 4,
+              "over1000": 1
+            },
+            "trustedPointerCallbackGap": {
+              "count": 83,
+              "p50": 100.1,
+              "p95": 200.7,
+              "p99": 2499.6,
+              "max": 2499.6,
+              "over100": 42,
+              "over250": 4,
+              "over1000": 1
+            }
+          },
+          "beforeOperatorPrepare": {
+            "duration": 4185.4,
+            "raf": {
+              "count": 150,
+              "p50": 16.7,
+              "p95": 16.8,
+              "p99": 616.7,
+              "max": 802.2,
+              "over100": 4,
+              "over250": 2,
+              "over1000": 0
+            },
+            "trustedPointerDelay": {
+              "count": 27,
+              "p50": 7.0,
+              "p95": 590.7,
+              "p99": 801.3,
+              "max": 801.3,
+              "over100": 3,
+              "over250": 2,
+              "over1000": 0
+            },
+            "trustedPointerCallbackGap": {
+              "count": 26,
+              "p50": 99.9,
+              "p95": 675.3,
+              "p99": 887.4,
+              "max": 887.4,
+              "over100": 13,
+              "over250": 2,
+              "over1000": 0
+            }
+          },
+          "operatorPrepare": {
+            "duration": 4936.5,
+            "raf": {
+              "count": 268,
+              "p50": 16.7,
+              "p95": 16.8,
+              "p99": 50,
+              "max": 366.7,
+              "over100": 1,
+              "over250": 1,
+              "over1000": 0
+            },
+            "trustedPointerDelay": {
+              "count": 47,
+              "p50": 8.6,
+              "p95": 14.2,
+              "p99": 306.0,
+              "max": 306.0,
+              "over100": 1,
+              "over250": 1,
+              "over1000": 0
+            },
+            "trustedPointerCallbackGap": {
+              "count": 46,
+              "p50": 100.0,
+              "p95": 116.7,
+              "p99": 410.1,
+              "max": 410.1,
+              "over100": 20,
+              "over250": 1,
+              "over1000": 0
+            }
+          },
+          "afterOperatorPrepareToFirstHud": {
+            "duration": 38.0,
+            "raf": {
+              "count": 3,
+              "p50": 16.6,
+              "p95": 16.8,
+              "p99": 16.8,
+              "max": 16.8,
+              "over100": 0,
+              "over250": 0,
+              "over1000": 0
+            },
+            "trustedPointerDelay": {
+              "count": 0
+            },
+            "trustedPointerCallbackGap": {
+              "count": 0
+            }
+          },
+          "rosterOutfits": [
+            "sniper",
+            "issued"
+          ]
+        }
+      }
+    }
+  },
+  "fullyWarmedNative": {
+    "rawSha256": "04a70425a0b45bd7a88ec437574cd2a0cad62c5ca5176169e0807790d762a5b0",
+    "ordinary": {
+      "durationSeconds": 1.8,
+      "owner": {
+        "contactFrame": {
+          "outfit": "shotgun",
+          "elapsed": 0.40593333330946635,
+          "fraction": 0.22551851850525909,
+          "visible": true,
+          "magazineMeters": 0.07230129786507289,
+          "thirdPersonFraction": null,
+          "width": 537,
+          "height": 302
+        },
+        "frames": 70,
+        "cues": [
+          {
+            "take": "magout_smg",
+            "rate": 1,
+            "elapsed": 0.40593333330946635,
+            "seconds": 0.15110416666666668,
+            "sampleRate": 48000
+          },
+          {
+            "take": "magin_smg",
+            "rate": 1,
+            "elapsed": 1.4022333332617265,
+            "seconds": 0.16610416666666666,
+            "sampleRate": 48000
+          }
+        ]
+      },
+      "observer": {
+        "contactFrame": {
+          "outfit": "shotgun",
+          "elapsed": 0.4333333333333087,
+          "fraction": 0.24074074074072704,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.24074074074072704,
+          "width": 234,
+          "height": 132
+        },
+        "frames": 66,
+        "cues": [
+          {
+            "take": "magout_smg",
+            "rate": 1,
+            "elapsed": 0.4333333333333087,
+            "seconds": 0.15110416666666668,
+            "sampleRate": 48000
+          },
+          {
+            "take": "magin_smg",
+            "rate": 1,
+            "elapsed": 1.4013333332617322,
+            "seconds": 0.16610416666666666,
+            "sampleRate": 48000
+          }
+        ]
+      }
+    },
+    "rage": {
+      "durationSeconds": 1.35,
+      "owner": {
+        "contactFrame": {
+          "outfit": "shotgun",
+          "elapsed": 0.3023333333333156,
+          "fraction": 0.22395061728393745,
+          "visible": true,
+          "magazineMeters": 0.07031959872646557,
+          "thirdPersonFraction": null,
+          "width": 470,
+          "height": 264
+        },
+        "frames": 54,
+        "cues": [
+          {
+            "take": "magout_smg",
+            "rate": 1.3333333730697632,
+            "elapsed": 0.3023333333333156,
+            "seconds": 0.11332812500000002,
+            "sampleRate": 48000
+          },
+          {
+            "take": "magin_smg",
+            "rate": 1.3333333730697632,
+            "elapsed": 1.039799999976104,
+            "seconds": 0.124578125,
+            "sampleRate": 48000
+          }
+        ]
+      },
+      "observer": {
+        "contactFrame": {
+          "outfit": "shotgun",
+          "elapsed": 0.3160333332379466,
+          "fraction": 0.2340987653614419,
+          "visible": true,
+          "magazineMeters": null,
+          "thirdPersonFraction": 0.2340987653614419,
+          "width": 234,
+          "height": 132
+        },
+        "frames": 55,
+        "cues": [
+          {
+            "take": "magout_smg",
+            "rate": 1.3333333730697632,
+            "elapsed": 0.3160333332379466,
+            "seconds": 0.11332812500000002,
+            "sampleRate": 48000
+          },
+          {
+            "take": "magin_smg",
+            "rate": 1.3333333730697632,
+            "elapsed": 1.0499999999999403,
+            "seconds": 0.124578125,
+            "sampleRate": 48000
+          }
+        ]
+      }
+    }
+  },
+  "sourceReceipts": {
+    "cs3-5958-wardrobe/wardrobe.json": "e6045ee7c735021718da886c5769d1df59ed39f63474bb36628aff624362d37b",
+    "cs3-5958-retire-retry/browser.json": "9f7e969d3a8033d066ebc7d0a690902decc6211a385ee8b189a822eda89f3a27",
+    "cs3-5958-warm/browser.json": "b66d52ce0f3b29021ac27bad4d211e1f6d39cf19664a30ebca8bbeef689d31f2"
+  },
+  "unitVerification": {
+    "command": "node --import ./server/register-shared.mjs --test --test-concurrency=1 src/fps/character-selection.test.mjs src/fps/private-character.test.mjs src/fps/view-character-appearance.test.mjs src/fps/operator-outfits.test.mjs src/fps/reload-foley.test.mjs",
+    "passed": 31,
+    "failed": 0,
+    "durationMs": 4319.92,
+    "noExtensionAndPreAbortedSmoke": "passed"
+  }
+}

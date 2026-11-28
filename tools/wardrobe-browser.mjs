@@ -100,7 +100,16 @@ try {
         const view = renderer.weaponModel.userData.characterAppearance;
         const fabric=avatar.meshes.find(m=>m.material?.name==='jacket-fabric')?.material;
         const sleeve=view?.profile.sleeve;
-        return {fabricMatches:!!fabric?.map && fabric.map===sleeve?.map,
+        const jacketMap=fabric?.map, sleeveMap=sleeve?.map;
+        const sampling=['mapping','channel','colorSpace','wrapS','wrapT','minFilter','magFilter','anisotropy','flipY','rotation','matrixAutoUpdate'];
+        const sameFabric=!!jacketMap?.isTexture && !!sleeveMap?.isTexture &&
+          jacketMap.source===sleeveMap.source && jacketMap.image===sleeveMap.image &&
+          sampling.every(key=>jacketMap[key]===sleeveMap[key]) &&
+          jacketMap.offset.equals(sleeveMap.offset) && jacketMap.repeat.equals(sleeveMap.repeat) &&
+          jacketMap.center.equals(sleeveMap.center) &&
+          (jacketMap.matrixAutoUpdate || jacketMap.matrix.equals(sleeveMap.matrix));
+        return {fabricMatches:sameFabric,
+          actorOwnsFabric:!!jacketMap && jacketMap===avatar.uniformTexture && jacketMap!==sleeveMap,
           swatch:[fabric?.map?.image?.width,fabric?.map?.image?.height],glove:view?.profile.glove.color.getHex(),
           hasKit:!!avatar.root.getObjectByName('operator-kit-shotgun-near'),outfit:avatar.outfitId,ally:renderer.actorModel(ally).userData.avatar.outfitId,
           shirt:avatar.meshes.find(m=>m.material?.name==='jacket-fabric')?.material.color.getHex(),
@@ -110,7 +119,8 @@ try {
       assert.equal(observed.outfit,'shotgun');
       assert.equal(observed.ally,'issued');
       assert.equal(observed.shirt,observed.sleeve);
-      assert.equal(observed.fabricMatches,true);
+      assert.equal(observed.fabricMatches,true,'The world jacket and first-person sleeve must render the same swatch');
+      assert.equal(observed.actorOwnsFabric,true,'The world actor must own its independent texture handle');
       assert.deepEqual(observed.swatch,[64,64]);
       assert.equal(observed.glove,0x4a463e);
       assert.equal(observed.hasKit,true);
