@@ -97,10 +97,27 @@ def reduce_run(path, condition, profile, repeat):
     return row
 
 
+def fresh_presentation(path, condition, profile):
+    data = json.loads(path.read_bytes())
+    assert data['presentationScenario'] == 'fresh spawn, primary action with Chromium tracing'
+    result = reduce_run(path, condition, profile, 0)
+    r = result['additionalTracedPresentation']
+    assert r and r['matchedFrame'], 'Fresh-spawn first Rush needs actual compositor feedback'
+    assert abs(r['sourceToSubmittedMs'] - result['actionTrace']['firstMovedRenderEnd']) < .5
+    return {**{k: result[k] for k in ('git','stamp','rawSha256','doorSource','browser','device',
+                                      'node','input','temperatureC','throttle','identity','actions','actionTrace')},
+            'scenario': data['presentationScenario'], 'tracedFirstRush': r}
+
+
 if __name__ == '__main__':
-    original, candidate = map(Path, sys.argv[1:])
-    runs = [reduce_run(directory / f'candidate-{profile}-{i}.json',condition,profile,i)
-            for directory,condition in ((original,original_doors),(candidate,'checkout'))
-            for profile in ('touch','desktop') for i in range(3)]
+    fresh = sys.argv[1:2] == ['--fresh-presentation']
+    original, candidate = map(Path, sys.argv[2:] if fresh else sys.argv[1:])
+    cases = ((original,original_doors),(candidate,'checkout'))
+    if fresh:
+        runs = [fresh_presentation(directory / f'candidate-{profile}-0.json',condition,profile)
+                for directory,condition in cases for profile in ('touch','desktop')]
+    else:
+        runs = [reduce_run(directory / f'candidate-{profile}-{i}.json',condition,profile,i)
+                for directory,condition in cases for profile in ('touch','desktop') for i in range(3)]
     assert len({(r['git'],r['browser'],r['device'],r['node']) for r in runs}) == 1
     print(json.dumps(runs, indent=2))

@@ -1,0 +1,398 @@
+[
+  {
+    "git": "ebe646d3a97f004591aa60ac1a956c5bdf3b7f12",
+    "stamp": "2026-11-28T09:47:31.141Z",
+    "rawSha256": "7304acd7839abf6ae0ab04aca9a1140afdd930ae018789c16e43f87f09588abb",
+    "doorSource": "33a6ee0b2a8dd7bd962c66b3cd73aed6da94192a",
+    "browser": "156.0.8078.79",
+    "device": "Raspberry Pi 5 Model B Rev 1.1",
+    "node": "v26.13.0",
+    "input": "touch",
+    "temperatureC": [
+      49.6,
+      49.6
+    ],
+    "throttle": [
+      "throttled=0x0",
+      "throttled=0x0"
+    ],
+    "identity": {
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        493,
+        228
+      ],
+      "internalRenderBuffer": [
+        493,
+        228
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "ratio": 0.5849999785423279,
+      "dpr": 0.6499999761581421,
+      "baseFov": 76,
+      "fov": 76,
+      "map": "lvl-floor5-preppad-20261105",
+      "mode": "endless",
+      "quality": "low",
+      "actors": 10,
+      "residents": 4,
+      "weapon": "ar47",
+      "phase": "active",
+      "shaderWarmupMs": 0
+    },
+    "actions": {
+      "observedRenderFrames": 157,
+      "sourceInputCount": 14,
+      "localAudioSourceStarts": 8,
+      "aliveSamples": 157,
+      "weapon": "ar47",
+      "magazineRange": [
+        28,
+        30
+      ],
+      "moveToFirstDisplacedRenderMs": 260.1,
+      "rushToFirstPoseAbove2PctMs": 306.2,
+      "fireToFirstObservedReadyRenderMs": 368.8,
+      "fireToFirstAmmoDropRenderMs": 368.8,
+      "fireToAudioCommandMs": 245.3,
+      "audioCommandMinusAmmoDropRenderMs": -123.5,
+      "reloadToFirstActiveRenderMs": 162.2,
+      "reloadToRefilledRenderMs": 2474.9,
+      "maxRushBlend": 1.0,
+      "travelPathM": 5.89
+    },
+    "actionTrace": {
+      "pointerOrKeyCallback": 153.1,
+      "gameRead": 154.3,
+      "firstMovedStep": 155.1,
+      "worldSubmit": [
+        165.1,
+        305.1
+      ],
+      "weaponSubmit": [
+        305.1,
+        306.2
+      ],
+      "firstMovedRenderEnd": 306.2,
+      "presentation": 350.5,
+      "firstWeight": 0.4231,
+      "actionBuffer": [
+        301,
+        139
+      ],
+      "actionPixelRatio": 0.3574999868869782,
+      "weaponYAndRoll": [
+        -0.263,
+        0.31754
+      ],
+      "unshiftedRendersAfterInput": 3
+    },
+    "scenario": "fresh spawn, primary action with Chromium tracing",
+    "tracedFirstRush": {
+      "matchedFrame": true,
+      "sourceToSubmittedMs": 306.2,
+      "submittedToPresentedMs": 41.72,
+      "sourceToPresentedMs": 347.91
+    }
+  },
+  {
+    "git": "ebe646d3a97f004591aa60ac1a956c5bdf3b7f12",
+    "stamp": "2026-11-28T09:50:33.348Z",
+    "rawSha256": "9f431945d9094533e9ad26e7d04dbd7291c892a02e6dfee8f76693f1af3d311a",
+    "doorSource": "33a6ee0b2a8dd7bd962c66b3cd73aed6da94192a",
+    "browser": "156.0.8078.79",
+    "device": "Raspberry Pi 5 Model B Rev 1.1",
+    "node": "v26.13.0",
+    "input": "desktop",
+    "temperatureC": [
+      52.35,
+      52.35
+    ],
+    "throttle": [
+      "throttled=0x0",
+      "throttled=0x0"
+    ],
+    "identity": {
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        493,
+        228
+      ],
+      "internalRenderBuffer": [
+        493,
+        228
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "ratio": 0.5849999785423279,
+      "dpr": 0.6499999761581421,
+      "baseFov": 76,
+      "fov": 76,
+      "map": "lvl-floor5-preppad-20261105",
+      "mode": "endless",
+      "quality": "low",
+      "actors": 10,
+      "residents": 5,
+      "weapon": "ar47",
+      "phase": "active",
+      "shaderWarmupMs": 1950.3000000715256
+    },
+    "actions": {
+      "observedRenderFrames": 196,
+      "sourceInputCount": 10,
+      "localAudioSourceStarts": 10,
+      "aliveSamples": 196,
+      "weapon": "ar47",
+      "magazineRange": [
+        29,
+        30
+      ],
+      "moveToFirstDisplacedRenderMs": 110.8,
+      "rushToFirstPoseAbove2PctMs": 108.5,
+      "fireToFirstObservedReadyRenderMs": 253.4,
+      "fireToFirstAmmoDropRenderMs": 253.4,
+      "fireToAudioCommandMs": 111.1,
+      "audioCommandMinusAmmoDropRenderMs": -142.3,
+      "reloadToFirstActiveRenderMs": 49.9,
+      "reloadToRefilledRenderMs": 2319.1,
+      "maxRushBlend": 1.0,
+      "travelPathM": 7.85
+    },
+    "actionTrace": {
+      "pointerOrKeyCallback": 56.0,
+      "gameRead": 56.4,
+      "firstMovedStep": 57.3,
+      "worldSubmit": [
+        65.5,
+        107.9
+      ],
+      "weaponSubmit": [
+        107.9,
+        108.5
+      ],
+      "firstMovedRenderEnd": 108.5,
+      "presentation": 123.8,
+      "firstWeight": 0.4231,
+      "actionBuffer": [
+        301,
+        139
+      ],
+      "actionPixelRatio": 0.3574999868869782,
+      "weaponYAndRoll": [
+        -0.25726,
+        0.25356
+      ],
+      "unshiftedRendersAfterInput": 1
+    },
+    "scenario": "fresh spawn, primary action with Chromium tracing",
+    "tracedFirstRush": {
+      "matchedFrame": true,
+      "sourceToSubmittedMs": 108.5,
+      "submittedToPresentedMs": 13.18,
+      "sourceToPresentedMs": 121.68
+    }
+  },
+  {
+    "git": "ebe646d3a97f004591aa60ac1a956c5bdf3b7f12",
+    "stamp": "2026-11-28T09:48:32.346Z",
+    "rawSha256": "3677b4e73dabd22a6899cc59088b03ec6bf391bb1ac7d5176e39976c7768027b",
+    "doorSource": "checkout",
+    "browser": "156.0.8078.79",
+    "device": "Raspberry Pi 5 Model B Rev 1.1",
+    "node": "v26.13.0",
+    "input": "touch",
+    "temperatureC": [
+      49.6,
+      51.8
+    ],
+    "throttle": [
+      "throttled=0x0",
+      "throttled=0x0"
+    ],
+    "identity": {
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        493,
+        228
+      ],
+      "internalRenderBuffer": [
+        493,
+        228
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "ratio": 0.5849999785423279,
+      "dpr": 0.6499999761581421,
+      "baseFov": 76,
+      "fov": 76,
+      "map": "lvl-floor5-preppad-20261105",
+      "mode": "endless",
+      "quality": "low",
+      "actors": 10,
+      "residents": 4,
+      "weapon": "ar47",
+      "phase": "active",
+      "shaderWarmupMs": 0
+    },
+    "actions": {
+      "observedRenderFrames": 289,
+      "sourceInputCount": 14,
+      "localAudioSourceStarts": 9,
+      "aliveSamples": 289,
+      "weapon": "ar47",
+      "magazineRange": [
+        28,
+        30
+      ],
+      "moveToFirstDisplacedRenderMs": 147.2,
+      "rushToFirstPoseAbove2PctMs": 118.9,
+      "fireToFirstObservedReadyRenderMs": 283.8,
+      "fireToFirstAmmoDropRenderMs": 283.8,
+      "fireToAudioCommandMs": 145.1,
+      "audioCommandMinusAmmoDropRenderMs": -138.7,
+      "reloadToFirstActiveRenderMs": 72.7,
+      "reloadToRefilledRenderMs": 2361.8,
+      "maxRushBlend": 1.0,
+      "travelPathM": 7.15
+    },
+    "actionTrace": {
+      "pointerOrKeyCallback": 87.4,
+      "gameRead": 88.8,
+      "firstMovedStep": 89.5,
+      "worldSubmit": [
+        98.4,
+        118.2
+      ],
+      "weaponSubmit": [
+        118.2,
+        118.8
+      ],
+      "firstMovedRenderEnd": 118.9,
+      "presentation": null,
+      "firstWeight": 0.307,
+      "actionBuffer": [
+        301,
+        139
+      ],
+      "actionPixelRatio": 0.3574999868869782,
+      "weaponYAndRoll": [
+        -0.22597,
+        0.24297
+      ],
+      "unshiftedRendersAfterInput": 3
+    },
+    "scenario": "fresh spawn, primary action with Chromium tracing",
+    "tracedFirstRush": {
+      "matchedFrame": true,
+      "sourceToSubmittedMs": 118.9,
+      "submittedToPresentedMs": 48.41,
+      "sourceToPresentedMs": 167.31
+    }
+  },
+  {
+    "git": "ebe646d3a97f004591aa60ac1a956c5bdf3b7f12",
+    "stamp": "2026-11-28T09:49:31.447Z",
+    "rawSha256": "ebc5bb5f69c6972218612ebae9f8f117f52f293acdb7283bfe6991775dfaa56e",
+    "doorSource": "checkout",
+    "browser": "156.0.8078.79",
+    "device": "Raspberry Pi 5 Model B Rev 1.1",
+    "node": "v26.13.0",
+    "input": "desktop",
+    "temperatureC": [
+      49.6,
+      51.8
+    ],
+    "throttle": [
+      "throttled=0x0",
+      "throttled=0x0"
+    ],
+    "identity": {
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        493,
+        228
+      ],
+      "internalRenderBuffer": [
+        493,
+        228
+      ],
+      "viewport": [
+        844,
+        390
+      ],
+      "ratio": 0.5849999785423279,
+      "dpr": 0.6499999761581421,
+      "baseFov": 76,
+      "fov": 76,
+      "map": "lvl-floor5-preppad-20261105",
+      "mode": "endless",
+      "quality": "low",
+      "actors": 10,
+      "residents": 5,
+      "weapon": "ar47",
+      "phase": "active",
+      "shaderWarmupMs": 1939
+    },
+    "actions": {
+      "observedRenderFrames": 282,
+      "sourceInputCount": 10,
+      "localAudioSourceStarts": 9,
+      "aliveSamples": 282,
+      "weapon": "ar47",
+      "magazineRange": [
+        29,
+        30
+      ],
+      "moveToFirstDisplacedRenderMs": 64.7,
+      "rushToFirstPoseAbove2PctMs": 53.6,
+      "fireToFirstObservedReadyRenderMs": 262.3,
+      "fireToFirstAmmoDropRenderMs": 262.3,
+      "fireToAudioCommandMs": 139.4,
+      "audioCommandMinusAmmoDropRenderMs": -122.9,
+      "reloadToFirstActiveRenderMs": 21.2,
+      "reloadToRefilledRenderMs": 2298.5,
+      "maxRushBlend": 1.0,
+      "travelPathM": 8.31
+    },
+    "actionTrace": {
+      "pointerOrKeyCallback": 26.1,
+      "gameRead": 26.6,
+      "firstMovedStep": 27.3,
+      "worldSubmit": [
+        34.3,
+        53.2
+      ],
+      "weaponSubmit": [
+        53.2,
+        53.6
+      ],
+      "firstMovedRenderEnd": 53.6,
+      "presentation": null,
+      "firstWeight": 0.307,
+      "actionBuffer": [
+        301,
+        139
+      ],
+      "actionPixelRatio": 0.3574999868869782,
+      "weaponYAndRoll": [
+        -0.23472,
+        0.18367
+      ],
+      "unshiftedRendersAfterInput": 1
+    },
+    "scenario": "fresh spawn, primary action with Chromium tracing",
+    "tracedFirstRush": {
+      "matchedFrame": true,
+      "sourceToSubmittedMs": 53.6,
+      "submittedToPresentedMs": 15.5,
+      "sourceToPresentedMs": 69.1
+    }
+  }
+]

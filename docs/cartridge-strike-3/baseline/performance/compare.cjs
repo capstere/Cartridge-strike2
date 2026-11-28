@@ -158,7 +158,13 @@ async function run(ctx,base,i,version,cacheWarm){
     row.navigationHtmlTransferBytes=await page.evaluate(()=>performance.getEntriesByType("navigation")[0]?.transferSize??null);
     row.transferredBytesAtEndOfPacing=await page.evaluate(()=>performance.getEntriesByType('resource').reduce((sum,e)=>sum+e.transferSize,0));
     await page.evaluate(()=>{cs3Baseline.mode='action';});await sleep(200);
-    await controls(page);
+    const traceFirstAction=traceRush && candidate && process.env.CS3_TRACE_FIRST_PRESENT==='1';
+    if(traceFirstAction){
+      row.presentationScenario='fresh spawn, primary action with Chromium tracing';
+      row.presentationTrial=await require('../../evidence/rush/latency/compositor.cjs')(page,controls);
+    }else{
+      await controls(page);
+    }
     row.action=await page.evaluate(()=>{cs3Baseline.mode='off';return {frames:cs3Baseline.actions,audio:cs3Baseline.audio,inputs:cs3Baseline.inputs};});
     if(traceRush) row.rushTrace=await page.evaluate(()=>rushTrace);
     if(traceRush && candidate && touch && process.env.CS3_STICK_TRIALS==='1'){
@@ -170,7 +176,8 @@ async function run(ctx,base,i,version,cacheWarm){
       row.doorPixels=await page.evaluate(doorPixels);
       if(process.env.CS3_REQUIRE_DOOR_PARITY==='1')doorPixels.checkParity(row.doorPixels);
     }
-    if(traceRush&&candidate&&process.env.CS3_TRACE_PRESENT==='1'&&i===Number(offset)+Number(repeats)-1){
+    if(!traceFirstAction&&traceRush&&candidate&&process.env.CS3_TRACE_PRESENT==='1'&&i===Number(offset)+Number(repeats)-1){
+      row.presentationScenario='additional action after the completed route';
       row.presentationTrial=await require('../../evidence/rush/latency/compositor.cjs')(page,controls);
     }
     row.memory=await page.evaluate(()=>performance.memory&&({usedHeap:performance.memory.usedJSHeapSize,totalHeap:performance.memory.totalJSHeapSize}));
