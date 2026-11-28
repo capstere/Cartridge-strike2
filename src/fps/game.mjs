@@ -342,12 +342,12 @@ export class Game {
     }
     actor.reloadUntil=actor.reloadStartedAt=actor.reloadDuration=0;
   }
-  dropItem(actor, item) { if(this.config.networkSlice)return; this.state.drops.push({ ...point(actor), id: `drop-${++this.eventSerial}`, type: 'weapon', createdAt:this.state.time, item: { ...item } }); }
+  dropItem(actor, item) { this.state.drops.push({ ...point(actor), id: `drop-${++this.eventSerial}`, type: 'weapon', createdAt:this.state.time, item: { ...item } }); }
   drop(actor = this.player) {
     if(this.warmupRemaining)return false;
-    if(this.config.networkSlice && (this.config.mode!=='classic'||this.bomb.carrierId!==actor?.id))return false;
+    if(this.config.networkSlice && this.bomb.carrierId!==actor?.id && WEAPONS[actor?.weapon]?.slot!=='primary')return false;
     if (!actor?.alive || !['buy', 'active'].includes(this.phase)) return false;
-    if ((actor.weapon === 'bomb'||this.config.networkSlice) && this.bomb.carrierId === actor.id) {
+    if ((actor.weapon === 'bomb'||(this.config.networkSlice&&!isEndless(this))) && this.bomb.carrierId === actor.id) {
       Object.assign(this.bomb, { status: 'dropped', carrierId: null, ...point(actor) }); this.select(actor.inventory.primary?.id ?? actor.inventory.pistol?.id ?? 'knife', actor); actor.action = null; this.emit('drop', actor, { item: 'bomb' }); return true;
     }
     const w = equippedDefinition(actor);
@@ -575,9 +575,9 @@ export class Game {
   }
   interaction(actor = this.player, targetId = null) {
     if (!actor?.alive || this.phase !== 'active') return null;
-    if(isEndless(this))return null;
     const b = this.bomb, range = this.config.interactDistance;
     const reaches = target => distance(actor, target) < range && this.world.segmentClear(eye(actor), { ...point(target), y: (target.y ?? 0) + .4 }, { vision: false });
+    if(isEndless(this))return this.pickupNear(reaches);
     if (actor.team === 'analysts' && b.status === 'planted' && reaches(b)) return { type: 'defuse', target: b, duration: this.config.defuseTime };
     if (actor.team === 'counterAnalysts') {
       if (b.carrierId === actor.id && distance(actor, this.world.anchors.bomb) <= this.world.anchors.bomb.radius && actor.onGround && (!this.config.networkSlice || this.world.segmentClear(eye(actor),{...point(this.world.anchors.bomb),y:.4},{vision:false}))) return { type: 'plant', target: b, duration: this.config.plantTime };
@@ -586,21 +586,27 @@ export class Game {
         .sort((a, c) => distance(actor, a) - distance(actor, c)).find(reaches);
       if (hostage) return { type: 'escort', target: hostage };
     }
+    return this.pickupNear(reaches);
+  }
+  pickupNear(reaches){
     const drop = this.state.drops.find(reaches);
     return drop ? { type: 'pickupWeapon', target: drop } : null;
   }
   prompt(actor = this.player) {
-    if(this.config.networkSlice && this.config.mode!=='classic')return '';
+    if(this.config.networkSlice && this.config.mode!=='classic'&&!this.state.drops.length)return '';
     if (!actor?.alive) return 'Eliminated · spectate a surviving teammate';
     if (this.phase === 'buy') return 'B · Buy equipment';
     const action = this.interaction(actor);
     if (!action) return '';
-    return { plant: 'Hold E · Plant in '+missionRoomName(this.world), defuse: 'Hold E · Defuse', pickupBomb: 'E · Pick up bomb', escort: action.target.escortId ? 'E · Stop escort' : 'E · Start escort', pickupWeapon: `E · Pick up ${WEAPONS[action.target.item?.id]?.name ?? 'weapon'}` }[action.type];
+    if(action.type==='pickupWeapon'){
+      const item=action.target.item;return `E · Pick up ${WEAPONS[item.id].name} · ${item.ammo}/${item.reserve}`;
+    }
+    return { plant: 'Hold E · Plant in '+missionRoomName(this.world), defuse: 'Hold E · Defuse', pickupBomb: 'E · Pick up bomb', escort: action.target.escortId ? 'E · Stop escort' : 'E · Start escort' }[action.type];
   }
   interact(actor, input) {
-    if(this.config.networkSlice && this.config.mode!=='classic')return;
+    if(isEndless(this)&&!this.state.drops.length)return;
     const interaction = input.interact && (!this.config.networkSlice||!actor.reloadUntil) ? this.interaction(actor, input.interactTarget) : null;
-    if (!interaction) { actor.action = null;if(input.interact){const door=this.world.doors?.nearest(actor);if(door)this.world.doors.request(door,this.state.time,actor);} return; }
+    if (!interaction) { actor.action = null;if(input.interact&&(!this.config.networkSlice||!isEndless(this))){const door=this.world.doors?.nearest(actor);if(door)this.world.doors.request(door,this.state.time,actor);} return; }
     if (interaction.duration) {
       if (actor.moving > .15 || !actor.onGround) { actor.action = null; return; }
       if (!actor.action || actor.action.type !== interaction.type) {

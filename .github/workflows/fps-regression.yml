@@ -66,12 +66,20 @@ jobs:
         env:
           FPS_NETWORK_ANGLE: metal
         run: node tools/network-family-browser.mjs
+      - name: Exercise signed and guest classes, equipped effects and model cleanup
+        env:
+          FPS_NETWORK_ANGLE: metal
+          FPS_ARSENAL_EVIDENCE: test-results/arsenal
+        run: |
+          node --import ./server/register-shared.mjs --test src/fps/arsenal.test.mjs src/fps/weapon-fittings.test.mjs
+          node tools/arsenal-browser.mjs
       - uses: actions/upload-artifact@v4
         if: success()
         with:
           name: account-journey
           path: |
             test-results/accounts/
+            test-results/arsenal/
             test-results/network-family/result.json
           retention-days: 3
   operator-wardrobe:

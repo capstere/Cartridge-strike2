@@ -100,8 +100,8 @@ export function tickActionState(g,dt){
    const p=g.world.anchors.hostages[Number(h.id.split('-').at(-1))];
    if(!aliveBodies(g).some(a=>dist(a,p)<.55))Object.assign(h,p,{y:0,hp:100,alive:true,rescued:false,deathAt:null,respawnAt:null,escortId:null,path:[],moving:0,distanceWalked:0});
   }
-  s.drops=s.drops.filter(d=>s.time-(d.createdAt??s.time)<25).slice(-24);
  }
+ if(s.drops.length&&(g.config.networkSlice||isEndless(g)))s.drops=s.drops.filter(d=>s.time-(d.createdAt??s.time)<25).slice(-24);
  if(g.config.wanderers){if(!s.wanderers?.length&&g.world.navigation?.nodes?.length)initializeWanderers(g);updateWanderers(g,dt);}
 }
 export function recordActionDeath(g,target,source,sourceTeam=source?.team){

@@ -21,6 +21,7 @@ function materials(){
  palette={steel:mat('anodised-graphite',0x45515a,.34,.88),edge:mat('machined-edge',0xa3adb2,.27,.85),
  black:mat('rubber',0x111b22,.87),polymer:mat('sand-polymer',0x8b806c,.79,.02),
  inset:mat('deep-insets',0x0b1117,.68,.15),accent:mat('safety-mark',0xdca65f,.52,.18)};
+ palette.steel.userData.camoPaint=palette.polymer.userData.camoPaint=true;
  for(const m of Object.values(palette)){m.roughnessMap=rough;m.envMapIntensity=.85;}
  return palette;
 }

@@ -201,7 +201,9 @@ function machiningMap() {
   sharedMachiningTexture=map;return map;
 }
 function weaponPalette() {
-  return { steel: material(0x44515a, .42, .82, {roughnessMap:machiningMap(),bumpMap:machiningMap(),bumpScale:.00008}), edge: material(0x7b8588, .35, .88, {roughnessMap:machiningMap()}), black: material(0x192227, .49, .1), polymer: material(0x2c3438, .77, .02), dark: material(0x10171a, .61), wood: material(0x76503a, .49), tan: material(0x82735c, .72), brass: material(0xa9843a, .32, .75), lens: material(0x22464b, .12, .7), paint: material(0xbcc2b7, .5), red: material(0xad4d37, .6) };
+  const palette = { steel: material(0x44515a, .42, .82, {roughnessMap:machiningMap(),bumpMap:machiningMap(),bumpScale:.00008}), edge: material(0x7b8588, .35, .88, {roughnessMap:machiningMap()}), black: material(0x192227, .49, .1), polymer: material(0x2c3438, .77, .02), dark: material(0x10171a, .61), wood: material(0x76503a, .49), tan: material(0x82735c, .72), brass: material(0xa9843a, .32, .75), lens: material(0x22464b, .12, .7), paint: material(0xbcc2b7, .5), red: material(0xad4d37, .6) };
+  for (const name of ['steel','polymer','wood','tan']) palette[name].userData.camoPaint = true;
+  return palette;
 }
 function rail(parent, z0, z1, y, p, width = .047) {
   bevel(parent, 0, y, (z0 + z1) / 2, width, .012, Math.abs(z1 - z0), p.black, .002);

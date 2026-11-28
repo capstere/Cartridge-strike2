@@ -32,8 +32,10 @@ if(typeof window!=='undefined')window.addEventListener('cs-account-changed',e=>{
   document.getElementById('menu')?.dispatchEvent(new Event('cs-class-identity'));
 });
 export function selectedArsenal(team){
-  if(accountClass)return accountClass.profile?resolveClass(accountClass.profile,team,accountClass.entitlements):null;
-  try{if(!hasSavedArsenal())return null;return resolveClass(readArsenal(),team);}
+  try{
+    if(accountClass)return accountClass.profile?resolveClass(accountClass.profile,team,accountClass.entitlements):null;
+    return hasSavedArsenal()?resolveClass(readArsenal(),team):null;
+  }
   catch{return null;}
 }
 export function localArsenalProfile(){
@@ -45,7 +47,7 @@ export function mountArsenal({team,draw,clear}){
   const menu=document.getElementById('menu'),status=find('[data-class-status]'),equip=find('[data-class-equip]');
   const rack=find('.arsenal-rack'),editor=find('[data-class-editor]'),stats=find('[data-class-stats]');
   let profile=readArsenal(),rights=BASE_ENTITLEMENTS,view=profile.selected,draft=null,weaponSlot='primary',angle=.14;
-  let account=false,generation=0,busy=false,active=false,frame=0;
+  let account=false,equipped=false,generation=0,busy=false,active=false,frame=0;
   const slots=new Map(),tiles=new Map();
   const notice=text=>{status.textContent=text;};
   function index(){return CUSTOM_LEVELS.findIndex((_,i)=>view==='custom-'+(i+1));}
@@ -62,7 +64,15 @@ export function mountArsenal({team,draw,clear}){
   function select(id){
     view=id;weaponSlot='primary';angle=.14;
     const i=index();draft=i<0||rights.playerLevel<CUSTOM_LEVELS[i]?null:structuredClone(profile.slots[i]||emptySlot(i));
-    notice('');render();
+    let hint='';
+    for(const [part,alias] of [['primary','rifle'],['secondary','sidearm']]){
+      const item=draft?.[part],restricted=WEAPONS[item?.id]?.team;
+      if(restricted&&restricted!==team()){
+        draft[part]=gun(alias);
+        hint='This slot belongs to the other team. Review the team replacement before saving.';
+      }
+    }
+    notice(hint);render();
   }
   for(const [id,title,sub,parent] of [
     ...PRESETS.map(p=>[p.id,p.name,p.description,find('[data-class-presets]')]),
@@ -127,8 +137,8 @@ export function mountArsenal({team,draw,clear}){
     for(const [id,{button,name,note}] of slots){
       const k=CUSTOM_LEVELS.findIndex((_,n)=>id==='custom-'+(n+1));
       button.setAttribute('aria-pressed',String(id===view));
-      if(k>=0){name.textContent=profile.slots[k]?.name||'Custom '+(k+1);note.textContent=rights.playerLevel<CUSTOM_LEVELS[k]?'Locked · Level '+CUSTOM_LEVELS[k]:id===profile.selected?'Equipped':'Editable slot';}
-      else {const p=PRESETS.find(item=>item.id===id);note.textContent=id===profile.selected?'Equipped preset':p.description;}
+      if(k>=0){name.textContent=profile.slots[k]?.name||'Custom '+(k+1);note.textContent=rights.playerLevel<CUSTOM_LEVELS[k]?'Locked · Level '+CUSTOM_LEVELS[k]:equipped&&id===profile.selected?'Equipped':'Editable slot';}
+      else {const p=PRESETS.find(item=>item.id===id);note.textContent=equipped&&id===profile.selected?'Equipped preset':p.description;}
     }
     find('[data-class-title]').textContent=preset?.name||draft?.name||'Custom '+(i+1);
     find('[data-class-note]').textContent=locked?'Unlock this class at player level '+CUSTOM_LEVELS[i]+'.':preset?preset.description+' This preset has a fixed loadout.':'Choose equipment and save this class before deploying.';
@@ -161,14 +171,14 @@ export function mountArsenal({team,draw,clear}){
         if(ticket!==generation)return;
         accountClass={profile:p,entitlements:rights};
       }else saveArsenal(p,undefined,rights);
-      profile=p;render();notice('Class equipped. Classic equipment still costs match money.');
+      profile=p;equipped=true;render();notice('Class equipped. Classic equipment still costs match money.');
       menu.dispatchEvent(new CustomEvent('cs-class-equipped',{detail:{profile:p}}));
     }catch(e){if(ticket===generation)notice(e.message||'Could not save this class.');}
     finally{if(ticket===generation){busy=false;equip.disabled=false;}}
   };
   async function open(){
     const ticket=++generation;active=true;busy=false;
-    rights=BASE_ENTITLEMENTS;account=false;profile=readArsenal();select(profile.selected);
+    rights=BASE_ENTITLEMENTS;account=false;equipped=hasSavedArsenal();profile=readArsenal();select(profile.selected);
     if(!hasAccountService())return;
     busy=true;equip.disabled=true;
     try{
@@ -177,13 +187,14 @@ export function mountArsenal({team,draw,clear}){
       if(!data){notice('Online profile unavailable. Guest classes stay on this device.');return;}
       account=!!data.user;
       if(account){
-        rights=data.entitlements||BASE_ENTITLEMENTS;profile=data.arsenal||defaultArsenal();
+        rights=data.entitlements||BASE_ENTITLEMENTS;equipped=!!data.arsenal;profile=data.arsenal||defaultArsenal();
         select(profile.selected);
       }
     }catch{if(ticket===generation)notice('Online profile unavailable. Guest classes stay on this device.');}
     finally{if(ticket===generation){busy=false;equip.disabled=false;}}
   }
   function close(){active=false;generation++;busy=false;cancelAnimationFrame(frame);frame=0;clear();}
+  menu.addEventListener('cs-class-identity',()=>{if(active)open();});
   menu.addEventListener('cs-menu-screen',e=>{if(e.detail.screen==='classes')open();else if(active)close();});
   window.addEventListener('pagehide',close);
   if(menu.dataset.screen==='classes')open();

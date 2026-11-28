@@ -86,3 +86,27 @@ test('strict expiry, origin, rotation, revocation, credential attempt and hashin
   db.clean();assert.equal(db.db.prepare('SELECT count(*) AS n FROM sessions').get().n,0);
   db.close();
 });
+
+test('server-owned XP unlocks private class slots and fittings across restart and isolated restore',async t=>{
+  const {defaultArsenal}=await import('../../src/fps/arsenal.mjs');
+  const dir=await mkdtemp(join(tmpdir(),'cs3-arsenal-store-'));t.after(()=>rm(dir,{recursive:true,force:true}));
+  const file=join(dir,'accounts.sqlite'),clone=join(dir,'restore.sqlite');
+  let store=new AccountStore(file);
+  try{
+    const origin='https://arsenal.example.test',account=await store.register({username:'class_player',displayName:'Class Player',password:randomBytes(24).toString('hex')},origin);
+    const user=store.userFor(account.token,origin);
+    const profile={...defaultArsenal(),selected:'custom-1'};
+    profile.slots[0]={name:'Harbor',primary:{id:'smg',attachments:['red'],camo:'desert'},secondary:{id:'sidearm',attachments:[],camo:null},equipment:'flash'};
+    assert.throws(()=>store.saveArsenal(user.id,profile),{status:400});
+    store.db.prepare('INSERT INTO rewards(instance,event,user_id,kind,xp) VALUES(?,?,?,?,?)').run(randomUUID(),'fixture',user.id,'match',2000);
+    assert.throws(()=>store.saveArsenal(user.id,profile),{status:400});
+    store.db.prepare('INSERT INTO weapon_progress(user_id,weapon,xp) VALUES(?,?,?)').run(user.id,'smg',2000);
+    store.saveArsenal(user.id,profile);
+    await copyAccountDatabase('backup',file,clone);
+    store.close();store=new AccountStore(clone);
+    const restored=store.profile(store.userFor(account.token,origin));
+    assert.deepEqual(restored.arsenal,profile);assert.equal(restored.entitlements.weaponLevels.smg,3);
+    assert.equal(restored.entitlements.weaponLevels.cr4,undefined);
+    assert.equal(store.profile(null).arsenal,null);
+  }finally{store.close();}
+});

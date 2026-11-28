@@ -13,7 +13,7 @@ import {DEFAULT_NETWORK_BOT_DIFFICULTY,ROOM_CAPACITY,RECONNECT_SECONDS,copyPose,
 import {checkContract,TEAM_COMMS_TYPE,validateNetworkInput,wireInput} from '../shared/multiplayer/protocol.mjs';
 import {CONTRACT,MAP_CONTRACTS} from '../shared/multiplayer/build.mjs';
 import {publicOutfitId} from '../src/fps/operator-outfits.mjs';
-import {NetworkInput,ActorState,HandlingState,RoomState,SmokeState,GrenadeState,ResidentState,RocketState} from './network-schema.mjs';
+import {NetworkInput,ActorState,HandlingState,RoomState,DropState,SmokeState,GrenadeState,ResidentState,RocketState} from './network-schema.mjs';
 
 import {DOOR_FIELDS} from '../shared/multiplayer/world.mjs';
 
@@ -87,7 +87,7 @@ export class NetworkRoom extends Room {
       const actor=structuredClone(this.templates.get(seat.id));
       Object.assign(actor,{name:seat.name,alive:false,lifeId:this.lives.get(seat.id)||0,controlEpoch:seat.epoch,respawnAt:null});
       if(onlinePrimaries(actor.team).includes(seat.loadout))actor.loadout=seat.loadout;
-      const profile=message.arsenalProfile ?? (Object.hasOwn(seat,'arsenalProfile')?seat.arsenalProfile:this.savedArsenal?.(seat));
+      const profile=Object.hasOwn(seat,'arsenalProfile')?seat.arsenalProfile:(message.arsenalProfile??this.savedArsenal?.(seat));
       if(profile)try{this.applySeatClass(seat,actor,profile);}catch(error){client.send('notice',error.message);}
       if(seat.pending)actor.id=seat.waitId;
       else this.sim.game.actors.push(actor);
@@ -128,8 +128,8 @@ export class NetworkRoom extends Room {
     });
     this.onMessage('classic',(client,m)=>{
       const s=this.seats.get(client.sessionId),g=this.sim.game;
-      if(!this.classic||!s?.ready||!s.connected||s.client!==client||this.state.phase!=='active'||
-        !m||m.matchId!==this.state.matchId||m.round!==g.state.round||m.lifeId!==s.actor.lifeId||
+      if((!this.classic&&m?.kind!=='drop')||!s?.ready||!s.connected||s.client!==client||this.state.phase!=='active'||
+        !m||m.matchId!==this.state.matchId||m.round!==(this.classic?g.state.round:this.state.round)||m.lifeId!==s.actor.lifeId||
         m.controlEpoch!==s.epoch||!Number.isSafeInteger(m.serial)||m.serial<=(s.lastClassic||0))return;
       s.lastClassic=m.serial;
       if(m.kind==='buy'&&typeof m.item==='string'){
@@ -219,8 +219,8 @@ export class NetworkRoom extends Room {
     seat.arsenalProfile=profile;seat.loadout=actor.loadout;
   }
   sendClass(seat){
-    if(!seat.arsenalProfile && !Object.hasOwn(seat,'arsenalProfile'))return;
-    seat.client.send('class-choice',{team:seat.actor.team,kit:seat.actor.arsenalClass||null});
+    if(!Object.hasOwn(seat,'arsenalProfile'))return;
+    seat.client.send('class-choice',{team:seat.actor.team,profile:seat.arsenalProfile,kit:seat.actor.arsenalClass||null});
   }
   prepareClassicActor(a,alive){
     const g=this.sim.game,p=g.world.anchors[a.team][a.index];
@@ -410,6 +410,13 @@ export class NetworkRoom extends Room {
       s.deathSource=a.deathCause?.sourceName||'';s.deathWeapon=a.deathCause?.weapon||'';s.deathVariant=a.deathVariant||'';
     }
     const active=new Set();
+    const drops=new Set();
+    for(const {id,x,y,z,createdAt,item} of g.state.drops){
+      drops.add(id);
+      if(!this.state.drops.has(id))this.state.drops.set(id,new DropState({id,x,y,z,createdAt,weapon:item.id,
+        ammo:item.ammo,reserve:item.reserve,equipment:equipmentKey(item)}));
+    }
+    for(const id of this.state.drops.keys())if(!drops.has(id))this.state.drops.delete(id);
     const clouds=new Set();
     for(const smoke of g.state.smokes){
       clouds.add(smoke.id);

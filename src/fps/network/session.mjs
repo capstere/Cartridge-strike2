@@ -114,7 +114,7 @@ export class NetworkSession {
   }
   classicCommand(kind,item){
     const a=this.view.player,s=this.room?.state;
-    if(!a||s?.mode!=='classic'||this.connectionState!=='connected')return false;
+    if(!a||!s||(s.mode!=='classic'&&kind!=='drop')||this.connectionState!=='connected')return false;
     this.notice='';
     const command={kind,item,serial:++this.classicSerial,round:s.round,matchId:s.matchId,lifeId:a.lifeId,controlEpoch:a.controlEpoch};
     if(kind==='buy')this.purchase={...command,outcome:'pending'};
@@ -221,7 +221,7 @@ export class NetworkSession {
     this.unsub.push(room.onMessage('problem',message=>{this.problem=String(message);}));
     this.unsub.push(room.onMessage('bonusState',message=>this.applyPrivateBonus(message)));
     this.unsub.push(room.onMessage('class-choice',message=>{
-      this.classChoice=message;
+      this.classChoice=message;this.arsenalProfile=message.profile;
       if(this.view.player?.team===message.team)this.view.player.arsenalClass=message.kit;
     }));
     this.unsub.push(room.onMessage('purchase',message=>this.receivePurchase(message)));
@@ -374,6 +374,8 @@ export class NetworkSession {
     }
     this.view.state.grenades=[...state.grenades.values()];
     this.view.state.smokes=[...state.smokes.values()];
+    this.view.state.drops=Array.from(state.drops.values(),d=>({id:d.id,type:'weapon',x:d.x,y:d.y,z:d.z,createdAt:d.createdAt,
+      item:{id:d.weapon,ammo:d.ammo,reserve:d.reserve,...decodeEquipment(d.equipment)}}));
     applyNetworkWorld(this.world.doors,state);
     this.view.state.actors=ready.map(s=>actorView(s,this.localPlayerId));
     if(this.view.player&&this.view.player.team===this.classChoice?.team)this.view.player.arsenalClass=this.classChoice.kit;
@@ -464,12 +466,11 @@ export class NetworkSession {
     if(newMatch||newPhase||modeChanged)queueMicrotask(()=>{if(!this.closed)this.onMatch(this.matchPhase);});
   }
   selectClass(profile){
-    this.arsenalProfile=profile;
-    this.matchCommand('class',{profile});
+    if(!this.room)this.arsenalProfile=profile;
+    else this.matchCommand('class',{profile});
   }
   matchCommand(kind,extra={}){
     const self=this.room?.state.actors.get(this.localPlayerId);if(!self||this.connectionState!=='connected')return;
-    if(kind==='loadout')this.arsenalProfile=null;
     this.notice='';this.room.send('match',{kind,matchId:this.room.state.matchId,controlEpoch:self.controlEpoch,...extra});
   }
   setBotDifficulty(botDifficulty){

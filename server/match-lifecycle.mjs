@@ -225,7 +225,7 @@ export class MatchLifecycle {
     Object.assign(this.state,{phase:'results',winner,reason,remainingSeconds:0,resultsAtMs:this.now,
       results:JSON.stringify({matchId:this.state.matchId,winner,reason,score:{...score},players:g.actors.map(a=>({id:a.id,name:a.name,team:a.team,kills:a.kills,deaths:a.deaths}))})});
     r.finishAccountMatch?.(winner);
-    g.state.paused=true;g.state.projectiles=[];g.state.grenades=[];
+    g.state.paused=true;g.state.projectiles=[];g.state.grenades=[];g.state.smokes=[];g.state.drops=[];
     for(const actor of g.actors){clearActorBonus(actor);resetRush(actor);actor.reloadUntil=actor.reloadStartedAt=actor.reloadDuration=0;actor.cartridge=null;actor.waitTriggerRelease=false;}
     for(const [sid,seat] of r.seats){seat.enabled=false;seat.holdThrow=false;r.inputs.get(sid).clear();}
   }
