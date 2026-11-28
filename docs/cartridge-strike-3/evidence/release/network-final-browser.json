@@ -1,0 +1,142 @@
+{
+  "path": "internet",
+  "publicEntry": "loopback HTTPS at the Pages project subpath",
+  "pilotEntry": "external HTTPS/WSS tunnel",
+  "build": "aec199fd40e814a4df3b4ff04a49b25277aca6fd2788375a32d801bb11d1420b",
+  "protocol": 22,
+  "date": "2026-11-28T16:04:07.505Z",
+  "physicalPhone": false,
+  "viewports": [
+    {
+      "width": 844,
+      "height": 390
+    },
+    {
+      "width": 800,
+      "height": 450
+    }
+  ],
+  "navigation": [
+    {
+      "surface": "public",
+      "visit": "cold",
+      "elapsedMs": 6621,
+      "lang": "en",
+      "resources": 250,
+      "cacheHits": 0
+    },
+    {
+      "surface": "public",
+      "visit": "cached",
+      "elapsedMs": 5063,
+      "lang": "en",
+      "resources": 250,
+      "cacheHits": 247
+    },
+    {
+      "surface": "private",
+      "visit": "cold",
+      "elapsedMs": 3087,
+      "lang": "en",
+      "resources": 247,
+      "cacheHits": 0
+    },
+    {
+      "surface": "private",
+      "visit": "cached",
+      "elapsedMs": 2283,
+      "lang": "en",
+      "resources": 246,
+      "cacheHits": 0
+    }
+  ],
+  "players": [
+    {
+      "number": 1,
+      "engine": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "authenticated": {
+        "status": 200,
+        "cache": "private, no-store",
+        "build": "aec199fd40e814a4df3b4ff04a49b25277aca6fd2788375a32d801bb11d1420b"
+      }
+    },
+    {
+      "number": 2,
+      "engine": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "authenticated": {
+        "status": 200,
+        "cache": "private, no-store",
+        "build": "aec199fd40e814a4df3b4ff04a49b25277aca6fd2788375a32d801bb11d1420b"
+      }
+    }
+  ],
+  "manifestSha256": "87d2f3177e22bac3b00143dc92947e972b7d08fcb80611c83742ed5a59ea239b",
+  "chromium": "156.0.8078.79",
+  "publicBuild": "aec199fd40e814a4df3b4ff04a49b25277aca6fd2788375a32d801bb11d1420b",
+  "unauthenticated": 401,
+  "room": {
+    "initial": {
+      "actor": "counterAnalysts-0",
+      "connected": true,
+      "life": 3,
+      "epoch": 1,
+      "ammo": 30,
+      "map": "compact-arena",
+      "tick": 2846,
+      "match": 1,
+      "phase": "active"
+    },
+    "fired": {
+      "actor": "counterAnalysts-0",
+      "connected": true,
+      "life": 3,
+      "epoch": 1,
+      "ammo": 29,
+      "map": "compact-arena",
+      "tick": 2972,
+      "match": 1,
+      "phase": "active"
+    },
+    "resumed": {
+      "actor": "counterAnalysts-0",
+      "connected": true,
+      "life": 3,
+      "epoch": 2,
+      "ammo": 29,
+      "map": "compact-arena",
+      "tick": 3079,
+      "match": 1,
+      "phase": "active"
+    },
+    "refired": {
+      "actor": "counterAnalysts-0",
+      "connected": true,
+      "life": 3,
+      "epoch": 2,
+      "ammo": 28,
+      "map": "compact-arena",
+      "tick": 3109,
+      "match": 1,
+      "phase": "active"
+    },
+    "observedReconnectMs": 433,
+    "ws": [
+      {
+        "connections": 2,
+        "sent": 1119,
+        "received": 1426
+      },
+      {
+        "connections": 2,
+        "sent": 305,
+        "received": 470
+      }
+    ]
+  },
+  "forfeitResults": true,
+  "idle": {
+    "rooms": 0,
+    "players": 0
+  },
+  "status": "PASS"
+}

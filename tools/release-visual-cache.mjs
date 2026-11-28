@@ -49,6 +49,14 @@ const browser=await chromium.launch({headless:!headed,executablePath:native,chan
 const report={oldBuild:old.build,oldHTML:old.html,candidateBuild:current.build,candidateHTML:current.html,
   started:new Date().toISOString(),browser:browser.version(),platform:process.platform,angle,headed,cache:'public, max-age=600',samples:[]};
 const openContext=(locale='sv-SE')=>browser.newContext({viewport:{width:932,height:430},hasTouch:true,isMobile:true,locale,deviceScaleFactor:1});
+async function retainCS2Settings(page) {
+  await page.waitForFunction(()=>window.__csFlow && document.querySelector('#loading')?.hidden,null,{timeout:120000});
+  return page.evaluate(()=>{
+    const key='cartridge-settings',data=JSON.parse(localStorage.getItem(key)||'{}');
+    data.graphics='low';data.volume=.35;localStorage.setItem(key,JSON.stringify(data));
+    return JSON.parse(localStorage.getItem(key)).volume;
+  });
+}
 async function openPage(context,label,path,verify,forceHTML,reload=false) {
   const page=await context.newPage(),trace=[],errors=[];
   page.setDefaultTimeout(60000);
@@ -65,6 +73,26 @@ async function openPage(context,label,path,verify,forceHTML,reload=false) {
   try {
     await page.goto(origin+path,{waitUntil:'domcontentloaded'});
     if(reload){
+      if(reload==='direct'){
+        // Keep this original Page and context open across the fixture's publication switch.
+        assert.equal(served,old);
+        await page.bringToFront();
+        const storedVolume=await retainCS2Settings(page);
+        const oldURL=page.url();
+        sample.beforeCutover=await page.evaluate(()=>({
+          language:document.documentElement.lang,start:document.getElementById('start').innerText,
+          visible:!document.hidden,soloChooser:!!document.getElementById('csl-ready'),path:location.pathname+location.search
+        }));
+        sample.beforeCutover.savedVolume=storedVolume;
+        sample.beforeCutover.responses={cs2:trace.filter(row=>row.servedBy==='CS2').length,cs3:trace.filter(row=>row.servedBy==='CS3').length};
+        assert.equal(sample.beforeCutover.language,'sv');assert.match(sample.beforeCutover.start,/starta match/i);
+        assert(sample.beforeCutover.visible&&!sample.beforeCutover.soloChooser);
+        assert.equal(storedVolume,.35);assert.equal(sample.beforeCutover.path,'/fps/');
+        assert(sample.beforeCutover.responses.cs2>0&&sample.beforeCutover.responses.cs3===0);
+        assert(trace.some(row=>row.type==='Document'&&row.servedBy==='CS2'));
+        served=current;
+        assert.equal(page.url(),oldURL);
+      }
       sample.initialLanguage=await page.locator('html').getAttribute('lang');
       await page.reload({waitUntil:'domcontentloaded'});
       // Ignore resources requested by the pre-reload document for this post-reload check.
@@ -74,17 +102,18 @@ async function openPage(context,label,path,verify,forceHTML,reload=false) {
     if(forceHTML)assert.equal(sample.language,'en','This scenario requires fresh CS3 HTML');
     if(verify==='old'){
       assert.equal(sample.language,'sv');
-      await page.waitForFunction(()=>window.__csFlow && document.querySelector('#loading')?.hidden,null,{timeout:120000});
-      // A real saved graphics preference goes through the same storage key on both versions.
-      await page.evaluate(()=>{
-        const key='cartridge-settings',data=JSON.parse(localStorage.getItem(key)||'{}');
-        data.graphics='low';data.volume=.35;localStorage.setItem(key,JSON.stringify(data));
-      });
+      await retainCS2Settings(page);
     }else if(verify==='deploy'){
       await page.waitForFunction(()=>!!window.__csFlow||document.querySelector('#fatal:not([hidden])'),null,{timeout:120000});
       sample.readyModule=await page.locator('#csl-ready').count()===1;
       const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('cartridge-settings')||'{}'));
       sample.savedGraphics=saved.graphics;sample.savedVolume=saved.volume;
+      if(reload==='direct'){
+        assert.equal(page.url(),origin+'/fps/');
+        const volume=page.locator('#menu-settings [data-setting=volume]');
+        await volume.waitFor({state:'attached'});
+        sample.gameVolume=Number(await volume.inputValue());assert.equal(sample.gameVolume,.35);
+      }
       if(!sample.readyModule){sample.outcome='BLOCKED · CS3 deployment selector absent';return;}
       await page.getByRole('button',{name:'Play',exact:true}).first().tap();
       await page.locator('[data-go=solo]:visible').first().tap();
@@ -116,7 +145,7 @@ async function openPage(context,label,path,verify,forceHTML,reload=false) {
     await page.close();
   }
 }
-try{
+async function verifyControls(){
   const warm=await openContext();
   await openPage(warm,'original with ordinary callbacks','/fps/','old',false);
   served=current;
@@ -133,7 +162,19 @@ try{
   assert.notEqual(control.savedVolume,.35,'The clean control must distinguish the legacy volume preference');
   report.migrationPass=[mixed,reloaded].every(sample=>sample.outcome==='PASS' && sample.savedGraphics==='low' && sample.savedVolume===.35 &&
     sample.deployed==='SCOUT RIFLE' && sample.changedLegacyResponses.length===0);
-  if(!report.migrationPass)process.exitCode=1;
+}
+try {
+  const directOnly=process.argv.includes('--direct-old-tab');
+  if(!directOnly)await verifyControls();
+  const directContext=await openContext();
+  served=old;
+  await openPage(directContext,'same active Swedish CS2 tab, ordinary reload before any CS3 visit','/fps/','deploy',true,'direct');
+  await directContext.close();
+  const direct=report.samples.at(-1);
+  report.directReloadPass=direct.outcome==='PASS' && direct.beforeCutover?.language==='sv' &&
+    direct.beforeCutover.savedVolume===.35 && direct.savedVolume===.35 && direct.gameVolume===.35 &&
+    direct.readyModule && direct.deployed==='SCOUT RIFLE' && direct.changedLegacyResponses.length===0;
+  if(!report.directReloadPass || report.migrationPass===false)process.exitCode=1;
 } finally{
   report.finished=new Date().toISOString();
   await writeFile(join(output,'cache-migration.json'),JSON.stringify(report,null,2)+'\n');

@@ -3,6 +3,54 @@
     "file": "1-baseline.json",
     "trace": "performance-authority-shot-1-baseline.json.gz",
     "rawSha256": "1d347b000045f8aa6a8505e3c9fb83ba0c6f546c424a0ab447fc61d624f1d9dd",
+    "maxFirstOrigin": {
+      "tick": 370,
+      "actionId": "counterAnalysts-0:3:1:117",
+      "firstToDequeueMs": 58.22,
+      "dequeueToShotMs": 2.222,
+      "shotToPatchMs": 146.174,
+      "patchToClientMs": 57.97
+    },
+    "actors": 10,
+    "bots": 8,
+    "residents": 6,
+    "transportCounters": {
+      "invalid": 0,
+      "maxQueue": 8,
+      "coalesced": 3804,
+      "ticks": 5730,
+      "events": 6182,
+      "reconnects": 0,
+      "drops": 0,
+      "backpressure": 0
+    },
+    "wholeRun": {
+      "tick": {
+        "n": 5399,
+        "p50": 1.5218569999997271,
+        "p95": 5.796536000001652,
+        "p99": 18.996909999998024,
+        "max": 99.40341099999932,
+        "above33": 17,
+        "above50": 8,
+        "above100": 0
+      },
+      "interval": {
+        "n": 5399,
+        "p50": 16.07262300000002,
+        "p95": 21.37754600000335,
+        "p99": 32.32620799999859,
+        "max": 100.66871100000026,
+        "above33": 27,
+        "above50": 8,
+        "above100": 1
+      }
+    },
+    "thermal": {
+      "temperatureC": 46.3,
+      "throttled": "throttled=0x0"
+    },
+    "emptyRoomsAfterLastLeave": 0,
     "contract": {
       "protocolVersion": 14,
       "protocolHash": "4d9b3b19c64e2df2c36714dd953bffde020387d56985413aa74cf9e6f0266bff",
@@ -381,6 +429,54 @@
     "file": "2-candidate.json",
     "trace": "performance-authority-shot-2-candidate.json.gz",
     "rawSha256": "7cf6326631b59d23e1292e1b76a7b68e18d3832c8d92dc1ddaf5b16f6dab90c3",
+    "maxFirstOrigin": {
+      "tick": 1677,
+      "actionId": "analysts-0:2:1:1303",
+      "firstToDequeueMs": 85.441,
+      "dequeueToShotMs": 1.707,
+      "shotToPatchMs": 42.959,
+      "patchToClientMs": 69.434
+    },
+    "actors": 10,
+    "bots": 8,
+    "residents": 6,
+    "transportCounters": {
+      "invalid": 0,
+      "maxQueue": 4,
+      "coalesced": 3744,
+      "ticks": 5735,
+      "events": 5710,
+      "reconnects": 0,
+      "drops": 0,
+      "backpressure": 0
+    },
+    "wholeRun": {
+      "tick": {
+        "n": 5403,
+        "p50": 2.021710000000894,
+        "p95": 3.946197999997821,
+        "p99": 5.600868999987142,
+        "max": 24.483593000000837,
+        "above33": 0,
+        "above50": 0,
+        "above100": 0
+      },
+      "interval": {
+        "n": 5403,
+        "p50": 16.088011999992887,
+        "p95": 17.04458900001191,
+        "p99": 32.313616999999795,
+        "max": 43.01733400000376,
+        "above33": 9,
+        "above50": 0,
+        "above100": 0
+      }
+    },
+    "thermal": {
+      "temperatureC": 44.1,
+      "throttled": "throttled=0x0"
+    },
+    "emptyRoomsAfterLastLeave": 0,
     "contract": {
       "protocolVersion": 22,
       "protocolHash": "5eeffd9db724492b606bbb7607d3ab933d430fa428db326ecf82861ccd64c469",
@@ -750,6 +846,1674 @@
           "p95": 10.17,
           "p99": 10.17,
           "max": 10.17
+        },
+        "endpointsDifferInAim": 0
+      }
+    }
+  },
+  {
+    "file": "3-cache-rtt100.json",
+    "trace": "performance-authority-shot-3-cache-rtt100.json.gz",
+    "rawSha256": "44b86693883b98e626ea675fed05df5c3190504d01f7152c21336ddf2ed7d0e3",
+    "maxFirstOrigin": {
+      "tick": 1076,
+      "actionId": "analysts-0:2:1:698",
+      "firstToDequeueMs": 85.857,
+      "dequeueToShotMs": 2.48,
+      "shotToPatchMs": 48.16,
+      "patchToClientMs": 77.13
+    },
+    "actors": 10,
+    "bots": 8,
+    "residents": 6,
+    "transportCounters": {
+      "invalid": 0,
+      "maxQueue": 4,
+      "coalesced": 3741,
+      "ticks": 5735,
+      "events": 5670,
+      "reconnects": 0,
+      "drops": 0,
+      "backpressure": 0
+    },
+    "wholeRun": {
+      "tick": {
+        "n": 5403,
+        "p50": 1.9784510000026785,
+        "p95": 3.974475999999413,
+        "p99": 6.467945999989752,
+        "max": 38.36500799999703,
+        "above33": 1,
+        "above50": 0,
+        "above100": 0
+      },
+      "interval": {
+        "n": 5403,
+        "p50": 16.084568999998737,
+        "p95": 17.730814999998984,
+        "p99": 32.301396999988356,
+        "max": 52.428644000014174,
+        "above33": 10,
+        "above50": 1,
+        "above100": 0
+      }
+    },
+    "thermal": {
+      "temperatureC": 45.75,
+      "throttled": "throttled=0x0"
+    },
+    "emptyRoomsAfterLastLeave": 0,
+    "contract": {
+      "protocolVersion": 22,
+      "protocolHash": "5eeffd9db724492b606bbb7607d3ab933d430fa428db326ecf82861ccd64c469",
+      "configHash": "c0d2d00526fd8f58106a6232eec122f5c8f699b5ec91ebc0643a8ac420ff21c5",
+      "buildHash": "aec199fd40e814a4df3b4ff04a49b25277aca6fd2788375a32d801bb11d1420b",
+      "tickRate": 60,
+      "patchMs": 50,
+      "mapId": "floor5-prepared",
+      "mapHash": "1dd0ec97a14f5a4cab6448e9a8f4b5da091b71a3caa63b575ef58ef1426b9ef0",
+      "collisionHash": "a5351e073a01ac95466acf4346acf9812f4265224e56712ce3e889085a42b6d9"
+    },
+    "environment": {
+      "model": "Raspberry Pi 5 Model B Rev 1.1",
+      "node": "v26.13.1",
+      "platform": "linux",
+      "arch": "arm64",
+      "cpu": "Cortex-A76",
+      "cores": 4
+    },
+    "configuredRttMs": 100,
+    "jitterMs": 20,
+    "shotsByHuman": [
+      150,
+      150
+    ],
+    "baselinePhase": "countdown",
+    "comparisons": {
+      "all": {
+        "actions": 300,
+        "firstSentToReceivedMs": {
+          "n": 300,
+          "p50": 154.27,
+          "p95": 183.87,
+          "p99": 193.877,
+          "max": 213.627
+        },
+        "lastSentToReceivedMs": {
+          "n": 300,
+          "p50": 141.353,
+          "p95": 170.714,
+          "p99": 179.295,
+          "max": 213.627
+        },
+        "selectedSentToReceivedMs": {
+          "n": 300,
+          "p50": 154.27,
+          "p95": 183.87,
+          "p99": 193.877,
+          "max": 213.627
+        },
+        "firstSentToDequeueMs": {
+          "n": 300,
+          "p50": 68.239,
+          "p95": 82.117,
+          "p99": 98.085,
+          "max": 99.177
+        },
+        "lastSentToDequeueMs": {
+          "n": 300,
+          "p50": 54.949,
+          "p95": 73.141,
+          "p99": 79.693,
+          "max": 85.857
+        },
+        "dequeueToShotMs": {
+          "n": 300,
+          "p50": 2.408,
+          "p95": 4.819,
+          "p99": 8.054,
+          "max": 34.1
+        },
+        "shotToPatchMs": {
+          "n": 300,
+          "p50": 24.812,
+          "p95": 46.931,
+          "p99": 49.232,
+          "max": 50.717
+        },
+        "patchToClientMs": {
+          "n": 300,
+          "p50": 60.155,
+          "p95": 70.067,
+          "p99": 71.234,
+          "max": 77.13
+        },
+        "selectedFirst": 300,
+        "selectedLast": 138,
+        "firstToLastInputMs": {
+          "n": 300,
+          "p50": 15.768,
+          "p95": 33.437,
+          "p99": 34.13,
+          "max": 50.167
+        },
+        "endpointsDifferInAim": 61
+      },
+      "afterWarmUp": {
+        "actions": 300,
+        "firstSentToReceivedMs": {
+          "n": 300,
+          "p50": 154.27,
+          "p95": 183.87,
+          "p99": 193.877,
+          "max": 213.627
+        },
+        "lastSentToReceivedMs": {
+          "n": 300,
+          "p50": 141.353,
+          "p95": 170.714,
+          "p99": 179.295,
+          "max": 213.627
+        },
+        "selectedSentToReceivedMs": {
+          "n": 300,
+          "p50": 154.27,
+          "p95": 183.87,
+          "p99": 193.877,
+          "max": 213.627
+        },
+        "firstSentToDequeueMs": {
+          "n": 300,
+          "p50": 68.239,
+          "p95": 82.117,
+          "p99": 98.085,
+          "max": 99.177
+        },
+        "lastSentToDequeueMs": {
+          "n": 300,
+          "p50": 54.949,
+          "p95": 73.141,
+          "p99": 79.693,
+          "max": 85.857
+        },
+        "dequeueToShotMs": {
+          "n": 300,
+          "p50": 2.408,
+          "p95": 4.819,
+          "p99": 8.054,
+          "max": 34.1
+        },
+        "shotToPatchMs": {
+          "n": 300,
+          "p50": 24.812,
+          "p95": 46.931,
+          "p99": 49.232,
+          "max": 50.717
+        },
+        "patchToClientMs": {
+          "n": 300,
+          "p50": 60.155,
+          "p95": 70.067,
+          "p99": 71.234,
+          "max": 77.13
+        },
+        "selectedFirst": 300,
+        "selectedLast": 138,
+        "firstToLastInputMs": {
+          "n": 300,
+          "p50": 15.768,
+          "p95": 33.437,
+          "p99": 34.13,
+          "max": 50.167
+        },
+        "endpointsDifferInAim": 61
+      },
+      "automaticRepeatInBatch": {
+        "actions": 161,
+        "firstSentToReceivedMs": {
+          "n": 161,
+          "p50": 161.615,
+          "p95": 185.77,
+          "p99": 195.04,
+          "max": 195.245
+        },
+        "lastSentToReceivedMs": {
+          "n": 161,
+          "p50": 137.184,
+          "p95": 167.398,
+          "p99": 176.419,
+          "max": 178.997
+        },
+        "selectedSentToReceivedMs": {
+          "n": 161,
+          "p50": 161.615,
+          "p95": 185.77,
+          "p99": 195.04,
+          "max": 195.245
+        },
+        "firstSentToDequeueMs": {
+          "n": 161,
+          "p50": 72.555,
+          "p95": 83.592,
+          "p99": 98.691,
+          "max": 99.177
+        },
+        "lastSentToDequeueMs": {
+          "n": 161,
+          "p50": 51.276,
+          "p95": 65.304,
+          "p99": 69.858,
+          "max": 81.968
+        },
+        "dequeueToShotMs": {
+          "n": 161,
+          "p50": 2.466,
+          "p95": 4.77,
+          "p99": 5.898,
+          "max": 8.054
+        },
+        "shotToPatchMs": {
+          "n": 161,
+          "p50": 26.02,
+          "p95": 46.641,
+          "p99": 49.232,
+          "max": 50.717
+        },
+        "patchToClientMs": {
+          "n": 161,
+          "p50": 59.624,
+          "p95": 69.841,
+          "p99": 70.684,
+          "max": 75.92
+        },
+        "selectedFirst": 161,
+        "selectedLast": 0,
+        "firstToLastInputMs": {
+          "n": 161,
+          "p50": 17.088,
+          "p95": 33.787,
+          "p99": 49.919,
+          "max": 50.167
+        },
+        "endpointsDifferInAim": 61
+      },
+      "singleSampleBatch": {
+        "actions": 138,
+        "firstSentToReceivedMs": {
+          "n": 138,
+          "p50": 148.461,
+          "p95": 173.276,
+          "p99": 183.911,
+          "max": 213.627
+        },
+        "lastSentToReceivedMs": {
+          "n": 138,
+          "p50": 148.461,
+          "p95": 173.276,
+          "p99": 183.911,
+          "max": 213.627
+        },
+        "selectedSentToReceivedMs": {
+          "n": 138,
+          "p50": 148.461,
+          "p95": 173.276,
+          "p99": 183.911,
+          "max": 213.627
+        },
+        "firstSentToDequeueMs": {
+          "n": 138,
+          "p50": 60.857,
+          "p95": 76.219,
+          "p99": 80.949,
+          "max": 85.857
+        },
+        "lastSentToDequeueMs": {
+          "n": 138,
+          "p50": 60.857,
+          "p95": 76.219,
+          "p99": 80.949,
+          "max": 85.857
+        },
+        "dequeueToShotMs": {
+          "n": 138,
+          "p50": 2.358,
+          "p95": 4.839,
+          "p99": 11.296,
+          "max": 34.1
+        },
+        "shotToPatchMs": {
+          "n": 138,
+          "p50": 24.806,
+          "p95": 48.235,
+          "p99": 49.615,
+          "max": 49.623
+        },
+        "patchToClientMs": {
+          "n": 138,
+          "p50": 61.63,
+          "p95": 70.277,
+          "p99": 71.414,
+          "max": 77.13
+        },
+        "selectedFirst": 138,
+        "selectedLast": 138,
+        "firstToLastInputMs": {
+          "n": 138,
+          "p50": 0.0,
+          "p95": 0.0,
+          "p99": 0.0,
+          "max": 0.0
+        },
+        "endpointsDifferInAim": 0
+      },
+      "actualTriggerEdge": {
+        "actions": 2,
+        "firstSentToReceivedMs": {
+          "n": 2,
+          "p50": 145.102,
+          "p95": 152.142,
+          "p99": 152.142,
+          "max": 152.142
+        },
+        "lastSentToReceivedMs": {
+          "n": 2,
+          "p50": 127.917,
+          "p95": 152.142,
+          "p99": 152.142,
+          "max": 152.142
+        },
+        "selectedSentToReceivedMs": {
+          "n": 2,
+          "p50": 145.102,
+          "p95": 152.142,
+          "p99": 152.142,
+          "max": 152.142
+        },
+        "firstSentToDequeueMs": {
+          "n": 2,
+          "p50": 50.934,
+          "p95": 66.491,
+          "p99": 66.491,
+          "max": 66.491
+        },
+        "lastSentToDequeueMs": {
+          "n": 2,
+          "p50": 49.306,
+          "p95": 50.934,
+          "p99": 50.934,
+          "max": 50.934
+        },
+        "dequeueToShotMs": {
+          "n": 2,
+          "p50": 4.9,
+          "p95": 11.296,
+          "p99": 11.296,
+          "max": 11.296
+        },
+        "shotToPatchMs": {
+          "n": 2,
+          "p50": 6.497,
+          "p95": 30.651,
+          "p99": 30.651,
+          "max": 30.651
+        },
+        "patchToClientMs": {
+          "n": 2,
+          "p50": 59.261,
+          "p95": 67.214,
+          "p99": 67.214,
+          "max": 67.214
+        },
+        "selectedFirst": 2,
+        "selectedLast": 1,
+        "firstToLastInputMs": {
+          "n": 2,
+          "p50": 0.0,
+          "p95": 17.185,
+          "p99": 17.185,
+          "max": 17.185
+        },
+        "endpointsDifferInAim": 0
+      }
+    }
+  },
+  {
+    "file": "4-baseline-rtt100.json",
+    "trace": "performance-authority-shot-4-baseline-rtt100.json.gz",
+    "rawSha256": "dbb2724a223aa6d36f8255a2d41f84e0904b2f1b685f7f53c56fb91692251743",
+    "maxFirstOrigin": {
+      "tick": 329,
+      "actionId": "counterAnalysts-0:3:1:74",
+      "firstToDequeueMs": 70.786,
+      "dequeueToShotMs": 82.114,
+      "shotToPatchMs": 19.257,
+      "patchToClientMs": 66.021
+    },
+    "actors": 10,
+    "bots": 8,
+    "residents": 6,
+    "transportCounters": {
+      "invalid": 0,
+      "maxQueue": 7,
+      "coalesced": 3866,
+      "ticks": 5734,
+      "events": 6242,
+      "reconnects": 0,
+      "drops": 0,
+      "backpressure": 0
+    },
+    "wholeRun": {
+      "tick": {
+        "n": 5405,
+        "p50": 1.443319000005431,
+        "p95": 5.223313000009512,
+        "p99": 17.087599000005866,
+        "max": 92.0240269999922,
+        "above33": 14,
+        "above50": 6,
+        "above100": 0
+      },
+      "interval": {
+        "n": 5405,
+        "p50": 16.08382800000254,
+        "p95": 23.173941999993986,
+        "p99": 32.422059999997145,
+        "max": 92.33078699999896,
+        "above33": 22,
+        "above50": 7,
+        "above100": 0
+      }
+    },
+    "thermal": {
+      "temperatureC": 45.75,
+      "throttled": "throttled=0x0"
+    },
+    "emptyRoomsAfterLastLeave": 0,
+    "contract": {
+      "protocolVersion": 14,
+      "protocolHash": "4d9b3b19c64e2df2c36714dd953bffde020387d56985413aa74cf9e6f0266bff",
+      "configHash": "6b01cccd31801a78ca231eeb119204c103e5b8bdc2af84f6e45f470b151fa5cb",
+      "buildHash": "30f8f4af97b2b082f995196f06f498b132ba9bf8d303671ee8ab8d4b69590385",
+      "tickRate": 60,
+      "patchMs": 50,
+      "mapId": "floor5-prepared",
+      "mapHash": "89283f437623457a10da37be29a282a41591f202270051ba940549ba01b4b050",
+      "collisionHash": "a5351e073a01ac95466acf4346acf9812f4265224e56712ce3e889085a42b6d9"
+    },
+    "environment": {
+      "model": "Raspberry Pi 5 Model B Rev 1.1",
+      "node": "v26.13.1",
+      "platform": "linux",
+      "arch": "arm64",
+      "cpu": "Cortex-A76",
+      "cores": 4
+    },
+    "configuredRttMs": 100,
+    "jitterMs": 20,
+    "shotsByHuman": [
+      150,
+      150
+    ],
+    "baselinePhase": "active",
+    "comparisons": {
+      "all": {
+        "actions": 300,
+        "firstSentToReceivedMs": {
+          "n": 300,
+          "p50": 154.076,
+          "p95": 191.415,
+          "p99": 200.19,
+          "max": 238.177
+        },
+        "lastSentToReceivedMs": {
+          "n": 300,
+          "p50": 142.73,
+          "p95": 175.835,
+          "p99": 181.307,
+          "max": 204.122
+        },
+        "selectedSentToReceivedMs": {
+          "n": 300,
+          "p50": 142.73,
+          "p95": 175.835,
+          "p99": 181.307,
+          "max": 204.122
+        },
+        "firstSentToDequeueMs": {
+          "n": 300,
+          "p50": 67.71,
+          "p95": 81.285,
+          "p99": 92.388,
+          "max": 93.651
+        },
+        "lastSentToDequeueMs": {
+          "n": 300,
+          "p50": 55.404,
+          "p95": 71.908,
+          "p99": 79.11,
+          "max": 81.22
+        },
+        "dequeueToShotMs": {
+          "n": 300,
+          "p50": 1.756,
+          "p95": 6.62,
+          "p99": 17.296,
+          "max": 82.114
+        },
+        "shotToPatchMs": {
+          "n": 300,
+          "p50": 25.209,
+          "p95": 47.059,
+          "p99": 49.334,
+          "max": 61.856
+        },
+        "patchToClientMs": {
+          "n": 300,
+          "p50": 61.399,
+          "p95": 70.063,
+          "p99": 71.144,
+          "max": 72.67
+        },
+        "selectedFirst": 138,
+        "selectedLast": 300,
+        "firstToLastInputMs": {
+          "n": 300,
+          "p50": 15.619,
+          "p95": 33.659,
+          "p99": 34.804,
+          "max": 49.643
+        },
+        "endpointsDifferInAim": 69
+      },
+      "afterWarmUp": {
+        "actions": 271,
+        "firstSentToReceivedMs": {
+          "n": 271,
+          "p50": 153.995,
+          "p95": 188.678,
+          "p99": 200.19,
+          "max": 207.118
+        },
+        "lastSentToReceivedMs": {
+          "n": 271,
+          "p50": 142.73,
+          "p95": 175.678,
+          "p99": 181.307,
+          "max": 194.427
+        },
+        "selectedSentToReceivedMs": {
+          "n": 271,
+          "p50": 142.73,
+          "p95": 175.678,
+          "p99": 181.307,
+          "max": 194.427
+        },
+        "firstSentToDequeueMs": {
+          "n": 271,
+          "p50": 67.618,
+          "p95": 81.22,
+          "p99": 92.822,
+          "max": 93.651
+        },
+        "lastSentToDequeueMs": {
+          "n": 271,
+          "p50": 55.404,
+          "p95": 71.908,
+          "p99": 80.664,
+          "max": 81.22
+        },
+        "dequeueToShotMs": {
+          "n": 271,
+          "p50": 1.726,
+          "p95": 6.814,
+          "p99": 17.296,
+          "max": 54.43
+        },
+        "shotToPatchMs": {
+          "n": 271,
+          "p50": 24.617,
+          "p95": 47.063,
+          "p99": 49.858,
+          "max": 61.856
+        },
+        "patchToClientMs": {
+          "n": 271,
+          "p50": 61.399,
+          "p95": 69.993,
+          "p99": 71.802,
+          "max": 72.67
+        },
+        "selectedFirst": 129,
+        "selectedLast": 271,
+        "firstToLastInputMs": {
+          "n": 271,
+          "p50": 15.514,
+          "p95": 33.659,
+          "p99": 49.552,
+          "max": 49.643
+        },
+        "endpointsDifferInAim": 65
+      },
+      "automaticRepeatInBatch": {
+        "actions": 160,
+        "firstSentToReceivedMs": {
+          "n": 160,
+          "p50": 157.545,
+          "p95": 194.693,
+          "p99": 207.118,
+          "max": 238.177
+        },
+        "lastSentToReceivedMs": {
+          "n": 160,
+          "p50": 137.018,
+          "p95": 175.248,
+          "p99": 181.307,
+          "max": 204.122
+        },
+        "selectedSentToReceivedMs": {
+          "n": 160,
+          "p50": 137.018,
+          "p95": 175.248,
+          "p99": 181.307,
+          "max": 204.122
+        },
+        "firstSentToDequeueMs": {
+          "n": 160,
+          "p50": 71.36,
+          "p95": 85.526,
+          "p99": 92.844,
+          "max": 93.651
+        },
+        "lastSentToDequeueMs": {
+          "n": 160,
+          "p50": 50.256,
+          "p95": 63.544,
+          "p99": 74.501,
+          "max": 75.666
+        },
+        "dequeueToShotMs": {
+          "n": 160,
+          "p50": 1.741,
+          "p95": 4.79,
+          "p99": 17.296,
+          "max": 82.114
+        },
+        "shotToPatchMs": {
+          "n": 160,
+          "p50": 24.617,
+          "p95": 46.918,
+          "p99": 49.176,
+          "max": 61.856
+        },
+        "patchToClientMs": {
+          "n": 160,
+          "p50": 62.408,
+          "p95": 69.993,
+          "p99": 72.031,
+          "max": 72.67
+        },
+        "selectedFirst": 0,
+        "selectedLast": 160,
+        "firstToLastInputMs": {
+          "n": 160,
+          "p50": 16.981,
+          "p95": 34.055,
+          "p99": 49.558,
+          "max": 49.643
+        },
+        "endpointsDifferInAim": 69
+      },
+      "singleSampleBatch": {
+        "actions": 138,
+        "firstSentToReceivedMs": {
+          "n": 138,
+          "p50": 148.574,
+          "p95": 176.72,
+          "p99": 183.694,
+          "max": 194.427
+        },
+        "lastSentToReceivedMs": {
+          "n": 138,
+          "p50": 148.574,
+          "p95": 176.72,
+          "p99": 183.694,
+          "max": 194.427
+        },
+        "selectedSentToReceivedMs": {
+          "n": 138,
+          "p50": 148.574,
+          "p95": 176.72,
+          "p99": 183.694,
+          "max": 194.427
+        },
+        "firstSentToDequeueMs": {
+          "n": 138,
+          "p50": 62.064,
+          "p95": 73.26,
+          "p99": 81.149,
+          "max": 81.22
+        },
+        "lastSentToDequeueMs": {
+          "n": 138,
+          "p50": 62.064,
+          "p95": 73.26,
+          "p99": 81.149,
+          "max": 81.22
+        },
+        "dequeueToShotMs": {
+          "n": 138,
+          "p50": 1.765,
+          "p95": 6.95,
+          "p99": 20.232,
+          "max": 54.43
+        },
+        "shotToPatchMs": {
+          "n": 138,
+          "p50": 25.805,
+          "p95": 47.137,
+          "p99": 49.858,
+          "max": 53.798
+        },
+        "patchToClientMs": {
+          "n": 138,
+          "p50": 60.453,
+          "p95": 70.063,
+          "p99": 70.716,
+          "max": 71.144
+        },
+        "selectedFirst": 138,
+        "selectedLast": 138,
+        "firstToLastInputMs": {
+          "n": 138,
+          "p50": 0.0,
+          "p95": 0.0,
+          "p99": 0.0,
+          "max": 0.0
+        },
+        "endpointsDifferInAim": 0
+      },
+      "actualTriggerEdge": {
+        "actions": 2,
+        "firstSentToReceivedMs": {
+          "n": 2,
+          "p50": 144.556,
+          "p95": 192.507,
+          "p99": 192.507,
+          "max": 192.507
+        },
+        "lastSentToReceivedMs": {
+          "n": 2,
+          "p50": 128.488,
+          "p95": 159.583,
+          "p99": 159.583,
+          "max": 159.583
+        },
+        "selectedSentToReceivedMs": {
+          "n": 2,
+          "p50": 128.488,
+          "p95": 159.583,
+          "p99": 159.583,
+          "max": 159.583
+        },
+        "firstSentToDequeueMs": {
+          "n": 2,
+          "p50": 75.927,
+          "p95": 76.119,
+          "p99": 76.119,
+          "max": 76.119
+        },
+        "lastSentToDequeueMs": {
+          "n": 2,
+          "p50": 43.195,
+          "p95": 59.859,
+          "p99": 59.859,
+          "max": 59.859
+        },
+        "dequeueToShotMs": {
+          "n": 2,
+          "p50": 3.514,
+          "p95": 5.29,
+          "p99": 5.29,
+          "max": 5.29
+        },
+        "shotToPatchMs": {
+          "n": 2,
+          "p50": 6.633,
+          "p95": 42.515,
+          "p99": 42.515,
+          "max": 42.515
+        },
+        "patchToClientMs": {
+          "n": 2,
+          "p50": 56.707,
+          "p95": 70.359,
+          "p99": 70.359,
+          "max": 70.359
+        },
+        "selectedFirst": 0,
+        "selectedLast": 2,
+        "firstToLastInputMs": {
+          "n": 2,
+          "p50": 16.068,
+          "p95": 32.924,
+          "p99": 32.924,
+          "max": 32.924
+        },
+        "endpointsDifferInAim": 0
+      }
+    }
+  },
+  {
+    "file": "5-baseline-rtt0.json",
+    "trace": "performance-authority-shot-5-baseline-rtt0.json.gz",
+    "rawSha256": "cd979b5cb8632414ff501c989f46318d9b0512299ef3fdce91f73475e08600fb",
+    "maxFirstOrigin": {
+      "tick": 352,
+      "actionId": "analysts-0:2:1:129",
+      "firstToDequeueMs": 78.52,
+      "dequeueToShotMs": 3.009,
+      "shotToPatchMs": 47.023,
+      "patchToClientMs": 0.526
+    },
+    "actors": 10,
+    "bots": 8,
+    "residents": 6,
+    "transportCounters": {
+      "invalid": 0,
+      "maxQueue": 8,
+      "coalesced": 661,
+      "ticks": 5710,
+      "events": 6415,
+      "reconnects": 0,
+      "drops": 0,
+      "backpressure": 0
+    },
+    "wholeRun": {
+      "tick": {
+        "n": 5398,
+        "p50": 1.4370050000034098,
+        "p95": 5.555481999996118,
+        "p99": 19.739810999999463,
+        "max": 84.31916900000215,
+        "above33": 17,
+        "above50": 10,
+        "above100": 0
+      },
+      "interval": {
+        "n": 5398,
+        "p50": 16.187741999994614,
+        "p95": 23.84815800000797,
+        "p99": 32.28743000000031,
+        "max": 84.94491199999902,
+        "above33": 21,
+        "above50": 10,
+        "above100": 0
+      }
+    },
+    "thermal": {
+      "temperatureC": 45.2,
+      "throttled": "throttled=0x0"
+    },
+    "emptyRoomsAfterLastLeave": 0,
+    "contract": {
+      "protocolVersion": 14,
+      "protocolHash": "4d9b3b19c64e2df2c36714dd953bffde020387d56985413aa74cf9e6f0266bff",
+      "configHash": "6b01cccd31801a78ca231eeb119204c103e5b8bdc2af84f6e45f470b151fa5cb",
+      "buildHash": "30f8f4af97b2b082f995196f06f498b132ba9bf8d303671ee8ab8d4b69590385",
+      "tickRate": 60,
+      "patchMs": 50,
+      "mapId": "floor5-prepared",
+      "mapHash": "89283f437623457a10da37be29a282a41591f202270051ba940549ba01b4b050",
+      "collisionHash": "a5351e073a01ac95466acf4346acf9812f4265224e56712ce3e889085a42b6d9"
+    },
+    "environment": {
+      "model": "Raspberry Pi 5 Model B Rev 1.1",
+      "node": "v26.13.1",
+      "platform": "linux",
+      "arch": "arm64",
+      "cpu": "Cortex-A76",
+      "cores": 4
+    },
+    "configuredRttMs": 0,
+    "jitterMs": 0,
+    "shotsByHuman": [
+      150,
+      150
+    ],
+    "baselinePhase": "active",
+    "comparisons": {
+      "all": {
+        "actions": 300,
+        "firstSentToReceivedMs": {
+          "n": 300,
+          "p50": 36.459,
+          "p95": 62.913,
+          "p99": 94.781,
+          "max": 129.077
+        },
+        "lastSentToReceivedMs": {
+          "n": 300,
+          "p50": 33.777,
+          "p95": 62.694,
+          "p99": 64.356,
+          "max": 121.761
+        },
+        "selectedSentToReceivedMs": {
+          "n": 300,
+          "p50": 33.777,
+          "p95": 62.694,
+          "p99": 64.356,
+          "max": 121.761
+        },
+        "firstSentToDequeueMs": {
+          "n": 300,
+          "p50": 9.347,
+          "p95": 26.09,
+          "p99": 27.792,
+          "max": 78.52
+        },
+        "lastSentToDequeueMs": {
+          "n": 300,
+          "p50": 9.129,
+          "p95": 16.158,
+          "p99": 16.749,
+          "max": 17.145
+        },
+        "dequeueToShotMs": {
+          "n": 300,
+          "p50": 1.809,
+          "p95": 7.668,
+          "p99": 13.509,
+          "max": 77.801
+        },
+        "shotToPatchMs": {
+          "n": 300,
+          "p50": 22.977,
+          "p95": 47.421,
+          "p99": 51.631,
+          "max": 108.136
+        },
+        "patchToClientMs": {
+          "n": 300,
+          "p50": 0.253,
+          "p95": 0.62,
+          "p99": 2.42,
+          "max": 2.679
+        },
+        "selectedFirst": 278,
+        "selectedLast": 300,
+        "firstToLastInputMs": {
+          "n": 300,
+          "p50": 0.0,
+          "p95": 16.246,
+          "p99": 17.47,
+          "max": 67.109
+        },
+        "endpointsDifferInAim": 8
+      },
+      "afterWarmUp": {
+        "actions": 268,
+        "firstSentToReceivedMs": {
+          "n": 268,
+          "p50": 36.051,
+          "p95": 62.826,
+          "p99": 65.933,
+          "max": 129.077
+        },
+        "lastSentToReceivedMs": {
+          "n": 268,
+          "p50": 33.777,
+          "p95": 61.968,
+          "p99": 63.065,
+          "max": 94.781
+        },
+        "selectedSentToReceivedMs": {
+          "n": 268,
+          "p50": 33.777,
+          "p95": 61.968,
+          "p99": 63.065,
+          "max": 94.781
+        },
+        "firstSentToDequeueMs": {
+          "n": 268,
+          "p50": 9.144,
+          "p95": 26.622,
+          "p99": 27.854,
+          "max": 78.52
+        },
+        "lastSentToDequeueMs": {
+          "n": 268,
+          "p50": 8.95,
+          "p95": 16.158,
+          "p99": 16.667,
+          "max": 17.08
+        },
+        "dequeueToShotMs": {
+          "n": 268,
+          "p50": 1.812,
+          "p95": 7.931,
+          "p99": 16.972,
+          "max": 77.801
+        },
+        "shotToPatchMs": {
+          "n": 268,
+          "p50": 22.346,
+          "p95": 47.421,
+          "p99": 50.772,
+          "max": 51.635
+        },
+        "patchToClientMs": {
+          "n": 268,
+          "p50": 0.246,
+          "p95": 0.595,
+          "p99": 2.512,
+          "max": 2.679
+        },
+        "selectedFirst": 249,
+        "selectedLast": 268,
+        "firstToLastInputMs": {
+          "n": 268,
+          "p50": 0.0,
+          "p95": 16.227,
+          "p99": 17.44,
+          "max": 67.109
+        },
+        "endpointsDifferInAim": 8
+      },
+      "automaticRepeatInBatch": {
+        "actions": 22,
+        "firstSentToReceivedMs": {
+          "n": 22,
+          "p50": 45.849,
+          "p95": 65.933,
+          "p99": 129.077,
+          "max": 129.077
+        },
+        "lastSentToReceivedMs": {
+          "n": 22,
+          "p50": 29.628,
+          "p95": 49.639,
+          "p99": 61.968,
+          "max": 61.968
+        },
+        "selectedSentToReceivedMs": {
+          "n": 22,
+          "p50": 29.628,
+          "p95": 49.639,
+          "p99": 61.968,
+          "max": 61.968
+        },
+        "firstSentToDequeueMs": {
+          "n": 22,
+          "p50": 27.268,
+          "p95": 28.153,
+          "p99": 78.52,
+          "max": 78.52
+        },
+        "lastSentToDequeueMs": {
+          "n": 22,
+          "p50": 10.365,
+          "p95": 11.38,
+          "p99": 11.411,
+          "max": 11.411
+        },
+        "dequeueToShotMs": {
+          "n": 22,
+          "p50": 1.998,
+          "p95": 2.523,
+          "p99": 3.009,
+          "max": 3.009
+        },
+        "shotToPatchMs": {
+          "n": 22,
+          "p50": 16.383,
+          "p95": 43.088,
+          "p99": 47.023,
+          "max": 47.023
+        },
+        "patchToClientMs": {
+          "n": 22,
+          "p50": 0.283,
+          "p95": 0.526,
+          "p99": 0.62,
+          "max": 0.62
+        },
+        "selectedFirst": 0,
+        "selectedLast": 22,
+        "firstToLastInputMs": {
+          "n": 22,
+          "p50": 16.42,
+          "p95": 17.577,
+          "p99": 67.109,
+          "max": 67.109
+        },
+        "endpointsDifferInAim": 8
+      },
+      "singleSampleBatch": {
+        "actions": 278,
+        "firstSentToReceivedMs": {
+          "n": 278,
+          "p50": 35.187,
+          "p95": 62.787,
+          "p99": 94.781,
+          "max": 121.761
+        },
+        "lastSentToReceivedMs": {
+          "n": 278,
+          "p50": 35.187,
+          "p95": 62.787,
+          "p99": 94.781,
+          "max": 121.761
+        },
+        "selectedSentToReceivedMs": {
+          "n": 278,
+          "p50": 35.187,
+          "p95": 62.787,
+          "p99": 94.781,
+          "max": 121.761
+        },
+        "firstSentToDequeueMs": {
+          "n": 278,
+          "p50": 8.372,
+          "p95": 16.199,
+          "p99": 16.774,
+          "max": 17.145
+        },
+        "lastSentToDequeueMs": {
+          "n": 278,
+          "p50": 8.372,
+          "p95": 16.199,
+          "p99": 16.774,
+          "max": 17.145
+        },
+        "dequeueToShotMs": {
+          "n": 278,
+          "p50": 1.801,
+          "p95": 7.931,
+          "p99": 16.972,
+          "max": 77.801
+        },
+        "shotToPatchMs": {
+          "n": 278,
+          "p50": 24.119,
+          "p95": 47.507,
+          "p99": 51.635,
+          "max": 108.136
+        },
+        "patchToClientMs": {
+          "n": 278,
+          "p50": 0.244,
+          "p95": 0.718,
+          "p99": 2.512,
+          "max": 2.679
+        },
+        "selectedFirst": 278,
+        "selectedLast": 278,
+        "firstToLastInputMs": {
+          "n": 278,
+          "p50": 0.0,
+          "p95": 0.0,
+          "p99": 0.0,
+          "max": 0.0
+        },
+        "endpointsDifferInAim": 0
+      },
+      "actualTriggerEdge": {
+        "actions": 0,
+        "firstSentToReceivedMs": {
+          "n": 0
+        },
+        "lastSentToReceivedMs": {
+          "n": 0
+        },
+        "selectedSentToReceivedMs": {
+          "n": 0
+        },
+        "firstSentToDequeueMs": {
+          "n": 0
+        },
+        "lastSentToDequeueMs": {
+          "n": 0
+        },
+        "dequeueToShotMs": {
+          "n": 0
+        },
+        "shotToPatchMs": {
+          "n": 0
+        },
+        "patchToClientMs": {
+          "n": 0
+        },
+        "selectedFirst": 0,
+        "selectedLast": 0,
+        "firstToLastInputMs": {
+          "n": 0
+        },
+        "endpointsDifferInAim": 0
+      }
+    }
+  },
+  {
+    "file": "6-cache-rtt0.json",
+    "trace": "performance-authority-shot-6-cache-rtt0.json.gz",
+    "rawSha256": "e8cb66826407008e0dd3563e42dd0e57621f8d4627698c487883925fc88849c6",
+    "maxFirstOrigin": {
+      "tick": 820,
+      "actionId": "analysts-0:2:1:473",
+      "firstToDequeueMs": 24.009,
+      "dequeueToShotMs": 3.12,
+      "shotToPatchMs": 45.932,
+      "patchToClientMs": 0.368
+    },
+    "actors": 10,
+    "bots": 8,
+    "residents": 6,
+    "transportCounters": {
+      "invalid": 0,
+      "maxQueue": 3,
+      "coalesced": 508,
+      "ticks": 5716,
+      "events": 5848,
+      "reconnects": 0,
+      "drops": 0,
+      "backpressure": 0
+    },
+    "wholeRun": {
+      "tick": {
+        "n": 5402,
+        "p50": 2.017081000001781,
+        "p95": 3.826698999997461,
+        "p99": 5.249314000000595,
+        "max": 24.156881000000794,
+        "above33": 0,
+        "above50": 0,
+        "above100": 0
+      },
+      "interval": {
+        "n": 5402,
+        "p50": 16.206388999999035,
+        "p95": 16.931597000000693,
+        "p99": 32.06923999999708,
+        "max": 48.85005700000329,
+        "above33": 6,
+        "above50": 0,
+        "above100": 0
+      }
+    },
+    "thermal": {
+      "temperatureC": 42.45,
+      "throttled": "throttled=0x0"
+    },
+    "emptyRoomsAfterLastLeave": 0,
+    "contract": {
+      "protocolVersion": 22,
+      "protocolHash": "5eeffd9db724492b606bbb7607d3ab933d430fa428db326ecf82861ccd64c469",
+      "configHash": "c0d2d00526fd8f58106a6232eec122f5c8f699b5ec91ebc0643a8ac420ff21c5",
+      "buildHash": "aec199fd40e814a4df3b4ff04a49b25277aca6fd2788375a32d801bb11d1420b",
+      "tickRate": 60,
+      "patchMs": 50,
+      "mapId": "floor5-prepared",
+      "mapHash": "1dd0ec97a14f5a4cab6448e9a8f4b5da091b71a3caa63b575ef58ef1426b9ef0",
+      "collisionHash": "a5351e073a01ac95466acf4346acf9812f4265224e56712ce3e889085a42b6d9"
+    },
+    "environment": {
+      "model": "Raspberry Pi 5 Model B Rev 1.1",
+      "node": "v26.13.1",
+      "platform": "linux",
+      "arch": "arm64",
+      "cpu": "Cortex-A76",
+      "cores": 4
+    },
+    "configuredRttMs": 0,
+    "jitterMs": 0,
+    "shotsByHuman": [
+      150,
+      150
+    ],
+    "baselinePhase": "countdown",
+    "comparisons": {
+      "all": {
+        "actions": 300,
+        "firstSentToReceivedMs": {
+          "n": 300,
+          "p50": 36.456,
+          "p95": 60.024,
+          "p99": 66.412,
+          "max": 73.43
+        },
+        "lastSentToReceivedMs": {
+          "n": 300,
+          "p50": 35.142,
+          "p95": 58.837,
+          "p99": 65.56,
+          "max": 66.412
+        },
+        "selectedSentToReceivedMs": {
+          "n": 300,
+          "p50": 36.456,
+          "p95": 60.024,
+          "p99": 66.412,
+          "max": 73.43
+        },
+        "firstSentToDequeueMs": {
+          "n": 300,
+          "p50": 10.349,
+          "p95": 24.182,
+          "p99": 25.004,
+          "max": 25.744
+        },
+        "lastSentToDequeueMs": {
+          "n": 300,
+          "p50": 8.445,
+          "p95": 15.988,
+          "p99": 16.549,
+          "max": 18.537
+        },
+        "dequeueToShotMs": {
+          "n": 300,
+          "p50": 2.428,
+          "p95": 3.924,
+          "p99": 5.002,
+          "max": 11.037
+        },
+        "shotToPatchMs": {
+          "n": 300,
+          "p50": 24.072,
+          "p95": 45.48,
+          "p99": 48.25,
+          "max": 48.669
+        },
+        "patchToClientMs": {
+          "n": 300,
+          "p50": 0.239,
+          "p95": 0.555,
+          "p99": 0.796,
+          "max": 1.074
+        },
+        "selectedFirst": 300,
+        "selectedLast": 280,
+        "firstToLastInputMs": {
+          "n": 300,
+          "p50": 0.0,
+          "p95": 15.845,
+          "p99": 17.231,
+          "max": 18.285
+        },
+        "endpointsDifferInAim": 8
+      },
+      "afterWarmUp": {
+        "actions": 300,
+        "firstSentToReceivedMs": {
+          "n": 300,
+          "p50": 36.456,
+          "p95": 60.024,
+          "p99": 66.412,
+          "max": 73.43
+        },
+        "lastSentToReceivedMs": {
+          "n": 300,
+          "p50": 35.142,
+          "p95": 58.837,
+          "p99": 65.56,
+          "max": 66.412
+        },
+        "selectedSentToReceivedMs": {
+          "n": 300,
+          "p50": 36.456,
+          "p95": 60.024,
+          "p99": 66.412,
+          "max": 73.43
+        },
+        "firstSentToDequeueMs": {
+          "n": 300,
+          "p50": 10.349,
+          "p95": 24.182,
+          "p99": 25.004,
+          "max": 25.744
+        },
+        "lastSentToDequeueMs": {
+          "n": 300,
+          "p50": 8.445,
+          "p95": 15.988,
+          "p99": 16.549,
+          "max": 18.537
+        },
+        "dequeueToShotMs": {
+          "n": 300,
+          "p50": 2.428,
+          "p95": 3.924,
+          "p99": 5.002,
+          "max": 11.037
+        },
+        "shotToPatchMs": {
+          "n": 300,
+          "p50": 24.072,
+          "p95": 45.48,
+          "p99": 48.25,
+          "max": 48.669
+        },
+        "patchToClientMs": {
+          "n": 300,
+          "p50": 0.239,
+          "p95": 0.555,
+          "p99": 0.796,
+          "max": 1.074
+        },
+        "selectedFirst": 300,
+        "selectedLast": 280,
+        "firstToLastInputMs": {
+          "n": 300,
+          "p50": 0.0,
+          "p95": 15.845,
+          "p99": 17.231,
+          "max": 18.285
+        },
+        "endpointsDifferInAim": 8
+      },
+      "automaticRepeatInBatch": {
+        "actions": 18,
+        "firstSentToReceivedMs": {
+          "n": 18,
+          "p50": 50.297,
+          "p95": 73.43,
+          "p99": 73.43,
+          "max": 73.43
+        },
+        "lastSentToReceivedMs": {
+          "n": 18,
+          "p50": 33.74,
+          "p95": 57.167,
+          "p99": 57.167,
+          "max": 57.167
+        },
+        "selectedSentToReceivedMs": {
+          "n": 18,
+          "p50": 50.297,
+          "p95": 73.43,
+          "p99": 73.43,
+          "max": 73.43
+        },
+        "firstSentToDequeueMs": {
+          "n": 18,
+          "p50": 24.662,
+          "p95": 25.744,
+          "p99": 25.744,
+          "max": 25.744
+        },
+        "lastSentToDequeueMs": {
+          "n": 18,
+          "p50": 7.747,
+          "p95": 9.35,
+          "p99": 9.35,
+          "max": 9.35
+        },
+        "dequeueToShotMs": {
+          "n": 18,
+          "p50": 2.521,
+          "p95": 3.916,
+          "p99": 3.916,
+          "max": 3.916
+        },
+        "shotToPatchMs": {
+          "n": 18,
+          "p50": 22.224,
+          "p95": 45.932,
+          "p99": 45.932,
+          "max": 45.932
+        },
+        "patchToClientMs": {
+          "n": 18,
+          "p50": 0.263,
+          "p95": 1.074,
+          "p99": 1.074,
+          "max": 1.074
+        },
+        "selectedFirst": 18,
+        "selectedLast": 0,
+        "firstToLastInputMs": {
+          "n": 18,
+          "p50": 16.543,
+          "p95": 18.285,
+          "p99": 18.285,
+          "max": 18.285
+        },
+        "endpointsDifferInAim": 8
+      },
+      "singleSampleBatch": {
+        "actions": 280,
+        "firstSentToReceivedMs": {
+          "n": 280,
+          "p50": 35.191,
+          "p95": 58.893,
+          "p99": 66.01,
+          "max": 66.412
+        },
+        "lastSentToReceivedMs": {
+          "n": 280,
+          "p50": 35.191,
+          "p95": 58.893,
+          "p99": 66.01,
+          "max": 66.412
+        },
+        "selectedSentToReceivedMs": {
+          "n": 280,
+          "p50": 35.191,
+          "p95": 58.893,
+          "p99": 66.01,
+          "max": 66.412
+        },
+        "firstSentToDequeueMs": {
+          "n": 280,
+          "p50": 9.406,
+          "p95": 16.02,
+          "p99": 16.706,
+          "max": 18.537
+        },
+        "lastSentToDequeueMs": {
+          "n": 280,
+          "p50": 9.406,
+          "p95": 16.02,
+          "p99": 16.706,
+          "max": 18.537
+        },
+        "dequeueToShotMs": {
+          "n": 280,
+          "p50": 2.401,
+          "p95": 3.89,
+          "p99": 4.938,
+          "max": 5.646
+        },
+        "shotToPatchMs": {
+          "n": 280,
+          "p50": 24.146,
+          "p95": 45.48,
+          "p99": 48.586,
+          "max": 48.669
+        },
+        "patchToClientMs": {
+          "n": 280,
+          "p50": 0.231,
+          "p95": 0.538,
+          "p99": 0.782,
+          "max": 0.848
+        },
+        "selectedFirst": 280,
+        "selectedLast": 280,
+        "firstToLastInputMs": {
+          "n": 280,
+          "p50": 0.0,
+          "p95": 0.0,
+          "p99": 0.0,
+          "max": 0.0
+        },
+        "endpointsDifferInAim": 0
+      },
+      "actualTriggerEdge": {
+        "actions": 2,
+        "firstSentToReceivedMs": {
+          "n": 2,
+          "p50": 35.541,
+          "p95": 40.172,
+          "p99": 40.172,
+          "max": 40.172
+        },
+        "lastSentToReceivedMs": {
+          "n": 2,
+          "p50": 24.035,
+          "p95": 24.815,
+          "p99": 24.815,
+          "max": 24.815
+        },
+        "selectedSentToReceivedMs": {
+          "n": 2,
+          "p50": 35.541,
+          "p95": 40.172,
+          "p99": 40.172,
+          "max": 40.172
+        },
+        "firstSentToDequeueMs": {
+          "n": 2,
+          "p50": 13.743,
+          "p95": 17.252,
+          "p99": 17.252,
+          "max": 17.252
+        },
+        "lastSentToDequeueMs": {
+          "n": 2,
+          "p50": 1.894,
+          "p95": 2.238,
+          "p99": 2.238,
+          "max": 2.238
+        },
+        "dequeueToShotMs": {
+          "n": 2,
+          "p50": 10.32,
+          "p95": 11.037,
+          "p99": 11.037,
+          "max": 11.037
+        },
+        "shotToPatchMs": {
+          "n": 2,
+          "p50": 10.821,
+          "p95": 10.85,
+          "p99": 10.85,
+          "max": 10.85
+        },
+        "patchToClientMs": {
+          "n": 2,
+          "p50": 0.657,
+          "p95": 1.033,
+          "p99": 1.033,
+          "max": 1.033
+        },
+        "selectedFirst": 2,
+        "selectedLast": 0,
+        "firstToLastInputMs": {
+          "n": 2,
+          "p50": 11.505,
+          "p95": 15.357,
+          "p99": 15.357,
+          "max": 15.357
         },
         "endpointsDifferInAim": 0
       }

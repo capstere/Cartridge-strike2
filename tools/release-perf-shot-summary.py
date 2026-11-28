@@ -58,7 +58,17 @@ def summarize(path, trace_directory):
                    "startMs": run["perfStart"], "shots": shots}
         data = json.dumps(payload, separators=(",", ":")).encode()
         (trace_directory / trace_name).write_bytes(gzip.compress(data, mtime=0))
+    room = run["measured"]["rooms"][0]
+    max_first = max(shots, key=lambda s: s["received"] - s["firstSent"])
     return {"file": path.name, "trace": trace_name, "rawSha256": hashlib.sha256(source).hexdigest(),
+            "maxFirstOrigin": {"tick": max_first["tick"], "actionId": max_first["id"],
+                "firstToDequeueMs": round(max_first["first"]["at"] - max_first["firstSent"], 3),
+                "dequeueToShotMs": round(max_first["queuedAt"] - max_first["first"]["at"], 3),
+                "shotToPatchMs": round(max_first["flushedAt"] - max_first["queuedAt"], 3),
+                "patchToClientMs": round(max_first["received"] - max_first["flushedAt"], 3)},
+            "actors": room["actors"], "bots": room["ai"], "residents": room["residents"],
+            "transportCounters": room["metrics"], "wholeRun": run["measured"]["wholeRun"],
+            "thermal": run["measured"]["thermal"], "emptyRoomsAfterLastLeave": len(run["cleanup"]["rooms"]),
             "contract": run["contract"], "environment": run["environment"], "configuredRttMs": run["rttMs"],
             "jitterMs": run["jitterMs"], "shotsByHuman": run["shots"],
             "baselinePhase": run["baseline"]["rooms"][0]["phase"], "comparisons": summaries}

@@ -1,0 +1,92 @@
+{
+  "oldBuild": "30f8f4af97b2b082f995196f06f498b132ba9bf8d303671ee8ab8d4b69590385",
+  "oldHTML": "4330aeae56695692dd5f84b7ef9d751f451e695c04c80668a7a7797a96e09a55",
+  "candidateBuild": "aec199fd40e814a4df3b4ff04a49b25277aca6fd2788375a32d801bb11d1420b",
+  "candidateHTML": "8ebdefe189ca502585ab5cae4fda4e2b402d8fec2721824faacb1bed121b8035",
+  "started": "2026-11-28T16:16:53.824Z",
+  "browser": "156.0.8078.79",
+  "platform": "linux",
+  "angle": "gl-egl",
+  "headed": true,
+  "cache": "public, max-age=600",
+  "samples": [
+    {
+      "label": "same active Swedish CS2 tab, ordinary reload before any CS3 visit",
+      "trace": [
+        {
+          "path": "/fps/",
+          "type": "Document",
+          "servedBy": "CS3",
+          "fromDiskCache": false
+        },
+        {
+          "path": "/fps/match-loading.css?asset=ec4a8c6741004c58",
+          "type": "Stylesheet",
+          "servedBy": "CS3",
+          "fromDiskCache": false
+        },
+        {
+          "path": "/fps/routes.css?asset=66b098c8502f12da",
+          "type": "Stylesheet",
+          "servedBy": "CS3",
+          "fromDiskCache": false
+        },
+        {
+          "path": "/src/fps/match-flow.mjs?asset=58c61f0f958688c7",
+          "type": "Script",
+          "servedBy": "CS3",
+          "fromDiskCache": false
+        },
+        {
+          "path": "/src/fps/menu-navigation.mjs?asset=f0f172b14adef8ba",
+          "type": "Script",
+          "servedBy": "CS3",
+          "fromDiskCache": false
+        },
+        {
+          "path": "/src/fps/app.mjs?asset=ceb179752f9eb67d",
+          "type": "Script",
+          "servedBy": "CS3",
+          "fromDiskCache": false
+        }
+      ],
+      "errors": [],
+      "beforeCutover": {
+        "language": "sv",
+        "start": "STARTA MATCH\n→",
+        "visible": true,
+        "soloChooser": false,
+        "path": "/fps/",
+        "savedVolume": 0.35,
+        "responses": {
+          "cs2": 180,
+          "cs3": 0
+        }
+      },
+      "initialLanguage": "sv",
+      "language": "en",
+      "readyModule": true,
+      "savedGraphics": "low",
+      "savedVolume": 0.35,
+      "gameVolume": 0.35,
+      "deployed": "SCOUT RIFLE",
+      "cacheStorage": [
+        "/fps/offline.html"
+      ],
+      "outcome": "PASS",
+      "changedLegacyResponses": [],
+      "received": {
+        "cs2": 0,
+        "cs3": 231
+      }
+    }
+  ],
+  "directReloadPass": true,
+  "finished": "2026-11-28T16:17:32.440Z",
+  "provenance": {
+    "candidateGit": "d43379995cbed5f6858cc403fa0e86f5094856f9",
+    "legacyGit": "8307e91118dba4fdca964012d2b0c247a40221fd",
+    "driverBlob": "2548079c07f0aa14369732d10627a1174f6f7d7c",
+    "device": "Raspberry Pi with native Wayland Chromium, emulated touch"
+  }
+}
