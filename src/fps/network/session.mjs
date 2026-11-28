@@ -38,11 +38,17 @@ function publicBonus(s){
   const handling=s.handling;
   return handling?.bonusId?{id:handling.bonusId,startTick:handling.bonusStart,endTick:handling.bonusEnd}:null;
 }
+function cartridgeCount(actor,id){
+  if(id==='he')return actor.he??0;
+  if(id==='smoke')return actor.handling?.smoke??0;
+  if(id==='flash')return actor.handling?.flashCount??0;
+  return 0;
+}
 function actorView(s,localId){
   const a={outfitId:s.handling?.outfitId || 'issued',reloadStartedAt:s.handling?.reloadStartedAt||0,reloadDuration:s.handling?.reloadDuration||0,bonusEffect:publicBonus(s),id:s.id,name:s.name,team:s.team,index:Number(s.id.split('-').at(-1)),isPlayer:s.id===localId,controllerType:s.bot?'bot':'human',bot:null,
     cartridge:s.handling?.cartridgeStart?{type:s.weapon,started:s.handling.cartridgeStart,releaseAt:s.handling.cartridgeRelease,deadline:s.handling.cartridgeFuse}:null,
     pending:!!s.pending,radius:NETWORK_CONFIG.radius,weapon:s.weapon,lastWeapon:s.lastWeapon,loadout:s.loadout,aimAmount:s.aimAmount,aiming:s.aiming,money:s.money,flash:s.handling?.flashAmount||0,action:s.actionType?{type:s.actionType,start:s.actionStart,duration:s.actionDuration}:null,
-    inventory:{primary:s.primary?{...decodeEquipment(s.handling?.primaryKit),id:s.primary,ammo:s.primaryAmmo,reserve:s.primaryReserve}:null,pistol:{...decodeEquipment(s.handling?.pistolKit),id:s.pistol,ammo:s.pistolAmmo,reserve:s.pistolReserve},knife:{id:'knife',ammo:Infinity,reserve:0},smoke:s.handling?.smoke||0,flash:s.handling?.flashCount||0,he:s.he}};
+    inventory:{primary:s.primary?{...decodeEquipment(s.handling?.primaryKit),id:s.primary,ammo:s.primaryAmmo,reserve:s.primaryReserve}:null,pistol:{...decodeEquipment(s.handling?.pistolKit),id:s.pistol,ammo:s.pistolAmmo,reserve:s.pistolReserve},knife:{id:'knife',ammo:Infinity,reserve:0},smoke:cartridgeCount(s,'smoke'),flash:cartridgeCount(s,'flash'),he:cartridgeCount(s,'he')}};
   copyPose(a,s);
   for(const k of ['lifeId','controlEpoch','connected','alive','hp','armor','kills','deaths','reloadUntil','nextShot','respawnAt','spawnProtectedUntil','deathVariant','hurtTime','recoil'])a[k]=s[k];
   // An unspawned Classic reservation also has alive=false, with no death.
@@ -373,12 +379,12 @@ export class NetworkSession {
       this.glassCount=state.brokenGlass.size;
     }
     this.view.state.grenades=[...state.grenades.values()];
-    this.view.state.smokes=[...state.smokes.values()];
-    this.view.state.drops=Array.from(state.drops.values(),d=>({id:d.id,type:'weapon',x:d.x,y:d.y,z:d.z,createdAt:d.createdAt,
+    this.view.state.smokes=Array.from(state.smokes?.values()??[]);
+    this.view.state.drops=Array.from(state.drops?.values()??[],d=>({id:d.id,type:'weapon',x:d.x,y:d.y,z:d.z,createdAt:d.createdAt,
       item:{id:d.weapon,ammo:d.ammo,reserve:d.reserve,...decodeEquipment(d.equipment)}}));
     applyNetworkWorld(this.world.doors,state);
     this.view.state.actors=ready.map(s=>actorView(s,this.localPlayerId));
-    if(this.view.player&&this.view.player.team===this.classChoice?.team)this.view.player.arsenalClass=this.classChoice.kit;
+    if(this.classChoice&&this.view.player?.team===this.classChoice.team)this.view.player.arsenalClass=this.classChoice.kit;
     this.applyPrivateBonus();
     this.view.state.score={analysts:state.analysts,counterAnalysts:state.counterAnalysts};
     this.view.state.time=newMatch?state.time:Math.max(this.view.state.time??0,state.time);
@@ -519,9 +525,9 @@ export class NetworkSession {
     if(this.closed||this.connectionState==='reconnecting'||!this.predict||!this.prediction)return;
     const steps=Math.min(6,this.predict.tick(now)),state=this.room.state,self=state.actors.get(this.localPlayerId);
     if(!self)return;
-    const weapon=equippedDefinition(this.view.player,self.weapon);
+    const weapon=Object.hasOwn(WEAPONS,self.weapon)?equippedDefinition(this.view.player,self.weapon):null;
     const throwing=weapon?.slot==='grenade';
-    const stocked=throwing?this.view.player?.inventory?.[self.weapon]>0:self.ammo>0 || self.weapon==='knife';
+    const stocked=throwing?cartridgeCount(self,self.weapon)>0:self.ammo>0 || self.weapon==='knife';
     const stale=performance.now()-this.lastPatch>1000;
     if(this.enabled && !stale && self.alive && state.phase==='active' && (state.mode!=='classic'||state.roundPhase==='active')){
       if(controls.crouchEdge)this.crouchEdge=true;

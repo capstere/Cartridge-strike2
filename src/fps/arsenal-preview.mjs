@@ -4,8 +4,8 @@ import {makeWeapon,releaseWeaponFittings} from './models.mjs?v=6.1.2';
 
 export function arsenalPreview(renderer) {
   const scene=new T.Scene(), camera=new T.PerspectiveCamera(24,1,.015,20);
-  scene.background=new T.Color(0x16212b);
-  scene.add(new T.HemisphereLight(0xe3edfa,0x394047,1.25));
+  scene.background=new T.Color(0x425868);
+  scene.add(new T.HemisphereLight(0xe3edfa,0x535b65,1.5));
   for(const [color,intensity,x,y,z] of [[0xffedcc,2.6,-2,3,2],[0x94bdf2,1.8,2,1,-1]]){
     const light=new T.DirectionalLight(color,intensity);light.position.set(x,y,z);scene.add(light);
   }

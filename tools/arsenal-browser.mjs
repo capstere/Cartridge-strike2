@@ -94,9 +94,13 @@ try{
   assert.doesNotMatch(await slot('scout').innerText(),/Equipped/);
   await slot('custom-1').click();await control('name').fill('Coast Patrol');
   await control('equipment').selectOption('smoke');
-  assert(await control('optic').locator('option[value=red]').isDisabled(),'shared rifle respects lower team entitlement');
+  const red=control('optic').locator('option[value=red]');
+  const locked=await red.evaluate(option=>({disabled:option.matches(':disabled'),label:option.textContent}));
+  assert(locked.disabled&&locked.label.includes('Weapon level 2'),'shared rifle respects lower team entitlement: '+JSON.stringify(locked));
+  await control('optic').focus();await page.keyboard.press('ArrowDown');
+  assert.equal(await control('optic').inputValue(),'','keyboard cannot select a locked optic');
   await control('weapon').selectOption('ar47');
-  assert(await control('optic').locator('option[value=red]').isEnabled(),'specific Arc Rifle uses its earned progression');
+  assert(await red.evaluate(option=>!option.matches(':disabled')),'specific Arc Rifle uses its earned progression');
   const bare=await waitImage('primary');
   await control('optic').selectOption('red');await control('barrel').selectOption('sil');
   await control('camo').selectOption('desert');

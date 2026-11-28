@@ -1,0 +1,70 @@
+[
+  {
+    "run": "gates",
+    "logSHA256": "b1bff72557ad337d5055dc0c22266682441169c1f6e65d29cf353ff1fc3bc32c",
+    "passed": 12,
+    "failed": 0,
+    "tests": [
+      {
+        "name": "real HTTPS-origin account lifecycle survives process replacement and separates room access",
+        "elapsedMs": 510.815158
+      },
+      {
+        "name": "two live private-room clients use old and new admission with isolated host rights and durable match results",
+        "elapsedMs": 3755.64973
+      },
+      {
+        "name": "private room codes, passwordless return and scoped link admission share normal Colyseus create and join routes",
+        "elapsedMs": 1100.933947
+      },
+      {
+        "name": "concurrent room-local match one, rematch and sign-out resolve to distinct trusted account results",
+        "elapsedMs": 3725.482575
+      },
+      {
+        "name": "explicit public host consent, scoped admission, reports, removal, blocks and private transitions",
+        "elapsedMs": 3352.90397
+      },
+      {
+        "name": "a revoked private device cannot resume its reserved seat through its separate valid pilot login",
+        "elapsedMs": 1723.022335
+      },
+      {
+        "name": "authoritative kills across a full rejoin and a grace reconnect credit one scoring seat at a time",
+        "elapsedMs": 1700.342545
+      },
+      {
+        "name": "an authoritative result survives a locked WAL writer, isolated backup and server replacement",
+        "elapsedMs": 2157.671057
+      },
+      {
+        "name": "two clients see equipped kits and smoke, pending class stays private through reconnect, respawn and paid Classic rematch",
+        "elapsedMs": 7309.130831
+      },
+      {
+        "name": "Classic economy, timed objectives, new lives, reserved seats and rematch",
+        "elapsedMs": 11724.05056
+      },
+      {
+        "name": "server BotControllers pick up, plant, defuse and lead a physical hostage",
+        "elapsedMs": 4492.976234
+      },
+      {
+        "name": "solo start, equipment authority, pane rewind, late join, HE ownership and rematch",
+        "elapsedMs": 10566.471238
+      }
+    ]
+  },
+  {
+    "run": "receipt",
+    "logSHA256": "dd81b01ff71c54f8a125c92651c8f83292f4f9f9a22e936ff4fcb3d8279acad8",
+    "passed": 1,
+    "failed": 0,
+    "tests": [
+      {
+        "name": "two clients see equipped kits and smoke, pending class stays private through reconnect, respawn and paid Classic rematch",
+        "elapsedMs": 7319.069321
+      }
+    ]
+  }
+]
