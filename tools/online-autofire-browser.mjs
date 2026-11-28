@@ -34,7 +34,7 @@ async function open(mobile){
   console.log('Ready '+(mobile?'mobile':'desktop')+' game.');
   return page;
 }
-async function join(page,{mode,roomId,team}){
+async function join(page,{mode,roomId,team,touch=false}){
   await page.locator('#network-name').fill(team);
   await page.locator('#network-team').selectOption(team);
   await page.locator('#network-code').fill('autofire-test');
@@ -43,7 +43,8 @@ async function join(page,{mode,roomId,team}){
     await page.locator('#network-mode').selectOption(mode);
     await page.locator('#network-fill-bots').uncheck();
   }
-  await page.locator('[data-create="'+!roomId+'"]').click();
+  const submit=page.locator('[data-create="'+!roomId+'"]');
+  if(touch)await submit.tap();else await submit.click();
   await page.locator('#room-ready').waitFor();
 }
 async function setAuto(page,value){
@@ -75,16 +76,22 @@ try{
   assert.equal(await desktop.locator('[data-setting=mobileAutoFire]').count(),0,'desktop has no touch-only setting');
   for(const mode of ['tdm','classic']){
     console.log('Checking '+mode+' automatic and manual input.');
-    await join(mobile,{mode,team:'analysts'});
+    await join(mobile,{mode,team:'analysts',touch:true});
     const room=[...local.rooms][0],game=room.sim.game;
     await join(desktop,{roomId:room.roomId,team:'counterAnalysts'});
     if(mode==='tdm')await mobile.locator('#room-primary').selectOption('shotgun');
     await desktop.locator('#room-ready').click();
+    await mobile.bringToFront();
     await mobile.locator('#room-ready').tap();await mobile.locator('#room-start').tap();
     await until(()=>room.state.phase==='active','match active');
     if(mode==='classic')game.state.buyDeadline=game.state.time;
     await until(()=>game.phase==='active','combat active');
     await mobile.waitForFunction(()=>__fps.network.room.state.phase==='active'&&__fps.game.phase==='active'&&__fps.modal===null);
+    await mobile.locator('#hud[data-match-phase="active"]').waitFor();
+    // Wait for the playable HUD, including the measured cold-join interval.
+    // A foreground transition may already have opened the pause panel.
+    const pause=mobile.locator('[data-mobile-action=pause]:visible, #pause:visible');
+    await pause.first().waitFor();
     if(await mobile.locator('#pause').isHidden())await mobile.locator('[data-mobile-action=pause]').tap();
     await mobile.locator('#pause').waitFor();
     const seat=[...room.seats.values()].find(seat=>seat.actor.team==='analysts');
@@ -183,6 +190,10 @@ try{
 }catch(error){
   for(const page of pages)console.error(await page.evaluate(()=>({fatal:document.querySelector('#fatal pre')?.textContent,
     modal:window.__fps?.modal,input:window.__fps?.input(),weapon:window.__fps?.game.player?.weapon,
+    presentation:{document:document.visibilityState,focus:document.hasFocus(),coarse:matchMedia('(pointer: coarse)').matches,
+      enabled:window.__fps?.mobile.enabled,visible:window.__fps?.mobile.visible,
+      rootHidden:document.querySelector('#mobile-controls')?.hidden,phase:document.querySelector('#hud')?.dataset.matchPhase,
+      gamePhase:window.__fps?.game.phase,alive:window.__fps?.game.player?.alive,paused:window.__fps?.game.state.paused},
     ammo:window.__fps?.game.item()?.ammo,metrics:window.__fps?.network?.metrics,status:window.__fps?.network?.status})).catch(()=>null));
   throw error;
 }finally{

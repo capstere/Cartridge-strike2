@@ -112,7 +112,8 @@ export function createAuthoredAvatar(team,id,isHostage=false,options={}){
  const seed=hash(id),gender=options.gender||(seed%3===0?'female':'male'),asset=templates[gender],root=cloneSkinned(asset.scene),materials=new Map(),ownedGeometry=[],bones=new Map(),meshes=[],shoes=[];
  const outfit = !isHostage && (options.previewOutfit || (!options.ignoreOverrides && playerOutfit(id)));
  const palette=isHostage?operatorPalette.hostage:team==='analysts'?operatorPalette.analysts:operatorPalette.counters;
- const camo=uniformSwatch(outfit);
+ // Share the immutable tile pixels, while each avatar owns its renderer bindings.
+ const camo=uniformSwatch(outfit)?.clone();
  fabric??=fabricTexture();
  root.traverse(o=>{
   if(o.isBone)bones.set(o.name,o);
@@ -177,7 +178,7 @@ export function createAuthoredAvatar(team,id,isHostage=false,options={}){
  const state=finishAvatar({asset,root,bones,materials,meshes,shoes,seed,gender,ownedGeometry,isHostage,normalize:true});
  // The kit must not rescale the actor or change existing hand and foot anchors.
  addOperatorEquipment(root,outfit,palette.trim,materials,ownedGeometry);
- state.outfitId=outfit?.id;
+ state.uniformTexture=camo;state.outfitId=outfit?.id;
  state.visualSignature=outfit?.id && outfit.id!=='issued'?'outfit-'+outfit.id:'original';
  return state;
 }
@@ -229,23 +230,27 @@ export function installPrivateCharacter(asset){
 }
 export function setPrivateCharacterActors(ids){privateActorIds=new Set(ids);}
 export function privateCharacterApplies(id){return !!privateCharacter&&privateActorIds.has(id);}
-export function privateCharacterAppearance(id,team){
+export function privateCharacterAppearance(id,team,profiles=originalViewProfiles){
  if(privateCharacterApplies(id))return privateViewAppearance;
  const entry = getCharacterOverride('player',id);
  if (entry) return entry.viewAppearance ??= createRuntimeViewAppearance(entry.asset,entry.contract.view);
  if (!templates || !team) return null;
  const gender = hash(id)%3 === 0 ? 'female' : 'male', outfit=playerOutfit(id), key = team+'-'+gender+'-'+outfit.id;
- if (!originalViewProfiles.has(key)) {
+ if (!profiles.has(key)) {
   const profile = createRuntimeViewAppearance(templates[gender]);
   profile.sleeve.color.setHex(outfit.shirt ?? (team === 'analysts' ? operatorPalette.analysts : operatorPalette.counters).shirt);
   if(outfit.glove)profile.glove.color.setHex(outfit.glove);
   profile.cloth = profile.sleeve.color.toArray();
-  const camo=uniformSwatch(outfit);
-  if (camo) {profile.sleeve.map=camo;profile.sleeve.color.setHex(0xffffff);}
+  const camo=uniformSwatch(outfit)?.clone();
+  if (camo) {
+    profile.sleeve.map=camo;profile.sleeve.color.setHex(0xffffff);
+    const release=profile.dispose;
+    profile.dispose=()=>{camo.dispose();release();};
+  }
   profile.useRigFinish = true;
-  originalViewProfiles.set(key,profile);
+  profiles.set(key,profile);
  }
- return originalViewProfiles.get(key);
+ return profiles.get(key);
 }
 export function characterVisualSignature(team,id){
  if(team&&privateCharacterApplies(id))return 'private';
@@ -353,6 +358,7 @@ export function animateAuthored(state,actor,time,options={}){
 export function disposeAvatar(state){
  if(!state||state.disposed)return;state.disposed=true;state.mixer.stopAllAction();state.mixer.uncacheRoot(state.root);
  for(const skeleton of state.skeletons)skeleton.dispose();
+ state.uniformTexture?.dispose();state.uniformTexture=null;
  for(const m of new Set(state.materials.values())){m.userData.ownedTexture?.dispose();m.dispose();}for(const g of state.ownedGeometry)g.dispose();live.delete(state);
 }
 export function disposeCharacterLibrary(){
