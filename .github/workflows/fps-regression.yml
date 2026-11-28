@@ -34,6 +34,46 @@ jobs:
         run: |
           npm run build --prefix server -- --check
           npm test --prefix server
+  multiplayer-accounts:
+    if: github.event_name != 'push'
+    runs-on: macos-15
+    timeout-minutes: 13
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: server/.node-version
+          cache: npm
+          cache-dependency-path: |
+            server/package-lock.json
+            frontline/source/tools/dev/package-lock.json
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: |
+          python -m pip install --only-binary=:all: pillow==11.3.0 zxing-cpp==3.0.0
+      - run: npm ci --prefix server --ignore-scripts
+      - run: npm ci --prefix frontline/source/tools/dev
+      - run: node frontline/source/tools/dev/node_modules/playwright-core/cli.js install chromium webkit
+      - name: Exercise actual accounts, scan the QR, join privately and moderate an opted-in room
+        env:
+          FPS_NETWORK_ANGLE: metal
+          CS3_QR_DECODER: ./tools/test-helpers/decode-room-qr.py
+          CS3_ACCOUNT_EVIDENCE: test-results/accounts
+        run: node tools/account-room-browser.mjs
+      - name: Verify first-time and remembered family entry on WebKit and Chromium
+        timeout-minutes: 6
+        env:
+          FPS_NETWORK_ANGLE: metal
+        run: node tools/network-family-browser.mjs
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: account-journey
+          path: |
+            test-results/accounts/
+            test-results/network-family/result.json
+          retention-days: 3
   node-tests:
     runs-on: ubuntu-latest
     # Preserve the existing offline/visual/mobile gates. Full two-scene gameplay
@@ -283,6 +323,16 @@ jobs:
       - name: Play a complete human-only match on Meltem with touch controls
         env:
           FPS_MAP_CASE: meltemTouch
+        run: node --import ./tools/multimap-teardown.mjs --import ./server/register-shared.mjs tools/multimap-browser.mjs
+      - name: Play and reconnect on the real harbor map with touch controls and sound
+        env:
+          FPS_MAP_CASE: embrunsTouch
+          FPS_MAP_AUDIO: "1"
+        run: node --import ./tools/multimap-teardown.mjs --import ./server/register-shared.mjs tools/multimap-browser.mjs
+      - name: Play and reconnect on the real volcanic map with touch controls and sound
+        env:
+          FPS_MAP_CASE: tephraTouch
+          FPS_MAP_AUDIO: "1"
         run: node --import ./tools/multimap-teardown.mjs --import ./server/register-shared.mjs tools/multimap-browser.mjs
       - name: Verify custom match settings in desktop and mobile family lobbies
         run: node tools/custom-match-browser.mjs

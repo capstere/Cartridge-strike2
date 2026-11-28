@@ -1,15 +1,15 @@
 # Reference map admission
 
-The Meltem pilot runs the original Cyclades factory and compiles its output into one local LevelProject and two indexed render files. The room server reads the same LevelProject as the browser. The game never starts the donor client to load a map. [Source and packaged asset digests](meltem-assets.json)
+The development candidate offers Meltem, Kervénec Harbor and Tephra in Solo Endless and room TDM. Each uses baked output from its original factory and a versioned LevelProject shared by the client and authority. Floor 5 and Compact Arena retain their original mode eligibility. Selecting Classic for one of these maps returns to Floor 5, and the three authored maps stay outside Random. [Source and packaged asset digests](source-to-package.json) · [English desktop and touch entries](candidates/english-menu/menu.json)
 
 | Source ID | Factory | Admission and reason |
 | --- | --- | --- |
 | sable | 02s-sable.js | Held. Khamsin has courtyard and indoor routes, roof positions and destructible cover props. Verify cover ownership and traversals before admitting this variant. |
 | givre | 02t-givre.js | Held. Val-Blanc combines station platforms, rail corridors, sheds and snow. Platform head clearance and snow material/footsteps need paired tests. |
-| embruns | 02u-embruns.js | Held. Kervénec adds harbor basins, piers, stepped shore geometry and waterfront ambience. Its water and route fixtures are distinct from Meltem. |
+| embruns | 02u-embruns.js | Offered in Solo Endless and room TDM. Kervénec Harbor preserves quays, multilevel pier surfaces, original boats, moored rigs and harbor audio. The nine-bot TDM finished 1–1, recovered after a damaged map, and released the seat. [Map receipt](candidates/p16-ground/embruns.json) |
 | floreal | 02v-floreal.js | Held. Hortus adds glass/greenhouse sight lines, gardens and dense foliage. Validate projectile materials, transparency and mobile overdraw. |
-| meltem | 02yf-meltem.js | Pilot. A deterministic 72 × 96 m village, mirrored spawns, quay, pier, under-roof routes, terraces, eight ramps and two wells. TDM/Endless use the donor spawn positions and original scale. Classic lacks bomb and hostage objectives. |
-| tephra | 02yh-tephra.js | Held. Volcanic industrial structures, differences in elevation, hot surfaces and emissive effects need their own traversal and low-quality measurements. |
+| meltem | 02yf-meltem.js | Offered in Solo Endless and room TDM. The 72 × 96 m village preserves its terraces, quay, eight ramps and two open wells. The merged pilot passed both desktop and touch room entry and its original 20-switch test. [Pilot lifecycle](meltem-integrated-native.json) |
+| tephra | 02yh-tephra.js | Offered in Solo Endless and room TDM. The field station retains its walkable levels, source materials, eruption, vents and bolt-synchronized thunder. The nine-bot TDM finished 1–2, recovered the map and released the seat. [Map receipt](candidates/p16-ground/tephra.json) |
 | stratus | 02yj-stratus.js | Held. All sampled spawn/POI routes have a walk connection; the original also exposes jump links. Open edges and native void falls still require authoritative death, respawn and prediction. |
 | simoun | 02yl-simoun.js | Held. Dunes, sampled relief, circular confinement, pools and well holes require the source terrain and ray solver. |
 | lotissement | 02yn-french-dream.js | Held. French Dream includes furnished houses and garages, construction floors, climbable roofs, parked vehicles and mirrored residential lanes. Test indoor/outdoor transitions and upper floors. |
@@ -48,7 +48,7 @@ Run from the repository root on the Pi, with the heavy slot reserved. Supply an 
 
 ```sh
 scratch=$(mktemp -d)
-WAYLAND_DISPLAY=wayland-0 node tools/reference-map/export.cjs "$scratch"
+WAYLAND_DISPLAY=wayland-0 node tools/reference-map/export.cjs "$scratch" --environment
 OPENBLAS_NUM_THREADS=1 python3 tools/reference-map/pack.py "$scratch" .
 ```
 
@@ -109,3 +109,57 @@ On protocol-15 revision `3a65284`, the ten-return repeat kept one game, network 
 The renderer now disposes uploaded geometry, materials and textures from the outgoing world, first-person scene and warmed weapons before discarding its WebGL renderer. Three.js r180 installs per-renderer callbacks on these resources. The CPU-side buffers and original character templates continue to serve the next map. A four-switch native repeat at `bb88b38` found 78 live canvases, zero detached game canvases, two Three renderers, two WebGL contexts, 69 programs and 130 shaders at both same-map visits and after a 53-second parked control. The JavaScript heap was 37.59 and 37.45 MiB on those visits and 37.14 MiB at the end of the control. All 272 portable root tests passed with server dependencies physically absent. [Short repeat and portable test receipt](meltem-retention-four.json)
 
 The integrated native repeat on `7ead5ac` completed the ordinary English menu in desktop and touch browser profiles. Each entered both Floor 5 Classic and Meltem Endless, checked the unsupported Classic bookmark and Random selection, and returned through the menus. A separate native V3D TLS room then ran a complete match with nine authority bots, twenty map switches and a 186.47-second same-room parked control. Both stages exited successfully under a bounded user service. At Meltem visits 2, 10 and 20 and after parking, Chromium retained 78 canvases, zero detached game canvases, two WebGL contexts, 59 program objects and 110 shader objects. The collected heap measured 37.13, 36.72, 36.88 and 36.12 MiB respectively. The room rejected a corrupted LevelProject, recovered on the saved map and released all seats. The active match measured a 33.1 ms client p95 frame interval and 5.23 ms authority p95 execution time. [Timings, per-switch resources, control and normal-menu receipts](meltem-integrated-native.json) · [Desktop Endless match](meltem-english-desktop-match.jpg) · [Touch setup](meltem-english-touch-setup.jpg)
+
+## Native source exports and target candidates
+
+The protected native export executed Meltem, Kervénec Harbor and Tephra on the pinned Riposte frontend. It completed at 15:08:45 UTC on November 27. The three LevelProjects use the original solids, ramps, layered graph, rest-position geometry and English sectors. Both new maps pass the shared world’s ten spawn fit checks and 25 opposing-team routes. Their normal-match and resource gates are open until their own receipts are recorded. [Original-to-package hashes and counts](source-to-package.json)
+
+| Map | Low architecture | Separately loaded fine geometry | Environment captured |
+|---|---:|---:|---|
+| Meltem | 302 batches, 291,400 triangles | 33 batches, 29,702 triangles | 12 sheets, 2 mills, 22 floating boats, 8 ponds, 8 wave bands and the original photographic sky |
+| Kervénec Harbor | 305 batches, 502,749 triangles | 21 batches, 30,804 triangles | 6 sheets, 14 boats, 17 ponds, 8 wave bands and the original misty harbor sky |
+| Tephra | 222 batches, 112,492 triangles | 8 batches, 8,024 triangles | 9 geothermal vents, an authored night sky, lava, ash, sparks and roof masking |
+
+Riposte’s r147 map builders, cloth constraints, water parameters and texture painters execute during export. The r180 target decodes indexed geometry directly and uses the fixed donor cloth samples with GPU interpolation. Its separate environment group owns its meshes, shaders, textures and teardown. The shore distance field, authored wave bands, boat position, draft and hull geometry come from the original water controller. The target’s volcanic particles use the donor’s vents and sampled roof mask. The photographic sky files are byte-identical to the low-resolution source. The audio and material provenance is recorded separately. [Factory and media hashes](source-to-package.json) [Coastal recordings](audio/takes.json)
+
+The decoded source UVs and packed half-float target UVs select the same painted cell for every board, decal and electronic display. Kervénec’s two auction displays retain all four emissive triangles in decal cell 4. Tephra retains all 244 console triangles in sign cells 6 and 7. Kervénec’s English sector names match the Fish Auction, Fish Dispatch, Ice Works and Harbor Café signage. The volcanic map uses the same Laboratory, Core Archive, Pump Station 2 and Control Room labels as its signs. [Kervénec target cells](art/candidates/embruns-packed-signs.json) [Tephra target cells](art/candidates/tephra-packed-signs.json)
+
+### First integrated native runs
+
+On revision `419d403`, both candidate maps completed a 45-second scored TDM through normal TLS family admission with one rendered player and nine authoritative bots. Both returned to the waiting room, switched to Floor 5 and back, rejected a damaged map, recovered and released every seat. Node naturally drained after each browser and authority closed. These captures establish two outstanding presentation requirements.
+
+| Candidate | Pi GPU frame interval p50 / p95 / p99 | Authority step p50 / p95 / p99 | Measured art and audio |
+|---|---|---|---|
+| Kervénec Harbor | 44.3 / 84.9 / 101.9 ms | 2.05 / 14.77 / 29.93 ms | 561 median draws, 640,017 median triangles, 14 moving boats, six cloth sheets, 17 basins, eight wave bands. Nine simultaneous voices, 14,464,328 decoded bytes and zero decoder errors. |
+| Tephra | 21.1 / 33.7 / 50.7 ms | 1.25 / 5.77 / 10.31 ms | 469 median draws, 293,172 median triangles, geothermal steam, 700 low-tier ash/ember points, ceiling masking and the photographic night sky. |
+
+On the first candidate, Kervénec needed fewer low-tier submissions and triangles to meet responsive play. Its shaded buildings also needed the original diffuse-light calibration. Tephra’s ground routes appeared too dark in the first target frames. The following sections record the subsequent lighting, visibility and lifecycle results.
+
+### Source lighting and low-tier comparison
+
+The original foreground light bake provided 23 lamps in Kervénec and four in Tephra. The target samples the source's occluded lamp irradiance and diffuse bounce in bounded three-dimensional textures. Its Lambert lights use Riposte r147’s legacy irradiance normalization on r180. Tephra preserves the original emissive windows, fixture colors, volcanic plume and fountain fragment functions. The source images and geometry retain their attribution in the public credits. [Captured lighting, inputs and asset hashes](source-to-package.json)
+
+The matched Pi 5 repeat on `1c70c0d` completed the same two 45-second TLS matches, including real controls and nine server bots. At the original harbor pier, the low model reduced architecture from 305 batches and 502,749 triangles to 149 batches and 238,376 triangles. Medium and high keep the original base geometry. The atlas cell assignments are identical in both tiers. The frame median fell from 44.3 to 25.0 ms and p95 from 84.9 to 38.8 ms. The authority’s step p95 fell from 14.77 to 7.15 ms. [Original and revised timings, pixel regions and hashes](candidates/relit-native/comparison.json) [Low-tier sign faces](art/candidates/embruns-low-signs.json)
+
+Tephra’s full presentation ran at 27.0 / 40.4 / 49.7 ms frame p50 / p95 / p99, with 6.96 ms authority-step p95. The eruption is anchored to the original summit. The red pipes, lit fixtures and facades are distinguishable in the ordinary route frame; the foreground ash outside lit areas remains dark. The game played twelve overlapping volcanic voices, then released every active voice, decoded buffer and sound bank recorded by the cleanup test. The separate native PCM probe decoded all ten original recordings, rendered the real visual bolt, and measured audible thunder 3.12835 seconds after its trigger. The scheduled delay was 3.12818 seconds. Leaving before onset yielded zero audio at the output. These are browser measurements on a Pi and the protected unit exited successfully. [Volcanic gameplay](candidates/relit-native/tephra-game.jpg) [Summit and plume](candidates/relit-native/tephra-eruption.jpg) [Audio samples and reset](candidates/relit-native/tephra-pcm.json) [Unit status](candidates/relit-native/unit.json)
+
+Both fresh English Solo profiles reached Floor 5, Meltem, Kervénec Harbor and Tephra through the normal menu. Desktop used a Swedish browser locale. The French touch profile rotated from portrait menu to landscape play. Both exercised Random, the incompatible Classic fallback to Floor 5, and return from play. [Clean native menu receipt and screenshots](candidates/english-menu/menu.json) The hosted map workflow exercises the ordinary two-seat Compact Arena, Meltem, Kervénec Harbor and Tephra touch matches with reconnect and natural process exit.
+
+### Ground routes in the harbor and field station
+
+The original `embrunsGround` and `tephraGround` factories place roads, stone squares, docks, moss and ash in world coordinates. The offline compiler executes those functions up to their r147 DataTexture allocation and preserves every RGBA mask byte. The r180 renderer samples the original four source surfaces in metres with the original height blend and soil tint. A four-layer mipmapped texture array and one linear mask keep the complete ground material to two samplers per loaded map. The map compiler adapts the photo height calculation for the low profile and retains the generated moss. No donor renderer runs in the game. [Source blobs, mask hashes, tile inputs and sizes](source-to-package.json)
+
+The integrated protocol 16 build rendered the harbor and volcanic matches with nine live bots, all source mask channels on the GPU and zero failed shader programs. Kervénec recorded 26.1 / 44.5 / 82.5 ms frame p50 / p95 / p99 and 9.81 ms authority step p95. Tephra recorded 24.4 / 34.4 / 41.9 ms with 4.66 ms authority p95. Both returned to the family room, changed maps, rejected a damaged level, recovered the seat and released the audio and browser resources. The dark ash along the volcanic pipes now retains surface detail. The source contains a further display-space shadow lift for this route. [Native frames, material samples and timings](candidates/p16-ground/comparison.json)
+
+
+### Integrated rendering, recovery and map changes
+
+The protocol 17 account, movement and map build on Pi 5 ran a 45-second Tephra TDM with one rendered player and nine server bots. The final score was 1–2. Frames measured 25.1 / 37.6 / 45.5 ms p50 / p95 / p99, and the authority’s step p95 was 4.46 ms. The earlier graded build measured the same pipe-lane region at median display luminance 18, compared with 3 using the ground mask alone and 0 before the source ground material. The original display-space shadow lift makes the ash and pipe supports visible without an additional render pass. [Graded route frame](candidates/four-map-lifecycle/graded-ash-lane.jpg) · [First controlled profiles](candidates/four-map-lifecycle/first-soak.json)
+
+The same family room rotated through Floor 5, Meltem, Kervénec Harbor and Tephra five times. Each visit reproduced the same renderer, program, texture and geometry counts for that map. The first run revealed one lazy GPU upload. When Meltem’s visible boat at (−50, 26) rocks across the stationary waiting camera, Three uploads its wooden deck. The trace identified all 447 geometries before that draw and all 448 afterwards. The timed repeat recorded the original raw count and compared after this real draw on each visit. [Named source mesh and four-return allocation trace](candidates/four-map-lifecycle/boat-upload.json)
+
+At the 4th, 12th and 20th switch and after the matched 175.121-second park, the page retained one Game, one NetworkSession and one AudioSystem, with zero detached gameplay canvases. After collection, parked JS heap was 39.56 MiB at entry and 40.32 MiB at the endpoint. A deliberately damaged Floor 5 map failed closed; the remembered family device returned, acknowledged the saved map and released its seat. [Integrated p17 overview](candidates/four-map-lifecycle/p17-summary.json) · [Full native timings, source fields and teardown](candidates/four-map-lifecycle/p17-native.json)
+
+Kervénec’s normal Graphics option switched Low → Standard → Low. Architecture changed from 149 to 305 batches and back to 149. The 21 optional fine batches (30,804 triangles) returned to zero on Low. Each setting retained one architecture group and the same 63 textures. [Graphics-option receipt](candidates/four-map-lifecycle/quality.json) · [Standard harbor frame](candidates/four-map-lifecycle/standard-harbor.jpg)
+
+A separate Pi 5 run enabled game audio throughout the four-map rotation and entered active matches on Tephra, Meltem and Kervénec Harbor. All three soundscapes played decoded samples. The probe paired each of six opened soundscapes with its disposal using the world ID and instance identity. All six released their decoded bytes, voices and banks. Peak usage reached 14 voices and 16,325,124 decoded bytes. After damaged-map recovery, the authority released the room and Node drained in 458 ms. [Four-map audio and teardown receipt](candidates/four-map-lifecycle/audio-owner-visits.json)

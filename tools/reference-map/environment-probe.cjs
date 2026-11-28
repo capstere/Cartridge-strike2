@@ -134,5 +134,7 @@ exports.capture=function readSourceEnvironment(){
     volcano={wind:TP_WIND,crater:TP_V,vents:TPH.vents.map(({x,y,z,r,k,low,lava})=>({x,y,z,r,k,low:!!low,lava:!!lava})),
       canopy:{x:bounds.x0,z:bounds.z0,width,height,step:2,heights:bytes(canopy)}};
   }
-  return {version:1,id:CURMAP.id,sky,fog:{color:atmo.fog,density:atmo.fogD},fabrics,mills,sea,atlas,ponds,floats,volcano};
+  return {version:1,id:CURMAP.id,sky,far:CURMAP.def.far||260,
+    light:{hemi:atmo.hemi,sun:atmo.sun,sunColor:atmo.sunColor,sunIntensity:atmo.sunI},
+    fog:{color:atmo.fog,density:atmo.fogD*(atmo.fogH&&atmo.fogH[0]>0?1.3:1)},fabrics,mills,sea,atlas,ponds,floats,volcano};
 };

@@ -112,3 +112,47 @@ test('ordinary and grazing grenade throws bounce inside both well shafts through
     }
   }
 });
+
+const variants=[
+  {id:'embruns',volumes:1656,nodes:6420,goals:35,zone:'Fish Auction'},
+  {id:'tephra',volumes:716,nodes:8855,goals:23,zone:'Observatory'},
+];
+for(const {id,volumes,nodes,goals,zone} of variants){
+  test(id+' preserves authored spawn crossings, patrol goals and English sectors in both match modes',async()=>{
+    const {networkMap}=await import('../../shared/multiplayer/maps.mjs');
+    const catalog=JSON.parse(await readFile(new URL('../../levels/manifest.json',import.meta.url)));
+    const entry=catalog.levels.find(row=>row.id===id), online=networkMap(id);
+    assert.deepEqual(entry.modes,['endless']);assert.notEqual(entry.randomEligible,true);
+    assert.deepEqual(online.modes,['tdm']);assert.equal(online.residents,false);
+    assert.equal(entry.name,online.name);assert.equal(entry.file,online.file);assert.equal(entry.preview,online.preview);
+    const data=parseProject(await readFile(new URL('../../'+entry.file,import.meta.url),'utf8'));
+    const world=createWorld({levelProject:data,fresh:true}), spec=data.referenceMap;
+    assert.equal(world.referenceId,id);assert.equal(world.staticBoxes.length,volumes);
+    assert.equal(world.navigation.statistics.nodes,nodes);assert.equal(spec.poi.length,goals);
+    assert.deepEqual(world.tactical.patrolPoints,spec.poi.map(([x,y,z])=>({x,y,z})));
+    assert.equal(world.roomAt(0,0).publicName,zone);
+    assert.equal(world.anchors.analysts.length,5);assert.equal(world.anchors.counterAnalysts.length,5);
+    for(const start of world.anchors.analysts)for(const end of world.anchors.counterAnalysts){
+      assert.ok(world.canOccupy(start.x,start.z,.215,1.7,start.y)&&world.canOccupy(end.x,end.z,.215,1.7,end.y));
+      assert.ok(world.findPath(start,end).length);
+    }
+    if(id==='embruns'){
+      assert.ok(Math.abs(world.groundHeight(-33.5,21.5,.4)-.4)<1e-9);
+      assert.equal(world.materialAt(-33.5,21.5,.4),'metal');
+      assert.equal(world.materialAt(-33.5,21.5,0),'wood');
+      assert.equal(world.anchors.bomb,null);
+      assert.equal(world.lowerSurface(-25,0),-7);
+      assert.equal(world.lowerSurface(-17,0),0);
+      for(const z of [-15,15])assert.equal(world.lowerSurface(-25,z),0);
+    }else{
+      assert.equal(spec.water,null);
+      assert.deepEqual([...spec.groundMaterials.names].sort(),['concrete','gravel']);
+      const grid=spec.groundMaterials;
+      for(const surface of grid.names){
+        const at=grid.indices.indexOf(grid.names.indexOf(surface));
+        const x=spec.bounds.x0+at%grid.width+.5,z=spec.bounds.z0+Math.floor(at/grid.width)+.5;
+        assert.equal(world.materialAt(x,z,0),surface);assert.equal(world.materialAt(x,z,3),'metal');
+      }
+    }
+  });
+}

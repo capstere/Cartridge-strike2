@@ -1,0 +1,10 @@
+{
+  "scenarios": [
+    "Registered, recovered, signed out and signed in through the standalone profile. Account alone denied private assets.",
+    "One legacy host and a fresh touch player reached the same live family lobby. The invite granted room access only.",
+    "The same device returned using the stable family link without a password.",
+    "Consumed link rejected in a fresh profile, a fresh fragment exchanged and cleared, and explicit host revocation removed guest access.",
+    "Signed-in host published an empty private room. Another account found and joined it, reported from the actual lobby, and could no longer find it after the host restored private access."
+  ],
+  "qrPixelDecode": true
+}

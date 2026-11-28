@@ -1,0 +1,11 @@
+# Tephra volcanic soundscape
+
+Tephra uses Riposte's ten `amb_tephra` MP3 takes. The bed mixes Yasur volcano in Vanuatu with wind on Kitt Peak in Arizona. Two steam silencers, four low sulfur vents and the turbine hall each have positioned emitters. The same emitter buffer plays at all four fumaroles. The original boom sounds from the western crater every 18–40 seconds. Wind gusts occur every 9–22 seconds within 4–12 metres of the listener. Overhead collision changes the bed gain and low-pass filter. The volcanic bed retains its open-air level across the map.
+
+The sky’s lightning callback passes the actual visible burst to the active audio scene for the same world. A single or double optical flash produces one thunder take, with its start scheduled 1.5–4 seconds later. The crater roll and lightning thunder have different recordings and source elevations of 150 and 320 metres. Original positional audio uses the inverse distance model and high-frequency absorption. The current game mixes these sounds into its world bus. The donor's additional shared reverberation send has no equivalent global effect in the current game.
+
+The original definitions are `MAP_DEFS.tephra.sound`, `tephraLightning` and `tephraThunder` in `frontline/source/src/02yh-tephra.js`, together with `ambStart`, `ambTick`, `sfxEmitter` and `sfxAt` in `05c-ambiance.js`. The map factory supplies the same four low vent coordinates found in the exported visual environment. Audio uses the original coordinates; animated ash, steam and lava features retain their separate visual ownership.
+
+All ten MP3s are byte-identical copies, 634,662 bytes in total. The original recordings by Hendrik, Félix Blume, klangfabrik, Nox_Sound, RTB45, kiefspoon and slugzilla are CC0 1.0. The shipped license catalog already includes all seven entries. [Original filenames, creators, URLs, licenses and per-file SHA-256](takes.json).
+
+The shared map mixer decodes one file at a time and uses up to 32 kHz on desktop or 24 kHz with a coarse pointer. The budget is 17 MiB and 12 MiB respectively. The bed and seven fixed sources leave room for local gusts, crater booms and at most four overlapping scheduled or playing thunders. Leaving, muting, pausing or resetting the match stops all sources, discards their buffers and unregisters that world’s lightning listener.

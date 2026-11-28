@@ -1,0 +1,17 @@
+{
+  "cwd": "/tmp/cs3-07-maps",
+  "revision": "5f699e01fdd76d964765d801e9e44cfdfaee8fcb",
+  "waylandDisplay": "wayland-0",
+  "runtime": "/run/user/1000",
+  "stages": [
+    {
+      "stage": "menu",
+      "startedAt": "2026-11-27T15:57:27.324458+00:00",
+      "pid": 780178,
+      "exitCode": 0,
+      "finishedAt": "2026-11-27T16:00:32.175169+00:00"
+    }
+  ],
+  "finishedAt": "2026-11-27T16:00:32.322230+00:00",
+  "success": true
+}

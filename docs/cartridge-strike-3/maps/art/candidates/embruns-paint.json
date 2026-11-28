@@ -1,0 +1,124 @@
+{
+  "map": "embruns",
+  "painters": [
+    "portSignAtlas",
+    "portDecalAtlas"
+  ],
+  "sourceBlob": "a996fb0d9a47d3a1eb6fb485b9d92699c015357d",
+  "size": [
+    1536,
+    768
+  ],
+  "bytes": 183712,
+  "sha256": "f993b2c989278d17d336cdec9a7e0c095b986c81c1363de4f380edae0fba95af",
+  "labels": {
+    "signs": {
+      "0": [
+        "KERVÉNEC",
+        "FISH AUCTION"
+      ],
+      "1": [
+        "HARBOR CAFÉ"
+      ],
+      "2": [
+        "ICE",
+        "WORKS"
+      ],
+      "3": [
+        "FISH",
+        "DISPATCH"
+      ],
+      "4": [
+        "MARITIME",
+        "COOPERATIVE"
+      ],
+      "5": [
+        "HARBOR OFFICE"
+      ],
+      "6": [
+        "FISH MARKET"
+      ],
+      "7": [
+        "AUCTION HALL",
+        "LICENSED BUYERS"
+      ]
+    },
+    "decals": {
+      "0": [
+        "THE SEA",
+        "GV 913425"
+      ],
+      "1": [
+        "STAR",
+        "CC 832107"
+      ],
+      "2": [
+        "CHILDREN OF THE SEA",
+        "GV 905118"
+      ],
+      "3": [
+        "GWENOLA",
+        "AD 771304"
+      ],
+      "4": [
+        "12.40",
+        "LOT 0347  BASS",
+        "48 KG  EXTRA",
+        "BUYER 112"
+      ],
+      "5": [
+        "Sea bass",
+        "24.50",
+        "Pollack",
+        "9.80",
+        "Sole",
+        "19.00",
+        "Langoustines",
+        "22.00",
+        "Mackerel",
+        "4.20",
+        "John Dory",
+        "16.90"
+      ],
+      "6": [
+        "SEA",
+        "FESTIVAL",
+        "Kervénec · August 14"
+      ],
+      "7": [
+        "FLEET",
+        "BLESSING",
+        "Blessing of the boats"
+      ],
+      "12": [
+        "NO PUBLIC",
+        "ENTRY",
+        "RESTRICTED AREA",
+        "PORT AUTHORITY"
+      ],
+      "13": [
+        "11",
+        "18",
+        "25",
+        "32"
+      ],
+      "14": [
+        "TIDE TABLE",
+        "High",
+        "06:42",
+        "5.80 m",
+        "Low",
+        "12:58",
+        "0.95 m",
+        "19:07",
+        "5.95 m",
+        "01:20",
+        "1.10 m",
+        "SPRING TIDE · COEFF. 98"
+      ],
+      "15": [
+        "BZH"
+      ]
+    }
+  }
+}

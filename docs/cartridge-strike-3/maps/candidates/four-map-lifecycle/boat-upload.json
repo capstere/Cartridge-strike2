@@ -1,0 +1,303 @@
+{
+  "revision": "418835a01a2d0b79889dfa309020381817fe0086",
+  "buildHash": "1bf4ae79d6ebeaeaf5e3d22fab38316d05c8e44af30958b7e257d1bd85eee735",
+  "nativeMatchStatus": "PASS",
+  "distinctAttachedGeometries": 718,
+  "origin": "r180 WebGLGeometries.get / onGeometryDispose, the method that increments info.memory.geometries",
+  "source": {
+    "vesselIndex": 19,
+    "x": -50,
+    "z": 26,
+    "material": "wood",
+    "vertices": 54,
+    "indices": 108
+  },
+  "observationOffsetsMs": [
+    0,
+    500,
+    2000,
+    5000
+  ],
+  "returns": [
+    {
+      "switch": 2,
+      "samples": [
+        {
+          "sample": 0,
+          "gpuCount": 447,
+          "identified": 447,
+          "camera": [
+            -23.5,
+            1.58,
+            42.5
+          ],
+          "extra": []
+        },
+        {
+          "sample": 1,
+          "gpuCount": 447,
+          "identified": 447,
+          "camera": [
+            -23.5,
+            1.58,
+            42.5
+          ],
+          "extra": []
+        },
+        {
+          "sample": 2,
+          "gpuCount": 447,
+          "identified": 447,
+          "camera": [
+            -23.5,
+            1.58,
+            42.5
+          ],
+          "extra": []
+        },
+        {
+          "sample": 3,
+          "gpuCount": 448,
+          "identified": 448,
+          "camera": [
+            -23.5,
+            1.58,
+            42.5
+          ],
+          "extra": [
+            {
+              "owners": [
+                "world/13:Meltem/1:Map environment/34:Moored boat/2:Mesh"
+              ],
+              "type": "BufferGeometry",
+              "name": "",
+              "vertices": 54,
+              "indices": 108,
+              "listeners": 1,
+              "at": 105020
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "switch": 4,
+      "samples": [
+        {
+          "sample": 0,
+          "gpuCount": 447,
+          "identified": 447,
+          "camera": [
+            -23.5,
+            1.58,
+            42.5
+          ],
+          "extra": []
+        },
+        {
+          "sample": 1,
+          "gpuCount": 448,
+          "identified": 448,
+          "camera": [
+            -23.5,
+            1.58,
+            42.5
+          ],
+          "extra": [
+            {
+              "owners": [
+                "world/13:Meltem/1:Map environment/34:Moored boat/2:Mesh"
+              ],
+              "type": "BufferGeometry",
+              "name": "",
+              "vertices": 54,
+              "indices": 108,
+              "listeners": 1,
+              "at": 118974
+            }
+          ]
+        },
+        {
+          "sample": 2,
+          "gpuCount": 448,
+          "identified": 448,
+          "camera": [
+            -23.5,
+            1.58,
+            42.5
+          ],
+          "extra": [
+            {
+              "owners": [
+                "world/13:Meltem/1:Map environment/34:Moored boat/2:Mesh"
+              ],
+              "type": "BufferGeometry",
+              "name": "",
+              "vertices": 54,
+              "indices": 108,
+              "listeners": 1,
+              "at": 118974
+            }
+          ]
+        },
+        {
+          "sample": 3,
+          "gpuCount": 448,
+          "identified": 448,
+          "camera": [
+            -23.5,
+            1.58,
+            42.5
+          ],
+          "extra": [
+            {
+              "owners": [
+                "world/13:Meltem/1:Map environment/34:Moored boat/2:Mesh"
+              ],
+              "type": "BufferGeometry",
+              "name": "",
+              "vertices": 54,
+              "indices": 108,
+              "listeners": 1,
+              "at": 118974
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "switch": 6,
+      "samples": [
+        {
+          "sample": 0,
+          "gpuCount": 447,
+          "identified": 447,
+          "camera": [
+            -23.5,
+            1.58,
+            42.5
+          ],
+          "extra": []
+        },
+        {
+          "sample": 1,
+          "gpuCount": 447,
+          "identified": 447,
+          "camera": [
+            -23.5,
+            1.58,
+            42.5
+          ],
+          "extra": []
+        },
+        {
+          "sample": 2,
+          "gpuCount": 447,
+          "identified": 447,
+          "camera": [
+            -23.5,
+            1.58,
+            42.5
+          ],
+          "extra": []
+        },
+        {
+          "sample": 3,
+          "gpuCount": 447,
+          "identified": 447,
+          "camera": [
+            -23.5,
+            1.58,
+            42.5
+          ],
+          "extra": []
+        }
+      ]
+    },
+    {
+      "switch": 8,
+      "samples": [
+        {
+          "sample": 0,
+          "gpuCount": 447,
+          "identified": 447,
+          "camera": [
+            -23.5,
+            1.58,
+            42.5
+          ],
+          "extra": []
+        },
+        {
+          "sample": 1,
+          "gpuCount": 448,
+          "identified": 448,
+          "camera": [
+            -23.5,
+            1.58,
+            42.5
+          ],
+          "extra": [
+            {
+              "owners": [
+                "world/13:Meltem/1:Map environment/34:Moored boat/2:Mesh"
+              ],
+              "type": "BufferGeometry",
+              "name": "",
+              "vertices": 54,
+              "indices": 108,
+              "listeners": 1,
+              "at": 156519
+            }
+          ]
+        },
+        {
+          "sample": 2,
+          "gpuCount": 448,
+          "identified": 448,
+          "camera": [
+            -23.5,
+            1.58,
+            42.5
+          ],
+          "extra": [
+            {
+              "owners": [
+                "world/13:Meltem/1:Map environment/34:Moored boat/2:Mesh"
+              ],
+              "type": "BufferGeometry",
+              "name": "",
+              "vertices": 54,
+              "indices": 108,
+              "listeners": 1,
+              "at": 156519
+            }
+          ]
+        },
+        {
+          "sample": 3,
+          "gpuCount": 448,
+          "identified": 448,
+          "camera": [
+            -23.5,
+            1.58,
+            42.5
+          ],
+          "extra": [
+            {
+              "owners": [
+                "world/13:Meltem/1:Map environment/34:Moored boat/2:Mesh"
+              ],
+              "type": "BufferGeometry",
+              "name": "",
+              "vertices": 54,
+              "indices": 108,
+              "listeners": 1,
+              "at": 156519
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
