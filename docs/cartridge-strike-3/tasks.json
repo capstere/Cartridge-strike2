@@ -195,7 +195,10 @@
       "tests": "Replay V2/V4/V6 and IMG_8153–8157 profiles, three pointers, HUD and cancel/rotation; mobile-input-ownership, mobile-reliability-browser and online-autofire-browser. Record hardware/emulation separately.",
       "exit": "Simultaneous controls, rotation, no stuck input, no key conflicts; physical status explicit.",
       "status": "IN_PROGRESS",
-      "branch": "cs3/06-mobile-input"
+      "branch": "cs3/06-mobile-input",
+      "pullRequests": [
+        63
+      ]
     },
     {
       "id": "CS3-07",
@@ -242,7 +245,10 @@
       "tests": "bot-tactics tests/scenarios/browser, network-load, Classic objectives, room startup",
       "exit": "Improved natural behavior and measured tick tails without rule degradation.",
       "status": "IN_PROGRESS",
-      "branch": "cs3/08-navigation"
+      "branch": "cs3/08-navigation",
+      "pullRequests": [
+        62
+      ]
     },
     {
       "id": "CS3-09",
