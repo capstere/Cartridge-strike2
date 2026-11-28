@@ -261,12 +261,22 @@
       "scope": "Measure navigation tails, bounded route budgets, fair perception, cover, personalities/squad, objective preservation and multilevel routes.",
       "tests": "bot-tactics tests/scenarios/browser, network-load, Classic objectives, room startup",
       "exit": "Improved natural behavior and measured tick tails without rule degradation.",
-      "status": "REVIEW",
+      "status": "VERIFIED",
       "branch": "cs3/08-navigation",
       "pullRequests": [
         62
       ],
-      "reviewHead": "1451a84a3a197fc91c4406620c7fa037292aed4e"
+      "reviewHead": "55095b2c7771fee9d3d992a507890a1e3a2968c3",
+      "verifiedHead": "55095b2c7771fee9d3d992a507890a1e3a2968c3",
+      "verifiedRun": 46143568711,
+      "mergedSlices": [
+        "64cc4e8e7158e24e03858575f2f2cc84473b5393"
+      ],
+      "evidence": [
+        "evidence/navigation/README.md",
+        "evidence/integration/joined-equipment-navigation.json"
+      ],
+      "independentReview": "Three alternating A/B seeds, normal keyboard/touch input, real objectives and human/bot lifecycle gates accepted. The 90.920 ms TDM tick remains a release performance investigation."
     },
     {
       "id": "CS3-09",
