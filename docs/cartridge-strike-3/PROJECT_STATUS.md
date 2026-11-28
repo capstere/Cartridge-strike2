@@ -1,6 +1,6 @@
 # Persistent project status
 
-**CS3-00, CS3-01, CS3-02 and CS3-04 are verified. Characters, killstreaks and map qualification are active.** Jesper authorized the complete program and gated production release. [PR #47](https://github.com/capstere/Cartridge-strike2/pull/47) merged at `5364240599164c0aee278bb0ac2a35d662c3a818` after [all eight jobs](https://github.com/capstere/Cartridge-strike2/actions/runs/45976270665) passed on `f1f363963cd082c6cc1b0f6289c3f9b616064e83`. The reviewed draft head and merge preserve the CS2 game runtime. Development and its evidence live on the integration branch `develop/cartridge-strike-3`. The Pi remains on its verified CS2 release.
+**CS3-00, 01, 02, 04 and 07 are verified. Characters, killstreaks and bot navigation are active.** Jesper authorized the complete program and gated production release. [PR #47](https://github.com/capstere/Cartridge-strike2/pull/47) merged at `5364240599164c0aee278bb0ac2a35d662c3a818` after [all eight jobs](https://github.com/capstere/Cartridge-strike2/actions/runs/45976270665) passed on `f1f363963cd082c6cc1b0f6289c3f9b616064e83`. The reviewed draft head and merge preserve the CS2 game runtime. Development and its evidence live on the integration branch `develop/cartridge-strike-3`. The Pi remains on its verified CS2 release.
 
 | ID | State | Next action |
 | --- | --- | --- |
@@ -11,14 +11,16 @@
 | CS3-04 | VERIFIED | [PR #55](https://github.com/capstere/Cartridge-strike2/pull/55) merged after independent review and [nine passing jobs](https://github.com/capstere/Cartridge-strike2/actions/runs/46129743025). |
 | CS3-05 | IN_PROGRESS | [PR #58](https://github.com/capstere/Cartridge-strike2/pull/58) exercises authoritative 3/5/8 awards, private UAV, Rage and Immortal in solo and two-client rooms. Complete rendered input, balance, stress and independent review. |
 | CS3-06 | NOT_STARTED | Wait for CS3-01, CS3-02, CS3-05 |
-| CS3-07 | REVIEW | Independent reviewer accepted [native map qualification](maps/README.md). Development integration requires all final hosted jobs on [#56](https://github.com/capstere/Cartridge-strike2/pull/56). |
-| CS3-08 | NOT_STARTED | Wait for CS3-00, CS3-02, CS3-07 |
+| CS3-07 | VERIFIED | [Map qualification](maps/README.md), independent review and [all nine hosted jobs](https://github.com/capstere/Cartridge-strike2/actions/runs/46133947108) passed on aac2e576. |
+| CS3-08 | IN_PROGRESS | Measure existing bot navigation tails on Floor 5 and the qualified reference maps, then adapt source route budgeting and verify playable objective behavior. |
 | CS3-09 | NOT_STARTED | Wait for CS3-01, CS3-03, CS3-04 |
 | CS3-10 | NOT_STARTED | Wait for CS3-04, CS3-05, CS3-07, CS3-08, CS3-09 |
 | CS3-11 | NOT_STARTED | Wait for CS3-03, CS3-05, CS3-06, CS3-07, CS3-08, CS3-09, CS3-10 |
 | CS3-12 | NOT_STARTED | Wait for CS3-01, CS3-02, CS3-03, CS3-04, CS3-05, CS3-06, CS3-07, CS3-08, CS3-09, CS3-10, CS3-11 |
 
 ## November 28 development checkpoint
+
+[PR #56](https://github.com/capstere/Cartridge-strike2/pull/56) merged at 7e980312 after all nine jobs, including separate four-map desktop and touch journeys. [Floor 5 PR #60](https://github.com/capstere/Cartridge-strike2/pull/60) followed at dba7c40e with nine green jobs. Its runtime matches the reviewed 700-file renderer build. See the [input measurements](evidence/rush/latency/input-delivery.md) for the normal running game and the remaining emulated-touch and handset gaps. CS3-08 is now eligible and active.
 
 The live Pi still runs the verified CS2 revision. Its private backup passed an isolated restoration rehearsal. PR #55 preserved the latest 02/03/05 states and its native protocol 17 account runtime. Both original PR heads had nine green jobs. The account branch was reconciled with current development and independently reviewed before its nine final checks passed.
 
