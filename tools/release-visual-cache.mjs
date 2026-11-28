@@ -78,12 +78,13 @@ async function openPage(context,label,path,verify,forceHTML,reload=false) {
       // A real saved graphics preference goes through the same storage key on both versions.
       await page.evaluate(()=>{
         const key='cartridge-settings',data=JSON.parse(localStorage.getItem(key)||'{}');
-        data.graphics='low';localStorage.setItem(key,JSON.stringify(data));
+        data.graphics='low';data.volume=.35;localStorage.setItem(key,JSON.stringify(data));
       });
     }else if(verify==='deploy'){
       await page.waitForFunction(()=>!!window.__csFlow||document.querySelector('#fatal:not([hidden])'),null,{timeout:120000});
       sample.readyModule=await page.locator('#csl-ready').count()===1;
-      sample.savedGraphics=await page.evaluate(()=>JSON.parse(localStorage.getItem('cartridge-settings')||'{}').graphics);
+      const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('cartridge-settings')||'{}'));
+      sample.savedGraphics=saved.graphics;sample.savedVolume=saved.volume;
       if(!sample.readyModule){sample.outcome='BLOCKED · CS3 deployment selector absent';return;}
       await page.getByRole('button',{name:'Play',exact:true}).first().tap();
       await page.locator('[data-go=solo]:visible').first().tap();
@@ -129,7 +130,8 @@ try{
   await cold.close();
   const [legacy,,mixed,reloaded,control]=report.samples;
   assert.equal(legacy.outcome,'PASS');assert.equal(control.outcome,'PASS','cold control must deploy');
-  report.migrationPass=[mixed,reloaded].every(sample=>sample.outcome==='PASS' && sample.savedGraphics==='low' &&
+  assert.notEqual(control.savedVolume,.35,'The clean control must distinguish the legacy volume preference');
+  report.migrationPass=[mixed,reloaded].every(sample=>sample.outcome==='PASS' && sample.savedGraphics==='low' && sample.savedVolume===.35 &&
     sample.deployed==='SCOUT RIFLE' && sample.changedLegacyResponses.length===0);
   if(!report.migrationPass)process.exitCode=1;
 } finally{

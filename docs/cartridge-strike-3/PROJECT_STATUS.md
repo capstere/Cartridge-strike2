@@ -16,7 +16,7 @@
 | CS3-09 | VERIFIED | [Class workshop, authority and native fitted models](evidence/arsenal/README.md) and [eleven passing hosted jobs](https://github.com/capstere/Cartridge-strike2/actions/runs/46143587002). |
 | CS3-10 | VERIFIED | [Competitive gameplay and rewards](evidence/competitive/README.md), independent review and [12 passing jobs](https://github.com/capstere/Cartridge-strike2/actions/runs/46152682878). Merged at 4c83eaa7. |
 | CS3-11 | VERIFIED | [Joined content exports](content/joined-after-floor5.json), independent review and [all 13 hosted jobs](https://github.com/capstere/Cartridge-strike2/actions/runs/46157414997). Merged at 25decefc. |
-| CS3-12 | IN_PROGRESS | Final acceptance, exact staged distributions, 30-minute soak, private recovery, release review and idle cutover when verified. |
+| CS3-12 | IN_PROGRESS | [Release PR #70](https://github.com/capstere/Cartridge-strike2/pull/70). [Visual and browser-cache receipts](evidence/release/visual-acceptance.md), [two-player staging](evidence/release/network.md), [interrupted rollback](evidence/release/manager.md) and [six Pi runs](evidence/release/performance-authority.md) are available. Complete confirmed-shot analysis, final-head endurance and release verification. |
 
 ## November 28 content pipeline and Floor 5 checkpoint
 
