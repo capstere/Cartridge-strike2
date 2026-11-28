@@ -359,19 +359,24 @@
       "scope": "Consolidate versioned registries, examples, migration, validated additions for character/rig/weapon/attachment/map/mode/bonus/audio/outfit/bot/theme/progression; no parallel editor.",
       "tests": "schema negative/positive tests, import sample and runtime smoke, build reproducibility",
       "exit": "Adding example content without unrelated gameplay edits. New registries reference the already exercised interfaces and include a build/allowlist closure check.",
-      "status": "IN_PROGRESS",
+      "status": "VERIFIED",
       "branch": "cs3/11-content-pipeline",
       "baseline": "4c83eaa7665f13fa84377670e2c93c585aca817f",
       "pullRequests": [
         68
       ],
       "reviewHead": "e4c30096a420d9e4050bb4b6c1bf2e734a667eb7",
-      "pendingRun": 46157414997,
       "evidence": [
         "content/joined-after-floor5.json",
         "content/appearance-evidence/report.json",
         "content/catalog.md"
-      ]
+      ],
+      "verifiedHead": "e4c30096a420d9e4050bb4b6c1bf2e734a667eb7",
+      "verifiedRun": 46157414997,
+      "mergedSlices": [
+        "25decefc5eee3f5f66daa17ee51629df6d7d4825"
+      ],
+      "independentReview": "Accepted versioned content identities, shipped public/pilot import closure, both native exports, appearance rig/rights and 36/36 disposal. Both hosted Mac and Pi confirmed the optional outfit and deployed private legacy character."
     },
     {
       "id": "CS3-12",
@@ -394,7 +399,9 @@
       "scope": "Full acceptance, hardware/physical status, security, before-after, backup restore rehearsal, stage exact SHA; release on idle Pi via existing process only after authorized gates.",
       "tests": "all CI, server tests, rendered two-client HTTPS/WSS, long soak, migration rollback rehearsal. All 16 screenshot states and all five recording scenarios, English journey sweep, reference-free distribution inventory, authenticated/unauthenticated HTTP and mixed-version reconnect, clean cached and cold clients on both surfaces.",
       "exit": "Independent reviewer evidence, no silent scope gaps, production verified or CS2 remains active.",
-      "status": "NOT_STARTED"
+      "status": "IN_PROGRESS",
+      "branch": "cs3/12-release",
+      "baseline": "25decefc5eee3f5f66daa17ee51629df6d7d4825"
     }
   ],
   "reviewedMain": "1a9dc3f10605a7ccd2c28fef354b25bcd4418c1b",
