@@ -53,7 +53,9 @@ async function recordDeath(page){
     const image=await createImageBitmap(new Blob([bytes],{type:'image/jpeg'}));
     const c=new OffscreenCanvas(image.width,image.height),ctx=c.getContext('2d');ctx.drawImage(image,0,0);image.close();
     const maxAt=(x,y)=>Math.max(...ctx.getImageData(Math.floor(x*c.width),Math.floor(y*c.height),1,1).data.slice(0,3));
-    if(![[.02,.05],[.98,.05],[.02,.93],[.98,.93]].every(([x,y])=>maxAt(x,y)<24))return -1;
+    // The compact replay puts labels and Skip in the bottom corners.
+    // Sample the uninterrupted left/right optic mask above those controls.
+    if(![[.12,.26],[.88,.26],[.12,.48],[.88,.48],[.12,.64],[.88,.64]].every(([x,y])=>maxAt(x,y)<24))return -1;
     const {data}=ctx.getImageData(c.width*.45,c.height*.32,c.width*.1,c.height*.22);
     let count=0,sum=0,squares=0;
     for(let i=0;i<data.length;i+=16){
