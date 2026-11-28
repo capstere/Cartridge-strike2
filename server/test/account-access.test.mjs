@@ -12,8 +12,9 @@ import {createLocalServer} from '../local-server.mjs';
 import {WebSocket} from 'ws';
 import {CONTRACT} from '../../shared/multiplayer/build.mjs';
 import {FAMILY_ROOM_ALIAS} from '../../shared/multiplayer/family-room.mjs';
-import {options,own,ready,until} from './helpers.mjs';
+import {delay,options,own,ready,send,until} from './helpers.mjs';
 import {defaultArsenal} from '../../src/fps/arsenal.mjs';
+import {eye} from '../../src/fps/game.mjs';
 import {respawnActor} from '../../src/fps/action-rules.mjs';
 globalThis.WebSocket=WebSocket;
 const {Client}=await import('@colyseus/sdk');
@@ -412,4 +413,78 @@ test('an authoritative result survives a locked WAL writer, isolated backup and 
   assert.equal(profile.stats.matches,1);assert.equal(profile.recent.length,1);
   const drained=new DatabaseSync(journal,{readOnly:true});
   assert.equal(drained.prepare('SELECT count(*) AS n FROM pending').get().n,0);drained.close();
+});
+
+test('signed SDK shots earn private kill, headshot and assist receipts and persist once at the match boundary',{timeout:30000},async t=>{
+  const dir=await mkdtemp(join(tmpdir(),'cs3-earned-sdk-')),path=join(dir,'account.sqlite');
+  const config={port:0,publicOrigin:origin,pilotInvite:randomBytes(24).toString('hex'),accountDb:path,testMatch:{countdownSeconds:.1,scoreTarget:2}};
+  const local=await createLocalServer(config),peers=[];
+  t.after(async()=>{await Promise.allSettled(peers.map(p=>p.room.leave()));await local.close();await rm(dir,{recursive:true,force:true});});
+  async function connectPeer(user,team,roomId){
+    const b=browser(local.url,'192.0.2.'+(peers.length+15));
+    await b.send('/pilot/session',new URLSearchParams({invite:config.pilotInvite}),{'Content-Type':'application/x-www-form-urlencoded'});
+    if(user)assert.equal((await b.send('/api/account/register',{username:user,password:randomBytes(20).toString('hex')})).status,200);
+    const held=await b.send(roomId?'/matchmake/joinById/'+roomId:'/matchmake/create/private-fps',{...options,team,fillBots:false});
+    assert.equal(held.status,200);
+    const room=await new Client(local.url,{headers:b.headers()}).consumeSeatReservation(held.json());
+    const receipts=[],summary=[];
+    room.onMessage('reward',p=>receipts.push(p));room.onMessage('match-progression',p=>summary.push(p));
+    room.onMessage('replay',()=>{});room.onMessage('bonusState',()=>{});
+    await ready(room);const peer={room,b,receipts,summary};peers.push(peer);return peer;
+  }
+  const shooter=await connectPeer('earned_shooter','analysts'),helper=await connectPeer('earned_assist','analysts',shooter.room.roomId);
+  const victim=await connectPeer(null,'counterAnalysts',shooter.room.roomId);
+  const r=[...local.rooms][0],g=r.sim.game,actor=peer=>r.seats.get(peer.room.sessionId).actor;
+  const command=(peer,kind,more={})=>peer.room.send('match',{kind,matchId:peer.room.state.matchId,controlEpoch:own(peer.room).controlEpoch,...more});
+  for(const peer of peers)command(peer,'ready',{ready:true});
+  await until(()=>peers.every(p=>own(p.room)?.playerReady),'three ready clients');
+  command(shooter,'start');await until(()=>peers.every(p=>p.room.state.phase==='active')&&g.phase==='active','normal match started');
+  for(const {room} of peers)room.send('controls',{enabled:true,lifeId:own(room).lifeId,controlEpoch:own(room).controlEpoch});
+  const target=actor(victim);
+  g.config.respawnDelay=.3;
+  async function shot(peer,id,head,hp){
+    const attacker=actor(peer),other=actor(peer===helper?shooter:helper);
+    Object.assign(attacker,{x:20,y:0,z:-18,yaw:Math.PI,spawnProtectedUntil:0});
+    Object.assign(target,{x:20,y:0,z:-16,hp,armor:0,spawnProtectedUntil:0});
+    Object.assign(other,{x:21,y:0,z:-18});
+    await delay(260);
+    const pitch=Math.atan2(target.y+target.height*(head ? .93 : .55)-eye(attacker).y,target.z-attacker.z-target.radius);
+    send(peer.room,{fire:true,fireEdge:true,fireId:id,yaw:Math.PI,pitch,shotYaw:Math.PI,shotPitch:pitch});
+    await until(()=>target.hp<hp,'server applied SDK shot');
+    send(peer.room,{fire:false,yaw:Math.PI,pitch});
+  }
+  await shot(helper,1,false,100);
+  if(target.hp>80)await shot(helper,2,false,target.hp);
+  assert(target.alive&&target.hp<=80);
+  const life=target.lifeId;
+  await shot(shooter,1,true,8);
+  await until(()=>shooter.receipts.length===1&&helper.receipts.length===1,'private assist and headshot');
+  assert.deepEqual(shooter.receipts.map(p=>[p.kind,p.xp,p.weaponXp]),[['headshot',15,150]]);
+  assert.deepEqual(helper.receipts.map(p=>[p.kind,p.xp,p.weaponXp]),[['assist',5,0]]);
+  assert.equal((await shooter.b.send('/api/account')).json().stats.matches,0);
+  await until(()=>target.alive&&target.lifeId>life,'next authority life');
+  await shot(shooter,2,false,8);
+  await until(()=>peers.every(p=>p.room.state.phase==='results'&&p.summary.length===1),'scoped results');
+  assert.deepEqual(shooter.receipts.map(p=>p.kind),['headshot','kill']);
+  assert(shooter.receipts[1].serial>shooter.receipts[0].serial);
+  assert.equal(victim.receipts.length,0);
+  for(const peer of peers)assert(peer.receipts.every(p=>p.actorId===actor(peer).id));
+  const s=shooter.summary[0],a=helper.summary[0];
+  assert.equal(s.ranked,true);assert.equal(s.xp,50);assert.equal(s.headshots,1);assert.equal(s.weapons[0].xp,250);
+  assert.equal(a.ranked,true);assert.equal(a.xp,30);assert.equal(a.assists,1);assert.deepEqual(a.weapons,[]);
+  assert.equal(victim.summary[0].ranked,false);
+  const profile=(await shooter.b.send('/api/account')).json(),assistProfile=(await helper.b.send('/api/account')).json();
+  assert.equal(profile.stats.xp,s.xp);assert.equal(profile.stats.kills,2);assert.equal(profile.progression.headshots,1);
+  assert.equal(profile.progression.weapons[0].xp,250);assert.equal(assistProfile.progression.assists,1);
+  const personal=(await shooter.b.send('/api/account/export')).json();
+  assert.deepEqual(personal.recent[0].weapons,{[s.weapons[0].id]:250});
+  assert.equal(personal.recent[0].headshots,1);assert.equal(personal.recent[0].assists,0);
+  assert.equal(assistProfile.stats.xp,30);assert.equal(assistProfile.stats.kills,0);
+  assert.equal((await victim.b.send('/api/account')).json().stats.xp,0);
+  const backup=join(dir,'backup.sqlite'),restored=join(dir,'restored.sqlite');
+  await copyAccountDatabase('backup',path,backup);await copyAccountDatabase('restore',backup,restored);
+  const restoredDb=new DatabaseSync(restored,{readOnly:true});
+  try{assert.equal(restoredDb.prepare('SELECT sum(xp) AS xp FROM weapon_progress').get().xp,250);
+    assert.equal(restoredDb.prepare('SELECT sum(xp) AS xp FROM rewards').get().xp,80);}
+  finally{restoredDb.close();}
 });

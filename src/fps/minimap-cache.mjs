@@ -174,7 +174,7 @@ function drawOnlineTeammates(ctx, layer, game, expanded) {
   ctx.fillStyle = '#7ce4cd';
   ctx.lineWidth = 1.4;
   for (const actor of game.actors) {
-    if (actor.team !== game.team || !actor.alive) continue;
+    if (!actor.alive || (game.state?.mode==='ffa'?!actor.isPlayer:actor.team!==game.team)) continue;
     if (actor.isPlayer) { player = actor; continue; }
     const x = layer.ox + (actor.x - layer.xmin) * layer.scale;
     const y = layer.oz + (actor.z - layer.zmin) * layer.scale;
@@ -208,12 +208,13 @@ export class MinimapCache {
     this.stats = {builds:0, draws:0, hiddenSkips:0};
   }
   invalidate() { this.layers.clear(); }
-  layer(world, expanded) {
+  layer(world, expanded, mode) {
     if (world !== this.world) { this.world = world; this.invalidate(); }
     const w = this.canvas.width, h = this.canvas.height;
     const online = !!world.networkSlice, classic = online && !!world.networkClassic;
+    const soloSites=!online && !['ffa','dom'].includes(mode);
     const onlineExpanded = online && expanded;
-    const key = `${w}/${h}/${!!expanded}/${online}/${classic}`;
+    const key = `${w}/${h}/${!!expanded}/${online}/${classic}/${soloSites}`;
     let layer = this.layers.get(key);
     if (layer) return layer;
     const canvas = this.createCanvas(); canvas.width = w; canvas.height = h;
@@ -274,7 +275,7 @@ export class MinimapCache {
         ctx.fillStyle = color;
         ctx.fillText(letter, xof(p.x) - 3, zof(p.z) - 4);
       }
-    } else {
+    } else if(soloSites) {
       for (const [p,label,color] of [[world.anchors.bomb,'B','#e9ae67'],[world.anchors.rescue,'R','#7ce4cd'],[world.anchors.hostages[0],'H','#ccebdc']]) {
         if (!p) continue;
         ctx.font='bold 11px sans-serif';ctx.fillStyle=color;
@@ -289,7 +290,7 @@ export class MinimapCache {
   }
   draw(world, game, expanded = false, visible = true) {
     if (!visible) { this.stats.hiddenSkips++; return false; }
-    const ctx = this.context, l = this.layer(world,expanded);
+    const ctx = this.context, l = this.layer(world,expanded,game.state?.mode);
     ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
     ctx.drawImage(l.canvas,0,0);
     const blips = game.uavBlips?.();
@@ -304,8 +305,18 @@ export class MinimapCache {
       }
       ctx.restore();
     }
+    if(game.state?.mode==='dom'){
+      ctx.save();
+      ctx.textAlign='center';ctx.textBaseline='middle';ctx.font=expanded?'bold 12px sans-serif':'bold 9px sans-serif';
+      for(const zone of game.state.zones||[]){
+        const x=l.ox+(zone.x-l.xmin)*l.scale,y=l.oz+(zone.z-l.zmin)*l.scale,r=expanded?9:6;
+        ctx.fillStyle=zone.contested?'#765615':!zone.owner?'#43494e':zone.owner===game.team?'#20665b':'#963d36';
+        ctx.fillRect(x-r,y-r,2*r,2*r);ctx.fillStyle='#fff';ctx.fillText(zone.id,x,y);
+      }
+      ctx.restore();
+    }
     if (world.networkSlice) {
-      const ping=game.teamPing;
+      const ping=game.state?.mode==='ffa'?null:game.teamPing;
       if(ping?.anchor&&ping.expiresAt>game.state.time){
         const {x,z}=ping.anchor;
         ctx.beginPath();
@@ -321,7 +332,7 @@ export class MinimapCache {
     // drawImage does not transfer canvas state: preserve the old .5px heading.
     ctx.lineWidth = .5;
     for (const a of game.actors) {
-      if (a.team !== game.team || !a.alive) continue;
+      if (!a.alive || (game.state?.mode==='ffa'?!a.isPlayer:a.team!==game.team)) continue;
       const x = l.ox+(a.x-l.xmin)*l.scale, y = l.oz+(a.z-l.zmin)*l.scale;
       ctx.fillStyle = a.isPlayer ? '#fff' : '#7ce4cd';
       ctx.beginPath();ctx.arc(x,y,a.isPlayer?3:1.9,0,Math.PI*2);ctx.fill();

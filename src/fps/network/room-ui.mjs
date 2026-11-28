@@ -1,3 +1,4 @@
+import {MODE_NAMES,MODE_GUIDES,rankPlayers,matchWinnerName} from '../match-presentation.mjs';
 import {roomModeration} from './room-moderation.mjs';
 import {roomInvitation} from './room-invitation.mjs';
 import {accessText as en} from '../../../shared/multiplayer/access-english.mjs';
@@ -40,6 +41,17 @@ export function roomUi({leave,resume,activate}){
   #online-room .room-controls select:disabled{opacity:1;color:#edf2e8;background:#182625;border-color:#52716d}
   #online-room .room-controls .room-wide{grid-column:1/-1}
   #online-room .room-settings p{margin:8px 0 0;font-size:13px;line-height:1.35}
+  #online-room[data-phase=results] :is(#room-rules,.room-map-card,#room-identity,#room-help){display:none}
+  #online-room[data-phase=results] .room-card{display:flex;flex-direction:column}
+  #online-room[data-phase=results] .room-header{display:contents}
+  #online-room[data-phase=results] .room-header .room-actions{order:3}
+  #online-room[data-phase=results] .room-settings{order:4}
+  #online-room[data-phase=results] .room-options{order:5}
+  #online-room[data-phase=results] #room-title{margin:0 0 6px}
+  #online-room[data-phase=results] :is(#room-earned,#room-result-summary){margin:4px 0 8px}
+  #online-room[data-phase=results] #room-notice:empty{display:none}
+  #online-room[data-phase=results] .room-roster{order:1}
+  #online-room[data-phase=results] .room-card>.room-actions{order:2}
   #online-room .room-options{display:flex;align-items:center;flex-wrap:wrap;gap:8px 16px;margin:12px 0;font-size:14px}
   #online-room .room-options p{margin:0;color:#b2c4bc}
   #online-room .room-residents{display:flex;flex-wrap:wrap;gap:8px 16px}
@@ -69,7 +81,7 @@ export function roomUi({leave,resume,activate}){
     <input id="room-link" readonly aria-label="${en.roomLink}" hidden>
     <p id="room-share-help" class="muted" hidden>${en.shareHelp}</p>
     <p id="room-identity" class="muted"></p>
-    <p id="room-result-summary" hidden></p>
+    <p id="room-result-summary" hidden></p><p id="room-earned" hidden></p>
     <p id="room-rules"></p>
     <div class="room-options">
       <label id="room-friendly-fire-label" hidden>Friendly fire <select id="room-friendly-fire"><option value="off">${en.off}</option><option value="on">${en.on}</option></select></label>
@@ -90,7 +102,7 @@ export function roomUi({leave,resume,activate}){
     </div>
     <p id="room-help"></p><p id="room-notice" class="notice" role="status"></p>
     <div class="room-roster">
-      <table><thead><tr><th>${en.player}</th><th>${en.team}</th><th>Status</th><th>K</th><th>D</th></tr></thead><tbody id="room-roster"></tbody></table>
+      <table><thead><tr><th>${en.player}</th><th>${en.team}</th><th>Status</th><th>K</th><th>D</th><th id="room-captures-head" hidden>Captures</th><th id="room-points-head" hidden>Points</th></tr></thead><tbody id="room-roster"></tbody></table>
     </div>
   </div>`;
   document.body.append(root);const $=id=>root.querySelector('#'+id);let session,key='';
@@ -118,7 +130,7 @@ export function roomUi({leave,resume,activate}){
   </section>`);
   $('room-map').replaceChildren(...NETWORK_MAPS.map(map=>new Option(map.name,map.id)));
   $('room-map').onchange=()=>session.matchCommand('settings',{mapId:$('room-map').value});
-  const modeLabels={tdm:'Team Deathmatch',classic:'Classic'};
+  const modeLabels=MODE_NAMES;
   const shareHelp=$('room-share-help'),normalShareHelp=shareHelp.textContent;
   let shareContext='';
   const invitation=roomInvitation(root),moderation=roomModeration(root);
@@ -182,11 +194,15 @@ export function roomUi({leave,resume,activate}){
   };
   return {hide(){moderation.update(null);invitation.update('');root.hidden=true;session=null;rematchPointer=null;key='';$('room-link').hidden=true;shareHelp.hidden=true;},update(s){
     if(!s?.room)return;moderation.update(s);session=s;const state=s.room.state,self=state.actors.get(s.localPlayerId),waiting=state.phase==='waiting',result=state.phase==='results';
+    const enteringResult=result&&root.dataset.phase!==state.phase;
+    root.dataset.phase=state.phase;
     if(!result)rematchPointer=null;
     root.hidden=state.phase==='active'||state.phase==='countdown';if(root.hidden){invitation.update('');return;}
-    $('room-title').textContent=result?(state.winner==='draw'?en.draw:en.winner(labels[state.winner])):en.lobby;
+    if(enteringResult){root.scrollTop=0;root.querySelector('.room-card').scrollTop=0;}
+    root.querySelector('.room-eyebrow').textContent=result?'Match complete':en.privateRoom;
+    $('room-title').textContent=result?(state.winner==='draw'?en.draw:en.winner(matchWinnerName(state.winner,state.actors.values(),labels),state.mode==='ffa')):en.lobby;
     const classic=state.mode==='classic';
-    $('room-rules').textContent=classic?en.classicRules:en.tdmRules;
+    $('room-rules').textContent=classic?en.classicRules:MODE_GUIDES[state.mode]||en.tdmRules;
     const map=networkMap(state.mapId);
     if(!map)return;
     const loading=s.worldRevision!==state.worldRevision||!self?.ready;
@@ -214,17 +230,17 @@ export function roomUi({leave,resume,activate}){
     shareHelp.textContent=published?'Share this link with a friend. Sign in to join while a seat is available.':s.familyAlias?en.familyShareHelp:normalShareHelp;
     if($('room-mode').value!==state.mode)$('room-mode').value=state.mode;
     $('room-tdm-minutes').parentElement.hidden=classic;
-    $('room-tdm-kills').parentElement.hidden=classic;
+    $('room-tdm-kills').parentElement.hidden=classic||state.mode==='dom';
     $('room-classic-wins').parentElement.hidden=!classic;
     for(const [id,field] of matchFields){
       const select=$(id),confirmed=String(state[field]);
       if(select.value!==confirmed)select.value=confirmed;
       select.disabled=!canEdit;
     }
-    $('room-friendly-fire-label').hidden=!canEdit;
+    $('room-friendly-fire-label').hidden=!canEdit||state.mode==='ffa';
     $('room-friendly-fire').disabled=!canEdit;
     $('room-friendly-fire').value=state.friendlyFire?'on':'off';
-    $('room-friendly-fire-status').hidden=canEdit;
+    $('room-friendly-fire-status').hidden=canEdit||state.mode==='ffa';
     $('room-friendly-fire-status').textContent=en.friendlyFire+' · '+(state.friendlyFire?en.on:en.off);
     const canSetDifficulty=canEdit;
     $('room-bot-difficulty-label').hidden=!canSetDifficulty;
@@ -251,22 +267,30 @@ export function roomUi({leave,resume,activate}){
       $('room-kit').textContent=en.deploymentKit(kit?.name,WEAPONS[kit?.secondary.id??self.pistol].name,
         WEAPONS[kit?.equipment??defaultOnlineCartridge].name);
     }
-    $('room-team-label').hidden=!waiting;$('room-team').value=self?.team||'analysts';
+    $('room-team-label').hidden=!waiting||state.mode==='ffa';$('room-team').value=self?.team||'analysts';
     $('room-ready').hidden=!waiting;$('room-ready').textContent=self?.playerReady?en.notReady:en.ready;
     const connected=[...state.actors.values()].filter(a=>a.connected);
-    const canStart=connected.every(a=>a.ready&&a.playerReady)&&['analysts','counterAnalysts'].every(t=>connected.some(a=>a.team===t));
+    const canStart=connected.every(a=>a.ready&&a.playerReady)&&(state.mode==='ffa'?connected.length>=2:['analysts','counterAnalysts'].every(t=>connected.some(a=>a.team===t)));
     $('room-start').hidden=!waiting||!host;$('room-start').disabled=!canEdit||!canStart;
     $('room-ready').disabled=loading||s.connectionState!=='connected';$('room-rematch').hidden=!result;$('room-resume').hidden=true;
     $('room-result-summary').hidden=!result;
     if(result){
       const reasons={rounds:en.roundsWon(state.scoreTarget),score:en.scoreLimit,forfeit:en.forfeit,time:en.timeLimit};
-      $('room-result-summary').textContent=`${state.analysts} – ${state.counterAnalysts} · ${reasons[state.reason]||''}`;
+      $('room-result-summary').textContent=`${state.mode==='ffa'?MODE_NAMES.ffa:state.analysts+' – '+state.counterAnalysts} · ${reasons[state.reason]||''}`;
+    }
+    const credit=result?s.progression:null;
+    $('room-earned').hidden=!credit;
+    if(credit){
+      const weapons=(credit.weapons||[]).map(w=>(WEAPONS[w.id]?.name||'Weapon')+' +'+w.xp+' XP');
+      $('room-earned').textContent=[credit.ranked?'Account rewards':'Unranked match',credit.xp+' XP',credit.assists+' assists',credit.headshots+' headshots',...weapons].join(' · ');
     }
     $('room-help').textContent=result?en.rematchHelp:waiting?en.readyHelp:en.startHelp;
     $('room-notice').textContent=loading?en.loadingMap(map.name):s.notice|| (s.connectionState==='reconnecting'?en.reconnectingHelp:'');
     let rows=[...state.actors.values()];if(result)try{rows=JSON.parse(state.results).players;}catch{}
-    const next=JSON.stringify([state.ownerId,rows.map(a=>[a.id,a.name,a.team,a.ready,a.playerReady,a.connected,a.kills,a.deaths])]);
+    const showCaptures=result&&state.mode==='dom',showPoints=result&&['dom','ffa'].includes(state.mode);
+    $('room-captures-head').hidden=!showCaptures;$('room-points-head').hidden=!showPoints;
+    const next=JSON.stringify([state.mode,state.phase,state.ownerId,rows.map(a=>[a.id,a.name,a.team,a.ready,a.playerReady,a.connected,a.kills,a.deaths,a.handling?.points??a.points,a.captures])]);
     if(next===key)return;key=next;$('room-roster').replaceChildren();
-    for(const a of rows){const tr=document.createElement('tr');for(const value of [a.name+(a.id===s.localPlayerId?en.you:'')+(a.sessionId===state.ownerId?en.host:''),labels[a.team],result?en.result:!a.connected?en.reconnecting:!a.ready?en.loading:a.playerReady?en.ready:en.waiting,a.kills||0,a.deaths||0]){const td=document.createElement('td');td.textContent=String(value);tr.append(td);}$('room-roster').append(tr);}
+    for(const a of (!result&&state.mode==='ffa'?rankPlayers(rows):rows)){const tr=document.createElement('tr');for(const value of [a.name+(a.id===s.localPlayerId?en.you:'')+(a.sessionId===state.ownerId?en.host:''),state.mode==='ffa'?'Individual':labels[a.team],result?en.result:!a.connected?en.reconnecting:!a.ready?en.loading:a.playerReady?en.ready:en.waiting,a.kills||0,a.deaths||0,...(showCaptures?[a.captures||0]:[]),...(showPoints?[a.points||0]:[])]){const td=document.createElement('td');td.textContent=String(value);tr.append(td);}$('room-roster').append(tr);}
   }};
 }

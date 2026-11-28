@@ -9,6 +9,7 @@
     {
       "id": "floor5-prepared",
       "file": "levels/floor5-prepared.json",
+      "modes": ["classic", "endless", "ffa", "dom"],
       "rights": "reviewed original/approved assets"
     },
     {
@@ -22,7 +23,9 @@
       "name": "Meltem",
       "file": "levels/meltem.json",
       "modes": [
-        "endless"
+        "endless",
+        "ffa",
+        "dom"
       ],
       "preview": "assets/fps/maps/meltem.webp",
       "rights": "Riposte MIT map factory and credited CC0 reference media"
@@ -32,7 +35,9 @@
       "name": "Kervénec Harbor",
       "file": "levels/embruns.json",
       "modes": [
-        "endless"
+        "endless",
+        "ffa",
+        "dom"
       ],
       "preview": "assets/fps/maps/embruns.webp",
       "rights": "Riposte MIT map factory and credited CC0 reference media"
@@ -42,7 +47,9 @@
       "name": "Tephra",
       "file": "levels/tephra.json",
       "modes": [
-        "endless"
+        "endless",
+        "ffa",
+        "dom"
       ],
       "preview": "assets/fps/maps/tephra.webp",
       "rights": "Riposte MIT map factory and credited CC0 reference media"

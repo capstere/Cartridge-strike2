@@ -179,7 +179,7 @@ try {
   }
   await displayed(mobile, custom, false);
   await screenshot(mobile, 'mobile-compact-tdm.jpg', Object.keys(custom));
-  mark('Compact only shows Team Deathmatch and retains its custom limits');
+  mark('Compact shows the Team Deathmatch settings and retains its custom limits');
 
   // Let the guest take ownership in the normal lobby, then start through the
   // actual touch button. Both teams have actors after the old host leaves.

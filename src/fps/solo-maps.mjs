@@ -1,8 +1,9 @@
 // A published map enters the Solo menu only after its manifest declares playable modes.
 // Private and historical links retain their separate local loading paths.
-const allModes = ['classic', 'endless'];
+const originalModes = ['classic','endless'];
+const allModes = [...originalModes,'ffa','dom'];
 const floor = {id:'floor5-prepared', name:'Floor 5 Laboratory', modes:allModes, preview:'assets/fps/maps/floor5-prepared.jpg'};
-const local = {id:'preview', name:'Private level preview', modes:allModes};
+const local = {id:'preview', name:'Private level preview', modes:originalModes};
 let manifestPromise;
 
 export function loadSoloManifest() {
@@ -45,7 +46,7 @@ export function resolveSoloSelection(manifest, query, preferredMode = 'classic')
   if (requestedId === 'classic-floor5') source = {...floor, id:requestedId};
   if (requestedId === 'synthetic-demo') {
     const fixture = manifest.levels?.find(row => row.id === requestedId && row.file === 'levels/synthetic-demo.json' && !row.multiplayerOnly);
-    if (fixture) source = {id:fixture.id, file:fixture.file, name:'Training fixture', modes:allModes};
+    if (fixture) source = {id:fixture.id, file:fixture.file, name:'Training fixture', modes:originalModes};
   }
   if (source && (!requestedMode || source.modes.includes(requestedMode))) {
     return {...source, mode:source.modes.includes(mode) ? mode : source.modes[0], notice:''};

@@ -40,7 +40,7 @@ export function aimFriction(game, yaw, pitch) {
   const cp = Math.cos(pitch), forward = { x: -Math.sin(yaw) * cp, y: Math.sin(pitch), z: -Math.cos(yaw) * cp };
   let friction = 1;
   for (const other of game.actors) {
-    if (!other.alive || other === p || !other.team || other.team === p.team) continue;
+    if (!other.alive || other === p || !other.team || (game.state.mode!=='ffa'&&other.team === p.team)) continue;
     // Closest height on the body to the sightline avoids only helping at chest height.
     const flat = Math.hypot(other.x - from.x, other.z - from.z);
     const to = { x: other.x, y: Math.max(other.y + .12, Math.min(other.y + other.height - .08,

@@ -38,7 +38,7 @@ export class TeamComms {
 
   active(){
     const {state,sim}=this.room;
-    return state.phase==='active'&&sim.game.phase==='active'&&!sim.game.state.paused;
+    return state.mode!=='ffa'&&state.phase==='active'&&sim.game.phase==='active'&&!sim.game.state.paused;
   }
 
   receive(client,message){

@@ -1,0 +1,93 @@
+{
+  "runtimeHead": "61fdb3710fff3e936dcf0c9de10eb1363490bfe2",
+  "driverSha256": "b5d551ea56328f0094e53f460b9f1c8a8ae2d17fb477682a21156fd49337d493",
+  "buildHash": "cb5b3c6c43cf087ea635746206dd3d4cca9d2859106df24a62e28f388f9303fb",
+  "chromium": "156.0.8078.79",
+  "passed": true,
+  "pageErrors": [],
+  "publishedHead": "b0282473fd90a7b2543fa6935050684bfa43a46c",
+  "scenarios": [
+    {
+      "mode": "ffa",
+      "visibleVerdicts": [
+        [
+          {
+            "id": "room-title",
+            "text": "Coast wins",
+            "top": 53,
+            "bottom": 98.59375,
+            "visible": true
+          },
+          {
+            "id": "room-earned",
+            "text": "Account rewards \u00b7 55 XP \u00b7 0 assists \u00b7 2 headshots \u00b7 Scout Rifle +300 XP",
+            "top": 141.59375,
+            "bottom": 162.59375,
+            "visible": true
+          }
+        ],
+        [
+          {
+            "id": "room-title",
+            "text": "Coast wins",
+            "top": 53,
+            "bottom": 98.59375,
+            "visible": true
+          },
+          {
+            "id": "room-earned",
+            "text": "Account rewards \u00b7 0 XP \u00b7 0 assists \u00b7 0 headshots",
+            "top": 141.59375,
+            "bottom": 162.59375,
+            "visible": true
+          }
+        ]
+      ],
+      "playerCredits": [
+        "Account rewards \u00b7 55 XP \u00b7 0 assists \u00b7 2 headshots \u00b7 Scout Rifle +300 XP",
+        "Account rewards \u00b7 0 XP \u00b7 0 assists \u00b7 0 headshots"
+      ]
+    },
+    {
+      "mode": "dom",
+      "visibleVerdicts": [
+        [
+          {
+            "id": "room-title",
+            "text": "Analysts win",
+            "top": 53,
+            "bottom": 98.59375,
+            "visible": true
+          },
+          {
+            "id": "room-earned",
+            "text": "Account rewards \u00b7 25 XP \u00b7 0 assists \u00b7 0 headshots",
+            "top": 141.59375,
+            "bottom": 162.59375,
+            "visible": true
+          }
+        ],
+        [
+          {
+            "id": "room-title",
+            "text": "Analysts win",
+            "top": 53,
+            "bottom": 98.59375,
+            "visible": true
+          },
+          {
+            "id": "room-earned",
+            "text": "Account rewards \u00b7 0 XP \u00b7 0 assists \u00b7 0 headshots",
+            "top": 141.59375,
+            "bottom": 162.59375,
+            "visible": true
+          }
+        ]
+      ],
+      "playerCredits": [
+        "Account rewards \u00b7 25 XP \u00b7 0 assists \u00b7 0 headshots",
+        "Account rewards \u00b7 0 XP \u00b7 0 assists \u00b7 0 headshots"
+      ]
+    }
+  ]
+}

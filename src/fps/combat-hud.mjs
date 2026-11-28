@@ -1,4 +1,5 @@
 /** Private session feedback. textContent only: names can never inject markup. */
+import {combatOpponents} from './bonuses.mjs';
 import {WEAPONS} from './config.mjs';
 import {activeControl} from './combat-flow.mjs';
 export class CombatHUD{
@@ -10,10 +11,15 @@ export class CombatHUD{
  }
  text(node,value){if(node.textContent!==String(value))node.textContent=value;}
  events(events,g){
-  for(const e of events){if(e.serial<=this.lastSerial)continue;this.lastSerial=e.serial;
+  for(const e of events){
+   const local=e.type==='damage'?e.sourceId===g.player.id:
+     (e.type==='combat-hit'||e.type==='combat-medal')&&e.actorId===g.player.id;
+   // Predicted shots and private reward messages have independent ordering.
+   if(!local||!Number.isSafeInteger(e.serial)||e.serial<=this.lastSerial)continue;
+   this.lastSerial=e.serial;
    if(e.type==='combat-medal'&&e.actorId===g.player.id){const el=this.nodes['combat-medal'];el.dataset.kind=e.kind;this.text(el.querySelector('small'),`+${e.points} SESSION POINTS`);this.text(el.querySelector('strong'),e.title);this.text(el.querySelector('span'),e.detail);this.medalUntil=e.time+2.5;}
    if(e.type==='combat-hit'&&e.actorId===g.player.id){this.hitUntil=e.time+(e.lethal?.38:.18);this.hitKind=e.lethal?'kill':e.head?'head':'body';this.text(this.nodes['combat-hit-label'],e.lethal?'ELIMINATED':e.head?'HEADSHOT':'HIT');}
-   if(e.type==='damage'&&e.sourceId===g.player.id&&e.team===g.team&&e.actorId!==g.player.id){this.warnUntil=e.time+1.5;this.text(this.nodes['combat-warning'],'FRIENDLY FIRE · TEAMMATE');}
+   if(e.type==='damage'&&e.sourceId===g.player.id&&e.team===g.team&&e.actorId!==g.player.id&&!combatOpponents(g.player,g.actors.find(a=>a.id===e.actorId),g.state.mode)){this.warnUntil=e.time+1.5;this.text(this.nodes['combat-warning'],'FRIENDLY FIRE · TEAMMATE');}
    if(e.type==='damage'&&e.sourceId===g.player.id&&g.hostages.some(h=>h.id===e.actorId)){this.warnUntil=e.time+1.5;this.text(this.nodes['combat-warning'],'HOSTAGE HIT · NO AWARD');}
   }
  }

@@ -5,12 +5,12 @@ import {neutralOpening} from './control-deployment.mjs';
 const teams=['analysts','counterAnalysts'];
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 const position=a=>({x:a.x,y:(a.y||0)+.85,z:a.z});
-const hostile=(a,b)=>a&&b&&a!==b&&teams.includes(a.team)&&teams.includes(b.team)&&a.team!==b.team;
+const hostile=(g,a,b)=>a&&b&&a!==b&&teams.includes(a.team)&&teams.includes(b.team)&&(g.state.mode==='ffa'||a.team!==b.team);
 const fresh=()=>({points:0,assists:0,streak:0,bestStreak:0,chain:0,lastKill:-Infinity,damage:0,hits:0,headHits:0,captures:0,incoming:{},recap:null});
 function resetLife(a){a.combat??=fresh();Object.assign(a.combat,{streak:0,chain:0,lastKill:-Infinity,incoming:{},recap:null});}
-function medal(g,a,title,detail,points=0,kind='kill'){
+function medal(g,a,title,detail,points=0,kind='kill',target=null){
  a.combat.points+=points;
- g.emit('combat-medal',a,{title,detail,points,kind,streak:a.combat.streak});
+ g.emit('combat-medal',a,{title,detail,points,kind,streak:a.combat.streak,...(target?{targetId:target.id,targetLifeId:target.lifeId??0}:{})});
 }
 export function createControlZones(world){
  if(!world.navigation?.nodes?.length)return [];
@@ -75,7 +75,7 @@ export function combatEvent(g,e){
   if(record.recent.length>128)record.recent.splice(0,record.recent.length-128);
   c.incoming[source.id]=record; // at most ten actor keys per life
  }
- if(e.type==='damage'&&hostile(source,victim)){
+ if(e.type==='damage'&&hostile(g,source,victim)){
   source.combat.damage+=e.amount;source.combat.hits++;
   const head=e.head;
   if(head)source.combat.headHits++;
@@ -90,7 +90,7 @@ export function combatEvent(g,e){
    streak:victim.combat.streak,at:e.time};
   victim.combat.streak=0;victim.combat.chain=0;
  }
- if(!hostile(source,victim)){
+ if(!hostile(g,source,victim)){
   if(source){source.combat.streak=0;source.combat.chain=0;source.combat.lastKill=-Infinity;}
   return; // no medals, points, assists or success sounds for allies/hostages/self
  }
@@ -100,10 +100,10 @@ export function combatEvent(g,e){
  if([3,5,10].includes(c.streak))title=c.streak===3?'ON A ROLL · 3 IN A ROW':c.streak===5?'DOMINATING · 5 IN A ROW':'UNSTOPPABLE · 10 IN A ROW';
  const first=!f.firstKill;f.firstKill=true;
  if(first&&c.chain===1)title='FIRST ELIMINATION';
- medal(g,source,title,`${victim.name} · ${c.streak} in a row`,100,'kill');
+ medal(g,source,title,`${victim.name} · ${c.streak} in a row`,100,'kill',victim);
  for(const [id,r]of Object.entries(victim.combat.incoming)){
   const a=g.actors.find(a=>a.id===id);
-  if(a&&a!==source&&a.team===source.team&&(r.recent||[]).filter(hit=>e.time-hit.at<=8).reduce((n,hit)=>n+hit.amount,0)>=20){a.combat.assists++;medal(g,a,'ASSIST',victim.name,35,'assist');}
+  if(a&&a!==source&&(g.state.mode==='ffa'?hostile(g,a,victim):a.team===source.team)&&(r.recent||[]).filter(hit=>e.time-hit.at<=8).reduce((n,hit)=>n+hit.amount,0)>=20){a.combat.assists++;medal(g,a,'ASSIST',victim.name,35,'assist',victim);}
  }
 }
 /** Public goal shared by both teams; actual combat still needs normal perception. */

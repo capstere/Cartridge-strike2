@@ -14,8 +14,8 @@ test('the Meltem pilot is selectable only in its reviewed modes',async()=>{
   const {DEFAULT_MAP_ID,networkMap}=await import('../../shared/multiplayer/maps.mjs');
   const catalog=JSON.parse(await readFile(new URL('../../levels/manifest.json',import.meta.url),'utf8'));
   const entry=catalog.levels.find(map=>map.id==='meltem'),online=networkMap('meltem');
-  assert.deepEqual(entry.modes,['endless']);assert.notEqual(entry.randomEligible,true);
-  assert.deepEqual(online.modes,['tdm']);assert.equal(online.residents,false);
+  assert.deepEqual(entry.modes,['endless','ffa','dom']);assert.notEqual(entry.randomEligible,true);
+  assert.deepEqual(online.modes,['tdm','ffa','dom']);assert.equal(online.residents,false);
   assert.equal(entry.file,online.file);assert.equal(entry.preview,online.preview);
   assert.equal(catalog.defaultLevel,DEFAULT_MAP_ID);
   assert.ok(networkMap('compact-arena')&&networkMap(DEFAULT_MAP_ID));
@@ -122,8 +122,8 @@ for(const {id,volumes,nodes,goals,zone} of variants){
     const {networkMap}=await import('../../shared/multiplayer/maps.mjs');
     const catalog=JSON.parse(await readFile(new URL('../../levels/manifest.json',import.meta.url)));
     const entry=catalog.levels.find(row=>row.id===id), online=networkMap(id);
-    assert.deepEqual(entry.modes,['endless']);assert.notEqual(entry.randomEligible,true);
-    assert.deepEqual(online.modes,['tdm']);assert.equal(online.residents,false);
+    assert.deepEqual(entry.modes,['endless','ffa','dom']);assert.notEqual(entry.randomEligible,true);
+    assert.deepEqual(online.modes,['tdm','ffa','dom']);assert.equal(online.residents,false);
     assert.equal(entry.name,online.name);assert.equal(entry.file,online.file);assert.equal(entry.preview,online.preview);
     const data=parseProject(await readFile(new URL('../../'+entry.file,import.meta.url),'utf8'));
     const world=createWorld({levelProject:data,fresh:true}), spec=data.referenceMap;

@@ -32,11 +32,16 @@ async function open(viewport={width:1280,height:720},mobile=false,endpoint=local
  assert(await page.locator('#fatal').evaluate(e=>e.hidden),await page.locator('#fatal').textContent());
  await page.locator('#network-mode').waitFor();
  assert.equal(await page.locator('#network-mode').inputValue(),'tdm');
- assert.deepEqual(await page.locator('#network-mode option').allTextContents(),['Team Deathmatch','Classic']);
+ assert.deepEqual(await page.locator('#network-mode option').allTextContents(),['Team Deathmatch','Classic','Free-for-All','Domination']);
  assert.deepEqual(await page.locator('.lb-brief dt').allTextContents(),['Map','Format','Available modes']);
  assert.deepEqual(await page.locator('.lb-brief dd').allTextContents(),[
-   'Floor 5 Laboratory','5v5 · Private room','Team Deathmatch or Classic',
+   'Floor 5 Laboratory','5v5 · Private room','Team Deathmatch, Classic, Free-for-All, or Domination',
  ]);
+ await page.locator('#network-mode').selectOption('ffa');
+ assert.equal(await page.locator('#menu .eyebrow').textContent(),'Local multiplayer');
+ assert.equal(await page.locator('.lb-brief dd').nth(1).textContent(),'Up to 10 players · Private room');
+ await page.locator('#network-mode').selectOption('tdm');
+ assert.equal(await page.locator('.lb-brief dd').nth(1).textContent(),'5v5 · Private room');
  assert.deepEqual(levelRequests,[],'no LevelProject requested before room admission');
  assert(await page.evaluate(()=>!__fps.world&&!__fps.renderer&&__fps.renderBudget.stats.rendered===0));
  return page;

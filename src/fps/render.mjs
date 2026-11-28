@@ -1,3 +1,6 @@
+import {createReplayHitMarker,disposeReplayRender} from './replay-render.mjs';
+import {DominationFlags} from './domination-flags.mjs';
+import {combatOpponents} from './bonuses.mjs';
 import {OUTFITS} from './operator-outfits.mjs';
 import {referenceScene} from './reference-scene.mjs';
 import {ActorOcclusion} from './actor-occlusion.mjs';
@@ -122,6 +125,7 @@ export class Renderer extends EngineRenderer {
       if(scene===this.viewScene)this.applyInspection();
       return this.nativeRender(scene,camera);
     };
+    this.replayHitMarker=createReplayHitMarker();
     this.viewFill=new THREE.DirectionalLight(0xb5d8ee,.75);this.viewFill.position.set(2,.5,-1);this.viewScene.add(this.viewFill);
     this.scene.environmentIntensity=.72;
     this.combatVisuals=new CombatVisuals(this.scene,world,settings);
@@ -248,6 +252,7 @@ export class Renderer extends EngineRenderer {
     this.nativeRender=(scene,camera)=>{passes.push([scene,camera]);};
     try{scissored(()=>this.render(game,game.player,0));}
     finally{this.nativeRender=draw;}
+    if(this.replayHitMarker)passes.push([this.replayHitMarker.scene,this.replayHitMarker.camera]);
     // Three.compile traverses invisible objects too. Link only the drawables
     // visible to the spawn cameras; use their actual scene as the lighting target.
     // The borrowed objects retain their parents, skeletons and instance attributes.
@@ -497,12 +502,16 @@ export class Renderer extends EngineRenderer {
   }
   render(game,viewActor,dt){
     // Door instance culling runs at the world-draw hook, after camera/lights update.
+    if(game.state.mode==='dom'&&game.state.zones?.length){
+      this.dominationFlags??=new DominationFlags(this.scene);
+      this.dominationFlags.update(game.state.zones,game.team,game.state.time);
+    }else if(this.dominationFlags)this.dominationFlags.root.visible=false;
     this.presentationGame=game;this.glassVisuals?.update(game.state.time);this.combatVisuals?.update(game);this.livingScene?.update(game.state.time);this.actionVisuals?.update(game,this.camera);super.render(game,viewActor,dt);
   }
   events(events,game){
     this.glassVisuals?.events(events,game);this.combatVisuals?.events(events,game);
     const playerHit=e=>e.sourceId===game.player?.id && (
-      game.actors.some(a=>a.id===e.actorId && a.team!==game.player.team) ||
+      game.actors.some(a=>a.id===e.actorId && combatOpponents(game.player,a,game.state.mode)) ||
       game.state.zombies?.some(z=>z.id===e.actorId));
     super.events(events.filter(e=>e.type!=='hit'||playerHit(e)),game);
     this.actionVisuals?.events(events,game);
@@ -515,7 +524,9 @@ export class Renderer extends EngineRenderer {
   }
   dispose({keepCharacterLibrary=false}={}){
     if(this.presentationDisposed)return;this.presentationDisposed=true;
+    disposeReplayRender(this);this.replayHitMarker.geometry.dispose();this.replayHitMarker.material.dispose();
     if(keepCharacterLibrary)releaseMapGpuResources([this.scene,this.viewScene,...this.weaponCache.values()]);
+    this.dominationFlags?.dispose();
     this.referenceScene?.dispose();this.zombieVisuals?.dispose();this.floorEnvironment?.dispose();this.glassVisuals?.dispose();this.detailScene?.dispose();this.doorVisuals?.dispose();this.riposteProps?.dispose();
     this.focusLighting?.dispose();this.facilityScene?.dispose();
     for(const restore of this.presentationRestores||[])restore();

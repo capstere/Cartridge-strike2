@@ -1,3 +1,4 @@
+import {MODE_NAMES} from '../match-presentation.mjs';
 import {accountRequest} from '../account-profile.mjs';
 import {accessText as en} from '../../../shared/multiplayer/access-english.mjs';
 import {NETWORK_MAPS,DEFAULT_MAP_ID,networkMap} from '../../../shared/multiplayer/maps.mjs';
@@ -40,12 +41,15 @@ export function networkMenu(join,activate=()=>{},internet=false,cancel=()=>{}){
   }else{
     $('network-map').replaceChildren(...NETWORK_MAPS.map(map=>new Option(map.name,map.id)));
     $('network-map').value=DEFAULT_MAP_ID;
+    const modeList=new Intl.ListFormat('en',{style:'long',type:'disjunction'});
+    const describeFormat=()=>{brief[1].textContent=$('network-mode').value==='ffa'?en.privateIndividuals:en.privateTeams;};
+    $('network-mode').addEventListener('change',describeFormat);
     const selectMap=()=>{
       const map=networkMap($('network-map').value),current=$('network-mode').value;
-      const labels={tdm:'Team Deathmatch',classic:'Classic'};
+      const labels=MODE_NAMES;
       $('network-mode').replaceChildren(...map.modes.map(id=>new Option(labels[id],id)));
       $('network-mode').value=map.modes.includes(current)?current:map.modes[0];
-      brief[0].textContent=map.name;brief[2].textContent=map.modes.map(id=>labels[id]).join(en.otherMode);
+      brief[0].textContent=map.name;brief[2].textContent=modeList.format(map.modes.map(id=>labels[id]));describeFormat();
     };
     $('network-map').onchange=selectMap;selectMap();
     $('network-endpoint').value=location.origin;

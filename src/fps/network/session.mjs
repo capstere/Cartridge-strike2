@@ -1,4 +1,5 @@
 import {decodeEquipment,equippedDefinition} from '../arsenal.mjs';
+import {ReplayPlayback} from '../replay-playback.mjs';
 import {bonusSlot} from '../bonuses.mjs';
 import {purchaseReasons} from '../game-english.mjs';
 import {RUSH,rushReady} from '../rush.mjs';
@@ -51,6 +52,7 @@ function actorView(s,localId){
     inventory:{primary:s.primary?{...decodeEquipment(s.handling?.primaryKit),id:s.primary,ammo:s.primaryAmmo,reserve:s.primaryReserve}:null,pistol:{...decodeEquipment(s.handling?.pistolKit),id:s.pistol,ammo:s.pistolAmmo,reserve:s.pistolReserve},knife:{id:'knife',ammo:Infinity,reserve:0},smoke:cartridgeCount(s,'smoke'),flash:cartridgeCount(s,'flash'),he:cartridgeCount(s,'he')}};
   copyPose(a,s);
   for(const k of ['lifeId','controlEpoch','connected','alive','hp','armor','kills','deaths','reloadUntil','nextShot','respawnAt','spawnProtectedUntil','deathVariant','hurtTime','recoil'])a[k]=s[k];
+  a.points=s.handling?.points??0;
   // An unspawned Classic reservation also has alive=false, with no death.
   a.deathAt=s.deathWeapon?s.deathAt:null;
   a.deathCause=s.deathWeapon?{sourceName:s.deathSource,weapon:s.deathWeapon}:null;
@@ -60,6 +62,7 @@ function actorView(s,localId){
 /** A Game-shaped presentation only. Never advances Game combat/rules locally. */
 export class NetworkSession {
   constructor(world,{outfitId='issued',arsenalProfile=null,loadWorld,onLoading=()=>{},onCombatAudio,onRocketAudio,onDisconnect=()=>{},onConnection=()=>{},onMatch=()=>{}}={}){
+    this.replay=new ReplayPlayback();this.progression=null;this.rewardSerial=0;
     this.loadWorld=loadWorld;this.onLoading=onLoading;this.worldRevision=0;
     this.onCombatAudio=onCombatAudio;this.onRocketAudio=onRocketAudio;this.onMatch=onMatch;this.matchId=0;this.matchPhase='';this.world=world;this.onDisconnect=onDisconnect;this.onConnection=onConnection;this.connectionState='connecting';this.controlEpoch=0;this.closed=false;this.enabled=true;
     this.events=[];this.seenEvent=0;this.predictedShots=new Map();this.actionTimes=new Map();this.remote=new Map();this.residents=new Map();this.projectiles=new Map();this.unsub=[];
@@ -105,6 +108,28 @@ export class NetworkSession {
     this.view.drainEvents=()=>this.drainEvents();
     this.view.update=()=>{throw Error('NetworkSession owns input; the client cannot step Game.');};
   }
+  replayScope(){
+    const room=this.room,state=room?.state,self=state?.actors?.get(this.localPlayerId);
+    if(this.closed||!self?.ready||self.pending||self.sessionId!==room.sessionId||this.worldRevision!==state.worldRevision)return null;
+    return {matchId:state.matchId,round:state.round,worldRevision:state.worldRevision,mapId:state.mapId,
+      phase:state.phase,mode:state.mode,roundPhase:state.roundPhase,actorId:self.id,lifeId:self.lifeId,controlEpoch:self.controlEpoch,
+      connected:self.connected&&this.connectionState==='connected',alive:self.alive,
+      respawnRemaining:self.respawnAt>0?self.respawnAt-state.time:undefined};
+  }
+  receiveReward(m){
+    const s=this.replayScope();
+    if(!s?.connected||!m||!['matchId','round','worldRevision','actorId','lifeId','controlEpoch'].every(k=>m[k]===s[k])||
+      !Number.isSafeInteger(m.serial)||m.serial<=this.rewardSerial||!['kill','headshot','assist'].includes(m.kind)||
+      !Number.isSafeInteger(m.xp)||m.xp<0||!Number.isSafeInteger(m.weaponXp)||m.weaponXp<0)return;
+    this.rewardSerial=m.serial;this.events.push({...m,type:'reward'});
+  }
+  receiveProgression(m){
+    const s=this.replayScope();
+    if(!s?.connected||!m||!['matchId','worldRevision','actorId'].every(k=>m[k]===s[k])||
+      ![m.xp,m.assists,m.headshots].every(n=>Number.isSafeInteger(n)&&n>=0)||!Array.isArray(m.weapons)||
+      !Array.isArray(m.challenges)||typeof m.ranked!=='boolean')return;
+    this.progression=m;
+  }
   applyPrivateBonus(message=this.privateBonus){
     const state=this.room?.state,self=state?.actors.get(this.localPlayerId);
     if(!message || !self?.ready || !self.connected || self.pending || self.sessionId!==this.room.sessionId ||
@@ -149,11 +174,11 @@ export class NetworkSession {
     return self?.ready&&self.connected&&self.alive&&!self.pending?self:null;
   }
   canSendTeamComms(){
-    return this.enabled&&!!this.teamCommsActor();
+    return this.room?.state.mode!=='ffa'&&this.enabled&&!!this.teamCommsActor();
   }
   sendTeamComms(kind,anchorId){
     const self=this.teamCommsActor();
-    if(!this.enabled||!self||!TEAM_COMMS_COMMANDS.includes(kind))return false;
+    if(this.room?.state.mode==='ffa'||!this.enabled||!self||!TEAM_COMMS_COMMANDS.includes(kind))return false;
     if(kind==='ping'&&!this.teamAnchors.has(anchorId))return false;
     const now=performance.now();
     if(now<this.nextTeamCommsAt)return false;
@@ -167,7 +192,7 @@ export class NetworkSession {
   }
   validTeamComms(message){
     const self=this.teamCommsActor();
-    if(!self||!message)return false;
+    if(this.room?.state.mode==='ffa'||!self||!message)return false;
     const state=this.room.state;
     if(message.team!==self.team||message.matchId!==state.matchId||message.round!==state.round||
       message.recipientLifeId!==self.lifeId||message.recipientEpoch!==self.controlEpoch||
@@ -232,6 +257,9 @@ export class NetworkSession {
     this.joiningRoom=null;this.room=room;this.familyAlias=room.name===FAMILY_ROOM_ALIAS?FAMILY_ROOM_ALIAS:'';
     Object.assign(room.reconnection,{enabled:true,minUptime:0,minDelay:150,maxDelay:1000,maxRetries:30,maxEnqueuedMessages:0});
     this.unsub.push(room.onMessage('problem',message=>{this.problem=String(message);}));
+    this.unsub.push(room.onMessage('replay',m=>this.replay.receive(m,this.replayScope())));
+    this.unsub.push(room.onMessage('reward',m=>this.receiveReward(m)));
+    this.unsub.push(room.onMessage('match-progression',m=>this.receiveProgression(m)));
     this.unsub.push(room.onMessage('bonusState',message=>this.applyPrivateBonus(message)));
     this.unsub.push(room.onMessage('class-choice',message=>{
       this.classChoice=message;this.arsenalProfile=message.profile;
@@ -277,6 +305,7 @@ export class NetworkSession {
     if(this.closed)throw this.problem instanceof Error ? this.problem : Error(this.problem||'Room closed before spawn.');
   }
   resetWorldBindings(){
+    this.replay.reset();this.progression=null;this.rewardSerial=0;
     this.prediction?.dispose();
     this.prediction=null;
     for(const collection of [this.remote,this.residents,this.projectiles]){
@@ -340,8 +369,14 @@ export class NetworkSession {
     }
     this.view.config=classic?CLASSIC_NETWORK_CONFIG:NETWORK_CONFIG;
     this.view.state.difficulty=state.botDifficulty??this.view.config.difficulty;
-    this.view.state.mode=classic?'classic':'endless';
+    this.view.state.mode=state.mode==='tdm'?'endless':state.mode;
+    Object.assign(this.view.state,{scoreTarget:state.scoreTarget,remainingSeconds:state.remainingSeconds,winner:state.winner,
+      zones:Array.from(state.zones?.values()??[],({id,x,y,z,radius,owner,progress,contested})=>({id,x,y,z,radius,owner,progress,contested}))});
     const newMatch=this.matchId!==state.matchId,newPhase=this.matchPhase!==state.phase;
+    if(newMatch){
+      this.replay.reset();this.rewardSerial=0;
+      if(this.progression?.matchId!==state.matchId)this.progression=null;
+    }
     if(newMatch||newRound||modeChanged){
       this.events=[];
       this.clearTeamComms();
@@ -654,6 +689,7 @@ export class NetworkSession {
     if(this.closed||this.connectionState==='reconnecting')return;
     this.crouchEdge=false;this.firePress=null;this.pendingCosmetic=null;
     discardSlideRequest(this);
+    this.replay.reset();this.progression=null;
     this.privateBonus=null;
     if(this.view.player){this.view.player.bonus=null;this.view.player.uavSamples=null;}
     this.connectionState='reconnecting';this.purchase=null;this.enabled=false;this.view.state.paused=true;
@@ -674,6 +710,7 @@ export class NetworkSession {
   }
   dispose(leave=true){
     if(this.closed)return;this.closed=true;this.connectionState='disconnected';
+    this.replay.reset();this.progression=null;
     clearTimeout(this.reconnectTimer);this.reconnectTimer=null;
     clearInterval(this.watchdog);this.watchdog=null;clearTimeout(this.joinTimer);this.joinTimer=null;this.joinAbort?.abort();this.mapAbort?.abort();
     for(const off of this.unsub)if(typeof off==='function')off();this.unsub=[];

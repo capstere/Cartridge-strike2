@@ -18,7 +18,7 @@ const forms = {
   delete: ['Delete account permanently', ['password']],
 };
 const labels = {matches:'Matches', wins:'Wins', kills:'Kills', deaths:'Deaths', xp:'XP'};
-const modes = {classic:'Classic', tdm:'Team Deathmatch', endless:'Endless'};
+const modes = {classic:'Classic', tdm:'Team Deathmatch', endless:'Endless', ffa:'Free-for-all', dom:'Domination'};
 const knownMaps = {'floor5-prepared':'Floor 5 Laboratory', 'compact-arena':'Compact Arena', meltem:'Meltem', embruns:'Kervénec', tephra:'Tephra'};
 function element(tag, text, className) {
   const el = document.createElement(tag);
@@ -85,7 +85,7 @@ export function mountAccountProfile(root) {
         const result = await accountRequest(path,payload);
         if (!valid()) return;
         data = result;
-        window.dispatchEvent(new CustomEvent('cs-account-changed',{detail:{user:result.user,arsenal:result.arsenal,entitlements:result.entitlements}}));
+        window.dispatchEvent(new CustomEvent('cs-account-changed',{detail:{user:result.user,arsenal:result.arsenal,entitlements:result.entitlements,progression:result.progression}}));
         render();
         if (result.recoveryCode) {
           const code = result.recoveryCode;
@@ -213,7 +213,19 @@ export function mountAccountProfile(root) {
       for (const [key,title] of Object.entries(labels)) {
         const cell = element('div'); cell.append(element('dt',title),element('dd',String(data.stats[key] || 0))); stats.append(cell);
       }
+      const progression=data.progression;
+      if(progression){
+        for(const [label,value] of [['Assists',progression.assists],['Headshots',progression.headshots]]){
+          const cell=element('div');cell.append(element('dt',label),element('dd',String(value||0)));stats.append(cell);
+        }
+      }
       view.append(stats);
+      if(progression?.weapons?.length){
+        const details=element('details'),list=element('ul');
+        details.append(element('summary','Weapon progression'));
+        for(const w of progression.weapons)list.append(element('li',(w.name||w.id)+' · Level '+w.level+' · '+w.xp+' XP'));
+        details.append(list);view.append(details);
+      }
       if (data.features?.publicMatches) view.append(actions(button('Find a public match',publicMatches,true),button('Blocked players',blockedPlayers)));
       view.append(element('h3','Recent matches'));
       if (data.recent.length) {

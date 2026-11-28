@@ -1,0 +1,132 @@
+{
+  "control": {
+    "revision": "61fdb3710fff3e936dcf0c9de10eb1363490bfe2",
+    "buildHash": "cb5b3c6c43cf087ea635746206dd3d4cca9d2859106df24a62e28f388f9303fb",
+    "driverSha256": "178235415b3a0e7ba65dc59ecc7204d666d4ca47ec3e5aeb207fb665a17a9f05",
+    "reportSha256": "fef904bbdd8e0aeeabffe7ab0298a42dc56c22600a8e7ec0d863c8b9b543dda0",
+    "gpu": [
+      {
+        "viewport": [
+          960,
+          600
+        ],
+        "framebuffer": [
+          720,
+          450
+        ],
+        "renderer": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)"
+      },
+      {
+        "viewport": [
+          844,
+          390
+        ],
+        "framebuffer": [
+          633,
+          292
+        ],
+        "renderer": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)"
+      }
+    ],
+    "chromium": "156.0.8078.79",
+    "scenarios": [
+      "ffa",
+      "dom"
+    ],
+    "passed": true,
+    "death": {
+      "firstHistoricalWorldRenderMs": 1101,
+      "newGlLinksInFirstDraw": 10,
+      "sampledDraws": 3,
+      "linksAcrossSample": 18,
+      "firstHistoricalElapsedMs": 802,
+      "nextCallbackStepMs": 1186,
+      "terminalMarkerDraws": 1,
+      "sourceStarts": 1
+    },
+    "desktopFinal": {
+      "firstHistoricalWorldRenderMs": 2204,
+      "newGlLinksInFirstDraw": 15,
+      "sampledDraws": 51,
+      "linksAcrossSample": 17,
+      "firstHistoricalElapsedMs": 0,
+      "nextCallbackStepMs": 18,
+      "terminalMarkerDraws": 2,
+      "sourceStarts": 1
+    },
+    "pageErrors": [],
+    "legalRespawn": {
+      "x": 29.399999999999995,
+      "y": 0,
+      "z": 4.8999999999999995,
+      "lifeId": 3,
+      "capsuleClear": true,
+      "overlaps": false
+    }
+  },
+  "candidate": {
+    "revision": "262c89746eb086b6facf4125f8441383faf8deeb",
+    "buildHash": "f465a24ad54c29cc2a5187ea4c1486b58d0de153d1a0ad91d52f3c894eaae48a",
+    "driverSha256": "178235415b3a0e7ba65dc59ecc7204d666d4ca47ec3e5aeb207fb665a17a9f05",
+    "reportSha256": "0b4317f25caeba10a33bf65f5f26d81221a8539ffa60bcbb0e28c2462ed7be7d",
+    "gpu": [
+      {
+        "viewport": [
+          960,
+          600
+        ],
+        "framebuffer": [
+          720,
+          450
+        ],
+        "renderer": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)"
+      },
+      {
+        "viewport": [
+          844,
+          390
+        ],
+        "framebuffer": [
+          633,
+          292
+        ],
+        "renderer": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)"
+      }
+    ],
+    "chromium": "156.0.8078.79",
+    "scenarios": [
+      "ffa",
+      "dom"
+    ],
+    "passed": true,
+    "death": {
+      "firstHistoricalWorldRenderMs": 12,
+      "newGlLinksInFirstDraw": 0,
+      "sampledDraws": 58,
+      "linksAcrossSample": 0,
+      "firstHistoricalElapsedMs": 800,
+      "nextCallbackStepMs": 79,
+      "terminalMarkerDraws": 3,
+      "sourceStarts": 1
+    },
+    "desktopFinal": {
+      "firstHistoricalWorldRenderMs": 23,
+      "newGlLinksInFirstDraw": 0,
+      "sampledDraws": 60,
+      "linksAcrossSample": 0,
+      "firstHistoricalElapsedMs": 0,
+      "nextCallbackStepMs": 12,
+      "terminalMarkerDraws": 7,
+      "sourceStarts": 1
+    },
+    "pageErrors": [],
+    "legalRespawn": {
+      "x": 29.399999999999995,
+      "y": 0,
+      "z": 4.8999999999999995,
+      "lifeId": 3,
+      "capsuleClear": true,
+      "overlaps": false
+    }
+  }
+}

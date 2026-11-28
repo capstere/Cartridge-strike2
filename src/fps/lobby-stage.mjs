@@ -9,7 +9,7 @@ import {arsenalPreview} from './arsenal-preview.mjs';
 import {mountWardrobe} from './wardrobe-menu.mjs';
 import {syncAuthoredActor} from './character-actors.mjs?v=6.1.2';
 import {makeWeapon} from './models.mjs?v=6.1.2';
-import {OUTFITS} from './operator-outfits.mjs';
+import {OUTFITS,EARNED_OUTFITS} from './operator-outfits.mjs';
 import {currentOutfit,equipOutfit,loadCharacterLibrary,createAuthoredAvatar,animateAuthored,disposeAvatar,setPrivateCharacterActors} from './character-library.mjs?v=6.1.2';
 
 const $=id=>document.getElementById(id);
@@ -110,6 +110,7 @@ function makeStage(){
   }
   const actor={x:0,z:0,y:0,yaw:0,moving:0,onGround:true,crouching:false,height:1.8,weapon:'knife',reloadUntil:-1,alive:true};
   let thumbnailTeam, thumbnailWeapon, thumbnailIndex = 0;
+  window.addEventListener('cs-wardrobe-progress',()=>{thumbnailIndex=0;stage?.setTeam(menu.dataset.side,true);});
   function setTeam(next,force=false){
     if(next===team&&avatar&&!force)return;team=next;const col=ACCENT[next]||ACCENT.analysts;
     rimA.color.setHex(col);rimB.color.setHex(col);ringMat.color.setHex(col);ring2.material.color.setHex(col);
@@ -133,7 +134,9 @@ function makeStage(){
       thumbnailWeapon = weapon;
       thumbnailIndex = 0;
     }
-    const outfit = OUTFITS[thumbnailIndex];
+    const catalog=[...OUTFITS,...EARNED_OUTFITS];
+    while(thumbnailIndex<catalog.length && !wardrobe.has(catalog[thumbnailIndex].id))thumbnailIndex++;
+    const outfit=catalog[thumbnailIndex];
     if (!outfit) return;
     thumbnailIndex++;
     const tile = wardrobe.get(outfit.id).querySelector('canvas');

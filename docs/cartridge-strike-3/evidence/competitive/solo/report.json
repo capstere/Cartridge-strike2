@@ -1,0 +1,706 @@
+{
+  "runtime": "61aa00e27b18bbc523483bb2938ef7eaa64203cf",
+  "driverHash": "93e232e299e16ff86e2a8c8ba0d1335f9aadd174fac7d277959fc02b432d4d6f",
+  "build": "cb5b3c6c43cf087ea635746206dd3d4cca9d2859106df24a62e28f388f9303fb",
+  "scenarios": [
+    {
+      "id": 1,
+      "mode": "ffa",
+      "phase": "active",
+      "initial": {
+        "x": 0.8442285714285713,
+        "y": 0,
+        "z": 16.45462,
+        "alive": true,
+        "life": 1,
+        "health": 100,
+        "k": 0,
+        "d": 0
+      },
+      "newGame": true,
+      "newActor": true,
+      "scores": {
+        "analysts": 0,
+        "counterAnalysts": 0
+      },
+      "actorCount": 8,
+      "actorsAlive": 8,
+      "zones": [],
+      "batches": {},
+      "draws": 9672,
+      "inputs": [
+        {
+          "at": 0.18333333333333332,
+          "x": 0.8442285714285713,
+          "z": 16.59462,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.21666666666666665,
+          "x": 0.8442285714285713,
+          "z": 16.73462,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.2333333333333333,
+          "x": 0.8442285714285713,
+          "z": 16.80462,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.24999999999999997,
+          "x": 0.8442285714285713,
+          "z": 16.87462,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.3,
+          "x": 0.8442285714285713,
+          "z": 17.08462,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.35,
+          "x": 0.8442285714285713,
+          "z": 17.25099,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.3833333333333333,
+          "x": 0.8442285714285713,
+          "z": 17.25099,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.4333333333333333,
+          "x": 0.8442285714285713,
+          "z": 17.25099,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.4833333333333333,
+          "x": 0.8442285714285713,
+          "z": 17.25099,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.5333333333333333,
+          "x": 0.8442285714285713,
+          "z": 17.25099,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.5833333333333335,
+          "x": 0.8442285714285713,
+          "z": 17.25099,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.6000000000000002,
+          "x": 0.8442285714285713,
+          "z": 17.25099,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.6166666666666669,
+          "x": 0.8442285714285713,
+          "z": 17.25099,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.6666666666666671,
+          "x": 0.8442285714285713,
+          "z": 17.25099,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.7000000000000005,
+          "x": 0.8442285714285713,
+          "z": 17.25099,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.7500000000000007,
+          "x": 0.8442285714285713,
+          "z": 17.25099,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.8000000000000008,
+          "x": 0.8442285714285713,
+          "z": 17.25099,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.8333333333333343,
+          "x": 0.8442285714285713,
+          "z": 17.25099,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.850000000000001,
+          "x": 0.8442285714285713,
+          "z": 17.25099,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        }
+      ],
+      "at": 1.183333333333334,
+      "warmup": 0,
+      "actor": {
+        "x": 0.8442285714285713,
+        "y": 0,
+        "z": 17.25099,
+        "alive": true,
+        "life": 1,
+        "health": 100,
+        "k": 0,
+        "d": 0
+      },
+      "legal": true,
+      "moved": 0.7963700000000031,
+      "hud": {
+        "label": "FREE-FOR-ALL · 25 KILLS",
+        "score": "0",
+        "other": "0",
+        "timer": "10:00",
+        "help": "Hold Tab · Ranked by eliminations, fewest deaths, then points",
+        "standings": "INDIVIDUAL STANDINGS\nPLAYER\tK\tD\tPOINTS\tSTATUS\nYou\t0\t0\t0\tIn play\nA-02 · bot\t0\t0\t0\tIn play\nA-03 · bot\t0\t0\t0\tIn play\nA-04 · bot\t0\t0\t0\tIn play\nC-01 · bot\t0\t0\t0\tIn play\nC-02 · bot\t0\t0\t0\tIn play\nC-03 · bot\t0\t0\t0\tIn play\nC-04 · bot\t0\t0\t0\tIn play"
+      }
+    },
+    {
+      "id": 2,
+      "mode": "dom",
+      "phase": "active",
+      "initial": {
+        "x": -20.541,
+        "y": 0,
+        "z": -30.03999,
+        "alive": true,
+        "life": 1,
+        "health": 100,
+        "k": 0,
+        "d": 0
+      },
+      "newGame": true,
+      "newActor": true,
+      "scores": {
+        "analysts": 0,
+        "counterAnalysts": 0
+      },
+      "actorCount": 10,
+      "actorsAlive": 10,
+      "zones": [
+        {
+          "id": "A",
+          "x": -16.0216,
+          "y": 0,
+          "z": -18.2662725,
+          "radius": 2.8,
+          "owner": "",
+          "progress": 0,
+          "contested": false
+        },
+        {
+          "id": "B",
+          "x": 4.8999999999999995,
+          "y": 0,
+          "z": -2.799999999999999,
+          "radius": 2.8,
+          "owner": "",
+          "progress": 0,
+          "contested": false
+        },
+        {
+          "id": "C",
+          "x": 18.2,
+          "y": 0,
+          "z": 18.2,
+          "radius": 2.8,
+          "owner": "",
+          "progress": 0,
+          "contested": false
+        }
+      ],
+      "batches": {
+        "CylinderGeometry": [
+          [
+            -16.0216007232666,
+            -18.266271591186523,
+            1
+          ],
+          [
+            4.900000095367432,
+            -2.799999952316284,
+            1
+          ],
+          [
+            18.200000762939453,
+            18.200000762939453,
+            1
+          ]
+        ],
+        "PlaneGeometry": [
+          [
+            -16.0216007232666,
+            -18.266271591186523,
+            1
+          ],
+          [
+            4.900000095367432,
+            -2.799999952316284,
+            1.000000020215581
+          ],
+          [
+            18.200000762939453,
+            18.200000762939453,
+            1.000000010513916
+          ]
+        ],
+        "RingGeometry": [
+          [
+            -16.0216007232666,
+            -18.266271591186523,
+            2.799999952316284
+          ],
+          [
+            4.900000095367432,
+            -2.799999952316284,
+            2.799999952316284
+          ],
+          [
+            18.200000762939453,
+            18.200000762939453,
+            2.799999952316284
+          ]
+        ]
+      },
+      "draws": 91720,
+      "inputs": [
+        {
+          "at": 0.19999999999999998,
+          "x": -20.541,
+          "z": -29.82999,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.24999999999999997,
+          "x": -20.541,
+          "z": -29.619989999999998,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.3,
+          "x": -20.541,
+          "z": -29.409989999999997,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.3333333333333333,
+          "x": -20.541,
+          "z": -29.269989999999996,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.36666666666666664,
+          "x": -20.541,
+          "z": -29.129989999999996,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.41666666666666663,
+          "x": -20.541,
+          "z": -28.919989999999995,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.4666666666666666,
+          "x": -20.541,
+          "z": -28.709989999999994,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.5166666666666666,
+          "x": -20.541,
+          "z": -28.499989999999993,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.5666666666666668,
+          "x": -20.541,
+          "z": -28.289989999999992,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.6000000000000002,
+          "x": -20.541,
+          "z": -28.149989999999992,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.6500000000000004,
+          "x": -20.541,
+          "z": -27.93998999999999,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.6833333333333338,
+          "x": -20.541,
+          "z": -27.79998999999999,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        }
+      ],
+      "at": 1.100000000000001,
+      "warmup": 0,
+      "actor": {
+        "x": -20.541,
+        "y": 0,
+        "z": -27.79998999999999,
+        "alive": true,
+        "life": 1,
+        "health": 100,
+        "k": 0,
+        "d": 0
+      },
+      "legal": true,
+      "moved": 2.240000000000009,
+      "hud": {
+        "label": "DOMINATION · 100 POINTS",
+        "score": "0",
+        "other": "0",
+        "timer": "10:00",
+        "presentation": {
+          "zone-control": {
+            "rect": [
+              428.7109375,
+              65,
+              631.2890625,
+              85
+            ],
+            "visible": true,
+            "text": "ANeutral\nBNeutral\nCNeutral",
+            "paint": [
+              "game",
+              "cs-flow-ready hud-inventory-peek cs-in-match hud-playing"
+            ]
+          },
+          "bomb-status": {
+            "rect": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "visible": false,
+            "text": "Capture and hold A, B and C",
+            "paint": [
+              "game",
+              "cs-flow-ready hud-inventory-peek cs-in-match hud-playing"
+            ]
+          },
+          "weapon-slots": {
+            "rect": [
+              392.4609375,
+              540.609375,
+              667.5390625,
+              584
+            ],
+            "visible": true,
+            "text": "1\nPULSE SMG\n2\nSIDEARM A\n3\nKNIFE\n4\nGRENADES\n5\n—",
+            "paint": [
+              "game",
+              "cs-flow-ready hud-inventory-peek cs-in-match hud-playing"
+            ]
+          },
+          "bonus-controls": {
+            "rect": [
+              444.3671875,
+              598,
+              615.6328125,
+              642
+            ],
+            "visible": true,
+            "text": "UAV\n0/3\nRage\n0/5\nImmortal\n0/8",
+            "paint": [
+              "",
+              "",
+              "bonus-controls",
+              "game",
+              "cs-flow-ready hud-inventory-peek cs-in-match hud-playing"
+            ]
+          }
+        },
+        "zones": "ANeutral\nBNeutral\nCNeutral"
+      }
+    },
+    {
+      "id": 3,
+      "mode": "ffa",
+      "phase": "active",
+      "initial": {
+        "x": 0.8442285714285713,
+        "y": 0,
+        "z": 16.45462,
+        "alive": true,
+        "life": 1,
+        "health": 100,
+        "k": 0,
+        "d": 0
+      },
+      "newGame": true,
+      "newActor": true,
+      "scores": {
+        "analysts": 0,
+        "counterAnalysts": 0
+      },
+      "actorCount": 8,
+      "actorsAlive": 8,
+      "zones": [],
+      "batches": {},
+      "draws": 9643,
+      "inputs": [
+        {
+          "at": 0.18333333333333332,
+          "x": 0.8442285714285713,
+          "z": 16.66462,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.2333333333333333,
+          "x": 0.8442285714285713,
+          "z": 16.87462,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.24999999999999997,
+          "x": 0.8442285714285713,
+          "z": 16.94462,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.3,
+          "x": 0.8442285714285713,
+          "z": 17.15462,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.35,
+          "x": 0.8442285714285713,
+          "z": 17.25099,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.3833333333333333,
+          "x": 0.8442285714285713,
+          "z": 17.25099,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.41666666666666663,
+          "x": 0.8442285714285713,
+          "z": 17.25099,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.4666666666666666,
+          "x": 0.8442285714285713,
+          "z": 17.25099,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.49999999999999994,
+          "x": 0.8442285714285713,
+          "z": 17.25099,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.5333333333333333,
+          "x": 0.8442285714285713,
+          "z": 17.25099,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.5833333333333335,
+          "x": 0.8442285714285713,
+          "z": 17.25099,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.6000000000000002,
+          "x": 0.8442285714285713,
+          "z": 17.25099,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.6166666666666669,
+          "x": 0.8442285714285713,
+          "z": 17.25099,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.6500000000000004,
+          "x": 0.8442285714285713,
+          "z": 17.25099,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.7000000000000005,
+          "x": 0.8442285714285713,
+          "z": 17.25099,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.7500000000000007,
+          "x": 0.8442285714285713,
+          "z": 17.25099,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.7666666666666674,
+          "x": 0.8442285714285713,
+          "z": 17.25099,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.8166666666666675,
+          "x": 0.8442285714285713,
+          "z": 17.25099,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        },
+        {
+          "at": 0.850000000000001,
+          "x": 0.8442285714285713,
+          "z": 17.25099,
+          "forward": 1,
+          "strafe": 0,
+          "life": 1
+        }
+      ],
+      "at": 1.0666666666666678,
+      "warmup": 0,
+      "actor": {
+        "x": 0.8442285714285713,
+        "y": 0,
+        "z": 17.25099,
+        "alive": true,
+        "life": 1,
+        "health": 100,
+        "k": 0,
+        "d": 0
+      },
+      "legal": true,
+      "moved": 0.7963700000000031,
+      "hud": {
+        "label": "FREE-FOR-ALL · 25 KILLS",
+        "score": "0",
+        "other": "0",
+        "timer": "10:00",
+        "help": "Hold Tab · Ranked by eliminations, fewest deaths, then points",
+        "standings": "INDIVIDUAL STANDINGS\nPLAYER\tK\tD\tPOINTS\tSTATUS\nYou\t0\t0\t0\tIn play\nA-02 · bot\t0\t0\t0\tIn play\nA-03 · bot\t0\t0\t0\tIn play\nA-04 · bot\t0\t0\t0\tIn play\nC-01 · bot\t0\t0\t0\tIn play\nC-02 · bot\t0\t0\t0\tIn play\nC-03 · bot\t0\t0\t0\tIn play\nC-04 · bot\t0\t0\t0\tIn play"
+      }
+    }
+  ],
+  "errors": [],
+  "fixture": "Unmodified game. Standard root, real desktop clicks, held keys, ordinary 5 second deployment. Read-only observation of Game.start/update and WebGL draws. Fresh guest profile, low graphics, volume zero.",
+  "map": "Floor 5 Laboratory",
+  "browser": "156.0.8078.79",
+  "renderer": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+  "passed": true
+}

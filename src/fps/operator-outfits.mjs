@@ -15,18 +15,31 @@ export const CHALLENGE_OUTFITS = Object.freeze([
   ['void','Void',['200 assault rifle eliminations','50 pistol eliminations','25 Domination captures']],
   ['gilet','Yellow Vest',['12 matches on qualifying French maps','5 wins on those maps','150 eliminations on those maps']]
 ]);
-const key = 'cartridge-operator-outfit';
-const find = id => OUTFITS.find(outfit => outfit.id === id);
-// Only built-in issued choices may cross a room boundary. Saved GLBs stay on-device.
-export function publicOutfitId(id) {
-  return find(id)?.id ?? OUTFITS[0].id;
+// 06gc-tenues-defi recognition details share each kit's existing skinned draw.
+const styles = [
+  ['shotgun',0x96735a,0x665447,0x403b33,0xbc7947],
+  ['sniper',0x34485a,0x273649,0x252f36,0x64b6dc],
+  ['sniper',0x3d5136,0x354833,0x353e32,0xe0aa50],
+  ['smg',0x423842,0x302934,0x453340,0xdf559c],
+  ['assault',0x34333f,0x272833,0x34303b,0xa58ded],
+  ['assault',0x343a37,0xd0c544,0x303532,0xe0e4c6]
+];
+export const EARNED_OUTFITS = Object.freeze(CHALLENGE_OUTFITS.map(([id,name],i)=>{
+  const [kit,shirt,vest,glove,accent]=styles[i];
+  return Object.freeze({id,name,role:'Challenge outfit',kit,shirt,vest,glove,accent});
+}));
+const catalog=new Map([...OUTFITS,...EARNED_OUTFITS].map(item=>[item.id,item]));
+const key='cartridge-operator-outfit';
+export const outfitDefinition=id=>catalog.get(id);
+export function publicOutfitId(id,unlocked=[]) {
+  const outfit=catalog.get(id);
+  return outfit && (!outfit.kit || Array.from(unlocked).includes(id)) ? id : 'issued';
 }
-export function readOutfit(storage) {
-  try { return find(storage.getItem(key)) || OUTFITS[0]; } catch { return OUTFITS[0]; }
+export function readOutfit(storage,unlocked=[]) {
+  try { return catalog.get(publicOutfitId(storage.getItem(key),unlocked)); } catch { return OUTFITS[0]; }
 }
-export function saveOutfit(id,storage) {
-  const outfit = find(id);
-  if (!outfit) throw Error('Choose an available outfit.');
-  storage.setItem(key, id);
-  return outfit;
+export function saveOutfit(id,storage,unlocked=[]) {
+  if (!catalog.has(id) || publicOutfitId(id,unlocked)!==id) throw Error('Choose an available outfit.');
+  storage.setItem(key,id);
+  return catalog.get(id);
 }

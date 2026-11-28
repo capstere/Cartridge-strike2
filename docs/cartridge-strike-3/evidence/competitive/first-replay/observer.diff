@@ -1,0 +1,30 @@
+diff --git a/tools/competitive-browser.mjs b/tools/replay-warm-native.tmp.mjs
+index f960776..1e32575 100644
+--- a/tools/competitive-browser.mjs
++++ b/tools/replay-warm-native.tmp.mjs
+@@ -125,6 +125,25 @@ async function observeFeedback(page){
+    const overlay=document.querySelector('#replay-view');
+    return overlay&&!overlay.hidden&&overlay.dataset.stage==='replay'?document.querySelector('#replay-stage').textContent:'';
+   };
++  const {Scene}=await import('/vendor/three/three.module.js');
++  const oldSceneBefore=Scene.prototype.onBeforeRender,oldSceneAfter=Scene.prototype.onAfterRender;
++  let totalLinks=0,activeScene=null;
++  const oldLink=WebGL2RenderingContext.prototype.linkProgram;
++  WebGL2RenderingContext.prototype.linkProgram=function(...args){totalLinks++;return oldLink.apply(this,args);};
++  feedback.draws=[];
++  Scene.prototype.onBeforeRender=function(...args){
++   const value=oldSceneBefore.apply(this,args),title=replayTitle();
++   if(title)activeScene={scene:this,start:performance.now(),links:totalLinks,title};
++   return value;
++  };
++  Scene.prototype.onAfterRender=function(...args){
++   const value=oldSceneAfter.apply(this,args);
++   if(activeScene?.scene===this&&feedback.draws.length<60){
++    const {start,links,title}=activeScene;feedback.draws.push({title,pass:this.name||'scene',duration:Math.round(performance.now()-start),linked:totalLinks-links,programs:args[0].info.programs.length});
++    activeScene=null;
++   }
++   return value;
++  };
+   const {ReplayPlayback}=await import('/src/fps/replay-playback.mjs');
+   const advance=ReplayPlayback.prototype.update;
+   ReplayPlayback.prototype.update=function(scope,now=performance.now()){

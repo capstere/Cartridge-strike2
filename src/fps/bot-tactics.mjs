@@ -42,6 +42,7 @@ export class SquadTactics {
   this.game=game;this.signature='';this.assignments=new Map();this.claims=new Map();this.ranks=new Map();
   for(const a of game.actors)if(a.bot)this.ranks.set(a.id,game.random());
   this.refresh();
+  if(game.state.mode==='ffa')return;
   for(const team of ['analysts','counterAnalysts']){
    const door=game.world.doors?.elevators?.cabins.find(c=>c.id===game.world.project?.gameplay.startElevators?.find(e=>e.team===team)?.doorId);
    const bots=game.actors.filter(a=>a.bot&&a.team===team).sort((a,b)=>door?distance(a,door)-distance(b,door):this.rank(a)-this.rank(b));
@@ -50,6 +51,7 @@ export class SquadTactics {
  }
  rank(a){return this.ranks.get(a.id)??a.index/5;}
  refresh(){
+  if(this.game.state.mode==='ffa')return;
   const g=this.game,b=g.bomb,signature=[g.actors.filter(a=>a.alive).map(a=>a.id).join(','),b.status,b.carrierId,...g.hostages.map(h=>`${h.id}:${h.alive}:${h.rescued}:${h.escortId}`)].join('|');
   if(signature===this.signature)return;this.signature=signature;this.assignments.clear();
   for(const team of ['analysts','counterAnalysts']){
@@ -70,6 +72,7 @@ export class SquadTactics {
   for(const a of g.actors)if(a.bot){const task=this.assignments.get(a.id);if(task){a.aiRole=task.role;a.bot.task=task;}}
  }
  claim(bot,record){
+  if(this.game.state.mode==='ffa')return true;
   const g=this.game,now=g.state.time,a=bot.actor,key=`${a.team}:${record.entity.id}:${Math.round(record.lastSensedPosition.x/3)}:${Math.round(record.lastSensedPosition.z/3)}`;
   for(const [id,c]of this.claims)if(c.until<now||!g.actors.some(a=>a.id===id&&a.alive))this.claims.delete(id);
   const own=this.claims.get(a.id);if(own?.key===key)return true;

@@ -104,7 +104,7 @@ export function stepActorBonuses(game){
     if(request && actor.alive && actor.controllerType==='human' && request.matchId===game.state.matchId &&
        request.round===game.state.round && request.lifeId===actor.lifeId && request.epoch===actor.controlEpoch){
       const id=[request.matchId,actor.id,request.lifeId,request.epoch||0,request.serial].join('/');
-      activateBonus(state,request.slot,tick,request.serial,id);
+      if(activateBonus(state,request.slot,tick,request.serial,id))game.emit?.('bonus-activated',actor,{bonusId:state.active.id});
     }
     if(state.active?.id==='uav' && (actor.uavPulseTick==null || tick-actor.uavPulseTick>=UAV_PULSE.interval)){
       const enemies=game.actors.filter(other=>other.alive && combatOpponents(actor,other,game.state.mode));
