@@ -4,6 +4,19 @@
 
 Run `node docs/cartridge-strike-3/verify-program.mjs` after updating the manifest and status table. It lists the packages whose dependencies permit work and reports inconsistent status or dependency cycles. Open focused pull requests against `develop/cartridge-strike-3`. These run the full FPS regression workflow. The final release PR targets `main`.
 
+## November 28 resumption
+
+Start from the [current task states](PROJECT_STATUS.md). CS3-00, 01, 02 and 04 are verified. Preparation #47 and accounts #55 have merged. Keep the 02 performance investigation separate from physical display latency. The active Pi installation is CS2 revision 8307e911.
+
+| Development PR | Evidence and next check |
+| --- | --- |
+| [#56 maps](https://github.com/capstere/Cartridge-strike2/pull/56) | Head 15a6647. The native four-map rotation, 20 changes, matched parked control, six disposed audio owners, reversible quality switch, recovery and actual signs passed independent review. A hosted account job correctly rejected an underscore from its random room-code fixture. The reviewed fix uses 192 random bits encoded as hex. Require the [nine corrected-head jobs](https://github.com/capstere/Cartridge-strike2/actions/runs/46132322031). After merge, record CS3-07 VERIFIED and start CS3-08. |
+| [#60 Floor 5](https://github.com/capstere/Cartridge-strike2/pull/60) | The renderer preserved all 24 tested views across four pixel ratios, including eleven visible-glass controls. Twelve continuous native actions improved time to CPU/render submission. Complete fresh-spawn hardware compositor sampling and keep physical-phone latency separately unmeasured. The branch contains the #56 catalog. |
+| [#59 operators](https://github.com/capstere/Cartridge-strike2/pull/59) | The [native wardrobe and motion evidence](https://github.com/capstere/Cartridge-strike2/tree/0fa23549a7b1df072b7ff91bc3a4261bbd323647/docs/cartridge-strike-3/evidence/wardrobe) covers both inputs and four directions. Check the existing saved-character browser with a real foreground pointer-lock gesture and the [hosted jobs](https://github.com/capstere/Cartridge-strike2/actions/runs/46132263419). The combined branch carries #56 and #60. |
+| [#58 streaks](https://github.com/capstere/Cartridge-strike2/pull/58) | Two actual browser clients and a ten-seat UAV workload passed on protocol 18. Review found animation and foley initially used the original reload duration during Rage. Check normalized contacts, including a reconnect across expiry, on the integrated protocol with wardrobe and all maps. |
+
+The branch chain preserves overlapping generated contracts and their individual reviews. After each merge, reconcile status by package and compare all runtime files from each included parent. Physical-phone, speaker and subjective human balance evidence are still separate from Pi Chromium measurements. Production remains subject to CS3-12.
+
 ## Lead execution procedure
 1. Read README, MASTER_PLAN, CURRENT_STATE_AUDIT, decisions, architecture, source matrix, all specifications, task DAG, existing root handover and deploy docs. Use English for player UI and new project documentation. No need to ask owner to repeat prior chats. Recheck current main and backup reference, production revision and exact repo/working tree; do not assume identical. Review any intervening changes. Verify existing CI and Pi CLI agent discovery, current processes and resource limits. 
 2. Start CS3-00: private backup/restore rehearsal, fresh matched baselines, actual comparative reference/CS2 gameplay and code traces, rights/source pin, confirm interface contracts. If unable to reach Pi or devices, state precise blocker; do not fake tests. Do not change production yet.
