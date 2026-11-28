@@ -52,6 +52,7 @@ function actorView(s,localId){
     inventory:{primary:s.primary?{...decodeEquipment(s.handling?.primaryKit),id:s.primary,ammo:s.primaryAmmo,reserve:s.primaryReserve}:null,pistol:{...decodeEquipment(s.handling?.pistolKit),id:s.pistol,ammo:s.pistolAmmo,reserve:s.pistolReserve},knife:{id:'knife',ammo:Infinity,reserve:0},smoke:cartridgeCount(s,'smoke'),flash:cartridgeCount(s,'flash'),he:cartridgeCount(s,'he')}};
   copyPose(a,s);
   for(const k of ['lifeId','controlEpoch','connected','alive','hp','armor','kills','deaths','reloadUntil','nextShot','respawnAt','spawnProtectedUntil','deathVariant','hurtTime','recoil'])a[k]=s[k];
+  a.points=s.handling?.points??0;
   // An unspawned Classic reservation also has alive=false, with no death.
   a.deathAt=s.deathWeapon?s.deathAt:null;
   a.deathCause=s.deathWeapon?{sourceName:s.deathSource,weapon:s.deathWeapon}:null;
@@ -291,12 +292,17 @@ export class NetworkSession {
     if(this.input.stepSeconds!==NETWORK_CONFIG.fixedStep)throw Error('Incompatible simulation step.');
     this.predict=Predict.get(room,{mode:'lerp',delay:INTERPOLATION_MS});
     this.snapshot();
-    await wait(()=>this.closed||(this.worldRevision===room.state.worldRevision&&room.state.actors.get(this.localPlayerId)?.ready),125000);
-    if(this.closed)throw this.problem instanceof Error ? this.problem : Error(this.problem||'Room closed before spawn.');
+    await this.waitForSpawn();
     this.connectionState='connected';this.snapshot();
     this.lastWatchdog=performance.now();this.silenceSince=0;
     this.watchdog=setInterval(()=>this.checkConnection(performance.now()),1000);
     return this;
+  }
+  async waitForSpawn(){
+    const ready=()=>this.worldRevision===this.room.state.worldRevision&&
+      this.room.state.actors.get(this.localPlayerId)?.ready&&this.view.player;
+    await wait(()=>this.closed||ready(),125000);
+    if(this.closed)throw this.problem instanceof Error ? this.problem : Error(this.problem||'Room closed before spawn.');
   }
   resetWorldBindings(){
     this.replay.reset();this.progression=null;this.rewardSerial=0;
@@ -365,7 +371,7 @@ export class NetworkSession {
     this.view.state.difficulty=state.botDifficulty??this.view.config.difficulty;
     this.view.state.mode=state.mode==='tdm'?'endless':state.mode;
     Object.assign(this.view.state,{scoreTarget:state.scoreTarget,remainingSeconds:state.remainingSeconds,winner:state.winner,
-      zones:Array.from(state.zones?.values()??[],({id,x,y,z,owner,progress,contested})=>({id,x,y,z,owner,progress,contested}))});
+      zones:Array.from(state.zones?.values()??[],({id,x,y,z,radius,owner,progress,contested})=>({id,x,y,z,radius,owner,progress,contested}))});
     const newMatch=this.matchId!==state.matchId,newPhase=this.matchPhase!==state.phase;
     if(newMatch){
       this.replay.reset();this.rewardSerial=0;

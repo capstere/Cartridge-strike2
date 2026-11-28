@@ -2,9 +2,9 @@
 export {MAP_CONTRACTS} from './map-build.mjs';
 export const CONTRACT = Object.freeze({
   "protocolVersion": 22,
-  "protocolHash": "d5eddfdb8a44b305daef8c299a55377dd80cfc839ac465ae4f7a161213296e6f",
+  "protocolHash": "5eeffd9db724492b606bbb7607d3ab933d430fa428db326ecf82861ccd64c469",
   "configHash": "c0d2d00526fd8f58106a6232eec122f5c8f699b5ec91ebc0643a8ac420ff21c5",
-  "buildHash": "9e167c5b8a9b97bb578d1dd7db583c6643c9bdf5838eb60d54c90658083131d1",
+  "buildHash": "5ead5b3a201ffd9de8c3652eb624f207f036f4e5129a44a1c38f6932de1b0679",
   "tickRate": 60,
   "patchMs": 50,
   "mapId": "floor5-prepared",

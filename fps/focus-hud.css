@@ -193,4 +193,11 @@ html #mobile-controls .mobile-stick[data-mobile-stick].active.rushing::after{bor
 .replay-strip{position:absolute;bottom:max(5vh,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:min(35rem,92vw);display:flex;align-items:center;justify-content:space-between;gap:1rem;background:#101417ed;border-left:3px solid #cb7855;padding:1rem 1.2rem;box-sizing:border-box}
 .replay-strip p{margin:.25rem 0}.replay-strip strong{font-size:clamp(1.1rem,3vw,1.75rem);overflow-wrap:anywhere}.replay-strip button{min-height:44px;flex:none}
 .replay-optic{position:absolute;left:50%;top:50%;width:72vmin;height:72vmin;transform:translate(-50%,-50%);border:2px solid #141515;border-radius:50%;box-shadow:0 0 0 150vmax #080a0a;background:linear-gradient(transparent calc(50% - 1px),#171919 50%,transparent calc(50% + 1px)),linear-gradient(90deg,transparent calc(50% - 1px),#171919 50%,transparent calc(50% + 1px))}
-.cs-replaying :is(#hud,#mobile-controls,#online-room,#scoreboard,#match-end,#countdown-look,#spectate){visibility:hidden!important;pointer-events:none!important}
+.cs-replaying :is(#flash-overlay,#smoke-overlay,#damage-direction,#damage-overlay,#hud,#mobile-controls,#online-room,#scoreboard,#match-end,#countdown-look,#spectate){visibility:hidden!important;pointer-events:none!important}
+
+.cs-ffa [data-utility=radio],.cs-ffa .team-radio-hint{display:none!important}
+
+@media(pointer:coarse){
+  html.cs-ffa[data-hud=clean] .score.analysts>span::before{content:'YOU'}
+  html.cs-ffa[data-hud=clean] .score.counter>span::before{content:'LEADER'}
+}

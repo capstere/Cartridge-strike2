@@ -208,12 +208,13 @@ export class MinimapCache {
     this.stats = {builds:0, draws:0, hiddenSkips:0};
   }
   invalidate() { this.layers.clear(); }
-  layer(world, expanded) {
+  layer(world, expanded, mode) {
     if (world !== this.world) { this.world = world; this.invalidate(); }
     const w = this.canvas.width, h = this.canvas.height;
     const online = !!world.networkSlice, classic = online && !!world.networkClassic;
+    const soloSites=!online && !['ffa','dom'].includes(mode);
     const onlineExpanded = online && expanded;
-    const key = `${w}/${h}/${!!expanded}/${online}/${classic}`;
+    const key = `${w}/${h}/${!!expanded}/${online}/${classic}/${soloSites}`;
     let layer = this.layers.get(key);
     if (layer) return layer;
     const canvas = this.createCanvas(); canvas.width = w; canvas.height = h;
@@ -274,7 +275,7 @@ export class MinimapCache {
         ctx.fillStyle = color;
         ctx.fillText(letter, xof(p.x) - 3, zof(p.z) - 4);
       }
-    } else {
+    } else if(soloSites) {
       for (const [p,label,color] of [[world.anchors.bomb,'B','#e9ae67'],[world.anchors.rescue,'R','#7ce4cd'],[world.anchors.hostages[0],'H','#ccebdc']]) {
         if (!p) continue;
         ctx.font='bold 11px sans-serif';ctx.fillStyle=color;
@@ -289,7 +290,7 @@ export class MinimapCache {
   }
   draw(world, game, expanded = false, visible = true) {
     if (!visible) { this.stats.hiddenSkips++; return false; }
-    const ctx = this.context, l = this.layer(world,expanded);
+    const ctx = this.context, l = this.layer(world,expanded,game.state?.mode);
     ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
     ctx.drawImage(l.canvas,0,0);
     const blips = game.uavBlips?.();

@@ -18,6 +18,12 @@
 | CS3-11 | NOT_STARTED | Wait for CS3-03, CS3-05, CS3-06, CS3-07, CS3-08, CS3-09, CS3-10 |
 | CS3-12 | NOT_STARTED | Wait for CS3-01, CS3-02, CS3-03, CS3-04, CS3-05, CS3-06, CS3-07, CS3-08, CS3-09, CS3-10, CS3-11 |
 
+## November 28 match and performance checkpoint
+
+[Floor 5 PR #65](https://github.com/capstere/Cartridge-strike2/pull/65) merged at `0937d820` after [all eleven hosted jobs](https://github.com/capstere/Cartridge-strike2/actions/runs/46145941619) and independent review. On the Pi, desktop and emulated-seat first HUD frame gaps fell from 2,250 and 2,542 ms to 133 and 100 ms. Trusted mouse event delivery fell from 2,174 and 2,426 ms to 52 and 84 ms. Both probes sent mouse input. The HUD appeared about 2.35 seconds later. End-to-end admission varied by seat and run, inputs during admission remain delayed, and physical-phone timing is open. The [native frame and input evidence](evidence/first-hud/README.md) includes rejected candidates and cancellation, map-switch and cleanup checks.
+
+[CS3-10 draft PR #66](https://github.com/capstere/Cartridge-strike2/pull/66) integrates Free-for-All, Domination, filtered replays and account progression. Native SDK checks cover capture and contest, same-uniform hits, authoritative assists and headshots, isolated account restore and reconnect. A two-renderer Pi trial reached both modes, personal rewards, scoped death and final replay, respawn and a contested B capture. The independent review found public profile, hit feedback, replay presentation and results issues. Verify the corrected joined revision, all twelve hosted jobs on the new workflow, earned outfit portraits, historical audio and fitted optics before CS3-11. Keep the TDM peak, pre-HUD admission and physical devices in the release record.
+
 ## November 28 development checkpoint
 
 Operator qualification closed with [PR #61](https://github.com/capstere/Cartridge-strike2/pull/61) at 055b8875 after verification of a1f3cb60. Both true-turn Ghillie captures presented the correct kit and heard the reload, with first visible draw return at 131 and 154 ms. Cancellation, rotation and independent first-/third-person GPU resource ownership passed. The existing post-HUD stall, admission overhead and physical handset timing remain release work. CS3-09 is now open.

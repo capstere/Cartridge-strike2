@@ -1,3 +1,4 @@
+import {compareFFA,rankFFA} from './match-modes.mjs';
 // English player-facing names are shared by the room, menu, scoreboard and results.
 export const MODE_NAMES=Object.freeze({tdm:'Team Deathmatch',classic:'Classic',endless:'Endless Action',ffa:'Free-for-All',dom:'Domination'});
 export const MODE_GUIDES=Object.freeze({
@@ -6,13 +7,10 @@ export const MODE_GUIDES=Object.freeze({
   ffa:'Every other operator is an opponent. Earn one point per elimination. The highest individual score wins.',
   dom:'Stand inside A, B or C to capture it. Opponents contest the zone. Hold zones to score for your team.'
 });
-const comparePlayers=(a,b)=>b.kills-a.kills||a.deaths-b.deaths||(b.combat?.points||0)-(a.combat?.points||0)||String(a.id).localeCompare(String(b.id));
-export function rankPlayers(actors){
-  return Array.from(actors).sort(comparePlayers);
-}
+export const rankPlayers=rankFFA;
 export function leadingPlayer(actors){
   let leader;
-  for(const actor of actors)if(!leader||comparePlayers(actor,leader)<0)leader=actor;
+  for(const actor of actors)if(!leader||compareFFA(actor,leader)<0)leader=actor;
   return leader;
 }
 export function matchWinnerName(winner,actors,teams){

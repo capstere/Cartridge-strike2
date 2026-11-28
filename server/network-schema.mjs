@@ -9,7 +9,7 @@ export const NetworkInput=schema({
 export const HandlingState=schema({
   ...Object.fromEntries(SLIDE_NUMBERS.map(k=>[k,t.float64()])),crouchHeld:t.boolean(),
   reloadStartedAt:t.float64(),reloadDuration:t.float64(),
-  bonusId:t.string(),bonusStart:t.uint32(),bonusEnd:t.uint32(),
+  points:t.uint32(),bonusId:t.string(),bonusStart:t.uint32(),bonusEnd:t.uint32(),
   primaryKit:t.string(),pistolKit:t.string(),smoke:t.uint8(),flashCount:t.uint8(),flashAmount:t.float32(),
   outfitId:t.string(),cartridgeStart:t.float64(),cartridgeRelease:t.float64(),cartridgeFuse:t.float64(),waitTriggerRelease:t.boolean()
 },'FPSHandlingV21');

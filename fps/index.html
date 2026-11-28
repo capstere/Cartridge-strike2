@@ -87,7 +87,7 @@
       <div class="wardrobe-grid"><div class="wardrobe-stage"><div class="wardrobe-turn">
         <button type="button" data-rotate="-1" aria-label="Rotate operator left">↶</button><span>Drag to rotate</span><button type="button" data-rotate="1" aria-label="Rotate operator right">↷</button>
       </div></div><div class="wardrobe-list"><div data-outfit-choices aria-label="Available outfits"></div>
-        <h2>Challenge outfits</h2><p>Challenge tracking is coming with player progression.</p><ul data-outfit-challenges></ul>
+        <h2>Challenge outfits</h2><p>Complete an outfit’s three objectives in signed-in multiplayer matches to earn it.</p><ul data-outfit-challenges></ul>
         <button type="button" class="route-action" data-go="solo" data-focus="player-character">Saved characters →</button>
         <p role="status"></p></div></div>
     </section>
@@ -167,7 +167,7 @@
     <div id="deployment-countdown" role="status" aria-live="polite" aria-atomic="true" hidden><small>Match begins in</small><strong></strong></div>
     <button id="countdown-look" type="button" hidden>Enable mouse look</button>
     <div class="top-hud"><div class="score analysts"><strong id="score-a">0</strong><span><b id="score-name-a">ANALYSTS</b> <small id="alive-a">5 alive</small></span></div><div class="round-clock"><small id="round-label">ROUND 1</small><b id="timer">0:15</b><small id="phase">BUY PHASE</small></div><div class="score counter"><span><b id="score-name-ca">COUNTER ANALYSTS</b> <small id="alive-ca">5 alive</small></span><strong id="score-ca">0</strong></div></div>
-    <div class="map-panel"><p id="location">Unit 05</p><canvas id="minimap" width="224" height="158" aria-label="Map showing teammates and objectives"></canvas><small class="offline-map-hint">M tactical map · B buy</small><small class="online-map-hint">M map · Z radio</small><small id="map-legend" hidden></small></div>
+    <div class="map-panel"><p id="location">Unit 05</p><canvas id="minimap" width="224" height="158" aria-label="Map showing teammates and objectives"></canvas><small class="offline-map-hint">M tactical map · B buy</small><small id="online-map-hint" class="online-map-hint">M map · Z radio</small><small id="map-legend" hidden></small></div>
     <div id="killfeed" aria-live="polite"></div>
     <div id="zone-control" aria-label="Control zones" hidden></div>
     <div id="objectives"><span id="bomb-status"></span><span id="hostage-status"></span></div>
@@ -177,7 +177,7 @@
     <div id="round-result" hidden><small id="result-kicker">ROUND OVER</small><h2 id="result-title"></h2><p id="result-reason"></p></div>
     <div id="spectate" hidden>ELIMINATED · <span></span><small id="death-cause"></small><small id="respawn-status">← → Switch teammate · Next round starts automatically</small><button id="death-restart">RESTART MATCH <kbd>Enter</kbd></button></div>
     <div class="bottom-hud"><div class="vitals"><span class="health-symbol">+</span><strong id="health">100</strong><div><span>HEALTH</span><small id="armor"></small></div></div><div class="inventory"><div id="weapon-slots"></div><small id="money">800 ¤</small></div><div class="ammo"><small id="weapon-name">PISTOL</small><strong id="ammo">20 <span>/ 120</span></strong><span id="reload-text"></span></div></div>
-    <div class="key-hints">X Rush &nbsp; V inspect &nbsp; Z radio &nbsp; Shift sneak &nbsp; Ctrl crouch &nbsp; Space jump &nbsp; R reload &nbsp; E interact &nbsp; G drop &nbsp; Esc pause</div>
+    <div class="key-hints">X Rush &nbsp; V inspect &nbsp; <span class="team-radio-hint">Z radio &nbsp; </span>Shift sneak &nbsp; Ctrl crouch &nbsp; Space jump &nbsp; R reload &nbsp; E interact &nbsp; G drop &nbsp; Esc pause</div>
     <div id="difficulty-label"></div><div id="perf"></div>
   </div>
   <div id="flash-overlay"></div><div id="damage-overlay"></div><div id="damage-direction">⌃</div><div id="smoke-overlay"></div>

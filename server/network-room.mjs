@@ -412,6 +412,7 @@ export class NetworkRoom extends Room {
         cartridgeFuse:a.cartridge?.deadline||0,waitTriggerRelease:!!a.waitTriggerRelease});
       if(!a.alive&&!seat.diedAtMs)seat.diedAtMs=this.clock.elapsedTime;
       s.playerReady=seat.playerReady;s.connected=seat.connected;s.controlEpoch=seat.epoch;s.lifeStartedAt=seat.lifeStartedAt;s.diedAtMs=seat.diedAtMs;
+      s.handling.points=a.combat?.points??0;
       for(const k of ['lifeId','alive','hp','armor','kills','deaths','reloadUntil','nextShot','spawnProtectedUntil','recoil'])s[k]=a[k]??0;
       const {primary,pistol,he}=a.inventory;
       Object.assign(s,{ready:true,pending:!!seat.pending,bot:a.controllerType==='bot',money:a.money||0,actionType:a.action?.type||'',actionStart:a.action?.start||0,actionDuration:a.action?.duration||0,weapon:a.weapon,lastWeapon:a.lastWeapon,loadout:a.loadout||'smg',

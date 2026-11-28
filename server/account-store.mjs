@@ -5,6 +5,7 @@ import {basename,dirname,join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {DatabaseSync} from 'node:sqlite';
 import {BASE_ENTITLEMENTS,weaponLevelFromXP,playerLevelFromXP,validateArsenal} from '../src/fps/arsenal.mjs';
+import {WEAPONS} from '../src/fps/config.mjs';
 import {challengeList,earnedOutfits} from './progression.mjs';
 import {applyMatchCredit} from './result-journal.mjs';
 
@@ -210,13 +211,16 @@ export class AccountStore {
     const challenges=this.challengeCounts(userId);
     const weapons=userId?this.db.prepare('SELECT weapon AS id,xp FROM weapon_progress WHERE user_id=? ORDER BY weapon').all(userId):[];
     const totals=userId?this.db.prepare('SELECT coalesce(sum(assists),0) AS assists,coalesce(sum(headshots),0) AS headshots FROM match_progression WHERE user_id=?').get(userId):{assists:0,headshots:0};
-    return {...totals,challenges,unlockedOutfits:earnedOutfits(challenges),weapons:weapons.map(w=>({...w,level:weaponLevelFromXP(w.id,w.xp)}))};
+    return {...totals,challenges,unlockedOutfits:earnedOutfits(challenges),weapons:weapons.map(w=>({...w,name:WEAPONS[w.id]?.name||'Weapon',level:weaponLevelFromXP(w.id,w.xp)}))};
   }
   profile(user,rooms=[],all=false){
     if(!user)return {user:null,progression:this.progression(null),stats:emptyStats(),recent:[],rooms,arsenal:null,entitlements:BASE_ENTITLEMENTS};
     const stats=this.db.prepare(`SELECT count(*) AS matches,coalesce(sum(kills),0) AS kills,coalesce(sum(deaths),0) AS deaths,coalesce(sum(win),0) AS wins,
        (SELECT coalesce(sum(xp),0) FROM rewards WHERE user_id=?) AS xp FROM summaries WHERE user_id=?`).get(user.id,user.id);
-    const recent=this.db.prepare('SELECT mode,map,played,kills,deaths,win FROM summaries WHERE user_id=? ORDER BY played DESC'+(all?'':' LIMIT 12')).all(user.id);
+    const recent=this.db.prepare(`SELECT mode,map,played,kills,deaths,win,coalesce(p.assists,0) AS assists,coalesce(p.headshots,0) AS headshots,
+      p.weapons,p.challenges FROM summaries s LEFT JOIN match_progression p USING(instance,user_id) WHERE s.user_id=?
+      ORDER BY played DESC`+(all?'':' LIMIT 12')).all(user.id).map(row=>({...row,weapons:JSON.parse(row.weapons||'{}'),challenges:JSON.parse(row.challenges||'{}')}));
+
     const entitlements=this.arsenalEntitlements(user.id);
     return {arsenal:this.arsenalFor(user.id,entitlements),entitlements,progression:this.progression(user.id),user:{username:user.username,displayName:user.display_name,createdAt:user.created},stats,recent,rooms};
   }

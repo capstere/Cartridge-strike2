@@ -78,3 +78,14 @@ test('FFA scoring uses actor identity, qualified connected finishes and server c
   assert.deepEqual(score.challenges,{nBrut:1,gElim:1,tUav:1,vDom:1,nFfa:1,fCartes:1,gParties:1,gVict:1});
   assert.equal(results.some(p=>!p.user),false);
 });
+
+test('a vacated FFA actor ID cannot confer its new occupant’s win on a former account',()=>{
+  const {room,credits,source}=fixture('ffa');
+  credits.leave(source);
+  const replacement={...source,actor:{...source.actor,lifeId:2,controlEpoch:4},credential:{user:'replacement',session:'replacement-session'}};
+  room.seats.set(source.actor.id,replacement);credits.admit(replacement);
+  const results=credits.finish(source.actor.id,room);
+  const departed=results.find(p=>p.user==='first').segments[0],winner=results.find(p=>p.user==='replacement').segments[0];
+  assert.equal(departed.win,false);assert.equal(departed.completed,false);
+  assert.equal(winner.win,true);assert.equal(winner.completed,true);
+});

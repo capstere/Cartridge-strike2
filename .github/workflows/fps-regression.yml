@@ -16,6 +16,35 @@ permissions:
   contents: read
 
 jobs:
+  competitive-matches:
+    if: github.event_name != 'push'
+    runs-on: macos-15
+    timeout-minutes: 12
+    env:
+      FPS_NETWORK_ANGLE: metal
+      FPS_WARDROBE_EVIDENCE: test-results/earned-wardrobe
+      FPS_COMPETITIVE_EVIDENCE: test-results/competitive
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: server/.node-version
+          cache: npm
+          cache-dependency-path: |
+            server/package-lock.json
+            frontline/source/tools/dev/package-lock.json
+      - run: npm ci --prefix server --ignore-scripts
+      - run: npm ci --prefix frontline/source/tools/dev
+      - run: node frontline/source/tools/dev/node_modules/playwright-core/cli.js install chromium
+      - run: node tools/challenge-outfits-browser.mjs
+      - run: node tools/competitive-browser.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: competitive-evidence
+          path: |
+            test-results/competitive/
+            test-results/earned-wardrobe/
   multiplayer-foundation:
     # Full dependency/API verification belongs to PR/manual runs, not duplicate
     # post-merge browser/dependency jobs. The headless core tests also run below.

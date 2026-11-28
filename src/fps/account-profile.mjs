@@ -1,6 +1,4 @@
 // The optional account/profile routes adapt Riposte's 09j-compte account flow.
-import {WEAPONS} from './config.mjs';
-const weaponName=id=>WEAPONS[id]?.name||'Weapon';
 // Account and room credentials travel in separate server-managed cookies.
 const portal = 'https://cs2.capstere.com/profile';
 const fields = {
@@ -225,7 +223,7 @@ export function mountAccountProfile(root) {
       if(progression?.weapons?.length){
         const details=element('details'),list=element('ul');
         details.append(element('summary','Weapon progression'));
-        for(const w of progression.weapons)list.append(element('li',weaponName(w.id)+' · Level '+w.level+' · '+w.xp+' XP'));
+        for(const w of progression.weapons)list.append(element('li',(w.name||w.id)+' · Level '+w.level+' · '+w.xp+' XP'));
         details.append(list);view.append(details);
       }
       if (data.features?.publicMatches) view.append(actions(button('Find a public match',publicMatches,true),button('Blocked players',blockedPlayers)));

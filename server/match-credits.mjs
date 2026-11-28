@@ -109,7 +109,11 @@ export class MatchCredits {
         }
         this.leave(seat);
       }
-      const segments=[...player.sessions.values()].map(s=>({...s,win:(room.state.mode==='ffa'?s.actorId:s.team)===winner}));
+      // An FFA actor ID can be reseated. Its eventual victory belongs to the
+      // winning occupant and cannot retroactively turn a former occupant into a winner.
+      const segments=[...player.sessions.values()].map(s=>({...s,win:room.state.mode==='ffa'
+        ? Boolean(seat?.connected&&!seat.revoked&&s.session===seat.credential?.session&&seat.actor.id===winner)
+        : s.team===winner}));
       results.push({user:player.user,seat,segments});
     }
     return results;

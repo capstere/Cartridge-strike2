@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {ReplayPlayback} from '../src/fps/replay-playback.mjs';
 import {NetworkSession} from '../src/fps/network/session.mjs';
 import {WEAPONS} from '../src/fps/config.mjs';
 import {validateNetworkInput} from '../shared/multiplayer/protocol.mjs';
@@ -12,7 +13,7 @@ function triggerSession(weapon='p9'){
  const wire=[];
  let steps=1;
  const prediction={world:{game:{state:{time:0}},actor:{x:0,y:0,z:0}},reset(){}};
- const session=Object.assign(Object.create(NetworkSession.prototype),{
+ const session=Object.assign(Object.create(NetworkSession.prototype),{replay:new ReplayPlayback(),
   closed:false,enabled:true,connectionState:'connected',lastPatch:performance.now(),localPlayerId:'a',lifeId:self.lifeId,controlEpoch:self.controlEpoch,
   room:{roomId:'test',state},view:{state:{time:0},actors:[]},prediction,predict:{tick:()=>steps},
   world:{doors:{doors:[]}},residents:new Map(),projectiles:new Map(),

@@ -60,7 +60,8 @@ export async function createLocalServer(options={}) {
       return testMatch?.arsenalEntitlements ?? (accounts&&accounts.store.arsenalEntitlements(seat.credential?.user));
     }
     outfitRights(seat){
-      return accounts?.store.unlockedOutfits(seat.credential?.user)??[];
+      const {user,session}=seat.credential??{};
+      return user&&accounts?.store.validScoringSession(user,session)?accounts.store.unlockedOutfits(user):[];
     }
     savedArsenal(seat){
       const user=seat.credential?.user;
@@ -105,7 +106,8 @@ export async function createLocalServer(options={}) {
       for(const {user,seat,segments} of results){
         if(!seat)continue;
         const current=segments.filter(p=>p.session===seat.credential?.session);
-        const credit=user&&accounts.store.validScoringSession(user,seat.credential.session)&&validated.find(p=>p.user===user);
+        const verified=validated.find(p=>p.user===user);
+        const credit=verified&&accounts.store.validScoringSession(user,seat.credential.session)?verified:null;
         tracker.present(this,seat,credit?[credit]:current,!!credit);
       }
       this.sim.game.onProgressEvent=null;

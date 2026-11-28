@@ -18,6 +18,10 @@ export class RoomReplays{
     if(!sameReplayWorld(this.history.scope,scope))this.reset();
     const clips=this.history.record(scope,sim.game.state.time,sim.game.actors,events);
     for(const clip of clips){
+      // Projected costume IDs have already passed the account's outfit rights check.
+      for(const participant of [clip.killer,clip.victim]){
+        participant.outfitId=state.actors?.get(participant.id)?.handling?.outfitId??participant.outfitId;
+      }
       this.lastKill=clip.samples?clip:null;
       if(state.phase!=='active')continue;
       for(const seat of seats.values()){
@@ -25,7 +29,7 @@ export class RoomReplays{
         if(target?.actorId!==clip.victim.id||target.lifeId!==clip.victim.lifeId||
           target.controlEpoch!==clip.victim.controlEpoch||seat.actor.alive)continue;
         // A live Classic round permits a card only. No killer trajectory crosses the socket.
-        const {samples,shots,...card}=clip;
+        const {samples,shots,hitTime,...card}=clip;
         const payload=!clip.samples||state.mode==='classic'&&state.roundPhase==='active'?{card}:{clip};
         this.pending.set(seat,{client:seat.client,target,message:{kind:'death',...target,...payload}});
       }

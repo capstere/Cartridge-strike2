@@ -1,4 +1,4 @@
-import {SoloReplays} from './replay-playback.mjs';
+import {SoloReplays,presentReplayAudio} from './replay-playback.mjs';
 import {drawReplay,disposeReplayRender} from './replay-render.mjs';
 import {MODE_NAMES,MODE_GUIDES,matchWinnerName,rankPlayers,leadingPlayer,zoneCaption} from './match-presentation.mjs';
 import {canOfferInstall} from '../../ui/cs-install.mjs';
@@ -506,7 +506,18 @@ async function joinNetwork(options){
   networkUi?.status(accessEnglish.loadingMap(networkMap(id).name));if(game===session.view)onlineRoomUi?.update(session);
  },onMatch:()=>{if(networkSession===session&&game===session.view)networkPhase();},onConnection:status=>{if(networkSession!==session)return;countdownSession=null;deployment.suspend();clearInput();audio.reset();renderer?.resetTransient();recoil.reset();if(status==='reconnecting')showPause();$('pause').querySelector('p:not(.eyebrow)').textContent=status==='reconnecting'?accessEnglish.reconnectingHelp:accessEnglish.reconnected;},onDisconnect:message=>{if(networkSession!==session)return;newMatch();networkUi?.status(connectionMessage(message),connectionFailure(message));}});
  networkSession=session;
- try{await session.connect({...options,arsenalProfile:localArsenalProfile()});if(session.room.state.mode==='classic')await renderer.prepareClassic();if(generation!==networkJoinGeneration){await session.dispose();throw Error('Join cancelled.');}}
+ try{
+  await session.connect({...options,arsenalProfile:localArsenalProfile()});
+  if(session.room.state.mode==='classic')await renderer.prepareClassic();
+  // The live frame can initialize these materials if the optional GPU preparation fails.
+  try{await renderer.prepareSpawnFrame(session.view,session.mapAbort?.signal);}
+  catch(error){console.warn('Skipped optional spawn rendering preparation.',error);}
+  if(generation!==networkJoinGeneration)throw Error('Join cancelled.');
+  // A host can replace the map while a guest prepares the old seat. Wait for the
+  // current revision and its own actor before copying the spawn camera or showing the HUD.
+  await session.waitForSpawn();
+  if(generation!==networkJoinGeneration)throw Error('Join cancelled.');
+ }
  catch(e){await session.dispose();if(networkSession===session)networkSession=null;throw e;}
  game=session.view;applyNetworkMode();
  team=game.team;setPrivateCharacterActors([]);modal=null;lastRound=game.state.round;lastPhase='active';spectateIndex=0;feed=[];
@@ -520,6 +531,7 @@ async function joinNetwork(options){
 function applyNetworkMode(){
  world.networkMode=game.state.mode;world.networkClassic=game.state.mode==='classic';minimapCache.invalidate();setMapExpanded(false);
  const soloOpponents=game.state.mode==='ffa',zones=game.state.mode==='dom';
+ setText('online-map-hint',soloOpponents?'M map':'M map · Z radio');
  setText('map-legend',soloOpponents?'Arrow · You':zones?'Arrow · You    Dot · Team    A/B/C · Control zones':world.networkClassic?'Arrow · You    Dot · Team    B · Bomb site    H · Hostages    R · Rescue zone':'Arrow · You    Dot · Team');
  $('minimap').setAttribute('aria-label',soloOpponents?'Tactical map showing your heading':zones?'Tactical map showing teammates and control zones':world.networkClassic?'Tactical map showing your heading, teammates, spawns and objectives':'Tactical map showing your heading, teammates and spawns');
  document.documentElement.classList.toggle('online-classic',world.networkClassic);
@@ -562,7 +574,7 @@ function timer(value){const sec=Math.max(0,Math.ceil(value));return `${Math.floo
 function scoreboard(){
  const mode=game.state.mode,individual=mode==='ffa',rankedMode=individual||mode==='dom';
  setText('board-round',rankedMode?MODE_NAMES[mode].toUpperCase():networkSession?(isEndless(game)?'TEAM DEATHMATCH · 5v5':'CLASSIC · ROUND '+game.state.round):isEndless(game)?'ENDLESS · ELIMINATIONS':'ROUND '+game.state.round);
- const key=JSON.stringify([mode,!!networkSession,game.state.score,game.actors.map(a=>[a.id,a.name,a.team,a.isPlayer,a.controllerType,a.alive,a.connected,a.kills,a.deaths,a.money])]);
+ const key=JSON.stringify([mode,!!networkSession,game.state.score,game.actors.map(a=>[a.id,a.name,a.team,a.isPlayer,a.controllerType,a.alive,a.connected,a.kills,a.deaths,a.combat?.points??a.points,a.money])]);
  if(htmlCache.get('score-tables')===key)return;htmlCache.set('score-tables',key);
  const root=$('score-tables');root.replaceChildren();
  for(const [id,name] of (individual?[[null,'Individual standings']]:Object.entries(TEAMS))){
@@ -631,6 +643,7 @@ function updateHud(){bonusHud.update(game, !!modal || radioOpen || teamRadioOpen
  }
  if(notificationUntil<s.time)setText('notification','');feed=feed.filter(f=>f.until>s.time);updateKillfeed(); if(networkSession&&game.state.mode!=='classic'){if(modal==='buy'&&$('shop').dataset.selected!==p.loadout){$('shop').dataset.selected=p.loadout;refreshShop();}onlineRoomUi?.update(networkSession);setText('timer',timer(holdingDeployment()?networkSession.room.state.durationSeconds:networkSession.room.state.remainingSeconds));setText('round-label','TEAM DEATHMATCH · '+networkSession.room.state.scoreTarget+' KILLS');setText('phase',networkSession.status||'CONNECTING');setText('money','B · EQUIPMENT');setText('bomb-status',p.inventory.he||p.inventory.smoke||p.inventory.flash?'4 · '+carriedGrenades(p.inventory)+' · Fire to throw':'No grenades');setText('hostage-status','The match continues in menus · Esc or Pause to leave');setText('respawn-status',`RESPAWN ${Math.max(0,(p.respawnAt||s.time)-s.time).toFixed(1)} s`);}
  const individual=s.mode==='ffa',domination=s.mode==='dom';
+ document.documentElement.classList.toggle('cs-ffa',individual);
  setText('score-name-a',individual?'YOU':'ANALYSTS');setText('score-name-ca',individual?'LEADER':'COUNTER ANALYSTS');
  const zones=$('zone-control');zones.hidden=!domination||!!modal||s.phase!=='active'||!p.alive;
  if(!zones.hidden){
@@ -655,7 +668,7 @@ function updateHud(){bonusHud.update(game, !!modal || radioOpen || teamRadioOpen
      const leader=leadingPlayer(game.actors);
      setText('score-a',p.kills);setText('score-ca',leader?.kills||0);
      setText('alive-a',p.name);setText('alive-ca',leader?.name||'');
-     if(!p.alive)$('spectate').querySelector('span').textContent='ELIMINATED';
+     if(!p.alive)$('spectate').querySelector('span').textContent='Awaiting respawn';
    }
  }
  if(holdingDeployment()){setText('phase','DEPLOYING');setText('reload-text','');$('prompt').hidden=true;$('spawn-protection').hidden=true;}
@@ -719,6 +732,7 @@ function consumeEvents(){audio.game=game;const events=game.drainEvents();
  if(!networkSession)soloReplays?.capture(events);
  const active=networkSession?networkSession.replay.update(networkSession.replayScope()):soloReplays?.update();
  presentReplay(active||null);
+ presentReplayAudio(audio,active);
  if(!replayFrame)combatHud.events(events,game);
  for(const event of events)if(event.type==='reward'&&!replayFrame){
    const label={assist:'Assist',headshot:'Headshot',kill:'Elimination'}[event.kind];

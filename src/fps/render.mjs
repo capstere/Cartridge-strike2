@@ -1,3 +1,5 @@
+import {DominationFlags} from './domination-flags.mjs';
+import {combatOpponents} from './bonuses.mjs';
 import {OUTFITS} from './operator-outfits.mjs';
 import {referenceScene} from './reference-scene.mjs';
 import {ActorOcclusion} from './actor-occlusion.mjs';
@@ -228,6 +230,86 @@ export class Renderer extends EngineRenderer {
       }
     });
   }
+  async prepareSpawnFrame(game,signal){
+    // Optional work must never hold a valid seat open on a hidden or stuck GPU.
+    const deadline=performance.now()+5000;
+    const gpu=this.renderer,gl=gpu.getContext();
+    const available=()=>performance.now()<deadline&&!globalThis.document?.hidden&&
+      !signal?.aborted&&!this.presentationDisposed&&!gl.isContextLost();
+    if(this.spawnFramePrepared||!game.player||this.settings.graphics!=='low'||!available()||
+       !gl.getExtension('KHR_parallel_shader_compile'))return;
+    // First-person lighting, camera culling, team sleeves and equipped fittings are
+    // only known once the local seat has arrived. Derive both actual display passes
+    // without presenting an unprepared image or advancing the game simulation.
+    const passes=[],draw=this.nativeRender;
+    const scissored=action=>{
+      const scissor=gpu.getScissor(new THREE.Vector4()),enabled=gpu.getScissorTest();
+      try{gpu.setScissor(0,0,1,1);gpu.setScissorTest(true);return action();}
+      finally{gpu.setScissor(scissor);gpu.setScissorTest(enabled);}
+    };
+    this.nativeRender=(scene,camera)=>{passes.push([scene,camera]);};
+    try{scissored(()=>this.render(game,game.player,0));}
+    finally{this.nativeRender=draw;}
+    // Three.compile traverses invisible objects too. Link only the drawables
+    // visible to the spawn cameras; use their actual scene as the lighting target.
+    // The borrowed objects retain their parents, skeletons and instance attributes.
+    const programs=new Set(),visiblePasses=[];
+    for(const [scene,camera] of passes){
+      if(!available())return;
+      scene.updateMatrixWorld();
+      const frustum=new THREE.Frustum().setFromProjectionMatrix(new THREE.Matrix4().multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse));
+      const drawables=[];
+      scene.traverseVisible(node=>{
+        if(!node.isMesh&&!node.isLine&&!node.isPoints&&!node.isSprite)return;
+        if(!node.layers.test(camera.layers))return;
+        if(node.frustumCulled&&!(node.isSprite?frustum.intersectsSprite(node):frustum.intersectsObject(node)))return;
+        drawables.push(node);
+      });
+      visiblePasses.push({scene,camera,drawables});
+      const batch=new THREE.Group();
+      batch.traverse=visit=>{for(const node of drawables)visit(node);};
+      // Capture the handles while their material variant is current. Both cameras
+      // can share materials, and the stage may be cancelled between poll turns.
+      for(const material of gpu.compile(batch,camera,scene)){
+        const program=gpu.properties.get(material).currentProgram;
+        if(program)programs.add(program);
+      }
+    }
+    const yieldInput=()=>new Promise(resolve=>setTimeout(resolve,12));
+    for(const program of programs){
+      while(available()&&!program.isReady())await yieldInput();
+      if(!available())return;
+      // Three checks the link log on first uniform access. Do that before the
+      // new textures and buffers from both passes occupy the GPU command queue.
+      program.getUniforms();
+    }
+    // Keep first-use buffer and texture submissions bounded. Layer masks suppress
+    // individual draws without hiding nested lights. Their original values are
+    // restored synchronously, before resize, cancellation or a subsequent batch.
+    for(const {scene,camera,drawables} of visiblePasses){
+      for(let first=0;first<drawables.length;first+=16){
+        if(!available())return;
+        const masks=drawables.map(node=>node.layers.mask);
+        try{
+          for(let i=0;i<drawables.length;i++)if(i<first||i>=first+16)drawables[i].layers.mask=0;
+          scissored(()=>draw(scene,camera));
+        }finally{drawables.forEach((node,i)=>{node.layers.mask=masks[i];});}
+        const fence=gl.fenceSync(gl.SYNC_GPU_COMMANDS_COMPLETE,0);
+        if(!fence)return;
+        try{
+          gl.flush();
+          await yieldInput();
+          while(available()){
+            const state=gl.clientWaitSync(fence,0,0);
+            if(state===gl.WAIT_FAILED)return;
+            if(state!==gl.TIMEOUT_EXPIRED)break;
+            await yieldInput();
+          }
+        }finally{gl.deleteSync(fence);}
+      }
+    }
+    if(available())this.spawnFramePrepared=true;
+  }
   async prepareOperatorPrograms(actors,signal){
     const gpu=this.renderer,gl=gpu.getContext();
     if(!gl.getExtension('KHR_parallel_shader_compile'))return;
@@ -417,12 +499,16 @@ export class Renderer extends EngineRenderer {
   }
   render(game,viewActor,dt){
     // Door instance culling runs at the world-draw hook, after camera/lights update.
+    if(game.state.mode==='dom'&&game.state.zones?.length){
+      this.dominationFlags??=new DominationFlags(this.scene);
+      this.dominationFlags.update(game.state.zones,game.team,game.state.time);
+    }else if(this.dominationFlags)this.dominationFlags.root.visible=false;
     this.presentationGame=game;this.glassVisuals?.update(game.state.time);this.combatVisuals?.update(game);this.livingScene?.update(game.state.time);this.actionVisuals?.update(game,this.camera);super.render(game,viewActor,dt);
   }
   events(events,game){
     this.glassVisuals?.events(events,game);this.combatVisuals?.events(events,game);
     const playerHit=e=>e.sourceId===game.player?.id && (
-      game.actors.some(a=>a.id===e.actorId && a.team!==game.player.team) ||
+      game.actors.some(a=>a.id===e.actorId && combatOpponents(game.player,a,game.state.mode)) ||
       game.state.zombies?.some(z=>z.id===e.actorId));
     super.events(events.filter(e=>e.type!=='hit'||playerHit(e)),game);
     this.actionVisuals?.events(events,game);
@@ -436,6 +522,7 @@ export class Renderer extends EngineRenderer {
   dispose({keepCharacterLibrary=false}={}){
     if(this.presentationDisposed)return;this.presentationDisposed=true;
     if(keepCharacterLibrary)releaseMapGpuResources([this.scene,this.viewScene,...this.weaponCache.values()]);
+    this.dominationFlags?.dispose();
     this.referenceScene?.dispose();this.zombieVisuals?.dispose();this.floorEnvironment?.dispose();this.glassVisuals?.dispose();this.detailScene?.dispose();this.doorVisuals?.dispose();this.riposteProps?.dispose();
     this.focusLighting?.dispose();this.facilityScene?.dispose();
     for(const restore of this.presentationRestores||[])restore();

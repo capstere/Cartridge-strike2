@@ -37,8 +37,9 @@ export function resetModeObjectives(game){
   s.scoreTarget=s.mode===FFA?(game.config.fragLimit??25):(game.config.dominationLimit??DOMINATION_LIMIT);
  }
 }
+export const compareFFA=(a,b)=>b.kills-a.kills||a.deaths-b.deaths||(b.combat?.points??b.handling?.points??b.points??0)-(a.combat?.points??a.handling?.points??a.points??0)||a.id.localeCompare(b.id);
 export function rankFFA(actors){
- return [...actors].sort((a,b)=>b.kills-a.kills||a.deaths-b.deaths||(b.combat?.points??0)-(a.combat?.points??0)||a.id.localeCompare(b.id));
+ return [...actors].sort(compareFFA);
 }
 export function modeWinner(mode,actors,score){
  if(mode!==FFA)return score.analysts===score.counterAnalysts?'draw':score.analysts>score.counterAnalysts?'analysts':'counterAnalysts';

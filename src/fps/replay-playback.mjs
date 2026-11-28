@@ -25,6 +25,7 @@ export class ReplayPlayback{
     const budget=packet.kind==='death'&&Number.isFinite(scope.respawnRemaining)?Math.max(0,scope.respawnRemaining*1000-100):Infinity;
     this.cardDuration=packet.kind==='death'?Math.min(cardMs,budget*.4):0;
     this.offset=packet.clip?Math.max(0,c.samples.at(-1).t-Math.max(0,budget-this.cardDuration-180)/1000):0;
+    this.lastPresentedAt=now;this.lastClipTime=null;
     this.update(scope,now);return true;
   }
   update(scope,now=performance.now()){
@@ -36,10 +37,30 @@ export class ReplayPlayback{
     if(elapsed>=duration){this.skip();return null;}
     const card=elapsed<delay,time=this.offset+Math.max(0,(elapsed-delay)*rate/1000);
     const pose=card?{}:sampleReplay(c,time);
-    this.frame={stage:card?'card':'replay',kind:p.kind,serial:c.serial,killer:c.killer.name,victim:c.victim.name,
+    // Advance the cursor even when sound is muted, the tab stalls or a new
+    // replay starts midway through its window. Never drain a backlog into audio.
+    const continuous=!card&&this.lastClipTime!==null&&now>=this.lastPresentedAt&&now-this.lastPresentedAt<=100;
+    const audioShots=continuous?c.shots.filter(s=>s.t>this.lastClipTime&&s.t<=time):[];
+    this.lastClipTime=card?null:time;this.lastPresentedAt=now;
+    const hitAge=time-c.hitTime;
+    const hitStrength=!card&&hitAge>=0&&hitAge<.14?1-hitAge/.14:0;
+    this.frame={audioShots,hitStrength,killerId:c.killer.id,stage:card?'card':'replay',kind:p.kind,serial:c.serial,killer:c.killer.name,victim:c.victim.name,
       victimId:c.victim.id,victimTeam:c.victim.team,victimOutfit:c.victim.outfitId,weapon:c.weapon,distance:c.distance,remaining:(duration-elapsed)/1000,
-      time,scoped:pose.camera?.weapon==='sniper'&&pose.camera.aim>.7,...pose};
+      time,deathTime:c.samples?.at(-1)?.t,scoped:pose.camera?.weapon==='sniper'&&pose.camera.aim>.92,...pose};
     return this.frame;
+  }
+}
+/** Present only newly crossed historical shots, through ordinary POV audio.
+ * There is no game event queue, world ambience, feedback award or live listener here. */
+export function presentReplayAudio(audio,frame){
+  if(!frame?.audioShots.length)return;
+  const shots=frame.audioShots;frame.audioShots=[];
+  if(!audio?.volume||audio.context?.state!=='running')return;
+  const p=frame.camera;
+  audio.updateListener({id:frame.killerId,x:p.x,y:p.y+p.height-.12,z:p.z,yaw:p.yaw,pitch:p.pitch});
+  for(const shot of shots){
+    audio.handleEvent({type:shot.weapon==='bazooka'?'rocket-launch':'shot',actorId:frame.killerId,
+      time:shot.t,weapon:shot.weapon,suppressed:shot.suppressed,x:p.x,y:p.y+p.height-.12,z:p.z},frame.time);
   }
 }
 export class SoloReplays{
@@ -57,7 +78,7 @@ export class SoloReplays{
     for(const clip of clips){
       this.lastKill=clip.samples?clip:null;
       if(scope.phase!=='active'||scope.actorId!==clip.victim.id)continue;
-      const {samples,shots,...card}=clip;
+      const {samples,shots,hitTime,...card}=clip;
       const detail=!clip.samples||scope.mode==='classic'&&scope.roundPhase==='active'?{card}:{clip};
       this.playback.receive({...scope,kind:'death',...detail},scope);
     }

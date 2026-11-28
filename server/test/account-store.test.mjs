@@ -136,7 +136,7 @@ test('private earned progression migrates v4, folds live sessions, caps outfits,
     assert.equal(first.stats.xp,100);
     assert.equal(first.progression.assists,1);assert.equal(first.progression.headshots,1);
     assert.deepEqual(first.progression.unlockedOutfits,[]);
-    assert.deepEqual(first.progression.weapons,[{id:'smg',xp:550,level:2}]);
+    assert.deepEqual(first.progression.weapons,[{id:'smg',name:'Pulse SMG',xp:550,level:2}]);
     assert.deepEqual(first.entitlements.weaponLevels,{smg:2});
     assert.equal(first.progression.challenges.find(c=>c.id==='rPm').count,150);
     store.recordMatch('match-b','ffa','embruns',entries);
