@@ -2,6 +2,7 @@
 import assert from 'node:assert/strict';
 import {mkdir,writeFile} from 'node:fs/promises';
 import {join} from 'node:path';
+import {resumeDesktop} from './network-browser-resume.mjs';
 import {chromium} from '../frontline/source/tools/dev/node_modules/playwright-core/index.mjs';
 
 const origin = process.env.FPS_TEST_ORIGIN || 'http://127.0.0.1:8765';
@@ -33,17 +34,24 @@ try {
       await page.goto(origin+'/fps/?test=1',{waitUntil:'domcontentloaded'});
       await route('outfits');
       await page.locator('#lobby-stage.is-ready').waitFor();
-      await page.waitForFunction(() => {
-        const tiles = [...document.querySelectorAll('[data-outfit] canvas')];
-        return tiles.length === 5 && tiles.every(c => {
-          const bytes = c.getContext('2d').getImageData(0,0,c.width,c.height).data;
-          let covered = 0;
-          for (let i=3;i<bytes.length;i+=4) if(bytes[i]>64) covered++;
-          return covered > 200;
-        });
-      });
-      const pictures = await page.locator('[data-outfit] canvas').evaluateAll(items => items.map(c=>c.toDataURL()));
-      assert.equal(new Set(pictures).size,5,'all five cards show different real operators');
+      async function portraits(previous = []) {
+        await page.waitForFunction(prior => {
+          const tiles = [...document.querySelectorAll('[data-outfit] canvas')];
+          if (tiles.length !== 5) return false;
+          const pictures = new Set();
+          return tiles.every((c,i) => {
+            const bytes = c.getContext('2d').getImageData(0,0,c.width,c.height).data;
+            let covered = 0;
+            for (let j=3;j<bytes.length;j+=4) if (bytes[j]>64) covered++;
+            const picture = c.toDataURL();
+            if (covered <= 200 || picture === prior[i] || pictures.has(picture)) return false;
+            pictures.add(picture);
+            return true;
+          });
+        },previous);
+        return page.locator('[data-outfit] canvas').evaluateAll(items=>items.map(c=>c.toDataURL()));
+      }
+      await portraits();
       const chosen = page.locator('[data-outfit=shotgun]');
       await press(chosen);
       assert.equal(await chosen.getAttribute('aria-pressed'),'true');
@@ -57,12 +65,33 @@ try {
       }
       await snap('wardrobe');
       await page.reload({waitUntil:'domcontentloaded'});
-      await route('outfits');
+      await page.locator('#menu[data-screen=outfits]').waitFor();
+      await page.locator('#lobby-stage.is-ready').waitFor();
       assert.equal(await chosen.getAttribute('aria-pressed'),'true','equipped choice survived reload');
+      const previousWeapon = await portraits();
       await press(page.locator('#route-back'));
       await route('play');
       await route('solo');
+      await press(page.locator('#lb-mode-seg [data-value=endless]'));
+      await page.locator('#loadout').selectOption('sniper');
+      await press(page.locator('#route-back'));
+      await press(page.locator('#route-back'));
+      await route('outfits');
+      await portraits(previousWeapon);
+      await press(page.locator('#route-back'));
+      await route('play');
+      await route('solo');
+      await page.bringToFront();
       await press(page.locator('#start'));
+      await page.locator('#hud').waitFor();
+      await page.locator('#cs-loading').waitFor({state:'hidden'});
+      if (!touch) {
+        if (!await page.evaluate(()=>document.pointerLockElement?.id==='game')) await resumeDesktop(page);
+      } else if (await page.locator('#resume').isVisible()) {
+        await press(page.locator('#resume'));
+      }
+      await page.waitForFunction(()=>!window.__fps?.modal && window.__fps?.game.phase==='active' &&
+        document.querySelector('#pause').hidden && document.querySelector('#buy').hidden);
       await page.waitForFunction(()=>window.__fps?.renderer.weaponModel && window.__fps?.game.player?.alive);
       const observed = await page.evaluate(() => {
         const {game,renderer} = window.__fps;

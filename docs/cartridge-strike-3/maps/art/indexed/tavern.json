@@ -1,0 +1,507 @@
+{
+  "map": "meltem",
+  "quality": "low",
+  "position": [
+    -26.27,
+    0,
+    18.6
+  ],
+  "yaw": -1.5707963267948966,
+  "pitch": 0.18,
+  "frameIntervals": {
+    "n": 90,
+    "p50": 22,
+    "p95": 39,
+    "p99": 41.400000000001455
+  },
+  "renderer": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+  "buffer": [
+    816,
+    459
+  ],
+  "drawCalls": 466,
+  "triangles": 379198,
+  "textures": 76,
+  "signage": [
+    {
+      "owner": "Moored boat",
+      "triangles": 24,
+      "uvRange": [
+        0.5,
+        0.625
+      ],
+      "transparent": true,
+      "flipY": false,
+      "width": 1024,
+      "height": 512,
+      "texture": "24983750-724e-43aa-8d46-634bb9a83379"
+    },
+    {
+      "owner": "Moored boat",
+      "triangles": 24,
+      "uvRange": [
+        0.625,
+        0.75
+      ],
+      "transparent": true,
+      "flipY": false,
+      "width": 1024,
+      "height": 512,
+      "texture": "24983750-724e-43aa-8d46-634bb9a83379"
+    },
+    {
+      "owner": "Moored boat",
+      "triangles": 24,
+      "uvRange": [
+        0.75,
+        0.875
+      ],
+      "transparent": true,
+      "flipY": false,
+      "width": 1024,
+      "height": 512,
+      "texture": "24983750-724e-43aa-8d46-634bb9a83379"
+    },
+    {
+      "owner": "Moored boat",
+      "triangles": 24,
+      "uvRange": [
+        0.875,
+        1
+      ],
+      "transparent": true,
+      "flipY": false,
+      "width": 1024,
+      "height": 512,
+      "texture": "24983750-724e-43aa-8d46-634bb9a83379"
+    },
+    {
+      "owner": "Moored boat",
+      "triangles": 24,
+      "uvRange": [
+        0.5,
+        0.625
+      ],
+      "transparent": true,
+      "flipY": false,
+      "width": 1024,
+      "height": 512,
+      "texture": "24983750-724e-43aa-8d46-634bb9a83379"
+    },
+    {
+      "owner": "Moored boat",
+      "triangles": 24,
+      "uvRange": [
+        0.625,
+        0.75
+      ],
+      "transparent": true,
+      "flipY": false,
+      "width": 1024,
+      "height": 512,
+      "texture": "24983750-724e-43aa-8d46-634bb9a83379"
+    },
+    {
+      "owner": "Moored boat",
+      "triangles": 24,
+      "uvRange": [
+        0.75,
+        0.875
+      ],
+      "transparent": true,
+      "flipY": false,
+      "width": 1024,
+      "height": 512,
+      "texture": "24983750-724e-43aa-8d46-634bb9a83379"
+    },
+    {
+      "owner": "Moored boat",
+      "triangles": 24,
+      "uvRange": [
+        0.5,
+        0.625
+      ],
+      "transparent": true,
+      "flipY": false,
+      "width": 1024,
+      "height": 512,
+      "texture": "24983750-724e-43aa-8d46-634bb9a83379"
+    },
+    {
+      "owner": "Moored boat",
+      "triangles": 24,
+      "uvRange": [
+        0.625,
+        0.75
+      ],
+      "transparent": true,
+      "flipY": false,
+      "width": 1024,
+      "height": 512,
+      "texture": "24983750-724e-43aa-8d46-634bb9a83379"
+    },
+    {
+      "owner": "Moored boat",
+      "triangles": 24,
+      "uvRange": [
+        0.75,
+        0.875
+      ],
+      "transparent": true,
+      "flipY": false,
+      "width": 1024,
+      "height": 512,
+      "texture": "24983750-724e-43aa-8d46-634bb9a83379"
+    },
+    {
+      "owner": "Moored boat",
+      "triangles": 24,
+      "uvRange": [
+        0.875,
+        1
+      ],
+      "transparent": true,
+      "flipY": false,
+      "width": 1024,
+      "height": 512,
+      "texture": "24983750-724e-43aa-8d46-634bb9a83379"
+    },
+    {
+      "owner": "Moored boat",
+      "triangles": 24,
+      "uvRange": [
+        0.5,
+        0.625
+      ],
+      "transparent": true,
+      "flipY": false,
+      "width": 1024,
+      "height": 512,
+      "texture": "24983750-724e-43aa-8d46-634bb9a83379"
+    },
+    {
+      "owner": "Moored boat",
+      "triangles": 24,
+      "uvRange": [
+        0.625,
+        0.75
+      ],
+      "transparent": true,
+      "flipY": false,
+      "width": 1024,
+      "height": 512,
+      "texture": "24983750-724e-43aa-8d46-634bb9a83379"
+    },
+    {
+      "owner": "Moored boat",
+      "triangles": 24,
+      "uvRange": [
+        0.75,
+        0.875
+      ],
+      "transparent": true,
+      "flipY": false,
+      "width": 1024,
+      "height": 512,
+      "texture": "24983750-724e-43aa-8d46-634bb9a83379"
+    },
+    {
+      "owner": "Moored boat",
+      "triangles": 24,
+      "uvRange": [
+        0.625,
+        0.75
+      ],
+      "transparent": true,
+      "flipY": false,
+      "width": 1024,
+      "height": 512,
+      "texture": "24983750-724e-43aa-8d46-634bb9a83379"
+    },
+    {
+      "owner": "Moored boat",
+      "triangles": 24,
+      "uvRange": [
+        0.75,
+        0.875
+      ],
+      "transparent": true,
+      "flipY": false,
+      "width": 1024,
+      "height": 512,
+      "texture": "24983750-724e-43aa-8d46-634bb9a83379"
+    },
+    {
+      "owner": "Moored boat",
+      "triangles": 24,
+      "uvRange": [
+        0.875,
+        1
+      ],
+      "transparent": true,
+      "flipY": false,
+      "width": 1024,
+      "height": 512,
+      "texture": "24983750-724e-43aa-8d46-634bb9a83379"
+    },
+    {
+      "owner": "Indexed architecture",
+      "triangles": 186,
+      "uvRange": [
+        0.5,
+        1
+      ],
+      "transparent": true,
+      "flipY": false,
+      "width": 1024,
+      "height": 512,
+      "texture": "24983750-724e-43aa-8d46-634bb9a83379"
+    },
+    {
+      "owner": "Indexed architecture",
+      "triangles": 88,
+      "uvRange": [
+        0,
+        0.5
+      ],
+      "transparent": false,
+      "flipY": false,
+      "width": 1024,
+      "height": 512,
+      "texture": "24983750-724e-43aa-8d46-634bb9a83379"
+    }
+  ],
+  "coverage": {
+    "staticMeshes": [
+      {
+        "kind": "boards",
+        "triangles": 88
+      },
+      {
+        "kind": "decals",
+        "triangles": 186
+      }
+    ],
+    "materialCells": {
+      "boards": {
+        "0": 4,
+        "2": 4,
+        "4": 4,
+        "5": 62,
+        "6": 2,
+        "7": 12
+      },
+      "decals": {
+        "0": 48,
+        "1": 48,
+        "3": 48,
+        "4": 6,
+        "5": 4,
+        "10": 12,
+        "12": 4,
+        "13": 16
+      }
+    },
+    "markedHulls": [
+      {
+        "x": -31.9,
+        "z": 7.5,
+        "triangles": 24,
+        "cells": {
+          "0": 24
+        }
+      },
+      {
+        "x": -31.9,
+        "z": 16.5,
+        "triangles": 24,
+        "cells": {
+          "1": 24
+        }
+      },
+      {
+        "x": -31.9,
+        "z": 25.5,
+        "triangles": 24,
+        "cells": {
+          "2": 24
+        }
+      },
+      {
+        "x": -31.9,
+        "z": 36,
+        "triangles": 24,
+        "cells": {
+          "3": 24
+        }
+      },
+      {
+        "x": -31.9,
+        "z": 44.5,
+        "triangles": 24,
+        "cells": {
+          "0": 24
+        }
+      },
+      {
+        "x": -35.2,
+        "z": 13,
+        "triangles": 24,
+        "cells": {
+          "1": 24
+        }
+      },
+      {
+        "x": -35.2,
+        "z": 31,
+        "triangles": 24,
+        "cells": {
+          "2": 24
+        }
+      },
+      {
+        "x": -31.9,
+        "z": -7.5,
+        "triangles": 24,
+        "cells": {
+          "0": 24
+        }
+      },
+      {
+        "x": -31.9,
+        "z": -16.5,
+        "triangles": 24,
+        "cells": {
+          "1": 24
+        }
+      },
+      {
+        "x": -31.9,
+        "z": -25.5,
+        "triangles": 24,
+        "cells": {
+          "2": 24
+        }
+      },
+      {
+        "x": -31.9,
+        "z": -36,
+        "triangles": 24,
+        "cells": {
+          "3": 24
+        }
+      },
+      {
+        "x": -31.9,
+        "z": -44.5,
+        "triangles": 24,
+        "cells": {
+          "0": 24
+        }
+      },
+      {
+        "x": -35.2,
+        "z": -13,
+        "triangles": 24,
+        "cells": {
+          "1": 24
+        }
+      },
+      {
+        "x": -35.2,
+        "z": -31,
+        "triangles": 24,
+        "cells": {
+          "2": 24
+        }
+      },
+      {
+        "x": -50,
+        "z": 26,
+        "triangles": 24,
+        "cells": {
+          "1": 24
+        }
+      },
+      {
+        "x": -60,
+        "z": -70,
+        "triangles": 24,
+        "cells": {
+          "2": 24
+        }
+      },
+      {
+        "x": -46,
+        "z": -30,
+        "triangles": 24,
+        "cells": {
+          "3": 24
+        }
+      }
+    ],
+    "sharedAtlasCount": 1,
+    "visible": [
+      {
+        "label": "MENU",
+        "sourceCell": 4,
+        "center": [
+          -22.008365631103516,
+          1.4499974846839905,
+          20.749643325805664
+        ],
+        "framebufferBox": [
+          532,
+          267,
+          587,
+          318
+        ],
+        "visiblePixels": 1944,
+        "restoredPixelDifferences": 0,
+        "visibleLumaRange": [
+          31,
+          234
+        ],
+        "pixelsAboveLuma90": 758
+      },
+      {
+        "label": "FISH TAVERN · CAPTAIN MICHAEL",
+        "sourceCell": 2,
+        "center": [
+          -22.06989097595215,
+          3.0900007486343384,
+          18.600072860717773
+        ],
+        "framebufferBox": [
+          292,
+          156,
+          524,
+          206
+        ],
+        "visiblePixels": 3299,
+        "restoredPixelDifferences": 0,
+        "visibleLumaRange": [
+          73,
+          239
+        ],
+        "pixelsAboveLuma90": 3292
+      }
+    ]
+  },
+  "atlasSha256": "79ee402e3c9735f698db635da120089cad53b55f45fbde4094842bb6f81470dd",
+  "contract": {
+    "protocol": 16,
+    "build": "1bf4ae79d6ebeaeaf5e3d22fab38316d05c8e44af30958b7e257d1bd85eee735"
+  },
+  "browser": "156.0.8078.79",
+  "baseline": null,
+  "revision": "41acfea8bed77ec77a37d856599a726f6eeadd96",
+  "dirty": false,
+  "sourceComparison": {
+    "cycladesKit": "ed36786a3e36eaf292b8d51b064fa8648b72da73",
+    "placementFactory": "16f541c40afc96afc238d59a3985b615014ac4d4",
+    "decorator": "ecb10ce67a4112ddbbd5b5b40a2119e4889b8f58",
+    "staticBoardOriginalGroup": 132,
+    "menuOriginalGroup": 137
+  }
+}

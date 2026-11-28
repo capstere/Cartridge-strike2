@@ -157,7 +157,7 @@ export class Renderer extends EngineRenderer {
       this.livingScene=world.newLevel?null:buildLivingScene(world,this.registry,{replacedProps:this.facilityScene?.plan.replacedProps,refinedFreight:!!this.facilityScene});
       if(this.facilityScene)this.scene.add(this.facilityScene.root);
       if(this.livingScene){this.scene.add(this.livingScene.root);this.livingScene.decorateCeilings(this.scene);}
-      [this.doorVisuals,this.riposteProps]=await Promise.all([buildDoorVisuals(world.doors),world.newLevel?Promise.resolve(null):buildRiposteProps(world)]);
+      [this.doorVisuals,this.riposteProps]=await Promise.all([buildDoorVisuals(world.doors,this.neutralLighting&&!world.referenceId?world:null,this.renderer),world.newLevel?Promise.resolve(null):buildRiposteProps(world)]);
       if(this.presentationDisposed){this.doorVisuals?.dispose();this.riposteProps?.dispose();return;}
       if(this.doorVisuals)this.scene.add(this.doorVisuals.root);if(this.riposteProps)this.scene.add(this.riposteProps.root);
       if(this.riposteProps)freezeStaticTransforms(this.riposteProps.root);

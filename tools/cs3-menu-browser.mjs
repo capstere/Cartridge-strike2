@@ -77,7 +77,12 @@ async function run(input) {
     assert.equal(await page.locator('#solo-map-list [data-map-id=compact-arena]').count(),0);
     assert.equal(await page.locator('#solo-map-list [data-map-id=synthetic-demo]').count(),0);
     await page.locator('#random-map').waitFor();
-    const hasMeltem = !!await page.locator('#choose-meltem').count();
+    const referenceOptions=[];
+    for(const [id,name] of [['meltem','Meltem'],['embruns','Kervénec Harbor'],['tephra','Tephra']]){
+      if(await page.locator('#choose-'+id).count())referenceOptions.push({id,name});
+    }
+    const hasMeltem = referenceOptions.some(entry=>entry.id==='meltem');
+    if(process.env.CS3_VERIFY_VARIANTS==='1')assert.equal(referenceOptions.length,3);
     if (process.env.CS3_VERIFY_MELTEM === '1') assert.ok(hasMeltem,'Meltem must be qualified in the tested manifest');
     await snap('maps');
     await press(page.locator('#choose-floor5')); await page.locator('#setup-title').waitFor();
@@ -101,16 +106,16 @@ async function run(input) {
       await page.locator('#setup-title').waitFor();
     }
     await playMatch(/round\s+1/i,'match');
-    if (hasMeltem) {
+    for (const {id,name} of referenceOptions) {
       await press(page.locator('.map-tile'));
-      await press(page.locator('#choose-meltem'));
-      await page.waitForURL(url => url.searchParams.get('level') === 'meltem' && url.searchParams.get('mode') === 'endless');
+      await press(page.locator('#choose-'+id));
+      await page.waitForURL(url => url.searchParams.get('level') === id && url.searchParams.get('mode') === 'endless');
       await page.waitForFunction(() => document.querySelector('#lb-mode-seg [data-value="classic"]')?.disabled);
       assert.equal(await page.locator('#game-mode').inputValue(),'endless');
-      assert.equal(await page.locator('.map-tile [data-map-name]').textContent(),'Meltem');
+      assert.equal(await page.locator('.map-tile [data-map-name]').textContent(),name);
       assert.equal(await page.locator('#roster-counter').textContent(),'You + 4 bots');
-      await snap('meltem-setup');
-      await playMatch(/endless action/i,'meltem-match');
+      await snap(id+'-setup');
+      await playMatch(/endless action/i,id+'-match');
       const unsupported = new URL(page.url());
       unsupported.searchParams.set('mode','classic');
       await press(page.locator('.map-tile'));
@@ -118,14 +123,15 @@ async function run(input) {
         const {loadSoloManifest,soloCatalog}=await import('/src/fps/solo-maps.mjs');
         return soloCatalog(await loadSoloManifest()).filter(row=>row.random&&row.modes.includes('endless')).map(row=>row.id);
       });
-      assert.ok(eligible.includes('floor5-prepared')&&!eligible.includes('meltem'));
+      assert.ok(eligible.includes('floor5-prepared')&&referenceOptions.every(entry=>!eligible.includes(entry.id)));
       await press(page.locator('#random-map'));
       await page.waitForURL(url=>eligible.includes(url.searchParams.get('level'))&&url.searchParams.get('mode')==='endless');
       await page.locator('#setup-title').waitFor();
       await snap('random-endless-setup');
       await page.goto(unsupported.href,{waitUntil:'domcontentloaded'});
       await page.locator('#solo-map-notice').waitFor();
-      assert.match(await page.locator('#solo-map-notice').textContent(),/Meltem.*does not support.*Floor 5/i);
+      const notice=await page.locator('#solo-map-notice').textContent();
+      assert.ok(notice.startsWith(name));assert.match(notice,/does not support.*Floor 5/i);
       assert.equal(new URL(page.url()).searchParams.get('level'),'floor5-prepared');
     }
     await back(); await page.locator('#play-title').waitFor();
@@ -142,7 +148,7 @@ async function run(input) {
     await page.waitForSelector('#menu[data-screen="network"]');
     assert.deepEqual(errors,[]);
     assert.equal(await page.evaluate(() => typeof window.__fps), 'undefined');
-    evidence.push({input,locale:touch?'fr-FR':'sv-SE',menuViewport:viewport,matchViewport:page.viewportSize(),maps:hasMeltem?['floor5-prepared','meltem']:['floor5-prepared'],startedAt,completedAt:new Date().toISOString()});
+    evidence.push({input,locale:touch?'fr-FR':'sv-SE',menuViewport:viewport,matchViewport:page.viewportSize(),maps:['floor5-prepared',...referenceOptions.map(row=>row.id)],startedAt,completedAt:new Date().toISOString()});
   } catch (error) {
     console.error(input, page.url(), await route(), errors);
     await snap('failure').catch(() => {});

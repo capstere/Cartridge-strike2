@@ -2,6 +2,7 @@
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {readFile} from 'node:fs/promises';
+import {resumeDesktop} from './network-browser-resume.mjs';
 import {chromium} from '../frontline/source/tools/dev/node_modules/playwright-core/index.mjs';
 
 const origin = process.env.FPS_TEST_ORIGIN || 'http://127.0.0.1:8765';
@@ -56,7 +57,13 @@ function inspectAppearance() {
   };
 }
 
-const browser = await chromium.launch({channel:'chromium'});
+const native = process.env.CHROMIUM_PATH;
+const browser = await chromium.launch({
+  channel:native ? undefined : 'chromium',
+  executablePath:native,
+  headless:process.env.FPS_NETWORK_HEADED !== '1',
+  args:native ? ['--ozone-platform=wayland','--use-angle=gl-egl','--disable-dev-shm-usage'] : []
+});
 try {
   const page = await browser.newPage({viewport:{width:1100,height:700}});
   const errors = [], writes = [];
@@ -106,7 +113,8 @@ try {
   }
   async function match() {
     await page.waitForFunction(()=>window.__fps?.game.player && !document.querySelector('#hud').hidden && document.querySelector('#cs-loading').hidden);
-    if (await page.locator('#resume').isVisible()) await page.locator('#resume').click();
+    await page.bringToFront();
+    if (!await page.evaluate(()=>document.pointerLockElement?.id==='game')) await resumeDesktop(page);
     await page.waitForFunction(()=>__fps.modal===null && !__fps.game.state.paused);
   }
   async function back() {

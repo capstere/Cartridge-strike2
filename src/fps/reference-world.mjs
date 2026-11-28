@@ -6,10 +6,10 @@ import {referenceNavigation} from './reference-navigation.mjs';
 import {referenceRays} from './reference-rays.mjs';
 
 function validate(spec){
-  const fail=()=>{throw Error('Invalid Meltem terrain data.');};
+  const fail=()=>{throw Error('Invalid reference terrain data.');};
   const finite=(v,limit)=>Number.isFinite(v)&&Math.abs(v)<=limit;
   const bounded=(list,limit)=>Array.isArray(list)&&list.length<=limit;
-  if(spec?.version!==1||spec.sourceId!=='meltem'||!spec.bounds||!bounded(spec.solids,10000)||
+  if(spec?.version!==1||!['meltem','embruns','tephra'].includes(spec.sourceId)||!spec.bounds||!bounded(spec.solids,10000)||
     !bounded(spec.ramps,200)||!bounded(spec.holes,100)||!bounded(spec.poi,500)||!bounded(spec.zones,400)||!bounded(spec.rayProps,2000))fail();
   for(const b of spec.solids)if(!Array.isArray(b)||b.length!==11||b.slice(0,6).some(v=>!finite(v,5000))||
     b[0]>b[1]||b[2]>b[3]||b[4]>b[5]||typeof b[6]!=='string')fail();
@@ -25,7 +25,15 @@ function validate(spec){
     !finite(n.cost[i],200)||n.cost[i]<=0||!Number.isInteger(n.kind[i])||n.kind[i]<0||n.kind[i]>3)fail();
   for(const r of spec.ramps)if(!['x','z'].includes(r.axis)||![r.x0,r.x1,r.z0,r.z1,r.h0,r.h1].every(v=>finite(v,1500))||r.x0>=r.x1||r.z0>=r.z1)fail();
   for(const h of spec.holes)if(![h.x,h.z,h.y,h.r].every(v=>finite(v,1500))||h.r<=0)fail();
-  const w=spec.water;if(!w||!finite(w.y,100)||!finite(w.floor,100)||w.floor>w.y||!bounded(w.land,30)||
+  const w=spec.water;
+  if(spec.sourceId==='tephra'){
+    if(w!==null)fail();
+    const grid=spec.groundMaterials;
+    if(!grid||grid.step!==1||grid.width!==Math.ceil(spec.bounds.x1-spec.bounds.x0)||
+      grid.height!==Math.ceil(spec.bounds.z1-spec.bounds.z0)||!bounded(grid.names,10)||
+      grid.names.some(v=>!['concrete','gravel','metal'].includes(v))||!bounded(grid.indices,90000)||
+      grid.indices.length!==grid.width*grid.height||grid.indices.some(v=>!Number.isInteger(v)||v<0||v>=grid.names.length))fail();
+  }else if(!w||!finite(w.y,100)||!finite(w.floor,100)||w.floor>w.y||!bounded(w.land,30)||
     ![w.box,...w.land].every(b=>Array.isArray(b)&&b.length===4&&b.every(v=>finite(v,11000))&&b[0]<=b[1]&&b[2]<=b[3]))fail();
   for(const p of spec.poi)if(!Array.isArray(p)||p.length<3||p.slice(0,3).some(v=>!finite(v,1500)))fail();
   for(const row of spec.zones)if(!Array.isArray(row)||row.length!==5||typeof row[0]!=='string'||
@@ -36,10 +44,11 @@ function validate(spec){
 const rectangle=(x0,x1,z0,z1)=>[[x0,z0],[x1,z0],[x1,z1],[x0,z1]];
 export function createReferenceWorld(project){
   const spec=project.referenceMap;validate(spec);
+  if(project.projectId!=='lvl-'+spec.sourceId)throw Error('Reference level identity mismatch.');
   const terrain=createReferenceTerrain(spec),navigation=referenceNavigation(spec.nav,terrain);
   const bounds=spec.bounds,footprint=rectangle(bounds.x0,bounds.x1,bounds.z0,bounds.z1);
   const rooms=spec.zones.map(([name,x0,x1,z0,z1],i)=>({id:'M-'+i,name,publicName:name,status:'included',surface:'stone',polygon:rectangle(x0,x1,z0,z1)}));
-  const outside={id:'M-0-all',name:'Meltem',publicName:'Meltem',status:'included',surface:'stone',polygon:footprint};
+  const outside={id:'M-0-all',name:project.name,publicName:project.name,status:'included',surface:'stone',polygon:footprint};
   const data={__custom:true,rooms,corridors:[outside],walls:[],doors:[],obstacles:[],routes:[],targets:[],excludedRooms:[],floorPolygons:[footprint],ground:project.ground};
   const description={boxes:[],surfaces:[],labels:[],furnishings:[],floorPolygons:[footprint]};
   // Draw the ground-level silhouettes from the same authoritative solids.
@@ -57,15 +66,25 @@ export function createReferenceWorld(project){
   // This map has no dynamic doors, elevators or destructible glazing. The
   // network door interface still exists, including an independent empty
   // context for prediction. Static geometry is shared throughout each room.
-  const empty=boxes=>{if(boxes.length)throw Error('Unexpected moving geometry on Meltem.');return boxes;};
+  const empty=boxes=>{if(boxes.length)throw Error('Unexpected moving geometry for '+project.name+'.');return boxes;};
   const physics={...terrain,...referenceRays(spec,terrain),staticBoxes,staticCanOccupy:terrain.canOccupy,
     onFloor:(x,z)=>terrain.scopeAllowed(x,z,0),setDynamicBoxes:empty,createDynamicContext:empty,
     withDynamicContext:(context,run)=>run(),enableNetworkGlassThresholds:()=>{}};
   const doors=createDoors(data,physics),glass=createGlassState({specs:[]},physics);
   const roomAt=(x,z)=>rooms.find((_,i)=>{const v=spec.zones[i];return x>=v[1]&&x<=v[2]&&z>=v[3]&&z<=v[4];})||outside;
-  return {...physics,newLevel:true,layeredTerrain:true,referenceId:'meltem',project,data,description,anchors,doors,glass,
+  return {...physics,newLevel:true,layeredTerrain:true,referenceId:spec.sourceId,project,data,description,anchors,doors,glass,
     furnishings:{instances:[],boxes:[]},tactical:{...createFloorTactics(navigation,anchors),
       patrolPoints:spec.poi.map(([x,y,z])=>({x,y,z}))},navigation,findPath:navigation.findPath,roomAt,
-    materialAt:(x,z)=>x< -30?'wood':Math.abs(z)>41&&x> -18?'dirt':'concrete',
+    materialAt(x,z,y=0){
+      if(spec.sourceId==='embruns')return y>.2&&x< -20?'metal':x< -30?'wood':'concrete';
+      if(spec.sourceId==='tephra'){
+        if(y>2.5)return 'metal';
+        const grid=spec.groundMaterials;
+        const cx=Math.max(0,Math.min(grid.width-1,Math.floor(x-bounds.x0)));
+        const cz=Math.max(0,Math.min(grid.height-1,Math.floor(z-bounds.z0)));
+        return grid.names[grid.indices[cz*grid.width+cx]];
+      }
+      return x< -30?'wood':Math.abs(z)>41&&x> -18?'dirt':'concrete';
+    },
     setElevatorProgress:()=>{},statistics:{staticBoxes:staticBoxes.length,navigation:navigation.statistics,furnishings:0}};
 }

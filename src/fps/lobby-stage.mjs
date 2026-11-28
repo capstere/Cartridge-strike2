@@ -98,7 +98,7 @@ function makeStage(){
     syncAuthoredActor(turntable,actor,time);
   }
   const actor={x:0,z:0,y:0,yaw:0,moving:0,onGround:true,crouching:false,height:1.8,weapon:'knife',reloadUntil:-1,alive:true};
-  let thumbnailTeam, thumbnailIndex = 0;
+  let thumbnailTeam, thumbnailWeapon, thumbnailIndex = 0;
   function setTeam(next,force=false){
     if(next===team&&avatar&&!force)return;team=next;const col=ACCENT[next]||ACCENT.analysts;
     rimA.color.setHex(col);rimB.color.setHex(col);ringMat.color.setHex(col);ring2.material.color.setHex(col);
@@ -116,7 +116,12 @@ function makeStage(){
   tileCamera.lookAt(0,.88,0);
   function drawNextPortrait() {
     if (menu.dataset.screen !== 'outfits' || !avatar) return;
-    if (thumbnailTeam !== team) {thumbnailTeam = team; thumbnailIndex = 0;}
+    const weapon = $('loadout').value || 'smg';
+    if (thumbnailTeam !== team || thumbnailWeapon !== weapon) {
+      thumbnailTeam = team;
+      thumbnailWeapon = weapon;
+      thumbnailIndex = 0;
+    }
     const outfit = OUTFITS[thumbnailIndex];
     if (!outfit) return;
     thumbnailIndex++;

@@ -1,0 +1,22 @@
+{
+  "revision": "1c70c0d93b2d4da3fcb3a1a29c840fcc64b16ded",
+  "stages": [
+    {
+      "case": "embruns",
+      "start": "2026-11-27T15:47:58.389192+00:00",
+      "end": "2026-11-27T15:49:51.130004+00:00",
+      "exit": 0,
+      "status": "PASS",
+      "naturalExit": true
+    },
+    {
+      "case": "tephra",
+      "start": "2026-11-27T15:49:51.130678+00:00",
+      "end": "2026-11-27T15:51:45.172315+00:00",
+      "exit": 0,
+      "status": "PASS",
+      "naturalExit": true
+    }
+  ],
+  "success": true
+}

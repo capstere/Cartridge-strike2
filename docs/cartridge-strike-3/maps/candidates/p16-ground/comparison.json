@@ -1,0 +1,123 @@
+{
+  "revision": "aafc587f32060cf738c19dfcd4de1631e1e15ec6",
+  "build": "e6f610309ea6722b01e469f2ff6d343c89cca0715c8e6040aeaf5abc35466aad",
+  "comparisonAgainst": "1c70c0d93b2d4da3fcb3a1a29c840fcc64b16ded",
+  "cases": {
+    "embruns": {
+      "frame": {
+        "n": 347,
+        "min": 17.1,
+        "p50": 26.1,
+        "p95": 44.5,
+        "p99": 82.5,
+        "max": 149
+      },
+      "authorityStep": {
+        "n": 605,
+        "min": 0.56,
+        "p50": 1.54,
+        "p95": 9.81,
+        "p99": 20.33,
+        "max": 34.81
+      },
+      "terrain": {
+        "size": [
+          416,
+          560
+        ],
+        "tiles": [
+          256,
+          256,
+          4
+        ],
+        "mips": true,
+        "samples": [
+          [
+            255,
+            0,
+            0,
+            76
+          ],
+          [
+            0,
+            255,
+            0,
+            99
+          ]
+        ]
+      },
+      "bakedLamps": [
+        70,
+        86,
+        12
+      ]
+    },
+    "tephra": {
+      "frame": {
+        "n": 387,
+        "min": 18.2,
+        "p50": 24.4,
+        "p95": 34.4,
+        "p99": 41.9,
+        "max": 166.1
+      },
+      "authorityStep": {
+        "n": 606,
+        "min": 0.4,
+        "p50": 1.28,
+        "p95": 4.66,
+        "p99": 7.92,
+        "max": 21.83
+      },
+      "terrain": {
+        "size": [
+          550,
+          550
+        ],
+        "tiles": [
+          256,
+          256,
+          4
+        ],
+        "mips": true,
+        "samples": [
+          [
+            255,
+            0,
+            0,
+            40
+          ],
+          [
+            0,
+            255,
+            0,
+            92
+          ]
+        ]
+      },
+      "bakedLamps": [
+        64,
+        104,
+        12
+      ],
+      "ordinaryAshLane": {
+        "fixedRegionPx": [
+          324,
+          435,
+          427,
+          495
+        ],
+        "lightingOnly": {
+          "meanLuma": 0.01,
+          "medianLuma": 0,
+          "fractionBelow12": 1.0
+        },
+        "groundLayers": {
+          "meanLuma": 2.79,
+          "medianLuma": 3,
+          "fractionBelow12": 1.0
+        }
+      }
+    }
+  }
+}

@@ -59,7 +59,7 @@ export function moveActor(game, actor, input, dt, effects = true) {
   if (!game.world.layeredTerrain && actor.y <= .001) { actor.y = Math.max(0, actor.y); actor.onGround = true; }
   if (actor.onGround && actor.vy < 0) actor.vy = 0;
   if (result.ceiling && actor.vy > 0) actor.vy = 0;
-  if (effects && !wasGrounded && actor.onGround) game.emit('land', actor, { surface: game.world.materialAt(actor.x, actor.z) });
+  if (effects && !wasGrounded && actor.onGround) game.emit('land', actor, { surface: game.world.materialAt(actor.x, actor.z, actor.y) });
   const moved = distance(actor, before); actor.moving = moved / dt; actor.distanceWalked += moved;
   advanceRush(actor,rush,dt,game.config.runSpeed);
   if((actor.rushing || (actor.slideBuffer>0 && !sliding)) && moved>.001){
@@ -71,7 +71,7 @@ export function moveActor(game, actor, input, dt, effects = true) {
   }
   if (!sliding && moved > .001 && actor.onGround && game.state.time - actor.lastStep > (mode === 'rush' ? .29 : mode === 'run' ? .36 : mode === 'sneak' ? .66 : .75)) {
     actor.lastStep = game.state.time;
-    if (effects) game.emit('step', actor, { mode, surface: game.world.materialAt(actor.x, actor.z) });
+    if (effects) game.emit('step', actor, { mode, surface: game.world.materialAt(actor.x, actor.z, actor.y) });
     if (effects && !actor.isPlayer && actor.controllerType !== 'human' && game.random() < .33) game.emit('rustle', actor, { mode });
   }
 }
