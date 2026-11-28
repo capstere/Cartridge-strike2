@@ -13,35 +13,82 @@ assert(origin && output, 'Set FPS_TEST_ORIGIN to the isolated build and CS3_VISU
 const base = new URL(origin);
 assert(['127.0.0.1','localhost','[::1]'].includes(base.hostname), 'Use an isolated loopback server.');
 await mkdir(output,{recursive:true});
-const browser = await chromium.launch({
-  headless:false, executablePath:process.env.CHROMIUM_PATH || '/usr/bin/chromium',
-  args:['--ozone-platform=wayland','--use-angle=gl-egl','--disable-dev-shm-usage']
-});
+const native=process.env.CHROMIUM_PATH,headed=process.env.FPS_NETWORK_HEADED==='1';
+const angle=process.env.FPS_NETWORK_ANGLE || (process.platform==='darwin'?'metal':headed?'gl-egl':'swiftshader');
+const args=['--use-angle='+angle,'--disable-dev-shm-usage'];
+if(process.platform==='linux'&&headed)args.push('--ozone-platform=wayland');
+if(angle==='swiftshader')args.push('--enable-unsafe-swiftshader');
+const browser=await chromium.launch({executablePath:native,channel:native?undefined:'chromium',headless:!headed,args});
 const viewport = {width:932,height:430};
 const context = await browser.newContext({viewport, locale:'sv-SE', hasTouch:true, isMobile:true, deviceScaleFactor:1});
 const page = await context.newPage();
 const report = {
   commit:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),
   started:new Date().toISOString(), build:CONTRACT.buildHash, protocol:CONTRACT.protocolVersion,
-  browser:browser.version(), viewport, device:'Raspberry Pi, Wayland native Chromium. CDP emulated touch.',
+  browser:browser.version(), viewport, platform:process.platform, angle, headed, device:'Chromium emulated touch',
   locale:'sv-SE', scenes:[], errors:[]
 };
 page.setDefaultTimeout(65000);
 page.on('pageerror', error => report.errors.push(error.message));
 async function photograph(name, locator) {
+  const camera=locator.page();
   await locator.waitFor();
-  const bytes = await page.screenshot({type:'jpeg',quality:83,path:join(output,name+'.jpg')});
+  const bytes = await camera.screenshot({type:'jpeg',quality:83,path:join(output,name+'.jpg')});
   report.scenes.push({name,path:name+'.jpg',sha256:createHash('sha256').update(bytes).digest('hex'),
-    ms:Math.round(await page.evaluate(()=>performance.now())),text:(await locator.innerText()).trim().slice(0,1200)});
+    ms:Math.round(await camera.evaluate(()=>performance.now())),locale:await camera.evaluate(()=>navigator.language),text:(await locator.innerText()).trim().slice(0,1200)});
 }
 const open = name => page.locator('[data-go="'+name+'"]:visible').first().tap();
 const back = () => page.locator('#route-back').tap();
 try {
+  const fresh=await browser.newContext({viewport,locale:'fr-FR',hasTouch:true,isMobile:true,deviceScaleFactor:1});
+  const french=await fresh.newPage();french.on('pageerror',error=>report.errors.push(error.message));
+  await french.goto(base.href,{waitUntil:'domcontentloaded'});
+  await french.locator('#lobby-stage.is-ready').waitFor({state:'attached',timeout:120000});
+  assert.equal(await french.locator('html').getAttribute('lang'),'en');
+  const home=french.locator('[data-panel=main]');
+  for(const name of ['Play','Classes','Outfits','Options'])await home.getByRole('button',{name,exact:true}).waitFor();
+  await french.getByRole('link',{name:'Credits'}).waitFor();
+  await photograph('fresh-home',home);
+  await home.getByRole('button',{name:'Play',exact:true}).tap();
+  const play=french.locator('[data-panel=play]');
+  for(const name of [/Solo/,/With friends/,/Public matches/])await play.getByRole('button',{name}).waitFor();
+  assert(await play.getByRole('button',{name:/Public matches/}).isDisabled());
+  await photograph('fresh-play',play);
+  await fresh.close();
   await page.goto(base.href,{waitUntil:'domcontentloaded'});
   await page.waitForURL('**/fps/');
   const build = await page.evaluate(async()=> (await import('../shared/multiplayer/build.mjs')).CONTRACT.buildHash);
   assert.equal(build,report.build);
   assert.equal(await page.locator('html').getAttribute('lang'),'en');
+  await open('classes');
+  const slot=id=>page.locator('[data-class-id="'+id+'"]');
+  await slot('scout').tap();
+  await page.getByRole('button',{name:'Equip preset',exact:true}).tap();
+  await page.locator('[data-class-status]').filter({hasText:'Class equipped'}).waitFor();
+  await back();await open('outfits');
+  const outfit=page.locator('[data-outfit=shotgun]');
+  await outfit.tap();
+  assert.equal(await outfit.getAttribute('aria-pressed'),'true');
+  await page.reload({waitUntil:'domcontentloaded'});
+  await page.locator('[data-outfit=shotgun][aria-pressed=true]').waitFor();
+  await page.getByRole('button',{name:'Rotate operator right'}).tap();
+  await page.locator('#lobby-stage.is-ready').waitFor({state:'attached',timeout:120000});
+  await photograph('saved-outfit',page.locator('[data-panel=outfits]'));
+  await back();await open('classes');
+  await slot('scout').filter({hasText:'Equipped preset'}).waitFor();
+  await page.getByRole('button',{name:'Rotate weapon right'}).tap();
+  await page.waitForFunction(()=>{
+    const canvases=[...document.querySelectorAll('[data-inspect-slot] canvas')];
+    return canvases.length===2 && canvases.every(canvas=>{
+      const pixels=canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height).data;
+      return pixels.some((value,index)=>index%4===3&&value>64);
+    });
+  },null,{timeout:120000});
+  await photograph('saved-class',page.locator('[data-panel=classes]'));
+  await slot('custom-5').tap();
+  assert.match(await page.locator('[data-class-note]').innerText(),/level 20/i);
+  await photograph('locked-class',page.locator('[data-panel=classes]'));
+  await back();
   await open('news');
   assert.match(await page.locator('[data-news-build]').innerText(),new RegExp(report.build.slice(0,12)));
   await photograph('news',page.locator('[data-panel=news]'));
@@ -90,7 +137,7 @@ try {
   await page.locator('#start').tap();
   await deploy.waitFor();
   assert.equal(await choice.inputValue(),'shotgun');
-  await choice.selectOption('scout');
+  await choice.selectOption('equipped');
   await photograph('deploy',page.locator('#csl-ready'));
   report.confirmedClass = await choice.locator('option:checked').innerText();
   await deploy.tap();
