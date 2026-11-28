@@ -10,11 +10,6 @@
   },
   "files": [
     {
-      "path": ".nojekyll",
-      "bytes": 0,
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-    },
-    {
       "path": "Business_Man_Quaternius_Anims.glb",
       "bytes": 10179392,
       "sha256": "8848008569ae5a35733f1ecc9456cd90a6c505cf3ccde375de7e228bd4a264d4"

@@ -1,31 +1,49 @@
 #!/bin/bash
-# Run as the checkout owner, from any location in a verified, committed checkout.
-# Stages a release only. Activation, tunnel publication and rollback are separate.
+# Run inside the reviewed checkout. Only the dependency-closed distribution
+# crosses from the temporary build workspace into a versioned release.
 set -euo pipefail
 umask 022
 repo=$(git rev-parse --show-toplevel)
-revision=$(git -C "$repo" rev-parse --verify HEAD^{commit})
-prefix=/opt/cartridge-strike2-pilot
-release="$prefix/releases/$revision"
-if sudo test -e "$release"; then
-    echo "Release already staged at $release"
-    exit 0
+revision=$(git -C "$repo" rev-parse --verify 'HEAD^{commit}')
+prefix=/opt/cartridge-strike2-pilot/releases
+if (( $# == 0 )); then
+    sudo -n install -d -m 0755 "$prefix"
+    release="$prefix/$revision"
+    privileged=(sudo -n)
+elif [[ $# == 2 && $1 == --export-to && $2 == /* ]]; then
+    release=$2
+    privileged=()
+else
+    echo 'Usage: bash deploy/pilot/stage-release.sh [--export-to /absolute/stage]' >&2
+    exit 2
 fi
-staging=$(mktemp -d)
-trap 'rm -rf -- "$staging"' EXIT
-git -C "$repo" archive "$revision" | tar -x -C "$staging"
+workspace=$(mktemp -d)
+incoming=''
+cleanup() {
+    rm -rf -- "$workspace"
+    if [[ -n "$incoming" ]]; then "${privileged[@]}" rm -rf -- "$incoming"; fi
+}
+trap cleanup EXIT
+mkdir "$workspace/source"
+git -C "$repo" archive "$revision" -- . ':(exclude)frontline' ':(exclude)IMG_*.PNG' \
+    ':(exclude,icase)*.zip' ':(exclude)docs/cartridge-strike-3/evidence' | tar -x -C "$workspace/source"
 (
-    cd "$staging"
-    npm ci --prefix server --ignore-scripts --no-audit --no-fund
+    cd "$workspace/source"
+    npm ci --prefix server --prefer-offline --ignore-scripts --no-audit --no-fund
     node tools/build-network.mjs --check
     node tools/verify-owner-runtime.mjs
-    npm prune --prefix server --omit=dev --ignore-scripts --no-audit --no-fund
+    node tools/runtime-distribution.mjs pilot "$workspace/pilot"
 )
-sudo install -d -m 0755 "$prefix/releases"
-incoming=$(sudo mktemp -d "$prefix/releases/.incoming.XXXXXXXX")
-trap 'rm -rf -- "$staging"; sudo rm -rf -- "$incoming"' EXIT
-sudo cp -a "$staging/." "$incoming/"
-sudo chown -R root:root "$incoming"
-sudo chmod 0755 "$incoming"
-sudo mv -T "$incoming" "$release"
-echo "Verified and staged $release"
+npm ci --prefix "$workspace/pilot/server" --offline --omit=dev --ignore-scripts --no-audit --no-fund
+if "${privileged[@]}" test -e "$release"; then
+    "${privileged[@]}" diff --no-dereference -qr "$workspace/pilot" "$release"
+else
+    incoming=$("${privileged[@]}" mktemp -d "$(dirname "$release")/.incoming.XXXXXXXX")
+    "${privileged[@]}" cp -a "$workspace/pilot/." "$incoming/"
+    if (( ${#privileged[@]} )); then sudo -n chown -R root:root "$incoming"; fi
+    "${privileged[@]}" chmod 0755 "$incoming"
+    # Concurrent attempts can stage the same immutable revision. Never replace it.
+    "${privileged[@]}" mv -Tn "$incoming" "$release"
+    "${privileged[@]}" diff --no-dereference -qr "$workspace/pilot" "$release"
+fi
+echo "Verified $revision at $release"
