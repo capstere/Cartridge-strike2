@@ -1,0 +1,129 @@
+{
+  "localRevision": "6ce0bda880a5d57b32718933b78238b662573ed5",
+  "publishedHead": "7cf50f63196861702a030eb39db83c0bc2d2e930",
+  "buildHash": "1ac88e31ba8f2aa7460034ae3c16f741e2527fb3fbcae199ffcd58681df393c9",
+  "environment": "Raspberry Pi native headed Chromium, V3D and emulated touch",
+  "equipment": {
+    "command": "node tools/online-equipment-browser.mjs",
+    "result": "two rendered clients, eight BotControllers, desktop ADS/glass/equipment and simultaneous mobile movement/ADS/fire/HE.",
+    "sound": [
+      {
+        "label": "near",
+        "id": "analysts-0:2:1:2",
+        "own": {
+          "id": "analysts-0:2:1:2",
+          "actor": "analysts-0",
+          "take": "armes/g_glock_pov-1.mp3",
+          "distance": 1.58,
+          "delay": 0,
+          "predicted": true,
+          "tick": null,
+          "contextTime": 84.52266666666667,
+          "scheduled": 84.52266666666667,
+          "eventTime": 59.09999999999793,
+          "dispatch": 90612.69999992847,
+          "frame": 90662.09999990463
+        },
+        "remote": {
+          "id": "analysts-0:2:1:2",
+          "actor": "analysts-0",
+          "take": "armes/g_glock_near-1.mp3",
+          "distance": 8.14868490252415,
+          "delay": 0.02375709884118038,
+          "predicted": false,
+          "tick": 4852,
+          "contextTime": 58.14666666666667,
+          "scheduled": 58.17042376550785,
+          "eventTime": 59.28333333333125,
+          "dispatch": 87788.10000002384,
+          "frame": 87909.19999992847
+        },
+        "ammoBefore": 20,
+        "ammoAfter": 19
+      },
+      {
+        "label": "far",
+        "id": "analysts-0:2:1:3",
+        "own": {
+          "id": "analysts-0:2:1:3",
+          "actor": "analysts-0",
+          "take": "armes/g_glock_pov-2.mp3",
+          "distance": 1.58,
+          "delay": 0,
+          "predicted": true,
+          "tick": null,
+          "contextTime": 85.57866666666666,
+          "scheduled": 85.57866666666666,
+          "eventTime": 60.1929000000694,
+          "dispatch": 91670.39999997616,
+          "frame": 91718.29999995232
+        },
+        "remote": {
+          "id": "analysts-0:2:1:3",
+          "actor": "analysts-0",
+          "take": "armes/g_far_pistol-1.mp3",
+          "distance": 48.05311721382021,
+          "delay": 0.14009655164379353,
+          "predicted": false,
+          "tick": 4915,
+          "contextTime": 59.114666666666665,
+          "scheduled": 59.25476321831046,
+          "eventTime": 60.33333333333119,
+          "dispatch": 88747.10000002384,
+          "frame": 88766.39999997616
+        },
+        "ammoBefore": 19,
+        "ammoAfter": 18
+      }
+    ],
+    "logSHA256": "073b6f5e93110f6a0343d27c613e075c364b796cce0e9840ff6c22dfabd61b46"
+  },
+  "normalNavigation": {
+    "command": "node tools/bot-navigation-live.mjs",
+    "rooms": [
+      {
+        "map": "floor5",
+        "input": "keyboard and mouse",
+        "moved": 9,
+        "renderedFrames": 349,
+        "activeSeconds": 12.067,
+        "renderer": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+        "samples": 31,
+        "playerMaxDisplacement": 2.94,
+        "botMaxTravel": {
+          "analysts-1": 14.1,
+          "analysts-2": 32.789,
+          "analysts-3": 26.261,
+          "analysts-4": 26.074,
+          "counterAnalysts-0": 37.223,
+          "counterAnalysts-1": 33.403,
+          "counterAnalysts-2": 35.404,
+          "counterAnalysts-3": 32.06,
+          "counterAnalysts-4": 30.686
+        }
+      },
+      {
+        "map": "meltem",
+        "input": "emulated touch",
+        "moved": 9,
+        "renderedFrames": 778,
+        "activeSeconds": 12.017,
+        "renderer": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+        "samples": 42,
+        "playerMaxDisplacement": 5.533,
+        "botMaxTravel": {
+          "analysts-1": 34.083,
+          "analysts-2": 31.77,
+          "analysts-3": 31.63,
+          "analysts-4": 33.422,
+          "counterAnalysts-0": 30.699,
+          "counterAnalysts-1": 31.017,
+          "counterAnalysts-2": 34.733,
+          "counterAnalysts-3": 33.272,
+          "counterAnalysts-4": 32.569
+        }
+      }
+    ],
+    "rawSHA256": "0a1852db7a9d28c858154a8423448546b0c74a4fdf33a2a3aa799952792cd5b5"
+  }
+}
