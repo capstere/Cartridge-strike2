@@ -1,30 +1,15 @@
 import assert from 'node:assert/strict';
-import {readFile} from 'node:fs/promises';
+import {originalOperator} from './original-operator-fixture.mjs';
 import test from 'node:test';
 import {PerspectiveCamera,Vector3} from '../vendor/three/three.module.js';
-import {GLTFLoader} from '../vendor/three/addons/loaders/GLTFLoader.js';
 import {createAuthoredAvatar,installCharacterTemplates,disposeCharacterLibrary,disposeAvatar,
   animateAuthored,clearNetworkOutfits,setNetworkOutfit,characterVisualSignature,
   privateCharacterAppearance,setPrivateCharacterActors} from '../src/fps/character-library.mjs?v=6.1.2';
 import {OUTFITS} from '../src/fps/operator-outfits.mjs';
 
-async function original(gender) {
-  const file=new URL('../assets/fps/models/quaternius-operator-'+gender+'.glb',import.meta.url);
-  const bytes=await readFile(file);
-  const loader=new GLTFLoader();
-  loader.register(parser=>{
-    for(const material of parser.json.materials) {
-      for(const field of [material,material.pbrMetallicRoughness||{}]) {
-        for(const key of Object.keys(field)) if (key.endsWith('Texture')) delete field[key];
-      }
-    }
-    return {name:'cpu-rig-fixture'};
-  });
-  return loader.parseAsync(bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength),'');
-}
 
 test('the four publicly equipped kits fit either original rig, preserve team proportions and share the arm profile',async()=>{
-  installCharacterTemplates(await original('male'),await original('female'));
+  installCharacterTemplates(await originalOperator('male'),await originalOperator('female'));
   setPrivateCharacterActors([]);
   const tracked=[];
   try {
@@ -93,7 +78,7 @@ test('the four publicly equipped kits fit either original rig, preserve team pro
 });
 
 test('original GLB stride steers in all four directions, keeps hands stable and survives pause and teleport', async()=>{
-  installCharacterTemplates(await original('male'),await original('female'));
+  installCharacterTemplates(await originalOperator('male'),await originalOperator('female'));
   const tracked=[];
   try {
     function walk(dx,dz,distanceSquared=0) {

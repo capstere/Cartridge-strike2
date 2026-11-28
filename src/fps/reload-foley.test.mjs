@@ -113,22 +113,23 @@ test('a spectator ear or life change stops spatially placed mechanisms from the 
   }
 });
 
-test('Rage and ordinary reloads start at zero, animate the same poses at matching phases and release at the accepted deadline',async()=>{
+test('Rage and ordinary reloads start at zero, animate the same poses at matching phases and release at the accepted deadline',async t=>{
   const {makeWeapon,animateWeapon}=await import('./models.mjs');
-  const {animateAuthored}=await import('./character-library.mjs');
-  const T=await import('../../vendor/three/three.module.js');
+  const {animateAuthored,createAuthoredAvatar,installCharacterTemplates,disposeAvatar,disposeCharacterLibrary}=await import('./character-library.mjs');
+  const {originalOperator}=await import('../../tools/original-operator-fixture.mjs');
+  installCharacterTemplates(await originalOperator('male'),await originalOperator('female'));
+  const avatars=[];
+  t.after(()=>{for(const avatar of avatars)disposeAvatar(avatar);disposeCharacterLibrary();});
   const {reloadPhase}=await import('./strike-kit-timing.mjs');
   for(const id of ['smg','p9','cr4']){
     const duration=WEAPONS[id].reload,start=10;
     const actors=[1,.75].map(scale=>({id:'player',x:0,z:0,height:1.7,alive:true,onGround:true,moving:0,weapon:id,
       inventory:{item:{id,ammo:2}},reloadStartedAt:start,reloadDuration:duration*scale,reloadUntil:start+duration*scale}));
     const models=actors.map(()=>makeWeapon(id));
-    const third=actors.map(()=>{
-      const root=new T.Group(),mixer=new T.AnimationMixer(root);
-      const action=name=>mixer.clipAction(new T.AnimationClip(name,2,[]));
-      return {root,holder:root,mixer,scale:1,groundOffset:0,groundInverse:new T.Matrix4(),bones:new Map(),
-        shoes:[],footSamples:[],time:null,x:null,z:null,base:new Map([['Idle_Loop',action('Idle_Loop')]]),
-        upper:new Map(['Pistol_Reload','Pistol_Idle_Loop'].map(n=>[n,action(n)]))};
+    const third=['male','female'].map((gender,i)=>{
+      const avatar=createAuthoredAvatar('analysts','analysts-'+i,false,gender);
+      assert(avatar.skeletons.length>0);
+      avatars.push(avatar);return avatar;
     });
     for(const fraction of [0,.13,.33,.55,.77,.99,1]){
       const offsets=[];
@@ -140,7 +141,10 @@ test('Rage and ordinary reloads start at zero, animate the same poses at matchin
         offsets.push(d.magazine.position.distanceTo(d.magazineHome));
         assert(Math.abs(reloadPhase(a,id,time,duration)-(fraction<1?fraction:0))<1e-7);
         animateAuthored(third[i],a,time);
-        if(fraction<1)assert(Math.abs(third[i].upper.get('Pistol_Reload').time-fraction*1.999)<1e-6);
+        if(fraction<1){
+          const reload=third[i].upper.get('Pistol_Reload');
+          assert(Math.abs(reload.time-fraction*(reload.getClip().duration-.001))<1e-6);
+        }
         else assert.equal(third[i].activeUpper,'Pistol_Idle_Loop');
       }
       assert(Math.abs(offsets[0]-offsets[1])<1e-7,id+' '+fraction);

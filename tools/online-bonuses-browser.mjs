@@ -28,7 +28,7 @@ async function open(touch){
       '--disable-dev-shm-usage',...(process.env.WAYLAND_DISPLAY?['--ozone-platform=wayland']:[])]});
   browsers.push(browser);
   const page=await browser.newPage({viewport:touch?{width:640,height:360}:{width:896,height:504},
-    deviceScaleFactor:1,isMobile:touch,hasTouch:touch});
+    deviceScaleFactor:process.env.CS3_BONUS_RELOAD_CAPTURE==='1'?.75:1,isMobile:touch,hasTouch:touch});
   pages.push(page);page.setDefaultTimeout(35000);
   page.on('pageerror',e=>errors.push(e.message));
   await page.addInitScript(()=>localStorage.setItem('cartridge-settings',JSON.stringify({graphics:'low',ambient:false,volume:.35,mobileAutoFire:false})));
