@@ -43,6 +43,11 @@ export function roomUi({leave,resume,activate}){
   #online-room .room-settings p{margin:8px 0 0;font-size:13px;line-height:1.35}
   #online-room[data-phase=results] :is(.room-settings,.room-options,#room-rules,.room-map-card,#room-identity,#room-help){display:none}
   #online-room[data-phase=results] .room-card{display:flex;flex-direction:column}
+  #online-room[data-phase=results] .room-header{display:contents}
+  #online-room[data-phase=results] .room-header .room-actions{order:3}
+  #online-room[data-phase=results] #room-title{margin:0 0 6px}
+  #online-room[data-phase=results] :is(#room-earned,#room-result-summary){margin:4px 0 8px}
+  #online-room[data-phase=results] #room-notice:empty{display:none}
   #online-room[data-phase=results] .room-roster{order:1}
   #online-room[data-phase=results] .room-card>.room-actions{order:2}
   #online-room .room-options{display:flex;align-items:center;flex-wrap:wrap;gap:8px 16px;margin:12px 0;font-size:14px}
@@ -187,12 +192,12 @@ export function roomUi({leave,resume,activate}){
   };
   return {hide(){moderation.update(null);invitation.update('');root.hidden=true;session=null;rematchPointer=null;key='';$('room-link').hidden=true;shareHelp.hidden=true;},update(s){
     if(!s?.room)return;moderation.update(s);session=s;const state=s.room.state,self=state.actors.get(s.localPlayerId),waiting=state.phase==='waiting',result=state.phase==='results';
-    if(root.dataset.phase!==state.phase){
-      root.dataset.phase=state.phase;
-      if(result){root.scrollTop=0;root.querySelector('.room-card').scrollTop=0;}
-    }
+    const enteringResult=result&&root.dataset.phase!==state.phase;
+    root.dataset.phase=state.phase;
     if(!result)rematchPointer=null;
     root.hidden=state.phase==='active'||state.phase==='countdown';if(root.hidden){invitation.update('');return;}
+    if(enteringResult){root.scrollTop=0;root.querySelector('.room-card').scrollTop=0;}
+    root.querySelector('.room-eyebrow').textContent=result?'Match complete':en.privateRoom;
     $('room-title').textContent=result?(state.winner==='draw'?en.draw:en.winner(matchWinnerName(state.winner,state.actors.values(),labels))):en.lobby;
     const classic=state.mode==='classic';
     $('room-rules').textContent=classic?en.classicRules:MODE_GUIDES[state.mode]||en.tdmRules;

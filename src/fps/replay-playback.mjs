@@ -25,6 +25,7 @@ export class ReplayPlayback{
     const budget=packet.kind==='death'&&Number.isFinite(scope.respawnRemaining)?Math.max(0,scope.respawnRemaining*1000-100):Infinity;
     this.cardDuration=packet.kind==='death'?Math.min(cardMs,budget*.4):0;
     this.offset=packet.clip?Math.max(0,c.samples.at(-1).t-Math.max(0,budget-this.cardDuration-180)/1000):0;
+    this.respawnDeadline=Number.isFinite(budget)?now+budget+100:Infinity;
     this.lastPresentedAt=now;this.lastClipTime=null;
     this.update(scope,now);return true;
   }
@@ -33,14 +34,35 @@ export class ReplayPlayback{
     if(!p||!authorized(p,scope)){this.skip();return null;}
     const c=p.clip??p.card,rate=p.kind==='final'?finalRate:deathRate;
     const delay=this.cardDuration,elapsed=Math.max(0,now-this.started);
-    const duration=delay+(p.clip?(c.samples.at(-1).t-this.offset)*1000/rate+180:0);
+    const card=elapsed<delay,gap=now-this.lastPresentedAt;
+    let time=this.offset+Math.max(0,(elapsed-delay)*rate/1000);
+    const tail=p.clip?c.samples.at(-1).t:0;
+    let duration=delay+(p.clip?(tail-this.offset)*1000/rate+180:0);
+    const deathRemaining=Math.min(this.respawnDeadline-now,(scope.respawnRemaining??Infinity)*1000);
+    // A cold historical scene may consume most of a victim's remaining life.
+    // Keep the real finishing pose for the last available frame. In results,
+    // recover that pose if a slow frame crossed its short visual/audio cue.
+    const pendingHit=!card&&p.clip&&(this.lastClipTime===null||this.lastClipTime<c.hitTime);
+    const lastDeathFrame=p.kind==='death'&&deathRemaining<=gap+100;
+    const recoverHit=pendingHit&&gap>100&&elapsed<duration+250&&
+      (p.kind!=='death'||deathRemaining>0)&&(time>=c.hitTime||lastDeathFrame);
+    if(recoverHit){
+      // Advance (or slow) the clip clock only from this frame onward. The next
+      // update cannot replay the shot, and the marker fades at its ordinary rate.
+      this.offset+=c.hitTime-time;
+      duration+=(time-c.hitTime)*1000/rate;
+      time=c.hitTime;
+    }
     if(elapsed>=duration){this.skip();return null;}
-    const card=elapsed<delay,time=this.offset+Math.max(0,(elapsed-delay)*rate/1000);
     const pose=card?{}:sampleReplay(c,time);
-    // Advance the cursor even when sound is muted, the tab stalls or a new
-    // replay starts midway through its window. Never drain a backlog into audio.
-    const continuous=!card&&this.lastClipTime!==null&&now>=this.lastPresentedAt&&now-this.lastPresentedAt<=100;
-    const audioShots=continuous?c.shots.filter(s=>s.t>this.lastClipTime&&s.t<=time):[];
+    // Never drain the shots skipped by a slow frame. The one recovered cue
+    // requires a recorded firearm event at the confirmed hit's exact time.
+    const continuous=!card&&this.lastClipTime!==null&&gap>=0&&gap<=100;
+    let audioShots=continuous?c.shots.filter(s=>s.t>this.lastClipTime&&s.t<=time):[];
+    if(recoverHit){
+      const terminal=c.shots.findLast(s=>s.t===c.hitTime);
+      if(terminal)audioShots=[terminal];
+    }
     this.lastClipTime=card?null:time;this.lastPresentedAt=now;
     const hitAge=time-c.hitTime;
     const hitStrength=!card&&hitAge>=0&&hitAge<.14?1-hitAge/.14:0;

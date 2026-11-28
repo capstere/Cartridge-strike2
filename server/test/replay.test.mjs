@@ -145,3 +145,36 @@ test('historical POV audio crosses each authorized shot once; stalls, muted fram
   p.skip();assert.equal(p.update(f.scope(),3000),null);
   presentReplayAudio(audio,null);assert.equal(heard.length,before+1);
 });
+
+test('cold history draws show one confirmed terminal frame before respawn, without replaying skipped shots',()=>{
+  const f=setup('ffa');
+  for(let i=0;i<28;i++)f.sample(i/10,[{type:'shot',actorId:'killer',time:i/10,weapon:'p9'}]);
+  f.death(2.733);f.manager.flush();
+  const death=f.received.victim[0][1],dead={...f.scope(),respawnRemaining:2.983};
+  const p=new ReplayPlayback();p.receive(death,dead,0);
+  const first=p.update({...dead,respawnRemaining:2.033},812);
+  assert(first.scoped);assert.equal(first.target.alive,true);
+  const terminal=p.update({...dead,respawnRemaining:1.983},2067);
+  assert.equal(terminal.time,death.clip.hitTime);
+  assert.equal(terminal.target.alive,false);assert.equal(terminal.hitStrength,1);
+  assert.deepEqual(terminal.audioShots,[death.clip.shots.at(-1)]);
+  assert.equal(p.update(dead,2100).audioShots.length,0);
+  assert.equal(p.update({...dead,alive:true,lifeId:3},2101),null);
+
+  f.state.phase='results';f.sample(2.733);f.manager.flush();
+  const final=f.received.victim[1][1];
+  for(const includeShot of [true,false]){
+    const clip={...final.clip,shots:includeShot?final.clip.shots:final.clip.shots.slice(0,-1)};
+    const viewer=new ReplayPlayback();viewer.receive({...final,clip},f.scope(),0);
+    viewer.update(f.scope(),3000);
+    const end=viewer.update(f.scope(),3850); // Crossed the hit and the normal replay end.
+    assert.equal(end.time,clip.hitTime);assert.equal(end.hitStrength,1);
+    assert.equal(end.audioShots.length,includeShot?1:0);
+    assert.equal(viewer.update(f.scope(),3910).audioShots.length,0);
+    assert.equal(viewer.update(f.scope(),4100),null);
+  }
+  const stale=new ReplayPlayback();stale.receive(death,dead,0);stale.update(dead,812);
+  assert.equal(stale.update({...dead,respawnRemaining:0},4000),null);
+  const suspended=new ReplayPlayback();suspended.receive(final,f.scope(),0);
+  assert.equal(suspended.update(f.scope(),20000),null);
+});

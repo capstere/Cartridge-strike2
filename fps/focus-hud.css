@@ -201,3 +201,10 @@ html #mobile-controls .mobile-stick[data-mobile-stick].active.rushing::after{bor
   html.cs-ffa[data-hud=clean] .score.analysts>span::before{content:'YOU'}
   html.cs-ffa[data-hud=clean] .score.counter>span::before{content:'LEADER'}
 }
+
+@media (orientation:landscape) and (max-height:500px){
+  .replay-strip{bottom:max(.5rem,env(safe-area-inset-bottom));width:auto;left:max(.5rem,env(safe-area-inset-left));right:max(.5rem,env(safe-area-inset-right));transform:none;background:transparent;align-items:flex-end;padding:0;border:0;pointer-events:none}
+  .replay-strip>div{background:#101417ec;padding:.35rem .65rem;border-left:3px solid #cb7855;max-width:45vw}
+  .replay-strip .eyebrow{font-size:.62rem}.replay-strip strong{font-size:1.05rem}.replay-strip p{margin:.12rem 0;font-size:.75rem}
+  .replay-strip button{background:#192225e8;pointer-events:auto}
+}

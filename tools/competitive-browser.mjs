@@ -118,10 +118,22 @@ async function observeFeedback(page){
  await page.evaluate(async()=>{
   const {Mesh,Matrix4}=await import('/vendor/three/three.module.js');
   const {AudioSystem}=await import('/src/fps/riposte-audio.mjs');
-  const feedback=window.competitiveFeedback={audio:[],marker:[],liveHits:[],hitLabels:[],warnings:[],batches:{}};
+  const feedback=window.competitiveFeedback={audio:[],marker:[],liveHits:[],hitLabels:[],warnings:[],batches:{},timing:[]};
   const replayTitle=()=>{
    const overlay=document.querySelector('#replay-view');
    return overlay&&!overlay.hidden&&overlay.dataset.stage==='replay'?document.querySelector('#replay-stage').textContent:'';
+  };
+  const {ReplayPlayback}=await import('/src/fps/replay-playback.mjs');
+  const advance=ReplayPlayback.prototype.update;
+  ReplayPlayback.prototype.update=function(scope,now=performance.now()){
+   const packet=this.packet,prior=this.lastClipTime,previousAt=this.lastPresentedAt;
+   const result=advance.call(this,scope,now);
+   if(packet?.clip&&feedback.timing.length<700){
+    feedback.timing.push({kind:packet.kind,elapsed:Math.round(now-this.started),step:Math.round(now-previousAt),stage:result?.stage??'cut',
+     budget:scope?.respawnRemaining,life:scope?.lifeId,alive:scope?.alive,cardMs:this.cardDuration,offset:this.offset,
+     prior,current:result?.time,hit:packet.clip.hitTime,strength:result?.hitStrength,shots:result?.audioShots?.length});
+   }
+   return result;
   };
   const after=Mesh.prototype.onAfterRender;
   Mesh.prototype.onAfterRender=function(renderer,scene,camera,geometry,material,...rest){
@@ -159,6 +171,14 @@ async function observeFeedback(page){
    if(!warning.hidden&&getComputedStyle(warning).visibility!=='hidden'&&warning.textContent&&feedback.warnings.at(-1)!==warning.textContent)feedback.warnings.push(warning.textContent);
   }).observe(document.querySelector('#hud'),{subtree:true,attributes:true,attributeFilter:['data-kind','style'],childList:true});
  });
+}
+async function initialVerdict(p){
+ const verdict=await p.evaluate(()=>['room-title','room-earned'].map(id=>{
+  const e=document.getElementById(id),r=e.getBoundingClientRect();
+  return {id,text:e.textContent,top:r.top,bottom:r.bottom,visible:!e.hidden&&r.height>0&&r.top>=0&&r.bottom<=innerHeight};
+ }));
+ assert(verdict.every(e=>e.visible),'victor and personal receipt in the initial viewport '+JSON.stringify(verdict));
+ return verdict;
 }
 async function start(host,touch){
  await host.locator('#room-ready').click();await touch.locator('#room-ready').tap();
@@ -290,7 +310,7 @@ try{
  assert((feedback[0].liveHits.includes('kill')||feedback[0].hitLabels.includes('ELIMINATED'))&&!feedback[0].warnings.some(w=>w.includes('FRIENDLY FIRE')),
   'same-uniform opponent receives hostile hit feedback '+JSON.stringify({marker:feedback[0].liveHits,label:feedback[0].hitLabels,warnings:feedback[0].warnings}));
  for(const f of feedback)assert.equal(f.audio.filter(e=>e.title==='FINAL ELIMINATION').length,1,'one historical gun sound per finishing shot');
- assert(feedback[1].marker.some(e=>e.title==='ELIMINATION REPLAY'),'victim saw the confirmed marker before legal respawn');
+ const deathTerminal=feedback[1].marker.some(e=>e.title==='ELIMINATION REPLAY');
  for(const p of pages){
   if(await p.locator('#replay-skip').isVisible())await p.locator('#replay-skip').click();
   await p.locator('#room-earned').filter({hasText:'Account rewards'}).waitFor();
@@ -300,9 +320,9 @@ try{
  assert(scores[0].stats.xp>=45&&scores[0].weapons.find(w=>w.id==='sniper')?.xp>=200);
  assert.equal(scores[1].stats.kills,0);assert.equal(scores[1].stats.deaths,2);assert.equal(scores[1].stats.xp,0);
  for(const [i,label] of credits.entries())assert(label.includes(scores[i].stats.xp+' XP'));
- for(const p of pages)assert(await p.locator('#room-earned').evaluate(e=>{const r=e.getBoundingClientRect();return r.top>=0&&r.bottom<=innerHeight;}),'personal result is in the initial viewport');
+ const verdicts=await Promise.all(pages.map(initialVerdict));
  await shot(touch,'mobile-ffa-results');
- report.scenarios.push({mode:'ffa',map:r.state.mapId,uniform:shooter.actor.team,feedback,deathCapture,deathFrames:first,finalFrames:await Promise.all(pages.map(p=>p.evaluate(()=>window.competitiveCards.filter(f=>f.title==='FINAL ELIMINATION')))),credits,profiles:scores,oldLife,respawnLife:victim.actor.lifeId,legalRespawn});
+ report.scenarios.push({mode:'ffa',map:r.state.mapId,uniform:shooter.actor.team,verdicts,deathCapture,deathFrames:first,finalFrames:await Promise.all(pages.map(p=>p.evaluate(()=>window.competitiveCards.filter(f=>f.title==='FINAL ELIMINATION')))),credits,profiles:scores,oldLife,respawnLife:victim.actor.lifeId,legalRespawn});
  progress('Domination rematch');
  await host.locator('#room-rematch').click();await host.locator('#room-ready').waitFor();await host.locator('#room-mode').selectOption('dom');
  await until(()=>r.state.mode==='dom','same room adopted Domination');
@@ -330,15 +350,21 @@ try{
  await until(()=>r.state.phase==='results','two real held-point score ticks');
  for(const p of pages)await p.locator('#room-result-summary').filter({hasText:/2 – 0|0 – 2/}).waitFor();
  await shot(host,'desktop-dom-results');await shot(touch,'mobile-dom-results');
+ const domVerdicts=await Promise.all(pages.map(initialVerdict));
  const domProfiles=await Promise.all(pages.map(profile));
  assert.equal(domProfiles[0].stats.matches,2);assert.equal(domProfiles[0].stats.kills,2);assert.equal(domProfiles[0].stats.wins,2);
  assert.equal(domProfiles[0].challenges.find(c=>c.id==='vDom')?.count,1);assert.equal(domProfiles[1].stats.matches,2);
  assert.equal(r.state.winner,shooter.actor.team);
- report.scenarios.push({mode:'dom',map:r.state.mapId,flags,walked:Math.hypot(victim.actor.x-at.x,victim.actor.z-at.z),
+ report.scenarios.push({mode:'dom',map:r.state.mapId,flags,verdicts:domVerdicts,walked:Math.hypot(victim.actor.x-at.x,victim.actor.z-at.z),
   results:JSON.parse(r.state.results),credits:await Promise.all(pages.map(p=>p.locator('#room-earned').innerText())),profiles:domProfiles});
- assert.deepEqual(errors,[]);report.passed=true;
+ assert.deepEqual(errors,[]);assert(deathTerminal,'victim saw the confirmed marker before legal respawn');
+ assert.equal(feedback[1].audio.filter(e=>e.title==='ELIMINATION REPLAY').length,1,'victim heard one recorded finishing shot');
+ report.passed=true;
+}catch(error){
+ report.failure=error.stack??String(error);throw error;
 }finally{
  report.pageErrors=errors;
+ report.feedback=await Promise.all(pages.map(p=>p.evaluate(()=>window.competitiveFeedback??null).catch(()=>null)));
  if(!report.passed)for(const [i,p] of pages.entries())if(await p.locator('#hud').count())await shot(p,'interrupted-'+i).catch(()=>{});
  await writeFile(join(output,'report.json'),JSON.stringify(report,null,2)+'\n');
  for(const browser of browsers.reverse())await browser.close().catch(()=>{});

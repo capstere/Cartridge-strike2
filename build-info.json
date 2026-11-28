@@ -1166,8 +1166,8 @@
     },
     {
       "path": "fps/focus-hud.css",
-      "bytes": 17383,
-      "sha256": "c2be7d64eaa4e4b2e543c96be1823ed17d3ebd3ed1f456f452e29d8eb4261803"
+      "bytes": 18004,
+      "sha256": "5e3230f8b82eaf102d2306c059a8d1c42809ce5026faede32b5edf4338e33780"
     },
     {
       "path": "fps/hud.css",
@@ -2522,7 +2522,7 @@
     {
       "path": "shared/multiplayer/build.mjs",
       "bytes": 660,
-      "sha256": "6347909820aec42ef38ab508a6d67494f2d29fbcc10d8edfaccdbe40ec1caf51"
+      "sha256": "a70068a2bd34a53ab0d738f00e33affe48f606787c8834f0a0df0e27fbdbba09"
     },
     {
       "path": "shared/multiplayer/collision-contract.mjs",
@@ -2542,7 +2542,7 @@
     {
       "path": "shared/multiplayer/map-build.mjs",
       "bytes": 2831,
-      "sha256": "debe25eeec00ad53b2027718d6161a09db973627a409e0ffd1ed881b59dbc446"
+      "sha256": "414bf4e6ddba6f514e9ae92a822ca5d77798a4ba5842f84fa2a916a02306577d"
     },
     {
       "path": "shared/multiplayer/maps.mjs",
@@ -2616,8 +2616,8 @@
     },
     {
       "path": "src/fps/app.mjs",
-      "bytes": 75131,
-      "sha256": "fb061da471652c730eb9201503908f222b49ff558fbfa412f3e2004b9feb5bc3"
+      "bytes": 75243,
+      "sha256": "8de9f07691a8510e1b01888337082676920095ff8ff9f931f37efa576231ca47"
     },
     {
       "path": "src/fps/arsenal-menu.mjs",
@@ -3016,8 +3016,8 @@
     },
     {
       "path": "src/fps/network/room-ui.mjs",
-      "bytes": 20809,
-      "sha256": "22d35e159045e3e56e73632f2d4b19da1efa25b68fe1eae3c466b0d0672d5fe6"
+      "bytes": 21284,
+      "sha256": "e8bcf7c2c38a22ea6087f0ceecb3aea01599e71a95aea029a048ff530cbe844c"
     },
     {
       "path": "src/fps/network/session.mjs",
@@ -3156,8 +3156,8 @@
     },
     {
       "path": "src/fps/replay-playback.mjs",
-      "bytes": 5785,
-      "sha256": "639964da6d10f197bcc60a76392542f320102c754a44564effed258b38ad68cb"
+      "bytes": 6932,
+      "sha256": "1aafa6755ca40a22b542557bd0a4a85f1d402587b5b7490a3cde145937e14ab4"
     },
     {
       "path": "src/fps/replay-render.mjs",
@@ -3640,7 +3640,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 82004859,
+  "bytes": 82007214,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

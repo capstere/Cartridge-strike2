@@ -461,6 +461,8 @@ function presentReplay(next){
      replayRenderer=null;
      $('replay-view').hidden=true;document.documentElement.classList.remove('cs-replaying');
      if(document.activeElement===$('replay-skip'))$('replay-skip').blur();
+     const room=$('online-room');
+     if(old.kind==='final'&&room?.dataset.phase==='results')room.scrollTop=0;
    }
    return;
  }
