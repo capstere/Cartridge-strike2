@@ -2497,7 +2497,7 @@
     {
       "path": "shared/multiplayer/build.mjs",
       "bytes": 660,
-      "sha256": "31a80d56cadde9f238f67905f179ca7b0bb74f8d951173a19aac38097141fa26"
+      "sha256": "fde7b9f52129b3e81d509ffc409ca12acaa85883e3b6605a2bd45754d7cef1ef"
     },
     {
       "path": "shared/multiplayer/collision-contract.mjs",
@@ -2517,7 +2517,7 @@
     {
       "path": "shared/multiplayer/map-build.mjs",
       "bytes": 2831,
-      "sha256": "deabadd3f3521fbc10d9c21b4933406fee5b1061a21b7e1483105217c51911ae"
+      "sha256": "99bfe9d494489a7f6c71fbc06e3e2864b71bbec55fc149c52222da65a493e7ba"
     },
     {
       "path": "shared/multiplayer/maps.mjs",
@@ -2651,8 +2651,8 @@
     },
     {
       "path": "src/fps/character-library.mjs",
-      "bytes": 27728,
-      "sha256": "31f0fd97236f34f3031b93aaeb40b66c8503947e2edd285f982ab3942125f24c"
+      "bytes": 27906,
+      "sha256": "8697a466ca2495a05931f32d6da1e3b1fa1b817ad4aa71cc9193bdaefed2ffab"
     },
     {
       "path": "src/fps/character-overrides.mjs",
@@ -3081,8 +3081,8 @@
     },
     {
       "path": "src/fps/render.mjs",
-      "bytes": 30261,
-      "sha256": "97cd3e3ac7562c708c7ef4f4cd4e0c242687fb044ed3ea0062655dc2ab450fa9"
+      "bytes": 30783,
+      "sha256": "00df482b654b88250e692880f364f802a28e9c97c18a1cebe525ff97b917b265"
     },
     {
       "path": "src/fps/riposte-audio.mjs",
@@ -3540,7 +3540,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 81828925,
+  "bytes": 81829625,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

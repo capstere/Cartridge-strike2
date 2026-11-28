@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {writeFile} from 'node:fs/promises';
 import {join} from 'node:path';
 import {setTimeout as delay} from 'node:timers/promises';
+import {CONTRACT} from '../shared/multiplayer/build.mjs';
 
 async function install(actorId) {
   const {Renderer} = await import('/src/fps/render.mjs?v=floor5-environment-1');
@@ -179,6 +180,27 @@ export async function startColdSightline(pages,owner,observer,game,position,focu
       reloadCapture.trial=null;
       return {...bonusColdAudit.result,reload};
     })));
-    await writeFile(join(output,'cold-sightline.json'),JSON.stringify({focus,turn,beforePlacement,server,views}));
+    await writeFile(join(output,'cold-sightline.json'),JSON.stringify({build:CONTRACT.buildHash,protocol:CONTRACT.protocolVersion,focus,turn,beforePlacement,server,views}));
+    if(process.env.CS3_BONUS_COLD_GATE==='1'){
+      const observer=views[1],start=beforePlacement-observer.origin,frames=observer.frames.filter(f=>f.start>=start);
+      assert(frames.length>=20 && frames.some(f=>f.modelVisible && f.actor?.[2]===(process.env.CS3_BONUS_COLD_OUTFIT||'shotgun')),'First displayed selected outfit');
+      assert(frames.every(f=>f.visibility==='visible' && !f.paused && !f.pausePanel),'Live observer');
+      assert(Math.max(...frames.map(f=>f.end-f.start))<500,'500 ms cold observer render ceiling');
+      for(const view of views)assert.deepEqual(view.reload.cues.map(c=>c.take),['magout_smg','magin_smg']);
+      if(turn){
+        const first=frames.find(f=>f.modelVisible),starts=observer.frames.map(f=>f.start),raf=observer.raf.map(f=>f[0]);
+        assert(first.end-start<600,'600 ms request to first visible render completion');
+        for(const times of [starts,raf])assert(Math.max(...times.slice(1).flatMap((n,i)=>n>=start?[n-times[i]]:[]))<500,
+          '500 ms real normal-turn render/RAF interval ceiling');
+      }
+      if(process.env.CS3_BONUS_COLD_LATE==='1'){
+        assert(observer.startup.roster.every(id=>id==='issued'),'All-issued host warmed before colored guest joined');
+        // The late guest submits its own class to the authority only after map readiness.
+        assert(views[0].startup.roster.every(id=>id==='issued'),'No invented wardrobe before the ready handshake');
+      }
+      if(process.env.CS3_BONUS_COLD_RETIRE==='1')assert(observer.startup.roster.includes(process.env.CS3_BONUS_COLD_OUTFIT),
+        'The observer warms the already-confirmed class from the authority');
+      if(turn)assert.equal(new Set(frames.filter(f=>f.actor).map(f=>f.actor.slice(0,2).join(','))).size,1,'Stationary operator');
+    }
   }finally{clearInterval(interval);}
 }

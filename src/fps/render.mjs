@@ -188,7 +188,8 @@ export class Renderer extends EngineRenderer {
       const startupActors=[];
       for(const side of ['analysts','counterAnalysts'])for(let i=0;i<(world.networkSlice?1:5);i++){
        const id=`${side}-${i}`;
-       startupActors.push(this.actorModel(roomActors?.get(id)||{id,team:side}));
+       const seat=roomActors?.get(id);
+       startupActors.push(this.actorModel({id,team:side,outfitId:world.networkSlice?(seat?.handling?.outfitId||'issued'):undefined}));
       }
       if(!world.networkSlice)for(let i=0;i<2;i++)startupActors.push(this.actorModel({id:`hostage-${i}`}));
       this.worldWeaponWarmup=new THREE.Group();this.worldWeaponWarmup.name='world-weapon-preload';
@@ -258,7 +259,7 @@ export class Renderer extends EngineRenderer {
     const needsSample=actors.every(a=>!a.userData.avatar?.outfitId||a.userData.avatar.outfitId==='issued');
     const sample=needsSample?createAuthoredAvatar('analysts','operator-display-sample',false,
       {ignoreOverrides:true,previewOutfit:OUTFITS.find(o=>o.id==='shotgun')}):null;
-    const roots=[...actors,this.worldWeaponWarmup],proxies=[],sampleTextures=new Map();
+    const roots=[...actors,this.worldWeaponWarmup],proxies=[],sampleTextures=new Map(),warmMaterials=new Map();
     if(sample){
       // A template may stay in the character library across map changes. Keep
       // sample-only uploads and their WebGL disposal listeners local to this pass.
@@ -269,7 +270,7 @@ export class Renderer extends EngineRenderer {
           for(const value of Object.values(material))if(value?.isTexture)rosterTextures.add(value);
       });
       for(const material of sample.materials.values())for(const [slot,value] of Object.entries(material)){
-        if(!value?.isTexture||rosterTextures.has(value)||material.userData.ownedTexture===value)continue;
+        if(!value?.isTexture||rosterTextures.has(value)||sample.uniformTexture===value||material.userData.ownedTexture===value)continue;
         if(!sampleTextures.has(value))sampleTextures.set(value,value.clone());
         material[slot]=sampleTextures.get(value);
       }
@@ -281,11 +282,18 @@ export class Renderer extends EngineRenderer {
         mesh.geometry=copies.get(geometry);
       });
     }
+    const warmMaterial=source=>{
+      if(!warmMaterials.has(source)){
+        const clone=source.clone();delete clone.userData.ownedTexture;warmMaterials.set(source,clone);
+      }
+      return warmMaterials.get(source);
+    };
     for(const root of sample?[...roots,sample.holder]:roots){
       root.updateWorldMatrix(true,true);
       root.traverseVisible(mesh=>{
         if(!mesh.isMesh)return;
-        const proxy=mesh.isSkinnedMesh?new THREE.SkinnedMesh(mesh.geometry,mesh.material):new THREE.Mesh(mesh.geometry,mesh.material);
+        const material=Array.isArray(mesh.material)?mesh.material.map(warmMaterial):warmMaterial(mesh.material);
+        const proxy=mesh.isSkinnedMesh?new THREE.SkinnedMesh(mesh.geometry,material):new THREE.Mesh(mesh.geometry,material);
         if(mesh.isSkinnedMesh){proxy.bindMode=mesh.bindMode;proxy.bind(mesh.skeleton,mesh.bindMatrix);}
         proxy.receiveShadow=mesh.receiveShadow;proxy.frustumCulled=false;
         proxy.matrixAutoUpdate=false;proxy.matrix.copy(mesh.matrixWorld);
@@ -340,24 +348,22 @@ export class Renderer extends EngineRenderer {
         if(!await waitForGpu())return;
       }
       if(!check())return;
-      if(sample){
-        // Keep only a representative material for variants absent from the
-        // received roster. Release the extra skeleton, clips and geometry now.
-        const livePrograms=new Set();
-        for(const root of roots)root.traverse(node=>{
-          for(const material of [].concat(node.material||[]))livePrograms.add(gpu.properties.get(material).currentProgram);
-        });
-        this.operatorProgramMaterials=[];
-        for(const [key,material] of sample.materials){
-          const program=gpu.properties.get(material).currentProgram;
-          if(program&&!livePrograms.has(program)){
-            livePrograms.add(program);sample.materials.delete(key);this.operatorProgramMaterials.push(material);
-          }
-        }
+      // Wardrobe and seat changes dispose the old live actor materials. Hold
+      // one independent program reference per variant until this renderer exits.
+      const programs=new Set();
+      this.operatorProgramMaterials=[];
+      for(const [original,material] of warmMaterials){
+        const program=gpu.properties.get(material).currentProgram;
+        if(!program||programs.has(program))continue;
+        programs.add(program);warmMaterials.delete(original);this.operatorProgramMaterials.push(material);
+        // These materials own only the cached program. No texture remains in
+        // their uniform slots and they never participate in gameplay draws.
+        for(const [slot,value] of Object.entries(material))if(value?.isTexture)material[slot]=null;
       }
       this.operatorReady={milliseconds:performance.now()-started,batches:batches.size,submitMs:submit,
         maxSubmitMs:peakSubmit,retainedMaterials:this.operatorProgramMaterials?.length??0};
     }finally{
+      for(const material of warmMaterials.values())material.dispose();
       disposeAvatar(sample);
       for(const texture of sampleTextures.values())texture.dispose();
     }
@@ -438,7 +444,7 @@ export class Renderer extends EngineRenderer {
     if(keepCharacterLibrary){
       for(const actor of this.actors.values())disposeAvatar(actor.userData.avatar);
     }else disposeCharacterLibrary();
-    for(const material of this.operatorProgramMaterials??[]){material.userData.ownedTexture?.dispose();material.dispose();}
+    for(const material of this.operatorProgramMaterials??[])material.dispose();
     this.operatorProgramMaterials=null;this.presentationRestores=[];this.presentationField?.dispose();this.livingScene?.dispose();super.dispose();
   }
 }

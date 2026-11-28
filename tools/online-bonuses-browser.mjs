@@ -6,12 +6,15 @@ import {join} from 'node:path';
 import {setTimeout as delay} from 'node:timers/promises';
 import {chromium} from '../frontline/source/tools/dev/node_modules/playwright-core/index.mjs';
 import '../server/register-shared.mjs';
+import {recordWarmOwner,retireRemoteOutfit} from './bonus-cold-retire.mjs';
 import {captureReloads} from './bonus-reload-capture.mjs';
 import {CONTRACT} from '../shared/multiplayer/build.mjs';
 import {respawnActor} from '../src/fps/action-rules.mjs';
 import {waitForActiveHud,resumeDesktop,enterTouchMatch} from './network-browser-resume.mjs';
 const {createLocalServer}=await import('../server/local-server.mjs');
 const output=process.env.CS3_BONUS_EVIDENCE;
+const coldOutfit=process.env.CS3_BONUS_COLD_OUTFIT||'shotgun';
+assert(['shotgun','sniper'].includes(coldOutfit));
 const result={build:CONTRACT.buildHash,protocol:CONTRACT.protocolVersion};
 const server=await createLocalServer({port:0,testMatch:{countdownSeconds:.15}});
 const browsers=[],pages=[],errors=[];
@@ -47,18 +50,27 @@ async function open(touch){
   await page.goto(server.url+'/',{waitUntil:'domcontentloaded'});
   if(!touch && process.env.CS3_BONUS_RELOAD_CAPTURE==='1'){
     await page.locator('[data-go=outfits]:visible').click();
-    await page.locator('[data-outfit=shotgun]').click();
-    assert.equal(await page.locator('[data-outfit=shotgun]').getAttribute('aria-pressed'),'true');
+    await page.locator('[data-outfit='+coldOutfit+']').click();
+    assert.equal(await page.locator('[data-outfit='+coldOutfit+']').getAttribute('aria-pressed'),'true');
     await page.locator('#route-back').click();
   }
   await page.locator('[data-go=play]:visible').click();
   await page.locator('[data-go=friends]').click();
   await page.locator('[data-lan-link]').click();
   await page.locator('#network-code').waitFor();
+  if(touch&&process.env.CS3_BONUS_COLD_RETIRE==='1')await page.evaluate(recordWarmOwner);
   await page.evaluate(async()=>{
     const {NetworkSession}=await import('/src/fps/network/session.mjs');
     const snapshot=NetworkSession.prototype.snapshot;
     if(window.coldStartup){
+      const {Renderer}=await import('/src/fps/render.mjs?v=floor5-environment-1');
+      const warm=Renderer.prototype.prepareOperatorPrograms;
+      if(warm)Renderer.prototype.prepareOperatorPrograms=async function(...args){
+        const start=performance.now();
+        window.coldStartup.roster=args[0].map(root=>root.userData.avatar?.outfitId);
+        try{return await warm.apply(this,args);}
+        finally{(window.coldStartup.warmWindows??=[]).push([start,performance.now()]);}
+      };
       const prepare=NetworkSession.prototype.prepareRoomWorld;
       NetworkSession.prototype.prepareRoomWorld=function(state){
         if(this.loadingRevision!==state.worldRevision)window.coldStartup.markers.push(['loadWorld',performance.now(),state.mapId,state.worldRevision]);
@@ -112,8 +124,9 @@ function award(game,winner,loser,count){
 try{
   if(output)await mkdir(output,{recursive:true});
   const desktop=await open(false),touch=await open(true);
-  await desktop.locator('#network-map').selectOption('compact-arena');
-  await desktop.locator('#network-fill-bots').uncheck();
+  const late=process.env.CS3_BONUS_COLD_LATE==='1',host=late?touch:desktop,guest=late?desktop:touch;
+  await host.locator('#network-map').selectOption('compact-arena');
+  await host.locator('#network-fill-bots').uncheck();
   const mark=async(page,label)=>{
     if(process.env.CS3_BONUS_COLD_FOCUS)await page.evaluate(s=>window.coldStartup.markers.push([s,performance.now()]),label);
   };
@@ -127,22 +140,24 @@ try{
     },100).unref());
   };
   await monitorInput(desktop);await monitorInput(touch);
-  await mark(desktop,'join requested');
-  await desktop.locator('[data-create=true]').click();await desktop.locator('#room-ready').click();
+  const press=(page,id)=>page===touch?page.locator(id).tap():page.locator(id).click();
+  await mark(host,'join requested');
+  await press(host,'[data-create=true]');await press(host,'#room-ready');
   const room=[...server.rooms][0];
-  await touch.locator('#network-room').fill(room.roomId);
-  await mark(desktop,'waiting ready');await mark(touch,'join requested');
-  await touch.locator('[data-create=false]').tap();await touch.locator('#room-ready').tap();
-  await mark(touch,'waiting ready');
+  await guest.locator('#network-room').fill(room.roomId);
+  await mark(host,'waiting ready');await mark(guest,'join requested');
+  await press(guest,'[data-create=false]');await press(guest,'#room-ready');
+  await mark(guest,'waiting ready');
   console.log('Both players joined and entered ready state');
-  await desktop.locator('#room-start').click();await waitForActiveHud(desktop);await enterTouchMatch(touch);
+  await press(host,'#room-start');await waitForActiveHud(desktop);await enterTouchMatch(touch);
   if(await desktop.locator('#pause').isHidden()&&!await desktop.evaluate(()=>!!document.pointerLockElement))await desktop.keyboard.press('Escape');
   if(await desktop.locator('#resume').isVisible())await resumeDesktop(desktop);
   await Promise.all([observe(desktop),observe(touch)]);
   await mark(desktop,'active input');await mark(touch,'active input');for(const timer of inputTimers)clearInterval(timer);
   console.log('Both game HUDs active');
   const game=room.sim.game;
-  const [a,b]=[...room.seats.values()].map(s=>s.actor);
+  const actors=[...room.seats.values()].map(s=>s.actor);
+  const a=actors.find(a=>a.name==='Desktop player'),b=actors.find(a=>a.name==='Touch player');
   assert.notEqual(a.team,b.team);assert.equal(room.bots.size,0);
   assert(await desktop.evaluate(()=>typeof __fps==='undefined'));
   result.fresh=await Promise.all(pages.map(p=>p.locator(controls).allTextContents()));
@@ -191,6 +206,7 @@ try{
   assert(result.receivers[0].onlyOwn&&result.receivers[0].samples>0);
   assert(result.receivers[1].onlyOwn&&result.receivers[1].samples===0&&result.receivers[1].markers===0);
   if(process.env.CS3_BONUS_RELOAD_CAPTURE==='1')await captureReloads({desktop,touch,game,owner:a,observer:b,output,wait});
+  if(process.env.CS3_BONUS_COLD_RETIRE==='1')await retireRemoteOutfit(touch,host,room,seat,output);
   result.deathCarry=true;result.spent=true;result.errors=errors;assert.deepEqual(errors,[]);
   if(output)await writeFile(join(output,'browser.json'),JSON.stringify(result,null,2)+'\n');
   console.log(JSON.stringify(result));
