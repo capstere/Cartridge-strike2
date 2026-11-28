@@ -9,10 +9,39 @@ import { distanceSegment } from './physics.mjs';
 import {tacticalPosition} from './bot-tactics.mjs';
 
 const distance = (a, b) => Math.hypot(a.x - b.x, a.z - b.z);
+const nearFloor=(world,a,b,tolerance)=>!world.layeredTerrain||Math.abs((a.y??0)-(b.y??0))<tolerance;
 const eye = a => ({ x: a.x, y: a.y + a.height - .12, z: a.z });
 const angleDelta = (a, b) => angleDifference(b,a);
 const position = a => ({ x: a.x, y: a.y ?? 0, z: a.z });
 const aimAt = (a, b) => ({ yaw: Math.atan2(-(b.x - a.x), -(b.z - a.z)), pitch: Math.atan2((b.y ?? 1) - (a.y + a.height - .12), distance(a, b)) });
+
+const routeSchedules=new WeakMap();
+const routeSeat=a=>a.index*2+(a.team==='counterAnalysts'?1:0);
+function routeSchedule(game,tick){
+  let schedule=routeSchedules.get(game);
+  if(schedule?.tick===tick)return schedule;
+  let waiting=0,running=0;
+  for(const actor of game.actors){
+    if(!actor.bot||actor.alive===false)continue;
+    const jobs=actor.bot.routeJobs;
+    for(const job of [jobs.movement,jobs.tactical]){
+      if(!job)continue;
+      const bit=1<<routeSeat(actor);
+      if(job.query)running|=bit;else waiting|=bit;
+    }
+  }
+  let starter=-1,allowed=0,count=0;
+  for(let i=0;i<10;i++){
+    const seat=(tick+i)%10;
+    if(waiting&(1<<seat)){starter=seat;allowed=1<<seat;count=1;break;}
+  }
+  for(let i=0;i<10&&count<4;i++){
+    const bit=1<<((tick+i)%10);
+    if((running&bit)&&!(allowed&bit)){allowed|=bit;count++;}
+  }
+  schedule={tick,starter,allowed};routeSchedules.set(game,schedule);
+  return schedule;
+}
 
 class ObjectiveState extends State { execute(bot) { bot.planObjective(); } }
 class CombatState extends State { execute(bot) { bot.planCombat(); } }
@@ -146,7 +175,10 @@ export class BotController {
       if (item.reserve > 0) game.reload(actor); else if (actor.inventory.pistol?.ammo || actor.inventory.pistol?.reserve) game.select('pistol', actor); else game.select('knife', actor);
     }
     if (!input.interact && (this.goal||this.yieldPoint)) this.follow(dt, input);
-    else { this.path = []; this.vehicle.velocity.set(0, 0, 0); }
+    else {
+      this.path=[];this.routeJobs.tactical=this.routeJobs.movement=null;
+      this.vehicle.velocity.set(0,0,0);
+    }
     if (this.aimGoal && this.target?.visible) {
       const turn = this.profile.turnSpeed * dt;
       input.yaw = actor.yaw + Math.max(-turn, Math.min(turn, angleDelta(this.aimGoal.yaw, actor.yaw)));
@@ -236,7 +268,6 @@ export class BotController {
   setGoal(goal) {
     if (!goal) {
       this.goal = null; this.path = [];
-      this.routeJobs.tactical = this.routeJobs.movement = null;
       return;
     }
     const goalY=this.game.world.layeredTerrain ? goal.y??this.actor.y : undefined;
@@ -346,7 +377,8 @@ export class BotController {
   }
   planInvestigation(){
     const q=this.inquiry,now=this.game.state.time;this.actor.aiState='undersöker ljud';
-    if(now<q.ready||distance(this.actor,q.point)<.65){this.setGoal(null);this.lookToward(q.point,.22*Math.sin(now+this.style.angle));}
+    const arrived=distance(this.actor,q.point)<.65&&nearFloor(this.game.world,this.actor,q.point,.5);
+    if(now<q.ready||arrived){this.setGoal(null);this.lookToward(q.point,.22*Math.sin(now+this.style.angle));}
     else this.setGoal(q.point);
   }
   // The reference's morale and role vary the decision to stay in cover.
@@ -437,20 +469,25 @@ export class BotController {
         Math.abs(job.goal.y-(destination.y??0))>.5)){
       this.routeJobs[kind]=job=null;
     }
-    const tick=Math.round(g.state.time/g.config.fixedStep);
-    const seat=a.index*2+(a.team==='counterAnalysts'?1:0);
-    // One new request and up to four continuing slices per fixed step across
-    // the ten seats. Both tactical and movement queries share the actor's turn.
-    if(this.lastRouteTick===tick||(tick+10-seat)%10>=(job?4:1))return null;
+    if(!job)this.routeJobs[kind]=job={goal:position(destination),epoch,blocker,query:null};
+    const tick=Math.round(g.state.time/g.config.fixedStep),seat=routeSeat(a);
+    if(this.lastRouteTick===tick)return null;
+    // Redistribute unused turns to pending bots. One query may start and up to
+    // four seats can spend a bounded batch, cycling priority through the roster.
+    const schedule=routeSchedule(g,tick);
+    if(!(schedule.allowed&(1<<seat))||(!job.query&&schedule.starter!==seat))return null;
     this.lastRouteTick=tick;
-    if(!job){
-      const goal=position(destination),from=position(a);
-      const query=kind==='tactical'?nav.findPath(from,goal,{...options,stepped:true}):
-        g.world.findPath(from,goal,{...options,stepped:true});
-      if(Array.isArray(query))return query;
-      this.routeJobs[kind]=job={goal,from,epoch,blocker,query};
+    if(!job.query){
+      job.from=position(a);
+      job.query=kind==='tactical'?nav.findPath(job.from,job.goal,{...options,stepped:true}):
+        g.world.findPath(job.from,job.goal,{...options,stepped:true});
+      if(Array.isArray(job.query)){this.routeJobs[kind]=null;return job.query;}
     }
-    const result=job.query.next();
+    let result;
+    for(let i=0;i<10;i++){
+      result=job.query.next();
+      if(result.done)break;
+    }
     if(!result.done)return null;
     this.routeJobs[kind]=null;
     const path=result.value;
@@ -490,7 +527,9 @@ export class BotController {
     const {game:g,actor:a}=this,now=g.state.time,w=g.world;
     if(this.yieldPoint&&now<this.yieldUntil)return;
     this.nextRecovery=now+1.1+this.style.preference*.6;this.stuckTime=0;
-    const blocker=blockerOverride||g.actors.concat(g.hostages).find(o=>o.id===a.blockedBy&&o.alive!==false&&(!o.team||o.team===a.team||this.records.some(r=>r.entity===o&&r.visible)));
+    const bodies=g.actors.concat(g.hostages);
+    const obstruction=blockerOverride||bodies.find(o=>o.id===a.blockedBy&&o.alive!==false&&(!o.team||o.team===a.team||this.records.some(r=>r.entity===o&&r.visible)));
+    const blocker=obstruction&&nearFloor(w,a,obstruction,a.height)?obstruction:null;
     if(blocker){
       this.pathBlocker={...position(blocker),radius:a.radius+blocker.radius+.001,until:now+2.5};this.nextPath=0;
       while(this.routePlan?.gates.length&&distance(this.routePlan.gates[0],blocker)<this.pathBlocker.radius+.08)this.routePlan.gates.shift();
@@ -508,7 +547,11 @@ export class BotController {
     if(offGraph)for(const radius of [.45,.8,1.3])for(let i=0;i<8;i++)offsets.push([Math.sin(i*Math.PI/4)*radius,Math.cos(i*Math.PI/4)*radius]);
     for(const [side,back]of offsets){
       const p={x:a.x+dz/len*side+dx/len*back,z:a.z-dx/len*side+dz/len*back};
-      if(!(offGraph?this.physicalRecoveryClear(p):w.navigation.clear(a,p))||g.actors.concat(g.hostages).some(o=>o!==a&&o.alive!==false&&!o.rescued&&(o.team===a.team||!o.team||o===blocker)&&distance(o,p)<.55))continue;
+      if(w.layeredTerrain)p.y=w.groundHeight(p.x,p.z,a.y,a.radius);
+      if(!(offGraph?this.physicalRecoveryClear(p):w.navigation.clear(a,p)))continue;
+      const crowded=point=>distance(point,p)<.55&&nearFloor(w,point,p,a.height);
+      if(bodies.some(o=>o!==a&&o.alive!==false&&!o.rescued&&(o.team===a.team||!o.team||o===blocker)&&
+        (crowded(o)||o.bot?.yieldPoint&&now<o.bot.yieldUntil&&crowded(o.bot.yieldPoint))))continue;
       this.yieldPoint=p;this.yieldDirect=offGraph;this.yieldUntil=now+1+this.style.preference*.7;this.path=[];this.nextPath=0;this.replans++;a.aiState='lämnar plats';
       g.emit('bot-yield',a,{blockerId:blocker?.id,...p});return;
     }
@@ -519,7 +562,7 @@ export class BotController {
   physicalRecoveryClear(p){
     const {game:g,actor:a}=this;
     const known=g.actors.concat(g.hostages,g.state.zombies||[]).filter(o=>o!==a && o.alive!==false &&
-      !o.rescued && (!o.team||o.team===a.team) && distance(a,o)<4);
+      !o.rescued && (!o.team||o.team===a.team) && distance(a,o)<4&&nearFloor(g.world,a,o,a.height));
     return physicalRecoveryClear(g.world,a,p,known);
   }
   localBlockers(){return this.pathBlocker?.until>this.game.state.time?[this.pathBlocker]:[];}

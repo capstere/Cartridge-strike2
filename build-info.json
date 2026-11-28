@@ -2497,7 +2497,7 @@
     {
       "path": "shared/multiplayer/build.mjs",
       "bytes": 660,
-      "sha256": "645ad8b66b1486185f3633192da3e1be1de46cf24edf5c4112185fe5e47d13b0"
+      "sha256": "5cb4dd4acb5e4150f157e9962c1b3178856a7e9bb40196384e79169cede6d380"
     },
     {
       "path": "shared/multiplayer/collision-contract.mjs",
@@ -2517,7 +2517,7 @@
     {
       "path": "shared/multiplayer/map-build.mjs",
       "bytes": 2831,
-      "sha256": "1360900c8643e8d5b358cac0bb73b842df48bf2770a61a328368f9b54edfcba6"
+      "sha256": "28fd7cd6f584932f4d636d41e4b91628fbe48359ae067f052000bf7561da38d3"
     },
     {
       "path": "shared/multiplayer/maps.mjs",
@@ -2616,13 +2616,13 @@
     },
     {
       "path": "src/fps/bot-tactics.mjs",
-      "bytes": 6622,
-      "sha256": "e7a3af82908c7319d7d15b0e7fadddcd76c28519042db33ec6ca733adf7b093a"
+      "bytes": 6635,
+      "sha256": "a4f4124230c126ffaf318ccf81c2a51d0efe2c1a56a643d86bb2d9a4aaea3018"
     },
     {
       "path": "src/fps/bots.mjs",
-      "bytes": 37577,
-      "sha256": "09a72c134dc418ba1fa7d0e1f34d93d6efc7c51ad47322ff6a7a6b94695d6309"
+      "bytes": 39239,
+      "sha256": "036462fd12eae5c8e41989761b049c1e9a750ba837fa05a312b4194b0703cd9d"
     },
     {
       "path": "src/fps/business-hostage.mjs",
@@ -3031,8 +3031,8 @@
     },
     {
       "path": "src/fps/reference-navigation.mjs",
-      "bytes": 4946,
-      "sha256": "9cb7f847f426eb8e2a969e2f5781d32fc6ee186e6efab70326966b923e2469d6"
+      "bytes": 5362,
+      "sha256": "ae2746181c619ea3eb5a11587f8acc6e8a127d4800675785d402f71b853aebbe"
     },
     {
       "path": "src/fps/reference-prop-ray.mjs",
@@ -3540,7 +3540,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 81828806,
+  "bytes": 81830897,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

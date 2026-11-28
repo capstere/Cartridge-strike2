@@ -16,9 +16,9 @@ One of ten seats may start a query per fixed step. Up to four seats can process 
 
 ## Acceptance and reproduction
 
-The focused tests run a real Meltem roof-to-ground route against the synchronous Yuka result both with and without tactical weighting. Other cases exercise the ten-seat work limit, invalidation, floor-aware hearing, last-known position, cover ownership, hidden-target fire suppression and leaving an overlapping body on a layered route.
+The focused tests compare a real lower-to-upper Meltem stair route with the synchronous Yuka result, with and without tactical weighting. The sampled stair route has identical waypoints. Equal-cost branches on other graphs can select a different legal path. Other cases exercise the ten-seat work limit, invalidation, floor-aware hearing, last-known position, cover ownership, hidden-target fire suppression and leaving an overlapping body on a layered route. A native bot hears a shot directly overhead, waits, requests the actual stair path, and finishes investigating only at the correct elevation. Roof sidestep tests cover upper-deck reservations and a body directly below the recovery point.
 
-The load harness can run against two independent checkouts from the same script. Each map uses nine real bot controllers and one human seat driven by a deterministic movement, aim, fire and reload sequence. The network profile builds room geometry, assigns vacant seats, binds the human through ControllerRegistry and advances AuthoritativeSimulation. The Solo profile drives the ordinary standalone Game at 60 fixed steps per simulated second. Both retain the map hash and seed. Elapsed CPU work per fixed step, request starts, search slices, completed route CPU time, route response measured in simulation ticks, movement, early shots, eliminations and world setup time are recorded separately. These headless figures measure simulation work. Actual socket load and rendered objective scenarios have their own acceptance runs.
+The load harness can run against two independent checkouts from the same script. Each map uses nine real bot controllers and one human seat driven by a deterministic movement, aim, fire and reload sequence. The network profile builds room geometry, assigns vacant seats, binds the human through ControllerRegistry and advances AuthoritativeSimulation. The Solo profile drives the ordinary standalone Game at 60 fixed steps per simulated second. Both retain the map hash and seed. Elapsed CPU work per fixed step, starts, search slices, completed route CPU time, movement, early shots, eliminations and world setup time are recorded separately. The raw `responseTicks` starts at route-search admission and stops at completion, including empty paths. The final study also records `requestToUsefulPathTicks` from the controller's first request through admission to delivery of a nonempty path. Both series omit cancelled and pending work. `firstMovementFromActiveTicks` records each bot's first observed movement after active play begins, including its scheduled departure from spawn. These headless figures measure simulation work. Actual socket load and rendered objective scenarios have their own acceptance runs.
 
 ```sh
 node --import ./server/register-shared.mjs --test tools/bot-navigation-budget.test.mjs
@@ -29,3 +29,11 @@ node --import ./server/register-shared.mjs --test --test-concurrency=1 \
 node --import "$CHECKOUT/server/register-shared.mjs" "$HARNESS" \
   --root "$CHECKOUT" --profiles authority,solo --seeds 17 --ticks 1800 --out "$OUTPUT"
 ```
+
+## Initial scheduling trial
+
+The first integrated build at 3b8ee76c used source fa6636a and protocol 20 build 3631e6d442e239956cf5c7008e9daff594391a88c28a31681b01333698eeceeb. Its original comparison checkout was 02dc5ab. The same Pi ran both programs serially with seed 17, identical map hashes and nine bots beside one scripted human, for 1,800 fixed ticks per map and profile.
+
+The candidate reduced p99 tick CPU in all ten cases. For example, Meltem authority went from 5.416 to 1.352 ms and Solo from 5.016 to 0.904 ms. However, its rotating seat schedule spent only one short search checkpoint on each eligible turn. The completed-request p95 reached 151 ticks for Meltem authority and 153 ticks for Solo. The number of moving live-bot samples fell from 1,093 to 441 and from 1,080 to 450 on those paths. The longest individual route tick rose on Solo Floor 5 and Kervénec. The team retained this trial to document the tradeoff and changed the scheduler to spend unused turns on waiting actors before further qualification.
+
+[Original measurements](first-trial/original-seed-17.json) · [First candidate](first-trial/seed-17.json) · [Matched results](first-trial/first-block.json)

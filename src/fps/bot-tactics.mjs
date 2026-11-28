@@ -93,11 +93,11 @@ export function tacticalPosition(bot,center,{threat=null,radius=2.2,cover=false}
   const angle=phase+i*Math.PI/6,p={x:center.x+Math.cos(angle)*radius,z:center.z+Math.sin(angle)*radius};
   const floor=center.y??a.y;
   if(w.layeredTerrain)p.y=w.groundHeight(p.x,p.z,floor,a.radius);
-  const crowded=other=>distance(other,p)<.75&&(!w.layeredTerrain||Math.abs((other.y??floor)-p.y)<a.height);
+  const crowded=(other,radius=.75)=>distance(other,p)<radius&&(!w.layeredTerrain||Math.abs((other.y??floor)-p.y)<a.height);
   if(!w.canOccupy(p.x,p.z,a.radius+.02,a.height,p.y??0))continue;
   if(g.actors.some(o=>o!==a&&o.alive&&o.team===a.team&&
       (crowded(o)||o.bot?.hold&&crowded(o.bot.hold.point)||o.bot?.coverMove?.until>g.state.time&&crowded(o.bot.coverMove.point))))continue;
-  if(g.hostages.some(h=>h.alive!==false&&!h.rescued&&distance(h,p)<.65))continue;
+  if(g.hostages.some(h=>h.alive!==false&&!h.rescued&&crowded(h,.65)))continue;
   if(!w.navigation.clear(cover?a:center,p))continue;
   let score=-distance(a,p)*.12;
   if(threat){

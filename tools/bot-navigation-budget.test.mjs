@@ -30,13 +30,14 @@ test('ten live seats share bounded route work and cancel a query on world change
   let started=0,steps=0;
   const nav={revision:0,queryEpoch:0,clear:()=>true,findPath(from,to){
     started++;
-    return (function*(){for(let i=0;i<5;i++){steps++;yield;}steps++;return [to];})();
+    return (function*(){for(let i=0;i<49;i++){steps++;yield;}steps++;return [to];})();
   }};
   const game={config:{fixedStep:1/60},state:{time:0},world:{navigation:nav,findPath:nav.findPath}};
   const bots=Array.from({length:10},(_,i)=>Object.assign(Object.create(BotController.prototype),{
     game,actor:{team:i%2?'counterAnalysts':'analysts',index:Math.floor(i/2),x:0,y:0,z:0},
     routeJobs:{tactical:null,movement:null},lastRouteTick:-1,
   }));
+  game.actors=bots.map(bot=>Object.assign(bot.actor,{bot,alive:true}));
   const to={x:7,y:0,z:3},options={blockers:[]},complete=new Set();
   for(let tick=0;tick<40;tick++){
     game.state.time=tick/60;started=0;steps=0;
@@ -48,7 +49,7 @@ test('ten live seats share bounded route work and cancel a query on world change
       else if(bot.lastRouteTick===tick)assert.equal(bot.advanceRoute('tactical',to,options),null);
       if(bot.routeJobs.movement)assert.equal(bot.routeJobs.movement.epoch,nav.queryEpoch);
     }
-    assert(started<=1);assert(steps<=4);
+    assert(started<=1);assert(steps<=40);
   }
   assert.equal(complete.size,10);
 });
@@ -104,4 +105,54 @@ test('a layered route leaves overlapping bodies outward and can pass a teammate 
   assert(route.length>1);assert(route[0].x<=start.x);
   assert.deepEqual(route.at(-1),end);
   assert.deepEqual(nav.findPath(start,end,{blockers:[{...body,y:0}]}),[end]);
+});
+
+test('one waiting bot can use the free work budget on three consecutive ticks',()=>{
+  const nav={revision:0,clear:()=>true,findPath(from,to){
+    return (function*(){for(let i=0;i<23;i++)yield;return [to];})();
+  }};
+  const game={config:{fixedStep:1/60},state:{time:0},world:{navigation:nav,findPath:nav.findPath}};
+  const actor={team:'counterAnalysts',index:4,x:0,y:0,z:0,alive:true};
+  actor.bot=Object.assign(Object.create(BotController.prototype),{game,actor,routeJobs:{tactical:null,movement:null},lastRouteTick:-1});
+  game.actors=[actor];
+  const goal={x:4,y:0,z:0};
+  for(let tick=0;tick<3;tick++){
+    game.state.time=tick/60;
+    const result=actor.bot.advanceRoute('movement',goal,{blockers:[]});
+    if(tick<2)assert.equal(result,null);else assert.deepEqual(result,[goal]);
+  }
+});
+
+test('a native bot investigates a remembered sound through Meltem stairs before looking around',()=>{
+  const game=new Game(world,{autoplay:true,seed:42,config:{mode:'endless',botVision:0}}).start();
+  const listener=game.actors[0],source=game.actors[5],bot=listener.bot;
+  for(const a of game.actors)a.alive=a===listener||a===source;
+  const point={x:-19.5,y:3.4,z:18.5};
+  Object.assign(listener,{...point,y:0});Object.assign(source,point);
+  game.state.time=10;game.emit('shot',source);bot.perceive();assert(bot.shouldInvestigate());
+  bot.planInvestigation();assert.equal(bot.goal,null);
+  game.state.time=bot.inquiry.ready+.01;bot.planInvestigation();assert.deepEqual(bot.goal,point);
+  bot.mode='investigate';
+  for(let i=0;i<60&&!bot.path.length;i++){game.state.time+=1/60;bot.follow(1/60,{});}
+  assert(bot.path.length>1);assert.deepEqual(bot.path.at(-1),point);
+  Object.assign(listener,point);bot.planInvestigation();assert.equal(bot.goal,null);
+});
+
+test('native roof sidesteps retain support and exclude lower-deck bodies and reservations',()=>{
+  const game=new Game(world,{autoplay:true,seed:93,config:{mode:'endless'}}).start();
+  const [actor,ally,other]=game.actors,bot=actor.bot;
+  for(const a of game.actors)a.alive=a===actor||a===ally;
+  Object.assign(actor,{x:-19.5,y:3.4,z:18.5});
+  Object.assign(ally,{x:actor.x+1,y:3.4,z:actor.z});
+  bot.style.preference=.7;game.state.time=10;
+  bot.recoverPosition(ally);
+  const first=bot.yieldPoint;
+  assert(first);assert.equal(first.y,3.4);assert(world.navigation.clear(actor,first));
+  Object.assign(other,{...first,y:0,alive:true});
+  other.bot.yieldPoint={...first,y:0};other.bot.yieldUntil=20;
+  bot.yieldPoint=null;bot.recoverPosition(ally);assert.deepEqual(bot.yieldPoint,first);
+  other.bot.yieldPoint=first;bot.yieldPoint=null;bot.recoverPosition(ally);
+  assert(bot.yieldPoint);assert(Math.hypot(bot.yieldPoint.x-first.x,bot.yieldPoint.z-first.z)>=.55);
+  const goal={x:actor.x+1,y:actor.y,z:actor.z};bot.setGoal(goal);
+  bot.pathBlocker=null;bot.yieldPoint=null;bot.recoverPosition(other);assert.equal(bot.pathBlocker,null);
 });

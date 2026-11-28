@@ -67,7 +67,13 @@ export function referenceNavigation(spec,terrain){
     return options.stepped?query:finishRoute(query);
   }
   function* pathSteps(from,to,{avoid=[],blockers=[],stepped=false}={}){
-    if(!from||!to)return [];
+    if(!from||!to||![from.x,from.z,to.x,to.z].every(Number.isFinite))return [];
+    // nearestSteps must start on valid support. Reject an impossible endpoint
+    // once instead of rechecking the very same first capsule at every node.
+    for(const p of [from,to]){
+      const y=p.y??0,floor=terrain.groundHeight(p.x,p.z,y,.202);
+      if(!Number.isFinite(y)||Math.abs(y-floor)>.47||!terrain.canOccupy(p.x,p.z,.202,1.7,floor))return [];
+    }
     const legal=(a,b,allowExit=false)=>clearOfBodies(a,b,blockers,allowExit);
     if(!avoid.length&&legal(from,to,true)&&(yield* clearSteps(from,to,undefined,stepped)))return [point(to)];
     const start=yield* nearestSteps(from,stepped,blockers,true),end=yield* nearestSteps(to,stepped,blockers);
