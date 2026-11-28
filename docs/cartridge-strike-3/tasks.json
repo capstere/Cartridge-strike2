@@ -291,12 +291,22 @@
       "scope": "Presets/custom slots, primary/secondary/equipment/attachments/optics/camos, derived stats, real preview, server validation and Classic purchases; persistence.",
       "tests": "online-classic/equipment, illegal loadout tests, preview lifecycle, profile restart",
       "exit": "No purchase bypass, correct stats and saved real loadouts. Use an explicitly seeded entitlement fixture for locked/unlocked states until CS3-10 supplies earned progression.",
-      "status": "REVIEW",
+      "status": "VERIFIED",
       "branch": "cs3/09-arsenal",
       "pullRequests": [
         64
       ],
-      "reviewHead": "7cf50f63196861702a030eb39db83c0bc2d2e930"
+      "reviewHead": "32bbbcc6392b796f92b322a4b53adc29275e5023",
+      "verifiedHead": "32bbbcc6392b796f92b322a4b53adc29275e5023",
+      "verifiedRun": 46143587002,
+      "mergedSlices": [
+        "20e8b20dfe3f07abca32b81e88442f6cbc6e5aad"
+      ],
+      "evidence": [
+        "evidence/arsenal/README.md",
+        "evidence/integration/joined-equipment-navigation.json"
+      ],
+      "independentReview": "Guest and signed class deployment, two-client equipment, 17 model comparisons, private admission and genuine current-life suppressed shot passed. Weapon XP used the approved seeded fixture until CS3-10."
     },
     {
       "id": "CS3-10",
@@ -313,7 +323,9 @@
       "scope": "Bounded filtered killcam/final replay, spectator, scoreboard/results, FFA and Domination, server XP/challenges/unlocks; preserve existing modes.",
       "tests": "match-lifecycle-browser, online-match/classic, replay, FFA/domination win rules, trusted XP idempotency. V5 killer card → scoped replay → legal respawn or Classic spectator, skip/timeout/disconnect and clean local HUD; V6 assist, kill and headshot credit exactly once.",
       "exit": "Real replays, new modes verified, no information leaks or double rewards.",
-      "status": "NOT_STARTED"
+      "status": "IN_PROGRESS",
+      "branch": "cs3/10-match-progression",
+      "baseline": "20e8b20dfe3f07abca32b81e88442f6cbc6e5aad"
     },
     {
       "id": "CS3-11",
