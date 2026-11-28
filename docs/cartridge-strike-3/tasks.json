@@ -201,12 +201,21 @@
       "scope": "Finish saved fixed/floating layouts, auto/on/off touch UI, stick-threshold or Run button, look while firing, tap/hold ADS, optional double-tap and fire-on-release, sprint+crouch, manual throw, bonuses, gamepad and PWA.",
       "tests": "Replay V2/V4/V6 and IMG_8153–8157 profiles, three pointers, HUD and cancel/rotation; mobile-input-ownership, mobile-reliability-browser and online-autofire-browser. Record hardware/emulation separately.",
       "exit": "Simultaneous controls, rotation, no stuck input, no key conflicts; physical status explicit.",
-      "status": "REVIEW",
+      "status": "VERIFIED",
       "branch": "cs3/06-mobile-input",
       "pullRequests": [
         63
       ],
-      "reviewHead": "e1fa727b55d38dabed73f7ff01aaab19783bbac3"
+      "reviewHead": "e1fa727b55d38dabed73f7ff01aaab19783bbac3",
+      "verifiedHead": "e1fa727b55d38dabed73f7ff01aaab19783bbac3",
+      "verifiedRun": 46141267973,
+      "mergedSlices": [
+        "8ecd504b59e5d591804ae36fb15078ca076e61ea"
+      ],
+      "evidence": [
+        "evidence/mobile/README.md"
+      ],
+      "independentReview": "Native Pi touch emulation, virtual pad, PWA scopes, protected offline response and exact hosted controller acceptance reviewed. Real handset and controller remain explicitly unmeasured."
     },
     {
       "id": "CS3-07",
