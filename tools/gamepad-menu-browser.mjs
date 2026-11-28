@@ -61,7 +61,16 @@ try{
  assert(!soloFocus.includes('game-mode'),'The transparent backing select must never win controller focus');
  assert.equal(await mode.inputValue(),'endless');
  await p.locator('#start').focus();assert.equal(await p.evaluate(()=>document.activeElement.id),'start');
- phase('Starting Meltem with A');await tap(0);await p.locator('#hud').waitFor();
+ phase('Choosing the deployment class with the controller');await tap(0);
+ await p.locator('#csl-deploy').waitFor();
+ assert.equal(await p.evaluate(()=>document.activeElement.id),'csl-deploy');
+ await tap(1);await p.locator('#cs-loading').waitFor({state:'hidden'});
+ assert.equal(await p.evaluate(()=>document.activeElement.id),'start');
+ await tap(0);await p.locator('#csl-deploy').waitFor();
+ // The first submitted world frame can compile shaders. HUD visibility proves the A edge
+ // was consumed. Release it before measuring ordinary running-controller polling.
+ await hold(0,1);await p.locator('#hud').waitFor();await hold(0,0);
+ await p.waitForFunction(()=>testButtonMask===0);
  await p.waitForFunction(()=>!__fps.modal&&!__fps.game.warmupRemaining&&__fps.game.phase==='active');
  const state=()=>p.evaluate(()=>{const a=__fps.game.player;return {x:a.x,z:a.z,weight:a.rushWeight,yaw:a.yaw,ammo:__fps.game.item(a).ammo,time:__fps.game.state.time,modal:__fps.modal};});
  phase('Checking stick and trigger');const before=await state();await p.evaluate(()=>{testPad.axes[1]=-1;testPad.axes[2]=.35;});await tap(10);
@@ -93,7 +102,7 @@ try{
  const reloaded=p.waitForEvent('framenavigated',f=>f===p.mainFrame());
  await hold(0,1);await reloaded;await p.waitForFunction(()=>!!window.__csFlow?.flow.active&&window.testPolls>=2);
  await tap(1);await p.locator('#cs-loading').waitFor({state:'hidden',timeout:3000});
- const loadingActions=['Cancel with A','Cancel with B','Back after timeout','Retry with A and automatic launch'];
+ const loadingActions=['Cancel with A','Cancel with B','Back after timeout','Retry with A returns to loading'];
  const sample={loadingActions,soloFocus,device:'Simulated standard Gamepad API controller',focus:[first,second],before,running,shot,reconnected,errors};
  assert.deepEqual(errors,[]);if(output){await mkdir(output,{recursive:true});await writeFile(join(output,'gamepad.json'),JSON.stringify(sample,null,2)+'\n');}
  console.log(JSON.stringify(sample));

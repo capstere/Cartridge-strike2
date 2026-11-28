@@ -8,6 +8,7 @@ try{
  p.on('pageerror',e=>errors.push(e.message));
  await p.addInitScript(()=>localStorage.setItem('cartridge-settings',JSON.stringify({mode:'endless',graphics:'low'})));
  await p.goto(origin+'/fps/?test&seed=42');await p.locator('#start').click();
+ await p.locator('#csl-deploy').click();
  await p.waitForFunction(()=>window.__fps?.game.player&&document.querySelector('#cs-loading').hidden,null,{timeout:180000});
  const result=await p.evaluate(async()=>{
   const f=__fps,r=f.renderer,gpu=r.renderer,gl=gpu.getContext();f.stopFrameLoop();f.pause(false);

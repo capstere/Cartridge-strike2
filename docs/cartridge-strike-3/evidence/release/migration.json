@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "source": "private CS3-12 family backup",
+  "originalFamilyFields": 12,
+  "recoveredFamilyFields": 12,
+  "restoredCS3Settings": "Meltem / Domination",
+  "olderReaderSubstitutions": [
+    "mapId",
+    "mode"
+  ],
+  "compatiblePostSnapshotPreference": true,
+  "accountSchema": 5,
+  "matchesBeforeSnapshot": 0,
+  "recoveredMatches": 2,
+  "recoveredKills": 6,
+  "pendingResultsRecovered": 1,
+  "originalPrivateJournalRetained": true
+}

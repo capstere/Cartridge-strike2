@@ -25,6 +25,7 @@ try{
     });
     await page.locator('#lb-mode-seg [data-value='+mode+']').click();
     await page.locator('#start').click();
+    await page.locator('#csl-deploy').click();
     await page.waitForFunction(()=>__fps.game.player && document.querySelector('#cs-loading').hidden);
     if(await page.locator('#resume').isVisible())await page.locator('#resume').click();
     const report=await page.evaluate(async()=>{

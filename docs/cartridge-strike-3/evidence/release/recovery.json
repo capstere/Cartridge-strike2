@@ -1,0 +1,56 @@
+{
+  "accountDatabase": "not configured",
+  "activeFamilyTwoClients": {
+    "familyClients": 2,
+    "protocol": 14,
+    "rosterOnBoth": true,
+    "settingsFields": 12,
+    "status": "PASS",
+    "writeVerified": true
+  },
+  "activeRevision": "8307e91118dba4fdca964012d2b0c247a40221fd",
+  "backupId": "cs3-12-20261128T152119Z-5647db",
+  "backupManifestSha256": "0a1e303a962af4df0aa495d2bf6ceb6b530ffa2a6450245d25917acd1e4cf90b",
+  "bothPeersConfirmedShots": [
+    1,
+    1
+  ],
+  "bothPeersReloaded": [
+    30,
+    30
+  ],
+  "buildHash": "30f8f4af97b2b082f995196f06f498b132ba9bf8d303671ee8ab8d4b69590385",
+  "dataStore": "family-settings-v1",
+  "familyReplicaSurvivedRestart": {
+    "familyClients": 2,
+    "protocol": 14,
+    "rosterOnBoth": true,
+    "settingsFields": 12,
+    "status": "PASS",
+    "writeVerified": false
+  },
+  "gameplayClients": 2,
+  "hostBackupOnly": true,
+  "manifestBytes": 887645045,
+  "manifestFiles": 17155,
+  "manifestLinks": 28,
+  "previousBuild": "09cc3fcc2f9ea016674b5b66be65716f0cf21c0df6deb432cff2f323717192a7",
+  "previousFamilyTwoClients": {
+    "familyClients": 2,
+    "protocol": 13,
+    "rosterOnBoth": true,
+    "settingsFields": 7,
+    "status": "PASS",
+    "writeVerified": false
+  },
+  "previousProtocol": 13,
+  "previousRevision": "75feffd9360da2380098bfea18f60df12713feff",
+  "privateNetworkNamespace": true,
+  "productionIdentityAndSensitiveStateUnchanged": true,
+  "protocol": 14,
+  "releaseTrees": 4,
+  "restoredManifestIdentical": true,
+  "transport": "isolated loopback HTTP/WS with forwarded test origin",
+  "tunnelMode": "config, launcher and binary restored; external connector offline",
+  "unprivilegedRestoredNode": true
+}

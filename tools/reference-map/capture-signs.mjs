@@ -60,6 +60,7 @@ try{
       const realtime=viewpoint==='kiosk'?'&realtime=1':'';
       await page.goto(origin+'/fps/?test=1&level=meltem&mode=endless'+realtime,{waitUntil:'domcontentloaded'});
       await page.locator('#start').click();
+      await page.locator('#csl-deploy').click();
       await page.locator('#hud').waitFor();
       await page.locator('#cs-loading').waitFor({state:'hidden'});
       await page.waitForFunction(()=>window.__fps?.world?.project?.referenceMap?.sourceId==='meltem' && __fps.game.player?.alive);

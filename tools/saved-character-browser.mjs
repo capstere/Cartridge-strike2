@@ -156,11 +156,13 @@ try {
   await page.reload({waitUntil:'domcontentloaded'});
   await start.click();
   await page.locator('#csl-retry').click();
+  await page.locator('#csl-deploy').click();
   await match();
   const first = await appearance('counterAnalysts');
   await back();
   await page.locator('.team-option[data-team=analysts]').click();
   await start.click();
+  await page.locator('#csl-deploy').click();
   await match();
   const replay = await appearance('analysts');
   await back();
@@ -173,6 +175,7 @@ try {
   await ready();
   assert.ok(await start.isEnabled());
   await start.click();
+  await page.locator('#csl-deploy').click();
   await match();
   assert.equal(await page.evaluate(()=>!!__fps.renderer.actorModel(__fps.game.player).userData.avatar?.privateDesign),false);
   await back();

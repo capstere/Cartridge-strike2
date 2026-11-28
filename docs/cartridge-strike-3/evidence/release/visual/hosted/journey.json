@@ -1,0 +1,144 @@
+{
+  "commit": "fc61be4382b4ea97024d3eeb762f655b96612503",
+  "started": "2026-11-28T15:57:40.738Z",
+  "build": "aec199fd40e814a4df3b4ff04a49b25277aca6fd2788375a32d801bb11d1420b",
+  "protocol": 22,
+  "browser": "153.0.8010.12",
+  "viewport": {
+    "width": 932,
+    "height": 430
+  },
+  "platform": "darwin",
+  "angle": "metal",
+  "headed": false,
+  "device": "Chromium emulated touch",
+  "locale": "sv-SE",
+  "scenes": [
+    {
+      "name": "fresh-home",
+      "path": "fresh-home.jpg",
+      "sha256": "0741b2fff24b522f1b112c50442992455e8bc0d975e321409d39d316d9d8abf9",
+      "ms": 27154,
+      "locale": "fr-FR",
+      "text": "CARTRIDGE\nSTRIKE3\nPlay\n→\nClasses\nOutfits\nOptions\nWhat’s new"
+    },
+    {
+      "name": "fresh-play",
+      "path": "fresh-play.jpg",
+      "sha256": "11009279ef522280c9625adca921569e4b220b8ce98a01a2156997a1012e9c89",
+      "ms": 29064,
+      "locale": "fr-FR",
+      "text": "Play\nSolo\nChoose a map and play against bots.\nWith friends\nJoin a private match or host a room.\nPublic matches\nPublic matchmaking is unavailable."
+    },
+    {
+      "name": "saved-outfit",
+      "path": "saved-outfit.jpg",
+      "sha256": "f9e650161bd02ddb11fff4cc2d535cebc1cc244295cdf87ccd78ff9269594455",
+      "ms": 9599,
+      "locale": "sv-SE",
+      "text": "Outfits\n↶\nDrag to rotate\n↷\nIssued uniform\nTeam colors\nAssault\nFrontline, flexible\nCommando\nClose range, aggressive\nGhillie\nLong range, precision\nBreacher\nBreach, close quarters\nChallenge outfits\n\nComplete an outfit’s three objectives in signed-in multiplayer matches to earn it.\n\nNomad · Locked\nTempest · Locked\nVerdant Phantom · Locked\nRaptor · Locked\nVoid · Locked\nYellow Vest · Locked\nSaved characters →"
+    },
+    {
+      "name": "saved-class",
+      "path": "saved-class.jpg",
+      "sha256": "0ededdfb6ac1f9ca1ad18a58ffb326c9e858b28ae8c61b11f6000f39dd369cd2",
+      "ms": 10610,
+      "locale": "sv-SE",
+      "text": "Classes\n\nLevel 1 · 0/5 custom slots · Next slot at level 3. Guest classes stay on this device.\n\nPRESETS\nAssault\nA service rifle for medium-range engagements.\nRaider\nA mobile close-range class with a flash cartridge.\nScout\nEquipped preset\nBreacher\nA shotgun and explosive cartridge for tight rooms.\nCUSTOM CLASSES\nCustom 1\nLocked · Level 3\nCustom 2\nLocked · Level 6\nCustom 3\nLocked · Level 10\nCustom 4\nLocked · Level 15\nCustom 5\nLocked · Level 20\nScout\n\nA scoped rifle and smoke for longer sightlines. This preset has a fixed loadout.\n\nScout Rifle\nSidearm A\n↶\n↷\nSCOUT RIFLE · WEAPON LEVEL 1\nDamage\n105\nRange\n130 m\nMagazine\n5\nRate\n48 rpm\nReload\n2.9 s\nAim field of view\n24°\n\nAttachments · None\n\nEquipment · Smoke Cartridge\n\nEquip preset\nOpen Solo setup →"
+    },
+    {
+      "name": "locked-class",
+      "path": "locked-class.jpg",
+      "sha256": "a1560bc43049f3c4057b34d908815baaf60a7b6a9d09a26f674acb97721137f7",
+      "ms": 10723,
+      "locale": "sv-SE",
+      "text": "Classes\n\nLevel 1 · 0/5 custom slots · Next slot at level 3. Guest classes stay on this device.\n\nPRESETS\nAssault\nA service rifle for medium-range engagements.\nRaider\nA mobile close-range class with a flash cartridge.\nScout\nEquipped preset\nBreacher\nA shotgun and explosive cartridge for tight rooms.\nCUSTOM CLASSES\nCustom 1\nLocked · Level 3\nCustom 2\nLocked · Level 6\nCustom 3\nLocked · Level 10\nCustom 4\nLocked · Level 15\nCustom 5\nLocked · Level 20\nCustom 5\n\nUnlock this class at player level 20.\n\nOpen Solo setup →"
+    },
+    {
+      "name": "news",
+      "path": "news.jpg",
+      "sha256": "864d977e7d590d6cf7838870075b88c0784c496edffecbd855672a3db9d16008",
+      "ms": 11256,
+      "locale": "sv-SE",
+      "text": "What’s new\nNovember 28, 2026\nClasses, Rush and new match modes\n\nCartridge-Strike 3 · Build aec199fd40e8\n\nChoose your class before deploying in Solo. Build forward speed to Rush, then crouch to slide. Touch players can use the stick edge or a dedicated Run button.\n\nPlay Free-for-All for individual points, or contest capture zones in Domination. Open Classes to inspect your equipment and Outfits to change your operator.\n\nNovember 27, 2026\nNew match menus\n\nChoose Solo or With friends from Play. Quick join takes you directly to the family room. Your saved characters are available in Solo setup."
+    },
+    {
+      "name": "sound",
+      "path": "sound.jpg",
+      "sha256": "e08005e823f033ad10ba03f40911d596d647973db4d7f3c16c7a0f0c346055e2",
+      "ms": 12124,
+      "locale": "sv-SE",
+      "text": "Sound\nVolume\nMenu music volume\n100%\nAnnouncement volume\n100%\nHit and elimination sounds\nRadio voices"
+    },
+    {
+      "name": "display",
+      "path": "display.jpg",
+      "sha256": "aba97a366446361465f3f76f403a6b600935b393c89ff2a8f3fb7bb90e2b1429",
+      "ms": 12174,
+      "locale": "sv-SE",
+      "text": "Display\nGraphics\nStandard\nLow · reduced resolution and shadows\nPower saving · 30 FPS cap\nAmbient occlusion\nDynamic resolution\nField of view (degrees)\n76\nReduced motion\nReduced flash and ringing\n\nAmbient occlusion is unavailable here. Low quality uses direct rendering. Dynamic resolution adjusts the render buffer during play. Sun rays and animated grass are unavailable in this renderer."
+    },
+    {
+      "name": "touch",
+      "path": "touch.jpg",
+      "sha256": "083e243010a0f97704df46761e1c1bdbdb0f9957c63ea47668d1fb5dd9dd0580",
+      "ms": 12213,
+      "locale": "sv-SE",
+      "text": "Touch and aim\nTouch controls\nAutomatic\nOn\nOff\nMovement stick\nFloating\nFixed\nRun control\nPush past the ring\nRun button\nMobile auto-fire\nLight aim assist\nDouble-tap to aim\nScout rifle fires on release\nMouse sensitivity\nTouch look sensitivity\n1\nZoom sensitivity\n1\nInvert vertical look\n\nFire when the reticle settles on a visible opponent. Turn off to use the Fire button. Grenades and rockets always use manual fire.\n\nEdit touch layoutReset look settings\n\nPush the stick past its ring to run. Press Crouch while running to slide. Auto-fire follows a visible target. Tap Aim to toggle, or hold it for temporary aim. Double-tap the look area to toggle aim. Hold Throw to prepare a grenade and release to throw.\n\nGamepad: move with the left stick, look with the right, press L3 to run, B to crouch, LT to aim and RT to fire. Start pauses. Use the D-pad and A to navigate menus. Bonus buttons follow the bindings above."
+    },
+    {
+      "name": "look",
+      "path": "look.jpg",
+      "sha256": "956e9eb6c18472c8bf2861e2c1bf0e18284c0170461201e3418df084b1230593",
+      "ms": 12330,
+      "locale": "sv-SE",
+      "text": "Touch and aim\nTouch controls\nAutomatic\nOn\nOff\nMovement stick\nFloating\nFixed\nRun control\nPush past the ring\nRun button\nMobile auto-fire\nLight aim assist\nDouble-tap to aim\nScout rifle fires on release\nMouse sensitivity\nTouch look sensitivity\n1\nZoom sensitivity\n1\nInvert vertical look\n\nFire when the reticle settles on a visible opponent. Turn off to use the Fire button. Grenades and rockets always use manual fire.\n\nEdit touch layoutReset look settings\n\nPush the stick past its ring to run. Press Crouch while running to slide. Auto-fire follows a visible target. Tap Aim to toggle, or hold it for temporary aim. Double-tap the look area to toggle aim. Hold Throw to prepare a grenade and release to throw.\n\nGamepad: move with the left stick, look with the right, press L3 to run, B to crouch, LT to aim and RT to fire. Start pauses. Use the D-pad and A to navigate menus. Bonus buttons follow the bindings above."
+    },
+    {
+      "name": "help",
+      "path": "help.jpg",
+      "sha256": "f7fd91372f16308ccb313fe248ebfa62f9e1cbd251b53c2f07cec8ec0563dbba",
+      "ms": 12421,
+      "locale": "sv-SE",
+      "text": "Touch and aim\nTouch controls\nAutomatic\nOn\nOff\nMovement stick\nFloating\nFixed\nRun control\nPush past the ring\nRun button\nMobile auto-fire\nLight aim assist\nDouble-tap to aim\nScout rifle fires on release\nMouse sensitivity\nTouch look sensitivity\n1\nZoom sensitivity\n1\nInvert vertical look\n\nFire when the reticle settles on a visible opponent. Turn off to use the Fire button. Grenades and rockets always use manual fire.\n\nEdit touch layoutReset look settings\n\nPush the stick past its ring to run. Press Crouch while running to slide. Auto-fire follows a visible target. Tap Aim to toggle, or hold it for temporary aim. Double-tap the look area to toggle aim. Hold Throw to prepare a grenade and release to throw.\n\nGamepad: move with the left stick, look with the right, press L3 to run, B to crouch, LT to aim and RT to fire. Start pauses. Use the D-pad and A to navigate menus. Bonus buttons follow the bindings above."
+    },
+    {
+      "name": "solo",
+      "path": "solo.jpg",
+      "sha256": "8550c85a3572473c50ceef98471b1176a45aa81d5761c318fd4f84d83b56acb8",
+      "ms": 1497,
+      "locale": "sv-SE",
+      "text": "SOLO MATCH"
+    },
+    {
+      "name": "loading",
+      "path": "loading.jpg",
+      "sha256": "e00500484177e55d5301b8623aa32099b4a738ee2e9b161378bbf484e8bb61ff",
+      "ms": 2365,
+      "locale": "sv-SE",
+      "text": "CARTRIDGE\n//STRIKE\nENDLESS ACTION\n\nMAP\n\nMELTEM\n\nA\nTEAM\nANALYSTS\n\nFight through the whitewashed village, from the stepped terraces to the waterfront.\n\nTIPS\nOpen the tactical map during play to see your position and plan a route.\n\nLOADING THE MAP\nCANCEL · RETURN TO LOBBY",
+      "art": "linear-gradient(90deg, rgba(8, 18, 28, 0.933) 7%, rgba(10, 21, 34, 0.74) 50%, rgba(23, 36, 52, 0.506)), url(\"http://127.0.0.1:8916/assets/fps/maps/meltem.webp\")"
+    },
+    {
+      "name": "deploy",
+      "path": "deploy.jpg",
+      "sha256": "210f950e6faf106033ee840eb731b90e21d14947f3de8dabcf75c5d6e54d0179",
+      "ms": 10684,
+      "locale": "sv-SE",
+      "text": "Meltem · Analysts\n\nChoose your class\nDeployment loadout\nPulse SMG\nBreach Shotgun\nScout Rifle\nRocket Launcher\nScout\nAssault\nRaider\nBreacher\n\nScout Rifle · Sidearm A\n\nDeploy"
+    },
+    {
+      "name": "hud",
+      "path": "hud.jpg",
+      "sha256": "da9593e56f864ecc7f4fd5481085949caa80ecae7d58ee971b54f33cdddccafe",
+      "ms": 14811,
+      "locale": "sv-SE",
+      "text": "MATCH BEGINS IN\n5\n0\nANALYSTS\n5 ALIVE\nENDLESS ACTION ∞\n0:00\nCOUNTER ANALYSTS\n5 ALIVE\n0\n×\n+\n100\n60 armor\nSCOUT RIFLE\n5 / 25\nPier · RENDEZVOUS\nCAPTURE · 44 m\n↑ 44 m · moves in 60 s\nA 0 · CA 0"
+    }
+  ],
+  "errors": [],
+  "loadControl": "The driver released the single Meltem JSON response after recording the cold loading state.",
+  "confirmedClass": "Scout",
+  "deployedWeapon": "SCOUT RIFLE",
+  "finished": "2026-11-28T15:58:46.792Z"
+}

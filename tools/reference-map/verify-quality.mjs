@@ -17,7 +17,8 @@ try{
   const errors=[];page.on('pageerror',error=>errors.push(error.message));
   await page.addInitScript(()=>localStorage.setItem('cartridge-settings',JSON.stringify({graphics:'low',reducedMotion:true,volume:0})));
   await page.goto(origin+'/fps/?test=1&realtime=1&level=embruns&mode=endless',{waitUntil:'domcontentloaded'});
-  await page.locator('#start').click();await page.locator('#hud').waitFor();
+  await page.locator('#start').click();
+  await page.locator('#csl-deploy').click();await page.locator('#hud').waitFor();
   await page.locator('#cs-loading').waitFor({state:'hidden'});
   if(await page.locator('#pause').isVisible())await page.locator('#resume').click();
   const results=[];

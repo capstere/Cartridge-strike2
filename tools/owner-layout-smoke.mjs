@@ -19,6 +19,7 @@ async function capture(name){const data=await page.evaluate(()=>{__fps.render();
 try{
  await page.goto(origin+'/fps/?level=classic-floor5&test=1');await page.waitForFunction(()=>window.__fps||!document.querySelector('#fatal').hidden,null,{timeout:240000,polling:100});check('scene and shaders load',await page.locator('#fatal').isHidden());
  await page.locator('#start').click();
+ await page.locator('#csl-deploy').click();
  await page.evaluate(async()=>{__fps.start('analysts',{mode:'endless',botFire:false,botSpeed:0,wanderers:false});await __fps.audio.unlock();});
  check('original game actors, hostages and audio preserved',await page.evaluate(()=>__fps.game.actors.length===10&&__fps.game.hostages.length===2&&__fps.audio.context.state==='running'));
  for(const cfg of [
@@ -40,7 +41,8 @@ try{
  }
  report.resources=await page.evaluate(()=>{const f=__fps,r=f.renderer.renderer;f.render();const before={...r.info.memory};for(let i=0;i<25;i++)f.render();return {before,after:{...r.info.memory},stats:{...f.renderer.stats}};});
  check('repeated rendering does not allocate persistent GPU geometry',report.resources.before.geometries===report.resources.after.geometries);
- await page.evaluate(()=>__fps.newMatch());await page.selectOption('#game-mode','endless');await page.locator('#start').click();await page.waitForFunction(()=>document.pointerLockElement?.id==='game');
+ await page.evaluate(()=>__fps.newMatch());await page.selectOption('#game-mode','endless');await page.locator('#start').click();
+ await page.locator('#csl-deploy').click();await page.waitForFunction(()=>document.pointerLockElement?.id==='game');
  // Consume the actual new-round events before holding W; app clears input on round start.
  await page.evaluate(()=>__fps.step({},1/60));
  const from=await page.evaluate(()=>{__fps.game.config.botFire=false;return {x:__fps.game.player.x,z:__fps.game.player.z};});

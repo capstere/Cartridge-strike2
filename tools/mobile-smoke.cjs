@@ -42,6 +42,7 @@ async function openOriginal(browser, mobile, mode = 'classic') {
   if (!mobile) await page.evaluate(() => __fps.stopFrameLoop());
   await page.locator('#lb-mode-seg [data-value=' + mode + ']').click();
   await page.locator('#start').click({ timeout: 30000 });
+  await page.locator('#csl-deploy').click();
   await page.waitForFunction(() => !!globalThis.__fps && globalThis.__fps.modal === null, null,
     { timeout: 20000, polling: 100 });
   if (mobile) await page.waitForTimeout(900);

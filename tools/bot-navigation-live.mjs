@@ -60,7 +60,7 @@ try{
         };
       });
       console.log(map,'observer attached');
-      await press('#start');await page.locator('#hud').waitFor();await page.locator('#cs-loading').waitFor({state:'hidden'});
+      await press('#start');await press('#csl-deploy');await page.locator('#hud').waitFor();await page.locator('#cs-loading').waitFor({state:'hidden'});
       console.log(map,'HUD loaded');
       if(!touch&&!await page.evaluate(()=>document.pointerLockElement?.id==='game'))pointer=(await resumeDesktop(page)).point;
       if(touch&&await page.locator('#resume').isVisible())await press('#resume');

@@ -22,6 +22,7 @@ async function boot(browser,mobile){
   // No change to the shipped render loop or any game-control behavior.
   await page.evaluate(()=>{window.requestAnimationFrame=()=>0;});
   await page.locator('#start').click();
+  await page.locator('#csl-deploy').click();
   await page.evaluate(()=>{
     __fps.start('analysts',{mode:'endless',firefight:false,wanderers:false,botFire:false,friendlyFire:false});
     const g=__fps.game;for(const a of g.actors)if(!a.isPlayer){a.alive=false;a.bot=null;}

@@ -44,6 +44,7 @@ try{
   await page.locator('[data-outfit=harbor-crew][aria-pressed=true]').waitFor();
   await page.locator('#route-back').tap();await page.locator('[data-go=play]:visible').first().tap();
   await page.locator('[data-go=solo]:visible').first().tap();await page.locator('#start').tap();
+  await page.locator('#csl-deploy').tap();
   await page.waitForFunction(()=>window.__fps?.game?.player&&!document.querySelector('#hud').hidden&&__fps.renderer?.weaponModel?.userData.characterAppearance);
   report.deployment=await page.evaluate(async()=>{
     const {renderer,game}=__fps,actor=renderer.actorModel(game.player).userData.avatar;
@@ -138,6 +139,7 @@ try{
   assert(report.saved.unchanged);assert.equal(report.saved.selected,'harbor-crew');assert.equal(report.saved.schema,1);
   await saved.locator('#route-back').tap();await saved.locator('[data-go=play]:visible').first().tap();
   await saved.locator('[data-go=solo]:visible').first().tap();await saved.locator('#start').tap();
+  await saved.locator('#csl-deploy').tap();
   await saved.waitForFunction(()=>window.__fps?.game?.player&&!document.querySelector('#hud').hidden);
   report.saved.deployed=await saved.evaluate(async()=>{
     const {renderer,game}=__fps;

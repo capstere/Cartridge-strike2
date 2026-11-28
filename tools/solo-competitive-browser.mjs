@@ -54,7 +54,8 @@ try{
  for(const [i,mode] of ['ffa','dom','ffa'].entries()){
   console.log('Selecting',mode,i);let seg=p.locator('#lb-mode-seg [data-value='+mode+']');
   await seg.click();await p.waitForFunction(m=>document.querySelector('#game-mode').value===m,mode);
-  await p.locator('#start').click();await p.locator('#cs-loading').waitFor({state:'hidden'});await p.locator('#hud').waitFor();
+  await p.locator('#start').click();
+  await p.locator('#csl-deploy').click();await p.locator('#cs-loading').waitFor({state:'hidden'});await p.locator('#hud').waitFor();
   if(await p.locator('#pause').isVisible())await p.locator('#resume').click();
   await p.waitForFunction(m=>window.soloTrials.at(-1)?.mode===m&&window.soloTrials.at(-1)?.warmup===0&&window.soloTrials.at(-1).at>.12,mode);
   const last=()=>p.evaluate(()=>window.soloTrials.at(-1)),s=await last();assert(s.newGame&&s.newActor&&s.initial.alive);assert.equal(s.initial.k+s.initial.d,0);

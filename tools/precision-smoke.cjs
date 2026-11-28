@@ -25,6 +25,7 @@ async function boot(browser, mobile) {
   // WebGL draw loop while SwiftShader captures the scoped viewport.
   await page.evaluate(()=>{window.requestAnimationFrame=()=>0;});
   await page.locator('#start').click();
+  await page.locator('#csl-deploy').click();
   await page.evaluate(()=>{
     __fps.start('analysts',{mode:'endless',firefight:false,wanderers:false,botFire:false});
     const g=__fps.game;

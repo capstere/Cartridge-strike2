@@ -149,6 +149,7 @@ async function main() {
     const report = { browser: browser.version(), angle, launches: [] };
     for (const label of ['cold', 'warm replay']) {
       await page.locator('#start').tap();
+      await page.locator('#csl-deploy').tap();
       await page.waitForFunction(() => window.floor5Profiles.at(-1)?.done || !document.getElementById('fatal').hidden,
         null, { timeout: 600000, polling: 1000 });
       assert.equal(await page.locator('#fatal').isVisible(), false, await page.locator('#fatal pre').textContent());

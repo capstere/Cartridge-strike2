@@ -1,0 +1,104 @@
+{
+  "candidate": "40060d6b27655dd88fc87bffde41d3cce45209c7",
+  "operatorSha256": "0fd442f77e839d43b3c2ff55cab9f0ff12318f4da62bafe5d4d50a9f4ed7b0b5",
+  "previous": "8307e91118dba4fdca964012d2b0c247a40221fd",
+  "gameUid": 65534,
+  "previousBuild": "30f8f4af97b2b082f995196f06f498b132ba9bf8d303671ee8ab8d4b69590385",
+  "occupiedActivationRefused": true,
+  "activate": {
+    "status": "PASS",
+    "path": "HTTPS/WSS via public origin",
+    "clients": 2,
+    "map": "floor5-prepared",
+    "build": "e52226e22acd0cc49583683ecf340e31ff108943e46a3d4f9bc8ed8e3c8bf984",
+    "unauthenticatedStatus": 401,
+    "wrongRoomCodeRejected": true,
+    "checkpoints": [
+      {
+        "clients": 2,
+        "readyOnEachSocket": 2,
+        "analysts": 1,
+        "counterAnalysts": 1
+      }
+    ],
+    "gameplayPeers": 2,
+    "tickAdvance": 119,
+    "movementMetres": [
+      0.28,
+      0.28
+    ],
+    "ammoAfterFire": [
+      28,
+      28
+    ],
+    "reloadAmmo": [
+      30,
+      30
+    ],
+    "sharedShots": [
+      2,
+      2
+    ],
+    "consentedLeaves": 2
+  },
+  "candidateBuild": "e52226e22acd0cc49583683ecf340e31ff108943e46a3d4f9bc8ed8e3c8bf984",
+  "rollback": {
+    "status": "PASS",
+    "path": "HTTPS/WSS via public origin",
+    "clients": 2,
+    "map": "floor5-prepared",
+    "build": "30f8f4af97b2b082f995196f06f498b132ba9bf8d303671ee8ab8d4b69590385",
+    "unauthenticatedStatus": 401,
+    "wrongRoomCodeRejected": true,
+    "checkpoints": [
+      {
+        "clients": 2,
+        "readyOnEachSocket": 2,
+        "analysts": 1,
+        "counterAnalysts": 1
+      }
+    ],
+    "gameplayPeers": 2,
+    "tickAdvance": 117,
+    "movementMetres": [
+      0.21,
+      0.21
+    ],
+    "ammoAfterFire": [
+      29,
+      29
+    ],
+    "reloadAmmo": [
+      30,
+      30
+    ],
+    "sharedShots": [
+      1,
+      1
+    ],
+    "consentedLeaves": 2
+  },
+  "conversion": {
+    "accountSchema": 5,
+    "familyFields": 12,
+    "adjustedFields": [
+      "mapId",
+      "mode"
+    ]
+  },
+  "preservedAccounts": 1,
+  "status": "PASS",
+  "publicVerifyFailure": true,
+  "operatorInterrupted": true,
+  "liveSeatPreservedOnResume": true,
+  "verifiedRecovery": true,
+  "finalBuild": "30f8f4af97b2b082f995196f06f498b132ba9bf8d303671ee8ab8d4b69590385",
+  "finalRooms": 0,
+  "productionReleaseAndServiceIdsStable": true,
+  "verifiedConnectorFences": 4,
+  "observedProbeUids": [
+    65534,
+    65534,
+    65534
+  ]
+}

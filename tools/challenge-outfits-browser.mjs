@@ -60,6 +60,7 @@ try{
   await page.screenshot({path:join(output,'earned-choices.png')});
   await open();await page.locator('[data-outfit=gilet][aria-pressed=true]').waitFor();
   await page.locator('#route-back').click();await page.locator('[data-go=play]:visible').first().click();await page.locator('[data-go=solo]:visible').first().click();await page.locator('#start').click();
+  await page.locator('#csl-deploy').click();
   await page.waitForFunction(()=>window.__fps?.game?.player&&!document.getElementById('hud').hidden&&__fps.renderer?.weaponModel?.userData.characterAppearance);
   const worn=await page.evaluate(async()=>{
     const {renderer,game}=__fps,avatar=renderer.actorModel(game.player).userData.avatar;

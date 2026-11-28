@@ -1,13 +1,13 @@
 # Lead Codex assignment — Cartridge-Strike 3
 
 
-Resume CS3-12 on `cs3/12-release` from `25decefc`. CS3-00 through CS3-11 are verified. [PR #68](https://github.com/capstere/Cartridge-strike2/pull/68) passed [all 13 hosted jobs](https://github.com/capstere/Cartridge-strike2/actions/runs/46157414997). Use the [release and recovery specification](BACKUP_AND_ROLLBACK.md), [acceptance matrix](ACCEPTANCE_TEST_MATRIX.md) and [task manifest](tasks.json). Complete the 30-minute soak, all evidence routes, reference-free packaging, isolated migration/restore and public HTTPS/WSS two-client staging. Inspect [the exact held-input regression run](https://github.com/capstere/Cartridge-strike2/actions/runs/46157512278) before integrating PR #69. Verify the final immutable build and room drain before activation. CS2 is live.
+Continue [release PR #70](https://github.com/capstere/Cartridge-strike2/pull/70) on `cs3/12-release`. CS3-00 through CS3-11 are verified and #69 merged at 002b4b45. Reuse the [visual and cache receipts](evidence/release/visual-acceptance.md), the [systemd cutover and interrupted rollback](evidence/release/manager.md), the [six matched Pi runs](evidence/release/performance-authority.md), the [network proof](evidence/release/network.md) and [private recovery instructions](BACKUP_AND_ROLLBACK.md). The published `fc61be43` public graph passed fresh and returning English journeys and normal cache upgrade to Scout; first-generation Swedish HTML can live for the remaining 600-second Pages cache lifetime. Inspect [PR discussion](https://github.com/capstere/Cartridge-strike2/pull/70#issuecomment-7241876177) for release progress. Complete the exact-head soak, confirmed-shot timing comparison, final network sweep, independent release review and monitored idle cutover. CS2 remains on protocol 14 at 8307e911.
 
 **Owner authorization recorded.** Jesper approved PR #47 at `f1f36396`. Preparation merged at `5364240599164c0aee278bb0ac2a35d662c3a818`. The authorization covers development and eventual release after the documented gates. Resume from `develop/cartridge-strike-3` and the first eligible unfinished row in [tasks.json](tasks.json). Read [project status](PROJECT_STATUS.md) for current measurements and open checks.
 
 Run `node docs/cartridge-strike-3/verify-program.mjs` after updating the manifest and status table. It lists the packages whose dependencies permit work and reports inconsistent status or dependency cycles. Open focused pull requests against `develop/cartridge-strike-3`. These run the full FPS regression workflow. The final release PR targets `main`.
 
-## November 28 resumption
+## Earlier November 28 checkpoints
 
 Start from the [current task states](PROJECT_STATUS.md). Verified packages are CS3-00, CS3-01, CS3-02, CS3-03, CS3-04, CS3-05, CS3-07. Preparation #47 and accounts #55 have merged. Keep the 02 performance investigation separate from physical display latency. The active Pi installation is CS2 revision 8307e911.
 

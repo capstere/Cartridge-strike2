@@ -69,7 +69,8 @@ try {
   await press(p.locator('#lb-mode-seg [data-value=endless]'));await press(p.locator('.map-tile'));
   await press(p.locator('#choose-meltem'));await p.locator('#loadout').selectOption('sniper');
   await phase('Deploying in Meltem');
-  await press(p.locator('#start'));await p.locator('#hud').waitFor();await p.locator('#cs-loading').waitFor({state:'hidden'});
+  await press(p.locator('#start'));
+  await press(p.locator('#csl-deploy'));await p.locator('#hud').waitFor();await p.locator('#cs-loading').waitFor({state:'hidden'});
   if(await p.locator('#resume').isVisible())await press(p.locator('#resume'));
   await p.waitForFunction(()=>!__fps.modal&&!__fps.game.warmupRemaining&&__fps.game.phase==='active'&&__fps.game.player.weapon==='sniper');
   const cd=await ctx.newCDPSession(p),points=new Map();

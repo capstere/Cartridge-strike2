@@ -27,6 +27,7 @@ try {
   await page.locator('[data-go=play]:visible').click();
   await page.locator('[data-go=solo]:visible').click();
   await page.locator('#start').click();
+  await page.locator('#csl-deploy').click();
   await page.waitForFunction(()=>window.__fps?.game?.player && window.__fps.renderer.weaponModel);
   const result=await page.evaluate(()=>{
     const fps=window.__fps,{game,renderer,world}=fps,actor=game.player;

@@ -6,19 +6,21 @@ import {createFullscreenController} from './fullscreen.mjs';
 // Lifecycle:  lobby-ready (DOM interactive) → engine-ready (app.mjs hides #loading after
 // world, renderer and assets resolve) → match-ready (app.mjs start() ran, #hud shown).
 // Start match is always clickable. If the engine isn't ready yet, the click is held here and
-// the engine launches from its normal match handler once its assets are ready.
+// the player confirms a loadout once the world and its assets are ready.
+// Ready screen adapted from Riposte 09e-menus.js renderDeploy. Copyright 2026 BenDBSS.
+// CS3 starts the match only after a player gesture. See licenses/riposte-MIT.txt.
+const mapBriefs = {
+  'floor5-prepared':'Laboratory corridors connect the transit lift, test chambers and offices.',
+  'meltem':'Fight through the whitewashed village, from the stepped terraces to the waterfront.',
+  'embruns':'Follow the quays and pier lanes between cranes, moorings and fishing boats.',
+  'tephra':'Use the field station and service lanes for cover beneath the active volcano.'
+};
 const $ = id => document.getElementById(id);
 const html = document.documentElement;
 const fullscreen = createFullscreenController(document);
 const menu = $('menu'), startBtn = $('start'), engineNote = $('loading'), fatalBox = $('fatal');
 const MUSIC_KEY = 'cs-lobby-music';
-const TIPS = [
-  'Buy equipment in your spawn zone during the buy phase.',
-  'Hold E to plant, defuse or escort a hostage.',
-  'Press M for the tactical map or hold Tab for the scoreboard.',
-  'Hold Shift to sneak. Crouch to steady your aim.',
-  'Press 4 to cycle cartridge grenades. Press 5 to equip the objective bomb.',
-];
+const mapTip = 'Open the tactical map during play to see your position and plan a route.';
 
 /* A single streaming element belongs to the lobby for the lifetime of this page. */
 const track = new Audio();
@@ -83,6 +85,13 @@ function buildOverlay() {
       <p class="csl-team"><span class="csl-shield" id="csl-shield"></span><span><small>TEAM</small><strong id="csl-team"></strong></span></p>
       <p class="csl-brief" id="csl-brief"></p>
     </div>
+    <section id="csl-ready" aria-labelledby="csl-title" hidden>
+      <p id="csl-location"></p>
+      <h2 id="csl-title">Choose your class</h2>
+      <label for="csl-choice">Deployment loadout</label><select id="csl-choice"></select>
+      <p id="csl-kit"></p>
+      <button type="button" id="csl-deploy">Deploy</button>
+    </section>
     <footer class="csl-foot">
       <p class="csl-tip"><b>TIPS</b><span id="csl-tip"></span></p>
       <div class="csl-status" aria-live="polite"><span id="csl-status">Preparing</span><i class="csl-bar" aria-hidden="true"><i></i></i></div>
@@ -93,8 +102,10 @@ function buildOverlay() {
       <button type="button" class="csl-cancel" id="csl-cancel">Cancel · return to lobby</button>
     </footer>`;
   document.body.append(el);
-  for (const id of ['map', 'mode', 'team', 'shield', 'brief', 'tip', 'status', 'error', 'err-title', 'err-text', 'retry', 'back', 'cancel']) ui[id.replace(/-(\w)/, (_, c) => c.toUpperCase())] = $('csl-' + id);
+  for (const id of ['ready', 'location', 'choice', 'kit', 'deploy', 'map', 'mode', 'team', 'shield', 'brief', 'tip', 'status', 'error', 'err-title', 'err-text', 'retry', 'back', 'cancel']) ui[id.replace(/-(\w)/, (_, c) => c.toUpperCase())] = $('csl-' + id);
   ui.root = el;
+  ui.choice.onchange = () => { ui.kit.textContent = ui.choice.selectedOptions[0]?.dataset.brief || ''; };
+  ui.deploy.onclick = () => flow.deploy();
   ui.retry.onclick = () => flow.retry();
   ui.back.onclick = ui.cancel.onclick = () => flow.toLobby();
 }
@@ -111,7 +122,7 @@ const flow = {
       team, teamName: team === 'counterAnalysts' ? 'Counter Analysts' : 'Analysts',
       mode: UI_EN.modes[modeSel.value]?.name || UI_EN.modes.classic.name,
       map: selectedMapName(new URLSearchParams(location.search), engineNote.dataset.mapName),
-      brief: document.querySelector('.team-option.selected em')?.textContent || '',
+      brief: mapBriefs[new URLSearchParams(location.search).get('level') || 'floor5-prepared'] || $('mode-description').textContent,
     };
   },
   begin(fullscreenRequested = false) {
@@ -123,7 +134,8 @@ const flow = {
     ui.root.classList.toggle('csl-floor5', ['floor5-prepared','classic-floor5',null].includes(new URLSearchParams(location.search).get('level')));
     ui.map.textContent = s.map; ui.mode.textContent = s.mode.toUpperCase();
     ui.team.textContent = s.teamName; ui.shield.textContent = s.team === 'counterAnalysts' ? 'CA' : 'A';
-    ui.brief.textContent = s.brief; ui.tip.textContent = TIPS[(this.attempt + Math.floor(Math.random() * TIPS.length)) % TIPS.length];
+    ui.brief.textContent = s.brief; ui.tip.textContent = mapTip;
+    ui.ready.hidden = true; ui.root.setAttribute('aria-labelledby','csl-map'); html.classList.remove('cs-deploy-ready');
     ui.error.hidden = true; ui.cancel.hidden = false; ui.root.classList.remove('is-error', 'is-out');
     ui.root.hidden = false; html.classList.add('cs-loading-open');
     menu.inert = true;
@@ -137,7 +149,7 @@ const flow = {
     this.status(fullscreenRequested);
   },
   status(fullscreenRequested = false) {
-    if (!this.active || this.failed) return;
+    if (!this.active || this.failed || !ui.ready.hidden) return;
     if (engineFailed()) return this.fail();
     if (!engineReady()) {
       ui.map.textContent = this.snapshot().map;
@@ -146,13 +158,37 @@ const flow = {
     }
     if (document.hidden) { setStatus(UI_EN.loading.waiting); return; }
     if (startBtn.disabled) return this.fail($('character-status').textContent);
-    // A warm launch keeps the original click's user activation for mouse lock and audio.
-    startBtn.dispatchEvent(new CustomEvent('cs-start-match', { detail: { fullscreenRequested } }));
+    clearTimeout(this.slowTimer); clearTimeout(this.hardTimer);
+    const choices = {items:[], selected:''};
+    startBtn.dispatchEvent(new CustomEvent('cs-deployment-choices', {detail:choices}));
+    ui.choice.replaceChildren();
+    for (const {value,label,brief} of choices.items) {
+      const option = new Option(label,value);
+      option.dataset.brief = brief;
+      ui.choice.add(option);
+    }
+    if (!ui.choice.length) return this.fail('No deployment loadout is available.');
+    ui.choice.value = choices.selected;
+    ui.choice.onchange();
+    ui.location.textContent = ui.map.textContent+' · '+ui.team.textContent;
+    ui.root.setAttribute('aria-labelledby','csl-title');
+    ui.ready.hidden = false;
+    html.classList.add('cs-deploy-ready');
+    ui.deploy.focus();
+  },
+  deploy() {
+    if (!this.active || this.failed || ui.ready.hidden || document.hidden || !engineReady()) return;
+    if (startBtn.disabled || engineFailed()) return this.fail($('character-status').textContent);
+    const fullscreenRequested = fullscreen.resume();
+    startBtn.dispatchEvent(new CustomEvent('cs-start-match', {
+      detail:{fullscreenRequested, loadoutChoice:ui.choice.value}
+    }));
     if (menu.hidden && !$('hud').hidden) this.done();
     else this.fail('The match could not start. Try again.');
   },
   done() {
     clearTimeout(this.slowTimer); clearTimeout(this.hardTimer);
+    html.classList.remove('cs-deploy-ready');
     ui.root.classList.add('is-out');
     this.exitTimer = setTimeout(() => { ui.root.hidden = true; ui.root.classList.remove('is-out'); html.classList.remove('cs-loading-open'); }, 420);
     menu.inert = false;
@@ -160,6 +196,7 @@ const flow = {
   },
   fail(msg) {
     clearTimeout(this.slowTimer); clearTimeout(this.hardTimer); this.failed = true;
+    ui.ready.hidden = true; ui.root.setAttribute('aria-labelledby','csl-map'); html.classList.remove('cs-deploy-ready');
     const detail = msg || (fatalBox.querySelector('pre')?.textContent || '').split('\n')[0] || 'A game asset could not be loaded.';
     ui.errText.textContent = /WebGL context/i.test(detail)
       ? 'WebGL 2 could not start. Turn on hardware acceleration or try another browser.'
@@ -185,7 +222,7 @@ const flow = {
     fullscreen.exit();
     clearTimeout(this.slowTimer); clearTimeout(this.hardTimer);
     this.active = false; this.failed = false;
-    ui.root.hidden = true; html.classList.remove('cs-loading-open');
+    ui.root.hidden = true; html.classList.remove('cs-loading-open','cs-deploy-ready');
     menu.inert = false;
     music.sync(); (startBtn.disabled ? $('player-character') : startBtn).focus();
   },

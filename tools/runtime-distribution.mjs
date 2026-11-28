@@ -10,7 +10,7 @@ const requireServer=createRequire(new URL('../server/package.json',import.meta.u
 const {parse}=requireServer('acorn');
 const digest=bytes=>createHash('sha256').update(bytes).digest('hex');
 const publicRoots=new Set(['assets','audio','fps','furniture-editor','levels','licenses','shared','src','ui','vendor']);
-const publicSingles=new Set(['.nojekyll','index.html','credits.html','robots.txt','Business_Man_Quaternius_Anims.glb','docs/fps-furniture-library.md']);
+const publicSingles=new Set(['index.html','credits.html','robots.txt','Business_Man_Quaternius_Anims.glb','docs/fps-furniture-library.md']);
 const privateEntries=['server/local-server.mjs','server/register-shared.mjs','server/account-backup.mjs',
   'server/package.json','server/package-lock.json','server/.node-version','tools/vendor-three-test-loader.mjs'];
 

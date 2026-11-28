@@ -10,11 +10,6 @@
   },
   "files": [
     {
-      "path": ".nojekyll",
-      "bytes": 0,
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-    },
-    {
       "path": "Business_Man_Quaternius_Anims.glb",
       "bytes": 10179392,
       "sha256": "8848008569ae5a35733f1ecc9456cd90a6c505cf3ccde375de7e228bd4a264d4"
@@ -1191,8 +1186,8 @@
     },
     {
       "path": "fps/index.html",
-      "bytes": 22115,
-      "sha256": "7fb20e742ed26d3bf9d20c1462256aad5c890a9616f11c04016f03d413f88769"
+      "bytes": 52349,
+      "sha256": "8ebdefe189ca502585ab5cae4fda4e2b402d8fec2721824faacb1bed121b8035"
     },
     {
       "path": "fps/lobby.css",
@@ -1201,8 +1196,8 @@
     },
     {
       "path": "fps/match-loading.css",
-      "bytes": 7569,
-      "sha256": "70e7868ad4ce6e541a95ab3650feddeb5a10b458d253b3150b978552204565fc"
+      "bytes": 8695,
+      "sha256": "ec4a8c6741004c589fe159dcc89d605ac0a7e2fec4ce2b4faa92bfdb02206093"
     },
     {
       "path": "fps/menu-modern.css",
@@ -2527,7 +2522,7 @@
     {
       "path": "shared/multiplayer/build.mjs",
       "bytes": 660,
-      "sha256": "8525d0dedc531d0de17751384bd8b345911990b8b953724589d4ee272457e192"
+      "sha256": "40f3894af2139552820f98e9a5e1b0bb0e4b91c24540821dba4975d556b3feba"
     },
     {
       "path": "shared/multiplayer/collision-contract.mjs",
@@ -2547,7 +2542,7 @@
     {
       "path": "shared/multiplayer/map-build.mjs",
       "bytes": 2831,
-      "sha256": "9f371631db2a698633a2ba76084136d112484804514c60b87cd6a8ee70217151"
+      "sha256": "eb909e1f9a7ee46e0e5363fb670e4e29a7976370c1f899f8f8b7a18eefc77f07"
     },
     {
       "path": "shared/multiplayer/maps.mjs",
@@ -2621,8 +2616,8 @@
     },
     {
       "path": "src/fps/app.mjs",
-      "bytes": 75805,
-      "sha256": "eef34efbf81c5c95f29bc58434e2d62083a6b9d1bd79c0264abafc09c21d3e4a"
+      "bytes": 77426,
+      "sha256": "ceb179752f9eb67d57fa087c07427c035a8b012418b6c2f36cbf423bade676d3"
     },
     {
       "path": "src/fps/appearance-package.mjs",
@@ -2941,8 +2936,8 @@
     },
     {
       "path": "src/fps/match-flow.mjs",
-      "bytes": 12885,
-      "sha256": "d56699ed3c92b4fe6a0cdf871a3023ec2d33ada6e21602469076c51d99e1d193"
+      "bytes": 15052,
+      "sha256": "58c61f0f958688c70cb967d1ddcdea13029ab11ac61694e8c21a6da59fe2c531"
     },
     {
       "path": "src/fps/match-modes.mjs",
@@ -2961,8 +2956,8 @@
     },
     {
       "path": "src/fps/menu-navigation.mjs",
-      "bytes": 12117,
-      "sha256": "684288814eb186a95993e96863abd87ae7d6cab5a228288b408eaf8bae149f82"
+      "bytes": 12297,
+      "sha256": "f0f172b14adef8baa145880b2d6d3169efc4299e8fc286784d69bff223a2ba5d"
     },
     {
       "path": "src/fps/minimap-cache.mjs",
@@ -3650,7 +3645,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 82014337,
+  "bytes": 82049665,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

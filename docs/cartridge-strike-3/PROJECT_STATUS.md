@@ -16,7 +16,7 @@
 | CS3-09 | VERIFIED | [Class workshop, authority and native fitted models](evidence/arsenal/README.md) and [eleven passing hosted jobs](https://github.com/capstere/Cartridge-strike2/actions/runs/46143587002). |
 | CS3-10 | VERIFIED | [Competitive gameplay and rewards](evidence/competitive/README.md), independent review and [12 passing jobs](https://github.com/capstere/Cartridge-strike2/actions/runs/46152682878). Merged at 4c83eaa7. |
 | CS3-11 | VERIFIED | [Joined content exports](content/joined-after-floor5.json), independent review and [all 13 hosted jobs](https://github.com/capstere/Cartridge-strike2/actions/runs/46157414997). Merged at 25decefc. |
-| CS3-12 | IN_PROGRESS | Final acceptance, exact staged distributions, 30-minute soak, private recovery, release review and idle cutover when verified. |
+| CS3-12 | IN_PROGRESS | [Release PR #70](https://github.com/capstere/Cartridge-strike2/pull/70). [Visual and browser-cache receipts](evidence/release/visual-acceptance.md), [two-player staging](evidence/release/network.md), [interrupted rollback](evidence/release/manager.md) and [six Pi runs](evidence/release/performance-authority.md) are available. Complete confirmed-shot analysis, final-head endurance and release verification. |
 
 ## November 28 content pipeline and Floor 5 checkpoint
 
@@ -194,3 +194,9 @@ The lead reviewed both fetched branches and the full preparation program with ga
 | Independent review | Reviewer cross-checked all screenshot sheets, all five clip overviews, source/target symbols, 13 package dependencies, local links and scope. The program now distinguishes near-wall/countdown from Rush, preserves input edges and guest/pilot boundaries, and assigns UI acceptance to the package that implements each screen. Reviewer found no blocking preparation defect. |
 
 **Readiness decision.** Ready for owner approval and then CS3-00. All feature work remains gated on its verified dependencies. Open work includes the private backup and restore, measured baseline and timing targets, physical iPhone/Android play, versioned multi-level collision/navigation, durable account/reward migration, and filtered authoritative replay/UAV. These have assigned packages and acceptance checks. This review did not implement CS3, stage a release, or activate production.
+
+### CS3-12 release checkpoint, November 28
+
+[Draft release PR #70](https://github.com/capstere/Cartridge-strike2/pull/70) records the fresh [CS2 two-client restoration](evidence/release/recovery.json), [CS3 state conversion](evidence/release/migration.json) and [performance comparisons](evidence/release/performance.md). [PR #69](https://github.com/capstere/Cartridge-strike2/pull/69) merged after all 12 hosted checks. It retains cancellation of stale held input at 180 ms. Sustained handset latency and the original uninstrumented double start remain open.
+
+The configured Pages publisher is the root of main. The [first official Pages and pilot build](https://github.com/capstere/Cartridge-strike2/actions/runs/46160080979) compared every Pages file with the verified public export and staged the immutable private package twice. The previous CS2 release remains active. The final candidate adds explicit Solo class confirmation and cancellation before spawn, selected-map briefing and build-linked English news. Pending gates include the full rendered journeys, final hosted endurance, native authority profile, independent review, exact candidate staging and two-client public cutover.
