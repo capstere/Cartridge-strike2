@@ -323,6 +323,7 @@ try{
  assert.equal(scores[1].stats.kills,0);assert.equal(scores[1].stats.deaths,2);assert.equal(scores[1].stats.xp,0);
  for(const [i,label] of credits.entries())assert(label.includes(scores[i].stats.xp+' XP'));
  const verdicts=await Promise.all(pages.map(initialVerdict));
+ for(const page of pages)assert.equal(await page.locator('#room-title').innerText(),'Coast wins');
  await shot(touch,'mobile-ffa-results');
  report.scenarios.push({mode:'ffa',map:r.state.mapId,uniform:shooter.actor.team,verdicts,deathCapture,deathFrames:first,finalFrames:await Promise.all(pages.map(p=>p.evaluate(()=>window.competitiveCards.filter(f=>f.title==='FINAL ELIMINATION')))),credits,profiles:scores,oldLife,respawnLife:victim.actor.lifeId,legalRespawn});
  progress('Domination rematch');
@@ -353,6 +354,11 @@ try{
  for(const p of pages)await p.locator('#room-result-summary').filter({hasText:/2 – 0|0 – 2/}).waitFor();
  await shot(host,'desktop-dom-results');await shot(touch,'mobile-dom-results');
  const domVerdicts=await Promise.all(pages.map(initialVerdict));
+ for(const page of pages){
+  const headers=await page.locator('.room-roster th:visible').allTextContents();
+  const winner=await page.locator('#room-roster tr').filter({hasText:'Coast'}).locator('td').allTextContents();
+  assert.equal(winner[headers.indexOf('Captures')],'1');assert.equal(winner[headers.indexOf('Points')],'75');
+ }
  const domProfiles=await Promise.all(pages.map(profile));
  assert.equal(domProfiles[0].stats.matches,2);assert.equal(domProfiles[0].stats.kills,2);assert.equal(domProfiles[0].stats.wins,2);
  assert.equal(domProfiles[0].challenges.find(c=>c.id==='vDom')?.count,1);assert.equal(domProfiles[1].stats.matches,2);

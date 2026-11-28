@@ -100,7 +100,7 @@ export function roomUi({leave,resume,activate}){
     </div>
     <p id="room-help"></p><p id="room-notice" class="notice" role="status"></p>
     <div class="room-roster">
-      <table><thead><tr><th>${en.player}</th><th>${en.team}</th><th>Status</th><th>K</th><th>D</th></tr></thead><tbody id="room-roster"></tbody></table>
+      <table><thead><tr><th>${en.player}</th><th>${en.team}</th><th>Status</th><th>K</th><th>D</th><th id="room-captures-head" hidden>Captures</th><th id="room-points-head" hidden>Points</th></tr></thead><tbody id="room-roster"></tbody></table>
     </div>
   </div>`;
   document.body.append(root);const $=id=>root.querySelector('#'+id);let session,key='';
@@ -198,7 +198,7 @@ export function roomUi({leave,resume,activate}){
     root.hidden=state.phase==='active'||state.phase==='countdown';if(root.hidden){invitation.update('');return;}
     if(enteringResult){root.scrollTop=0;root.querySelector('.room-card').scrollTop=0;}
     root.querySelector('.room-eyebrow').textContent=result?'Match complete':en.privateRoom;
-    $('room-title').textContent=result?(state.winner==='draw'?en.draw:en.winner(matchWinnerName(state.winner,state.actors.values(),labels))):en.lobby;
+    $('room-title').textContent=result?(state.winner==='draw'?en.draw:en.winner(matchWinnerName(state.winner,state.actors.values(),labels),state.mode==='ffa')):en.lobby;
     const classic=state.mode==='classic';
     $('room-rules').textContent=classic?en.classicRules:MODE_GUIDES[state.mode]||en.tdmRules;
     const map=networkMap(state.mapId);
@@ -285,8 +285,10 @@ export function roomUi({leave,resume,activate}){
     $('room-help').textContent=result?en.rematchHelp:waiting?en.readyHelp:en.startHelp;
     $('room-notice').textContent=loading?en.loadingMap(map.name):s.notice|| (s.connectionState==='reconnecting'?en.reconnectingHelp:'');
     let rows=[...state.actors.values()];if(result)try{rows=JSON.parse(state.results).players;}catch{}
-    const next=JSON.stringify([state.mode,state.phase,state.ownerId,rows.map(a=>[a.id,a.name,a.team,a.ready,a.playerReady,a.connected,a.kills,a.deaths,a.handling?.points??a.points])]);
+    const showCaptures=result&&state.mode==='dom',showPoints=result&&['dom','ffa'].includes(state.mode);
+    $('room-captures-head').hidden=!showCaptures;$('room-points-head').hidden=!showPoints;
+    const next=JSON.stringify([state.mode,state.phase,state.ownerId,rows.map(a=>[a.id,a.name,a.team,a.ready,a.playerReady,a.connected,a.kills,a.deaths,a.handling?.points??a.points,a.captures])]);
     if(next===key)return;key=next;$('room-roster').replaceChildren();
-    for(const a of (!result&&state.mode==='ffa'?rankPlayers(rows):rows)){const tr=document.createElement('tr');for(const value of [a.name+(a.id===s.localPlayerId?en.you:'')+(a.sessionId===state.ownerId?en.host:''),state.mode==='ffa'?'Individual':labels[a.team],result?en.result:!a.connected?en.reconnecting:!a.ready?en.loading:a.playerReady?en.ready:en.waiting,a.kills||0,a.deaths||0]){const td=document.createElement('td');td.textContent=String(value);tr.append(td);}$('room-roster').append(tr);}
+    for(const a of (!result&&state.mode==='ffa'?rankPlayers(rows):rows)){const tr=document.createElement('tr');for(const value of [a.name+(a.id===s.localPlayerId?en.you:'')+(a.sessionId===state.ownerId?en.host:''),state.mode==='ffa'?'Individual':labels[a.team],result?en.result:!a.connected?en.reconnecting:!a.ready?en.loading:a.playerReady?en.ready:en.waiting,a.kills||0,a.deaths||0,...(showCaptures?[a.captures||0]:[]),...(showPoints?[a.points||0]:[])]){const td=document.createElement('td');td.textContent=String(value);tr.append(td);}$('room-roster').append(tr);}
   }};
 }

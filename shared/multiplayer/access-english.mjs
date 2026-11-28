@@ -114,7 +114,7 @@ export const accessText = Object.freeze({
   roomId: id => `Room ID · ${id}`,
   roomIdentity: (id, match) => `Room ${id} · Match ${match}`,
   countdown: seconds => `Starting in ${seconds}…`,
-  winner: team => `${team} win`,
+  winner: (name,individual=false) => name+(individual?" wins":" win"),
   preview: name => `Gameplay view of ${name}`,
   roundsWon: rounds => `${rounds} round wins`,
   deploymentKit: (className,sidearm,cartridge) => [className,sidearm,"Knife","1 "+cartridge].filter(Boolean).join(" · "),

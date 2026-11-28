@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {accessText} from '../../shared/multiplayer/access-english.mjs';
 import {CombatHUD} from './combat-hud.mjs';
 import {rankPlayers,leadingPlayer,zoneCaption} from './match-presentation.mjs';
 
@@ -10,6 +11,8 @@ test('FFA ties use authoritative points in both play and the results table',()=>
     assert.equal(leadingPlayer(rows).id,'z');
     assert.deepEqual(rankPlayers(rows).map(a=>a.id),['z','a']);
   }
+  assert.equal(accessText.winner('Coast',true),'Coast wins');
+  assert.equal(accessText.winner('Analysts'),'Analysts win');
   assert.equal(zoneCaption({owner:'analysts',contested:true},'analysts'),'Contested');
 });
 
