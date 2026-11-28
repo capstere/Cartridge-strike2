@@ -32,6 +32,17 @@ async function open(touch){
   pages.push(page);page.setDefaultTimeout(35000);
   page.on('pageerror',e=>errors.push(e.message));
   await page.addInitScript(()=>localStorage.setItem('cartridge-settings',JSON.stringify({graphics:'low',ambient:false,volume:.35,mobileAutoFire:false})));
+  if(process.env.CS3_BONUS_COLD_FOCUS)await page.addInitScript(()=>{
+    const result=window.coldStartup={first:performance.now(),last:null,maxGap:0,above100:0,above250:0,intervals:0,markers:[]};
+    function frame(now){
+      if(result.last!==null){const gap=now-result.last;result.intervals++;result.maxGap=Math.max(result.maxGap,gap);
+        if(gap>100)result.above100++;if(gap>250)result.above250++;}
+      result.last=now;
+      if(!document.getElementById('hud')?.hidden && document.getElementById('hud'))result.firstHud??=now;
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  });
   await page.goto(server.url+'/',{waitUntil:'domcontentloaded'});
   if(!touch && process.env.CS3_BONUS_RELOAD_CAPTURE==='1'){
     await page.locator('[data-go=outfits]:visible').click();

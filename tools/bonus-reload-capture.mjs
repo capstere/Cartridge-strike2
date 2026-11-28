@@ -71,6 +71,11 @@ export async function captureReloads({desktop,touch,game,owner,observer,output,w
   }).filter(n=>n.d>1.1 && n.d<6 && n.f>.92 && game.world.segmentClear(eye,{x:n.p.x,y:(n.p.y??0)+1.3,z:n.p.z},{vision:true}));
   nodes.sort((a,b)=>Math.abs(a.d-2.6)-Math.abs(b.d-2.6));
   assert(nodes.length,'a clear placement in the normal observer camera');
+  if(process.env.CS3_BONUS_COLD_FOCUS){
+    const {startColdSightline}=await import('./bonus-cold-sightline.mjs');
+    await startColdSightline(pages,owner,game,nodes[0].p,process.env.CS3_BONUS_COLD_FOCUS,output);
+    return;
+  }
   Object.assign(owner,{x:nodes[0].p.x,y:nodes[0].p.y??0,z:nodes[0].p.z,vy:0});
   await desktop.bringToFront();
   // Entering a fresh sightline can compile the visible operator's GPU programs.
