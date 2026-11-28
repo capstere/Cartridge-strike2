@@ -119,7 +119,15 @@
       "exit": "Existing imports and arms matching; visual/authority separation.",
       "status": "IN_PROGRESS",
       "baseline": "f789655c55cb431b2916a8052200383b0d22d228",
-      "branch": "cs3/03-character-wardrobe"
+      "branch": "cs3/03-character-wardrobe",
+      "pullRequests": [
+        59
+      ],
+      "mergedSlices": [
+        "9e9da21a32cef3643c29eac091ec1bc9a9c06ecf"
+      ],
+      "evidence": "evidence/wardrobe/README.md",
+      "remaining": "Native and independent acceptance of first-sightline performance, comparable loading, rotation, roster and resource cleanup."
     },
     {
       "id": "CS3-04",
@@ -159,12 +167,19 @@
       "scope": "Implement dedicated spec 3/5/8 and 15/15/8; shared pure transitions, kill attribution, authoritative command and own radar, HUD/action binding, audio.",
       "tests": "state tests, invalid input cases, two-client online, offline parity, delayed projectiles, exact durations. Split-screen observer/recipient check on a fresh join and reconnect, including mixed assist/kill/headshot signals.",
       "exit": "All bonus rules proven, no unauthorized activation/stacking; UI confirmed.",
-      "status": "IN_PROGRESS",
+      "status": "VERIFIED",
       "baseline": "f789655c55cb431b2916a8052200383b0d22d228",
       "branch": "cs3/05-authoritative-streaks",
       "pullRequests": [
         58
-      ]
+      ],
+      "verifiedHead": "f265f35d09118af50fa909f30f0131eb909f383e",
+      "verifiedRun": 46133071502,
+      "mergedSlices": [
+        "e67f32aff5cba0707e15c398d89b03b06d93513b"
+      ],
+      "independentReview": "Two rendered players, native touch emulation, ten-seat UAV load, immutable reload intervals, foley and reconnect passed independent review.",
+      "evidence": "evidence/streaks/protocol-20/README.md"
     },
     {
       "id": "CS3-06",
@@ -179,7 +194,8 @@
       "scope": "Finish saved fixed/floating layouts, auto/on/off touch UI, stick-threshold or Run button, look while firing, tap/hold ADS, optional double-tap and fire-on-release, sprint+crouch, manual throw, bonuses, gamepad and PWA.",
       "tests": "Replay V2/V4/V6 and IMG_8153–8157 profiles, three pointers, HUD and cancel/rotation; mobile-input-ownership, mobile-reliability-browser and online-autofire-browser. Record hardware/emulation separately.",
       "exit": "Simultaneous controls, rotation, no stuck input, no key conflicts; physical status explicit.",
-      "status": "NOT_STARTED"
+      "status": "IN_PROGRESS",
+      "branch": "cs3/06-mobile-input"
     },
     {
       "id": "CS3-07",
