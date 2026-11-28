@@ -48,8 +48,8 @@ if(angle==='swiftshader')args.push('--enable-unsafe-swiftshader');
 const browser=await chromium.launch({headless:!headed,executablePath:native,channel:native?undefined:'chromium',args});
 const report={oldBuild:old.build,oldHTML:old.html,candidateBuild:current.build,candidateHTML:current.html,
   started:new Date().toISOString(),browser:browser.version(),platform:process.platform,angle,headed,cache:'public, max-age=600',samples:[]};
-const openContext=()=>browser.newContext({viewport:{width:932,height:430},hasTouch:true,isMobile:true,locale:'sv-SE',deviceScaleFactor:1});
-async function openPage(context,label,path,verify,forceHTML) {
+const openContext=(locale='sv-SE')=>browser.newContext({viewport:{width:932,height:430},hasTouch:true,isMobile:true,locale,deviceScaleFactor:1});
+async function openPage(context,label,path,verify,forceHTML,reload=false) {
   const page=await context.newPage(),trace=[],errors=[];
   page.setDefaultTimeout(60000);
   const debug=await context.newCDPSession(page);
@@ -64,6 +64,12 @@ async function openPage(context,label,path,verify,forceHTML) {
   const sample={label,trace,errors};report.samples.push(sample);
   try {
     await page.goto(origin+path,{waitUntil:'domcontentloaded'});
+    if(reload){
+      sample.initialLanguage=await page.locator('html').getAttribute('lang');
+      await page.reload({waitUntil:'domcontentloaded'});
+      // Ignore resources requested by the pre-reload document for this post-reload check.
+      trace.splice(0,trace.findLastIndex(row=>row.type==='Document'));
+    }
     sample.language=await page.locator('html').getAttribute('lang');
     if(forceHTML)assert.equal(sample.language,'en','This scenario requires fresh CS3 HTML');
     if(verify==='old'){
@@ -99,6 +105,10 @@ async function openPage(context,label,path,verify,forceHTML) {
     sample.outcome='FAIL';sample.reason=error.message.split('\n')[0];
   } finally {
     // Retain representative bytes from each version; omit per-run server paths, session data and bodies.
+    sample.changedLegacyResponses=trace.filter(row=>{
+      const path=row.path.split('?')[0].slice(1);
+      return row.type!=='Document'&&row.servedBy==='CS2'&&old.files.get(path)?.sha256!==current.files.get(path)?.sha256;
+    }).map(row=>row.path);
     sample.received={cs2:trace.filter(row=>row.servedBy==='CS2').length,cs3:trace.filter(row=>row.servedBy==='CS3').length};
     const core = /\/(?:fps\/(?:index\.html)?(?:\?|$)|src\/fps\/(?:app|match-flow|menu-navigation)\.mjs|fps\/(?:match-loading|routes)\.css)/;
     sample.trace=trace.filter(row=>core.test(row.path));
@@ -112,13 +122,15 @@ try{
   await openPage(warm,'same navigation URL after cutover','/fps/','identity',false);
   // A unique document URL guarantees new HTML; all of its dependency URLs retain normal HTTP reuse.
   await openPage(warm,'new HTML with warm CS2 subresources','/fps/?migration-probe=1','deploy',true);
+  await openPage(warm,'ordinary reload with saved CS2 settings','/fps/','deploy',true,true);
   await warm.close();
-  const cold=await openContext();
+  const cold=await openContext('fr-FR');
   await openPage(cold,'new HTML in a fresh browser cache','/fps/?migration-probe=1','deploy',true);
   await cold.close();
-  const [legacy,,mixed,control]=report.samples;
+  const [legacy,,mixed,reloaded,control]=report.samples;
   assert.equal(legacy.outcome,'PASS');assert.equal(control.outcome,'PASS','cold control must deploy');
-  report.migrationPass=mixed.outcome==='PASS'&&mixed.savedGraphics==='low'&&mixed.deployed==='SCOUT RIFLE';
+  report.migrationPass=[mixed,reloaded].every(sample=>sample.outcome==='PASS' && sample.savedGraphics==='low' &&
+    sample.deployed==='SCOUT RIFLE' && sample.changedLegacyResponses.length===0);
   if(!report.migrationPass)process.exitCode=1;
 } finally{
   report.finished=new Date().toISOString();

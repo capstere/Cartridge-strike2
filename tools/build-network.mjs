@@ -4,6 +4,7 @@ import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {relative,sep} from 'node:path';
 import '../server/register-shared.mjs';
+import {publicGameHTML} from './release-public-assets.mjs';
 import {buildContentCatalog} from './content/catalog.mjs';
 import {verifyAppearanceRigs} from './appearance-import.mjs';
 import {collisionContract} from '../shared/multiplayer/collision-contract.mjs';
@@ -107,6 +108,10 @@ const managedFiles=catalog.assets.map(asset=>asset.path).filter(path=>!runtime.h
 for(const path of managedFiles)runtime.add(path);
 info.contentCatalog={version:catalog.version,digest:catalog.digest,entries:catalog.entries.length,managedFiles};
 info.files=await Promise.all([...runtime].sort().map(async path=>{const bytes=files[path]||await read(path);return {path,bytes:bytes.length,sha256:hash(bytes)};}));
+const gamePage='fps/index.html';
+const published=await publicGameHTML((await read(gamePage)).toString(),info.files,async path=>files[path]||await read(path));
+files[gamePage]=Buffer.from(published);
+Object.assign(info.files.find(entry=>entry.path===gamePage),{bytes:files[gamePage].length,sha256:hash(files[gamePage])});
 info.bytes=info.files.reduce((n,f)=>n+f.bytes,0);
 files['build-info.json']=Buffer.from(JSON.stringify(info,null,2)+'\n');
 for(const [path,bytes] of Object.entries(files)){

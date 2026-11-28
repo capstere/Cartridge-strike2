@@ -32,7 +32,7 @@ try {
   });
   // A stalled optional font stylesheet must leave the launch and cancel controls usable.
   let fontRequest;
-  const fontStylesheet = new URL('/fps/type.css', origin).href;
+  const fontStylesheet = /\/fps\/type\.css(?:\?|$)/;
   await page.route(fontStylesheet, route => { fontRequest = route; }, { times:1 });
   await page.goto(origin + '/fps/?test&level=synthetic-demo', { waitUntil: 'commit' });
   await start.click();
@@ -41,7 +41,7 @@ try {
   await page.waitForFunction(() => window.__csFlow);
   assert.ok(await cancel.isVisible());
   await cancel.click();
-  assert.equal(fontRequest?.request().url(), fontStylesheet, 'Launch and cancel work while the actual optional font stylesheet is stalled');
+  assert.match(fontRequest?.request().url(), fontStylesheet, 'Launch and cancel work while the actual optional font stylesheet is stalled');
   await page.locator('[data-team=counterAnalysts]').click();
   await page.waitForFunction(() => __csFlow.music.track.currentTime > 0);
   await start.click();
