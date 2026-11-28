@@ -205,7 +205,17 @@ try{
   })));
   assert(result.receivers[0].onlyOwn&&result.receivers[0].samples>0);
   assert(result.receivers[1].onlyOwn&&result.receivers[1].samples===0&&result.receivers[1].markers===0);
-  if(process.env.CS3_BONUS_RELOAD_CAPTURE==='1')await captureReloads({desktop,touch,game,owner:a,observer:b,output,wait});
+  if(process.env.CS3_BONUS_RELOAD_CAPTURE==='1'){
+    const fixed=room.fixedTick,ticks=[];
+    if(process.env.CS3_BONUS_COLD_FOCUS)room.fixedTick=function(...args){
+      const start=performance.now();
+      try{return fixed.apply(this,args);}
+      finally{ticks.push([performance.timeOrigin+start,performance.now()-start]);}
+    };
+    try{await captureReloads({desktop,touch,game,owner:a,observer:b,output,wait});}
+    finally{room.fixedTick=fixed;}
+    if(output&&ticks.length)await writeFile(join(output,'server-ticks.json'),JSON.stringify(ticks));
+  }
   if(process.env.CS3_BONUS_COLD_RETIRE==='1')await retireRemoteOutfit(touch,host,room,seat,output);
   result.deathCarry=true;result.spent=true;result.errors=errors;assert.deepEqual(errors,[]);
   if(output)await writeFile(join(output,'browser.json'),JSON.stringify(result,null,2)+'\n');
