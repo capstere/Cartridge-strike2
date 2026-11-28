@@ -80,11 +80,15 @@ async function open(mobile){
     assert.deepEqual(stored,[],'Private pilot responses stay out of the install cache');
     const offlinePage=await context.newPage();
     try {
+      // A service worker owns its own network context. Disconnect the test TLS
+      // endpoint as well, so the worker cannot fetch through a live connection.
+      fixture.setReachable(false);
       await context.setOffline(true);
       const response=await offlinePage.goto(origin+'/fps/',{waitUntil:'domcontentloaded'});
       assert.equal(response.status(),503);
       await offlinePage.getByRole('heading',{name:/offline/i}).waitFor();
     } finally {
+      fixture.setReachable(true);
       await context.setOffline(false);
       await offlinePage.close();
     }

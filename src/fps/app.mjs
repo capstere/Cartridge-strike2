@@ -638,18 +638,25 @@ function consumeEvents(){audio.game=game;const events=game.drainEvents();combatH
 if(game.phase!==lastPhase){if(['result','match'].includes(game.phase)){audio.reset();}lastPhase=game.phase;}if(game.state.round!==lastRound){lastRound=game.state.round;audio.reset();renderer.resetTransient();recoil.reset();yaw=game.player.yaw;pitch=game.player.pitch;clearInput();}for(const event of events){if(event.type==='respawn'&&event.actorId===game.player.id){clearInput();recoil.reset();yaw=game.player.yaw;pitch=0;renderer.lastWeapon='';}if(event.type==='radio'&&!event.teamPrivate){setText('radio-caption',`RADIO · ${event.text}`);radioUntil=game.state.time+3.4;radioOpen=false;$('radio-menu').hidden=true;}if(event.type==='kill'){if(event.actorId===game.player.id){fire=false;radioOpen=false;$('radio-menu').hidden=true;if(!isEndless(game))unlockMouse();}const killer=game.actors.find(a=>a.id===event.sourceId),victim=game.actors.find(a=>a.id===event.actorId);feed.push({text:`${killer?.name||event.sourceName||'—'}  ▸  ${victim?.name||event.targetName||'—'}`,until:game.state.time+5});}if(event.type==='planted')notify('Bomb planted in '+missionRoomName(world)+'.',4);if(event.type==='rescued')notify('A hostage reached the rescue zone.',3);}const effectEvents=['result','match'].includes(game.phase)?events.filter(e=>['result','match','kill','rocket-launch','rocket-explosion'].includes(e.type)):events;renderer.events(events,game);const view=viewActor();if(view)audio.handle(networkSession?effectEvents.filter(e=>!e.audioPresented):effectEvents,{...view,y:view.y+view.height-.12,ambient:['buy','active'].includes(game.phase)&&!game.state.paused,floorAudioReady:!modal&&$('cs-loading').hidden},game.state.time);return events;}
 window.addEventListener('pointerdown',()=>{gamepad.active=false;},{capture:true});
 window.addEventListener('keydown',e=>{if(e.isTrusted)gamepad.active=false;},{capture:true});
+function pollMenuController(){
+ if(!modal || document.hidden)return;
+ const loading=$('cs-loading'),overlay=loading&&!loading.hidden?loading:null;
+ const dialog=document.querySelector('dialog[open]');
+ const scope=dialog || overlay || $(({pause:'pause',buy:'buy',online:'online-room',match:'match-end'})[modal]||'menu');
+ navigateGamepad(scope,gamepad.read(),()=>{
+   if(dialog){dialog.close();return;}
+   if(overlay){(overlay.querySelector('#csl-error')?.hidden?$('csl-cancel'):$('csl-back'))?.click();return;}
+   if(modal==='pause'){resume();return;}
+   if(modal==='buy'){closeBuy();return;}
+   if(modal==='menu'){const back=$('route-back');if(back&&!back.hidden)back.click();}
+ });
+}
+function loadingControllerFrame(){
+ pollMenuController();
+ raf=requestAnimationFrame(loadingControllerFrame);
+}
 function frame(now){try{
- if(modal && !document.hidden){
-   const pad=gamepad.read(),dialog=document.querySelector('dialog[open]');
-   const scope=dialog || document.getElementById(({pause:'pause',buy:'buy',online:'online-room',match:'match-end'})[modal]||'menu');
-   navigateGamepad(scope,pad,()=>{
-     if(dialog){dialog.close();return;}
-     if(modal==='pause'){resume();return;}
-     if(modal==='buy'){closeBuy();return;}
-     if(modal!=='menu')return;
-     const back=$('route-back');if(back&&!back.hidden)back.click();
-   });
- }
+ pollMenuController();
  if(networkMode&&(!renderer||!grenadeAssist||networkSession&&(!networkSession.view.player||networkSession.worldRevision!==networkSession.room?.state.worldRevision||game!==networkSession.view))){
   lastFrame=now;raf=requestAnimationFrame(frame);return;
  }
@@ -684,7 +691,7 @@ function frame(now){try{
  if(renderDt!==null && !networkSession && !modal && !document.hidden && holdingDeployment())foregroundCountdown.presented(presentedAt);
  showDeployment(presentedAt);
  raf=requestAnimationFrame(frame);}catch(e){fatal(e);}}
-function fatal(error){cancelAnimationFrame(raf);grenadeAssist?.reset();$('fatal').hidden=false;$('fatal').querySelector('pre').textContent=error.stack||String(error);$('loading').hidden=true;console.error(error);}
+function fatal(error){cancelAnimationFrame(raf);raf=requestAnimationFrame(loadingControllerFrame);grenadeAssist?.reset();$('fatal').hidden=false;$('fatal').querySelector('pre').textContent=error.stack||String(error);$('loading').hidden=true;console.error(error);}
 team = document.querySelector('.team-option.selected').dataset.team;
 for (const option of document.querySelectorAll('[data-team]')) option.addEventListener('click', () => { team = option.dataset.team; });
 function launchMatch(event){
@@ -732,6 +739,7 @@ $('radio-options').innerHTML=RADIO.map((r,i)=>`<div><kbd>${i+1}</kbd><span>${r.t
 const characterQuery=new URLSearchParams(location.search);
 if(!window.__csFlow && !rehearsalMode && characterQuery.get('team')==='counterAnalysts')team='counterAnalysts';
 if(characterQuery.has('seed'))$('seed').value=String(Math.min(999999,Math.max(1,Number(characterQuery.get('seed'))||42)));
+raf=requestAnimationFrame(loadingControllerFrame);
 try{
  loadingStage('level');
  audio=new AudioSystem(null,settings);
@@ -752,7 +760,7 @@ try{
   await Promise.all([renderer.assetsReady,audio.prepareFloorAudio()]);grenadeAssist=new GrenadeAssist(renderer,settings);
  }
  loadingStage('ready');$('loading').hidden=true;$('start').disabled=characterSelectionFailed||networkMode;
- raf=requestAnimationFrame(frame);if(testMode){globalThis.__fps={stopFrameLoop(){cancelAnimationFrame(raf);raf=0;},get game(){return game;},get network(){return networkSession;},joinNetwork,get world(){return world;},get renderer(){return renderer;},audio,settings,start(selected,config={},autoplay=false){start(selected,config,autoplay);return this.snapshot();},step(controls=null,dt=1/60){tactical.update(dt);game.update(dt,controls??input(dt));yaw=game.player.yaw;pitch=game.player.pitch;consumeEvents();tactical.render(renderer);grenadeAssist.update(game,viewActor(),modal);renderer.render(game,viewActor(),dt);presentViewEffects();updateHud();return this.snapshot();},snapshot(){return JSON.parse(JSON.stringify({...game.state,player:game.player,actors:game.actors.map(({bot,...rest})=>rest),hostages:game.hostages},(k,v)=>k==='bot'?undefined:v));},render(){tactical.render(renderer);grenadeAssist.update(game,viewActor(),modal);renderer.render(game,viewActor(),1/60);updateHud();},pause(value){game.pause(value);},input,showBuy,newMatch,get modal(){return modal;},mobile,recoil,tactical,get grenadeAssist(){return grenadeAssist;},focusHud,renderBudget,minimapCache};}}
+ cancelAnimationFrame(raf);raf=requestAnimationFrame(frame);if(testMode){globalThis.__fps={stopFrameLoop(){cancelAnimationFrame(raf);raf=0;},get game(){return game;},get network(){return networkSession;},joinNetwork,get world(){return world;},get renderer(){return renderer;},audio,settings,start(selected,config={},autoplay=false){start(selected,config,autoplay);return this.snapshot();},step(controls=null,dt=1/60){tactical.update(dt);game.update(dt,controls??input(dt));yaw=game.player.yaw;pitch=game.player.pitch;consumeEvents();tactical.render(renderer);grenadeAssist.update(game,viewActor(),modal);renderer.render(game,viewActor(),dt);presentViewEffects();updateHud();return this.snapshot();},snapshot(){return JSON.parse(JSON.stringify({...game.state,player:game.player,actors:game.actors.map(({bot,...rest})=>rest),hostages:game.hostages},(k,v)=>k==='bot'?undefined:v));},render(){tactical.render(renderer);grenadeAssist.update(game,viewActor(),modal);renderer.render(game,viewActor(),1/60);updateHud();},pause(value){game.pause(value);},input,showBuy,newMatch,get modal(){return modal;},mobile,recoil,tactical,get grenadeAssist(){return grenadeAssist;},focusHud,renderBudget,minimapCache};}}
 catch(error){fatal(error);}
 
 window.addEventListener('pagehide',event=>{if(!event.persisted){cancelAnimationFrame(raf);networkJoinGeneration++;networkSession?.dispose();grenadeAssist?.dispose();audio?.dispose();renderer?.dispose();}});
