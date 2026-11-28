@@ -1,0 +1,234 @@
+[
+  {
+    "experiment": "owner focus",
+    "revision": "982c57c",
+    "rawSha256": "dfa3968ea84498c36209aa6519ab7cef6a30e05fb19d9e0f18eac88e1d5b5749",
+    "requestedForeground": "owner",
+    "serverPollMaximumMs": 86.0,
+    "owner": {
+      "frames": 67,
+      "renderWallMs": {
+        "p50": 8.6,
+        "max": 3578.2
+      },
+      "rafMaxMs": 400.9,
+      "worldPassAtSlowFrameMs": null,
+      "programLogMs": null,
+      "slowFrame": {
+        "before": [
+          125,
+          51,
+          85
+        ],
+        "after": [
+          176,
+          62,
+          85
+        ],
+        "modelVisible": false,
+        "mesh": null,
+        "focus": true,
+        "visibility": "visible",
+        "paused": false,
+        "pausePanel": false
+      },
+      "exportObserved": false,
+      "maxAudioSimDeltaMs": 100.0,
+      "cues": []
+    },
+    "observer": {
+      "frames": 59,
+      "renderWallMs": {
+        "p50": 8.4,
+        "max": 4790.3
+      },
+      "rafMaxMs": 67.3,
+      "worldPassAtSlowFrameMs": null,
+      "programLogMs": null,
+      "slowFrame": {
+        "before": [
+          119,
+          45,
+          53
+        ],
+        "after": [
+          162,
+          57,
+          56
+        ],
+        "modelVisible": true,
+        "mesh": {
+          "meshes": 51,
+          "skinned": 13,
+          "geometries": 51,
+          "materials": 32
+        },
+        "focus": true,
+        "visibility": "visible",
+        "paused": false,
+        "pausePanel": false
+      },
+      "exportObserved": false,
+      "maxAudioSimDeltaMs": 45.47,
+      "cues": []
+    }
+  },
+  {
+    "experiment": "observer focus",
+    "revision": "982c57c",
+    "rawSha256": "04c9625f6d8124fd5d80d632ffff23b6ff9217d9e174bc6e851315e1a0e418f0",
+    "requestedForeground": "observer",
+    "serverPollMaximumMs": 99.63,
+    "owner": {
+      "frames": 66,
+      "renderWallMs": {
+        "p50": 8.2,
+        "max": 3476.9
+      },
+      "rafMaxMs": 417.0,
+      "worldPassAtSlowFrameMs": null,
+      "programLogMs": null,
+      "slowFrame": {
+        "before": [
+          150,
+          51,
+          85
+        ],
+        "after": [
+          196,
+          62,
+          85
+        ],
+        "modelVisible": false,
+        "mesh": null,
+        "focus": true,
+        "visibility": "visible",
+        "paused": false,
+        "pausePanel": false
+      },
+      "exportObserved": false,
+      "maxAudioSimDeltaMs": 100.0,
+      "cues": []
+    },
+    "observer": {
+      "frames": 54,
+      "renderWallMs": {
+        "p50": 8.0,
+        "max": 5014.3
+      },
+      "rafMaxMs": 68.8,
+      "worldPassAtSlowFrameMs": null,
+      "programLogMs": null,
+      "slowFrame": {
+        "before": [
+          119,
+          45,
+          53
+        ],
+        "after": [
+          162,
+          57,
+          56
+        ],
+        "modelVisible": true,
+        "mesh": {
+          "meshes": 51,
+          "skinned": 13,
+          "geometries": 51,
+          "materials": 32
+        },
+        "focus": true,
+        "visibility": "visible",
+        "paused": false,
+        "pausePanel": false
+      },
+      "exportObserved": false,
+      "maxAudioSimDeltaMs": 23.2,
+      "cues": []
+    }
+  },
+  {
+    "experiment": "renderer stages",
+    "revision": "598cd71",
+    "rawSha256": "11344c90637cf3553198bd7dbec0544234ed611936065630e5b8b92cccbb2f56",
+    "requestedForeground": "owner",
+    "serverPollMaximumMs": 239.61,
+    "owner": {
+      "frames": 160,
+      "renderWallMs": {
+        "p50": 9.0,
+        "max": 3579.7
+      },
+      "rafMaxMs": 3616.5,
+      "worldPassAtSlowFrameMs": 3576.4,
+      "programLogMs": {
+        "countOver2Ms": 9,
+        "sum": 3498.2,
+        "max": 933.7
+      },
+      "slowFrame": {
+        "before": [
+          152,
+          51,
+          85
+        ],
+        "after": [
+          198,
+          62,
+          85
+        ],
+        "modelVisible": false,
+        "mesh": null,
+        "focus": true,
+        "visibility": "visible",
+        "paused": false,
+        "pausePanel": false
+      },
+      "exportObserved": false,
+      "maxAudioSimDeltaMs": 350.0,
+      "cues": [
+        "magout_smg"
+      ]
+    },
+    "observer": {
+      "frames": 79,
+      "renderWallMs": {
+        "p50": 10.6,
+        "max": 5223.8
+      },
+      "rafMaxMs": 5233.6,
+      "worldPassAtSlowFrameMs": 5219.2,
+      "programLogMs": {
+        "countOver2Ms": 12,
+        "sum": 5126.3,
+        "max": 1076.7
+      },
+      "slowFrame": {
+        "before": [
+          119,
+          45,
+          53
+        ],
+        "after": [
+          162,
+          57,
+          56
+        ],
+        "modelVisible": true,
+        "mesh": {
+          "meshes": 51,
+          "skinned": 13,
+          "geometries": 51,
+          "materials": 32
+        },
+        "focus": true,
+        "visibility": "visible",
+        "paused": false,
+        "pausePanel": false
+      },
+      "exportObserved": false,
+      "maxAudioSimDeltaMs": 100.0,
+      "cues": []
+    }
+  }
+]
