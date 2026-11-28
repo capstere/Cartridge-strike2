@@ -1,0 +1,208 @@
+{
+  "status": "measured",
+  "version": "156.0.8078.79",
+  "stamp": "2026-11-27T15:52:11.793Z",
+  "before": {
+    "model": "Raspberry Pi 5 Model B Rev 1.1",
+    "thermalC": 47.95,
+    "freqKHz": "2400000",
+    "load": "1.90 3.11 3.21 9/631 771772",
+    "throttled": "throttled=0x0",
+    "node": "v26.13.0",
+    "sha": "0f79cc3cfe4df42c65664f0ca921bb1449ce2f9c"
+  },
+  "after": {
+    "model": "Raspberry Pi 5 Model B Rev 1.1",
+    "thermalC": 49.6,
+    "freqKHz": "2400000",
+    "load": "2.19 3.00 3.17 3/632 772147",
+    "throttled": "throttled=0x0",
+    "node": "v26.13.0",
+    "sha": "0f79cc3cfe4df42c65664f0ca921bb1449ce2f9c"
+  },
+  "identity": {
+    "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+    "buffer": [
+      493,
+      228
+    ],
+    "internalRenderBuffer": [
+      493,
+      228
+    ],
+    "viewport": [
+      844,
+      390
+    ],
+    "ratio": 0.5849999785423279,
+    "dpr": 0.6499999761581421,
+    "baseFov": 76,
+    "fov": 76,
+    "map": "lvl-floor5-preppad-20261105",
+    "mode": "endless",
+    "quality": "low",
+    "actors": 10,
+    "residents": 4,
+    "weapon": "ar47",
+    "phase": "active",
+    "shaderWarmupMs": 0
+  },
+  "errors": [],
+  "frameIntervalMs": {
+    "n": 150,
+    "p50": 66.5,
+    "p95": 82.6,
+    "p99": 87.9,
+    "max": 105.8,
+    "over33": 150,
+    "over50": 150,
+    "over100": 1
+  },
+  "renderSubmissionMs": {
+    "n": 151,
+    "p50": 55.2,
+    "p95": 64.7,
+    "p99": 74.8,
+    "max": 77.4,
+    "over33": 151,
+    "over50": 106,
+    "over100": 0
+  },
+  "drawCalls": {
+    "n": 151,
+    "p50": 1293,
+    "p95": 1545,
+    "p99": 1545,
+    "max": 1545,
+    "over33": 151,
+    "over50": 151,
+    "over100": 151
+  },
+  "triangles": {
+    "n": 151,
+    "p50": 679564,
+    "p95": 824984,
+    "p99": 824984,
+    "max": 824984,
+    "over33": 151,
+    "over50": 151,
+    "over100": 151
+  },
+  "testedRuntime": "457175c",
+  "baselineRuntime": "33a6ee0b2a8dd7bd962c66b3cd73aed6da94192a",
+  "geometryAndPixels": {
+    "counts": {
+      "originalColors": 1346748,
+      "updatedColors": 1346748
+    },
+    "views": [
+      {
+        "name": "lift",
+        "originalDraws": 1218,
+        "candidateDraws": 1218,
+        "originalTriangles": 638352,
+        "candidateTriangles": 638352,
+        "pixels": 41839,
+        "changed": 0,
+        "maxDifference": 0,
+        "overOne": 0,
+        "overTwo": 0
+      },
+      {
+        "name": "lift side",
+        "originalDraws": 131,
+        "candidateDraws": 131,
+        "originalTriangles": 191615,
+        "candidateTriangles": 191615,
+        "pixels": 41839,
+        "changed": 0,
+        "maxDifference": 0,
+        "overOne": 0,
+        "overTwo": 0
+      },
+      {
+        "name": "lift threshold",
+        "originalDraws": 1118,
+        "candidateDraws": 1118,
+        "originalTriangles": 608468,
+        "candidateTriangles": 608468,
+        "pixels": 41839,
+        "changed": 0,
+        "maxDifference": 0,
+        "overOne": 0,
+        "overTwo": 0
+      },
+      {
+        "name": "C08",
+        "originalDraws": 1248,
+        "candidateDraws": 1248,
+        "originalTriangles": 574042,
+        "candidateTriangles": 574042,
+        "pixels": 41839,
+        "changed": 0,
+        "maxDifference": 0,
+        "overOne": 0,
+        "overTwo": 0
+      },
+      {
+        "name": "C08 reverse",
+        "originalDraws": 271,
+        "candidateDraws": 271,
+        "originalTriangles": 222487,
+        "candidateTriangles": 222487,
+        "pixels": 41839,
+        "changed": 0,
+        "maxDifference": 0,
+        "overOne": 0,
+        "overTwo": 0
+      },
+      {
+        "name": "I04 desk",
+        "originalDraws": 747,
+        "candidateDraws": 747,
+        "originalTriangles": 349028,
+        "candidateTriangles": 349028,
+        "pixels": 41839,
+        "changed": 0,
+        "maxDifference": 0,
+        "overOne": 0,
+        "overTwo": 0
+      },
+      {
+        "name": "I04 reverse",
+        "originalDraws": 377,
+        "candidateDraws": 377,
+        "originalTriangles": 402748,
+        "candidateTriangles": 402748,
+        "pixels": 41839,
+        "changed": 0,
+        "maxDifference": 0,
+        "overOne": 0,
+        "overTwo": 0
+      }
+    ]
+  },
+  "actorDraws": {
+    "cartridge bag": 28,
+    "skinned avatar": 92,
+    "marker": 12,
+    "avatar attachment": 126,
+    "held weapon": 90
+  },
+  "rush": {
+    "rawCallback": null,
+    "pointerOrKeyCallback": 146.3,
+    "firstMovedStep": 148.4,
+    "worldSubmit": [
+      162.1,
+      310.0
+    ],
+    "weaponSubmit": [
+      310.0,
+      310.6
+    ],
+    "firstMovedRenderEnd": 310.7,
+    "presentation": 354.6,
+    "unshiftedRendersAfterInput": 3
+  }
+}

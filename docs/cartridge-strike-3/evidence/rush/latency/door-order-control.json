@@ -1,0 +1,437 @@
+{
+  "testedCheckout": "42327584de0ef5574fc7ee7b941139c4465855b2",
+  "runtimeChange": "5289cf9",
+  "originalRuntime": "33a6ee0b2a8dd7bd962c66b3cd73aed6da94192a",
+  "status": "measured",
+  "rendererTargets": {
+    "main": 814
+  },
+  "transmissive": [],
+  "poseCount": 17,
+  "rush": {
+    "build": "42327584de0ef5574fc7ee7b941139c4465855b2",
+    "game": "candidate",
+    "profile": "touch",
+    "repeat": 0,
+    "cache": "new browser context",
+    "at": "2026-11-27T16:12:53.718Z",
+    "browser": "156.0.8078.79",
+    "map": "lvl-floor5-preppad-20261105",
+    "buffer": [
+      493,
+      228
+    ],
+    "mode": "endless",
+    "quality": "low",
+    "actors": 10,
+    "localWeapon": "ar47",
+    "residents": 4,
+    "thermalC": [
+      48.5,
+      52.35
+    ],
+    "throttle": [
+      "throttled=0x0",
+      "throttled=0x0"
+    ],
+    "frameMs": {
+      "n": 293,
+      "p50": 32.3,
+      "p95": 45.7,
+      "p99": 64,
+      "max": 94.6,
+      "over33": 121,
+      "over50": 11,
+      "over100": 0
+    },
+    "renderMs": {
+      "n": 294,
+      "p50": 24.8,
+      "p95": 31.9,
+      "p99": 38.4,
+      "max": 43.3,
+      "over33": 12,
+      "over50": 0,
+      "over100": 0
+    },
+    "draws": {
+      "n": 294,
+      "p50": 654,
+      "p95": 831,
+      "p99": 831,
+      "max": 831,
+      "over33": 294,
+      "over50": 294,
+      "over100": 294
+    },
+    "tris": {
+      "n": 294,
+      "p50": 324737,
+      "p95": 426078,
+      "p99": 426078,
+      "max": 426078,
+      "over33": 294,
+      "over50": 294,
+      "over100": 294
+    },
+    "census": {
+      "projectFurniture": 370,
+      "world/room-static-batch": 69,
+      "glass": 50,
+      "actor-analysts-1": 44,
+      "actor-analysts-3": 43,
+      "doors": 43,
+      "actor-analysts-2": 42,
+      "action": 37,
+      "actor-analysts-4": 37,
+      "environment": 19,
+      "viewmodel": 16,
+      "world/cosmetic-room-details": 14,
+      "world/Mesh": 13,
+      "world/Group": 6,
+      "actor-hostage-0": 4,
+      "actor-hostage-1": 4,
+      "world/combat-flow-effects": 2,
+      "world/The Hollow Walker": 1
+    },
+    "rawCallback": null,
+    "pointerOrKeyCallback": 95.8,
+    "touchOrKeyCallback": 96.1,
+    "gameRead": 97.3,
+    "firstMovedStep": 98.1,
+    "firstMovedRenderBegin": 100.8,
+    "worldSubmit": [
+      106.4,
+      126.5
+    ],
+    "weaponSubmit": [
+      126.5,
+      127.1
+    ],
+    "firstMovedRenderEnd": 127.1,
+    "presentation": null,
+    "firstWeight": 0.307,
+    "weaponYAndRoll": [
+      -0.22591,
+      0.24297
+    ],
+    "unshiftedRendersAfterInput": 3
+  },
+  "poses": [
+    {
+      "name": "closed lift",
+      "visible": [
+        false,
+        false
+      ],
+      "first": {
+        "count": 2349,
+        "maxChannel": 168,
+        "bounds": [
+          2,
+          0,
+          300,
+          138
+        ]
+      },
+      "positivePixels": null,
+      "draws": 376,
+      "originalDraws": 662,
+      "counts": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 2349,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      }
+    },
+    {
+      "name": "half-open lift",
+      "visible": [
+        false,
+        false
+      ],
+      "first": 0,
+      "positivePixels": null,
+      "draws": 576,
+      "originalDraws": 1061,
+      "counts": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      }
+    },
+    {
+      "name": "open lift",
+      "visible": [
+        false,
+        false
+      ],
+      "first": 0,
+      "positivePixels": null,
+      "draws": 663,
+      "originalDraws": 1235,
+      "counts": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      }
+    },
+    {
+      "name": "lift side",
+      "visible": [
+        false,
+        false
+      ],
+      "first": 0,
+      "positivePixels": null,
+      "draws": 137,
+      "originalDraws": 137,
+      "counts": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      }
+    },
+    {
+      "name": "lift threshold",
+      "visible": [
+        false,
+        false
+      ],
+      "first": 0,
+      "positivePixels": null,
+      "draws": 589,
+      "originalDraws": 1125,
+      "counts": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      }
+    },
+    {
+      "name": "C08",
+      "visible": [
+        false,
+        false
+      ],
+      "first": 0,
+      "positivePixels": null,
+      "draws": 659,
+      "originalDraws": 1265,
+      "counts": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      }
+    },
+    {
+      "name": "C08 reverse",
+      "visible": [
+        false,
+        false
+      ],
+      "first": 0,
+      "positivePixels": null,
+      "draws": 277,
+      "originalDraws": 277,
+      "counts": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      }
+    },
+    {
+      "name": "I04 desk",
+      "visible": [
+        false,
+        false
+      ],
+      "first": 0,
+      "positivePixels": null,
+      "draws": 741,
+      "originalDraws": 741,
+      "counts": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      }
+    },
+    {
+      "name": "I04 reverse",
+      "visible": [
+        false,
+        false
+      ],
+      "first": 0,
+      "positivePixels": null,
+      "draws": 225,
+      "originalDraws": 394,
+      "counts": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      }
+    },
+    {
+      "name": "BYGG-D-0001 angle 0 side -1",
+      "visible": [
+        true,
+        false
+      ],
+      "first": 0,
+      "positivePixels": 12598,
+      "draws": 471,
+      "originalDraws": 473,
+      "counts": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      }
+    },
+    {
+      "name": "BYGG-D-0001 angle 0 side 1",
+      "visible": [
+        true,
+        false
+      ],
+      "first": 0,
+      "positivePixels": 12598,
+      "draws": 271,
+      "originalDraws": 271,
+      "counts": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      }
+    },
+    {
+      "name": "BYGG-D-0001 angle 0.8 side -1",
+      "visible": [
+        true,
+        false
+      ],
+      "first": 0,
+      "positivePixels": 12598,
+      "draws": 129,
+      "originalDraws": 131,
+      "counts": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      }
+    },
+    {
+      "name": "BYGG-D-0001 angle 0.8 side 1",
+      "visible": [
+        true,
+        false
+      ],
+      "first": 0,
+      "positivePixels": 12598,
+      "draws": 439,
+      "originalDraws": 439,
+      "counts": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      }
+    },
+    {
+      "name": "BYGG-D-0028 angle 0 side -1",
+      "visible": [
+        false,
+        true
+      ],
+      "first": 0,
+      "positivePixels": 12598,
+      "draws": 111,
+      "originalDraws": 111,
+      "counts": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      }
+    },
+    {
+      "name": "BYGG-D-0028 angle 0 side 1",
+      "visible": [
+        false,
+        true
+      ],
+      "first": 0,
+      "positivePixels": 12598,
+      "draws": 489,
+      "originalDraws": 489,
+      "counts": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      }
+    },
+    {
+      "name": "BYGG-D-0028 angle 0.8 side -1",
+      "visible": [
+        false,
+        true
+      ],
+      "first": 0,
+      "positivePixels": 12598,
+      "draws": 190,
+      "originalDraws": 192,
+      "counts": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      }
+    },
+    {
+      "name": "BYGG-D-0028 angle 0.8 side 1",
+      "visible": [
+        false,
+        true
+      ],
+      "first": 0,
+      "positivePixels": 12598,
+      "draws": 322,
+      "originalDraws": 322,
+      "counts": {
+        "firstCandidateRepeat": 0,
+        "originalRepeat": 0,
+        "secondCandidateAgainstOriginal": 0,
+        "returnToCandidate": 0,
+        "returnToOriginal": 0
+      }
+    }
+  ]
+}
