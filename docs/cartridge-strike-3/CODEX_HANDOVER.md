@@ -1,7 +1,7 @@
 # Lead Codex assignment — Cartridge-Strike 3
 
 
-Resume CS3-10 on cs3/10-match-progression. CS3-00 through CS3-09 are verified. Mobile #63, navigation #62 and arsenal #64 merged in order. Use the [project status](PROJECT_STATUS.md) and [task manifest](tasks.json) for the proof and dependencies. Keep a single heavy Pi run active. The Floor 5 loading stalls, unusual TDM tick and physical-device qualification remain release work.
+Resume [CS3-10 draft PR #66](https://github.com/capstere/Cartridge-strike2/pull/66) on cs3/10-match-progression. CS3-00 through CS3-09 are verified. Floor 5 PR #65 merged on development. Reconcile its admission changes with the match branch and verify the corrected rendered scenarios and account entry before closing CS3-10. See the [current checkpoint](PROJECT_STATUS.md#november-28-match-and-performance-checkpoint) and [task manifest](tasks.json).
 
 **Owner authorization recorded.** Jesper approved PR #47 at `f1f36396`. Preparation merged at `5364240599164c0aee278bb0ac2a35d662c3a818`. The authorization covers development and eventual release after the documented gates. Resume from `develop/cartridge-strike-3` and the first eligible unfinished row in [tasks.json](tasks.json). Read [project status](PROJECT_STATUS.md) for current measurements and open checks.
 
