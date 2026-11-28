@@ -192,7 +192,7 @@
       "scope": "Baseline visual pass, reference map adapter and Meltem or lower-risk pilot; validated additional maps, all nine assessed, environment FX and ambience; LOD/disposal.",
       "tests": "build-network --check, compact-arena/owner-door-traversal tests, multimap-browser/recovery, asset-memory and complete matches",
       "exit": "Original maps preserved. All nine have a source ID, capability assessment and explicit disposition. Each offered map passes versioned collision/nav/void, mode eligibility, spawn, lifecycle and measured budget.",
-      "status": "IN_PROGRESS",
+      "status": "REVIEW",
       "branch": "cs3/07-candidate-environments",
       "pullRequests": [
         52,
@@ -205,7 +205,9 @@
       ],
       "mergedSlices": [
         "b7d303b44b147e671b033f6519e16abe4376ee0f"
-      ]
+      ],
+      "nativeReviewedBuild": "b575ba6a76c3d1a9253c370b2a2ef3ed2e2b44c5d51c5711615bd488621e2384",
+      "independentReview": "Accepted the 20 map switches and matched 175.121 s parked run, six distinct disposed soundscape instances, actual quality switching, recovery and retained coastal/volcanic/sign frames. Run final hosted checks on the reconciled head."
     },
     {
       "id": "CS3-08",

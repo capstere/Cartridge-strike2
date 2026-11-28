@@ -6,6 +6,7 @@ import {relative,sep} from 'node:path';
 import '../server/register-shared.mjs';
 import {collisionContract} from '../shared/multiplayer/collision-contract.mjs';
 import {coastalRecordings,coastalClipPath} from '../src/fps/coastal-recordings.mjs';
+import {tephraRecordings} from '../src/fps/tephra-ambience.mjs';
 import {shotTakes} from '../src/fps/shot-audio.mjs';
 import {CONFIG} from '../src/fps/config.mjs';
 import {DEFAULT_MAP_ID,NETWORK_MAPS} from '../shared/multiplayer/maps.mjs';
@@ -19,10 +20,21 @@ const knockdownFiles=['src/fps/character-actors.mjs','src/fps/character-library.
   'assets/animations/headshot-male.animation.glb','assets/animations/headshot-female.animation.glb'];
 // Map geometry, prediction and source render assets share one compatibility boundary.
 const coastalAudio=Object.entries(coastalRecordings).flatMap(([id,takes])=>Object.keys(takes).map(take=>coastalClipPath(id,take)));
-const meltemRuntime=['src/fps/reference-world.mjs','src/fps/reference-terrain.mjs','src/fps/reference-rays.mjs',
+const mapAssets={
+  meltem:['plaster.webp','stone.webp','pavers.webp','cyfol.webp','cyflag.webp'],
+  embruns:['coarse.bin.gz','lighting.json.gz','ground.bin.gz'],
+  tephra:['ground.bin.gz','lighting.json.gz','ash.webp','basalt.webp','lava.webp','moss.webp','panel.webp']
+};
+const mappedFiles=Object.entries(mapAssets).flatMap(([id,surfaces])=>[
+  'assets/fps/maps/'+id+'.webp',
+  ...['base.bin.gz','detail.bin.gz','environment.json.gz','sky.webp','signs.webp',...surfaces].map(name=>'assets/fps/maps/'+id+'/'+name)
+]);
+const referenceRuntime=['src/fps/reference-world.mjs','src/fps/reference-terrain.mjs','src/fps/reference-rays.mjs',
   'src/fps/reference-prop-ray.mjs','src/fps/reference-navigation.mjs','src/fps/reference-scene.mjs',
-  'src/fps/coastal-ambience.mjs','src/fps/coastal-recordings.mjs',...coastalAudio,
-  'assets/fps/maps/meltem.webp',...['base.bin.gz','detail.bin.gz','plaster.webp','stone.webp','pavers.webp','signs.webp'].map(f=>'assets/fps/maps/meltem/'+f)];
+  'src/fps/coastal-ambience.mjs','src/fps/coastal-recordings.mjs','src/fps/tephra-ambience.mjs',...coastalAudio,
+  ...Object.keys(tephraRecordings).map(take=>coastalClipPath('tephra',take)),
+  'credits.html','licenses/riposte-MIT.txt',
+  'src/fps/reference-environment.mjs','src/fps/reference-volcano.mjs','src/fps/reference-eruption.mjs','src/fps/reference-lighting.mjs','src/fps/reference-ground.mjs',...mappedFiles];
 const accessCatalog='shared/multiplayer/access-english.mjs';
 const deploymentFiles=['src/fps/deployment-countdown.mjs',
   ...['ui_tick','r_beep-1','st_start'].map(name=>'assets/fps/audio/riposte-'+name+'.mp3')];
@@ -40,7 +52,7 @@ const shotAudioFiles=['assets/fps/audio/ffsl-f_bolt-1.mp3','assets/fps/audio/ffs
   'assets/fps/audio/riposte-f_pin.mp3','assets/fps/audio/riposte-s_slide_soft.mp3','src/fps/audio.mjs','src/fps/riposte-audio.mjs','src/fps/shot-audio.mjs','src/fps/shot-timing.mjs',
   ...shotTakes.map(take=>'assets/fps/audio/riposte-'+take+'.mp3')];
 const paths=[...new Set([...shotAudioFiles,...Object.keys(graph),...frontendFiles,...rushPresentation,...rocketPresentation,accessCatalog,'shared/multiplayer/rules.mjs','shared/multiplayer/protocol.mjs','server/network-schema.mjs','server/network-room.mjs','server/team-comms.mjs','server/lag-compensation.mjs','server/match-lifecycle.mjs','server/classic-round.mjs','server/headless.mjs','shared/multiplayer/input.mjs','src/fps/app.mjs','src/fps/tactical-controls.mjs','src/fps/render-engine.mjs','src/fps/render.mjs','src/fps/minimap-cache.mjs','src/fps/hud-shell.mjs','src/fps/zombie-visuals.mjs','src/fps/floor-audio.mjs','fps/network.css','src/fps/lobby-stage.mjs','src/fps/network/menu.mjs','src/fps/network/session.mjs','src/fps/network/room-ui.mjs','shared/multiplayer/world.mjs','shared/multiplayer/collision-contract.mjs','shared/sha256.mjs','src/fps/network/connection.mjs','server/account-store.mjs','server/account-access.mjs','server/public-rooms.mjs','server/match-credits.mjs','server/result-journal.mjs','server/access.mjs','server/pilot-access.mjs','server/local-server.mjs',
-  'server/room-world.mjs','server/family-room.mjs','server/match-preferences.mjs','shared/multiplayer/maps.mjs','shared/multiplayer/family-room.mjs','ui/cs-mobile.mjs','ui/cs-mobile.css',...knockdownFiles,...meltemRuntime])].sort();
+  'server/room-world.mjs','server/family-room.mjs','server/match-preferences.mjs','shared/multiplayer/maps.mjs','shared/multiplayer/family-room.mjs','ui/cs-mobile.mjs','ui/cs-mobile.css',...knockdownFiles,...referenceRuntime])].sort();
 const sources=await Promise.all(paths.map(async path=>[path,hash(await read(path))]));
 const {loadHeadlessWorld}=await import('../server/headless.mjs');
 const worlds=[];
@@ -66,7 +78,7 @@ const files={
 // Only resolved, shipped map dependencies are added to the runtime allowlist.
 const {LIBRARY_MAP}=await import('../furniture-editor/library/catalog.mjs');
 const info=JSON.parse(await read('build-info.json'));
-const runtime=new Set([...shotAudioFiles,...info.files.map(f=>f.path),...frontendFiles,accessCatalog,...Object.keys(files),...knockdownFiles,...meltemRuntime,...rushPresentation,'src/fps/rush.mjs','shared/multiplayer/maps.mjs',
+const runtime=new Set([...shotAudioFiles,...info.files.map(f=>f.path),...frontendFiles,accessCatalog,...Object.keys(files),...knockdownFiles,...referenceRuntime,...rushPresentation,'src/fps/rush.mjs','shared/multiplayer/maps.mjs',
   ...NETWORK_MAPS.flatMap(map=>[map.file,map.preview]),
   'shared/multiplayer/world.mjs','shared/multiplayer/collision-contract.mjs','shared/sha256.mjs','src/fps/network/connection.mjs','src/fps/network/room-ui.mjs','shared/multiplayer/family-room.mjs']);
 for(const world of worlds){

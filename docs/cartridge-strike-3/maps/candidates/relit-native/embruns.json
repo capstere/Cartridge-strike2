@@ -1,0 +1,452 @@
+{
+  "scenario": "embruns",
+  "map": "embruns",
+  "physicalPhone": false,
+  "transport": "TLS loopback",
+  "date": "2026-11-27T15:47:59.958Z",
+  "revision": "1c70c0d93b2d4da3fcb3a1a29c840fcc64b16ded",
+  "buildHash": "46c27c9d8e96743dfce3c2291ef87151ba6f5909af864e99a05300e6c483abc4",
+  "manifestHash": "8d295ef4bd22b19baa4094d087847d739a641b01a3bc3583ab21a2b509c0f137",
+  "cpu": "Cortex-A76",
+  "arch": "arm64",
+  "os": "linux",
+  "node": "v26.13.0",
+  "model": "Raspberry Pi 5 Model B Rev 1.1",
+  "warmupMs": 3000,
+  "windowMs": 10000,
+  "scheduledSeconds": 45,
+  "scoreTarget": 150,
+  "args": [
+    "--use-angle=gl-egl",
+    "--ignore-gpu-blocklist",
+    "--enable-unsafe-swiftshader",
+    "--disable-renderer-backgrounding",
+    "--disable-background-timer-throttling",
+    "--disable-backgrounding-occluded-windows",
+    "--host-resolver-rules=MAP 127.0.0.1 127.0.0.1",
+    "--no-proxy-server",
+    "--ozone-platform=wayland"
+  ],
+  "hardwareBefore": {
+    "thermalC": 47.4,
+    "cpuKHz": 2400000
+  },
+  "renderedClients": 1,
+  "sdkPeers": 0,
+  "phaseLog": [
+    {
+      "step": "enter waiting room",
+      "elapsedMs": 3769
+    },
+    {
+      "step": "load embruns",
+      "elapsedMs": 29409
+    },
+    {
+      "step": "start match",
+      "elapsedMs": 38528
+    },
+    {
+      "step": "measure active game",
+      "elapsedMs": 44468
+    },
+    {
+      "step": "finish match",
+      "elapsedMs": 56342
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 85462
+    },
+    {
+      "step": "switch embruns",
+      "elapsedMs": 95044
+    },
+    {
+      "step": "reject a damaged level and retry on the saved map",
+      "elapsedMs": 98935
+    },
+    {
+      "step": "complete",
+      "elapsedMs": 110486
+    }
+  ],
+  "browser": "156.0.8078.79",
+  "viewport": {
+    "width": 1024,
+    "height": 576
+  },
+  "signInToFormMs": 2656,
+  "enterToWaitingMs": 25640,
+  "selectMapMs": 8992,
+  "players": {
+    "humanSlots": 1,
+    "bots": 9
+  },
+  "startToPlayableMs": 1661,
+  "controls": {
+    "distanceM": 0.63,
+    "ammoBefore": 30,
+    "ammoAfter": 29,
+    "rightClickAim": true,
+    "team": "analysts"
+  },
+  "measurement": {
+    "client": {
+      "frameIntervalMs": {
+        "n": 369,
+        "min": 19.3,
+        "p50": 25,
+        "p95": 38.8,
+        "p99": 67.8,
+        "max": 87.2
+      },
+      "framesOver33": 43,
+      "framesOver50": 6,
+      "framesOver100": 0,
+      "renderCpuMs": {
+        "n": 370,
+        "min": 17,
+        "p50": 20.7,
+        "p95": 29.4,
+        "p99": 41.6,
+        "max": 58
+      },
+      "draws": {
+        "n": 370,
+        "min": 392,
+        "p50": 436,
+        "p95": 522,
+        "p99": 526,
+        "max": 526
+      },
+      "triangles": {
+        "n": 370,
+        "min": 394732,
+        "p50": 421157,
+        "p95": 470289,
+        "p99": 470523,
+        "max": 470971
+      },
+      "pixelRatio": {
+        "n": 370,
+        "min": 0.47,
+        "p50": 0.51,
+        "p95": 0.68,
+        "p99": 0.68,
+        "max": 0.68
+      }
+    },
+    "server": {
+      "executionMs": {
+        "n": 607,
+        "min": 0.32,
+        "p50": 1.16,
+        "p95": 7.15,
+        "p99": 13.52,
+        "max": 35.04
+      },
+      "intervalMs": {
+        "n": 606,
+        "min": 0.66,
+        "p50": 16.16,
+        "p95": 20.35,
+        "p99": 32.47,
+        "max": 42.71
+      },
+      "executionOverTickBudget": 5,
+      "executionOver33": 1,
+      "executionOver50": 0,
+      "intervalOver33": 4,
+      "rttMs": 0,
+      "tick": 2816
+    },
+    "resources": {
+      "projectId": "lvl-embruns",
+      "level": "Kervénec Harbor",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        478,
+        269
+      ],
+      "quality": "low",
+      "geometries": 417,
+      "textures": 81,
+      "programs": 60,
+      "owners": 2,
+      "disposals": 1,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    }
+  },
+  "sourceGeometry": {
+    "inScene": true,
+    "groups": 149,
+    "triangles": 238376,
+    "projectId": "lvl-embruns"
+  },
+  "environment": {
+    "camera": {
+      "x": -33.5,
+      "z": 21.5,
+      "y": 0.4,
+      "pitch": 0.02,
+      "yaw": -1.78,
+      "height": 1.72,
+      "radius": 0.2
+    },
+    "first": {
+      "draws": 230,
+      "skyWidth": 2048,
+      "bakedLight": [
+        70,
+        86,
+        12
+      ],
+      "weatherTime": 53.66620000004769,
+      "counts": {
+        "waveBands": 8,
+        "mills": 0,
+        "fabrics": 6,
+        "boats": 14,
+        "ponds": 17,
+        "ash": 0
+      },
+      "shoreWidth": 256,
+      "millAngles": [],
+      "boatHeights": [
+        -1.5065050930897217,
+        -1.5002754598822017,
+        -1.4915561153033878,
+        -1.506330624171087,
+        -1.6851509675858807,
+        -1.6926287443861416,
+        -1.532702389917197,
+        -1.5376136376966039,
+        -1.546739343553659,
+        -1.5457400159795787,
+        -1.5427521587415192,
+        -1.5367483734058307,
+        -1.5171313435735685,
+        -1.533625673247678
+      ],
+      "fourPoses": true,
+      "failedPrograms": 0
+    },
+    "second": {
+      "draws": 227,
+      "skyWidth": 2048,
+      "bakedLight": [
+        70,
+        86,
+        12
+      ],
+      "weatherTime": 54.70020000004769,
+      "counts": {
+        "waveBands": 8,
+        "mills": 0,
+        "fabrics": 6,
+        "boats": 14,
+        "ponds": 17,
+        "ash": 0
+      },
+      "shoreWidth": 256,
+      "millAngles": [],
+      "boatHeights": [
+        -1.4944019359089282,
+        -1.4928128774126876,
+        -1.5011592343355786,
+        -1.4959474990200177,
+        -1.682790690659282,
+        -1.6645256167401659,
+        -1.5737598004387747,
+        -1.5685925277934343,
+        -1.5555666276560407,
+        -1.5588708664321844,
+        -1.5385679041175797,
+        -1.5539861852341827,
+        -1.5072829637360485,
+        -1.4725021184516365
+      ],
+      "fourPoses": true,
+      "failedPrograms": 0
+    }
+  },
+  "completed": {
+    "matchId": 1,
+    "winner": "draw",
+    "reason": "time",
+    "score": {
+      "analysts": 1,
+      "counterAnalysts": 1
+    },
+    "players": [
+      {
+        "id": "analysts-1",
+        "name": "BOT A-02",
+        "team": "analysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "analysts-2",
+        "name": "BOT A-03",
+        "team": "analysts",
+        "kills": 1,
+        "deaths": 1
+      },
+      {
+        "id": "analysts-3",
+        "name": "BOT A-04",
+        "team": "analysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "analysts-4",
+        "name": "BOT A-05",
+        "team": "analysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "counterAnalysts-0",
+        "name": "BOT C-01",
+        "team": "counterAnalysts",
+        "kills": 0,
+        "deaths": 1
+      },
+      {
+        "id": "counterAnalysts-1",
+        "name": "BOT C-02",
+        "team": "counterAnalysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "counterAnalysts-2",
+        "name": "BOT C-03",
+        "team": "counterAnalysts",
+        "kills": 1,
+        "deaths": 0
+      },
+      {
+        "id": "counterAnalysts-3",
+        "name": "BOT C-04",
+        "team": "counterAnalysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "counterAnalysts-4",
+        "name": "BOT C-05",
+        "team": "counterAnalysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "analysts-0",
+        "name": "Map Tester",
+        "team": "analysts",
+        "kills": 0,
+        "deaths": 0
+      }
+    ]
+  },
+  "retiredGameCanvases": 0,
+  "transitions": [
+    {
+      "id": "floor5-prepared",
+      "ms": 9056,
+      "heapUsedBytes": 74561116,
+      "heapCapacityBytes": 76038144,
+      "embedderHeapUsedBytes": 10365648,
+      "backingStorageBytes": 94897203,
+      "documents": 1,
+      "nodes": 2259,
+      "eventListeners": 176,
+      "resourceTimings": 250,
+      "mountedNodes": 810,
+      "loadingPanels": 1,
+      "loadingDescendants": 31,
+      "projectId": "lvl-floor5-preppad-20261105",
+      "level": "Unit 05",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 3,
+      "disposals": 2,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "embruns",
+      "ms": 3641,
+      "heapUsedBytes": 40706072,
+      "heapCapacityBytes": 42827776,
+      "embedderHeapUsedBytes": 7714632,
+      "backingStorageBytes": 86248444,
+      "documents": 1,
+      "nodes": 2220,
+      "eventListeners": 176,
+      "resourceTimings": 250,
+      "mountedNodes": 809,
+      "loadingPanels": 1,
+      "loadingDescendants": 31,
+      "projectId": "lvl-embruns",
+      "level": "Kervénec Harbor",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 308,
+      "textures": 63,
+      "programs": 59,
+      "owners": 4,
+      "disposals": 3,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    }
+  ],
+  "damagedMapRejected": true,
+  "retryMap": "floor5-prepared",
+  "audio": {
+    "peakVoices": 9,
+    "peakBytes": 14464328,
+    "closed": [
+      {
+        "id": "embruns",
+        "bytes": 0,
+        "voices": 0,
+        "banks": 0
+      },
+      {
+        "id": "embruns",
+        "bytes": 0,
+        "voices": 0,
+        "banks": 0
+      }
+    ],
+    "map": "embruns",
+    "decodeErrors": []
+  },
+  "status": "PASS",
+  "hardwareAfter": {
+    "thermalC": 50.15,
+    "cpuKHz": 2400000
+  },
+  "teardown": {
+    "naturalExit": true,
+    "elapsedMs": 656,
+    "activeResources": [],
+    "liveReferenced": []
+  }
+}

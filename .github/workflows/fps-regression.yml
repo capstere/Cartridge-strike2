@@ -110,13 +110,27 @@ jobs:
           node tools/match-flow-browser.mjs
           node tools/floor5-workstation-visibility.cjs
           node tools/actor-occlusion-browser.mjs
-      - name: Enter Solo from the English main menu with desktop and touch inputs
+      - name: Enter all four Solo maps from the English desktop menu
         if: github.event_name != 'push'
         timeout-minutes: 6
+        env:
+          CS3_MENU_INPUT: desktop
+          CS3_VERIFY_VARIANTS: '1'
         run: |
-          python3 -m http.server 8765 >/tmp/cs3-menu-server.log 2>&1 &
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/cs3-desktop-menu-server.log 2>&1 &
           server=$!
-          trap 'kill $server || true' EXIT
+          trap 'kill "$server" 2>/dev/null || true; wait "$server" 2>/dev/null || true' EXIT
+          node tools/cs3-menu-browser.mjs
+      - name: Enter all four Solo maps from the English touch menu
+        if: github.event_name != 'push'
+        timeout-minutes: 6
+        env:
+          CS3_MENU_INPUT: touch
+          CS3_VERIFY_VARIANTS: '1'
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/cs3-touch-menu-server.log 2>&1 &
+          server=$!
+          trap 'kill "$server" 2>/dev/null || true; wait "$server" 2>/dev/null || true' EXIT
           node tools/cs3-menu-browser.mjs
       - name: Verify shared character resources and exact animation poses
         if: github.event_name != 'push'
@@ -323,6 +337,16 @@ jobs:
       - name: Play a complete human-only match on Meltem with touch controls
         env:
           FPS_MAP_CASE: meltemTouch
+        run: node --import ./tools/multimap-teardown.mjs --import ./server/register-shared.mjs tools/multimap-browser.mjs
+      - name: Play and reconnect on the real harbor map with touch controls and sound
+        env:
+          FPS_MAP_CASE: embrunsTouch
+          FPS_MAP_AUDIO: "1"
+        run: node --import ./tools/multimap-teardown.mjs --import ./server/register-shared.mjs tools/multimap-browser.mjs
+      - name: Play and reconnect on the real volcanic map with touch controls and sound
+        env:
+          FPS_MAP_CASE: tephraTouch
+          FPS_MAP_AUDIO: "1"
         run: node --import ./tools/multimap-teardown.mjs --import ./server/register-shared.mjs tools/multimap-browser.mjs
       - name: Verify custom match settings in desktop and mobile family lobbies
         run: node tools/custom-match-browser.mjs

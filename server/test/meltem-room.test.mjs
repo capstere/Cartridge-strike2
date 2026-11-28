@@ -18,3 +18,23 @@ test('room preparation retains all 76 authored patrol destinations for nine acti
   bot.setGoal(roof);assert.deepEqual(bot.goal,roof);
   assert.ok(world.findPath(bot.actor,bot.goal).length);
 });
+
+for(const [id,count] of [['embruns',35],['tephra',23]]){
+  test('the family authority initializes nine active bots from '+id+' routes',async()=>{
+    const simulation=await prepareRoomSimulation({mapId:id,mode:'tdm',botDifficulty:'casual'});
+    const game=simulation.game,world=game.world;
+    assert.equal(world.referenceId,id);assert.equal(world.tactical.patrolPoints.length,count);
+    assert.equal(game.actors.length,10);
+    for(const actor of game.actors.slice(1))actor.controllerType='bot';
+    game.beginRound();
+    for(let i=0;i<60;i++)simulation.tick();
+    const bots=game.actors.flatMap(actor=>actor.bot?[actor.bot]:[]);
+    assert.equal(bots.length,9);
+    const goal=world.tactical.patrolPoints.find(p=>p.y>.3);
+    assert.ok(goal);
+    for(const bot of bots){
+      bot.setGoal(goal);
+      assert.ok(world.findPath(bot.actor,bot.goal).length);
+    }
+  });
+}

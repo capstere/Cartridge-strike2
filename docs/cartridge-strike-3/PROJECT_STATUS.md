@@ -11,7 +11,7 @@
 | CS3-04 | VERIFIED | [PR #55](https://github.com/capstere/Cartridge-strike2/pull/55) merged after independent review and [nine passing jobs](https://github.com/capstere/Cartridge-strike2/actions/runs/46129743025). |
 | CS3-05 | IN_PROGRESS | [PR #58](https://github.com/capstere/Cartridge-strike2/pull/58) exercises authoritative 3/5/8 awards, private UAV, Rage and Immortal in solo and two-client rooms. Complete rendered input, balance, stress and independent review. |
 | CS3-06 | NOT_STARTED | Wait for CS3-01, CS3-02, CS3-05 |
-| CS3-07 | IN_PROGRESS | Meltem merged on development in [#52](https://github.com/capstere/Cartridge-strike2/pull/52). Qualify native visibility, audio, low-tier cost and repeatable cleanup on Kervénec and Tephra in [#56](https://github.com/capstere/Cartridge-strike2/pull/56). |
+| CS3-07 | REVIEW | Independent reviewer accepted [native map qualification](maps/README.md). Development integration requires all final hosted jobs on [#56](https://github.com/capstere/Cartridge-strike2/pull/56). |
 | CS3-08 | NOT_STARTED | Wait for CS3-00, CS3-02, CS3-07 |
 | CS3-09 | NOT_STARTED | Wait for CS3-01, CS3-03, CS3-04 |
 | CS3-10 | NOT_STARTED | Wait for CS3-04, CS3-05, CS3-07, CS3-08, CS3-09 |

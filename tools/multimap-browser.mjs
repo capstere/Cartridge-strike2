@@ -15,24 +15,34 @@ import {startPilotFixture} from './network-pilot-fixture.mjs';
 import {enterTouchMatch, resumeDesktop, waitForActiveHud} from './network-browser-resume.mjs';
 import {countLivePrototypes,installRetentionProbe,parkedControl,readRetained,snapshotDetachedCanvases,writeRetainedProfile} from './multimap-heap.mjs';
 import {CONTRACT} from '../shared/multiplayer/build.mjs';
+import {waitForMeltemDeck} from './reference-map/geometry-census.mjs';
 
 const cases = {
   desktop: {actors:10, bots:9, family:true, video:true},
   mobile: {actors:2, bots:0, mobile:true},
   four: {actors:4, bots:0},
-  meltem: {actors:10, bots:9, family:true, reference:true},
-  meltemTouch: {actors:2, bots:0, mobile:true, reference:true},
+  ...Object.fromEntries(['meltem','embruns','tephra'].flatMap(id=>[
+    [id,{actors:10,bots:9,family:true,reference:id}],
+    [id+'Touch',{actors:2,bots:0,mobile:true,reference:id}]
+  ])),
   floor: {actors:10, bots:9, family:true, floor:true},
 };
 const name = process.env.FPS_MAP_CASE || 'desktop';
 const profileHeap=process.env.FPS_MAP_HEAP_PROFILE==='1';
+const audible=process.env.FPS_MAP_AUDIO==='1';
+const traceGeometry=process.env.FPS_MAP_GEOMETRY_CENSUS==='1';
 const tour = name==='four' && process.env.FPS_MAP_TOUR==='1';
 const spec = cases[name];
 // A pair switches the same family room to Floor 5 and then back to the selected map.
 const switchPairs = Number(process.env.FPS_MAP_SWITCH_PAIRS ?? 2);
 assert(Number.isSafeInteger(switchPairs) && switchPairs>=1, 'Use a positive number of map switch pairs');
 assert(spec, 'Unknown map browser scenario');
-const floor = 'floor5-prepared', arena = 'compact-arena', map = spec.reference ? 'meltem' : spec.floor ? floor : arena;
+const floor = 'floor5-prepared', arena = 'compact-arena', map = spec.reference || (spec.floor ? floor : arena);
+// A qualified full-catalog run returns to the same anchor at every comparison.
+const cycle=process.env.FPS_MAP_ALL_VARIANTS==='1'?[floor,'meltem','embruns','tephra']:[floor,map];
+assert(cycle.at(-1)===map&&2*switchPairs%cycle.length===0,'Use whole catalog cycles ending on the selected map.');
+const cycleCount=2*switchPairs/cycle.length;
+const checkpoints=new Set([cycle.length,cycle.length*Math.ceil(cycleCount/2),cycle.length*cycleCount]);
 const out = process.env.FPS_MAP_OUT || 'test-results/multiplayer-maps';
 await mkdir(out, {recursive:true});
 const fixture = await startPilotFixture({familyRoom:true, host:'127.0.0.1',
@@ -76,10 +86,35 @@ function stats(raw) {
 
 // No test query, camera replacement, simulated rendering, or edits to actor state.
 // Observe completed Three.js frames, resource ownership and world identity.
-async function observe() {
+async function observe(withAudio) {
   const path = performance.getEntriesByType('resource').find(r=>new URL(r.name).pathname.endsWith('/src/fps/render.mjs'))?.name;
   const {Renderer} = await import(path || '/src/fps/render.mjs?v=floor5-environment-1');
   const observed = window.mapProbe = {frames:[], collecting:false, renderers:[], gameCanvases:[], last:null};
+  if(withAudio){
+    const loaded=performance.getEntriesByType('resource').find(r=>new URL(r.name).pathname.endsWith('/src/fps/coastal-ambience.mjs'));
+    const {CoastalAmbience}=await import(loaded?.name||'/src/fps/coastal-ambience.mjs');
+    const sample=observed.audio={peakVoices:0,peakBytes:0,opened:[],closed:[],audibleMaps:[],decodeErrors:[]};
+    const owners=new WeakMap();
+    const update=CoastalAmbience.prototype.update,dispose=CoastalAmbience.prototype.dispose;
+    CoastalAmbience.prototype.update=function(...args){
+      if (!owners.has(this)) {
+        const owner={serial:sample.opened.length+1,id:args[1].referenceId};
+        owners.set(this,owner);
+        sample.opened.push(owner);
+      }
+      const value=update.apply(this,args);
+      sample.map=this.mapId;sample.peakVoices=Math.max(sample.peakVoices,this.voices.size);
+      sample.peakBytes=Math.max(sample.peakBytes,this.bytes);if (this.bytes && this.voices.size && !sample.audibleMaps.includes(this.mapId)) sample.audibleMaps.push(this.mapId);
+      return value;
+    };
+    CoastalAmbience.prototype.dispose=function(){
+      try{return dispose.call(this);}
+      finally{
+        sample.decodeErrors.push(...this.loadErrors);
+        sample.closed.push({serial:owners.get(this)?.serial,id:this.mapId,bytes:this.bytes,voices:this.voices.size,banks:this.banks.size});
+      }
+    };
+  }
   const draw = Renderer.prototype.render, dispose = Renderer.prototype.dispose;
   Renderer.prototype.render = function(...args) {
     const started = performance.now();
@@ -297,15 +332,23 @@ try {
   const viewport=spec.mobile ? {width:915,height:412} : {width:1024,height:576};
   const context=await browser.newContext({...spec.mobile&&devices['Pixel 7'],viewport,screen:viewport,deviceScaleFactor:1,ignoreHTTPSErrors:true});
   result.browser=browser.version(); result.viewport=viewport;
-  await context.addInitScript(()=>localStorage.setItem('cartridge-settings',JSON.stringify({graphics:'low',volume:0,mobileAutoFire:false})));
-  page=await context.newPage(); page.setDefaultTimeout(90000); page.on('pageerror',err=>errors.push(err.message));
+  await context.addInitScript(volume=>localStorage.setItem('cartridge-settings',JSON.stringify({graphics:'low',volume,mobileAutoFire:false})),audible ? .45 : 0);
+  page=await context.newPage();
+  page.on('console',message=>{
+    if(message.type()==='error'&&/shader error|WebGLProgram:|GL_INVALID/i.test(message.text()))errors.push(message.text());
+  });
+  page.setDefaultTimeout(90000); page.on('pageerror',err=>errors.push(err.message));
   const entry=spec.family?'/room/JESPERS-ROOM':'/';
   await page.goto(fixture.origin+entry,{waitUntil:'domcontentloaded'});
   await page.locator('[name=invite]').fill(fixture.invite);
   const login=performance.now(); await page.locator('button[type=submit]').click();
   await page.locator('#network-code').waitFor(); result.signInToFormMs=Math.round(performance.now()-login);
-  await page.evaluate(observe);
+  await page.evaluate(observe,audible);
   if(profileHeap)await page.evaluate(installRetentionProbe);
+  if(traceGeometry){
+    const {installGeometryCensus}=await import('./reference-map/geometry-census.mjs');
+    await page.evaluate(installGeometryCensus);
+  }
   assert.equal(await page.evaluate(()=>typeof window.__fps),'undefined');
   await page.locator('#network-name').fill('Map Tester');
   await page.locator('#network-code').fill(spec.family ? fixture.familyPassword : code);
@@ -340,13 +383,18 @@ try {
   if(spec.reference) {
     result.sourceGeometry=await page.evaluate(()=>{
       const renderer=window.mapProbe.last.deref(), root=renderer.referenceScene?.root;
-      const architecture=root?.children.filter(mesh=>mesh.geometry?.index && mesh.geometry.hasAttribute('color')) || [];
+      const architecture=root?.getObjectByName('Indexed architecture')?.children.filter(mesh=>mesh.geometry?.index && mesh.geometry.hasAttribute('color')) || [];
       return {inScene:!!root && root.parent===renderer.scene,
         groups:architecture.length, triangles:architecture.reduce((n,mesh)=>n+mesh.geometry.index.count/3,0),
         projectId:renderer.world.project.projectId};
     });
-    assert.deepEqual(result.sourceGeometry,{inScene:true,groups:295,triangles:291400,projectId:'lvl-meltem'},
-      'The selected room must render the compiled Meltem architecture');
+    const expected={meltem:[302,291400],embruns:[149,238376],tephra:[265,112492]}[map];
+    assert.deepEqual(result.sourceGeometry,{inScene:true,groups:expected[0],triangles:expected[1],projectId:'lvl-'+map},
+      'The selected room must render its measured original architecture');
+    if(process.env.FPS_MAP_ENVIRONMENT==='1'){
+      const {verifyEnvironment}=await import('./reference-map/verify-environment.mjs');
+      result.environment=await verifyEnvironment(page,out,map);
+    }
   }
   await page.screenshot({path:join(out,name+'-game.jpg'), quality:86});
   if(spec.video || tour) {
@@ -400,10 +448,21 @@ try {
     try {
       if(profileHeap)await cdp.send('HeapProfiler.startSampling',{samplingInterval:32768});
       for(let turn=0;turn<2*switchPairs;turn++) {
-        const id=turn%2 ? map : floor;
+        const id=cycle[turn%cycle.length];
         mark('switch '+id); const ms=await selectMap(id);
-        result.transitions.push({id,ms,...await readRetained(cdp,page),...await renderedResources()});
-        if(profileHeap && id===map && [2,2*Math.ceil(switchPairs/2),2*switchPairs].includes(turn+1)){
+        if(traceGeometry&&id==='meltem'){
+          const frames=[await page.evaluate(()=>mapGeometryCensus())];
+          if(process.env.FPS_MAP_GEOMETRY_SETTLE==='1'){
+            for(const interval of [500,1500,3000]){
+              await page.waitForTimeout(interval);
+              frames.push(await page.evaluate(()=>mapGeometryCensus()));
+            }
+          }
+          await writeFile(join(out,'meltem-geometry-'+(turn+1)+'.json'),JSON.stringify(frames)+'\n');
+        }
+        const movingDeck=id==='meltem'?await waitForMeltemDeck(page):undefined;
+        result.transitions.push({id,ms,movingDeck,...await readRetained(cdp,page),...await renderedResources()});
+        if(profileHeap && id===map && checkpoints.has(turn+1)){
           const sample=result.transitions.at(-1);
           sample.livePrototypes=await countLivePrototypes(cdp);
           await writeFile(join(out,'heap-'+(turn+1)+'.json'),JSON.stringify(sample,null,2)+'\n');
@@ -437,6 +496,22 @@ try {
       assert.equal(row.geometries,first.geometries,'Stable waiting-room geometry count for '+row.id);
       assert.equal(row.textures,first.textures,'Stable waiting-room texture count for '+row.id);
     }
+    if (audible && process.env.FPS_MAP_ALL_VARIANTS==='1') {
+      // Waiting-room map selection can leave the audio context suspended. Enter
+      // each additional soundscape through the real controls before checking disposal.
+      for (const id of cycle.filter(id=>id!==floor && id!==map)) {
+        mark('hear '+id+' during active play');
+        await selectMap(id);
+        await page.locator('#room-ready').click();
+        await page.locator('#room-start').click();
+        await waitForActiveHud(page);
+        await resumeDesktop(page);
+        await page.waitForFunction(id=>mapProbe.audio.audibleMaps.includes(id),id);
+        await page.locator('#room-rematch').click();
+        await until(()=>room.state.phase==='waiting','Audible round returned to its lobby');
+      }
+      await selectMap(map);
+    }
     mark('reject a damaged level and retry on the saved map');
     const route='**/levels/floor5-prepared.json';
     await page.route(route,r=>r.fulfill({status:200,contentType:'application/json',body:'{}'}));
@@ -458,6 +533,18 @@ try {
   else await page.locator('#network-code').waitFor();
   for(const p of peers) await p.pages()[0].evaluate(()=>mapPeerRoom.leave());
   await until(()=>fixture.authority.rooms.size===0,'All sockets and simulation released');
+  if(audible&&spec.reference){
+    result.audio=await page.evaluate(()=>mapProbe.audio);
+    assert.ok(result.audio.peakBytes>0&&result.audio.peakVoices>0);
+    assert.deepEqual(result.audio.decodeErrors,[]);
+    assert.ok(result.audio.closed.length>0);
+    const visitedMaps=new Set([map,...(result.transitions??[]).map(row=>row.id)]);
+    const expectedMaps=[...visitedMaps].filter(id=>id!==floor);
+    assert.deepEqual([...result.audio.audibleMaps].sort(),[...expectedMaps].sort());
+    for (const owner of result.audio.opened) assert(expectedMaps.includes(owner.id),'Audio owner belongs to a visited soundscape');
+    assert.deepEqual(result.audio.closed,result.audio.opened.map(owner=>({...owner,bytes:0,voices:0,banks:0})),
+      'Each world audio owner is disposed once in visit order with no retained samples, voices or banks');
+  }
   assert.deepEqual(errors,[]);
   await browser.close();browser=null;
   if(footage) result.video=await encode(footage);

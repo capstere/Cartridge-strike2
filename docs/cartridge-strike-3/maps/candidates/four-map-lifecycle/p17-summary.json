@@ -1,0 +1,247 @@
+{
+  "revision": "e58966b3cf78274483647984c2b37e4a05280776",
+  "tree": "225d829420b4e40036f6daa7e071c56e079bad5b",
+  "protocolVersion": 17,
+  "buildHash": "b575ba6a76c3d1a9253c370b2a2ef3ed2e2b44c5d51c5711615bd488621e2384",
+  "manifestFiles": 700,
+  "status": "PASS",
+  "started": "2026-11-27T16:32:20.220661+00:00",
+  "finished": "2026-11-27T16:40:05.946539+00:00",
+  "pi": "Raspberry Pi 5 Model B Rev 1.1",
+  "browser": "156.0.8078.79",
+  "transport": "TLS loopback",
+  "score": {
+    "matchId": 1,
+    "winner": "counterAnalysts",
+    "reason": "time",
+    "score": {
+      "analysts": 1,
+      "counterAnalysts": 2
+    },
+    "players": [
+      {
+        "id": "analysts-1",
+        "name": "BOT A-02",
+        "team": "analysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "analysts-2",
+        "name": "BOT A-03",
+        "team": "analysts",
+        "kills": 1,
+        "deaths": 1
+      },
+      {
+        "id": "analysts-3",
+        "name": "BOT A-04",
+        "team": "analysts",
+        "kills": 0,
+        "deaths": 1
+      },
+      {
+        "id": "analysts-4",
+        "name": "BOT A-05",
+        "team": "analysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "counterAnalysts-0",
+        "name": "BOT C-01",
+        "team": "counterAnalysts",
+        "kills": 0,
+        "deaths": 1
+      },
+      {
+        "id": "counterAnalysts-1",
+        "name": "BOT C-02",
+        "team": "counterAnalysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "counterAnalysts-2",
+        "name": "BOT C-03",
+        "team": "counterAnalysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "counterAnalysts-3",
+        "name": "BOT C-04",
+        "team": "counterAnalysts",
+        "kills": 1,
+        "deaths": 0
+      },
+      {
+        "id": "counterAnalysts-4",
+        "name": "BOT C-05",
+        "team": "counterAnalysts",
+        "kills": 1,
+        "deaths": 0
+      },
+      {
+        "id": "analysts-0",
+        "name": "Map Tester",
+        "team": "analysts",
+        "kills": 0,
+        "deaths": 0
+      }
+    ]
+  },
+  "frameMs": {
+    "n": 370,
+    "min": 19.2,
+    "p50": 25.1,
+    "p95": 37.6,
+    "p99": 45.5,
+    "max": 167.5
+  },
+  "authorityStepMs": {
+    "n": 605,
+    "min": 0.6,
+    "p50": 1.28,
+    "p95": 4.46,
+    "p99": 6.55,
+    "max": 11.19
+  },
+  "resourcesByMap": {
+    "floor5-prepared": {
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "liveOwners": 1,
+      "reachableOwners": 1
+    },
+    "meltem": {
+      "geometries": 448,
+      "textures": 64,
+      "programs": 60,
+      "liveOwners": 1,
+      "reachableOwners": 1
+    },
+    "embruns": {
+      "geometries": 308,
+      "textures": 64,
+      "programs": 60,
+      "liveOwners": 1,
+      "reachableOwners": 1
+    },
+    "tephra": {
+      "geometries": 375,
+      "textures": 65,
+      "programs": 59,
+      "liveOwners": 1,
+      "reachableOwners": 1
+    }
+  },
+  "swellWaitsMs": [
+    3594,
+    945,
+    4890,
+    10,
+    5816
+  ],
+  "rawDeckUploadCounts": [
+    447,
+    447,
+    447,
+    448,
+    447
+  ],
+  "retainedAtSameMap": [
+    {
+      "heapUsedBytes": 43199768,
+      "backingStorageBytes": 80809303,
+      "livePrototypes": {
+        "Game": 1,
+        "NetworkSession": 1,
+        "AudioSystem": 1,
+        "threeRenderers": 2,
+        "glContexts": 2,
+        "glPrograms": 63,
+        "glShaders": 118,
+        "canvases": 78,
+        "detachedGameCanvases": 0,
+        "audioContexts": 1
+      }
+    },
+    {
+      "heapUsedBytes": 42116948,
+      "backingStorageBytes": 80812164,
+      "livePrototypes": {
+        "Game": 1,
+        "NetworkSession": 1,
+        "AudioSystem": 1,
+        "threeRenderers": 2,
+        "glContexts": 2,
+        "glPrograms": 63,
+        "glShaders": 118,
+        "canvases": 78,
+        "detachedGameCanvases": 0,
+        "audioContexts": 1
+      }
+    },
+    {
+      "heapUsedBytes": 42301704,
+      "backingStorageBytes": 80812164,
+      "livePrototypes": {
+        "Game": 1,
+        "NetworkSession": 1,
+        "AudioSystem": 1,
+        "threeRenderers": 2,
+        "glContexts": 2,
+        "glPrograms": 63,
+        "glShaders": 118,
+        "canvases": 78,
+        "detachedGameCanvases": 0,
+        "audioContexts": 1
+      }
+    },
+    {
+      "heapUsedBytes": 42275060,
+      "backingStorageBytes": 80813793,
+      "livePrototypes": {
+        "Game": 1,
+        "NetworkSession": 1,
+        "AudioSystem": 1,
+        "threeRenderers": 2,
+        "glContexts": 2,
+        "glPrograms": 63,
+        "glShaders": 118,
+        "canvases": 78,
+        "detachedGameCanvases": 0,
+        "audioContexts": 1
+      }
+    }
+  ],
+  "requestedParkMs": 175121,
+  "parkedSamples": [
+    {
+      "atMs": 1,
+      "heapUsedBytes": 41480984,
+      "backingStorageBytes": 80816744
+    },
+    {
+      "atMs": 87560,
+      "heapUsedBytes": 42012824,
+      "backingStorageBytes": 80817399
+    },
+    {
+      "atMs": 175121,
+      "heapUsedBytes": 42275060,
+      "backingStorageBytes": 80813793
+    }
+  ],
+  "damagedMapRejected": true,
+  "rememberedRetryMap": "floor5-prepared",
+  "teardown": {
+    "naturalExit": true,
+    "elapsedMs": 504,
+    "activeResources": [],
+    "liveReferenced": []
+  },
+  "fullReceipt": "p17-native.json"
+}

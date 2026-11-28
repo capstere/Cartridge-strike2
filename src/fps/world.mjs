@@ -73,7 +73,7 @@ function createLevelWorld(project,{fresh=false,template=null}={}){
 }
 
 export function createWorld({fresh=false,levelProject=null,template=null}={}){
- if(levelProject?.projectId==='lvl-meltem'&&levelProject.referenceMap)return createReferenceWorld(levelProject);
+ if(levelProject?.referenceMap&&['lvl-meltem','lvl-embruns','lvl-tephra'].includes(levelProject.projectId))return createReferenceWorld(levelProject);
  if(levelProject)return createLevelWorld(levelProject,{fresh,template});
   if(sharedWorld&&!fresh)return sharedWorld;
   // SpelWorld.build itself caches its description, even when sharedWorld is bypassed.

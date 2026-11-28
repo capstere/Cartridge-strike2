@@ -35,9 +35,11 @@ export function referenceRays(spec,terrain){
       const ground=-oy/dy;
       if(ground>=0&&ground<best&&terrain.lowerSurface(ox+dx*ground,oz+dz*ground)===0)
         save(ground,'ground','ground',0,1,0);
-      const sea=(spec.water.y-oy)/dy;
-      if(sea>=0&&sea<best&&terrain.lowerSurface(ox+dx*sea,oz+dz*sea)===spec.water.floor)
-        save(sea,'ground','water',0,1,0);
+      if(spec.water){
+        const sea=(spec.water.y-oy)/dy;
+        if(sea>=0&&sea<best&&terrain.lowerSurface(ox+dx*sea,oz+dz*sea)===spec.water.floor)
+          save(sea,'ground','water',0,1,0);
+      }
     }
     // The well is an open cylinder with an inward-facing wall and a bottom.
     // Projectiles already below its rim never cross the y=0 ground plane again.
