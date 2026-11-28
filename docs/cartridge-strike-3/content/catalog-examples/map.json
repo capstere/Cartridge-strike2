@@ -1,0 +1,17 @@
+{
+  "format": "cartridge-strike-content",
+  "version": 1,
+  "id": "map-example",
+  "entries": [
+    {
+      "kind": "map",
+      "id": "meltem",
+      "surface": "online",
+      "mode": "dom"
+    },
+    {
+      "kind": "audio",
+      "id": "meltem-a_waves"
+    }
+  ]
+}

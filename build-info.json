@@ -1060,6 +1060,11 @@
       "sha256": "780a0473bc7202fae47647986918dede4598286c3e2ec95ac03710aa8d00405c"
     },
     {
+      "path": "assets/fps/outfit-packs.json",
+      "bytes": 37,
+      "sha256": "76d7183f22eb02269ac0421197a7d1b017016db63e307cdf1c6858b19208cd1e"
+    },
+    {
       "path": "assets/fps/zombies/hollow.glb.gz",
       "bytes": 3268124,
       "sha256": "b6de52bc2085af04a1e1681784cf9f2532f03a6f64f7fc2b75683c82fdb967c9"
@@ -2522,7 +2527,7 @@
     {
       "path": "shared/multiplayer/build.mjs",
       "bytes": 660,
-      "sha256": "0f9c7ab83a8c6fdcc0c12e242c52a50142a61c1c1008bef71b215328955207bf"
+      "sha256": "a77561593d9e4e5245e05f80673ebd7d4b133de3ea50afe935912f783349d025"
     },
     {
       "path": "shared/multiplayer/collision-contract.mjs",
@@ -2542,7 +2547,7 @@
     {
       "path": "shared/multiplayer/map-build.mjs",
       "bytes": 2831,
-      "sha256": "365064c0b7dd5b89ae00a0edf5ce5b2d1e1c58b854a55b03ccda5202e4623ffa"
+      "sha256": "fd7cb2473673cfc5f15a8817afa91950dd4ab9b2ae081fd7ebb1190c8321af4b"
     },
     {
       "path": "shared/multiplayer/maps.mjs",
@@ -2618,6 +2623,11 @@
       "path": "src/fps/app.mjs",
       "bytes": 75788,
       "sha256": "36f9d53b000a236f4414552c545ea2f209898396e15a26a372a195c995cda2fe"
+    },
+    {
+      "path": "src/fps/appearance-package.mjs",
+      "bytes": 2678,
+      "sha256": "04c3e0c4db8f1b3221ca958b6ff048c09bf601b373ef41f99c111d3659d320d3"
     },
     {
       "path": "src/fps/arsenal-menu.mjs",
@@ -2696,8 +2706,8 @@
     },
     {
       "path": "src/fps/character-library.mjs",
-      "bytes": 28247,
-      "sha256": "e72d2a0b5e441c24150d501f634d40976f0b11cf985380d51e711d639a0cbce3"
+      "bytes": 28259,
+      "sha256": "0e7690e4320075c298235cbc6887b5672d9ffd4f8e7677d78f1ed69e99d32f4a"
     },
     {
       "path": "src/fps/character-overrides.mjs",
@@ -2926,8 +2936,8 @@
     },
     {
       "path": "src/fps/lobby-stage.mjs",
-      "bytes": 13379,
-      "sha256": "62d5d22dc7e0c6911780ae7a7855bd1080ac3d2711dc2dcb23777615d2ae785d"
+      "bytes": 13512,
+      "sha256": "a651ab526f4d57fd1430c94510ff2f5fa43288169c049f162c2b07d7f3ca00af"
     },
     {
       "path": "src/fps/match-flow.mjs",
@@ -3036,8 +3046,8 @@
     },
     {
       "path": "src/fps/operator-outfits.mjs",
-      "bytes": 2790,
-      "sha256": "e34f59d35e2067e2d2b14730e07c9db14590a2f7c4a81b04bebabbdee9eb4c7d"
+      "bytes": 3198,
+      "sha256": "eef9305f6b1067615e8e93078abc5a6576d179b8b11e69e833a82e5aa69d3b41"
     },
     {
       "path": "src/fps/physics.mjs",
@@ -3336,8 +3346,8 @@
     },
     {
       "path": "src/fps/wardrobe-menu.mjs",
-      "bytes": 3475,
-      "sha256": "1797166b783560b45c475b71820bba73f108b673c6f036f3e4b79688b588f4b4"
+      "bytes": 3484,
+      "sha256": "ac68116643d4e88b571334a8abedf1d98d5d148bfb5e7415b6a25fe638df1d0d"
     },
     {
       "path": "src/fps/weapon-camo.mjs",
@@ -3640,7 +3650,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 82010258,
+  "bytes": 82013535,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",
@@ -4034,5 +4044,11 @@
     ],
     "modelUnitsVerifiedAsMetres": false,
     "privatePreview": "browser-local"
+  },
+  "contentCatalog": {
+    "version": 1,
+    "digest": "45238a8c25630788a6a354af3dae607234cca7c03f40f0cca4316bd798fe2ce9",
+    "entries": 160,
+    "managedFiles": []
   }
 }

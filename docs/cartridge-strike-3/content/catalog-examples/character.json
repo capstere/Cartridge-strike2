@@ -1,0 +1,13 @@
+{
+  "format": "cartridge-strike-content",
+  "version": 1,
+  "id": "character-example",
+  "entries": [
+    {
+      "kind": "character",
+      "id": "quaternius-operator-female",
+      "rig": "quaternius-operator-female",
+      "outfit": "assault"
+    }
+  ]
+}
