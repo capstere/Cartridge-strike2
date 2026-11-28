@@ -370,10 +370,19 @@ try{
   'same-uniform opponent receives hostile hit feedback '+JSON.stringify({marker:feedback[0].liveHits,label:feedback[0].hitLabels,warnings:feedback[0].warnings}));
  for(const f of feedback)assert.equal(f.audio.filter(e=>e.title==='FINAL ELIMINATION').length,1,'one historical gun sound per finishing shot');
  const deathTerminal=feedback[1].marker.some(e=>e.title==='ELIMINATION REPLAY');
- for(const p of pages){
-  if(await p.locator('#replay-skip').isVisible())await p.locator('#replay-skip').click();
+ // A final replay can expire between locating Skip and its actionable click.
+ // Both exits must return the player to the visible results for this match.
+ report.finalExits=await Promise.all(pages.map(async p=>{
+  const skip=p.locator('#replay-skip'),replay=p.locator('#replay-view');
+  let exit='expired';
+  if(await skip.isVisible()){
+   try{await skip.click({timeout:1200});exit='clicked';}
+   catch(error){if(error.name!=='TimeoutError'||await replay.isVisible())throw error;}
+  }
+  await replay.waitFor({state:'hidden',timeout:5000});
   await p.locator('#room-earned').filter({hasText:'Account rewards'}).waitFor();
- }
+  return exit;
+ }));
  const scores=await Promise.all(pages.map(profile)),credits=await Promise.all(pages.map(p=>p.locator('#room-earned').innerText()));
  assert.equal(scores[0].stats.matches,1);assert.equal(scores[0].stats.kills,2);assert.equal(scores[0].stats.wins,1);
  assert(scores[0].stats.xp>=45&&scores[0].weapons.find(w=>w.id==='sniper')?.xp>=200);
