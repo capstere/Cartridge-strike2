@@ -8,8 +8,10 @@ export const NetworkInput=schema({
 // Keep the original actor fields inside the SDK's 63-field schema ceiling.
 export const HandlingState=schema({
   ...Object.fromEntries(SLIDE_NUMBERS.map(k=>[k,t.float64()])),crouchHeld:t.boolean(),
+  reloadStartedAt:t.float64(),reloadDuration:t.float64(),
+  bonusId:t.string(),bonusStart:t.uint32(),bonusEnd:t.uint32(),
   outfitId:t.string(),cartridgeStart:t.float64(),cartridgeRelease:t.float64(),cartridgeFuse:t.float64(),waitTriggerRelease:t.boolean()
-},'FPSHandlingV19');
+},'FPSHandlingV20');
 export const ActorState=schema({
   handling:HandlingState,
   ...Object.fromEntries(MOVEMENT_NUMBERS.map(k=>[k,t.float64()])),

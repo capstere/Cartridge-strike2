@@ -1,3 +1,4 @@
+import {reloadDuration,reloadStart} from './strike-kit-timing.mjs';
 // Times are fractions of the authoritative reload duration. Start the recording
 // early enough for its contact transient to meet the moving part at the socket.
 import {WEAPONS} from './config.mjs';
@@ -106,8 +107,8 @@ export class ReloadFoley {
       if (!actor.alive || !(actor.reloadUntil>time)) continue;
       const cues = PRIMARY_RELOADS[actor.weapon];
       if (!cues) continue;
-      const duration = WEAPONS[actor.weapon].reload;
-      const start = actor.reloadUntil-duration;
+      const duration = reloadDuration(actor,WEAPONS[actor.weapon].reload);
+      const start = reloadStart(actor,duration);
       for (const cue of cues) {
         const at = start+cue.at*duration;
         // Crossing an animation marker owns one sound. Discard missed markers
@@ -115,7 +116,7 @@ export class ReloadFoley {
         if (at<=previous || at>time || time-at>.12) continue;
         const empty=actor.inventory?.primary?.ammo===0;
         if ((cue.emptyOnly && !empty) || (cue.loadedOnly && empty)) continue;
-        this.play(audio,actor,cue,actor.reloadUntil-time);
+        this.play(audio,actor,cue,actor.reloadUntil-time,WEAPONS[actor.weapon].reload/duration);
       }
     }
   }
@@ -125,7 +126,7 @@ export class ReloadFoley {
     this.voices.clear();this.pending.clear();this.seen.clear();this.listener=null;
   }
 
-  play(audio,actor,cue,remaining) {
+  play(audio,actor,cue,remaining,rate=1) {
     const buffer = this.buffers.get(cue.take);
     if (!buffer || audio.active.size>=94) return;
     // Magazine and mechanism recordings overlap briefly at the final contact.
@@ -134,10 +135,10 @@ export class ReloadFoley {
     const old = this.voices.get(key);
     if (old) old.source.stop();
     const source = audio.context.createBufferSource();
-    source.buffer = buffer;
+    source.buffer = buffer;source.playbackRate.value=rate;
     const channel = audio.channel({type:'reload',actorId:actor.id,x:actor.x,y:actor.y,z:actor.z},cue.gain);
     source.connect(channel.gain);
-    const length = Math.min(buffer.duration,remaining);
+    const length = Math.min(buffer.duration/rate,remaining);
     channel.gain.gain.setValueAtTime(channel.gain.gain.value,channel.when+Math.max(0,length-.008));
     channel.gain.gain.linearRampToValueAtTime(0,channel.when+length);
     audio.track(source,channel,length);

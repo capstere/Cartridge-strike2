@@ -1,3 +1,4 @@
+import {clearActorBonus} from '../src/fps/bonuses.mjs';
 import {HostageState,ActorState} from './network-schema.mjs';
 
 // Game.beginRound owns inventory carry-over, buying, objective placement and
@@ -32,7 +33,7 @@ export function prepareClassicRound(room,advanceEpoch=true){
     if(!seat.ready||seat.pending)continue;
     const a=seat.actor,sid=seat.client?.sessionId;
     if(advanceEpoch)seat.epoch++;
-    a.controlEpoch=seat.epoch;a.lifeId++;
+    a.controlEpoch=seat.epoch;a.lifeId++;clearActorBonus(a,true);
     seat.lastSelect=seat.lastFire=seat.lastReload=seat.lastSampleTick=seat.lastShotStamp=0;
     seat.holdThrow=seat.trigger=seat.aim=seat.releaseInteract=false;seat.interactUntil=0;
     a.aimAmount=0;a.aiming=false;

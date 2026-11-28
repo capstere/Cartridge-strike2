@@ -172,3 +172,10 @@ html #mobile-controls .mobile-stick[data-mobile-stick].active.rushing::after{bor
     max-width:min(36vw,340px)!important;
   }
 }
+
+#bonus-controls:not([hidden]) { position:fixed; z-index:13; display:flex; gap:3px; bottom:max(8px,env(safe-area-inset-bottom)); left:50%; transform:translateX(-50%) }
+#bonus-controls button { min-width:50px; min-height:44px; padding:3px 7px; display:grid; align-content:center; color:#d9e0e5; background:#16212aed; border:1px solid #73838e; font:12px/1.1 system-ui; touch-action:manipulation }
+#bonus-controls button:disabled { opacity:1; color:#aebbc3 }
+#bonus-controls button[data-state=ready] { border:2px solid #efba58; color:#ffe5a3 }
+#bonus-controls button[data-state=active] { color:#b5f3e5; border-color:#89d8c4 }
+#bonus-controls button:focus-visible { outline:3px solid white }

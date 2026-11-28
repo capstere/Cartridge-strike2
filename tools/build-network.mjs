@@ -44,15 +44,15 @@ const fontFiles=['fps/type.css',...Array.from(fontCss.toString().matchAll(/url\(
 const accountFiles=[...fontFiles,'fps/account.html','fps/account.css','src/fps/account-profile.mjs','src/fps/network/room-invitation.mjs','src/fps/network/room-moderation.mjs',
   'vendor/qrcode-generator/qrcode.mjs','licenses/qrcode-generator-MIT.txt'];
 const frontendFiles=['src/fps/wardrobe-menu.mjs','src/fps/operator-outfits.mjs','src/fps/operator-equipment.mjs','src/fps/operator-locomotion.mjs',...deploymentFiles,...accountFiles,'src/fps/game-english.mjs','src/fps/english-ui.mjs','src/fps/solo-maps.mjs','src/fps/menu-navigation.mjs','fps/routes.css','furniture-editor/build/environment-art.mjs'];
-const rushPresentation=['src/fps/door-visuals.mjs','src/fps/frosted-door.mjs','src/fps/project-visibility.mjs',
+const rushPresentation=['src/fps/bonus-hud.mjs','src/fps/door-visuals.mjs','src/fps/frosted-door.mjs','src/fps/project-visibility.mjs',
   'src/fps/mobile-controls.mjs','src/fps/gamepad-controls.mjs','src/fps/presentation-hands.mjs',
-  'src/fps/strike-kit-models.mjs','src/fps/model-primitives.mjs','src/fps/view-surface.mjs',
+  'src/fps/strike-kit-models.mjs','src/fps/strike-kit-timing.mjs','src/fps/strike-kit-audio.mjs','src/fps/model-primitives.mjs','src/fps/view-surface.mjs',
   'src/fps/grenade-assist.mjs','src/fps/action-audio.mjs','src/fps/reload-foley.mjs','src/fps/effects.mjs','src/fps/focus-hud.mjs','fps/focus-hud.css'];
 const rocketPresentation=['src/fps/action-visuals.mjs','src/fps/audio.mjs'];
 const shotAudioFiles=['assets/fps/audio/ffsl-f_bolt-1.mp3','assets/fps/audio/ffsl-f_pump-1.mp3',
   'assets/fps/audio/riposte-f_pin.mp3','assets/fps/audio/riposte-s_slide_soft.mp3','src/fps/audio.mjs','src/fps/riposte-audio.mjs','src/fps/shot-audio.mjs','src/fps/shot-timing.mjs',
   ...shotTakes.map(take=>'assets/fps/audio/riposte-'+take+'.mp3')];
-const paths=[...new Set([...shotAudioFiles,...Object.keys(graph),...frontendFiles,...rushPresentation,...rocketPresentation,accessCatalog,'shared/multiplayer/rules.mjs','shared/multiplayer/protocol.mjs','server/network-schema.mjs','server/network-room.mjs','server/team-comms.mjs','server/lag-compensation.mjs','server/match-lifecycle.mjs','server/classic-round.mjs','server/headless.mjs','shared/multiplayer/input.mjs','src/fps/app.mjs','src/fps/tactical-controls.mjs','src/fps/render-engine.mjs','src/fps/render.mjs','src/fps/minimap-cache.mjs','src/fps/hud-shell.mjs','src/fps/zombie-visuals.mjs','src/fps/floor-audio.mjs','fps/network.css','src/fps/lobby-stage.mjs','src/fps/network/menu.mjs','src/fps/network/session.mjs','src/fps/network/room-ui.mjs','shared/multiplayer/world.mjs','shared/multiplayer/collision-contract.mjs','shared/sha256.mjs','src/fps/network/connection.mjs','server/account-store.mjs','server/account-access.mjs','server/public-rooms.mjs','server/match-credits.mjs','server/result-journal.mjs','server/access.mjs','server/pilot-access.mjs','server/local-server.mjs',
+const paths=[...new Set([...shotAudioFiles,...Object.keys(graph),...frontendFiles,...rushPresentation,...rocketPresentation,accessCatalog,'shared/multiplayer/rules.mjs','shared/multiplayer/protocol.mjs','server/network-schema.mjs','server/network-room.mjs','server/team-comms.mjs','server/bonus-channel.mjs','server/lag-compensation.mjs','server/match-lifecycle.mjs','server/classic-round.mjs','server/headless.mjs','shared/multiplayer/input.mjs','src/fps/app.mjs','src/fps/tactical-controls.mjs','src/fps/render-engine.mjs','src/fps/render.mjs','src/fps/minimap-cache.mjs','src/fps/hud-shell.mjs','src/fps/zombie-visuals.mjs','src/fps/floor-audio.mjs','fps/network.css','src/fps/lobby-stage.mjs','src/fps/network/menu.mjs','src/fps/network/session.mjs','src/fps/network/room-ui.mjs','shared/multiplayer/world.mjs','shared/multiplayer/collision-contract.mjs','shared/sha256.mjs','src/fps/network/connection.mjs','server/account-store.mjs','server/account-access.mjs','server/public-rooms.mjs','server/match-credits.mjs','server/result-journal.mjs','server/access.mjs','server/pilot-access.mjs','server/local-server.mjs',
   'server/room-world.mjs','server/family-room.mjs','server/match-preferences.mjs','shared/multiplayer/maps.mjs','shared/multiplayer/family-room.mjs','ui/cs-mobile.mjs','ui/cs-mobile.css',...knockdownFiles,...referenceRuntime])].sort();
 const sources=await Promise.all(paths.map(async path=>[path,hash(await read(path))]));
 const {loadHeadlessWorld}=await import('../server/headless.mjs');
@@ -79,7 +79,7 @@ const files={
 // Only resolved, shipped map dependencies are added to the runtime allowlist.
 const {LIBRARY_MAP}=await import('../furniture-editor/library/catalog.mjs');
 const info=JSON.parse(await read('build-info.json'));
-const runtime=new Set([...shotAudioFiles,...info.files.map(f=>f.path),...frontendFiles,accessCatalog,...Object.keys(files),...knockdownFiles,...referenceRuntime,...rushPresentation,'src/fps/rush.mjs','shared/multiplayer/maps.mjs',
+const runtime=new Set([...shotAudioFiles,...info.files.map(f=>f.path),...frontendFiles,accessCatalog,...Object.keys(files),...knockdownFiles,...referenceRuntime,...rushPresentation,'src/fps/bonuses.mjs','src/fps/rush.mjs','shared/multiplayer/maps.mjs',
   ...NETWORK_MAPS.flatMap(map=>[map.file,map.preview]),
   'shared/multiplayer/world.mjs','shared/multiplayer/collision-contract.mjs','shared/sha256.mjs','src/fps/network/connection.mjs','src/fps/network/room-ui.mjs','shared/multiplayer/family-room.mjs']);
 for(const world of worlds){

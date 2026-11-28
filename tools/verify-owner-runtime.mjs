@@ -18,7 +18,7 @@ const required = [
  'ui/cs-mobile.css', 'ui/cs-mobile.mjs', 'ui/cs-theme.css',
  'src/fps/app.mjs', 'src/fps/lobby-stage.mjs', 'src/fps/match-flow.mjs',
  'src/fps/operator-outfits.mjs', 'src/fps/wardrobe-menu.mjs', 'src/fps/operator-equipment.mjs', 'src/fps/operator-locomotion.mjs',
- 'src/fps/rush.mjs', 'src/fps/mobile-controls.mjs', 'src/fps/grenade-physics.mjs', 'src/fps/focus-hud.mjs',
+ 'src/fps/bonuses.mjs','src/fps/bonus-hud.mjs','src/fps/rush.mjs', 'src/fps/mobile-controls.mjs', 'src/fps/grenade-physics.mjs', 'src/fps/focus-hud.mjs',
  'src/fps/trajectory-cache.mjs', 'src/fps/frame-time-window.mjs',
 ];
 for (const path of required) assert(names.has(path), path + ' missing from build-info');

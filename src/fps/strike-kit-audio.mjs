@@ -3,7 +3,8 @@
  * magazine and slide cues keep the original Strike Kit mix. No external network, new AI hearing events or match-RNG calls.
  */
 import {AudioSystem as CombatAudio} from './combat-audio.mjs';
-import {kitWeapon,RELOAD_CUES,reloadIsEmpty} from './strike-kit-timing.mjs';
+import {WEAPONS} from './config.mjs';
+import {kitWeapon,RELOAD_CUES,reloadIsEmpty,reloadDuration,reloadStart} from './strike-kit-timing.mjs';
 export const KIT_AUDIO_VERSION='strike-kit-audio-2';
 export const KIT_FOLEY = Object.freeze({
  'p9:out:0':'f_magout_pistol.mp3', 'p9:in:0':'f_magin_pistol.mp3', 'p9:action:0':'f_slide_pistol-1.mp3'
@@ -54,17 +55,17 @@ export class AudioSystem extends CombatAudio{
   }));
   await this.foleyLoadPromise;return !this.disposed&&this.context.state==='running';
  }
- kitSample(kind,event,volume=1,variant=0){
+ kitSample(kind,event,volume=1,variant=0,rate=1){
   const key=`${event.weapon==='cr4'?'cr4':'p9'}:${kind}:${variant}`,recorded=this.recordedFoley.get(key),buffer=recorded||this.kitBuffers.get(key);if(!buffer||this.active.size>=94)return;
-  const source=this.context.createBufferSource();source.buffer=buffer;const c=this.channel(event,volume*(recorded?1.45:1));
+  const source=this.context.createBufferSource();source.buffer=buffer;source.playbackRate.value=rate;const c=this.channel(event,volume*(recorded?1.45:1));
   const position=event.position||event,distance=Math.hypot((position.x||0)-(this.listener?.x||0),(position.z||0)-(this.listener?.z||0));
   const filter=c.nodes[1];filter.frequency.value=Math.min(filter.frequency.value,18000/(1+distance*.075));
-  source.connect(c.gain);this.track(source,c,buffer.duration+.005);
+  source.connect(c.gain);this.track(source,c,buffer.duration/rate+.005);
  }
  play(e){
-  if(e.type==='reload'&&(e.weapon==='p9'||e.weapon==='p12')){
-   const a=this.game?.actors.find(a=>a.id===e.actorId);this.kitReloads.set(e.actorId,{event:{...e},at:e.time,duration:e.duration||1.55,empty:reloadIsEmpty(a,e.weapon),stage:0});return;
-  }
+  // The replicated reload interval drives the cues, including for a late
+  // observer. A delayed reload event cannot restart an already audible marker.
+  if(e.type==='reload'&&(e.weapon==='p9'||e.weapon==='p12'))return;
   if(e.type==='shot'&&kitWeapon(e.weapon)&&this.kitReady){
    this.serial++;this.kitSample('shot',e,e.actorId===this.listenerId?.75:.63,this.serial%3);this.kitStats.shots++;
    const room=this.world.roomAt?.(e.x,e.z)||this.world.roomAt?.(this.listener?.x,this.listener?.z),hard=/HISS|KORRIDOR|LAB|PQC/.test(room?.name||'');
@@ -77,17 +78,28 @@ export class AudioSystem extends CombatAudio{
  handle(events,listener,time){
   super.handle(events,listener,time);
   if(!this.context||this.context.state!=='running'||!this.kitReady||this.volume===0)return;
-  for(const[id,r]of this.kitReloads){
-   const a=this.game?.actors.find(a=>a.id===id);
-   if(!a?.alive||a.weapon!==r.event.weapon||!a.reloadUntil||Math.abs(a.reloadUntil-r.at-r.duration)>.03){this.kitReloads.delete(id);this.kitStats.cancelled++;continue;}
-   const f=(time-r.at)/r.duration;
-   while(r.stage<RELOAD_CUES.length&&f>=RELOAD_CUES[r.stage].at){
-    const cue=RELOAD_CUES[r.stage++];if(cue.emptyOnly&&!r.empty)continue;
-    // Never play several obsolete cues on resume/time jumps. At most recent cue.
-    if((f-cue.at)*r.duration>.15)continue;
-    this.kitSample(cue.id,{...r.event,x:a.x,y:a.y,z:a.z},cue.id==='in'?.38:.27);this.kitStats.foley++;
+  const actors=this.game?.actors||[];
+  for(const [id,r] of this.kitReloads){
+   const a=actors.find(actor=>actor.id===id);
+   if(a?.alive && a.weapon===r.weapon && a.lifeId===r.life && a.controlEpoch===r.epoch && a.reloadUntil===r.until && time<r.until)continue;
+   if(time<r.until)this.kitStats.cancelled++;
+   this.kitReloads.delete(id);
+  }
+  for(const a of actors){
+   if(!a.alive || !(a.reloadUntil>time) || (a.weapon!=='p9' && a.weapon!=='p12'))continue;
+   const duration=reloadDuration(a,WEAPONS[a.weapon].reload),at=reloadStart(a,duration);
+   let r=this.kitReloads.get(a.id);
+   if(!r){
+    r={weapon:a.weapon,life:a.lifeId,epoch:a.controlEpoch,until:a.reloadUntil,empty:reloadIsEmpty(a,a.weapon),stage:0};
+    this.kitReloads.set(a.id,r);
    }
-   if(r.stage===RELOAD_CUES.length)this.kitReloads.delete(id);
+   const f=(time-at)/duration;
+   while(r.stage<RELOAD_CUES.length && f>=RELOAD_CUES[r.stage].at){
+    const cue=RELOAD_CUES[r.stage++];
+    if((cue.emptyOnly && !r.empty) || (f-cue.at)*duration>.15)continue;
+    this.kitSample(cue.id,{type:'reload',actorId:a.id,weapon:a.weapon,x:a.x,y:a.y,z:a.z},cue.id==='in'?.38:.27,0,WEAPONS[a.weapon].reload/duration);
+    this.kitStats.foley++;
+   }
   }
  }
  reset(){super.reset();this.kitReloads?.clear();}

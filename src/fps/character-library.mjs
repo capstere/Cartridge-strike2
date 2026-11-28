@@ -1,3 +1,4 @@
+import {reloadPhase} from './strike-kit-timing.mjs';
 import {OUTFITS,readOutfit,saveOutfit} from './operator-outfits.mjs';
 import {createDirectionalPose,restoreDirectionalPose,steerStride} from './operator-locomotion.mjs';
 import {addOperatorEquipment,uniformSwatch,disposeUniformSwatches} from './operator-equipment.mjs';
@@ -316,7 +317,7 @@ export function animateAuthored(state,actor,time,options={}){
  // Presentation follows the true reload timer; it never changes ammunition.
  if(!state.isHostage&&actor.reloadUntil>time){
   const a=state.upper.get('Pistol_Reload'),duration=WEAPONS[actor.weapon]?.reload||1;
-  const progress=Math.max(0,Math.min(1,1-(actor.reloadUntil-time)/duration));
+  const progress=reloadPhase(actor,actor.weapon,time,duration);
   a.time=progress*Math.max(0,a.getClip().duration-.001);a.timeScale=0;
  }else if(!state.isHostage)state.upper.get('Pistol_Reload').timeScale=1;
  state.mixer.update(delta);

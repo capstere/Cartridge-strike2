@@ -1,3 +1,4 @@
+import {BONUSES,BONUS_VERSION} from '../../src/fps/bonuses.mjs';
 import {CONFIG, WEAPONS} from '../../src/fps/config.mjs';
 
 export const BOT_DIFFICULTY_IDS = Object.freeze(['casual', 'normal', 'hard']);
@@ -10,7 +11,7 @@ export const NETWORK_CONFIG = Object.freeze({...CONFIG, networkSlice:true,
 export const CLASSIC_NETWORK_CONFIG = Object.freeze({...NETWORK_CONFIG,mode:'classic',
   startMoney:CONFIG.startMoney,maxMoney:CONFIG.maxMoney,killMoney:CONFIG.killMoney,hostageDamage:CONFIG.hostageDamage});
 export {DEFAULT_MAP_ID as NETWORK_MAP} from './maps.mjs';
-export const PROTOCOL_VERSION = 19;
+export const PROTOCOL_VERSION = 20;
 export const TEAM_CAPACITY = 5;
 export const ROOM_CAPACITY = TEAM_CAPACITY * 2;
 export const TDM_MINUTES = Object.freeze([3,5,10,15]);
@@ -62,7 +63,7 @@ export function copyPose(target,source){
   for(const key of SLIDE_NUMBERS)to[key]=from[key] || 0;
   to.crouchHeld=!!from.crouchHeld;
 }
-export const configContract = () => ({config:NETWORK_CONFIG,classic:CLASSIC_NETWORK_CONFIG, weapons:Object.values(WEAPONS).filter(w=>['smg','ar47','cr4','sniper','shotgun','bazooka','p9','p12','knife','he'].includes(w.id)),
+export const configContract = () => ({config:NETWORK_CONFIG,classic:CLASSIC_NETWORK_CONFIG, bonuses:{version:BONUS_VERSION,items:BONUSES}, weapons:Object.values(WEAPONS).filter(w=>['smg','ar47','cr4','sniper','shotgun','bazooka','p9','p12','knife','he'].includes(w.id)),
   world:'floor5-authoritative-doors-spawn-shutters-breakable-glass-v2',
   capacity:ROOM_CAPACITY, teamCapacity:TEAM_CAPACITY, reconnectSeconds:RECONNECT_SECONDS,
   rewindMs:REWIND_MS, interpolationMs:INTERPOLATION_MS, match:MATCH_DEFAULTS, matchPreferences:MATCH_PREFERENCES,

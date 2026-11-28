@@ -25,6 +25,14 @@ export function reloadIsEmpty(actor,id){
  if(!inv)return false;
  return Object.values(inv).some(v=>v&&typeof v==='object'&&v.id===id&&v.ammo===0);
 }
-export function reloadPhase(actor,id,time,duration){
- return actor.reloadUntil>time?saturate(1-(actor.reloadUntil-time)/duration):0;
+// Older presentation fixtures can supply only the deadline and normal duration.
+export function reloadDuration(actor,normalDuration){
+ return actor.reloadDuration>0?actor.reloadDuration:normalDuration;
+}
+export function reloadStart(actor,duration){
+ return actor.reloadDuration>0 && Number.isFinite(actor.reloadStartedAt)?actor.reloadStartedAt:actor.reloadUntil-duration;
+}
+export function reloadPhase(actor,id,time,normalDuration){
+ const duration=reloadDuration(actor,normalDuration);
+ return actor.reloadUntil>time?saturate((time-reloadStart(actor,duration))/duration):0;
 }
