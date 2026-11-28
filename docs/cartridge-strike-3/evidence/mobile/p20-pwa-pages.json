@@ -1,0 +1,30 @@
+{
+  "scope": "http://127.0.0.1:33013/Cartridge-strike2/fps/",
+  "start": "http://127.0.0.1:33013/Cartridge-strike2/fps/",
+  "worker": "http://127.0.0.1:33013/Cartridge-strike2/fps/sw.js",
+  "iconSizes": [
+    "192x192",
+    "512x512"
+  ],
+  "cached": [
+    "http://127.0.0.1:33013/Cartridge-strike2/fps/offline.html"
+  ],
+  "language": "en",
+  "active": "activated",
+  "offlineEntries": [
+    {
+      "path": "/Cartridge-strike2/fps/",
+      "status": 200,
+      "worker": true,
+      "text": "You're offline\n\nReconnect to open Cartridge-Strike 3. Your saved controls and local characters stay on this device.\n\nTry again"
+    },
+    {
+      "path": "/Cartridge-strike2/fps/index.html",
+      "status": 200,
+      "worker": true,
+      "text": "You're offline\n\nReconnect to open Cartridge-Strike 3. Your saved controls and local characters stay on this device.\n\nTry again"
+    }
+  ],
+  "recovered": true,
+  "privateBypassed": true
+}

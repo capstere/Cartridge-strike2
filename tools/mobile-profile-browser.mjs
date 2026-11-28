@@ -11,12 +11,13 @@ const native=process.env.CHROMIUM_PATH;
 const browser=await chromium.launch({executablePath:native,channel:native?undefined:'chromium',
   headless:process.env.FPS_NETWORK_HEADED!=='1',args:native?['--ozone-platform=wayland','--use-angle=gl-egl','--disable-dev-shm-usage']:['--enable-unsafe-swiftshader']});
 const result={profile:'Chromium touch emulation',viewport:[844,390],deviceScaleFactor:1};
+let activePage;
 try {
   const ctx=await browser.newContext({viewport:{width:844,height:390},hasTouch:true,isMobile:true,deviceScaleFactor:1,locale:'fr-FR',reducedMotion:'reduce'});
   await ctx.addInitScript(()=>{
     if(!localStorage.getItem('cartridge-settings'))localStorage.setItem('cartridge-settings',JSON.stringify({graphics:'low',volume:0,reducedMotion:true,mobileAutoFire:false}));
   });
-  const p=await ctx.newPage(),errors=[];
+  const p=activePage=await ctx.newPage(),errors=[];
   p.on('pageerror',error=>errors.push(error.message));p.setDefaultTimeout(90000);
   const phase=async label=>{
     console.log(new Date().toISOString(),label);
@@ -72,6 +73,17 @@ try {
   if(await p.locator('#resume').isVisible())await press(p.locator('#resume'));
   await p.waitForFunction(()=>!__fps.modal&&!__fps.game.warmupRemaining&&__fps.game.phase==='active'&&__fps.game.player.weapon==='sniper');
   const cd=await ctx.newCDPSession(p),points=new Map();
+  await p.evaluate(()=>{
+    window.deviceEvents=[];
+    for(const type of ['pointerdown','pointerup','pointercancel','lostpointercapture']){
+      document.addEventListener(type,e=>{
+        const el=e.target.closest?.('[data-mobile-action]')||e.target,v=window.visualViewport;
+        deviceEvents.push({type,id:e.pointerId,at:e.timeStamp,x:e.clientX,y:e.clientY,target:el.dataset?.mobileAction||el.id||el.tagName,
+          viewport:[innerWidth,innerHeight,v.width,v.height,v.offsetLeft,v.offsetTop,v.scale]});
+        if(deviceEvents.length>120)deviceEvents.shift();
+      },{capture:true,passive:true});
+    }
+  });
   const send=async(type)=>cd.send('Input.dispatchTouchEvent',{type,touchPoints:[...points.values()]});
   const down=async(id,pos)=>{points.set(id,{id,...pos});await send('touchStart');};
   const move=async(id,x,y)=>{const pos=points.get(id);pos.x+=x;pos.y+=y;await send('touchMove');};
@@ -118,7 +130,10 @@ try {
   await down(1,stick);await move(1,0,-30);await p.setViewportSize({width:390,height:844});
   await p.waitForFunction(()=>__fps.modal==='pause');result.rotation=await observe();
   assert(result.rotation.paused&&result.rotation.stick===null&&result.rotation.look===null&&!result.rotation.manualFire);
-  await p.setViewportSize({width:932,height:430});await press(p.locator('#resume'));points.clear();
+  // The game must already be neutral while the original physical finger is still down.
+  // Complete that same contact at the driver before tapping Resume or starting another press.
+  await up(1);assert.equal(points.size,0);
+  await p.setViewportSize({width:932,height:430});await press(p.locator('#resume'));
   await p.waitForFunction(()=>!__fps.modal&&__fps.game.player.alive);
   await phase('Checking grenade hold and release');
   result.grenadeSelection=[];
@@ -134,7 +149,7 @@ try {
   });
   const throwAt=await center('[data-mobile-action=fire]');
   const hit=await p.evaluate(({x,y})=>{const el=document.elementFromPoint(x,y);return {action:el?.closest('[data-mobile-action]')?.dataset.mobileAction,tag:el?.tagName,id:el?.id};},throwAt);
-  assert.equal(hit.action,'fire',JSON.stringify({throwAt,hit}));
+  result.throwTarget={throwAt,hit};assert.equal(hit.action,'fire',JSON.stringify({throwAt,hit}));
   await down(4,throwAt);
   result.grenadePress=await observe();await phase('HE trigger pressed');
   assert(result.grenadePress.manualFire,'Physical pointer reaches the held Throw control');
@@ -204,7 +219,25 @@ try {
   assert.equal(rotated.modal,'pause');assert(rotated.paused&&!rotated.held&&!rotated.manualFire);
   assert.equal(rotated.matchingDrops,1);assert.deepEqual(rotated.drop,{vx:0,vy:0,vz:0,deadline:rotated.deadline});
   points.clear();await send('touchCancel');
+  result.deviceEvents=await p.evaluate(()=>window.deviceEvents);
   assert.deepEqual(errors,[]);result.errors=errors;
   if(output)await writeFile(join(output,'mobile-profile.json'),JSON.stringify(result,null,2)+'\n');
   console.log(JSON.stringify(result));await ctx.close();
+}catch(error){
+  if(output&&activePage&&!activePage.isClosed()){
+    const state=await activePage.evaluate(()=>{
+      const f=window.__fps,g=f?.game,a=g?.player;
+      return {url:location.pathname+location.search,screen:document.querySelector('#menu')?.dataset.screen,
+        modal:f?.modal,phase:g?.phase,simTime:g?.state.time,paused:g?.state.paused,deviceEvents:window.deviceEvents?.slice(-20),
+        player:a&&{alive:a.alive,weapon:a.weapon,action:a.action,cartridge:a.cartridge,waitTriggerRelease:a.waitTriggerRelease,
+          nextShot:a.nextShot,reloadUntil:a.reloadUntil,hp:a.health,inventoryHE:a.inventory.he},
+        controls:f&&{visible:f.mobile.visible,buttons:f.mobile.buttonPointers.size,stick:f.mobile.stickId,fire:f.mobile.state.fire,
+          tacticalWeapon:f.tactical.weapon,drawer:f.focusHud.expanded},
+        overlays:[...document.querySelectorAll('dialog[open],#cs-loading:not([hidden]),#pause:not([hidden]),#buy:not([hidden])')].map(el=>el.id)};
+    }).catch(()=>null);
+    console.log('Last touch state',JSON.stringify(state));
+    await writeFile(join(output,'failed-touch.json'),JSON.stringify({message:error.message,state},null,2)+'\n');
+    await activePage.screenshot({path:join(output,'failed-touch.jpg'),type:'jpeg',quality:75,timeout:5000}).catch(()=>{});
+  }
+  throw error;
 }finally{await browser.close();}

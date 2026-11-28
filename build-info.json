@@ -2522,7 +2522,7 @@
     {
       "path": "shared/multiplayer/build.mjs",
       "bytes": 660,
-      "sha256": "10a34bf5cccc590b334bbe81dafa59e48945e81f8640f67c5f5d157c25a4702a"
+      "sha256": "9395d0994216410caa0cdc40641fb1daf294d2e6403471a32b32f903371613a7"
     },
     {
       "path": "shared/multiplayer/collision-contract.mjs",
@@ -2542,7 +2542,7 @@
     {
       "path": "shared/multiplayer/map-build.mjs",
       "bytes": 2831,
-      "sha256": "3de9d5a3e72af85ee5f88b3b2070201234349d6fa18528f80ea7be0a8010209d"
+      "sha256": "ed51240cbbe0855ccf552f0993309eb6587680504d36cbff9fb50b0fb9ebd9ab"
     },
     {
       "path": "shared/multiplayer/maps.mjs",
@@ -2611,8 +2611,8 @@
     },
     {
       "path": "src/fps/app.mjs",
-      "bytes": 67585,
-      "sha256": "fe3a2e7071a675571a0e0b4efd08b5a79470e4c59b3ed7257037e288e7f0dc0d"
+      "bytes": 67192,
+      "sha256": "50ce74653c423c8a8bdbb4bebba13251d50ec2990381f422baa38de8a0744402"
     },
     {
       "path": "src/fps/audio.mjs",
@@ -2846,8 +2846,8 @@
     },
     {
       "path": "src/fps/gamepad-controls.mjs",
-      "bytes": 4863,
-      "sha256": "9c87f733b4af7ca247202c9ea90d9d76c4c6632a5473c88dd62481f2624909cb"
+      "bytes": 6450,
+      "sha256": "ee58557439e9341b3bf1a823deccb894ebb66d10a6132d947e07c33b9001a95a"
     },
     {
       "path": "src/fps/glass-visuals.mjs",
@@ -2906,8 +2906,8 @@
     },
     {
       "path": "src/fps/match-flow.mjs",
-      "bytes": 12796,
-      "sha256": "894a2abeb91eeb06da0387bab779202081c1ad31fbe0f238377ae2b89260634a"
+      "bytes": 12885,
+      "sha256": "d56699ed3c92b4fe6a0cdf871a3023ec2d33ada6e21602469076c51d99e1d193"
     },
     {
       "path": "src/fps/materials.mjs",
@@ -3585,7 +3585,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 81877041,
+  "bytes": 81878324,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",

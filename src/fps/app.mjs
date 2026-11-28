@@ -23,7 +23,7 @@ import { Renderer } from './render.mjs?v=floor5-environment-1';
 import { AudioSystem } from './riposte-audio.mjs';
 import {RADIO,isEndless} from './action-rules.mjs';
 import {BonusHud} from './bonus-hud.mjs';
-import {GamepadControls,navigateGamepad} from './gamepad-controls.mjs';
+import {sharedGamepad as gamepad,claimControllerForGame,installLobbyController,pollControllerMenu} from './gamepad-controls.mjs';
 import { MobileControls, isTouchDevice } from './mobile-controls.mjs';
 import { PlayerRecoil } from './riposte-recoil.mjs';
 import { TacticalControls } from './tactical-controls.mjs';
@@ -205,7 +205,6 @@ function recordFirePress(){
    firePress ??= {yaw,pitch,weapon:game.player.weapon,life:game.player.lifeId,epoch:game.player.controlEpoch,round:game.state.round};
  }
 }
-const gamepad=new GamepadControls();
 const bonusHud = new BonusHud($('bonus-controls'),settings,requestBonus);
 function requestBonus(slot) {
   if (!modal && !radioOpen && !teamRadioOpen && !holdingDeployment() && game?.player?.alive && game.phase === 'active') {
@@ -644,16 +643,11 @@ if(game.phase!==lastPhase){if(['result','match'].includes(game.phase)){audio.res
 window.addEventListener('pointerdown',()=>{gamepad.active=false;},{capture:true});
 window.addEventListener('keydown',e=>{if(e.isTrusted)gamepad.active=false;},{capture:true});
 function pollMenuController(){
- if(!modal || document.hidden)return;
- const loading=$('cs-loading'),overlay=loading&&!loading.hidden?loading:null;
- const dialog=document.querySelector('dialog[open]');
- const scope=dialog || overlay || $(({pause:'pause',buy:'buy',online:'online-room',match:'match-end'})[modal]||'menu');
- navigateGamepad(scope,gamepad.read(),()=>{
-   if(dialog){dialog.close();return;}
-   if(overlay){(overlay.querySelector('#csl-error')?.hidden?$('csl-cancel'):$('csl-back'))?.click();return;}
-   if(modal==='pause'){resume();return;}
-   if(modal==='buy'){closeBuy();return;}
-   if(modal==='menu'){const back=$('route-back');if(back&&!back.hidden)back.click();}
+ if(!modal)return;
+ const panel=({pause:'pause',buy:'buy',online:'online-room',match:'match-end'})[modal]||'menu';
+ pollControllerMenu(panel,modal==='menu'?undefined:()=>{
+   if(modal==='pause')resume();
+   if(modal==='buy')closeBuy();
  });
 }
 function loadingControllerFrame(){
@@ -696,7 +690,7 @@ function frame(now){try{
  if(renderDt!==null && !networkSession && !modal && !document.hidden && holdingDeployment())foregroundCountdown.presented(presentedAt);
  showDeployment(presentedAt);
  raf=requestAnimationFrame(frame);}catch(e){fatal(e);}}
-function fatal(error){cancelAnimationFrame(raf);raf=requestAnimationFrame(loadingControllerFrame);grenadeAssist?.reset();$('fatal').hidden=false;$('fatal').querySelector('pre').textContent=error.stack||String(error);$('loading').hidden=true;console.error(error);}
+function fatal(error){claimControllerForGame();cancelAnimationFrame(raf);raf=requestAnimationFrame(loadingControllerFrame);grenadeAssist?.reset();$('fatal').hidden=false;$('fatal').querySelector('pre').textContent=error.stack||String(error);$('loading').hidden=true;console.error(error);}
 team = document.querySelector('.team-option.selected').dataset.team;
 for (const option of document.querySelectorAll('[data-team]')) option.addEventListener('click', () => { team = option.dataset.team; });
 function launchMatch(event){
@@ -744,7 +738,7 @@ $('radio-options').innerHTML=RADIO.map((r,i)=>`<div><kbd>${i+1}</kbd><span>${r.t
 const characterQuery=new URLSearchParams(location.search);
 if(!window.__csFlow && !rehearsalMode && characterQuery.get('team')==='counterAnalysts')team='counterAnalysts';
 if(characterQuery.has('seed'))$('seed').value=String(Math.min(999999,Math.max(1,Number(characterQuery.get('seed'))||42)));
-raf=requestAnimationFrame(loadingControllerFrame);
+installLobbyController();
 try{
  loadingStage('level');
  audio=new AudioSystem(null,settings);
@@ -765,7 +759,7 @@ try{
   await Promise.all([renderer.assetsReady,audio.prepareFloorAudio()]);grenadeAssist=new GrenadeAssist(renderer,settings);
  }
  loadingStage('ready');$('loading').hidden=true;$('start').disabled=characterSelectionFailed||networkMode;
- cancelAnimationFrame(raf);raf=requestAnimationFrame(frame);if(testMode){globalThis.__fps={stopFrameLoop(){cancelAnimationFrame(raf);raf=0;},get game(){return game;},get network(){return networkSession;},joinNetwork,get world(){return world;},get renderer(){return renderer;},audio,settings,start(selected,config={},autoplay=false){start(selected,config,autoplay);return this.snapshot();},step(controls=null,dt=1/60){tactical.update(dt);game.update(dt,controls??input(dt));yaw=game.player.yaw;pitch=game.player.pitch;consumeEvents();tactical.render(renderer);grenadeAssist.update(game,viewActor(),modal);renderer.render(game,viewActor(),dt);presentViewEffects();updateHud();return this.snapshot();},snapshot(){return JSON.parse(JSON.stringify({...game.state,player:game.player,actors:game.actors.map(({bot,...rest})=>rest),hostages:game.hostages},(k,v)=>k==='bot'?undefined:v));},render(){tactical.render(renderer);grenadeAssist.update(game,viewActor(),modal);renderer.render(game,viewActor(),1/60);updateHud();},pause(value){game.pause(value);},input,showBuy,newMatch,get modal(){return modal;},mobile,recoil,tactical,get grenadeAssist(){return grenadeAssist;},focusHud,renderBudget,minimapCache};}}
+ claimControllerForGame();raf=requestAnimationFrame(frame);if(testMode){globalThis.__fps={stopFrameLoop(){cancelAnimationFrame(raf);raf=0;},get game(){return game;},get network(){return networkSession;},joinNetwork,get world(){return world;},get renderer(){return renderer;},audio,settings,start(selected,config={},autoplay=false){start(selected,config,autoplay);return this.snapshot();},step(controls=null,dt=1/60){tactical.update(dt);game.update(dt,controls??input(dt));yaw=game.player.yaw;pitch=game.player.pitch;consumeEvents();tactical.render(renderer);grenadeAssist.update(game,viewActor(),modal);renderer.render(game,viewActor(),dt);presentViewEffects();updateHud();return this.snapshot();},snapshot(){return JSON.parse(JSON.stringify({...game.state,player:game.player,actors:game.actors.map(({bot,...rest})=>rest),hostages:game.hostages},(k,v)=>k==='bot'?undefined:v));},render(){tactical.render(renderer);grenadeAssist.update(game,viewActor(),modal);renderer.render(game,viewActor(),1/60);updateHud();},pause(value){game.pause(value);},input,showBuy,newMatch,get modal(){return modal;},mobile,recoil,tactical,get grenadeAssist(){return grenadeAssist;},focusHud,renderBudget,minimapCache};}}
 catch(error){fatal(error);}
 
 window.addEventListener('pagehide',event=>{if(!event.persisted){cancelAnimationFrame(raf);networkJoinGeneration++;networkSession?.dispose();grenadeAssist?.dispose();audio?.dispose();renderer?.dispose();}});

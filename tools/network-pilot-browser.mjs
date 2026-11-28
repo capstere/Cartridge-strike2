@@ -14,7 +14,7 @@ const origin=fixture?.origin||new URL(external).origin;
 assert.equal(new URL(origin).protocol,'https:');
 const invite=fixture?.invite||(await readFile(process.env.CS2_PILOT_INVITE_FILE,'utf8')).trim();
 const roomCode=randomBytes(12).toString('hex'),browsers=[],pages=[],errors=[],wsCounts=[],renderers=[];
-let roomId;
+let roomId,privateOffline;
 const angle=process.env.FPS_NETWORK_ANGLE||(process.platform==='darwin'?'metal':'swiftshader');
 const dpr=Number(process.env.FPS_NETWORK_DPR||1);
 
@@ -86,7 +86,10 @@ async function open(mobile){
       await context.setOffline(true);
       const response=await offlinePage.goto(origin+'/fps/',{waitUntil:'domcontentloaded'});
       assert.equal(response.status(),503);
-      await offlinePage.getByRole('heading',{name:/offline/i}).waitFor();
+      assert.equal(response.fromServiceWorker(),true);
+      const heading=offlinePage.getByRole('heading',{name:/offline/i});
+      await heading.waitFor();
+      privateOffline={status:response.status(),fromWorker:true,heading:await heading.textContent(),cachedResponses:stored.length};
     } finally {
       fixture.setReachable(true);
       await context.setOffline(false);
@@ -189,7 +192,7 @@ try{
   await friend.locator('[data-mobile-action=pause]').tap();await friend.locator('#restart').tap();
   assert.deepEqual(errors,[]);
   const report={status:'PASS',path:external?'public HTTPS':'loopback TLS',date:new Date().toISOString(),
-    physicalDevices:false,chromium:browsers[0].version(),renderers,angle,dpr,renderedClients:2,resumeAttempts,fixtureCertificatePinned:!!fixture,
+    ...(privateOffline?{privateOffline}:{}),physicalDevices:false,chromium:browsers[0].version(),renderers,angle,dpr,renderedClients:2,resumeAttempts,fixtureCertificatePinned:!!fixture,
     inviteLogins:2,rejectedWrongRoomCode:true,readyActors:before.readyCount,floor5Doors:before.doors,webSockets:wsCounts,
     matchCycle,remoteGameplay:{tickBefore:before.tick,tickAfter:reloaded.tick,distance:Math.hypot(moved.x-before.x,moved.z-before.z),
       ammoBefore:before.ammo,ammoFired:fired.ammo,ammoReloaded:reloaded.ammo},departedHostRemoved:true};

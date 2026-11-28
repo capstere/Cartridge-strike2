@@ -15,3 +15,22 @@ for (const [title,secure,standalone,canInstall] of [
   assert.equal(canOfferInstall(),canInstall);installAppControls();assert.equal(registrations,secure?1:0);
   if(canInstall){window.dispatchEvent(new Event('appinstalled'));assert.equal(canOfferInstall(),false);}
 });
+
+test('one lobby pad loop hands button history to the game and resumes only while the lobby owns it',async t=>{
+  const globals=['window','document','navigator','requestAnimationFrame','cancelAnimationFrame'];
+  const originals=Object.fromEntries(globals.map(k=>[k,Object.getOwnPropertyDescriptor(globalThis,k)]));
+  t.after(()=>{for(const [key,desc] of Object.entries(originals)){if(desc)Object.defineProperty(globalThis,key,desc);else delete globalThis[key];}});
+  let id=0,reads=0;
+  const queue=new Map(),win=new EventTarget();
+  for(const [key,value] of Object.entries({window:win,document:{hidden:false,querySelector:()=>null,getElementById:()=>null},
+    navigator:{getGamepads(){reads++;return[];}},requestAnimationFrame:fn=>{queue.set(++id,fn);return id;},cancelAnimationFrame:token=>queue.delete(token)})){
+    Object.defineProperty(globalThis,key,{configurable:true,value});
+  }
+  const {claimControllerForGame,installLobbyController}=await import('../src/fps/gamepad-controls.mjs?lobby-ownership');
+  installLobbyController();installLobbyController();assert.equal(queue.size,1);
+  const [token,poll]=[...queue][0];queue.delete(token);poll();assert.equal(reads,1);assert.equal(queue.size,1);
+  win.dispatchEvent(new Event('pagehide'));assert.equal(queue.size,0);
+  win.dispatchEvent(new Event('pageshow'));assert.equal(queue.size,1);
+  claimControllerForGame();assert.equal(queue.size,0);
+  win.dispatchEvent(new Event('pageshow'));installLobbyController();assert.equal(queue.size,0);
+});

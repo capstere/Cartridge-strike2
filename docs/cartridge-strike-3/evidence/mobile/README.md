@@ -26,3 +26,9 @@ Serve the exact built checkout. Set `FPS_TEST_ORIGIN`, `CHROMIUM_PATH=/usr/bin/c
 - Existing package checks include `tools/mobile-reliability-browser.mjs` and `tools/online-autofire-browser.mjs`.
 
 This checkpoint covers the rows above. Native grenade hold/release and interruption, floating-stick thresholds, the 30 Hz rendering cap, controller play and offline recovery are tracked separately. No physical controller or handset was connected for this run.
+
+## Installed web app
+
+The native Pi browser opened the public deployment at both the root and a repository subpath on build `227ed715ceb839fcacfc8f4d9d14ccfa2a5972ae6521094455ec1a947476a9cf`, revision `1b2515e781a750748488229ac7bd8b3a41ffbe4a`. The browser activated and updated each worker and cached only that scope's public `offline.html`. With browser and worker connections disconnected, opening the manifest start URL and the explicit index in separate fresh tabs produced the English recovery page in all four cases. The browser confirmed the service worker supplied every response. An offline invitation produced a network failure. Restoring connectivity reopened the live menu.
+
+The [root receipt](p20-pwa-root.json) and [repository subpath receipt](p20-pwa-pages.json) preserve the exact scopes, cache contents, navigation responses and recovery results. These public HTTP loopback checks ran in Chromium's secure localhost context. The authenticated pilot has a separate HTTPS fixture.

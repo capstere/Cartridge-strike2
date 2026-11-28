@@ -1,3 +1,4 @@
+import {installLobbyController} from './gamepad-controls.mjs';
 import {soundLevels} from './sound-levels.mjs';
 import {UI_EN, selectedMapName} from './english-ui.mjs';
 import {createFullscreenController} from './fullscreen.mjs';
@@ -213,7 +214,7 @@ function init() {
   for (const option of options) option.addEventListener('click', () => selectTeam(option));
   const query = new URLSearchParams(location.search);
   if (!query.has('character') && query.get('team') === 'counterAnalysts') selectTeam(options.find(b => b.dataset.team === 'counterAnalysts'));
-  buildOverlay(); addMusicButton();
+  buildOverlay(); installLobbyController(); addMusicButton();
   html.classList.add('cs-flow-ready');
   document.addEventListener('click', intercept, true);
   const kick = e => {

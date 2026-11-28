@@ -6,14 +6,15 @@ import {chromium} from '../frontline/source/tools/dev/node_modules/playwright-co
 const base=process.env.FPS_TEST_ORIGIN||'http://127.0.0.1:8765',native=process.env.CHROMIUM_PATH,output=process.env.CS3_MOBILE_EVIDENCE;
 const browser=await chromium.launch({executablePath:native,channel:native?undefined:'chromium',headless:process.env.FPS_NETWORK_HEADED!=='1',
   args:native?['--ozone-platform=wayland','--use-angle=gl-egl','--disable-dev-shm-usage']:['--enable-unsafe-swiftshader']});
+let activePage;
 try{
- const p=await browser.newPage({viewport:{width:1024,height:600},reducedMotion:'reduce'});p.setDefaultTimeout(90000);
+ const p=activePage=await browser.newPage({viewport:{width:1024,height:600},reducedMotion:'reduce'});p.setDefaultTimeout(90000);
  const phase=label=>console.log(new Date().toISOString(),label);
  const errors=[];p.on('pageerror',e=>errors.push(e.message));
  await p.addInitScript(()=>{
    if(!localStorage.getItem('cartridge-settings'))localStorage.setItem('cartridge-settings',JSON.stringify({graphics:'low',volume:0,reducedMotion:true}));
    const pad=window.testPad={id:'Standard test controller',mapping:'standard',connected:true,axes:[0,0,0,0],buttons:Array.from({length:17},()=>({value:0,pressed:false}))};
-   Object.defineProperty(navigator,'getGamepads',{value:()=>[pad.connected?pad:null]});
+   window.testPolls=0;Object.defineProperty(navigator,'getGamepads',{value:()=>{window.testPolls++;return [pad.connected?pad:null];}});
  });
  const frames=()=>p.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))));
  const hold=(i,value)=>p.evaluate(([i,value])=>{Object.assign(testPad.buttons[i],{value,pressed:value>.5});},[i,value]);
@@ -55,13 +56,12 @@ try{
  phase('Checking pause and reconnect');await tap(9);await p.waitForFunction(()=>__fps.modal==='pause');await tap(9);await p.waitForFunction(()=>!__fps.modal);
  await p.evaluate(()=>{testPad.connected=false;});await frames();await hold(7,1);await p.evaluate(()=>{testPad.connected=true;});await frames();
  const reconnected=await state();assert.equal(reconnected.ammo,shot.ammo);await hold(7,0);
- // Stall the real selected-level request and exercise the action overlay before a renderer exists.
- let request;
- await p.route('**/levels/manifest.json',r=>{request=r;});
- await p.goto(base+'/fps/?test=1&level=synthetic-demo&loadTimeout=3',{waitUntil:'domcontentloaded'});
- await p.waitForFunction(()=>!!window.__csFlow);
- await p.waitForFunction(()=>document.getElementById('loading').dataset.stage==='level');
- await frames();assert.equal(await p.evaluate(()=>!!window.__fps),false);
+ // Hold the complete app graph before and after Retry. Only the real lobby module can read this pad.
+ let waitedForApp=false;
+ await p.route('**/src/fps/app.mjs*',()=>{waitedForApp=true;});
+ await p.goto(base+'/fps/?test=1&level=synthetic-demo&loadTimeout=3',{waitUntil:'commit'});
+ await p.waitForFunction(()=>!!window.__csFlow&&window.testPolls>=2);
+ assert.equal(await p.evaluate(()=>!!window.__fps),false);
  const start=p.locator('#start');
  const openLoading=async()=>{await start.focus();await tap(0);await p.locator('#csl-cancel').waitFor({timeout:2000});};
  phase('Checking controller Cancel before the renderer is ready');
@@ -74,12 +74,22 @@ try{
  await p.locator('#cs-loading').waitFor({state:'hidden',timeout:3000});
  await openLoading();await p.locator('#csl-retry').waitFor({timeout:9000});
  assert.equal(await p.evaluate(()=>document.activeElement.id),'csl-retry');
- assert(request,'The selected-level request was held');
+ assert(waitedForApp,'The engine module itself was held');
  const reloaded=p.waitForEvent('framenavigated',f=>f===p.mainFrame());
- await hold(0,1);await reloaded;await p.waitForFunction(()=>!!window.__csFlow?.flow.active);
+ await hold(0,1);await reloaded;await p.waitForFunction(()=>!!window.__csFlow?.flow.active&&window.testPolls>=2);
  await tap(1);await p.locator('#cs-loading').waitFor({state:'hidden',timeout:3000});
  const loadingActions=['Cancel with A','Cancel with B','Back after timeout','Retry with A and automatic launch'];
  const sample={loadingActions,soloFocus,device:'Simulated standard Gamepad API controller',focus:[first,second],before,running,shot,reconnected,errors};
  assert.deepEqual(errors,[]);if(output){await mkdir(output,{recursive:true});await writeFile(join(output,'gamepad.json'),JSON.stringify(sample,null,2)+'\n');}
  console.log(JSON.stringify(sample));
+}catch(error){
+ if(output&&activePage&&!activePage.isClosed()){
+   await mkdir(output,{recursive:true});
+   const status=await activePage.evaluate(()=>({url:location.pathname+location.search,focus:document.activeElement.id,screen:document.querySelector('#menu')?.dataset.screen,
+     phase:window.__fps?.game?.phase,modal:window.__fps?.modal,stage:document.querySelector('#loading').dataset.stage,
+     flow:{active:window.__csFlow?.flow.active,failed:window.__csFlow?.flow.failed,reason:document.querySelector('#csl-err-text')?.textContent}})).catch(()=>null);
+   console.log('Last controller state',JSON.stringify(status));await writeFile(join(output,'failed-pad.json'),JSON.stringify({message:error.message,status},null,2)+'\n');
+   await activePage.screenshot({path:join(output,'failed-pad.jpg'),type:'jpeg',quality:75,timeout:5000}).catch(()=>{});
+ }
+ throw error;
 }finally{await browser.close();}

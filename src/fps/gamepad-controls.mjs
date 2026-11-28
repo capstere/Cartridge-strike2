@@ -98,3 +98,48 @@ export function navigateGamepad(scope,pad,back) {
     for(const name of ['input','change'])cur.dispatchEvent(new Event(name,{bubbles:true}));
   }else cur.click();
 }
+
+// The lobby mounts independently of the game module graph. Its pad hands over
+// held-button history and the polling loop when the simulation becomes ready.
+export const sharedGamepad=new GamepadControls();
+let earlyFrame=0,gameOwnsController=false,controllerInstalled=false;
+
+export function pollControllerMenu(panel='menu',back) {
+  if(document.hidden)return;
+  const overlay=document.querySelector('#cs-loading:not([hidden])');
+  const dialog=document.querySelector('dialog[open]');
+  const target=dialog||overlay||document.getElementById(panel);
+  navigateGamepad(target,sharedGamepad.read(),()=>{
+    if(dialog){dialog.close();return;}
+    if(overlay){
+      const leave=overlay.querySelector('#csl-error')?.hidden?'#csl-cancel':'#csl-back';
+      overlay.querySelector(leave)?.click();return;
+    }
+    if(back){back();return;}
+    const previous=document.getElementById('route-back');
+    if(previous&&!previous.hidden)previous.click();
+  });
+}
+
+function stopEarlyController() {
+  if(earlyFrame)cancelAnimationFrame(earlyFrame);
+  earlyFrame=0;
+}
+
+export function claimControllerForGame() {
+  gameOwnsController=true;
+  stopEarlyController();
+}
+
+export function installLobbyController() {
+  if(gameOwnsController||controllerInstalled)return;
+  controllerInstalled=true;
+  const poll=()=>{
+    pollControllerMenu();
+    earlyFrame=requestAnimationFrame(poll);
+  };
+  const start=()=>{if(!earlyFrame&&!gameOwnsController)earlyFrame=requestAnimationFrame(poll);};
+  window.addEventListener('pagehide',stopEarlyController);
+  window.addEventListener('pageshow',start);
+  start();
+}
