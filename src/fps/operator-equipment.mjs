@@ -65,7 +65,7 @@ function kitGeometry(outfit, skeleton, teamTrim, near) {
       }
     }
   }
-  const id=outfit.id, chest='spine_03', head='Head';
+  const id=outfit.kit||outfit.id, chest='spine_03', head='Head';
   if (id==='sniper') {
     garment(hood,true);
     // Seeded strips lie on the hood and shoulder mantle; one draw with the hood.
@@ -104,6 +104,29 @@ function kitGeometry(outfit, skeleton, teamTrim, near) {
       } else {
         cylinder(-.124,1.47,-.19,.004,.28,0x3a3a36,chest);
         box(0,1.673,.128,.192,.037,.026,0xb0601a,head);
+      }
+    }
+  }
+  if (outfit.kit) {
+    const accent=outfit.accent;
+    if(outfit.id==='gilet'){
+      for(const face of [-1,1]){
+        box(0,1.27,face*.185,.31,.31,.025,outfit.vest,chest);
+        for(const y of [1.20,1.29])box(0,y,face*.201,.31,.024,.012,accent,chest);
+      }
+    }else if(outfit.id==='nomad'){
+      box(0,1.57,.141,.117,.086,.06,0x413c35,head);
+      for(let i=0;i<6;i++)cylinder(-.103+i*.038,1.33-i*.022,.202,.012,.055,accent,chest);
+    }else if(outfit.id==='raptor'||outfit.id==='verdant'){
+      for(const x of [-.052,.052]){
+        box(x,1.667,.146,.048,.018,.027,accent,head);
+        if(outfit.id==='raptor')box(x,1.701,.146,.047,.018,.027,accent,head);
+      }
+    }else{
+      box(0,1.665,.148,.19,.034,.02,accent,head);
+      if(outfit.id==='void')for(const side of [-1,1]){
+        const tab=new T.BoxGeometry(.02,.089,.014);
+        tab.rotateZ(side*.54);part(tab,side*.022,1.33,.196,accent,chest);
       }
     }
   }
@@ -158,9 +181,10 @@ const patterns = {
 };
 const swatches=new Map();
 export function uniformSwatch(outfit) {
-  if (!patterns[outfit?.id] || typeof document==='undefined') return null;
+  const pattern=patterns[outfit?.kit||outfit?.id];
+  if (!pattern || typeof document==='undefined') return null;
   if (swatches.has(outfit.id)) return swatches.get(outfit.id);
-  const [seed,palette]=patterns[outfit.id];
+  const [seed,palette]=pattern;
   let state=seed;
   function random() {
     state=(state+0x6d2b79f5)|0;
@@ -173,7 +197,7 @@ export function uniformSwatch(outfit) {
   const ctx=canvas.getContext('2d');
   ctx.fillStyle='#'+outfit.shirt.toString(16).padStart(6,'0');
   ctx.fillRect(0,0,64,64);
-  const leaf=outfit.id==='sniper';
+  const leaf=(outfit.kit||outfit.id)==='sniper';
   for (const color of palette) {
     ctx.fillStyle=color;
     for (let i=0;i<(leaf?45:21);i++) {

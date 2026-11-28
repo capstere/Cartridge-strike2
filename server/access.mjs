@@ -1,4 +1,4 @@
-import {networkMap} from '../shared/multiplayer/maps.mjs';
+import {NETWORK_MAPS,networkMap} from '../shared/multiplayer/maps.mjs';
 import {isIP} from 'node:net';
 import {dirname,isAbsolute,join,resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -91,7 +91,7 @@ export async function readAdmission(req) {
   if(Object.keys(body).some(k=>!['name','code','contract','team','fillBots','mapId','mode','zombies','danceman',...matchPreferenceKeys].includes(k))||
     !matchPreferences(body)||['zombies','danceman'].some(key=>body[key]!==undefined&&typeof body[key]!=='boolean')||
     (body.mapId!==undefined&&!networkMap(body.mapId))||
-    (body.mode!==undefined&&!['tdm','classic'].includes(body.mode))||
+    (body.mode!==undefined&&!NETWORK_MAPS.some(map=>map.modes.includes(body.mode)))||
     (body.team!==undefined&&!['auto','analysts','counterAnalysts'].includes(body.team))||
     typeof body.name!=='string'||body.name.length>96||typeof body.code!=='string'||body.code.length>64||
     !body.contract||Array.isArray(body.contract)||typeof body.contract!=='object')throw Object.assign(Error('Invalid room options.'),{status:400});

@@ -1,5 +1,6 @@
 import {closeSync,constants,fchmodSync,fstatSync,openSync,existsSync} from 'node:fs';
 import {DatabaseSync} from 'node:sqlite';
+import {challenges,fold,playerXP} from './progression.mjs';
 
 export const resultJournalPath=path=>path+'.pending.sqlite';
 const journalId=0x43533351;
@@ -11,21 +12,45 @@ export function resolveMatchCredit(db,result){
   const entries=[];
   for(const player of result.entries){
     const eligible=(player.segments??[player]).filter(s=>!s.session||live.get(s.session,player.user,result.played));
-    if(eligible.length)entries.push({user:player.user,kills:eligible.reduce((total,s)=>total+s.kills,0),
-      deaths:eligible.reduce((total,s)=>total+s.deaths,0),win:eligible.at(-1).win});
+    if(eligible.length)entries.push({...fold(eligible),user:player.user});
   }
   return {...result,entries};
 }
 
-// Caller owns the transaction. A deleted account cannot be recreated by replay.
+function saveProgress(db,result,p){
+  const weapon=db.prepare(`INSERT INTO weapon_progress VALUES(?,?,?)
+    ON CONFLICT(user_id,weapon) DO UPDATE SET xp=xp+excluded.xp`);
+  for(const [id,xp] of Object.entries(p.weapons))weapon.run(p.user,id,xp);
+  const increase=db.prepare(`INSERT INTO challenge_progress VALUES(?,?,?)
+    ON CONFLICT(user_id,challenge) DO UPDATE SET count=MIN(count+excluded.count,?)`);
+  const read=db.prepare('SELECT count FROM challenge_progress WHERE user_id=? AND challenge=?');
+  const changes={};
+  for(const {id,goal} of challenges){
+    if(!p.challenges[id])continue;
+    if(id==='fCartes'&&!db.prepare('INSERT OR IGNORE INTO challenge_maps VALUES(?,?)').run(p.user,result.map).changes)continue;
+    const previous=read.get(p.user,id)?.count??0;
+    const delta=Math.min(goal-previous,p.challenges[id]);
+    if(delta>0){increase.run(p.user,id,delta,goal);changes[id]=delta;}
+  }
+  p.challenges=changes;
+  db.prepare('INSERT INTO match_progression VALUES(?,?,?,?,?,?)').run(result.instance,p.user,p.assists,p.headshots,
+    JSON.stringify(p.weapons),JSON.stringify(changes));
+}
+
+// Caller owns the transaction. The summary's unique key guards every write,
+// including unlock counters and weapon XP, across retry, replacement and restore.
 export function applyMatchCredit(db,result){
   const insert=db.prepare('INSERT OR IGNORE INTO summaries SELECT ?,id,?,?,?,?,?,? FROM users WHERE id=?');
   const reward=db.prepare('INSERT INTO rewards VALUES(?,?,?,?,?)');
-  for(const p of resolveMatchCredit(db,result).entries){
+  const entries=resolveMatchCredit(db,result).entries;
+  for(const p of entries){
     if(insert.run(result.instance,result.mode,result.map,result.played,p.kills,p.deaths,Number(p.win),p.user).changes){
-      reward.run(result.instance,'result',p.user,'match',p.kills*10+(p.win?25:0));
+      reward.run(result.instance,'result',p.user,'match',playerXP(p));
+      // Version-one journal files also restore into their original pre-CS3-10 schema.
+      if(result.version===2)saveProgress(db,result,p);
     }
   }
+  return entries;
 }
 
 class ResultJournal {
@@ -68,7 +93,7 @@ class ResultJournal {
       if(!row)continue;
       if(Buffer.byteLength(row.receipt)>maxBytes)throw Error('Invalid private result receipt.');
       const result=JSON.parse(row.receipt);
-      if(result.version!==1||result.instance!==instance||!Array.isArray(result.entries))throw Error('Invalid private result receipt.');
+      if(![1,2].includes(result.version)||result.instance!==instance||!Array.isArray(result.entries))throw Error('Invalid private result receipt.');
       yield result;
     }
   }
@@ -122,15 +147,17 @@ export function resultWriter(store,path){
   }
   function recordMatch(instance,mode,map,entries){
     if(!entries.length)return;
-    let result={version:1,instance,mode,map,entries,played:store.now()};
+    let result={version:2,instance,mode,map,entries,played:store.now()};
     try{
       // WAL allows this authority snapshot while an independent writer holds the
       // main write lock. Usually the retry record contains only aggregate scores.
       result=resolveMatchCredit(store.db,result);
       if(!result.entries.length)return;
-      apply(result);
+      return apply(result);
     }catch{
-      stash(result);schedule();
+      const persisted=stash(result);schedule();
+      // A resolved immutable receipt can survive restart in the private journal.
+      return persisted&&result.entries.every(p=>!p.segments)?result.entries:[];
     }
   }
   function close(){

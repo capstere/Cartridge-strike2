@@ -3,6 +3,8 @@ export const UI_EN = Object.freeze({
   modes: {
     classic: {name: 'Classic rounds', detail: 'Bomb and hostage objectives'},
     endless: {name: 'Endless Action', detail: 'Continuous respawns'},
+    ffa: {name:'Free-for-All',detail:'Every operator for themselves'},
+    dom: {name:'Domination',detail:'Capture and hold three zones'},
   },
   maps: {
     'floor5-prepared': 'Floor 5 Laboratory',

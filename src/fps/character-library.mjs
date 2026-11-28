@@ -1,5 +1,5 @@
 import {reloadPhase} from './strike-kit-timing.mjs';
-import {OUTFITS,readOutfit,saveOutfit} from './operator-outfits.mjs';
+import {OUTFITS,readOutfit,saveOutfit,publicOutfitId,outfitDefinition} from './operator-outfits.mjs';
 import {createDirectionalPose,restoreDirectionalPose,steerStride} from './operator-locomotion.mjs';
 import {addOperatorEquipment,uniformSwatch,disposeUniformSwatches} from './operator-equipment.mjs';
 import {cloneSkinned} from './skinned-clone.mjs';
@@ -29,19 +29,25 @@ const operatorPalette = {
  hostage:{shirt:0xe0e7e2,pants:0x334552,vest:0xe4e7df,trim:0x468e8c}
 };
 let equippedOutfit;
+let unlockedOutfits=[];
+export function applyWardrobeEntitlements(ids=[]) {
+ unlockedOutfits=Array.isArray(ids)?ids:[];
+ equippedOutfit=undefined;
+ currentOutfit();
+}
 export function currentOutfit(){
- if (!equippedOutfit) { try { equippedOutfit=readOutfit(globalThis.localStorage); } catch { equippedOutfit=OUTFITS[0]; } }
+ if (!equippedOutfit) { try { equippedOutfit=readOutfit(globalThis.localStorage,unlockedOutfits); } catch { equippedOutfit=OUTFITS[0]; } }
  return equippedOutfit;
 }
 export function equipOutfit(id){
- const selected=OUTFITS.find(outfit=>outfit.id===id);if(!selected)return false;
+ const selected=outfitDefinition(id);if(!selected||publicOutfitId(id,unlockedOutfits)!==id)return false;
  equippedOutfit=selected;
- try { saveOutfit(id,globalThis.localStorage);return true; } catch { return false; }
+ try { saveOutfit(id,globalThis.localStorage,unlockedOutfits);return true; } catch { return false; }
 }
 const networkOutfits = new Map();
 export function setNetworkOutfit(id,outfitId) {
  if (!id) return;
- const outfit=OUTFITS.find(entry=>entry.id===outfitId);
+ const outfit=outfitDefinition(outfitId);
  networkOutfits.set(id,outfit || OUTFITS[0]);
 }
 export function clearNetworkOutfits(){networkOutfits.clear();}

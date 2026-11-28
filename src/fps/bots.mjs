@@ -84,7 +84,7 @@ export class BotController {
   }
   perceive() {
     const { game, actor } = this, now = game.state.time, c = game.config;
-    const enemies = game.actors.filter(a => a.team !== actor.team && a.alive);
+    const enemies = game.actors.filter(a => a!==actor && (game.state.mode==='ffa'||a.team !== actor.team) && a.alive);
     // A bot can defend either team against a visibly approaching aggressor.
     for(const z of game.state.zombies||[]){
       if(z.alive && ['pursuing','attack'].includes(z.behavior) && distance(actor,z)<5)enemies.push(z);
@@ -106,7 +106,7 @@ export class BotController {
           record.timeBecameVisible = now;
         } else record.focusTime = Math.min(this.profile.settleTime, (record.focusTime ?? 0) + now - record.lastSeenAt);
         record.lastSeenAt = now;
-        if (enemy.team&&now>=record.reactionAt&&now - this.lastContactReport > 4) {
+        if (game.state.mode!=='ffa'&&enemy.team&&now>=record.reactionAt&&now - this.lastContactReport > 4) {
           // Team reports only positions actually seen; stale contacts decay. This
           // shared memory never reads enemy positions while choosing a route.
           const contacts = game.tacticalContacts ??= [];
@@ -125,7 +125,7 @@ export class BotController {
     // remembered positions are snapshots, never live coordinates through a wall.
     for (const event of game.soundEvents) {
       const sourceId = event.actorId ?? event.ownerId;
-      if (event.serial <= this.heardSerial || !sourceId || event.team === actor.team) continue;
+      if (event.serial <= this.heardSerial || !sourceId || (game.state.mode!=='ffa'&&event.team === actor.team)) continue;
       const enemy = enemies.find(a => a.id === sourceId); if (!enemy || enemy.kind==='zombie' || event.ownerLifeId!==undefined&&event.ownerLifeId!==enemy.lifeId) continue;
       // Riposte botEars checks distance and floor separation before testing
       // obstacles. An unheard footstep cannot reveal a player on another deck.
@@ -194,7 +194,7 @@ export class BotController {
     this.distanceTravelled += travelled; this.lastPosition = position(actor);
     if (travelled > .006) this.lastProgress = now;
     this.stuckTime=actor.blockedBy?this.stuckTime+dt:Math.max(0,this.stuckTime-dt*2);
-    if(!this.goal&&!actor.action&&this.mode==='objective'&&now>=this.nextRecovery){
+    if(game.state.mode!=='ffa'&&!this.goal&&!actor.action&&this.mode==='objective'&&now>=this.nextRecovery){
       const waiting=game.actors.find(a=>a!==actor&&a.alive&&a.team===actor.team&&a.blockedBy===actor.id&&a.bot?.stuckTime>.55);
       if(waiting)this.recoverPosition(waiting);
     }
@@ -217,7 +217,7 @@ export class BotController {
     if (now < this.nextBurstAt) return false;
     // This only budgets independently perceived firing opportunities. It never
     // communicates the human's coordinates or grants sight to another bot.
-    if (target.entity.isPlayer || target.entity.controllerType === 'human') {
+    if (game.state.mode!=='ffa'&&(target.entity.isPlayer || target.entity.controllerType === 'human')) {
       const others = game.actors.filter(a => a !== actor && a.alive && a.team === actor.team && a.bot?.target?.entity === target.entity && a.bot.burstRemaining > 0 && a.bot.burstUntil > now);
       if (others.length >= profile.humanAttackers) return false;
     }
@@ -441,6 +441,7 @@ export class BotController {
   }
   chooseRoute() {
     const { game, actor } = this, tactical = game.world.tactical;
+    if(game.state.mode==='ffa')return; // Individual patrols use their own navigation and observations.
     if(tactical?.kind==='floor5'){this.chooseFloorRoute();return;}
     if (!tactical || this.routeStarted || this.mode !== 'objective' || actor.team !== 'counterAnalysts' || actor.x < -10 || !this.goal || this.goal.x > -15 || game.bomb.status === 'planted' || game.hostages.some(h => h.escortId === actor.id)) return;
     const room = game.world.roomAt(this.goal.x, this.goal.z), lab = ['I01','I02'].includes(room?.id);
@@ -531,7 +532,7 @@ export class BotController {
     if(this.yieldPoint&&now<this.yieldUntil)return;
     this.nextRecovery=now+1.1+this.style.preference*.6;this.stuckTime=0;
     const bodies=g.actors.concat(g.hostages);
-    const obstruction=blockerOverride||bodies.find(o=>o.id===a.blockedBy&&o.alive!==false&&(!o.team||o.team===a.team||this.records.some(r=>r.entity===o&&r.visible)));
+    const obstruction=blockerOverride||bodies.find(o=>o.id===a.blockedBy&&o.alive!==false&&(!o.team||(g.state.mode!=='ffa'&&o.team===a.team)||this.records.some(r=>r.entity===o&&r.visible)));
     const blocker=obstruction&&nearFloor(w,a,obstruction,a.height)?obstruction:null;
     if(blocker){
       this.pathBlocker={...position(blocker),radius:a.radius+blocker.radius+.001,until:now+2.5};this.nextPath=0;
@@ -553,7 +554,7 @@ export class BotController {
       if(w.layeredTerrain)p.y=w.groundHeight(p.x,p.z,a.y,a.radius);
       if(!(offGraph?this.physicalRecoveryClear(p):w.navigation.clear(a,p)))continue;
       const crowded=point=>distance(point,p)<.55&&nearFloor(w,point,p,a.height);
-      if(bodies.some(o=>o!==a&&o.alive!==false&&!o.rescued&&(o.team===a.team||!o.team||o===blocker)&&
+      if(bodies.some(o=>o!==a&&o.alive!==false&&!o.rescued&&((g.state.mode!=='ffa'&&o.team===a.team)||!o.team||o===blocker)&&
         (crowded(o)||o.bot?.yieldPoint&&now<o.bot.yieldUntil&&crowded(o.bot.yieldPoint))))continue;
       this.yieldPoint=p;this.yieldDirect=offGraph;this.yieldUntil=now+1+this.style.preference*.7;this.path=[];this.nextPath=0;this.replans++;a.aiState='lämnar plats';
       g.emit('bot-yield',a,{blockerId:blocker?.id,...p});return;
@@ -565,7 +566,7 @@ export class BotController {
   physicalRecoveryClear(p){
     const {game:g,actor:a}=this;
     const known=g.actors.concat(g.hostages,g.state.zombies||[]).filter(o=>o!==a && o.alive!==false &&
-      !o.rescued && (!o.team||o.team===a.team) && distance(a,o)<4&&nearFloor(g.world,a,o,a.height));
+      !o.rescued && (!o.team||(g.state.mode!=='ffa'&&o.team===a.team)) && distance(a,o)<4&&nearFloor(g.world,a,o,a.height));
     return physicalRecoveryClear(g.world,a,p,known);
   }
   localBlockers(){return this.pathBlocker?.until>this.game.state.time?[this.pathBlocker]:[];}

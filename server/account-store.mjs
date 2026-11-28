@@ -5,6 +5,7 @@ import {basename,dirname,join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {DatabaseSync} from 'node:sqlite';
 import {BASE_ENTITLEMENTS,weaponLevelFromXP,playerLevelFromXP,validateArsenal} from '../src/fps/arsenal.mjs';
+import {challengeList,earnedOutfits} from './progression.mjs';
 import {applyMatchCredit} from './result-journal.mjs';
 
 const derive=promisify(scrypt);
@@ -46,7 +47,7 @@ export class AccountStore {
       this.db.exec('PRAGMA trusted_schema=OFF; PRAGMA foreign_keys=ON; PRAGMA busy_timeout=250; PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL');
       this.transaction(()=>{
         const version=this.db.prepare('PRAGMA user_version').get().user_version;
-        if(version>4)throw Error('Unsupported account database version.');
+        if(version>5)throw Error('Unsupported account database version.');
         if(!version)this.db.exec(schema);
         if(version<2)this.db.exec(`CREATE TABLE credential_attempts(name_hash TEXT PRIMARY KEY, failures INTEGER NOT NULL, until_ms INTEGER NOT NULL);
           CREATE INDEX attempts_expiry ON credential_attempts(until_ms);
@@ -62,6 +63,14 @@ export class AccountStore {
         if(version<4)this.db.exec(`CREATE TABLE arsenals(user_id TEXT PRIMARY KEY REFERENCES users ON DELETE CASCADE, profile TEXT NOT NULL);
           CREATE TABLE weapon_progress(user_id TEXT NOT NULL REFERENCES users ON DELETE CASCADE,weapon TEXT NOT NULL,xp INTEGER NOT NULL DEFAULT 0 CHECK(xp>=0),PRIMARY KEY(user_id,weapon));
           PRAGMA user_version=4;`);
+        if(version<5)this.db.exec(`CREATE TABLE challenge_progress(user_id TEXT NOT NULL REFERENCES users ON DELETE CASCADE,
+          challenge TEXT NOT NULL,count INTEGER NOT NULL CHECK(count>=0),PRIMARY KEY(user_id,challenge));
+          CREATE TABLE challenge_maps(user_id TEXT NOT NULL REFERENCES users ON DELETE CASCADE,map TEXT NOT NULL,PRIMARY KEY(user_id,map));
+          CREATE TABLE match_progression(instance TEXT NOT NULL,user_id TEXT NOT NULL,assists INTEGER NOT NULL,headshots INTEGER NOT NULL,
+          weapons TEXT NOT NULL,challenges TEXT NOT NULL,PRIMARY KEY(instance,user_id),
+          FOREIGN KEY(instance,user_id) REFERENCES summaries(instance,user_id) ON DELETE CASCADE);
+          CREATE INDEX match_progression_user ON match_progression(user_id);
+          PRAGMA user_version=5;`);
       });
       this.findUser=this.db.prepare('SELECT u.*,s.token AS session FROM users u JOIN sessions s ON s.user_id=u.id WHERE s.token=? AND s.origin=? AND s.expires>?');
       this.findDevice=this.db.prepare('SELECT token FROM devices WHERE token=? AND origin=? AND expires>?');
@@ -188,13 +197,28 @@ export class AccountStore {
       this.db.prepare('INSERT INTO arsenals(user_id,profile) VALUES(?,?) ON CONFLICT(user_id) DO UPDATE SET profile=excluded.profile').run(userId,JSON.stringify(profile));
     });
   }
+  validScoringSession(userId,session){
+    return !!this.db.prepare('SELECT 1 FROM sessions WHERE token=? AND user_id=? AND expires>?').get(session,userId,this.now());
+  }
+  challengeCounts(userId){
+    const counts={};
+    if(userId)for(const row of this.db.prepare('SELECT challenge,count FROM challenge_progress WHERE user_id=?').all(userId))counts[row.challenge]=row.count;
+    return challengeList(counts);
+  }
+  unlockedOutfits(userId){return userId?earnedOutfits(this.challengeCounts(userId)):[];}
+  progression(userId){
+    const challenges=this.challengeCounts(userId);
+    const weapons=userId?this.db.prepare('SELECT weapon AS id,xp FROM weapon_progress WHERE user_id=? ORDER BY weapon').all(userId):[];
+    const totals=userId?this.db.prepare('SELECT coalesce(sum(assists),0) AS assists,coalesce(sum(headshots),0) AS headshots FROM match_progression WHERE user_id=?').get(userId):{assists:0,headshots:0};
+    return {...totals,challenges,unlockedOutfits:earnedOutfits(challenges),weapons:weapons.map(w=>({...w,level:weaponLevelFromXP(w.id,w.xp)}))};
+  }
   profile(user,rooms=[],all=false){
-    if(!user)return {user:null,stats:emptyStats(),recent:[],rooms,arsenal:null,entitlements:BASE_ENTITLEMENTS};
+    if(!user)return {user:null,progression:this.progression(null),stats:emptyStats(),recent:[],rooms,arsenal:null,entitlements:BASE_ENTITLEMENTS};
     const stats=this.db.prepare(`SELECT count(*) AS matches,coalesce(sum(kills),0) AS kills,coalesce(sum(deaths),0) AS deaths,coalesce(sum(win),0) AS wins,
        (SELECT coalesce(sum(xp),0) FROM rewards WHERE user_id=?) AS xp FROM summaries WHERE user_id=?`).get(user.id,user.id);
     const recent=this.db.prepare('SELECT mode,map,played,kills,deaths,win FROM summaries WHERE user_id=? ORDER BY played DESC'+(all?'':' LIMIT 12')).all(user.id);
     const entitlements=this.arsenalEntitlements(user.id);
-    return {arsenal:this.arsenalFor(user.id,entitlements),entitlements,user:{username:user.username,displayName:user.display_name,createdAt:user.created},stats,recent,rooms};
+    return {arsenal:this.arsenalFor(user.id,entitlements),entitlements,progression:this.progression(user.id),user:{username:user.username,displayName:user.display_name,createdAt:user.created},stats,recent,rooms};
   }
   deviceFor(token,origin){
     if(!token)return;
@@ -236,6 +260,6 @@ export class AccountStore {
     });
   }
   recordMatch(instance,mode,map,entries){
-    this.transaction(()=>applyMatchCredit(this.db,{instance,mode,map,entries,played:this.now()}));
+    this.transaction(()=>applyMatchCredit(this.db,{version:2,instance,mode,map,entries,played:this.now()}));
   }
 }

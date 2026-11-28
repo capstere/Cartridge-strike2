@@ -16,8 +16,8 @@ async function privatePath(path) {
 }
 export function verifyAccountDatabase(db){
   const version=db.prepare('PRAGMA user_version').get().user_version;
-  if(![1,2,3,4].includes(version))throw Error('Unsupported account database version.');
-  for(const table of ['users','sessions','devices','invites','grants','rewards','summaries',...(version>=2?['credential_attempts']:[]),...(version>=3?['public_grants','public_blocks','public_reports']:[]),...(version>=4?['arsenals','weapon_progress']:[])]){
+  if(![1,2,3,4,5].includes(version))throw Error('Unsupported account database version.');
+  for(const table of ['users','sessions','devices','invites','grants','rewards','summaries',...(version>=2?['credential_attempts']:[]),...(version>=3?['public_grants','public_blocks','public_reports']:[]),...(version>=4?['arsenals','weapon_progress']:[]),...(version>=5?['challenge_progress','challenge_maps','match_progression']:[])]){
     if(!db.prepare("SELECT 1 FROM sqlite_schema WHERE type='table' AND name=?").get(table))throw Error('Incomplete account database schema.');
   }
   if(db.prepare('PRAGMA integrity_check').get().integrity_check!=='ok'||db.prepare('PRAGMA foreign_key_check').get())throw Error('Account database integrity check failed.');

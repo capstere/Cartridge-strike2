@@ -59,12 +59,16 @@ export async function createLocalServer(options={}) {
     arsenalRights(seat){
       return testMatch?.arsenalEntitlements ?? (accounts&&accounts.store.arsenalEntitlements(seat.credential?.user));
     }
+    outfitRights(seat){
+      return accounts?.store.unlockedOutfits(seat.credential?.user)??[];
+    }
     savedArsenal(seat){
       const user=seat.credential?.user;
       return user&&accounts?.store.arsenalFor(user);
     }
     beginAccountMatch(){
-      if(accounts)this.accountMatch=new MatchCredits(this.seats.values());
+      this.accountMatch=new MatchCredits(this.seats.values());
+      this.sim.game.onProgressEvent=event=>this.accountMatch?.event(this,event);
     }
     onDrop(client,code){
       super.onDrop(client,code);
@@ -94,7 +98,17 @@ export async function createLocalServer(options={}) {
     }
     finishAccountMatch(winner){
       if(!this.accountMatch)return;
-      accounts.recordMatch(this.accountMatch.id,this.state.mode,this.state.mapId,this.accountMatch.finish(winner));
+      const tracker=this.accountMatch;
+      const results=tracker.finish(winner,this);
+      const entries=results.filter(p=>p.user).map(({user,segments})=>({user,segments}));
+      const validated=accounts?.recordMatch(tracker.id,this.state.mode,this.state.mapId,entries)??[];
+      for(const {user,seat,segments} of results){
+        if(!seat)continue;
+        const current=segments.filter(p=>p.session===seat.credential?.session);
+        const credit=user&&accounts.store.validScoringSession(user,seat.credential.session)&&validated.find(p=>p.user===user);
+        tracker.present(this,seat,credit?[credit]:current,!!credit);
+      }
+      this.sim.game.onProgressEvent=null;
       this.accountMatch=null;
     }
     onDispose(){

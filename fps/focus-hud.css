@@ -179,3 +179,18 @@ html #mobile-controls .mobile-stick[data-mobile-stick].active.rushing::after{bor
 #bonus-controls button[data-state=ready] { border:2px solid #efba58; color:#ffe5a3 }
 #bonus-controls button[data-state=active] { color:#b5f3e5; border-color:#89d8c4 }
 #bonus-controls button:focus-visible { outline:3px solid white }
+
+#zone-control{position:absolute;top:clamp(55px,10vh,95px);left:50%;transform:translateX(-50%);display:flex;gap:4px;pointer-events:none}
+#zone-control[hidden]{display:none}
+#zone-control span{padding:3px 6px;border:1px solid #71818c;background:#131b24e8;color:#f2f4f5;font:600 11px var(--lb-display,sans-serif);white-space:nowrap}
+#zone-control b{margin-right:5px}
+#zone-control [data-status=Held]{border-color:#66c7b1}
+#zone-control [data-status=Enemy]{border-color:#de8176}
+#zone-control [data-status=Contested]{border-color:#f7be67}
+
+#replay-view{position:fixed;inset:0;z-index:1200;pointer-events:auto;color:#f6f4ed}
+#replay-view[data-stage=card]{background:radial-gradient(ellipse at center,#23191a,#0c0d10 78%)}
+.replay-strip{position:absolute;bottom:max(5vh,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:min(35rem,92vw);display:flex;align-items:center;justify-content:space-between;gap:1rem;background:#101417ed;border-left:3px solid #cb7855;padding:1rem 1.2rem;box-sizing:border-box}
+.replay-strip p{margin:.25rem 0}.replay-strip strong{font-size:clamp(1.1rem,3vw,1.75rem);overflow-wrap:anywhere}.replay-strip button{min-height:44px;flex:none}
+.replay-optic{position:absolute;left:50%;top:50%;width:72vmin;height:72vmin;transform:translate(-50%,-50%);border:2px solid #141515;border-radius:50%;box-shadow:0 0 0 150vmax #080a0a;background:linear-gradient(transparent calc(50% - 1px),#171919 50%,transparent calc(50% + 1px)),linear-gradient(90deg,transparent calc(50% - 1px),#171919 50%,transparent calc(50% + 1px))}
+.cs-replaying :is(#hud,#mobile-controls,#online-room,#scoreboard,#match-end,#countdown-look,#spectate){visibility:hidden!important;pointer-events:none!important}

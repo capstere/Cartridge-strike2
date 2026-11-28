@@ -1,12 +1,13 @@
 import {classWeaponItem} from './arsenal.mjs';
-import {bonusOrigin} from './bonuses.mjs';
+import {FFA,respawnMode,dominationObjective,spawnSide} from './match-modes.mjs';
+import {bonusOrigin,combatOpponents} from './bonuses.mjs';
 import {resetRush} from './rush.mjs';
 import {controlObjective,combatSpawnCandidates,activeControl} from './combat-flow.mjs';
 /** Arcade rules. Simulation time only; visual/audio systems never own damage or respawns. */
 import {seededRandom, WEAPONS} from './config.mjs';
 import {zombiePosition} from './zombie-poses.mjs';
 import {BotController} from './bots.mjs';
-export const MODES=Object.freeze({classic:'Classic rounds',endless:'Endless Action · auto-respawn'});
+export const MODES=Object.freeze({ffa:'Free-for-All',dom:'Domination',classic:'Classic rounds',endless:'Endless Action · auto-respawn'});
 export const RADIO=Object.freeze([
  {id:'together',text:'Stick together team',label:'Group up'},
  {id:'fallback',text:'Fall back',label:'Fall back'},
@@ -19,7 +20,7 @@ const dist=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 const pos=a=>({x:a.x,y:a.y||0,z:a.z});
 const eye=a=>({...pos(a),y:(a.y||0)+(a.height||1.7)-.12});
 const rocketOwners=new WeakMap();
-export const isEndless=g=>g.state.mode==='endless';
+export const isEndless=g=>respawnMode(g.state.mode);
 const aliveBodies=g=>[...g.actors,...g.hostages,...(g.state.zombies||[]),...(g.config.wanderers?g.state.wanderers||[]:[])].filter(a=>a.alive!==false&&!a.rescued);
 
 export function prepareActionRound(g){
@@ -33,7 +34,11 @@ export function prepareActionRound(g){
  s.phase='active';s.buyDeadline=s.time;s.roundStartedAt=s.time;s.deadline=Infinity;
  Object.assign(s.bomb,{status:'inactive',carrierId:null,deadline:Infinity,nextBeep:Infinity});
  for(const a of g.actors){equipEndless(g,a);a.spawnProtectedUntil=s.time+g.config.spawnProtection;}
- g.emit('start',null,{mode:'endless'});
+ if(s.mode===FFA&&!g.config.networkSlice){
+  for(const a of g.actors)a.alive=false;
+  for(const a of g.actors){const p=respawnPoint(g,a);if(p)Object.assign(a,p);a.alive=true;}
+ }
+ g.emit('start',null,{mode:s.mode});
 }
 export const defaultOnlineCartridge='he';
 export const onlinePrimaries=team=>['smg',team==='analysts'?'ar47':'cr4','shotgun','sniper','bazooka'];
@@ -60,19 +65,29 @@ function equipEndless(g,a){
 }
 /** Stay on the accepted connected floor; maximize distance and break sight, never open a room. */
 export function respawnPoint(g,a){
- const anchors=g.world.anchors[a.team]||g.world.anchors.hostages;
+ const free=g.state.mode===FFA;
+ const anchors=free?[...g.world.anchors.analysts,...g.world.anchors.counterAnalysts]:g.world.anchors[spawnSide(g,a)]||g.world.anchors.hostages;
  const home=anchors[a.index%anchors.length]||anchors[0];
  const nodes=g.world.navigation?.nodes||[];
- const candidates=[...combatSpawnCandidates(g,a),...anchors,...nodes.filter(n=>anchors.some(h=>dist(n,h)<7)).filter((_,i)=>i%3===0)].slice(0,180);
+ let field=[];
+ if(free){
+  if(!g.freeSpawnField){
+   const stride=Math.max(1,Math.floor(nodes.length/36));
+   g.freeSpawnField=nodes.filter((_,i)=>i%stride===0).slice(0,36).filter(n=>g.world.findPath(home,n).length);
+  }
+  field=g.freeSpawnField;
+ }
+ const candidates=[...field,...combatSpawnCandidates(g,a),...anchors,...nodes.filter(n=>anchors.some(h=>dist(n,h)<7)).filter((_,i)=>i%3===0)].slice(0,180);
  const living=aliveBodies(g).filter(o=>o!==a);
+ const enemies=living.filter(o=>combatOpponents(a,o,g.state.mode));
  let best=null,bestScore=-Infinity;
  for(const p of candidates){
   if(g.world.canOccupy&&!g.world.canOccupy(p.x,p.z,a.radius+.015,a.height,p.y??0))continue;
   if(living.some(o=>dist(o,p)<(o.radius||.2)+a.radius+.12))continue;
-  if(p.frontline&&living.some(o=>o.team&&o.team!==a.team&&dist(o,p)<7))continue;
+  if(p.frontline&&enemies.some(o=>dist(o,p)<7))continue;
   const control=activeControl(g);
-  let score=-dist(p,home)*.08-(control?dist(p,control)*.22:0);
-  for(const e of living.filter(o=>o.team&&o.team!==a.team)){
+  let score=free?0:-dist(p,home)*.08-(control?dist(p,control)*.22:0);
+  for(const e of enemies){
    // Visibility cannot affect this score at 18 m or farther.
    const d=dist(e,p),visible=d<18&&g.world.segmentClear({...p,y:(p.y??0)+1.4},eye(e),{vision:true});
    score+=Math.min(d,22)*.025-(visible?Math.max(0,18-d)*1.1:0);
@@ -108,13 +123,13 @@ export function tickActionState(g,dt){
 export function recordActionDeath(g,target,source,sourceTeam=source?.team){
  if(isEndless(g)){
   target.respawnAt=g.state.time+(['hostage','dwarf'].includes(target.kind)?10:g.config.respawnDelay);
-  if(target.team&&sourceTeam&&source!==target&&target.team!==sourceTeam)g.state.score[sourceTeam]++;
+  if(g.state.mode==='endless'&&target.team&&sourceTeam&&source!==target&&target.team!==sourceTeam)g.state.score[sourceTeam]++;
  }
- if(source&&source!==target&&sourceTeam===target.team)source.teamKills=(source.teamKills||0)+1;
+ if(g.state.mode!==FFA&&source&&source!==target&&sourceTeam===target.team)source.teamKills=(source.teamKills||0)+1;
 }
 export function sendRadio(g,id,actor=g.player){
  const phrase=RADIO.find(p=>p.id===id),s=g.state;
- if(!phrase||!actor?.alive||s.paused||!['active','buy'].includes(s.phase)||s.time-s.radioAt<2)return false;
+ if(s.mode===FFA||!phrase||!actor?.alive||s.paused||!['active','buy'].includes(s.phase)||s.time-s.radioAt<2)return false;
  s.radioAt=s.time;const origin=pos(actor),back=id==='fallback';
  let target={x:origin.x-Math.sin(actor.yaw)*(back?-4:6),y:origin.y??0,z:origin.z-Math.cos(actor.yaw)*(back?-4:6)};
  if(!['go','incoming','fallback'].includes(id))target=origin;
@@ -130,7 +145,7 @@ export function actionObjective(bot){
   if(dist(a,order.point)<1+(.25*a.index))bot.setGoal(null);return true;
  }
  if(!isEndless(g))return false;
- if(controlObjective(bot))return true;
+ if(dominationObjective(bot)||controlObjective(bot))return true;
  // Shared public patrol destinations, not enemy coordinates. Perception still needs sight/hearing.
  const w=g.world;
  const points=w.tactical?.patrolPoints?.length?w.tactical.patrolPoints:[w.anchors.bomb,w.tactical?.guardPoints?.south,w.anchors.rescue,w.tactical?.guardPoints?.north,...w.anchors.hostages].filter(Boolean);
@@ -143,7 +158,7 @@ export function friendlyLineClear(bot){
  const a=bot.actor,e=bot.target?.entity;if(!e)return true;
  const dx=e.x-a.x,dz=e.z-a.z,len=dx*dx+dz*dz;if(len<.01)return true;
  return !aliveBodies(bot.game).some(b=>{
-  if(b===a||b===e||b.kind==='zombie'||b.team&&b.team!==a.team)return false;
+  if(b===a||b===e||b.kind==='zombie'||combatOpponents(a,b,bot.game.state.mode))return false;
   const t=((b.x-a.x)*dx+(b.z-a.z)*dz)/len;
   return t>0&&t<1&&Math.hypot(b.x-a.x-t*dx,b.z-a.z-t*dz)<(b.radius||.2)+.07;
  });

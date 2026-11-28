@@ -41,9 +41,11 @@ export const ResidentState=schema({
   x:t.float64(),y:t.float64(),z:t.float64(),yaw:t.float64(),radius:t.float64(),height:t.float64(),alive:t.boolean(),hp:t.float32(),
   behavior:t.string(),clip:t.string(),poseAt:t.float64(),rate:t.float32(),offset:t.float32(),loop:t.boolean(),
 },'FPSResidentV10');
-export const RoomState=schema({mapId:t.string(),mode:t.string(),round:t.uint32(),roundPhase:t.string(),zombiesEnabled:t.boolean(),dancemanEnabled:t.boolean(),friendlyFire:t.boolean(),botDifficulty:t.string(),residents:t.map(ResidentState),deadline:t.float64(),buyDeadline:t.float64(),resultDeadline:t.float64(),roundReason:t.string(),roundWinner:t.string(),
+export const ZoneState=schema({id:t.string(),x:t.float32(),y:t.float32(),z:t.float32(),radius:t.float32(),
+  owner:t.string(),progress:t.float32(),contested:t.boolean()},'FPSZoneV22');
+export const RoomState=schema({zones:t.map(ZoneState),mapId:t.string(),mode:t.string(),round:t.uint32(),roundPhase:t.string(),zombiesEnabled:t.boolean(),dancemanEnabled:t.boolean(),friendlyFire:t.boolean(),botDifficulty:t.string(),residents:t.map(ResidentState),deadline:t.float64(),buyDeadline:t.float64(),resultDeadline:t.float64(),roundReason:t.string(),roundWinner:t.string(),
   bombStatus:t.string(),carrierId:t.string(),bombX:t.float32(),bombY:t.float32(),bombZ:t.float32(),bombDeadline:t.float64(),hostages:t.map(HostageState),fillBots:t.boolean(),brokenGlass:t.map('number'),drops:t.map(DropState),smokes:t.map(SmokeState),grenades:t.map(GrenadeState),projectiles:t.map(RocketState),actors:t.map(ActorState),tick:t.uint32(),time:t.float64(),
   phase:t.string(),matchId:t.uint32(),ownerId:t.string(),remainingSeconds:t.float64(),durationSeconds:t.uint16(),scoreTarget:t.uint16(),
   tdmMinutes:t.uint8(),tdmKills:t.uint8(),classicWins:t.uint8(),analystsBots:t.uint8(),counterAnalystsBots:t.uint8(),
   winner:t.string(),reason:t.string(),results:t.string(),resultsAtMs:t.float64(),
-  analysts:t.uint16(),counterAnalysts:t.uint16(),worldRevision:t.uint32(),doors:t.map(DoorState),elevatorProgress:t.float64(),elevatorOpenAt:t.float64()},'FPSRoomV14');
+  analysts:t.uint16(),counterAnalysts:t.uint16(),worldRevision:t.uint32(),doors:t.map(DoorState),elevatorProgress:t.float64(),elevatorOpenAt:t.float64()},'FPSRoomV22');

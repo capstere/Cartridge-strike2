@@ -121,7 +121,7 @@
 
       <div class="lb-block">
         <div class="lb-label"><b>Game mode</b></div>
-        <div class="mode-picker lb-mode"><div class="lb-seg" id="lb-mode-seg" role="radiogroup" aria-label="Game mode"></div><label for="game-mode" class="sr-only">Game mode</label><select id="game-mode" aria-label="Game mode"><option value="classic">Classic rounds</option><option value="endless">Endless Action</option></select><p id="mode-description">First team to win five rounds.</p><label id="loadout-row" hidden>Starting weapon <select id="loadout" aria-label="Starting weapon"><option value="smg">Pulse SMG</option><option value="shotgun">Breach Shotgun</option><option value="sniper">Scout Rifle</option><option value="bazooka">Rocket Launcher</option></select></label></div>
+        <div class="mode-picker lb-mode"><div class="lb-seg" id="lb-mode-seg" role="radiogroup" aria-label="Game mode"></div><label for="game-mode" class="sr-only">Game mode</label><select id="game-mode" aria-label="Game mode"><option value="classic">Classic rounds</option><option value="endless">Endless Action</option><option value="ffa">Free-for-All</option><option value="dom">Domination</option></select><p id="mode-description">First team to win five rounds.</p><label id="loadout-row" hidden>Starting weapon <select id="loadout" aria-label="Starting weapon"><option value="smg">Pulse SMG</option><option value="shotgun">Breach Shotgun</option><option value="sniper">Scout Rifle</option><option value="bazooka">Rocket Launcher</option></select></label></div>
       </div>
 
       <a hidden class="local-network-link" href="?network=local">LAN multiplayer · up to 5v5</a>
@@ -166,9 +166,10 @@
   <div id="hud" hidden>
     <div id="deployment-countdown" role="status" aria-live="polite" aria-atomic="true" hidden><small>Match begins in</small><strong></strong></div>
     <button id="countdown-look" type="button" hidden>Enable mouse look</button>
-    <div class="top-hud"><div class="score analysts"><strong id="score-a">0</strong><span>ANALYSTS <small id="alive-a">5 alive</small></span></div><div class="round-clock"><small id="round-label">ROUND 1</small><b id="timer">0:15</b><small id="phase">BUY PHASE</small></div><div class="score counter"><span>COUNTER ANALYSTS <small id="alive-ca">5 alive</small></span><strong id="score-ca">0</strong></div></div>
+    <div class="top-hud"><div class="score analysts"><strong id="score-a">0</strong><span><b id="score-name-a">ANALYSTS</b> <small id="alive-a">5 alive</small></span></div><div class="round-clock"><small id="round-label">ROUND 1</small><b id="timer">0:15</b><small id="phase">BUY PHASE</small></div><div class="score counter"><span><b id="score-name-ca">COUNTER ANALYSTS</b> <small id="alive-ca">5 alive</small></span><strong id="score-ca">0</strong></div></div>
     <div class="map-panel"><p id="location">Unit 05</p><canvas id="minimap" width="224" height="158" aria-label="Map showing teammates and objectives"></canvas><small class="offline-map-hint">M tactical map · B buy</small><small class="online-map-hint">M map · Z radio</small><small id="map-legend" hidden></small></div>
     <div id="killfeed" aria-live="polite"></div>
+    <div id="zone-control" aria-label="Control zones" hidden></div>
     <div id="objectives"><span id="bomb-status"></span><span id="hostage-status"></span></div>
     <div id="crosshair"><i></i><i></i><i></i><i></i></div><div id="hitmarker">×</div>
     <div id="prompt"><kbd>E</kbd><span id="prompt-text"></span><div class="progress"><div id="action-progress"></div></div></div>
@@ -182,6 +183,13 @@
   <div id="flash-overlay"></div><div id="damage-overlay"></div><div id="damage-direction">⌃</div><div id="smoke-overlay"></div>
   <section id="buy" class="modal-overlay" hidden><div class="buy-card card"><div class="card-top"><span>EQUIPMENT <b id="buy-money"></b></span><button class="close" id="close-buy" aria-label="Close equipment menu">×</button></div><div class="buy-heading"><h2>Choose equipment</h2><p id="buy-note">Buy in your spawn zone during the buy phase.</p></div><div id="shop"></div><div id="buy-message" role="status"></div><button id="return-buy" class="primary">RETURN TO MATCH →</button></div></section>
   <section id="pause" class="modal-overlay" hidden><div class="card pause-card"><p class="eyebrow">MATCH PAUSED</p><h2>PAUSED</h2><p>Round timers and bots are paused.</p><div id="pause-settings"></div><button id="resume" class="primary">RESUME →</button><button id="fullscreen-toggle" class="secondary" type="button" hidden>ENTER FULLSCREEN</button><p id="fullscreen-hint" class="small" hidden>In Safari on iPhone, choose Share → Add to Home Screen to play in a standalone window.</p><button id="restart" class="secondary">RETURN TO LOBBY</button><div class="controls-list"><span>E <b>Hold to plant / defuse</b></span><span>4 <b>Cycle cartridge grenades</b></span><span>5 <b>Objective bomb</b></span><span>Tab <b>Scoreboard</b></span></div></div></section>
+  <section id="replay-view" hidden aria-label="Match replay">
+    <div class="replay-optic" hidden aria-hidden="true"></div>
+    <div class="replay-strip">
+      <div><p class="eyebrow" id="replay-stage"></p><strong id="replay-killer"></strong><p id="replay-detail"></p></div>
+      <button type="button" id="replay-skip">Skip replay</button>
+    </div>
+  </section>
   <section id="scoreboard" class="modal-overlay" hidden><div class="card scoreboard-card"><div class="card-top"><span>SCOREBOARD</span><span id="board-round"></span></div><div id="score-tables"></div><p class="small">Hold Tab · Hostages are listed separately from the teams</p></div></section>
   <section id="match-end" class="modal-overlay" hidden><div class="card pause-card"><p class="eyebrow">MATCH COMPLETE</p><h2 id="match-winner"></h2><p id="match-score"></p><button id="new-match" class="primary">RETURN TO LOBBY →</button></div></section>
   <div id="bonus-controls" role="group" aria-label="Killstreak rewards" hidden></div>

@@ -26,18 +26,18 @@ test('versioned migration, live WAL backup, isolated restore and authoritative r
   assert.equal(before.stats.matches,2);assert.equal(before.stats.kills,6);assert.equal(before.stats.xp,110);
   db.close();
   const v1=new DatabaseSync(source);
-  v1.exec('DROP TABLE arsenals; DROP TABLE weapon_progress; DROP TABLE public_grants; DROP TABLE public_blocks; DROP TABLE public_reports; DROP TABLE credential_attempts; DROP INDEX grants_invite; PRAGMA user_version=1');v1.close();
+  v1.exec('DROP TABLE match_progression; DROP TABLE challenge_maps; DROP TABLE challenge_progress; DROP TABLE arsenals; DROP TABLE weapon_progress; DROP TABLE public_grants; DROP TABLE public_blocks; DROP TABLE public_reports; DROP TABLE credential_attempts; DROP INDEX grants_invite; PRAGMA user_version=1');v1.close();
   const oldCopy=join(dir,'v1.sqlite');
   assert.deepEqual(await copyAccountDatabase('backup',source,oldCopy),{version:1});
   db=new AccountStore(source);
-  assert.equal(db.db.prepare('PRAGMA user_version').get().user_version,4);
+  assert.equal(db.db.prepare('PRAGMA user_version').get().user_version,5);
   assert.deepEqual(db.profile(db.userFor(account.token,origin)),before);
   await Promise.all([copyAccountDatabase('backup',source,backup),Promise.resolve().then(()=>db.recordMatch(first,'tdm','floor-5',[result]))]);
   assert.equal((await stat(backup)).mode&0o777,0o600);
   const content=await readFile(backup);
   for(const proof of [profile.password,account.token,account.recoveryCode,invite.shortCode,invite.token,device.token])assert(!content.includes(proof));
   await assert.rejects(copyAccountDatabase('restore',backup,source),/new isolated/);
-  assert.deepEqual(await copyAccountDatabase('restore',backup,restore),{version:4});
+  assert.deepEqual(await copyAccountDatabase('restore',backup,restore),{version:5});
   const recovered=new AccountStore(restore);
   recovered.recordMatch(second,'classic','floor-5',[result]);
   assert.deepEqual(recovered.profile(recovered.userFor(account.token,origin)),before);
@@ -108,5 +108,53 @@ test('server-owned XP unlocks private class slots and fittings across restart an
     assert.deepEqual(restored.arsenal,profile);assert.equal(restored.entitlements.weaponLevels.smg,3);
     assert.equal(restored.entitlements.weaponLevels.cr4,undefined);
     assert.equal(store.profile(null).arsenal,null);
+  }finally{store.close();}
+});
+
+test('private earned progression migrates v4, folds live sessions, caps outfits, and survives backup, replay and restore',async t=>{
+  const dir=await mkdtemp(join(tmpdir(),'cs3-earned-restore-'));t.after(()=>rm(dir,{recursive:true,force:true}));
+  const path=join(dir,'original.sqlite'),snapshot=join(dir,'snapshot.sqlite'),restored=join(dir,'restored.sqlite');
+  let store=new AccountStore(path);
+  try{
+    const credentials={username:'earned_player',password:randomBytes(20).toString('hex')};
+    const account=await store.register(credentials,origin),user=store.userFor(account.token,origin);
+    store.recordMatch('legacy','classic','floor5-prepared',[{user:user.id,kills:2,deaths:3,win:true}]);
+    // Reproduce the published schema v4 with a pre-existing signed result and weapon.
+    store.db.exec('DROP TABLE match_progression; DROP TABLE challenge_progress; DROP TABLE challenge_maps; PRAGMA user_version=4');
+    store.db.prepare('INSERT INTO weapon_progress VALUES(?,?,?)').run(user.id,'smg',300);
+    store.close();store=new AccountStore(path);
+    const before=store.profile(user);
+    assert.deepEqual({...before.stats},{matches:1,kills:2,deaths:3,wins:1,xp:45});
+    assert.equal(before.progression.challenges.length,18);
+    assert(before.progression.challenges.every(c=>c.count===0));
+    const part={session:user.session,kills:2,deaths:1,headshots:1,assists:1,win:true,weapons:{smg:250},
+      challenges:{rPm:151,rMouv:25,rDouble:14,fCartes:1},completed:true};
+    const entries=[{user:user.id,segments:[{...part,session:'revoked'},part]}];
+    store.recordMatch('match-a','ffa','embruns',entries);
+    store.recordMatch('match-a','ffa','embruns',entries);
+    const first=store.profile(user);
+    assert.equal(first.stats.xp,100);
+    assert.equal(first.progression.assists,1);assert.equal(first.progression.headshots,1);
+    assert.deepEqual(first.progression.unlockedOutfits,[]);
+    assert.deepEqual(first.progression.weapons,[{id:'smg',xp:550,level:2}]);
+    assert.deepEqual(first.entitlements.weaponLevels,{smg:2});
+    assert.equal(first.progression.challenges.find(c=>c.id==='rPm').count,150);
+    store.recordMatch('match-b','ffa','embruns',entries);
+    const complete=store.profile(user);
+    assert.equal(complete.progression.challenges.find(c=>c.id==='fCartes').count,1);
+    assert.deepEqual(complete.progression.unlockedOutfits,['raptor']);
+    assert.deepEqual(store.unlockedOutfits(user.id),['raptor']);
+    const final=store.db.prepare('SELECT challenges FROM match_progression WHERE instance=? AND user_id=?').get('match-b',user.id);
+    assert.deepEqual(JSON.parse(final.challenges),{rDouble:1},'completion shows only actual new progress');
+    await copyAccountDatabase('backup',path,snapshot);
+    await copyAccountDatabase('restore',snapshot,restored);
+    store.close();store=new AccountStore(restored);
+    store.recordMatch('match-b','ffa','embruns',entries);
+    assert.deepEqual(store.profile(store.userFor(account.token,origin)),complete);
+    assert.equal(store.validScoringSession(user.id,user.session),true);
+    store.logout(account.token,origin);
+    assert.equal(store.validScoringSession(user.id,user.session),false);
+    store.recordMatch('after-logout','ffa','meltem',entries);
+    assert.deepEqual(store.profile(user),complete);
   }finally{store.close();}
 });

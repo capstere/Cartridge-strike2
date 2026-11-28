@@ -1,6 +1,7 @@
 // Class list and workshop adapted from Riposte 09n-armurerie.js (MIT).
 import {PRESETS,CUSTOM_LEVELS,ATTACHMENTS,CAMOS,BASE_ENTITLEMENTS,defaultArsenal,resolveClass,
   weaponLevel,weaponFits,weaponDefinition,readArsenal,saveArsenal,hasSavedArsenal} from './arsenal.mjs';
+import {applyWardrobeEntitlements} from './character-library.mjs?v=6.1.2';
 import {WEAPONS} from './config.mjs';
 import {aimFov,canAim} from './tactical-rules.mjs';
 import {accountRequest} from './account-profile.mjs';
@@ -14,6 +15,9 @@ let accountClass=null;
 let accountRevision=0;
 const hasAccountService=()=>location.protocol==='https:'&&!location.hostname.endsWith('.github.io');
 function adoptAccount(data){
+  const progression=data?.user?data.progression:null;
+  applyWardrobeEntitlements(progression?.unlockedOutfits);
+  window.dispatchEvent(new CustomEvent('cs-wardrobe-progress',{detail:progression??null}));
   accountClass=data?.user?{profile:data.arsenal||null,entitlements:data.entitlements||BASE_ENTITLEMENTS}:null;
 }
 export async function refreshArsenalAccount(){
@@ -24,7 +28,7 @@ export async function refreshArsenalAccount(){
     if(rev===accountRevision)adoptAccount(data);
     return data;
   }catch{
-    if(rev===accountRevision)accountClass=null;
+    if(rev===accountRevision)adoptAccount(null);
     return undefined;
   }
 }
