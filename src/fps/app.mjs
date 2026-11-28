@@ -533,6 +533,8 @@ async function joinNetwork(options){
 function applyNetworkMode(){
  world.networkMode=game.state.mode;world.networkClassic=game.state.mode==='classic';minimapCache.invalidate();setMapExpanded(false);
  const soloOpponents=game.state.mode==='ffa',zones=game.state.mode==='dom';
+ const keyHints=document.querySelector('.key-hints');
+ if(keyHints)keyHints.textContent=soloOpponents?accessEnglish.bindings.replace(' · Z radio',''):accessEnglish.bindings;
  setText('online-map-hint',soloOpponents?'M map':'M map · Z radio');
  setText('map-legend',soloOpponents?'Arrow · You':zones?'Arrow · You    Dot · Team    A/B/C · Control zones':world.networkClassic?'Arrow · You    Dot · Team    B · Bomb site    H · Hostages    R · Rescue zone':'Arrow · You    Dot · Team');
  $('minimap').setAttribute('aria-label',soloOpponents?'Tactical map showing your heading':zones?'Tactical map showing teammates and control zones':world.networkClassic?'Tactical map showing your heading, teammates, spawns and objectives':'Tactical map showing your heading, teammates and spawns');

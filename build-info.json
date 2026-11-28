@@ -2522,7 +2522,7 @@
     {
       "path": "shared/multiplayer/build.mjs",
       "bytes": 660,
-      "sha256": "f3657e9cf82e1c8e400bfc1d1f7cc9039e766251b79e32eec7091f996b4fcd73"
+      "sha256": "455ad195f5e4a75f28926ee5258396fe4c078c3aedb4b6945a0672cf963d0fa6"
     },
     {
       "path": "shared/multiplayer/collision-contract.mjs",
@@ -2542,7 +2542,7 @@
     {
       "path": "shared/multiplayer/map-build.mjs",
       "bytes": 2831,
-      "sha256": "4a1a30fe4cabdc4b707269af2d7950960ca5d1520653b023582b4a515cd91c34"
+      "sha256": "b32fcc76c1cffdb3881f58d4b3bff9f9a8fc939598ad4bb5f3ab77f2b716f33d"
     },
     {
       "path": "shared/multiplayer/maps.mjs",
@@ -2616,8 +2616,8 @@
     },
     {
       "path": "src/fps/app.mjs",
-      "bytes": 75613,
-      "sha256": "bdddf2780a7a03e1acd0aadd7fc804d554f92549c4dda4bbe60cb7db502aecd5"
+      "bytes": 75788,
+      "sha256": "36f9d53b000a236f4414552c545ea2f209898396e15a26a372a195c995cda2fe"
     },
     {
       "path": "src/fps/arsenal-menu.mjs",
@@ -3001,8 +3001,8 @@
     },
     {
       "path": "src/fps/network/menu.mjs",
-      "bytes": 8611,
-      "sha256": "af468e2dd5ec656d7729ba355ce6817ab11fec6d3d91dc6113dcd2ae88b3b2ec"
+      "bytes": 8908,
+      "sha256": "70c08aa8fdf1e81dce7d6c2a108485d979e16c697ee609f1e113c146cbd9fde5"
     },
     {
       "path": "src/fps/network/room-invitation.mjs",
@@ -3640,7 +3640,7 @@
       "sha256": "9b0c24534a47f2e1c9549a63a5e00a850577e22fe8d18dbc7a532008a027cb89"
     }
   ],
-  "bytes": 82009763,
+  "bytes": 82010235,
   "sourceDirectoriesExcluded": [
     "references",
     "reviews",
