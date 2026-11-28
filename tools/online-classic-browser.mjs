@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {writeFileSync} from 'node:fs';
+import {mkdirSync,writeFileSync} from 'node:fs';
 import {join} from 'node:path';
 import {setTimeout as delay} from 'node:timers/promises';
 import {chromium} from '../frontline/source/tools/dev/node_modules/playwright-core/index.mjs';
@@ -196,6 +196,11 @@ try{
   }
   assert.deepEqual(errors,[]);console.log('PASS Classic two rendered clients, desktop and mobile buys, plant, touch defuse, authoritative result and survivor touch reload during the next buy phase.');
 }catch(error){
- for(const page of pages)console.error(await page.evaluate(()=>({fatal:document.querySelector('#fatal pre')?.textContent,notice:document.querySelector('#room-notice')?.textContent,status:document.querySelector('#network-status')?.textContent,hud:document.querySelector('#phase')?.textContent,prompt:document.querySelector('#prompt-text')?.textContent})).catch(()=>null));
+ const failureDir='test-results/online';
+ mkdirSync(failureDir,{recursive:true});
+ for(const [index,page] of pages.entries()){
+   console.error(await page.evaluate(()=>({fatal:document.querySelector('#fatal pre')?.textContent,notice:document.querySelector('#room-notice')?.textContent,status:document.querySelector('#network-status')?.textContent,hud:document.querySelector('#phase')?.textContent,prompt:document.querySelector('#prompt-text')?.textContent})).catch(()=>null));
+   await page.screenshot({path:join(failureDir,'classic-failure-'+(index?'touch':'desktop')+'.png'),timeout:5000}).catch(()=>{});
+ }
  console.error(errors);throw error;
 }finally{for(const b of browsers)await b.close();await local.close();}

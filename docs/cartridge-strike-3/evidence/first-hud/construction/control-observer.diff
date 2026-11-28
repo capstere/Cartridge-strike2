@@ -1,0 +1,135 @@
+diff --git a/src/fps/app.mjs b/src/fps/app.mjs
+index 1bf959d..8b9fb14 100644
+--- a/src/fps/app.mjs
++++ b/src/fps/app.mjs
+@@ -105,6 +105,11 @@ function releaseWorldPresentation(){
+  audio.reset();audio.world=null;audio.game=null;
+  world=null;displayMapId=null;
+ }
++function profileLoad(name, work){
++ const start=performance.now();
++ try{return work();}
++ finally{if(typeof window!=='undefined')(window.cs3LoadSpans??=[]).push({name,start,end:performance.now()});}
++}
+ function loadRoomWorld(contract,mode,signal){
+  async function load(){
+   signal.throwIfAborted();
+@@ -117,14 +122,16 @@ function loadRoomWorld(contract,mode,signal){
+    if(await sha256(body)!==contract.mapHash)throw Error('Map version mismatch');
+    signal.throwIfAborted();
+    const {collisionContract}=await import('../../shared/multiplayer/collision-contract.mjs');
+-   const candidate=createWorld({levelProject:englishPublishedFixtures(parseProject(body)),fresh:true});
+-   if(await sha256(collisionContract(candidate))!==contract.collisionHash)throw Error('Collision version mismatch');
++   const candidate=profileLoad('world total',()=>createWorld({levelProject:profileLoad('English fixture',()=>englishPublishedFixtures(profileLoad('parse validate',()=>parseProject(body)))),fresh:true}));
++   if(await sha256(profileLoad('collision payload',()=>collisionContract(candidate)))!==contract.collisionHash)throw Error('Collision version mismatch');
+    signal.throwIfAborted();
+-   prepareNetworkWorld(candidate);
++   profileLoad('prepare network',()=>prepareNetworkWorld(candidate));
+    releaseWorldPresentation();
+    try{
+-    renderer=new Renderer($('game'),candidate,settings,{roomActors:networkSession?.room?.state.actors,signal});
++    renderer=profileLoad('renderer ctor',()=>new Renderer($('game'),candidate,settings,{roomActors:networkSession?.room?.state.actors,signal}));
++    const assetStart=performance.now();
+     await renderer.assetsReady;
++    window.cs3LoadSpans.push({name:'assets elapsed async',start:assetStart,end:performance.now()});
+     signal.throwIfAborted();
+     grenadeAssist=new GrenadeAssist(renderer,settings);
+     world=audio.world=candidate;displayMapId=map.id;
+diff --git a/src/fps/world.mjs b/src/fps/world.mjs
+index afc1fdb..86b53ab 100644
+--- a/src/fps/world.mjs
++++ b/src/fps/world.mjs
+@@ -38,14 +38,19 @@ export function inheritFloor5Gameplay(project){
+  return p;
+ }
+ 
++function profileLoad(name, work){
++ const start=performance.now();
++ try{return work();}
++ finally{if(typeof window!=='undefined')(window.cs3LoadSpans??=[]).push({name,start,end:performance.now()});}
++}
+ function createLevelWorld(project,{fresh=false,template=null}={}){
+- project=inheritFloor5Gameplay(fresh?structuredClone(project):project);
+- const key=JSON.stringify(project);
++ project=profileLoad('inherit plan',()=>inheritFloor5Gameplay(fresh?structuredClone(project):project));
++ const key=profileLoad('cache key',()=>JSON.stringify(project));
+  if(!fresh&&levelCacheKey===key&&levelCache)return levelCache;
+  // The scene resolver reads a cached Floor 5 baseline. Detach nested polygons,
+  // furniture records and source entries before exposing a room-owned world.
+- const resolved=levelProjectToWorldData(project);
+- const {data,anchors,scene}=fresh?structuredClone(resolved):resolved;
++ const resolved=profileLoad('resolve level',()=>levelProjectToWorldData(project));
++ const {data,anchors,scene}=profileLoad('detach level',()=>fresh?structuredClone(resolved):resolved);
+  const source=globalThis.SpelWorldForLevel(data);
+  const description=source.build({doors:Object.fromEntries(data.doors.filter(d=>d.accessCardConfirmed).map(d=>[d.id,true]))});
+  paintDescription(description,data);
+@@ -61,11 +66,11 @@ function createLevelWorld(project,{fresh=false,template=null}={}){
+  const navPhysics={...physics,dynamicPassages:()=>doors.elevators.progress<1,canOccupy:(x,z,r=ACTOR_RADIUS,h=1.7,y=0)=>physics.staticCanOccupy(x,z,r,h,y)&&
+   !doorClearance.query(x,z,r,scratch).some(b=>circleHitsBox(x,z,r,b))&&
+   !doors.elevators.boxes.some(b=>circleHitsBox(x,z,r,b))};
+- const navigation=createNavigation(data,navPhysics,{template}),roomAt=(x,z)=>[...data.rooms,...data.corridors].find(r=>insidePolygon(x,z,r.polygon))||null;
++ const navigation=profileLoad('navigation',()=>createNavigation(data,navPhysics,{template})),roomAt=(x,z)=>[...data.rooms,...data.corridors].find(r=>insidePolygon(x,z,r.polygon))||null;
+  physics.setDynamicBoxes(doors.boxes);
+  const glass=createGlassState(glassPlan,physics,change=>navigation.updateGlass(change));
+  const setElevatorProgress=t=>{if(doors.elevators.cabins.length&&doors.elevators.setProgress(t))navigation.invalidate();};
+- const world={setElevatorProgress,newLevel:true,project,projectScene:scene,description,data,anchors,doors,glass,details:null,living:null,furnishings:{instances:[],boxes:[]},tactical:createFloorTactics(navigation,anchors,template),
++ const world={setElevatorProgress,newLevel:true,project,projectScene:scene,description,data,anchors,doors,glass,details:null,living:null,furnishings:{instances:[],boxes:[]},tactical:profileLoad('tactics',()=>createFloorTactics(navigation,anchors,template)),
+   roomAt,materialAt:(x,z)=>roomAt(x,z)?.surface||'carpet',...physics,findPath:navigation.findPath,navigation,
+   statistics:{...physics.statistics,navigation:navigation.statistics,furnishings:0}};
+  if(!fresh){levelCacheKey=key;levelCache=world;}
+diff --git a/tools/first-hud-admission.mjs b/tools/first-hud-admission.mjs
+index df90972..28b2a2b 100644
+--- a/tools/first-hud-admission.mjs
++++ b/tools/first-hud-admission.mjs
+@@ -96,7 +96,7 @@ export function admissionReceipt(){
+   const {firstVisibleCallback,detailed,spans,tasks}=window.admissionTrace;
+   // rAF timestamps, handler arrival time and the event timestamp differ. Retain all three.
+   const within=([handler,stamp])=>stamp>=firstHud-50&&stamp<=following[0]&&handler<=horizon;
+-  return {firstHud,nextRaf:following[0],gap:following[1],firstVisibleCallback,markers,warmWindows,
++  return {loadSpans:window.cs3LoadSpans,loadInputs:input.filter(([h,s])=>s>=join&&h<=firstHud),loadRaf:raf.filter(([t,g])=>t>=join&&t-g<=firstHud),firstHud,nextRaf:following[0],gap:following[1],firstVisibleCallback,markers,warmWindows,
+     joinToHud:firstHud-join,loadingWorstRaf:Math.max(0,...raf.filter(([t])=>t>=join&&t<=firstHud).map(([,gap])=>gap)),
+     loadingWorstInput:Math.max(0,...input.filter(([handler,stamp])=>stamp>=join&&handler<=firstHud).map(([handler,stamp])=>handler-stamp)),
+     preparation:interval?{...interval,raf:raf.filter(([t,gap])=>t-gap<=interval.end&&t>=interval.start),input:input.filter(([t,stamp])=>stamp>=interval.start&&stamp<=interval.end)}:undefined,
+diff --git a/tools/online-bonuses-browser.mjs b/tools/online-bonuses-browser.mjs
+index 1f91f61..621b06c 100644
+--- a/tools/online-bonuses-browser.mjs
++++ b/tools/online-bonuses-browser.mjs
+@@ -28,7 +28,7 @@ async function wait(check,message,ms=12000){
+   while(!await check()){assert(performance.now()<end,message);await delay(35);}
+ }
+ async function open(touch){
+-  const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',
++  const browser=await chromium.launch({env:{...process.env,XDG_RUNTIME_DIR:touch?'/tmp/cs3-floor5-load-guest':process.env.XDG_RUNTIME_DIR},executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',
+     headless:!process.env.WAYLAND_DISPLAY,args:['--use-angle='+(process.env.FPS_NETWORK_ANGLE||'gl-egl'),
+       '--disable-background-timer-throttling','--disable-renderer-backgrounding','--disable-backgrounding-occluded-windows',
+       '--disable-dev-shm-usage',...(process.env.WAYLAND_DISPLAY?['--ozone-platform=wayland']:[])]});
+@@ -201,19 +201,21 @@ qualification:try{
+     await writeFile(join(output,(i?'emulated':'desktop')+'-waiting.png'),Buffer.from(image,'base64'));
+     waiting.push(meta);
+   }
++  if(admission)await writeFile(join(output,'waiting-observed.json'),JSON.stringify({waiting,loads:await Promise.all(pages.map(page=>page.evaluate(()=>({spans:window.cs3LoadSpans,inputs:window.coldStartup.input,hud:window.coldStartup.firstHud}))))}));
+   console.log('Both players joined and entered ready state');
+   await press(host,'#room-start');await waitForActiveHud(desktop);await enterTouchMatch(touch);
+-  if(await desktop.locator('#pause').isHidden()&&!await desktop.evaluate(()=>!!document.pointerLockElement))await desktop.keyboard.press('Escape');
+-  if(await desktop.locator('#resume').isVisible())await resumeDesktop(desktop);
++  if(!admission&&await desktop.locator('#pause').isHidden()&&!await desktop.evaluate(()=>!!document.pointerLockElement))await desktop.keyboard.press('Escape');
++  if(!admission&&await desktop.locator('#resume').isVisible())await resumeDesktop(desktop);
+   if(admission){
+     for(const timer of inputTimers)clearInterval(timer);
+-    const human=[...room.seats.values()].find(seat=>seat.actor.name==='Desktop player').actor;
++    const human=[...room.seats.values()].find(seat=>seat.actor.name==='Touch player').actor;
+     const initial=[human.x,human.z],tick=room.state.tick;
+-    await desktop.bringToFront();
+-    if(await desktop.locator('#pause').isVisible())await resumeDesktop(desktop);
+-    await desktop.keyboard.down('w');
+-    try{await wait(()=>Math.hypot(human.x-initial[0],human.z-initial[1])>.08,'ordinary live movement after ready');}
+-    finally{await desktop.keyboard.up('w');}
++    const stick=await touch.locator('[data-mobile-stick-zone]').boundingBox();assert(stick);
++    const x=stick.x+stick.width/2,y=stick.y+stick.height/2,cdp=await touch.context().newCDPSession(touch);
++    await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y}]});
++    try{await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x,y:y-stick.height*.34}]});
++      await wait(()=>Math.hypot(human.x-initial[0],human.z-initial[1])>.08,'live thumbstick travel after ready');}
++    finally{await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await cdp.detach();}
+     assert(room.state.tick>tick);
+     assert.deepEqual(errors,[]);
+     const receipts=await Promise.all(pages.map(page=>page.evaluate(admission.admissionReceipt)));

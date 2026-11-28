@@ -1,0 +1,17 @@
+{
+  "control1": {
+    "scenario": "control1",
+    "qualification": "EXCLUDED",
+    "lastCompleted": "both seats in ready state",
+    "failure": "Chromium target closed in the ordinary desktop Resume/pointer-lock flow",
+    "stderrSHA256": "fdc36d1d7e56aff062af42b499de49d765ae5919e7a6235d2857024cc9a1006a"
+  },
+  "control2": {
+    "scenario": "control2",
+    "qualification": "EXCLUDED",
+    "lastCompleted": "both seats in ready state",
+    "failure": "Chromium target closed in the ordinary desktop Resume/pointer-lock flow",
+    "stderrSHA256": "f7332c7964ace38735093265d0ed47fa2f2885ee2e5080b18b79b4e549dfd507",
+    "beforeStartSHA256": "488f97c969b50ed5277a05e9a76c71b49f993eceaaad1178ad705f32795c6027"
+  }
+}

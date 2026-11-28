@@ -6,9 +6,29 @@ export async function waitForActiveHud(page){
 
 export async function enterTouchMatch(page){
   await waitForActiveHud(page);
-  if(await page.locator('#pause').isVisible())await page.locator('#resume').tap();
-  await page.locator('#pause').waitFor({state:'hidden'});
-  await page.locator('#mobile-controls').waitFor();
+  const playing = page.locator('body:has(#pause[hidden]) #mobile-controls:visible');
+  const resume = page.locator('#pause:visible #resume:visible');
+  // A focus or orientation change can open Pause after the active phase arrives.
+  // Wait for the actual player-facing choice before deciding whether to tap.
+  const target = playing.or(resume);
+  try {
+    if (await target.getAttribute('id') === 'resume') {
+      await resume.tap();
+      await playing.waitFor();
+    }
+  } catch (error) {
+    const state = await page.evaluate(() => ({
+      roomPhase:document.querySelector('#hud')?.dataset.matchPhase,
+      gamePhase:document.querySelector('#phase')?.textContent,
+      pause:document.querySelector('#pause')?.hidden === false,
+      shop:document.querySelector('#buy')?.hidden === false,
+      touchControls:document.querySelector('#mobile-controls')?.hidden === false,
+      touchMode:document.documentElement.classList.contains('touch-fps'),
+      coarsePointer:matchMedia('(pointer: coarse)').matches,
+      touchPoints:navigator.maxTouchPoints, focused:document.hasFocus(), visible:!document.hidden,
+    })).catch(() => null);
+    throw new Error('Touch match entry failed '+JSON.stringify(state),{cause:error});
+  }
 }
 
 export async function resumeDesktop(page){

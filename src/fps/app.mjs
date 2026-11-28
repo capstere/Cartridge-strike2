@@ -22,7 +22,7 @@ import { FocusHud, focusHudSettings, isLowAmmo } from './focus-hud.mjs';
 import {onlinePrimaries} from './action-rules.mjs';
 import { GrenadeAssist, grenadeSettingsMarkup } from './grenade-assist.mjs';
 import {CombatHUD} from './combat-hud.mjs';
-import { createWorld } from './world.mjs?v=5.9.0';
+import { createWorld,createRoomLevelWorld } from './world.mjs?v=5.9.0';
 import { Game, TEAMS, WEAPONS, CONFIG, DIFFICULTIES } from './game.mjs';
 import { Renderer } from './render.mjs?v=floor5-environment-1';
 import { AudioSystem } from './riposte-audio.mjs';
@@ -120,7 +120,7 @@ function loadRoomWorld(contract,mode,signal){
    if(await sha256(body)!==contract.mapHash)throw Error('Map version mismatch');
    signal.throwIfAborted();
    const {collisionContract}=await import('../../shared/multiplayer/collision-contract.mjs');
-   const candidate=createWorld({levelProject:englishPublishedFixtures(parseProject(body)),fresh:true});
+   const candidate=await createRoomLevelWorld(englishPublishedFixtures(parseProject(body)),signal);
    if(await sha256(collisionContract(candidate))!==contract.collisionHash)throw Error('Collision version mismatch');
    signal.throwIfAborted();
    prepareNetworkWorld(candidate);
