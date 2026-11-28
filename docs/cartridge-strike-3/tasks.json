@@ -201,11 +201,12 @@
       "scope": "Finish saved fixed/floating layouts, auto/on/off touch UI, stick-threshold or Run button, look while firing, tap/hold ADS, optional double-tap and fire-on-release, sprint+crouch, manual throw, bonuses, gamepad and PWA.",
       "tests": "Replay V2/V4/V6 and IMG_8153–8157 profiles, three pointers, HUD and cancel/rotation; mobile-input-ownership, mobile-reliability-browser and online-autofire-browser. Record hardware/emulation separately.",
       "exit": "Simultaneous controls, rotation, no stuck input, no key conflicts; physical status explicit.",
-      "status": "IN_PROGRESS",
+      "status": "REVIEW",
       "branch": "cs3/06-mobile-input",
       "pullRequests": [
         63
-      ]
+      ],
+      "reviewHead": "e1fa727b55d38dabed73f7ff01aaab19783bbac3"
     },
     {
       "id": "CS3-07",
@@ -251,11 +252,12 @@
       "scope": "Measure navigation tails, bounded route budgets, fair perception, cover, personalities/squad, objective preservation and multilevel routes.",
       "tests": "bot-tactics tests/scenarios/browser, network-load, Classic objectives, room startup",
       "exit": "Improved natural behavior and measured tick tails without rule degradation.",
-      "status": "IN_PROGRESS",
+      "status": "REVIEW",
       "branch": "cs3/08-navigation",
       "pullRequests": [
         62
-      ]
+      ],
+      "reviewHead": "1451a84a3a197fc91c4406620c7fa037292aed4e"
     },
     {
       "id": "CS3-09",
@@ -270,8 +272,12 @@
       "scope": "Presets/custom slots, primary/secondary/equipment/attachments/optics/camos, derived stats, real preview, server validation and Classic purchases; persistence.",
       "tests": "online-classic/equipment, illegal loadout tests, preview lifecycle, profile restart",
       "exit": "No purchase bypass, correct stats and saved real loadouts. Use an explicitly seeded entitlement fixture for locked/unlocked states until CS3-10 supplies earned progression.",
-      "status": "IN_PROGRESS",
-      "branch": "cs3/09-arsenal"
+      "status": "REVIEW",
+      "branch": "cs3/09-arsenal",
+      "pullRequests": [
+        64
+      ],
+      "reviewHead": "7cf50f63196861702a030eb39db83c0bc2d2e930"
     },
     {
       "id": "CS3-10",
