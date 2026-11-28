@@ -8,6 +8,11 @@ import {chromium} from '../frontline/source/tools/dev/node_modules/playwright-co
 const origin = process.env.FPS_TEST_ORIGIN || 'http://127.0.0.1:8765';
 const output = process.env.CS3_MENU_EVIDENCE;
 const native = process.env.CHROMIUM_PATH;
+const inputProfiles = ['desktop', 'touch'];
+const requestedInput = process.env.CS3_MENU_INPUT;
+if (requestedInput !== undefined && !inputProfiles.includes(requestedInput)) {
+  throw Error('CS3_MENU_INPUT must be desktop or touch.');
+}
 if (output) await mkdir(output, {recursive:true});
 const browser = await chromium.launch({
   headless: process.env.FPS_NETWORK_HEADED !== '1',
@@ -159,7 +164,7 @@ async function run(input) {
   }
 }
 try {
-  for (const input of ['desktop','touch']) await run(input);
+  for (const input of requestedInput === undefined ? inputProfiles : [requestedInput]) await run(input);
   const commit = execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
   const workingTreeClean = !execFileSync('git',['status','--porcelain','--untracked-files=normal'],{encoding:'utf8'}).trim();
   const receipt = {commit,workingTreeClean,browser:browser.version(),scenarios:evidence};
