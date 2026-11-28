@@ -1,4 +1,5 @@
 // Riposte MAP_DEFS.meltem / MAP_DEFS.embruns and 05c-ambiance ambStart/ambTick.
+import {tephraSoundscape} from './tephra-ambience.mjs';
 import {coastalRecordings, coastalClipPath} from './coastal-recordings.mjs';
 
 const spread = (low, high, random) => low + (high - low) * random();
@@ -13,6 +14,7 @@ const nearPlayer = (p, random) => {
 };
 
 export const coastalMaps = {
+  tephra:tephraSoundscape(fixed,spot,nearPlayer),
   meltem: {
     bedGain:.55, water,
     loops:[
@@ -80,6 +82,7 @@ export class CoastalAmbience {
     this.abort = new AbortController();
     this.banks = new Map();
     this.voices = new Set();
+    this.spotVoices = 0;
     this.loops = new Map();
     this.lastTake = new Map();
     this.bytes = 0;
@@ -93,7 +96,7 @@ export class CoastalAmbience {
   }
 
   async load(decoder, coarse) {
-    const {signal} = this.abort, timings = coastalRecordings[this.mapId];
+    const {signal} = this.abort, timings = this.map.recordings ?? coastalRecordings[this.mapId];
     const limit = (coarse ? 12 : 17) * 1024 * 1024;
     const ordered = new Set(['a_bed', ...this.map.loops.map(loop => loop.bank), ...Object.keys(timings)]);
     for (const take of ordered) {
@@ -124,7 +127,7 @@ export class CoastalAmbience {
     }
   }
 
-  play(spec, position, loop, inside) {
+  play(spec, position, loop, inside, delay = 0) {
     const takes = this.banks.get(spec.bank);
     if (!takes?.length) return;
     const last = this.lastTake.get(spec.bank);
@@ -138,14 +141,17 @@ export class CoastalAmbience {
     if (panner) {
       panner.panningModel = 'equalpower'; panner.distanceModel = 'inverse'; panner.refDistance = spec.ref; panner.rolloffFactor = spec.roll; panner.maxDistance = spec.max;
       panner.setPosition(...position); filter.connect(panner).connect(gain);
-      source.playbackRate.value = loop ? spread(.96,1.04,this.random) : spread(.94,1.06,this.random);
+      const rate = spec.rate ?? (loop ? [.96,1.04] : [.94,1.06]);
+      source.playbackRate.value = spread(...rate,this.random);
     } else filter.connect(gain);
     gain.connect(this.output);
     // The streamed sea bed used to bypass the world hearing bus on this map.
     // Start smoothly even when the first decoded sample arrives mid-match.
     gain.gain.value = loop ? 0 : spec.gain * (1 - .6 * inside);
     if (loop) gain.gain.setTargetAtTime(spec.gain,ctx.currentTime,.25);
-    const voice = {source,gain,filter,panner,position,loop,take:clip.take};
+    const spot = !loop && !spec.weather;
+    const voice = {source,gain,filter,panner,position,loop,spot,take:clip.take,air:spec.air ?? (loop ? 60 : 120)};
+    if (spot) this.spotVoices++;
     this.voices.add(voice);
     source.onended = () => this.release(voice);
     let start = clip.offset;
@@ -153,7 +159,7 @@ export class CoastalAmbience {
       source.loopStart = start; source.loopEnd = start + clip.duration;
       start += spread(0,position ? 4 : 20,this.random) % clip.duration;
     }
-    source.start(ctx.currentTime,start);
+    source.start(ctx.currentTime+delay,start);
     return voice;
   }
 
@@ -161,10 +167,16 @@ export class CoastalAmbience {
     const now = this.context.currentTime, elapsed = now - this.lastUpdate;
     if (!position || this.abort.signal.aborted || elapsed < .25) return;
     this.lastUpdate = now;
+    if (this.map.listen && this.listenerWorld !== world) {
+      this.stopListening?.();
+      this.listenerWorld = world;
+      this.stopListening = this.map.listen(world,this);
+    }
     const inside = world.raycast({x:position.x,y:position.y+.15,z:position.z},{x:0,y:1,z:0},6,{vision:true}) ? 1 : 0;
     if (!this.bed) this.bed = this.play({bank:'a_bed',gain:this.map.bedGain}, null, true, inside);
     if (this.bed) {
-      const t = clamp(0,1,(this.map.water(position.x,position.z)-3)/32), far = t*t*(3-2*t);
+      const waterDistance = this.map.water?.(position.x,position.z) ?? 0;
+      const t = clamp(0,1,(waterDistance-3)/32), far = t*t*(3-2*t);
       this.bed.gain.gain.setTargetAtTime(this.map.bedGain*(1-.45*inside)*(1-.85*far),now,.25);
       this.bed.filter.frequency.setTargetAtTime(Math.min(18000-16900*inside,18000-15500*far),now,.25);
     }
@@ -178,22 +190,24 @@ export class CoastalAmbience {
       if (this.timers[i] > 0) continue;
       this.timers[i] = spread(...spec.every,this.random);
       // Never accumulate a backlog of overdue calls after a background/foreground transition.
-      if (this.voices.size - this.loops.size - Number(!!this.bed) < 3) this.play(spec, spec.at(position,this.random), false, inside);
+      if (this.spotVoices < 3) this.play(spec, spec.at(position,this.random), false, inside);
     }
     for (const voice of this.voices) {
       if (!voice.position) continue;
       const [x,y,z] = voice.position, distance = Math.hypot(position.x-x,position.y-y,position.z-z);
-      voice.filter.frequency.setTargetAtTime(18000 * (1400/18000)**Math.min(1,distance/(voice.loop ? 60 : 120)), now, .1);
+      voice.filter.frequency.setTargetAtTime(18000 * (1400/18000)**Math.min(1,distance/voice.air), now, .1);
     }
   }
 
   release(voice) {
     if (!this.voices.delete(voice)) return;
+    if (voice.spot) this.spotVoices--;
     voice.source.onended = null;
     voice.source.disconnect(); voice.filter.disconnect(); voice.panner?.disconnect(); voice.gain.disconnect();
   }
 
   dispose() {
+    this.stopListening?.(); this.stopListening = null; this.listenerWorld = null;
     this.abort.abort();
     for (const voice of this.voices) {
       voice.source.stop();

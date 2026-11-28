@@ -11,7 +11,7 @@ export const NETWORK_CONFIG = Object.freeze({...CONFIG, networkSlice:true,
 export const CLASSIC_NETWORK_CONFIG = Object.freeze({...NETWORK_CONFIG,mode:'classic',
   startMoney:CONFIG.startMoney,maxMoney:CONFIG.maxMoney,killMoney:CONFIG.killMoney,hostageDamage:CONFIG.hostageDamage});
 export {DEFAULT_MAP_ID as NETWORK_MAP} from './maps.mjs';
-export const PROTOCOL_VERSION = 18;
+export const PROTOCOL_VERSION = 20;
 export const TEAM_CAPACITY = 5;
 export const ROOM_CAPACITY = TEAM_CAPACITY * 2;
 export const TDM_MINUTES = Object.freeze([3,5,10,15]);

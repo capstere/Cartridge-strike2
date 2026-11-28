@@ -1,0 +1,204 @@
+// Normal account, family lobby and single-use invitation journeys on a disposable HTTPS pilot.
+import assert from 'node:assert/strict';
+import {randomBytes,createHash} from 'node:crypto';
+import {mkdir,writeFile} from 'node:fs/promises';
+import {execFileSync} from 'node:child_process';
+import {join} from 'node:path';
+import {chromium} from '../frontline/source/tools/dev/node_modules/playwright-core/index.mjs';
+import {startPilotFixture} from './network-pilot-fixture.mjs';
+const fixture = await startPilotFixture({familyRoom:true,publicListing:true});
+const browsers = [], errors = [], outside = new Set();
+const report = {scenarios:[], qrPixelDecode:false};
+const secret = () => randomBytes(24).toString('base64url');
+const username = 'player_'+randomBytes(5).toString('hex');
+const output = process.env.CS3_ACCOUNT_EVIDENCE;
+async function page(mobile) {
+  const angle = process.env.FPS_NETWORK_ANGLE || (process.platform === 'darwin'?'metal':'swiftshader');
+  const args = [...fixture.args,'--use-angle='+angle,'--disable-background-timer-throttling','--disable-renderer-backgrounding'];
+  if (process.env.WAYLAND_DISPLAY) args.push('--ozone-platform=wayland');
+  const browser = await chromium.launch({channel:'chromium',executablePath:process.env.CHROMIUM_PATH || undefined,
+    headless:process.env.FPS_NETWORK_HEADED!=='1',args});
+  browsers.push(browser);
+  const p = await browser.newPage({viewport:mobile?{width:844,height:390}:{width:1024,height:720},
+    deviceScaleFactor:.5,isMobile:mobile,hasTouch:mobile,locale:mobile?'sv-SE':'en-US'});
+  p.setDefaultTimeout(60000);
+  p.on('pageerror',e=>errors.push(e.name));
+  p.on('request',req=>{
+    const url = new URL(req.url());
+    if (['http:','https:'].includes(url.protocol) && url.origin!==fixture.origin) outside.add(url.origin);
+  });
+  await p.addInitScript(()=>localStorage.setItem('cartridge-settings',JSON.stringify({graphics:'low'})));
+  return p;
+}
+async function followPrivateLink(p,url) {
+  try { await p.goto(url); } catch { throw Error('Could not navigate to the single-use test invitation.'); }
+}
+async function screenshot(p,name) {
+  if (!output) return;
+  await mkdir(output,{recursive:true,mode:0o700});
+  await p.screenshot({path:join(output,name+'.jpg'),type:'jpeg',quality:76});
+}
+try {
+  const host = await page(false);
+  await host.goto(fixture.origin+'/profile');
+  const account = host.locator('[data-account-profile]'), form = account.locator('form:visible');
+  await account.getByRole('button',{name:'Create account',exact:true}).click();
+  let password = secret();
+  await form.getByLabel('Username').fill(username);
+  await form.getByLabel('Display name').fill('Test operator');
+  await form.getByLabel('Password').fill(password);
+  await form.getByRole('button',{name:'Create account'}).click();
+  await account.getByRole('heading',{name:'Save your recovery code'}).waitFor();
+  const firstRecovery = await account.getByLabel('Your recovery code').inputValue();
+  assert(firstRecovery.length>=24,'a one-use recovery code is displayed');
+  await account.getByRole('button',{name:'I saved my code'}).click();
+  await account.getByRole('heading',{name:'Test operator'}).waitFor();
+  assert.equal(await host.evaluate(()=>document.cookie),'');
+  const denied = await host.evaluate(async () => (await fetch('/src/fps/network/session.mjs',{cache:'no-store'})).status);
+  assert.equal(denied,401);
+  await account.getByRole('button',{name:'Sign out'}).click();
+  await account.getByRole('heading',{name:'Local guest'}).waitFor();
+  await account.getByRole('button',{name:'Recover account',exact:true}).click();
+  await form.getByLabel('Username').fill(username);
+  await form.getByLabel('Recovery code').fill(firstRecovery);
+  password=secret();
+  await form.getByLabel('New password').fill(password);
+  await form.getByRole('button',{name:'Recover account'}).click();
+  await account.getByRole('heading',{name:'Save your recovery code'}).waitFor();
+  assert((await account.getByLabel('Your recovery code').inputValue())!==firstRecovery,'recovery rotates the code');
+  await account.getByRole('button',{name:'I saved my code'}).click();
+  await account.getByRole('button',{name:'Sign out'}).click();
+  await form.getByLabel('Username').fill(username);
+  await form.getByLabel('Password').fill(password);
+  await form.getByRole('button',{name:'Sign in'}).click();
+  await account.getByRole('heading',{name:'Test operator'}).waitFor();
+  await screenshot(host,'profile');
+  report.scenarios.push('Registered, recovered, signed out and signed in through the standalone profile. Account alone denied private assets.');
+  await host.goto(fixture.origin+'/room/JESPERS-ROOM');
+  await host.locator('input[name=invite]').fill(fixture.invite);
+  await host.locator('button[type=submit]').click();
+  await host.locator('#network-name').fill('Test host');
+  await host.locator('#network-code').fill(fixture.familyPassword);
+  await host.locator('[data-create=false]').click();
+  const invite = host.locator('#room-invitation');
+  await host.locator('#room-invite').click();
+  await invite.getByRole('button',{name:'Create invitation'}).click();
+  await invite.locator('canvas').waitFor();
+  const destination = await invite.getByLabel('Invitation link').inputValue();
+  const short = await invite.locator('strong').textContent();
+  assert(new URL(destination).origin===fixture.origin && new URL(destination).pathname==='/join' && !new URL(destination).search && new URL(destination).hash.length>40);
+  assert(short.length===10);
+  if (process.env.CS3_QR_DECODER) {
+    const data = await invite.locator('canvas').evaluate(canvas=>canvas.toDataURL().split(',')[1]);
+    const digest = execFileSync(process.env.CS3_QR_DECODER,[],{input:Buffer.from(data,'base64'),encoding:'utf8'}).trim();
+    assert(digest===createHash('sha256').update(destination).digest('hex'),'the pixels decode to the complete invitation URL');
+    report.qrPixelDecode = true;
+  }
+  const guest = await page(true);
+  await guest.goto(fixture.origin+'/join');
+  await guest.getByLabel('Room invitation code').fill(short);
+  await guest.getByRole('button',{name:'Join room'}).tap();
+  await guest.waitForFunction(()=>document.querySelector('#network-code')?.required===false);
+  assert(!new URL(guest.url()).hash,'guest URL cleared the fragment');
+  await guest.locator('#network-name').fill('Touch guest');
+  await guest.locator('[data-create=false]').tap();
+  await guest.locator('#room-ready').waitFor(); await host.locator('#room-roster').getByText('Touch guest',{exact:false}).waitFor();
+  assert(await guest.locator('#room-invite').isHidden());
+  const cookies = await guest.context().cookies();
+  assert(cookies.some(c=>c.name==='__Host-cs3_room' && c.secure && c.httpOnly));
+  assert(!cookies.some(c=>c.name==='__Host-cs2_pilot' || c.name==='__Host-cs3_account'));
+  await screenshot(guest,'joined-room');
+  report.scenarios.push('One legacy host and a fresh touch player reached the same live family lobby. The invite granted room access only.');
+  await guest.locator('#room-leave').tap();
+  await guest.goto(fixture.origin+'/room/JESPERS-ROOM');
+  await guest.waitForFunction(()=>document.querySelector('#network-code')?.required===false);
+  await guest.locator('#network-name').fill('Returning guest'); await guest.locator('[data-create=false]').tap();
+  await guest.locator('#room-ready').waitFor();
+  report.scenarios.push('The same device returned using the stable family link without a password.');
+  const fresh = await guest.context().browser().newContext();
+  try {
+    const replay = await fresh.newPage();
+    await followPrivateLink(replay,destination);
+    await replay.getByRole('status').filter({hasText:/invalid|expired/i}).waitFor();
+    assert(!new URL(replay.url()).hash,'exchange page cleared the fragment');
+    await invite.getByRole('button',{name:'Create invitation'}).click();
+    await invite.locator('canvas').waitFor();
+    const secondLink = await invite.getByLabel('Invitation link').inputValue();
+    assert(secondLink!==destination);
+    await followPrivateLink(replay,secondLink);
+    await replay.waitForFunction(()=>document.querySelector('#network-code')?.required===false);
+    assert(!new URL(replay.url()).hash,'exchange page cleared the fragment');
+  } finally { await fresh.close(); }
+  await invite.getByRole('button',{name:'Revoke shared access'}).click();
+  await invite.getByRole('button',{name:'Revoke access',exact:true}).click();
+  await invite.getByRole('status').filter({hasText:'Shared access revoked'}).waitFor();
+  await guest.goto(fixture.origin+'/room/JESPERS-ROOM');
+  await guest.locator('input[name=invite]').waitFor();
+  report.scenarios.push('Consumed link rejected in a fresh profile, a fresh fragment exchanged and cleared, and explicit host revocation removed guest access.');
+  // Public access is explicitly enabled only in this isolated fixture. The host
+  // must publish a separate empty room; its private family room never appears.
+  await host.locator('#room-leave').click();
+  await host.goto(fixture.origin+'/fps/?network=internet');
+  await host.locator('#network-name').fill('Open match host');
+  // Account passwords allow base64url. Private room codes accept letters, digits and hyphens.
+  const roomCode = randomBytes(24).toString('hex');
+  await host.locator('#network-code').fill(roomCode);
+  await host.locator('[data-create=true]').click();
+  await host.locator('#room-public-tools').click();
+  const dialog=host.getByRole('dialog');
+  await dialog.getByRole('button',{name:'List this room publicly'}).click();
+  await dialog.getByRole('button',{name:'Make room private'}).waitFor();
+  await dialog.getByRole('button',{name:'Close'}).click();
+  await host.locator('#room-invite').waitFor({state:'hidden'});
+  await host.locator('.room-eyebrow').filter({hasText:'Public match'}).waitFor();
+  // Exercise the manual copy path to inspect the real link without using the OS clipboard or share sheet.
+  await host.evaluate(()=>{
+    Object.defineProperty(navigator,'share',{configurable:true,value:undefined});
+    Object.defineProperty(navigator,'clipboard',{configurable:true,value:undefined});
+  });
+  await host.getByRole('button',{name:'Share public match'}).click();
+  const publicLink=await host.locator('#room-link').inputValue();
+  assert(new URL(publicLink).origin===fixture.origin && /^#public-matches\/[A-Za-z0-9_-]+$/.test(new URL(publicLink).hash));
+  await host.getByText('Share this link with a friend.',{exact:false}).waitFor();
+  await guest.goto(publicLink);
+  const guestAccount=guest.locator('[data-account-profile]');
+  await guestAccount.getByRole('button',{name:'Create account',exact:true}).tap();
+  const guestForm=guestAccount.locator('form:visible');
+  await guestForm.getByLabel('Username').fill('guest_'+randomBytes(5).toString('hex'));
+  await guestForm.getByLabel('Display name').fill('Public touch player');
+  await guestForm.getByLabel('Password').fill(secret());
+  await guestForm.getByRole('button',{name:'Create account'}).tap();
+  await guestAccount.getByRole('button',{name:'I saved my code'}).tap();
+  await guestAccount.getByRole('heading',{name:'Public matches'}).waitFor();
+  await guestAccount.getByRole('button',{name:'Join match'}).waitFor();
+  assert.equal(await guestAccount.getByRole('button',{name:'Join match'}).count(),1,'only the published room is visible');
+  await guestAccount.getByRole('button',{name:'Join match'}).tap();
+  await guest.waitForFunction(()=>document.querySelector('#network-code')?.required===false);
+  await guest.locator('[data-create=false]').tap();
+  await guest.locator('#room-ready').waitFor();
+  await host.locator('#room-roster').getByText('Public touch player',{exact:false}).waitFor();
+  await guest.locator('.room-eyebrow').filter({hasText:'Public match'}).waitFor();
+  await guest.getByRole('button',{name:'Share public match'}).waitFor();
+  await guest.locator('#room-public-tools').tap();
+  const peerDialog=guest.getByRole('dialog');
+  await peerDialog.locator('summary').filter({hasText:'Open match host'}).tap();
+  await peerDialog.getByRole('button',{name:'Report player'}).tap();
+  await peerDialog.getByRole('button',{name:'Close'}).tap();
+  await host.locator('#room-public-tools').click();
+  await dialog.getByRole('heading',{name:'Player reports'}).waitFor();
+  await screenshot(host,'public-match-controls');
+  await dialog.getByRole('button',{name:'Make room private'}).click();
+  await dialog.getByRole('button',{name:'List this room publicly'}).waitFor();
+  await dialog.getByRole('button',{name:'Close'}).click();
+  await host.locator('.room-eyebrow').filter({hasText:'Private room'}).waitFor();
+  await host.locator('#room-invite').waitFor();
+  await guest.goto(fixture.origin+'/profile#public-matches');
+  await guest.getByText('No public rooms are accepting players.').waitFor();
+  report.scenarios.push('Signed-in host published an empty private room. Another account found and joined it, reported from the actual lobby, and could no longer find it after the host restored private access.');
+  assert.equal(outside.size,0,'all requests remained on the fixture origin'); assert.deepEqual(errors,[]);
+  if (output) await writeFile(join(output,'journey.json'),JSON.stringify(report,null,2)+'\n');
+  console.log('PASS optional account, legacy family host, short code, remembered touch guest, fragment, replay and revocation.');
+} finally {
+  for (const browser of browsers) await browser.close();
+  await fixture.close();
+}

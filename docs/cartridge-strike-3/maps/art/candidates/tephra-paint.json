@@ -1,0 +1,84 @@
+{
+  "map": "tephra",
+  "painters": [
+    "tpSignAtlas",
+    "tpDecalAtlas"
+  ],
+  "sourceBlob": "b394efcfc19d1bf4feb85153976a6c590b8a60bf",
+  "size": [
+    1536,
+    768
+  ],
+  "bytes": 198486,
+  "sha256": "1cf6d830a4f72892d9132452e352d1706ce77035066c29391eaf65132f087de3",
+  "labels": {
+    "signs": {
+      "0": [
+        "TEPHRA",
+        "FIELD STATION",
+        "VOLCANO OBSERVATORY"
+      ],
+      "1": [
+        "LABORATORY",
+        "GEOCHEMISTRY"
+      ],
+      "2": [
+        "CONTROL ROOM",
+        "GEOTHERMAL PLANT"
+      ],
+      "3": [
+        "CORE ARCHIVE",
+        "DRILL SAMPLES"
+      ],
+      "4": [
+        "PUMP STATION 2",
+        "REINJECTION"
+      ],
+      "5": [
+        "!",
+        "DANGER",
+        "HIGH PRESSURE",
+        "STEAM",
+        "DO NOT TOUCH"
+      ],
+      "6": [
+        "TPH.HHZ  ·  SEISMIC ACTIVITY  ·  24 H"
+      ],
+      "7": [
+        "TEPHRA  ·  MONITORING",
+        "GPS  +4.2 mm/d",
+        "SO2  2140 t/d",
+        "H2S  38 ppm",
+        "TREMOR  ▲"
+      ]
+    },
+    "decals": {
+      "2": [
+        "TP-07",
+        "GEOTHERMAL WELL"
+      ],
+      "3": [
+        "TP-12",
+        "GEOTHERMAL WELL"
+      ],
+      "5": [
+        "H2S",
+        "HYDROGEN SULFIDE",
+        "TOXIC GAS  ·  GAS MASK"
+      ],
+      "7": [
+        "GEOLOGICAL MAP"
+      ],
+      "12": [
+        "NO ENTRY"
+      ],
+      "13": [
+        "FIRE EXTINGUISHER"
+      ],
+      "14": [
+        "EMERGENCY",
+        "EXIT"
+      ]
+    }
+  }
+}

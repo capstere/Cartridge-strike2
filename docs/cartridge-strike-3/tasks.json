@@ -133,14 +133,19 @@
       "scope": "Scoped remembered sessions, invite link/QR/short code, migration, optional accounts/recovery/stats storage, secure public listing behind off-by-default flag.",
       "tests": "network-family-browser, network-pilot-browser, security/expiry/revoke/replay tests, migration/restore. Verify guest Pages flow separately from Pi pilot proof, room proof and account identity.",
       "exit": "Two-client old and new access, private credentials protected, real persistent accounts.",
-      "status": "REVIEW",
+      "status": "VERIFIED",
       "branch": "cs3/04-account-access",
       "baseline": "adb3cdf6c7c0a8721cecc1db30602eea1fe200f6",
       "pullRequests": [
         55
       ],
       "reviewHead": "1dd34063a04599ada44d1017f1576d5dcdbf52bc",
-      "independentReview": "Accepted the protocol 17 integration. A genuine fixture TCP cleanup failure was reproduced and corrected. Verify final hosted checks."
+      "independentReview": "Independent reviewer accepted the account runtime and reconciled task states. All nine final hosted jobs passed.",
+      "verifiedHead": "fb34637d27d5b495dd51126e13345ed856ad9288",
+      "verifiedRun": 46129743025,
+      "mergedSlices": [
+        "e2ad344636cb53d2411e73cc38b66ac5f84204f2"
+      ]
     },
     {
       "id": "CS3-05",
@@ -156,7 +161,10 @@
       "exit": "All bonus rules proven, no unauthorized activation/stacking; UI confirmed.",
       "status": "IN_PROGRESS",
       "baseline": "f789655c55cb431b2916a8052200383b0d22d228",
-      "branch": "cs3/05-authoritative-streaks"
+      "branch": "cs3/05-authoritative-streaks",
+      "pullRequests": [
+        58
+      ]
     },
     {
       "id": "CS3-06",
@@ -184,7 +192,7 @@
       "scope": "Baseline visual pass, reference map adapter and Meltem or lower-risk pilot; validated additional maps, all nine assessed, environment FX and ambience; LOD/disposal.",
       "tests": "build-network --check, compact-arena/owner-door-traversal tests, multimap-browser/recovery, asset-memory and complete matches",
       "exit": "Original maps preserved. All nine have a source ID, capability assessment and explicit disposition. Each offered map passes versioned collision/nav/void, mode eligibility, spawn, lifecycle and measured budget.",
-      "status": "IN_PROGRESS",
+      "status": "REVIEW",
       "branch": "cs3/07-candidate-environments",
       "pullRequests": [
         52,
@@ -197,7 +205,9 @@
       ],
       "mergedSlices": [
         "b7d303b44b147e671b033f6519e16abe4376ee0f"
-      ]
+      ],
+      "nativeReviewedBuild": "b575ba6a76c3d1a9253c370b2a2ef3ed2e2b44c5d51c5711615bd488621e2384",
+      "independentReview": "Accepted the 20 map switches and matched 175.121 s parked run, six distinct disposed soundscape instances, actual quality switching, recovery and retained coastal/volcanic/sign frames. Run final hosted checks on the reconciled head."
     },
     {
       "id": "CS3-08",

@@ -1,0 +1,406 @@
+{
+  "runtimeChange": "5289cf9",
+  "originalRuntime": "33a6ee0b2a8dd7bd962c66b3cd73aed6da94192a",
+  "testedCheckout": "d556a17c85cd811906b7b81846e58748b9798b98",
+  "status": "measured",
+  "doorSource": "checkout",
+  "environmentBefore": {
+    "model": "Raspberry Pi 5 Model B Rev 1.1",
+    "thermalC": 47.95,
+    "freqKHz": "2400000",
+    "load": "1.87 2.68 2.94 8/624 789439",
+    "throttled": "throttled=0x0",
+    "node": "v26.13.0",
+    "sha": "d556a17c85cd811906b7b81846e58748b9798b98"
+  },
+  "environmentAfter": {
+    "model": "Raspberry Pi 5 Model B Rev 1.1",
+    "thermalC": 49.05,
+    "freqKHz": "2400000",
+    "load": "1.93 2.55 2.88 3/638 789836",
+    "throttled": "throttled=0x0",
+    "node": "v26.13.0",
+    "sha": "d556a17c85cd811906b7b81846e58748b9798b98"
+  },
+  "scene": {
+    "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+    "buffer": [
+      493,
+      228
+    ],
+    "internalRenderBuffer": [
+      493,
+      228
+    ],
+    "viewport": [
+      844,
+      390
+    ],
+    "ratio": 0.5849999785423279,
+    "dpr": 0.6499999761581421,
+    "baseFov": 76,
+    "fov": 76,
+    "map": "lvl-floor5-preppad-20261105",
+    "mode": "endless",
+    "quality": "low",
+    "actors": 10,
+    "residents": 4,
+    "weapon": "ar47",
+    "phase": "active",
+    "shaderWarmupMs": 0
+  },
+  "errors": [],
+  "renderTargets": {
+    "main": 814
+  },
+  "visibleTransmissionMaterials": [],
+  "rush": {
+    "build": "d556a17c85cd811906b7b81846e58748b9798b98",
+    "game": "candidate",
+    "profile": "touch",
+    "repeat": 0,
+    "cache": "new browser context",
+    "at": "2026-11-27T16:05:15.894Z",
+    "browser": "156.0.8078.79",
+    "map": "lvl-floor5-preppad-20261105",
+    "buffer": [
+      493,
+      228
+    ],
+    "mode": "endless",
+    "quality": "low",
+    "actors": 10,
+    "localWeapon": "ar47",
+    "residents": 4,
+    "thermalC": [
+      47.95,
+      49.05
+    ],
+    "throttle": [
+      "throttled=0x0",
+      "throttled=0x0"
+    ],
+    "frameMs": {
+      "n": 309,
+      "p50": 31.3,
+      "p95": 41.2,
+      "p99": 48.7,
+      "max": 74.2,
+      "over33": 90,
+      "over50": 3,
+      "over100": 0
+    },
+    "renderMs": {
+      "n": 310,
+      "p50": 24.6,
+      "p95": 28.7,
+      "p99": 32.1,
+      "max": 33.3,
+      "over33": 0,
+      "over50": 0,
+      "over100": 0
+    },
+    "draws": {
+      "n": 310,
+      "p50": 654,
+      "p95": 831,
+      "p99": 831,
+      "max": 831,
+      "over33": 310,
+      "over50": 310,
+      "over100": 310
+    },
+    "tris": {
+      "n": 310,
+      "p50": 324737,
+      "p95": 426078,
+      "p99": 426078,
+      "max": 426078,
+      "over33": 310,
+      "over50": 310,
+      "over100": 310
+    },
+    "census": {
+      "projectFurniture": 370,
+      "world/room-static-batch": 69,
+      "glass": 50,
+      "actor-analysts-1": 44,
+      "actor-analysts-3": 43,
+      "doors": 43,
+      "actor-analysts-2": 42,
+      "action": 37,
+      "actor-analysts-4": 37,
+      "environment": 19,
+      "viewmodel": 16,
+      "world/cosmetic-room-details": 14,
+      "world/Mesh": 13,
+      "world/Group": 6,
+      "actor-hostage-0": 4,
+      "actor-hostage-1": 4,
+      "world/combat-flow-effects": 2,
+      "world/The Hollow Walker": 1
+    },
+    "rawCallback": null,
+    "pointerOrKeyCallback": 89.2,
+    "touchOrKeyCallback": 89.4,
+    "gameRead": 90.6,
+    "firstMovedStep": 91.3,
+    "firstMovedRenderBegin": 93.8,
+    "worldSubmit": [
+      98.5,
+      119.6
+    ],
+    "weaponSubmit": [
+      119.6,
+      120.1
+    ],
+    "firstMovedRenderEnd": 120.1,
+    "presentation": null,
+    "firstWeight": 0.307,
+    "weaponYAndRoll": [
+      -0.22751,
+      0.2389
+    ],
+    "unshiftedRendersAfterInput": 3
+  },
+  "views": [
+    {
+      "name": "closed lift",
+      "visible": [
+        false,
+        false
+      ],
+      "changed": 2349,
+      "pixels": 41839,
+      "positivePixels": null,
+      "originalDraws": 657,
+      "draws": 372,
+      "originalTriangles": 473742,
+      "triangles": 240203
+    },
+    {
+      "name": "half-open lift",
+      "visible": [
+        false,
+        false
+      ],
+      "changed": 0,
+      "pixels": 41839,
+      "positivePixels": null,
+      "originalDraws": 1056,
+      "draws": 572,
+      "originalTriangles": 582054,
+      "triangles": 294379
+    },
+    {
+      "name": "open lift",
+      "visible": [
+        false,
+        false
+      ],
+      "changed": 0,
+      "pixels": 41839,
+      "positivePixels": null,
+      "originalDraws": 1230,
+      "draws": 659,
+      "originalTriangles": 641266,
+      "triangles": 323985
+    },
+    {
+      "name": "lift side",
+      "visible": [
+        false,
+        false
+      ],
+      "changed": 0,
+      "pixels": 41839,
+      "positivePixels": null,
+      "originalDraws": 133,
+      "draws": 133,
+      "originalTriangles": 83721,
+      "triangles": 83721
+    },
+    {
+      "name": "lift threshold",
+      "visible": [
+        false,
+        false
+      ],
+      "changed": 0,
+      "pixels": 41839,
+      "positivePixels": null,
+      "originalDraws": 1120,
+      "draws": 585,
+      "originalTriangles": 506358,
+      "triangles": 254923
+    },
+    {
+      "name": "C08",
+      "visible": [
+        false,
+        false
+      ],
+      "changed": 0,
+      "pixels": 41839,
+      "positivePixels": null,
+      "originalDraws": 1260,
+      "draws": 655,
+      "originalTriangles": 468884,
+      "triangles": 238369
+    },
+    {
+      "name": "C08 reverse",
+      "visible": [
+        false,
+        false
+      ],
+      "changed": 0,
+      "pixels": 41839,
+      "positivePixels": null,
+      "originalDraws": 273,
+      "draws": 273,
+      "originalTriangles": 151565,
+      "triangles": 151565
+    },
+    {
+      "name": "I04 desk",
+      "visible": [
+        false,
+        false
+      ],
+      "changed": 0,
+      "pixels": 41839,
+      "positivePixels": null,
+      "originalDraws": 738,
+      "draws": 738,
+      "originalTriangles": 265822,
+      "triangles": 265822
+    },
+    {
+      "name": "I04 reverse",
+      "visible": [
+        false,
+        false
+      ],
+      "changed": 0,
+      "pixels": 41839,
+      "positivePixels": null,
+      "originalDraws": 389,
+      "draws": 221,
+      "originalTriangles": 337406,
+      "triangles": 170649
+    },
+    {
+      "name": "BYGG-D-0001 angle 0 side -1",
+      "visible": [
+        true,
+        false
+      ],
+      "changed": 0,
+      "pixels": 41839,
+      "positivePixels": 12598,
+      "originalDraws": 468,
+      "draws": 466,
+      "originalTriangles": 346166,
+      "triangles": 346142
+    },
+    {
+      "name": "BYGG-D-0001 angle 0 side 1",
+      "visible": [
+        true,
+        false
+      ],
+      "changed": 0,
+      "pixels": 41839,
+      "positivePixels": 12598,
+      "originalDraws": 266,
+      "draws": 266,
+      "originalTriangles": 92042,
+      "triangles": 92042
+    },
+    {
+      "name": "BYGG-D-0001 angle 0.8 side -1",
+      "visible": [
+        true,
+        false
+      ],
+      "changed": 0,
+      "pixels": 41839,
+      "positivePixels": 12598,
+      "originalDraws": 126,
+      "draws": 124,
+      "originalTriangles": 65666,
+      "triangles": 65642
+    },
+    {
+      "name": "BYGG-D-0001 angle 0.8 side 1",
+      "visible": [
+        true,
+        false
+      ],
+      "changed": 0,
+      "pixels": 41839,
+      "positivePixels": 12598,
+      "originalDraws": 434,
+      "draws": 434,
+      "originalTriangles": 225498,
+      "triangles": 225498
+    },
+    {
+      "name": "BYGG-D-0028 angle 0 side -1",
+      "visible": [
+        false,
+        true
+      ],
+      "changed": 0,
+      "pixels": 41839,
+      "positivePixels": 12598,
+      "originalDraws": 106,
+      "draws": 106,
+      "originalTriangles": 59714,
+      "triangles": 59714
+    },
+    {
+      "name": "BYGG-D-0028 angle 0 side 1",
+      "visible": [
+        false,
+        true
+      ],
+      "changed": 0,
+      "pixels": 41839,
+      "positivePixels": 12598,
+      "originalDraws": 484,
+      "draws": 484,
+      "originalTriangles": 324558,
+      "triangles": 324558
+    },
+    {
+      "name": "BYGG-D-0028 angle 0.8 side -1",
+      "visible": [
+        false,
+        true
+      ],
+      "changed": 0,
+      "pixels": 41839,
+      "positivePixels": 12598,
+      "originalDraws": 187,
+      "draws": 185,
+      "originalTriangles": 166906,
+      "triangles": 166882
+    },
+    {
+      "name": "BYGG-D-0028 angle 0.8 side 1",
+      "visible": [
+        false,
+        true
+      ],
+      "changed": 0,
+      "pixels": 41839,
+      "positivePixels": 12598,
+      "originalDraws": 317,
+      "draws": 317,
+      "originalTriangles": 175710,
+      "triangles": 175710
+    }
+  ]
+}

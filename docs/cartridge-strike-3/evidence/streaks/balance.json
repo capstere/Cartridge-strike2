@@ -1,0 +1,69 @@
+{
+  "build": "dad083e84e1ccf1997ecfc12be871a14b75d0ab53baf4ff7e8acd9050b83c5d4",
+  "map": "compact-arena",
+  "normalBotMatches": [
+    {
+      "seed": 42,
+      "simulationSeconds": 180,
+      "actors": 10,
+      "kills": 118,
+      "deaths": 118,
+      "longestLifeStreak": 15,
+      "thresholdOpportunities": {
+        "uav": 15,
+        "rage": 5,
+        "immortal": 4
+      }
+    },
+    {
+      "seed": 81,
+      "simulationSeconds": 180,
+      "actors": 10,
+      "kills": 118,
+      "deaths": 118,
+      "longestLifeStreak": 13,
+      "thresholdOpportunities": {
+        "uav": 14,
+        "rage": 9,
+        "immortal": 6
+      }
+    }
+  ],
+  "pairedInputs": {
+    "base": {
+      "distanceMeters": 1.0500000000000003,
+      "reloadMilliseconds": 1799.9999999999998,
+      "weapon": "smg",
+      "shotDamage": 18,
+      "fireIntervalSeconds": 0.075,
+      "receivedSmgDamage": true,
+      "hpLoss": 18,
+      "armorLoss": 0,
+      "ticks": 15
+    },
+    "rage": {
+      "distanceMeters": 1.2600000000000078,
+      "reloadMilliseconds": 1350,
+      "weapon": "smg",
+      "shotDamage": 18,
+      "fireIntervalSeconds": 0.075,
+      "receivedSmgDamage": true,
+      "hpLoss": 18,
+      "armorLoss": 0,
+      "ticks": 15
+    },
+    "immortal": {
+      "distanceMeters": 1.0500000000000003,
+      "reloadMilliseconds": 1799.9999999999998,
+      "weapon": "smg",
+      "shotDamage": 18,
+      "fireIntervalSeconds": 0.075,
+      "receivedSmgDamage": false,
+      "hpLoss": 0,
+      "armorLoss": 0,
+      "ticks": 15
+    },
+    "moveRatio": 1.200000000000007,
+    "reloadRatio": 0.7500000000000001
+  }
+}

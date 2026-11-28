@@ -6,7 +6,7 @@ import {roundReasons, purchaseLabel} from './game-english.mjs';
 import {GAME_NAME,COMPLEX_NAME,roomDisplayName,missionRoomName} from './player-names.mjs';
 import {setupCharacterMenu} from './character-selection.mjs';
 import {loadPrivateCharacter,characterHash,SavedCharacterError} from './private-character-store.mjs';
-import {loadCharacterLibrary,installPrivateCharacter,setPrivateCharacterActors} from './character-library.mjs?v=6.1.2';
+import {currentOutfit,clearNetworkOutfits,loadCharacterLibrary,installPrivateCharacter,setPrivateCharacterActors} from './character-library.mjs?v=6.1.2';
 import {GLTFLoader} from '../../vendor/three/addons/loaders/GLTFLoader.js';
 import { RenderBudget } from './render-budget.mjs';
 import { MinimapCache } from './minimap-cache.mjs';
@@ -400,7 +400,7 @@ async function joinNetwork(options){
  await networkSession?.dispose();networkSession=null;clearInput();audio.reset();renderer?.resetTransient();combatHud.reset();recoil.reset();
  const {NetworkSession}=await import('./network/session.mjs');
  if(generation!==networkJoinGeneration)throw Error('Join cancelled.');
- const session=new NetworkSession(null,{loadWorld:loadRoomWorld,onCombatAudio(event,serverTime){
+ const session=new NetworkSession(null,{outfitId:currentOutfit().id,loadWorld:loadRoomWorld,onCombatAudio(event,serverTime){
   if(networkSession!==session || game!==session.view)return false;
   const view=viewActor();
   if(view && !document.hidden){
@@ -463,7 +463,7 @@ function networkPhase(){
  }
 }
 function restartMatch(){if(networkMode){newMatch();return;}window.__csFlow?.fullscreen?.start();audio.unlock();start(team,{deploymentSeconds:testMode?0:MATCH_DEFAULTS.countdownSeconds});requestMouse();}
-function newMatch(){foregroundCountdown.suspend();deployment.reset();countdownSession=null;$('countdown-look').hidden=true;if(networkMode){networkJoinGeneration++;setMapExpanded(false);document.documentElement.classList.toggle('cs-family-lobby',familyRoomLink);}onlineRoomUi?.hide();if(networkSession){networkSession.dispose();networkSession=null;game=new Game(world);game.network=true;lastRound=game.state.round;lastPhase=game.phase;} window.__csFlow?.fullscreen?.exit();clearInput();recoil.reset();game.pause(true);audio.reset();renderer?.resetTransient();modal='menu';mobile.show(false);unlockMouse();for(const id of ['pause','buy','match-end','scoreboard','hud'])$(id).hidden=true;$('menu').hidden=false;settingsPanel('menu-settings');}
+function newMatch(){clearNetworkOutfits();foregroundCountdown.suspend();deployment.reset();countdownSession=null;$('countdown-look').hidden=true;if(networkMode){networkJoinGeneration++;setMapExpanded(false);document.documentElement.classList.toggle('cs-family-lobby',familyRoomLink);}onlineRoomUi?.hide();if(networkSession){networkSession.dispose();networkSession=null;game=new Game(world);game.network=true;lastRound=game.state.round;lastPhase=game.phase;} window.__csFlow?.fullscreen?.exit();clearInput();recoil.reset();game.pause(true);audio.reset();renderer?.resetTransient();modal='menu';mobile.show(false);unlockMouse();for(const id of ['pause','buy','match-end','scoreboard','hud'])$(id).hidden=true;$('menu').hidden=false;settingsPanel('menu-settings');}
 function viewActor(){if(game.player?.alive||renderer?.actionVisuals?.finishingFlightFor(game.player))return game.player;const alive=game.actors.filter(a=>a.alive&&a.team===game.team);return alive[spectateIndex%Math.max(1,alive.length)]||game.player;}
 function timer(value){const sec=Math.max(0,Math.ceil(value));return `${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}`;}
 function scoreboard(){

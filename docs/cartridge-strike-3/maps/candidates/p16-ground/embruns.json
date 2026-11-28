@@ -1,0 +1,504 @@
+{
+  "scenario": "embruns",
+  "map": "embruns",
+  "physicalPhone": false,
+  "transport": "TLS loopback",
+  "date": "2026-11-27T16:06:57.947Z",
+  "revision": "aafc587f32060cf738c19dfcd4de1631e1e15ec6",
+  "buildHash": "e6f610309ea6722b01e469f2ff6d343c89cca0715c8e6040aeaf5abc35466aad",
+  "manifestHash": "f4c8238312ac2ba614f30cd9239f066e60fd64fda3c6c33c11800860ab3b9fdd",
+  "cpu": "Cortex-A76",
+  "arch": "arm64",
+  "os": "linux",
+  "node": "v26.13.0",
+  "model": "Raspberry Pi 5 Model B Rev 1.1",
+  "warmupMs": 3000,
+  "windowMs": 10000,
+  "scheduledSeconds": 45,
+  "scoreTarget": 150,
+  "args": [
+    "--use-angle=gl-egl",
+    "--ignore-gpu-blocklist",
+    "--enable-unsafe-swiftshader",
+    "--disable-renderer-backgrounding",
+    "--disable-background-timer-throttling",
+    "--disable-backgrounding-occluded-windows",
+    "--host-resolver-rules=MAP 127.0.0.1 127.0.0.1",
+    "--no-proxy-server",
+    "--ozone-platform=wayland"
+  ],
+  "hardwareBefore": {
+    "thermalC": 51.25,
+    "cpuKHz": 2400000
+  },
+  "renderedClients": 1,
+  "sdkPeers": 0,
+  "phaseLog": [
+    {
+      "step": "enter waiting room",
+      "elapsedMs": 5538
+    },
+    {
+      "step": "load embruns",
+      "elapsedMs": 35843
+    },
+    {
+      "step": "start match",
+      "elapsedMs": 46035
+    },
+    {
+      "step": "measure active game",
+      "elapsedMs": 52196
+    },
+    {
+      "step": "finish match",
+      "elapsedMs": 64137
+    },
+    {
+      "step": "switch floor5-prepared",
+      "elapsedMs": 92986
+    },
+    {
+      "step": "switch embruns",
+      "elapsedMs": 103311
+    },
+    {
+      "step": "reject a damaged level and retry on the saved map",
+      "elapsedMs": 107303
+    },
+    {
+      "step": "complete",
+      "elapsedMs": 118933
+    }
+  ],
+  "browser": "156.0.8078.79",
+  "viewport": {
+    "width": 1024,
+    "height": 576
+  },
+  "signInToFormMs": 3428,
+  "enterToWaitingMs": 30305,
+  "selectMapMs": 9745,
+  "players": {
+    "humanSlots": 1,
+    "bots": 9
+  },
+  "startToPlayableMs": 1516,
+  "controls": {
+    "distanceM": 0.63,
+    "ammoBefore": 30,
+    "ammoAfter": 29,
+    "rightClickAim": true,
+    "team": "analysts"
+  },
+  "measurement": {
+    "client": {
+      "frameIntervalMs": {
+        "n": 347,
+        "min": 17.1,
+        "p50": 26.1,
+        "p95": 44.5,
+        "p99": 82.5,
+        "max": 149
+      },
+      "framesOver33": 52,
+      "framesOver50": 12,
+      "framesOver100": 2,
+      "renderCpuMs": {
+        "n": 348,
+        "min": 15,
+        "p50": 20.5,
+        "p95": 30.9,
+        "p99": 58.9,
+        "max": 116
+      },
+      "draws": {
+        "n": 348,
+        "min": 393,
+        "p50": 446,
+        "p95": 522,
+        "p99": 526,
+        "max": 526
+      },
+      "triangles": {
+        "n": 348,
+        "min": 396054,
+        "p50": 436884,
+        "p95": 471825,
+        "p99": 472563,
+        "max": 472715
+      },
+      "pixelRatio": {
+        "n": 348,
+        "min": 0.47,
+        "p50": 0.47,
+        "p95": 0.68,
+        "p99": 0.68,
+        "max": 0.68
+      }
+    },
+    "server": {
+      "executionMs": {
+        "n": 605,
+        "min": 0.56,
+        "p50": 1.54,
+        "p95": 9.81,
+        "p99": 20.33,
+        "max": 34.81
+      },
+      "intervalMs": {
+        "n": 604,
+        "min": 0.79,
+        "p50": 16.26,
+        "p95": 20.91,
+        "p99": 32.62,
+        "max": 34.85
+      },
+      "executionOverTickBudget": 9,
+      "executionOver33": 1,
+      "executionOver50": 0,
+      "intervalOver33": 6,
+      "rttMs": 0,
+      "tick": 3105
+    },
+    "resources": {
+      "projectId": "lvl-embruns",
+      "level": "Kervénec Harbor",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        478,
+        269
+      ],
+      "quality": "low",
+      "geometries": 417,
+      "textures": 82,
+      "programs": 61,
+      "owners": 2,
+      "disposals": 1,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    }
+  },
+  "sourceGeometry": {
+    "inScene": true,
+    "groups": 149,
+    "triangles": 238376,
+    "projectId": "lvl-embruns"
+  },
+  "environment": {
+    "camera": {
+      "x": -33.5,
+      "z": 21.5,
+      "y": 0.4,
+      "pitch": 0.02,
+      "yaw": -1.78,
+      "height": 1.72,
+      "radius": 0.2
+    },
+    "first": {
+      "draws": 229,
+      "skyWidth": 2048,
+      "groundField": {
+        "size": [
+          416,
+          560
+        ],
+        "tiles": [
+          256,
+          256,
+          4
+        ],
+        "mips": true,
+        "samples": [
+          [
+            255,
+            0,
+            0,
+            76
+          ],
+          [
+            0,
+            255,
+            0,
+            99
+          ]
+        ]
+      },
+      "bakedLight": [
+        70,
+        86,
+        12
+      ],
+      "weatherTime": 60.74210000002385,
+      "counts": {
+        "waveBands": 8,
+        "mills": 0,
+        "fabrics": 6,
+        "boats": 14,
+        "ponds": 17,
+        "ash": 0
+      },
+      "shoreWidth": 256,
+      "millAngles": [],
+      "boatHeights": [
+        -1.49916606850569,
+        -1.5069278453115023,
+        -1.4921999945122952,
+        -1.5015294556931449,
+        -1.6933888104250094,
+        -1.686098812026243,
+        -1.5327426034493954,
+        -1.5391232709769391,
+        -1.5490468517365215,
+        -1.5492533696521844,
+        -1.534857157345174,
+        -1.5410203565933915,
+        -1.4875541567104882,
+        -1.5343737089669693
+      ],
+      "fourPoses": true,
+      "failedPrograms": 0
+    },
+    "second": {
+      "draws": 227,
+      "skyWidth": 2048,
+      "groundField": {
+        "size": [
+          416,
+          560
+        ],
+        "tiles": [
+          256,
+          256,
+          4
+        ],
+        "mips": true,
+        "samples": [
+          [
+            255,
+            0,
+            0,
+            76
+          ],
+          [
+            0,
+            255,
+            0,
+            99
+          ]
+        ]
+      },
+      "bakedLight": [
+        70,
+        86,
+        12
+      ],
+      "weatherTime": 61.83089999997616,
+      "counts": {
+        "waveBands": 8,
+        "mills": 0,
+        "fabrics": 6,
+        "boats": 14,
+        "ponds": 17,
+        "ash": 0
+      },
+      "shoreWidth": 256,
+      "millAngles": [],
+      "boatHeights": [
+        -1.4942578266887971,
+        -1.5010445984847194,
+        -1.5075269972843226,
+        -1.49117945571403,
+        -1.6689403150252728,
+        -1.6733233232509366,
+        -1.5701277304967423,
+        -1.558195870830196,
+        -1.5549886913972502,
+        -1.5481486499784676,
+        -1.5698385705012898,
+        -1.5633923978606357,
+        -1.4920648376993484,
+        -1.4640146149123727
+      ],
+      "fourPoses": true,
+      "failedPrograms": 0
+    }
+  },
+  "completed": {
+    "matchId": 1,
+    "winner": "draw",
+    "reason": "time",
+    "score": {
+      "analysts": 1,
+      "counterAnalysts": 1
+    },
+    "players": [
+      {
+        "id": "analysts-1",
+        "name": "BOT A-02",
+        "team": "analysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "analysts-2",
+        "name": "BOT A-03",
+        "team": "analysts",
+        "kills": 1,
+        "deaths": 1
+      },
+      {
+        "id": "analysts-3",
+        "name": "BOT A-04",
+        "team": "analysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "analysts-4",
+        "name": "BOT A-05",
+        "team": "analysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "counterAnalysts-0",
+        "name": "BOT C-01",
+        "team": "counterAnalysts",
+        "kills": 0,
+        "deaths": 1
+      },
+      {
+        "id": "counterAnalysts-1",
+        "name": "BOT C-02",
+        "team": "counterAnalysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "counterAnalysts-2",
+        "name": "BOT C-03",
+        "team": "counterAnalysts",
+        "kills": 1,
+        "deaths": 0
+      },
+      {
+        "id": "counterAnalysts-3",
+        "name": "BOT C-04",
+        "team": "counterAnalysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "counterAnalysts-4",
+        "name": "BOT C-05",
+        "team": "counterAnalysts",
+        "kills": 0,
+        "deaths": 0
+      },
+      {
+        "id": "analysts-0",
+        "name": "Map Tester",
+        "team": "analysts",
+        "kills": 0,
+        "deaths": 0
+      }
+    ]
+  },
+  "retiredGameCanvases": 0,
+  "transitions": [
+    {
+      "id": "floor5-prepared",
+      "ms": 9825,
+      "heapUsedBytes": 74741920,
+      "heapCapacityBytes": 76038144,
+      "embedderHeapUsedBytes": 10477328,
+      "backingStorageBytes": 95132323,
+      "documents": 1,
+      "nodes": 2259,
+      "eventListeners": 176,
+      "resourceTimings": 250,
+      "mountedNodes": 810,
+      "loadingPanels": 1,
+      "loadingDescendants": 31,
+      "projectId": "lvl-floor5-preppad-20261105",
+      "level": "Unit 05",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 358,
+      "textures": 124,
+      "programs": 116,
+      "owners": 3,
+      "disposals": 2,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    },
+    {
+      "id": "embruns",
+      "ms": 3752,
+      "heapUsedBytes": 41671988,
+      "heapCapacityBytes": 43778048,
+      "embedderHeapUsedBytes": 7757568,
+      "backingStorageBytes": 87602057,
+      "documents": 1,
+      "nodes": 2219,
+      "eventListeners": 176,
+      "resourceTimings": 250,
+      "mountedNodes": 809,
+      "loadingPanels": 1,
+      "loadingDescendants": 31,
+      "projectId": "lvl-embruns",
+      "level": "Kervénec Harbor",
+      "backend": "ANGLE (Broadcom, V3D 7.1.10.2, OpenGL ES 3.1)",
+      "buffer": [
+        870,
+        489
+      ],
+      "quality": "low",
+      "geometries": 308,
+      "textures": 64,
+      "programs": 60,
+      "owners": 4,
+      "disposals": 3,
+      "reachableOwners": 1,
+      "liveOwners": 1
+    }
+  ],
+  "damagedMapRejected": true,
+  "retryMap": "floor5-prepared",
+  "audio": {
+    "peakVoices": 9,
+    "peakBytes": 14464328,
+    "closed": [
+      {
+        "id": "embruns",
+        "bytes": 0,
+        "voices": 0,
+        "banks": 0
+      },
+      {
+        "id": "embruns",
+        "bytes": 0,
+        "voices": 0,
+        "banks": 0
+      }
+    ],
+    "map": "embruns",
+    "decodeErrors": []
+  },
+  "status": "PASS",
+  "hardwareAfter": {
+    "thermalC": 51.25,
+    "cpuKHz": 2400000
+  },
+  "teardown": {
+    "naturalExit": true,
+    "elapsedMs": 505,
+    "activeResources": [],
+    "liveReferenced": []
+  }
+}

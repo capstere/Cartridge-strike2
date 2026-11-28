@@ -6,7 +6,8 @@
 function span(x,z,ux,uz,width,height){
  return {x,z,ux,uz,nx:-uz,nz:ux,half:width/2-.008,height:height-.008};
 }
-export function furnitureVisibility(world){
+export function furnitureVisibility(world,maximumDistance=12){
+ const rangeSquared=maximumDistance*maximumDistance;
  const walls=world.data.walls.filter(w=>w.surfaceType==='opaque').map(w=>{
   const dx=w.b[0]-w.a[0],dz=w.b[1]-w.a[1],width=Math.hypot(dx,dz);
   return span((w.a[0]+w.b[0])/2,(w.a[1]+w.b[1])/2,dx/width,dz/width,width,w.height);
@@ -22,7 +23,7 @@ export function furnitureVisibility(world){
   for(const s of [...walls,...slides]){
    const dx=eye.x-s.x,dz=eye.z-s.z,normal=dx*s.nx+dz*s.nz,along=dx*s.ux+dz*s.uz;
    const distance=normal*normal+Math.max(0,Math.abs(along)-s.half)**2;
-   if(Math.abs(normal)<.12||distance>144)continue;
+   if(Math.abs(normal)<.12||distance>rangeSquared)continue;
    near.push({s,normal,along,distance});
   }
   near.sort((a,b)=>a.distance-b.distance);return true;

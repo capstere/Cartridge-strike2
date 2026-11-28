@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {Client} from '@colyseus/sdk';
 import {respawnActor} from '../../src/fps/action-rules.mjs';
 import {createLocalServer} from '../local-server.mjs';
-import {delay,options,own,ready,until} from './helpers.mjs';
+import {delay,options,own,ready,send,until} from './helpers.mjs';
 
 const match=(peer,kind,extra={})=>peer.send('match',{kind,matchId:peer.state.matchId,controlEpoch:own(peer).controlEpoch,...extra});
 function command(peer,slot,serial){
@@ -77,6 +77,26 @@ test('owner-only UAV survives reconnect, rejects stale commands and clears on de
   await until(()=>latest(host)?.bonus.active?.id==='rage' && enemy.state.actors.get(owner.id)?.handling.bonusId==='rage','both observe the visible Rage effect');
   assert(privatePackets.get(enemy).every(m=>m.actorId===foe.id && !m.samples.length));
   assert.equal(enemy.state.actors.get(owner.id).handling.bonusEnd-owner.bonus.active.startTick,900);
+  g.item(owner).ammo--;
+  send(host,{reloadId:1});
+  await until(()=>[host,enemy].every(p=>p.state.actors.get(owner.id)?.handling.reloadDuration>0),'accepted reload carries authoritative timing to owner and observer');
+  const {reloadStartedAt,reloadDuration,reloadUntil}=owner;
+  assert(Math.abs(reloadDuration-1.35)<1e-8);
+  for(const p of [host,enemy]){
+    const a=p.state.actors.get(owner.id);
+    assert.equal(a.handling.reloadStartedAt,reloadStartedAt);
+    assert.equal(a.handling.reloadDuration,reloadDuration);
+    assert.equal(a.reloadUntil,reloadUntil);
+  }
+  // End the effect on the next simulation tick, leaving the original reload in flight.
+  owner.bonus.active.endTick=Math.round(g.state.time*60)+1;
+  const reconnectEpoch=own(host).controlEpoch;
+  room.seats.get(host.sessionId).client.ref.terminate();
+  await until(()=>own(host)?.connected && own(host).controlEpoch>reconnectEpoch && !own(host).handling.bonusId,'same reload survives Rage expiry and reserved reconnect');
+  assert.equal(own(host).handling.reloadDuration,reloadDuration);
+  assert.equal(own(host).handling.reloadStartedAt,reloadStartedAt);assert.equal(own(host).reloadUntil,reloadUntil);
+  await until(()=>[host,enemy].every(p=>!p.state.actors.get(owner.id).reloadUntil),'reload completes on both clients');
+  assert.equal(own(host).handling.reloadDuration,0);assert.equal(own(host).handling.reloadStartedAt,0);
   const oldSeat=command(host,3,4),previousId=oldSeat.actorId;
   host.reconnection.enabled=false;
   await host.leave();

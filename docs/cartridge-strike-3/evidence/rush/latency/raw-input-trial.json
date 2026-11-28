@@ -1,0 +1,111 @@
+[
+  {
+    "build": "431d0c4c2e81ba1803bada58f44ba8d526b04875",
+    "game": "candidate",
+    "profile": "touch",
+    "repeat": 0,
+    "cache": "new browser context",
+    "at": "2026-11-27T15:29:48.526Z",
+    "browser": "156.0.8078.79",
+    "map": "lvl-floor5-preppad-20261105",
+    "buffer": [
+      493,
+      228
+    ],
+    "mode": "endless",
+    "quality": "low",
+    "actors": 10,
+    "localWeapon": "ar47",
+    "residents": 4,
+    "thermalC": [
+      48.5,
+      53.45
+    ],
+    "throttle": [
+      "throttled=0x0",
+      "throttled=0x0"
+    ],
+    "frameMs": {
+      "n": 161,
+      "p50": 60.6,
+      "p95": 80.5,
+      "p99": 99,
+      "max": 99.9,
+      "over33": 161,
+      "over50": 158,
+      "over100": 0
+    },
+    "renderMs": {
+      "n": 162,
+      "p50": 49.1,
+      "p95": 66.2,
+      "p99": 81.7,
+      "max": 83.8,
+      "over33": 162,
+      "over50": 75,
+      "over100": 0
+    },
+    "draws": {
+      "n": 162,
+      "p50": 1293,
+      "p95": 1545,
+      "p99": 1545,
+      "max": 1545,
+      "over33": 162,
+      "over50": 162,
+      "over100": 162
+    },
+    "tris": {
+      "n": 162,
+      "p50": 679564,
+      "p95": 824984,
+      "p99": 824984,
+      "max": 824984,
+      "over33": 162,
+      "over50": 162,
+      "over100": 162
+    },
+    "census": {
+      "projectFurniture": 727,
+      "world/room-static-batch": 138,
+      "actor-analysts-1": 85,
+      "actor-analysts-4": 83,
+      "actor-analysts-3": 83,
+      "actor-analysts-2": 81,
+      "action": 73,
+      "doors": 70,
+      "glass": 51,
+      "environment": 38,
+      "world/cosmetic-room-details": 28,
+      "world/Mesh": 22,
+      "viewmodel": 16,
+      "world/Group": 8,
+      "actor-hostage-0": 8,
+      "actor-hostage-1": 8,
+      "world/The Hollow Walker": 2,
+      "world/combat-flow-effects": 2
+    },
+    "rawCallback": 240.1,
+    "pointerOrKeyCallback": 241.2,
+    "touchOrKeyCallback": 241.3,
+    "gameRead": 242.3,
+    "firstMovedStep": 242.9,
+    "firstMovedRenderBegin": 246.6,
+    "worldSubmit": [
+      253.5,
+      296.0
+    ],
+    "weaponSubmit": [
+      296.0,
+      296.6
+    ],
+    "firstMovedRenderEnd": 296.6,
+    "presentation": 343.7,
+    "firstWeight": 0.4231,
+    "weaponYAndRoll": [
+      -0.25768,
+      0.33467
+    ],
+    "unshiftedRendersAfterInput": 3
+  }
+]
